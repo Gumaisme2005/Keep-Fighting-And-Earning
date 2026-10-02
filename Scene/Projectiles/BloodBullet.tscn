@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://d1vjbtas3ygl7"]
 
 [ext_resource type="Script" uid="uid://dyioakcanasyd" path="res://Scene/Projectiles/blood_bullet.gd" id="1_g4bw1"]
-[ext_resource type="Texture2D" uid="uid://bsiyj82sborkw" path="res://Assets/2D Pixel Dungeon Asset Pack/items and trap_animation/flamethrower/flamethrower_2_2.png" id="2_2vivu"]
+[ext_resource type="Texture2D" uid="uid://bsiyj82sborkw" path="res://Assets/Projectiles/flamethrower_2_2.png" id="2_2vivu"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tjjsi"]
 atlas = ExtResource("2_2vivu")
