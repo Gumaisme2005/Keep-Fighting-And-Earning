@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://cpcn5e3epu68a"]
+
+[ext_resource type="PackedScene" uid="uid://def0qi8k07y4" path="res://Scene/Character/Player.tscn" id="1_f3sb7"]
+[ext_resource type="PackedScene" uid="uid://g1o8hn1c526h" path="res://Scene/Enemies/blood_monster.tscn" id="3_036b0"]
+[ext_resource type="PackedScene" uid="uid://d2apj8xexe4f7" path="res://Scene/Enemies/vampire.tscn" id="3_aqk2v"]
+[ext_resource type="PackedScene" uid="uid://hd36nx58eb5c" path="res://Scene/Enemies/skeleton.tscn" id="3_tlwt5"]
+
+[node name="Node2D" type="Node2D" unique_id=569670354]
+
+[node name="BloodMonster" parent="." unique_id=616879335 instance=ExtResource("3_036b0")]
+position = Vector2(620, 342)
+
+[node name="Skeleton" parent="." unique_id=759468722 instance=ExtResource("3_tlwt5")]
+position = Vector2(551, 323)
+
+[node name="Player" parent="." unique_id=1500814557 instance=ExtResource("1_f3sb7")]
+position = Vector2(590, 248)
+
+[node name="Vampire" parent="." unique_id=1637879376 instance=ExtResource("3_aqk2v")]
+position = Vector2(456, 263)

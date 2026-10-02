@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://d1vjbtas3ygl7"]
+
+[ext_resource type="Script" uid="uid://dyioakcanasyd" path="res://Scene/Projectiles/blood_bullet.gd" id="1_g4bw1"]
+[ext_resource type="Texture2D" uid="uid://bsiyj82sborkw" path="res://Assets/2D Pixel Dungeon Asset Pack/items and trap_animation/flamethrower/flamethrower_2_2.png" id="2_2vivu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tjjsi"]
+atlas = ExtResource("2_2vivu")
+region = Rect2(0, 0, 32, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1vivr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tjjsi")
+}],
+"loop": 1,
+"name": &"fly",
+"speed": 12.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1vivr"]
+radius = 8.0
+height = 24.0
+
+[node name="BloodBullet" type="Area2D" unique_id=1371297018]
+script = ExtResource("1_g4bw1")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=725323046]
+sprite_frames = SubResource("SpriteFrames_1vivr")
+animation = &"fly"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2059848972]
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_1vivr")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
