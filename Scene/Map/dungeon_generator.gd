@@ -8,7 +8,13 @@ extends TileMap
 
 # --- CÁC BIẾN MỚI THÊM VÀO ĐỂ QUẢN LÝ THỰC THỂ ---
 const PLAYER_SCENE = preload("res://Scene/Character/Player.tscn")
-@export var enemy_scenes: Array[PackedScene]
+# Khởi tạo một Danh sách chứa sẵn các bản thiết kế gốc của Quái vật
+var enemy_scenes: Array[PackedScene] = [
+	preload("res://Scene/Enemies/orc.tscn"),
+	preload("res://Scene/Enemies/skeleton.tscn"),
+	preload("res://Scene/Enemies/vampire.tscn"),
+	preload("res://Scene/Enemies/blood_monster.tscn")
+]
 @export var min_enemies: int = 2
 @export var max_enemies: int = 5
 
