@@ -19,3 +19,9 @@ func _on_area_entered(area: Area2D) -> void:
 			target.take_damage(1)
 		# Chạm trúng Player thì đạn tự biến mất
 		queue_free()
+
+
+func _on_body_entered(body):
+	# Nếu cái thứ đạn vừa chạm vào là TileMap (Bức tường)
+	if body is TileMap: 
+		queue_free()  # Xóa sổ viên đạn ngay lập tức
