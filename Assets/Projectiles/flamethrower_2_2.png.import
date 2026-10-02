@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dc8e7uvqydhs"
-path="res://.godot/imported/priest3_v2_4.png-cc2a901d0f06457d9bbba17fa1e5670b.ctex"
+uid="uid://bsiyj82sborkw"
+path="res://.godot/imported/flamethrower_2_2.png-afdfdd6e1032df46ea9b211be89ca608.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/2D Pixel Dungeon Asset Pack/Character_animation/priests_idle/priest3/v2/priest3_v2_4.png"
-dest_files=["res://.godot/imported/priest3_v2_4.png-cc2a901d0f06457d9bbba17fa1e5670b.ctex"]
+source_file="res://Assets/Projectiles/flamethrower_2_2.png"
+dest_files=["res://.godot/imported/flamethrower_2_2.png-afdfdd6e1032df46ea9b211be89ca608.ctex"]
 
 [params]
 
