@@ -13,7 +13,6 @@ config_version=5
 config/name="Keep Fighting And Earning"
 run/main_scene="uid://cpcn5e3epu68a"
 config/features=PackedStringArray("4.7", "GL Compatibility")
-config/icon="res://icon.svg"
 
 [display]
 
