@@ -99,7 +99,7 @@ func generate_dungeon():
 		else: room_types.append(RoomType.COMBAT)
 			
 		# Xây phòng dáng hữu cơ
-		carve_organic_room(main_rect)
+		carve_room(main_rect)
 		
 		# Trồng thêm cột cản đạn nếu là phòng đánh nhau
 		if room_types[room_index] == RoomType.COMBAT or room_types[room_index] == RoomType.BOSS:
@@ -119,20 +119,11 @@ func generate_dungeon():
 	scatter_decorations()
 
 # --- CÁC HÀM XÂY DỰNG ---
-func carve_organic_room(base_rect: Rect2i):
-	for x in range(base_rect.position.x, base_rect.end.x):
-		for y in range(base_rect.position.y, base_rect.end.y):
+func carve_room(room: Rect2i):
+	# Chỉ lấp đầy gạch nền cho đúng 1 hình chữ nhật duy nhất
+	for x in range(room.position.x, room.end.x):
+		for y in range(room.position.y, room.end.y):
 			set_cell(LAYER_FLOOR, Vector2i(x, y), SOURCE_WALLS, FLOOR_COORD)
-			
-	var num_extra_shapes = rng.randi_range(1, 2)
-	for i in range(num_extra_shapes):
-		var ew = rng.randi_range(int(room_min_size * 0.5), int(room_max_size * 0.7))
-		var eh = rng.randi_range(int(room_min_size * 0.5), int(room_max_size * 0.7))
-		var ex = base_rect.position.x + rng.randi_range(-int(ew/2.0), base_rect.size.x - int(ew/2.0))
-		var ey = base_rect.position.y + rng.randi_range(-int(eh/2.0), base_rect.size.y - int(eh/2.0))
-		for x in range(ex, ex + ew):
-			for y in range(ey, ey + eh):
-				set_cell(LAYER_FLOOR, Vector2i(x, y), SOURCE_WALLS, FLOOR_COORD)
 
 func carve_corridor_h(x1: int, x2: int, y: int):
 	for x in range(min(x1, x2), max(x1, x2) + 1):
@@ -150,13 +141,23 @@ func carve_corridor_v(y1: int, y2: int, x: int):
 
 func build_walls():
 	var used_cells = get_used_cells(LAYER_FLOOR)
+	var wall_cells = [] # Mảng chứa toàn bộ tọa độ cần xây tường
+	
+	# 1. Tìm tất cả các ô viền xung quanh sàn nhà
 	for cell in used_cells:
 		for dx in [-1, 0, 1]:
 			for dy in [-1, 0, 1]:
 				if dx == 0 and dy == 0: continue
 				var neighbor = cell + Vector2i(dx, dy)
+				
+				# Nếu ô bên cạnh chưa có gì (là khoảng không) -> Đưa vào danh sách xây tường
 				if get_cell_source_id(LAYER_FLOOR, neighbor) == -1: 
-					set_cell(LAYER_FLOOR, neighbor, SOURCE_WALLS, WALL_COORD)
+					if not wall_cells.has(neighbor):
+						wall_cells.append(neighbor)
+						
+	# 2. HÀM MA THUẬT CỦA GODOT: Tự động tính toán góc và vẽ tường AutoTile
+	# (0, 0) ở đây tương ứng với Terrain Set 0 và Terrain 0 (Dungeon Wall) cậu đã tạo
+	set_cells_terrain_connect(LAYER_FLOOR, wall_cells, 0, 0)
 
 func decorate_pillars(room: Rect2i):
 	var num_pillars = rng.randi_range(2, 5)
