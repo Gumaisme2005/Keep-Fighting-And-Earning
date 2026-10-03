@@ -236,7 +236,7 @@ radius = 3.0
 height = 16.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1vivr"]
-size = Vector2(28, 21)
+size = Vector2(30, 21)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8vrlf"]
 size = Vector2(16, 20.5)
@@ -257,7 +257,7 @@ shape = SubResource("CapsuleShape2D_1vivr")
 [node name="SwordHitbox" type="Area2D" parent="." unique_id=1952238041 groups=["player"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SwordHitbox" unique_id=1063299358]
-position = Vector2(6, -7.5)
+position = Vector2(7, -7.5)
 shape = SubResource("RectangleShape2D_1vivr")
 disabled = true
 
