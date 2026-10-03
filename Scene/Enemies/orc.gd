@@ -6,6 +6,7 @@ extends CharacterBody2D
 var hp: int = 3 
 var is_dead: bool = false
 var is_attacking: bool = false
+var is_active = false
 
 @onready var animated_sprite = $AnimatedSprite2D
 @onready var axe_hitbox = $AxeHitbox
@@ -20,6 +21,7 @@ func _ready() -> void:
 		player = players[0]
 
 func _physics_process(_delta: float) -> void:
+	if not is_active: return
 	if is_dead or player == null or animated_sprite.animation == "hurt":
 		return
 

@@ -591,4 +591,5 @@ sources/1 = SubResource("TileSetAtlasSource_aqk2v")
 tile_set = SubResource("TileSet_1vivr")
 format = 2
 layer_1/name = "Decor"
+layer_2/name = "Doors"
 script = ExtResource("6_dwbse")
