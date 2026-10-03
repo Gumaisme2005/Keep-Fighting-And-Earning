@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 @export var speed: float = 100.0 # Chạy nhanh hơn Orc (Orc là 70)
-@export var attack_range: float = 30.0 
+@export var attack_range: float = 15.0 
 
 var hp: int = 2 # Xương cốt giòn nên ít máu
 var is_dead: bool = false
@@ -64,11 +64,16 @@ func take_damage(damage_amount: int) -> void:
 		$Hurtbox/CollisionShape2D.set_deferred("disabled", true)
 		$CollisionShape2D.set_deferred("disabled", true)
 		sword_collision.set_deferred("disabled", true)
+		
+		# [THÊM MỚI] Ép buộc quái "bay màu" sau đúng 1 giây
+		# Bất chấp animation có bị lỗi vòng lặp hay không, 1 giây sau nó cũng sẽ bị xóa!
+		await get_tree().create_timer(1.0).timeout
+		queue_free()
 
 func _on_animated_sprite_2d_animation_finished() -> void:
-	if animated_sprite.animation == "death":
-		queue_free() 
-	elif animated_sprite.animation == "hurt":
+	# Tớ đã xóa đoạn check animation "death" ở đây đi để tránh trùng lặp với bộ đếm giờ ở trên
+	
+	if animated_sprite.animation == "hurt":
 		if not is_dead:
 			animated_sprite.play("idle") 
 	elif animated_sprite.animation == "attack": 
