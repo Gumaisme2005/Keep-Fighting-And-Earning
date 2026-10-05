@@ -12,7 +12,7 @@ enum RoomType { START, COMBAT, TREASURE, BOSS }
 # --- ĐƯỜNG DẪN SCENE (Đã giữ nguyên theo code của cậu) ---
 const PLAYER_SCENE = preload("res://Scene/Character/Player.tscn")
 const CHEST_SCENE = preload("res://Scene/Items/chest.tscn") 
-
+const SPIKE_TRAP = preload("res://Scene/Map/SpikeTrap.tscn")
 var enemy_scenes: Array[PackedScene] = [
 	preload("res://Scene/Enemies/orc.tscn"),
 	preload("res://Scene/Enemies/skeleton.tscn"),
@@ -273,12 +273,83 @@ func spawn_entities():
 				add_child(enemy)
 				enemy.global_position = to_global(map_to_local(Vector2i(rx, ry)))
 				manager.enemies.append(enemy) # Nạp đạn cho RoomManager!
+			# =========================================================
+			# HỆ THỐNG SINH BẪY THEO MẪU (PATTERN)
+			# =========================================================
+			var center = room.get_center() # Lấy chính xác tâm phòng làm mốc
+			var trap_positions = [] # Mảng chứa tọa độ của các bẫy sẽ sinh ra
+			
+			# Lăn xúc xắc để chọn ngẫu nhiên 1 trong 3 sơ đồ bẫy
+			var pattern_type = rng.randi() % 3
+			
+			if pattern_type == 0:
+				# SƠ ĐỒ 1: HÌNH CHỮ THẬP (CROSS)
+				# 1 bẫy ở giữa, 4 bẫy ở 4 hướng trên/dưới/trái/phải
+				trap_positions.append(center)
+				trap_positions.append(center + Vector2i(0, -1))
+				trap_positions.append(center + Vector2i(0, 1))
+				trap_positions.append(center + Vector2i(-1, 0))
+				trap_positions.append(center + Vector2i(1, 0))
 				
+			elif pattern_type == 1:
+				# SƠ ĐỒ 2: 4 GÓC GẦN (4 INNER CORNERS)
+				# Bố trí 4 bẫy cách tâm 2 ô về các góc chéo
+				var offset = 2
+				trap_positions.append(center + Vector2i(-offset, -offset)) # Góc trên-trái
+				trap_positions.append(center + Vector2i(offset, -offset))  # Góc trên-phải
+				trap_positions.append(center + Vector2i(-offset, offset))  # Góc dưới-trái
+				trap_positions.append(center + Vector2i(offset, offset))   # Góc dưới-phải
+				
+			elif pattern_type == 2:
+				# SƠ ĐỒ 3: VÒNG TRÒN LỬA (SQUARE RING)
+				# Vẽ một viền vuông rỗng bao quanh tâm (cách tâm 2 ô)
+				var radius = 2
+				for x in range(center.x - radius, center.x + radius + 1):
+					for y in range(center.y - radius, center.y + radius + 1):
+						# Chỉ lấy các ô nằm ở rìa viền ngoài
+						if x == center.x - radius or x == center.x + radius or y == center.y - radius or y == center.y + radius:
+							trap_positions.append(Vector2i(x, y))
+
+			# BẮT ĐẦU RẢI BẪY LÊN BẢN ĐỒ DỰA TRÊN SƠ ĐỒ ĐÃ CHỌN
+			for tile_pos in trap_positions:
+				# Kiểm tra xem ô đó có phải là gạch nền không, và không bị vướng đồ đạc gì
+				if get_cell_source_id(LAYER_FLOOR, tile_pos) != -1 and get_cell_source_id(LAYER_DECOR, tile_pos) == -1:
+					var trap = SPIKE_TRAP.instantiate()
+					add_child(trap)
+					trap.global_position = to_global(map_to_local(tile_pos))
+			# =========================================================
+			
 		elif type == RoomType.BOSS:
+			# 1. Sinh bộ cảm biến phòng
+			var manager = ROOM_MANAGER.instantiate()
+			add_child(manager)
+			
+			# Chỉnh kích thước cảm biến hụt đi 2 ô so với phòng (để Player vào hẳn giữa phòng mới sập bẫy)
+			var shape = RectangleShape2D.new()
+			shape.size = Vector2((room.size.x - 3) * 16, (room.size.y - 3) * 16)
+			manager.get_node("CollisionShape2D").shape = shape
+			manager.global_position = to_global(map_to_local(room.get_center()))
+			
+			# 2. Thuật toán tự động tìm Cửa (Quét viền ngoài của phòng xem chỗ nào có gạch sàn)
+			var entrances = []
+			for x in range(room.position.x - 1, room.end.x + 1):
+				for y in range(room.position.y - 1, room.end.y + 1):
+					if x == room.position.x - 1 or x == room.end.x or y == room.position.y - 1 or y == room.end.y:
+						if get_cell_atlas_coords(LAYER_FLOOR, Vector2i(x, y)) == FLOOR_COORD:
+							entrances.append(Vector2i(x, y))
+							
+			manager.tilemap = self
+			manager.entrances = entrances
+			
 			var num_e = max_enemies * 2 
 			for j in range(num_e):
 				var rx = rng.randi_range(room.position.x + 3, room.end.x - 4)
 				var ry = rng.randi_range(room.position.y + 3, room.end.y - 4)
+				
+				if get_cell_source_id(LAYER_DECOR, Vector2i(rx, ry)) != -1:
+					continue
+					
 				var enemy = enemy_scenes[rng.randi() % enemy_scenes.size()].instantiate()
 				add_child(enemy)
 				enemy.global_position = to_global(map_to_local(Vector2i(rx, ry)))
+				manager.enemies.append(enemy) 

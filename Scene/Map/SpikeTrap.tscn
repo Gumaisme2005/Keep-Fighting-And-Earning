@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://ctclj5bjc4h80"]
+
+[ext_resource type="Script" uid="uid://dir05q17an473" path="res://Scene/Map/spike_trap.gd" id="1_t0ox6"]
+[ext_resource type="Texture2D" uid="uid://b8hkgbcx2tb8v" path="res://Assets/Map/trap_animation.png" id="2_v4ma1"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rqlfv"]
+atlas = ExtResource("2_v4ma1")
+region = Rect2(48, 80, 48, 80)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nefs1"]
+atlas = ExtResource("2_v4ma1")
+region = Rect2(48, 160, 48, 80)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atefi"]
+atlas = ExtResource("2_v4ma1")
+region = Rect2(48, 240, 48, 80)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a81a1"]
+atlas = ExtResource("2_v4ma1")
+region = Rect2(48, 320, 48, 80)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ww1xx"]
+atlas = ExtResource("2_v4ma1")
+region = Rect2(48, 0, 48, 80)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1vivr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rqlfv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nefs1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atefi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a81a1")
+}],
+"loop": 0,
+"name": &"active",
+"speed": 15.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ww1xx")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1vivr"]
+size = Vector2(45, 63)
+
+[node name="SpikeTrap" type="Area2D" unique_id=1140323892]
+script = ExtResource("1_t0ox6")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1167595123]
+position = Vector2(-0.5, 0.5)
+scale = Vector2(1.0208334, 0.9875)
+sprite_frames = SubResource("SpriteFrames_1vivr")
+animation = &"active"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=36107593]
+position = Vector2(0.5, 7.5)
+shape = SubResource("RectangleShape2D_1vivr")
