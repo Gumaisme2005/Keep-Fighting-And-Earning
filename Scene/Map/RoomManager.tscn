@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://c2bah363vyqbb"]
+
+[ext_resource type="Script" uid="uid://bydx7efdnp7wy" path="res://Scene/Map/room_manager.gd" id="1_2qaro"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1vivr"]
+
+[node name="RoomManager" type="Area2D" unique_id=1408057984]
+script = ExtResource("1_2qaro")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2064707018]
+shape = SubResource("RectangleShape2D_1vivr")

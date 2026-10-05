@@ -23,6 +23,9 @@ var enemy_scenes: Array[PackedScene] = [
 @export var min_enemies: int = 2
 @export var max_enemies: int = 6
 
+# Khởi tạo cơ chế phòng
+const ROOM_MANAGER = preload("res://Scene/Map/RoomManager.tscn")
+
 # --- CÀI ĐẶT GẠCH VÀ LAYER MỚI ---
 const LAYER_FLOOR = 0
 const LAYER_DECOR = 1 # Lớp Layer 1 dùng để rải đồ
@@ -235,13 +238,41 @@ func spawn_entities():
 			chest.global_position = to_global(map_to_local(room.get_center()))
 			
 		elif type == RoomType.COMBAT:
+			# 1. Sinh bộ cảm biến phòng
+			var manager = ROOM_MANAGER.instantiate()
+			add_child(manager)
+			
+			# Chỉnh kích thước cảm biến hụt đi 2 ô so với phòng (để Player vào hẳn giữa phòng mới sập bẫy)
+			var shape = RectangleShape2D.new()
+			shape.size = Vector2((room.size.x - 3) * 16, (room.size.y - 3) * 16)
+			manager.get_node("CollisionShape2D").shape = shape
+			manager.global_position = to_global(map_to_local(room.get_center()))
+			
+			# 2. Thuật toán tự động tìm Cửa (Quét viền ngoài của phòng xem chỗ nào có gạch sàn)
+			var entrances = []
+			for x in range(room.position.x - 1, room.end.x + 1):
+				for y in range(room.position.y - 1, room.end.y + 1):
+					if x == room.position.x - 1 or x == room.end.x or y == room.position.y - 1 or y == room.end.y:
+						if get_cell_atlas_coords(LAYER_FLOOR, Vector2i(x, y)) == FLOOR_COORD:
+							entrances.append(Vector2i(x, y))
+							
+			manager.tilemap = self
+			manager.entrances = entrances
+			
+			# 3. Sinh quái và bàn giao danh sách cho Cảm biến quản lý
 			var num_e = rng.randi_range(min_enemies, max_enemies)
 			for j in range(num_e):
 				var rx = rng.randi_range(room.position.x + 3, room.end.x - 4)
 				var ry = rng.randi_range(room.position.y + 3, room.end.y - 4)
+				
+				# Tránh đặt quái vào chỗ đang có đồ đạc
+				if get_cell_source_id(LAYER_DECOR, Vector2i(rx, ry)) != -1:
+					continue
+					
 				var enemy = enemy_scenes[rng.randi() % enemy_scenes.size()].instantiate()
 				add_child(enemy)
 				enemy.global_position = to_global(map_to_local(Vector2i(rx, ry)))
+				manager.enemies.append(enemy) # Nạp đạn cho RoomManager!
 				
 		elif type == RoomType.BOSS:
 			var num_e = max_enemies * 2 
