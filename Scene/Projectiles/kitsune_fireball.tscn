@@ -1,0 +1,108 @@
+[gd_scene format=3 uid="uid://ct1q8lg1wrayq"]
+
+[ext_resource type="Script" uid="uid://cdmoldckb0xlr" path="res://Scene/Projectiles/kitsune_fireball.gd" id="1_8vm87"]
+[ext_resource type="Texture2D" uid="uid://chvnck0u6ryeq" path="res://Assets/Character/Boss_Kitsune/Fire_2.png" id="1_jntj5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8vm87"]
+atlas = ExtResource("1_jntj5")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m1xbx"]
+atlas = ExtResource("1_jntj5")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ypf0l"]
+atlas = ExtResource("1_jntj5")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8ovn1"]
+atlas = ExtResource("1_jntj5")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bp5vu"]
+atlas = ExtResource("1_jntj5")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3s1r0"]
+atlas = ExtResource("1_jntj5")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fykbt"]
+atlas = ExtResource("1_jntj5")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mwqj5"]
+atlas = ExtResource("1_jntj5")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4qgrp"]
+atlas = ExtResource("1_jntj5")
+region = Rect2(512, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jx22m"]
+atlas = ExtResource("1_jntj5")
+region = Rect2(576, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yhury"]
+atlas = ExtResource("1_jntj5")
+region = Rect2(640, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1vivr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8vm87")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m1xbx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ypf0l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8ovn1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bp5vu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3s1r0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fykbt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mwqj5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4qgrp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jx22m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yhury")
+}],
+"loop": 1,
+"name": &"fly",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8vrlf"]
+radius = 7.0
+height = 22.0
+
+[node name="KitsuneFireball" type="Area2D" unique_id=579267146]
+script = ExtResource("1_8vm87")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1490262951]
+sprite_frames = SubResource("SpriteFrames_1vivr")
+animation = &"fly"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1296006899]
+position = Vector2(0, 2)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_8vrlf")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
