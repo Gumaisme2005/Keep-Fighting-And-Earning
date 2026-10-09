@@ -13,11 +13,14 @@ enum RoomType { START, COMBAT, TREASURE, BOSS }
 const PLAYER_SCENE = preload("res://Scene/Character/Player.tscn")
 const CHEST_SCENE = preload("res://Scene/Items/chest.tscn") 
 const SPIKE_TRAP = preload("res://Scene/Map/SpikeTrap.tscn")
+
+const BOSS_SCENE = preload("res://Scene/Enemies/Boss/Kitsune/Kitsune.tscn")
+
 var enemy_scenes: Array[PackedScene] = [
-	preload("res://Scene/Enemies/orc.tscn"),
-	preload("res://Scene/Enemies/skeleton.tscn"),
-	preload("res://Scene/Enemies/vampire.tscn"),
-	preload("res://Scene/Enemies/blood_monster.tscn")
+	preload("res://Scene/Enemies/Orc/orc.tscn"),
+	preload("res://Scene/Enemies/Skeleton/skeleton.tscn"),
+	preload("res://Scene/Enemies/Blood Monster/blood_monster.tscn"),
+	preload("res://Scene/Enemies/Vampire/vampire.tscn")
 ]
 
 @export var min_enemies: int = 2
@@ -284,12 +287,14 @@ func spawn_entities():
 			
 			if pattern_type == 0:
 				# SƠ ĐỒ 1: HÌNH CHỮ THẬP (CROSS)
-				# 1 bẫy ở giữa, 4 bẫy ở 4 hướng trên/dưới/trái/phải
+				# Bẫy to 3 ô, nên phải giãn cách 3 ô để mép bẫy vừa chạm vào nhau
+				var offset = 3
+				var length = 4 
 				trap_positions.append(center)
-				trap_positions.append(center + Vector2i(0, -1))
-				trap_positions.append(center + Vector2i(0, 1))
-				trap_positions.append(center + Vector2i(-1, 0))
-				trap_positions.append(center + Vector2i(1, 0))
+				trap_positions.append(center + Vector2i(0, -length))
+				trap_positions.append(center + Vector2i(0, length))
+				trap_positions.append(center + Vector2i(-offset, 0))
+				trap_positions.append(center + Vector2i(offset, 0))
 				
 			elif pattern_type == 1:
 				# SƠ ĐỒ 2: 4 GÓC GẦN (4 INNER CORNERS)
@@ -341,15 +346,11 @@ func spawn_entities():
 			manager.tilemap = self
 			manager.entrances = entrances
 			
-			var num_e = max_enemies * 2 
-			for j in range(num_e):
-				var rx = rng.randi_range(room.position.x + 3, room.end.x - 4)
-				var ry = rng.randi_range(room.position.y + 3, room.end.y - 4)
-				
-				if get_cell_source_id(LAYER_DECOR, Vector2i(rx, ry)) != -1:
-					continue
-					
-				var enemy = enemy_scenes[rng.randi() % enemy_scenes.size()].instantiate()
-				add_child(enemy)
-				enemy.global_position = to_global(map_to_local(Vector2i(rx, ry)))
-				manager.enemies.append(enemy) 
+			# 3. CHỈ SINH DUY NHẤT 1 BOSS TỰ ĐỘNG BẰNG PRELOAD
+			var boss = BOSS_SCENE.instantiate()
+			boss.add_to_group("enemies") # Đưa vào group để TestArena và RoomManager nhận diện
+			add_child(boss)
+			
+			# Đặt Boss ở chính giữa tâm phòng
+			boss.global_position = to_global(map_to_local(room.get_center()))
+			manager.enemies.append(boss)
