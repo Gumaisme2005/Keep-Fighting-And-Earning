@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://yp42x3sbm4nr"]
+
+[ext_resource type="Texture2D" uid="uid://hy3rhe5kwp0e" path="res://Assets/Items/Items/Icons.png" id="1_vuok1"]
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="2_03u08"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ip484"]
+atlas = ExtResource("1_vuok1")
+region = Rect2(80, 96, 16, 16)
+
+[resource]
+script = ExtResource("2_03u08")
+item_name = "Giáp sắt"
+type = 1
+icon = SubResource("AtlasTexture_ip484")
+stat_value = 3
+metadata/_custom_type_script = "uid://cfc0cqlwptxu6"

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bh0irbsdqxac1"
-path="res://.godot/imported/doors_lever_chest_animation.png-3279853107da300646c60761a9c624a3.ctex"
+uid="uid://hy3rhe5kwp0e"
+path="res://.godot/imported/Icons.png-3fff1e34d9debf3b8e835c8732669b2c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Map/doors_lever_chest_animation.png"
-dest_files=["res://.godot/imported/doors_lever_chest_animation.png-3279853107da300646c60761a9c624a3.ctex"]
+source_file="res://Assets/Items/Items/Icons.png"
+dest_files=["res://.godot/imported/Icons.png-3fff1e34d9debf3b8e835c8732669b2c.ctex"]
 
 [params]
 

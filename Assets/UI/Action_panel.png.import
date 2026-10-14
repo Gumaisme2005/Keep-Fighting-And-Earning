@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cl3sl4vlkf2h7"
-path="res://.godot/imported/Water_coasts_animation.png-bddc1612c8fd5f8266891d28ef6d95a3.ctex"
+uid="uid://c8bjxc3bai1gk"
+path="res://.godot/imported/Action_panel.png-5db52d11e48c3033d402d9b619eb712e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Map/Water_coasts_animation.png"
-dest_files=["res://.godot/imported/Water_coasts_animation.png-bddc1612c8fd5f8266891d28ef6d95a3.ctex"]
+source_file="res://Assets/UI/Action_panel.png"
+dest_files=["res://.godot/imported/Action_panel.png-5db52d11e48c3033d402d9b619eb712e.ctex"]
 
 [params]
 

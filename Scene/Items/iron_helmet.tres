@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://dqu1so6s77ep3"]
+
+[ext_resource type="Texture2D" uid="uid://hy3rhe5kwp0e" path="res://Assets/Items/Items/Icons.png" id="1_qfhm0"]
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="2_sfnut"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oq06l"]
+atlas = ExtResource("1_qfhm0")
+region = Rect2(64, 96, 16, 16)
+
+[resource]
+script = ExtResource("2_sfnut")
+item_name = "Mũ sắt"
+type = 0
+icon = SubResource("AtlasTexture_oq06l")
+stat_value = 2
+metadata/_custom_type_script = "uid://cfc0cqlwptxu6"
