@@ -434,10 +434,9 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_v5gy4"]
-height = 46.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1vivr"]
-size = Vector2(45, 90)
+size = Vector2(29, 90)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8vrlf"]
 size = Vector2(40.75, 66.375)
@@ -453,14 +452,14 @@ animation = &"walk"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=543180591]
-position = Vector2(-2, 1)
+position = Vector2(2, 1)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_v5gy4")
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=1069670160]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=236706186]
-position = Vector2(-1.5, -33)
+position = Vector2(2.5, -35)
 shape = SubResource("RectangleShape2D_1vivr")
 
 [node name="SwordHitbox" type="Area2D" parent="." unique_id=1490794041]
