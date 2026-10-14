@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://k146yosqp16l" path="res://Assets/Character/Soldier/Soldier/Soldier_Death.png" id="3_tdg3f"]
 [ext_resource type="Texture2D" uid="uid://bc4itlskv021l" path="res://Assets/Character/Soldier/Soldier/Soldier_Hurt.png" id="4_dtqjt"]
 [ext_resource type="Script" uid="uid://cqm4110dqn65t" path="res://Scene/Character/InventoryManager.gd" id="7_rlyac"]
+[ext_resource type="PackedScene" uid="uid://c88b4e2b3wqrw" path="res://Scene/UI/GameUI.tscn" id="8_ec6a5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cgsek"]
 atlas = ExtResource("2_cxr5p")
@@ -275,6 +276,8 @@ position_smoothing_speed = 4.0
 
 [node name="Inventory" type="Node2D" parent="." unique_id=509777740]
 script = ExtResource("7_rlyac")
+
+[node name="GameUi" parent="." unique_id=1680741659 instance=ExtResource("8_ec6a5")]
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="area_entered" from="SwordHitbox" to="." method="_on_sword_hitbox_area_entered"]

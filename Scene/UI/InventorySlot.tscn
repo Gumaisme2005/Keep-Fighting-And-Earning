@@ -1,20 +1,22 @@
 [gd_scene format=3 uid="uid://gs1rnexk7qdb"]
 
-[ext_resource type="Texture2D" uid="uid://bth3re8ic6txw" path="res://Assets/Features/Inventory.png" id="1_fgroi"]
-[ext_resource type="Script" uid="uid://7pyqj0gtmq5j" path="res://Scene/UI/InventorySlot.gd" id="2_hmva2"]
+[ext_resource type="Texture2D" uid="uid://bth3re8ic6txw" path="res://Assets/UI/Inventory.png" id="1_d8qlf"]
+[ext_resource type="Script" uid="uid://7pyqj0gtmq5j" path="res://Scene/UI/InventorySlot.gd" id="2_7fdcd"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_an8xt"]
-atlas = ExtResource("1_fgroi")
+atlas = ExtResource("1_d8qlf")
 region = Rect2(176, 112, 16, 16)
 
 [node name="InventorySlot" type="TextureButton" unique_id=94601800]
-custom_minimum_size = Vector2(24, 24)
+custom_minimum_size = Vector2(14, 14)
+offset_right = 24.0
+offset_bottom = 24.0
 texture_normal = SubResource("AtlasTexture_an8xt")
 ignore_texture_size = true
 stretch_mode = 0
-script = ExtResource("2_hmva2")
+script = ExtResource("2_7fdcd")
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=486638766]
+[node name="ItemIcon" type="TextureRect" parent="." unique_id=486638766]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

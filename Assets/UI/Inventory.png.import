@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://db0fng5yi3dy7"
-path="res://.godot/imported/decorative_cracks_coasts_animation.png-66aa533d77713be1672262374b50bb8b.ctex"
+uid="uid://bth3re8ic6txw"
+path="res://.godot/imported/Inventory.png-f11b58ffe7a2fbaf2587a66b6987610d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Map/decorative_cracks_coasts_animation.png"
-dest_files=["res://.godot/imported/decorative_cracks_coasts_animation.png-66aa533d77713be1672262374b50bb8b.ctex"]
+source_file="res://Assets/UI/Inventory.png"
+dest_files=["res://.godot/imported/Inventory.png-f11b58ffe7a2fbaf2587a66b6987610d.ctex"]
 
 [params]
 

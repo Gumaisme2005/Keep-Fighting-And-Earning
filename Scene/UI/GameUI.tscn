@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://c88b4e2b3wqrw"]
+
+[ext_resource type="Script" uid="uid://bxwxs7xekgp45" path="res://Scene/UI/GameUI.gd" id="1_1e3es"]
+[ext_resource type="Texture2D" uid="uid://c8bjxc3bai1gk" path="res://Assets/UI/Action_panel.png" id="1_khx2i"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1vivr"]
+atlas = ExtResource("1_khx2i")
+region = Rect2(8, 8, 176, 24)
+
+[node name="GameUi" type="CanvasLayer" unique_id=1680741659]
+script = ExtResource("1_1e3es")
+
+[node name="HotbarBG" type="TextureRect" parent="." unique_id=1205157657]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -254.99997
+offset_top = -67.0
+offset_right = -84.99997
+offset_bottom = -45.0
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(3, 3)
+texture = SubResource("AtlasTexture_1vivr")
+expand_mode = 1
+
+[node name="HotbarContainer" type="HBoxContainer" parent="HotbarBG" unique_id=527417807]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 2
