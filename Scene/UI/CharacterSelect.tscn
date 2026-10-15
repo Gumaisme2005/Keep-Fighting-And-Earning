@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://0v00bp2oh1wx"]
+
+[ext_resource type="Script" uid="uid://cskigi0mvxkjr" path="res://Scene/UI/CharacterSelect.gd" id="1_v3tgs"]
+[ext_resource type="Texture2D" uid="uid://47ovclbqbopo" path="res://Assets/Character/Soldier/Soldier/Soldier_Idle.png" id="4_oufkq"]
+[ext_resource type="Texture2D" uid="uid://bt06mgh0df1ks" path="res://Assets/Character/Hoshimi Miyabi/Hoshimi Miyabi.png" id="5_5v5vu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1vivr"]
+atlas = ExtResource("4_oufkq")
+region = Rect2(41, 40, 17, 19)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8vrlf"]
+atlas = ExtResource("5_5v5vu")
+region = Rect2(24, 16, 120, 144)
+
+[node name="CharacterSelect" type="Control" unique_id=157718013]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_v3tgs")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1478331559]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="." unique_id=483572696]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -92.5
+offset_right = 92.5
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Choose Your Teammate"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=776851189]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = -100.0
+offset_right = 210.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 60
+
+[node name="Char_1" type="Button" parent="HBoxContainer" unique_id=611059059]
+texture_filter = 1
+custom_minimum_size = Vector2(180, 200)
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Soldier"
+icon = SubResource("AtlasTexture_1vivr")
+icon_alignment = 1
+vertical_icon_alignment = 0
+expand_icon = true
+
+[node name="Char_2" type="Button" parent="HBoxContainer" unique_id=1022526851]
+texture_filter = 1
+custom_minimum_size = Vector2(180, 200)
+layout_mode = 2
+text = "Miyabi"
+icon = SubResource("AtlasTexture_8vrlf")
+icon_alignment = 1
+vertical_icon_alignment = 0

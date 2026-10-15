@@ -224,10 +224,17 @@ func scatter_decorations():
 					break
 
 # --- THẢ QUÁI / PLAYER ---
+# --- THẢ QUÁI / PLAYER ---
 func spawn_entities():
 	if generated_rooms.is_empty(): return
 	
-	var player_instance = PLAYER_SCENE.instantiate()
+	# Kiểm tra xem GameManager đã lưu nhân vật nào chưa, nếu có thì dùng, không thì lấy mặc định
+	var character_to_spawn = PLAYER_SCENE
+	if GameManager.selected_character_scene != null:
+		character_to_spawn = GameManager.selected_character_scene
+		
+	var player_instance = character_to_spawn.instantiate()
+	player_instance.name = "Player"
 	add_child(player_instance)
 	player_instance.global_position = to_global(map_to_local(generated_rooms[0].get_center()))
 	

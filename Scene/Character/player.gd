@@ -12,6 +12,11 @@ signal stats_changed(current_hp, max_hp, current_armor, max_armor)
 @export var armor_regen_delay: float = 4.0 # Nghỉ 4 giây không bị đánh mới bắt đầu hồi giáp
 @export var armor_regen_rate: float = 1.0  # Tốc độ hồi: 1 giây hồi 1 điểm giáp
 
+# === [THÊM MỚI 2]: Các biến quản lý Kỹ năng đặc biệt (Phím Q) ===
+@export var skill_cooldown: float = 5.0 # Thời gian chờ hồi chiêu (5 giây)
+var can_use_skill: bool = true          # Kiểm tra xem chiêu đã hồi xong chưa
+var is_casting_skill: bool = false      # Trạng thái đang đứng tung chiêu
+
 var hp: int = 5
 var max_armor: int = 2
 var current_armor: int = 2
@@ -30,6 +35,10 @@ var regen_tick_timer: Timer
 @onready var inventory = $Inventory
 
 func _ready() -> void:
+	# === [THÊM MỚI 3]: Tự động đặt tên và vào nhóm "player" để Rương, Đồ rơi, Boss và UI luôn nhận diện đúng ===
+	name = "Player"
+	add_to_group("player")
+	
 	sword_collision.disabled = true
 	
 	# 1. Khởi tạo 2 bộ đếm giờ hồi Giáp trước tiên
@@ -45,6 +54,7 @@ func _ready() -> void:
 	add_child(regen_tick_timer)
 	
 	# 2. Khởi tạo chỉ số Máu & Giáp ban đầu và nối tín hiệu với Inventory
+	max_hp = base_max_hp + inventory.get_total_max_hp_bonus()
 	hp = max_hp
 	max_armor = base_armor + inventory.get_total_defense()
 	current_armor = max_armor
@@ -53,7 +63,7 @@ func _ready() -> void:
 	# 3. Test thử hệ thống Inventory khi vừa vào game:
 	var test_potion = preload("res://Scene/Items/health_potion.tres")
 	var test_helmet = preload("res://Scene/Items/mystic_armor.tres")
-	var test_sword = preload("res://Scene/Items/mystic_sword.tres") # Thêm dòng này
+	var test_sword = preload("res://Scene/Items/mystic_sword.tres")
 	
 	inventory.add_item(test_potion) # Ô số 1 (Phím 1)
 	inventory.add_item(test_helmet) # Ô số 2 (Phím 2)
@@ -78,7 +88,8 @@ func _physics_process(_delta: float) -> void:
 		animated_sprite.flip_h = false
 		sword_hitbox.scale.x = 1
 
-	if is_attacking:
+	# === [THÊM MỚI 4]: Nếu đang tung kỹ năng đặc biệt thì đứng yên giống như lúc đang chém ===
+	if is_attacking or is_casting_skill:
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
@@ -127,8 +138,9 @@ func take_damage(amount: int) -> void:
 	if hp > 0:
 		is_hurt = true
 		animated_sprite.play("hurt")
-		if is_attacking:
+		if is_attacking or is_casting_skill:
 			is_attacking = false
+			is_casting_skill = false
 			sword_collision.set_deferred("disabled", true)
 	else:
 		is_dead = true
@@ -228,7 +240,7 @@ func _on_sword_hitbox_area_entered(area: Area2D) -> void:
 			target.take_damage(total_dmg)
 			print("💥 Chém trúng [", target.name, "] gây ", total_dmg, " sát thương!")
 			
-# --- NHẤN PHÍM SỐ (1 -> 9) ĐỂ DÙNG ĐỒ TRONG TÚI ---
+# --- NHẤN PHÍM SỐ (1 -> 9) ĐỂ DÙNG ĐỒ VÀ PHÍM Q ĐỂ DÙNG KỸ NĂNG ---
 func _unhandled_input(event: InputEvent) -> void:
 	if is_dead:
 		return
@@ -238,4 +250,20 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.keycode >= KEY_1 and event.keycode <= KEY_9:
 			# Trong lập trình mảng đếm từ 0, nên: Phím 1 -> ô 0, Phím 2 -> ô 1...
 			var slot_index = event.keycode - KEY_1
-			inventory.use_or_equip_item(slot_index, self)			
+			inventory.use_or_equip_item(slot_index, self)
+			
+		# === [THÊM MỚI 5]: Bấm phím Q để kích hoạt Kỹ năng đặc biệt ===
+		elif event.keycode == KEY_Q:
+			if can_use_skill and not is_attacking and not is_casting_skill and not is_hurt:
+				use_special_skill()
+
+# === [THÊM MỚI 6]: Khuôn mẫu hàm Kỹ năng đặc biệt và Hồi chiêu ===
+func use_special_skill() -> void:
+	print("ℹ️ Nhân vật cơ bản này không có kỹ năng đặc biệt!")
+
+func start_skill_cooldown() -> void:
+	can_use_skill = false
+	await get_tree().create_timer(skill_cooldown).timeout
+	if not is_dead:
+		can_use_skill = true
+		print("⚡ Kỹ năng đặc biệt (Q) đã hồi xong!")
