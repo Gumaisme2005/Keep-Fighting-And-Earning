@@ -1,7 +1,13 @@
 [gd_scene format=3 uid="uid://dsclbsl8xd1c2"]
 
-[ext_resource type="Script" uid="uid://bklhulna1cl61" path="res://Scene/Items/chest.gd" id="1_n7fmx"]
+[ext_resource type="Script" uid="uid://bklhulna1cl61" path="res://Scene/Items/Chest/chest.gd" id="1_n7fmx"]
 [ext_resource type="Texture2D" uid="uid://bfxbdvopwqyq2" path="res://Assets/Items/Chest/doors_lever_chest_animation.png" id="2_bjafq"]
+[ext_resource type="PackedScene" uid="uid://b170752tjpa64" path="res://Scene/Items/WorldItem/WorldItem.tscn" id="2_df87b"]
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="3_kmyyh"]
+[ext_resource type="Resource" uid="uid://yp42x3sbm4nr" path="res://Scene/Items/iron_armor.tres" id="4_w8u5x"]
+[ext_resource type="Resource" uid="uid://dqu1so6s77ep3" path="res://Scene/Items/iron_helmet.tres" id="5_ykt7f"]
+[ext_resource type="Resource" uid="uid://dokmb6uincmku" path="res://Scene/Items/health_potion.tres" id="6_wymtn"]
+[ext_resource type="Resource" uid="uid://di26ldps1a11o" path="res://Scene/Items/big_health_potion.tres" id="7_kmyyh"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ufm20"]
 atlas = ExtResource("2_bjafq")
@@ -63,6 +69,9 @@ size = Vector2(16, 15)
 
 [node name="Chest" type="Area2D" unique_id=527873296]
 script = ExtResource("1_n7fmx")
+world_item_scene = ExtResource("2_df87b")
+loot_table = Array[ExtResource("3_kmyyh")]([ExtResource("4_w8u5x"), ExtResource("5_ykt7f"), ExtResource("6_wymtn"), ExtResource("7_kmyyh")])
+drop_chance = 0.8
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2097262699]
 sprite_frames = SubResource("SpriteFrames_usv81")

@@ -2,8 +2,11 @@
 
 [ext_resource type="Script" uid="uid://c6j3hm5aov3rg" path="res://Scene/Enemies/Orc/orc.gd" id="1_iqx3e"]
 [ext_resource type="Texture2D" uid="uid://v3wc05pabyok" path="res://Assets/Character/Orc/Orc with shadows/Orc_Attack01.png" id="2_s67cy"]
+[ext_resource type="PackedScene" uid="uid://b170752tjpa64" path="res://Scene/Items/WorldItem/WorldItem.tscn" id="2_xft4t"]
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="3_0sdxh"]
 [ext_resource type="Texture2D" uid="uid://cykntk4mxdh0q" path="res://Assets/Character/Orc/Orc with shadows/Orc_Death.png" id="3_20v7j"]
 [ext_resource type="Texture2D" uid="uid://cxh4bv7wabk3a" path="res://Assets/Character/Orc/Orc with shadows/Orc_Hurt.png" id="4_4281o"]
+[ext_resource type="Resource" uid="uid://dokmb6uincmku" path="res://Scene/Items/health_potion.tres" id="4_qhhuc"]
 [ext_resource type="Texture2D" uid="uid://bfmucspow1v3w" path="res://Assets/Character/Orc/Orc with shadows/Orc_Idle.png" id="5_n5rr8"]
 [ext_resource type="Texture2D" uid="uid://65p6vn2vn287" path="res://Assets/Character/Orc/Orc with shadows/Orc_Walk.png" id="6_xdbtq"]
 
@@ -243,6 +246,8 @@ size = Vector2(8.625, 19)
 
 [node name="Orc" type="CharacterBody2D" unique_id=631054120]
 script = ExtResource("1_iqx3e")
+world_item_scene = ExtResource("2_xft4t")
+loot_table = Array[ExtResource("3_0sdxh")]([ExtResource("4_qhhuc")])
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1543451136]
 position = Vector2(0, -7)

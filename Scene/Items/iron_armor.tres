@@ -13,4 +13,5 @@ item_name = "Giáp sắt"
 type = 1
 icon = SubResource("AtlasTexture_ip484")
 stat_value = 3
+description = "Tăng 3 giáp tối đa cho bản thân"
 metadata/_custom_type_script = "uid://cfc0cqlwptxu6"

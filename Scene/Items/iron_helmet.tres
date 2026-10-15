@@ -13,4 +13,5 @@ item_name = "Mũ sắt"
 type = 0
 icon = SubResource("AtlasTexture_oq06l")
 stat_value = 2
+description = "Tăng 2 giáp tối đa cho bản thân"
 metadata/_custom_type_script = "uid://cfc0cqlwptxu6"
