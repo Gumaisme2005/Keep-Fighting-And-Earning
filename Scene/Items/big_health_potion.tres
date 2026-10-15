@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://di26ldps1a11o"]
+
+[ext_resource type="Texture2D" uid="uid://hy3rhe5kwp0e" path="res://Assets/Items/Items/Icons.png" id="1_530bj"]
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="1_mktl5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_530bj"]
+atlas = ExtResource("1_530bj")
+region = Rect2(80, 272, 16, 16)
+
+[resource]
+script = ExtResource("1_mktl5")
+icon = SubResource("AtlasTexture_530bj")
+stat_value = 3
+description = "Hồi 3 máu cho bản thân"
+metadata/_custom_type_script = "uid://cfc0cqlwptxu6"

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cc2r5ettnw5vr"]
+
+[ext_resource type="Texture2D" uid="uid://hy3rhe5kwp0e" path="res://Assets/Items/Items/Icons.png" id="1_tvcto"]
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="2_lsdu8"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fawme"]
+atlas = ExtResource("1_tvcto")
+region = Rect2(0, 128, 16, 16)
+
+[resource]
+script = ExtResource("2_lsdu8")
+item_name = "Kiếm sắt"
+type = 2
+icon = SubResource("AtlasTexture_fawme")
+description = "Tăng 1 sát thương cận chiến"
+metadata/_custom_type_script = "uid://cfc0cqlwptxu6"

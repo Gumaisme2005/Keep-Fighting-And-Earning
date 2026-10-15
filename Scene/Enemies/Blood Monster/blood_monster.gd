@@ -3,6 +3,9 @@ extends CharacterBody2D
 @export var speed: float = 80.0
 @export var attack_range: float = 180.0
 @export var bullet_scene: PackedScene # Nơi nhận file đạn
+@export var world_item_scene: PackedScene 
+@export var loot_table: Array[ItemData] = []
+@export var drop_chance: float = 0.3 # Quái thường chỉ có 30% rớt đồ
 
 var hp: int = 3
 var is_dead: bool = false
@@ -71,6 +74,7 @@ func take_damage(damage_amount: int) -> void:
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if animated_sprite.animation == "death":
+		drop_loot()
 		queue_free() 
 	elif animated_sprite.animation == "hurt":
 		if not is_dead:
@@ -78,3 +82,13 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 	elif animated_sprite.animation == "attack": 
 		is_attacking = false
 		animated_sprite.play("idle")
+
+# Hàm rớt đồ
+func drop_loot() -> void:
+	if world_item_scene != null and loot_table.size() > 0:
+		if randf() <= drop_chance:
+			var random_item = loot_table.pick_random()
+			var item_drop = world_item_scene.instantiate()
+			item_drop.item_data = random_item
+			item_drop.global_position = global_position # Rớt đúng chỗ quái chết
+			get_tree().current_scene.call_deferred("add_child", item_drop)

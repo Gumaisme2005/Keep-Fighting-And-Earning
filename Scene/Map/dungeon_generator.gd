@@ -11,7 +11,7 @@ enum RoomType { START, COMBAT, TREASURE, BOSS }
 
 # --- ĐƯỜNG DẪN SCENE (Đã giữ nguyên theo code của cậu) ---
 const PLAYER_SCENE = preload("res://Scene/Character/Player.tscn")
-const CHEST_SCENE = preload("res://Scene/Items/chest.tscn") 
+const CHEST_SCENE = preload("res://Scene/Items/Chest/chest.tscn") 
 const SPIKE_TRAP = preload("res://Scene/Map/SpikeTrap.tscn")
 
 const BOSS_SCENE = preload("res://Scene/Enemies/Boss/Kitsune/Kitsune.tscn")

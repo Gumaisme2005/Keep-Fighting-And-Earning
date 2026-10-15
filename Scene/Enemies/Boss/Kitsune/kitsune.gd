@@ -86,7 +86,10 @@ func attack_ranged():
 func shoot_fireball():
 	if fireball_scene and is_instance_valid(player):
 		var fireball = fireball_scene.instantiate()
-		get_parent().add_child(fireball)
+		
+		# SỬA DÒNG NÀY TƯƠNG TỰ:
+		get_parent().call_deferred("add_child", fireball)
+		
 		fireball.global_position = shoot_point.global_position
 		fireball.direction = global_position.direction_to(player.global_position)
 
@@ -142,7 +145,10 @@ func cast_special_skill():
 		
 		for i in range(8):
 			var fireball = fireball_scene.instantiate()
-			get_parent().add_child(fireball)
+			
+			# SỬA DÒNG NÀY: Dùng call_deferred thay vì add_child trực tiếp
+			get_parent().call_deferred("add_child", fireball)
+			
 			fireball.global_position = shoot_point.global_position
 			var angle = i * (PI / 4)
 			fireball.direction = Vector2.RIGHT.rotated(angle)

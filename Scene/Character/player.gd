@@ -5,6 +5,7 @@ signal stats_changed(current_hp, max_hp, current_armor, max_armor)
 
 # --- CHỈ SỐ CƠ BẢN ---
 @export var speed: float = 150.0
+@export var base_damage: int = 1 # Sát thương gốc của nhân vật khi chưa lắp vũ khí
 @export var max_hp: int = 5          # Máu tối đa của Player
 @export var base_armor: int = 2      # Giáp gốc khi chưa mặc đồ
 @export var armor_regen_delay: float = 4.0 # Nghỉ 4 giây không bị đánh mới bắt đầu hồi giáp
@@ -51,9 +52,11 @@ func _ready() -> void:
 	# 3. Test thử hệ thống Inventory khi vừa vào game:
 	var test_potion = preload("res://Scene/Items/health_potion.tres")
 	var test_helmet = preload("res://Scene/Items/iron_helmet.tres")
+	var test_sword = preload("res://Scene/Items/iron_sword.tres") # Thêm dòng này
 	
-	inventory.add_item(test_potion) # Nhặt bình máu vào ô số 0
-	inventory.add_item(test_helmet) # Nhặt mũ sắt vào ô số 1
+	inventory.add_item(test_potion) # Ô số 1 (Phím 1)
+	inventory.add_item(test_helmet) # Ô số 2 (Phím 2)
+	inventory.add_item(test_sword)  # Ô số 3 (Phím 3)
 
 func _physics_process(_delta: float) -> void:
 	if is_dead:
@@ -184,16 +187,22 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 	elif animated_sprite.animation == "hurt":
 		is_hurt = false
 		
+# Hàm tính tổng sát thương hiện tại của Player
+func get_total_damage() -> int:
+	return base_damage + inventory.get_weapon_damage()
+
 func _on_sword_hitbox_area_entered(area: Area2D) -> void:
 	# Nếu thanh kiếm chạm vào vùng có tên là "Hurtbox" của quái
 	if area.name == "Hurtbox":
 		var target = area.get_parent()
-		# Hỗ trợ cả quái thường (Hurtbox nằm trực tiếp dưới gốc) và Boss (Hurtbox nằm trong Pivot)
+		# Hỗ trợ cả quái thường và Boss (Hurtbox nằm trong Pivot)
 		if not target.has_method("take_damage") and target.get_parent() != null:
 			target = target.get_parent()
 			
 		if target.has_method("take_damage"):
-			target.take_damage(1 + inventory.get_weapon_damage())
+			var total_dmg = get_total_damage()
+			target.take_damage(total_dmg)
+			print("💥 Chém trúng [", target.name, "] gây ", total_dmg, " sát thương!")
 			
 # --- NHẤN PHÍM SỐ (1 -> 9) ĐỂ DÙNG ĐỒ TRONG TÚI ---
 func _unhandled_input(event: InputEvent) -> void:
