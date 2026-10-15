@@ -13,4 +13,5 @@ item_name = "Kiếm sắt"
 type = 2
 icon = SubResource("AtlasTexture_fawme")
 description = "Tăng 1 sát thương cận chiến"
+damage = 1
 metadata/_custom_type_script = "uid://cfc0cqlwptxu6"

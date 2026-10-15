@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://g54v8kyodme1"]
+
+[ext_resource type="Texture2D" uid="uid://hy3rhe5kwp0e" path="res://Assets/Items/Items/Icons.png" id="1_6ad7n"]
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="1_prmxy"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6ad7n"]
+atlas = ExtResource("1_6ad7n")
+region = Rect2(48, 128, 16, 16)
+
+[resource]
+script = ExtResource("1_prmxy")
+item_name = "Kiếm tai ương"
+type = 2
+icon = SubResource("AtlasTexture_6ad7n")
+description = "tăng 3 sát thương cận chiến
+Tăng 1 giáp tối đa"
+damage = 3
+armor = 1
+metadata/_custom_type_script = "uid://cfc0cqlwptxu6"

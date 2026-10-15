@@ -11,6 +11,6 @@ region = Rect2(48, 272, 16, 16)
 script = ExtResource("1_ecocj")
 item_name = "Bình máu nhỏ"
 icon = SubResource("AtlasTexture_28578")
-stat_value = 2
 description = "Hồi 2 máu cho bản thân"
+heal_amount = 2
 metadata/_custom_type_script = "uid://cfc0cqlwptxu6"

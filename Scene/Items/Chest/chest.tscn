@@ -8,6 +8,9 @@
 [ext_resource type="Resource" uid="uid://dqu1so6s77ep3" path="res://Scene/Items/iron_helmet.tres" id="5_ykt7f"]
 [ext_resource type="Resource" uid="uid://dokmb6uincmku" path="res://Scene/Items/health_potion.tres" id="6_wymtn"]
 [ext_resource type="Resource" uid="uid://di26ldps1a11o" path="res://Scene/Items/big_health_potion.tres" id="7_kmyyh"]
+[ext_resource type="Resource" uid="uid://g54v8kyodme1" path="res://Scene/Items/mystic_sword.tres" id="8_w8u5x"]
+[ext_resource type="Resource" uid="uid://cc2r5ettnw5vr" path="res://Scene/Items/iron_sword.tres" id="9_wymtn"]
+[ext_resource type="Resource" uid="uid://bynxblh3dnmiy" path="res://Scene/Items/mystic_armor.tres" id="10_mdh4i"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ufm20"]
 atlas = ExtResource("2_bjafq")
@@ -70,7 +73,7 @@ size = Vector2(16, 15)
 [node name="Chest" type="Area2D" unique_id=527873296]
 script = ExtResource("1_n7fmx")
 world_item_scene = ExtResource("2_df87b")
-loot_table = Array[ExtResource("3_kmyyh")]([ExtResource("4_w8u5x"), ExtResource("5_ykt7f"), ExtResource("6_wymtn"), ExtResource("7_kmyyh")])
+loot_table = Array[ExtResource("3_kmyyh")]([ExtResource("4_w8u5x"), ExtResource("5_ykt7f"), ExtResource("6_wymtn"), ExtResource("7_kmyyh"), ExtResource("8_w8u5x"), ExtResource("9_wymtn"), ExtResource("10_mdh4i")])
 drop_chance = 0.8
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2097262699]

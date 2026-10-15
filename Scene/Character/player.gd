@@ -6,7 +6,8 @@ signal stats_changed(current_hp, max_hp, current_armor, max_armor)
 # --- CHỈ SỐ CƠ BẢN ---
 @export var speed: float = 150.0
 @export var base_damage: int = 1 # Sát thương gốc của nhân vật khi chưa lắp vũ khí
-@export var max_hp: int = 5          # Máu tối đa của Player
+@export var base_max_hp: int = 5 # Máu gốc khi cởi trần
+@export var max_hp: int = 5      # Máu tối đa (sẽ thay đổi khi mặc đồ)
 @export var base_armor: int = 2      # Giáp gốc khi chưa mặc đồ
 @export var armor_regen_delay: float = 4.0 # Nghỉ 4 giây không bị đánh mới bắt đầu hồi giáp
 @export var armor_regen_rate: float = 1.0  # Tốc độ hồi: 1 giây hồi 1 điểm giáp
@@ -51,8 +52,8 @@ func _ready() -> void:
 	
 	# 3. Test thử hệ thống Inventory khi vừa vào game:
 	var test_potion = preload("res://Scene/Items/health_potion.tres")
-	var test_helmet = preload("res://Scene/Items/iron_helmet.tres")
-	var test_sword = preload("res://Scene/Items/iron_sword.tres") # Thêm dòng này
+	var test_helmet = preload("res://Scene/Items/mystic_armor.tres")
+	var test_sword = preload("res://Scene/Items/mystic_sword.tres") # Thêm dòng này
 	
 	inventory.add_item(test_potion) # Ô số 1 (Phím 1)
 	inventory.add_item(test_helmet) # Ô số 2 (Phím 2)
@@ -140,26 +141,49 @@ func take_damage(amount: int) -> void:
 		# Tắt vùng nhận sát thương để quái vật không chém vào xác nữa
 		$PlayerHurtbox/CollisionShape2D.set_deferred("disabled", true)
 
-# --- HÀM HỒI MÁU KHI UỐNG THUỐC TỪ INVENTORY ---
-func heal(amount: int) -> void:
+# --- HÀM SỬ DỤNG BÌNH THUỐC (HỒI MÁU & TĂNG MÁU TỐI ĐA) ---
+func consume_potion(heal_amount: int, bonus_max_hp: int) -> void:
 	if is_dead:
 		return
-	hp = min(max_hp, hp + amount)
-	print("🧪 Đã hồi máu! Máu hiện tại: ", hp, "/", max_hp)
+		
+	# 1. Tăng máu gốc vĩnh viễn (nếu bình thuốc có chỉ số max_hp_bonus > 0)
+	if bonus_max_hp > 0:
+		base_max_hp += bonus_max_hp
+		max_hp += bonus_max_hp
+		hp += bonus_max_hp # Tặng luôn phần máu cho giới hạn vừa mở rộng
+		print("💖 Tăng giới hạn Máu tối đa! Máu gốc nâng lên thành: ", base_max_hp)
+		
+	# 2. Hồi máu thông thường (nếu bình thuốc có heal_amount > 0)
+	if heal_amount > 0:
+		hp = min(max_hp, hp + heal_amount)
+		print("🧪 Đã uống thuốc! Máu hiện tại: ", hp, "/", max_hp)
+		
 	stats_changed.emit(hp, max_hp, current_armor, max_armor)
 
-# --- CẬP NHẬT KHI MẶC/THÁO MŨ & GIÁP ---
+# --- CẬP NHẬT KHI MẶC/THÁO MŨ, GIÁP, VŨ KHÍ ---
 func _on_equipment_changed() -> void:
+	# 1. Tính toán lại Máu tối đa
+	var old_max_hp = max_hp
+	max_hp = base_max_hp + inventory.get_total_max_hp_bonus()
+	
+	# Nếu máu tối đa tăng lên (nhờ mặc đồ xịn), thì hồi cho nhân vật lượng máu tương ứng
+	if max_hp > old_max_hp:
+		hp += (max_hp - old_max_hp)
+		
+	# Nếu tháo đồ ra làm máu tối đa giảm xuống, ép máu hiện tại không được vượt quá max_hp mới
+	hp = min(hp, max_hp)
+	
+	# 2. Tính toán lại Giáp
 	max_armor = base_armor + inventory.get_total_defense()
 	current_armor = min(current_armor, max_armor)
 	
-	# Nếu mặc đồ mới làm tăng giới hạn giáp, bật bộ đếm để tự hồi phần giáp mới tăng thêm
+	# Bật bộ đếm tự hồi phần giáp mới tăng thêm
 	if current_armor < max_armor and regen_delay_timer.is_stopped() and regen_tick_timer.is_stopped():
 		regen_delay_timer.start()
 		
-	print("👕 Cập nhật trang bị! Giáp hiện tại: ", current_armor, "/", max_armor)
 	stats_changed.emit(hp, max_hp, current_armor, max_armor)
-
+	print("📊 Báo cáo chỉ số Player -> Máu: ", hp, "/", max_hp, " | Giáp: ", current_armor, "/", max_armor)
+	
 # --- CHU TRÌNH TỰ HỒI GIÁP ---
 func _start_armor_regen() -> void:
 	if current_armor < max_armor and not is_dead:
