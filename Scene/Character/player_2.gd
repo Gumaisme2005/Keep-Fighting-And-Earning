@@ -1,22 +1,41 @@
 extends "res://Scene/Character/player.gd"
 
-# Cậu có thể tùy chỉnh chỉ số riêng biệt cho Nhân vật 2 ở đây nếu muốn:
-func _ready() -> void:
-	super._ready() # Gọi lại hàm khởi tạo gốc của Player 1
-	
-	# Ví dụ: Nhân vật 2 chạy nhanh hơn một chút và nhiều máu gốc hơn
-	speed = 170.0
-	base_max_hp = 6
+@export var buff_duration: float = 5.0 # Thời gian duy trì buff (5 giây)
+@export var damage_multiplier: int = 2 # Sát thương nhân đôi
 
-# Viết đè (Override) chiêu thức đặc biệt riêng khi bấm phím Q của Nhân vật 2
+func _ready() -> void:
+	# 1. ĐẶT CHỈ SỐ RIÊNG LÊN ĐẦU TIÊN (Trước khi tính toán)
+	speed = 160.0
+	base_max_hp = 6   # Máu gốc của Hiệp sĩ
+	base_armor = 1    # Giáp gốc của Hiệp sĩ (Cậu có thể chỉnh số này tùy ý)
+	base_damage = 2   # Cậu cũng có thể đổi luôn cả sát thương gốc tay không ở đây
+	
+	# 2. SAU KHI ĐÃ ĐỔI CHỈ SỐ -> Gọi hàm của Player 1 để nó tính ra tổng máu/giáp/gắn Inventory
+	super._ready() 
+
 func use_special_skill() -> void:
 	if not can_use_skill:
 		return
 		
-	start_skill_cooldown() # Bắt đầu đếm thời gian hồi chiêu
+	start_skill_cooldown() # Bắt đầu đếm ngược hồi chiêu
 	
-	# Đổi animation thành animation kỹ năng của nhân vật 2 (nhớ tạo animation "skill" trong AnimatedSprite2D nhé)
-	animated_sprite.play("skill") 
-	print("🔥 Nhân vật 2 tung chiêu thức đặc biệt cực mạnh!")
+	is_casting_skill = true
+	animated_sprite.play("skill") # Chạy hoạt ảnh "ATK UP"
+	print("⚡ KÍCH HOẠT: Tăng gấp đôi sát thương trong ", buff_duration, " giây!")
 	
-	# Viết logic gây sát thương kỹ năng của riêng nhân vật 2 tại đây...
+	# 1. Tạm thời nhân đôi sát thương
+	var normal_damage = base_damage
+	base_damage *= damage_multiplier
+	
+	# 2. Đợi gồng chiêu xong (khoảng 0.6 giây tùy tốc độ animation) để cho phép đi lại
+	await get_tree().create_timer(0.6).timeout
+	is_casting_skill = false
+	if not is_dead:
+		animated_sprite.play("idle")
+		
+	# 3. Đếm ngược thời gian duy trì hiệu ứng Buff
+	await get_tree().create_timer(buff_duration - 0.6).timeout
+	
+	# 4. Trả lại sát thương gốc khi hết giờ
+	base_damage = normal_damage
+	print("⏳ Hết thời gian Buff sức mạnh! Sát thương quay về bình thường.")

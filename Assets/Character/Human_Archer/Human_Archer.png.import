@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bt06mgh0df1ks"
-path="res://.godot/imported/Hoshimi Miyabi.png-b4a11bfbdf23a0f18978d7782d87dfbb.ctex"
+uid="uid://bvdr127jnigh5"
+path="res://.godot/imported/Human_Archer.png-5888fdf2d7d259b86494c93f29012232.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Character/Hoshimi Miyabi/Hoshimi Miyabi.png"
-dest_files=["res://.godot/imported/Hoshimi Miyabi.png-b4a11bfbdf23a0f18978d7782d87dfbb.ctex"]
+source_file="res://Assets/Character/Human_Archer/Human_Archer.png"
+dest_files=["res://.godot/imported/Human_Archer.png-5888fdf2d7d259b86494c93f29012232.ctex"]
 
 [params]
 

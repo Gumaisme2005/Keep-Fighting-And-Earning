@@ -1,16 +1,21 @@
 [gd_scene format=3 uid="uid://0v00bp2oh1wx"]
 
 [ext_resource type="Script" uid="uid://cskigi0mvxkjr" path="res://Scene/UI/CharacterSelect.gd" id="1_v3tgs"]
+[ext_resource type="Texture2D" uid="uid://7gpghruvdd6s" path="res://Assets/Character/Human_knight/Human_Knight.png" id="3_ri6ba"]
+[ext_resource type="Texture2D" uid="uid://bvdr127jnigh5" path="res://Assets/Character/Human_Archer/Human_Archer.png" id="4_7k870"]
 [ext_resource type="Texture2D" uid="uid://47ovclbqbopo" path="res://Assets/Character/Soldier/Soldier/Soldier_Idle.png" id="4_oufkq"]
-[ext_resource type="Texture2D" uid="uid://bt06mgh0df1ks" path="res://Assets/Character/Hoshimi Miyabi/Hoshimi Miyabi.png" id="5_5v5vu"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1vivr"]
 atlas = ExtResource("4_oufkq")
 region = Rect2(41, 40, 17, 19)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_8vrlf"]
-atlas = ExtResource("5_5v5vu")
-region = Rect2(24, 16, 120, 144)
+[sub_resource type="AtlasTexture" id="AtlasTexture_h7f1q"]
+atlas = ExtResource("3_ri6ba")
+region = Rect2(32, 24, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v5gy4"]
+atlas = ExtResource("4_7k870")
+region = Rect2(32, 24, 16, 24)
 
 [node name="CharacterSelect" type="Control" unique_id=157718013]
 layout_mode = 3
@@ -57,7 +62,8 @@ texture_filter = 1
 custom_minimum_size = Vector2(180, 200)
 layout_mode = 2
 size_flags_horizontal = 0
-text = "Soldier"
+text = "Pyrois
+HP:5, SP: 2, DMG: 1"
 icon = SubResource("AtlasTexture_1vivr")
 icon_alignment = 1
 vertical_icon_alignment = 0
@@ -67,7 +73,20 @@ expand_icon = true
 texture_filter = 1
 custom_minimum_size = Vector2(180, 200)
 layout_mode = 2
-text = "Miyabi"
-icon = SubResource("AtlasTexture_8vrlf")
+text = "Olaf
+HP: 6, SP: 2, DMG: 2
+"
+icon = SubResource("AtlasTexture_h7f1q")
 icon_alignment = 1
 vertical_icon_alignment = 0
+expand_icon = true
+
+[node name="Char_3" type="Button" parent="HBoxContainer" unique_id=1977491269]
+texture_filter = 1
+layout_mode = 2
+text = "Miya
+HP:3, SP:1, DMG: 2"
+icon = SubResource("AtlasTexture_v5gy4")
+icon_alignment = 1
+vertical_icon_alignment = 0
+expand_icon = true

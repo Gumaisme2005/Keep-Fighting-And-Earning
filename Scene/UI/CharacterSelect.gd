@@ -1,16 +1,18 @@
 extends Control
 
-# Tự động nạp sẵn 2 nhân vật để tránh quên kéo thả ngoài Inspector
+# Tự động nạp sẵn 3 nhân vật
 @export var char_1_scene: PackedScene = preload("res://Scene/Character/player.tscn")
 @export var char_2_scene: PackedScene = preload("res://Scene/Character/player_2.tscn")
+@export var char_3_scene: PackedScene = preload("res://Scene/Character/player_3.tscn") # Đã thêm Cung thủ
 
-# Đường dẫn tới màn chơi chính (Kiểm tra lại xem file world.tscn của cậu nằm ở thư mục nào nhé)
+# Đường dẫn tới màn chơi chính (Cậu nhớ kiểm tra lại đường dẫn world.tscn nhé)
 @export_file("*.tscn") var game_world_path: String = "res://world.tscn"
 
 func _ready() -> void:
-	# Kết nối đúng với tên node Char_1 và Char_2 trên cây Scene của cậu
+	# Kết nối 3 nút bấm trên màn hình với 3 hàm ở dưới
 	$HBoxContainer/Char_1.pressed.connect(_on_select_char_1)
 	$HBoxContainer/Char_2.pressed.connect(_on_select_char_2)
+	$HBoxContainer/Char_3.pressed.connect(_on_select_char_3) # Nút của Cung thủ
 
 func _on_select_char_1() -> void:
 	print("✅ Đã chọn nhân vật 1: Soldier")
@@ -18,8 +20,14 @@ func _on_select_char_1() -> void:
 	_start_game()
 
 func _on_select_char_2() -> void:
-	print("✅ Đã chọn nhân vật 2: Miyabi")
+	print("✅ Đã chọn nhân vật 2: Olaf")
 	GameManager.selected_character_scene = char_2_scene
+	_start_game()
+
+# --- HÀM MỚI CHO CUNG THỦ ---
+func _on_select_char_3() -> void:
+	print("✅ Đã chọn nhân vật 3: Miya")
+	GameManager.selected_character_scene = char_3_scene
 	_start_game()
 
 func _start_game() -> void:
