@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://bynxblh3dnmiy"]
+
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="1_aum17"]
+[ext_resource type="Texture2D" uid="uid://d0i04ly8rljlq" path="res://Assets/Items/Items/Icon187.png" id="1_r4t5f"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r4t5f"]
+atlas = ExtResource("1_r4t5f")
+
+[resource]
+script = ExtResource("1_aum17")
+item_name = "Giáp cốt"
+type = 1
+icon = SubResource("AtlasTexture_r4t5f")
+description = "+2 máu tối đa
++3 giáp"
+armor = 3
+max_hp_bonus = 2
+metadata/_custom_type_script = "uid://cfc0cqlwptxu6"

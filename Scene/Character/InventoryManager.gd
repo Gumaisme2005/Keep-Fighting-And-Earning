@@ -30,17 +30,19 @@ func use_or_equip_item(index: int, player: Node2D) -> void:
 	
 	match item.type:
 		ItemData.ItemType.POTION:
-			if player.has_method("heal"):
-				player.heal(item.stat_value)
+			# Gọi sang hàm consume_potion mới và truyền vào cả 2 chỉ số
+			if player.has_method("consume_potion"):
+				player.consume_potion(item.heal_amount, item.max_hp_bonus)
 			bag.remove_at(index)
 			
 		ItemData.ItemType.HELMET:
 			if equipped_helmet != null:
-				bag[index] = equipped_helmet # Tráo mũ cũ vào đúng ô phím số vừa bấm
+				bag[index] = equipped_helmet 
 			else:
 				bag.remove_at(index)
 			equipped_helmet = item
-			print("🪖 Đã đội [", item.item_name, "] (+", item.stat_value, " Giáp). Tổng giáp: ", get_total_defense())
+			# SỬA DÒNG PRINT NÀY:
+			print("🪖 Đã đội [", item.item_name, "] (+", item.armor, " Giáp, +", item.max_hp_bonus, " Máu). Tổng giáp: ", get_total_defense())
 			equipment_changed.emit()
 			
 		ItemData.ItemType.ARMOR:
@@ -49,7 +51,8 @@ func use_or_equip_item(index: int, player: Node2D) -> void:
 			else:
 				bag.remove_at(index)
 			equipped_armor = item
-			print("🛡️ Đã mặc [", item.item_name, "] (+", item.stat_value, " Giáp). Tổng giáp: ", get_total_defense())
+			# SỬA DÒNG PRINT NÀY:
+			print("🛡️ Đã mặc [", item.item_name, "] (+", item.armor, " Giáp, +", item.max_hp_bonus, " Máu). Tổng giáp: ", get_total_defense())
 			equipment_changed.emit()
 			
 		ItemData.ItemType.WEAPON:
@@ -58,12 +61,13 @@ func use_or_equip_item(index: int, player: Node2D) -> void:
 			else:
 				bag.remove_at(index)
 			equipped_weapon = item
-			print("⚔️ Đã cầm [", item.item_name, "] (+", item.stat_value, " Sát thương)")
+			# SỬA DÒNG PRINT NÀY:
+			print("⚔️ Đã cầm [", item.item_name, "] (+", item.damage, " ST, +", item.max_hp_bonus, " Máu)")
 			equipment_changed.emit()
 			
 	inventory_changed.emit()
 
-# 3. BẤM VÀO ĐỒ ĐANG MẶC ĐỂ THÁO RA CẤT VÀO TÚI
+# BẤM VÀO ĐỒ ĐANG MẶC ĐỂ THÁO RA CẤT VÀO TÚI
 func unequip_item(type: ItemData.ItemType) -> void:
 	if bag.size() >= max_slots:
 		print("Túi đầy, không thể tháo trang bị!")
@@ -86,16 +90,23 @@ func unequip_item(type: ItemData.ItemType) -> void:
 	equipment_changed.emit()
 	inventory_changed.emit()
 
-# 4. TÍNH TỔNG GIÁP VÀ SÁT THƯƠNG VŨ KHÍ
+# TÍNH TỔNG GIÁP
 func get_total_defense() -> int:
 	var total = 0
-	if equipped_helmet != null:
-		total += equipped_helmet.stat_value
-	if equipped_armor != null:
-		total += equipped_armor.stat_value
+	if equipped_helmet != null: total += equipped_helmet.armor
+	if equipped_armor != null: total += equipped_armor.armor
 	return total
 
+# TÍNH TỔNG SÁT THƯƠNG VŨ KHÍ
 func get_weapon_damage() -> int:
 	if equipped_weapon != null:
-		return equipped_weapon.stat_value
+		return equipped_weapon.damage
 	return 0
+
+# TÍNH TỔNG MÁU TỐI ĐA CỘNG THÊM
+func get_total_max_hp_bonus() -> int:
+	var total = 0
+	if equipped_helmet != null: total += equipped_helmet.max_hp_bonus
+	if equipped_armor != null: total += equipped_armor.max_hp_bonus
+	if equipped_weapon != null: total += equipped_weapon.max_hp_bonus # Lỡ kiếm cũng tăng máu
+	return total
