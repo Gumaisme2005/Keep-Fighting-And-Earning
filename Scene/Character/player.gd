@@ -6,9 +6,9 @@ signal stats_changed(current_hp, max_hp, current_armor, max_armor)
 # --- CHỈ SỐ CƠ BẢN ---
 @export var speed: float = 150.0
 @export var base_damage: int = 1 # Sát thương gốc của nhân vật khi chưa lắp vũ khí
-@export var base_max_hp: int = 5 # Máu gốc khi cởi trần
+@export var base_max_hp: int = 4 # Máu gốc khi cởi trần
 @export var max_hp: int = 5      # Máu tối đa (sẽ thay đổi khi mặc đồ)
-@export var base_armor: int = 2      # Giáp gốc khi chưa mặc đồ
+@export var base_armor: int = 4      # Giáp gốc khi chưa mặc đồ
 @export var armor_regen_delay: float = 4.0 # Nghỉ 4 giây không bị đánh mới bắt đầu hồi giáp
 @export var armor_regen_rate: float = 1.0  # Tốc độ hồi: 1 giây hồi 1 điểm giáp
 
@@ -17,6 +17,8 @@ signal stats_changed(current_hp, max_hp, current_armor, max_armor)
 var can_use_skill: bool = true          # Kiểm tra xem chiêu đã hồi xong chưa
 var is_casting_skill: bool = false      # Trạng thái đang đứng tung chiêu
 
+var is_invincible: bool = false
+@export var invincibility_time: float = 0.75 # Thời gian bất tử sau khi bị đánh
 var hp: int = 5
 var max_armor: int = 2
 var current_armor: int = 2
@@ -114,27 +116,24 @@ func attack() -> void:
 
 # --- HÀM NHẬN SÁT THƯƠNG (GIÁP ĐỠ TRƯỚC, MÁU CHỊU SAU) ---
 func take_damage(amount: int) -> void:
-	# Nếu đã chết hoặc đang khựng vì đau thì không nhận thêm sát thương nữa
-	if is_dead or is_hurt or amount <= 0:
+	# Bổ sung chặn sát thương nếu đang trong thời gian I-frames (is_invincible)
+	if is_dead or is_hurt or is_invincible or amount <= 0:
 		return
 	
-	# Ngắt ngay quá trình đang hồi giáp và đếm lại 4 giây chờ
 	regen_tick_timer.stop()
 	regen_delay_timer.start()
 	
-	# Tính toán trừ giáp trước, sát thương dư mới trừ vào máu
 	if current_armor >= amount:
 		current_armor -= amount
-		print("🛡️ Giáp đỡ đòn! Giáp còn: ", current_armor, "/", max_armor, " | Máu: ", hp, "/", max_hp)
+		print("🛡️ Giáp đỡ đòn! Giáp còn: ", current_armor, "/", max_armor)
 	else:
 		var overflow_damage = amount - current_armor
 		current_armor = 0
 		hp = max(0, hp - overflow_damage)
-		print("💔 VỠ GIÁP! Mất ", overflow_damage, " máu! Giáp: 0/", max_armor, " | Máu còn: ", hp, "/", max_hp)
+		print("💔 VỠ GIÁP! Mất ", overflow_damage, " máu! Máu còn: ", hp, "/", max_hp)
 		
 	stats_changed.emit(hp, max_hp, current_armor, max_armor)
 	
-	# Kiểm tra trạng thái sống/chết để chạy Animation
 	if hp > 0:
 		is_hurt = true
 		animated_sprite.play("hurt")
@@ -142,6 +141,9 @@ func take_damage(amount: int) -> void:
 			is_attacking = false
 			is_casting_skill = false
 			sword_collision.set_deferred("disabled", true)
+			
+		# KÍCH HOẠT TRẠNG THÁI BẤT TỬ KHI MÁU CÒN > 0
+		start_invincibility()
 	else:
 		is_dead = true
 		regen_delay_timer.stop()
@@ -149,10 +151,22 @@ func take_damage(amount: int) -> void:
 		animated_sprite.play("death")
 		set_physics_process(false)
 		print("💀 Nhân vật đã gục ngã!")
-		
-		# Tắt vùng nhận sát thương để quái vật không chém vào xác nữa
 		$PlayerHurtbox/CollisionShape2D.set_deferred("disabled", true)
 
+# --- HÀM TẠO HIỆU ỨNG BẤT TỬ NHẤP NHÁY (I-FRAMES) ---
+func start_invincibility() -> void:
+	is_invincible = true
+	
+	# Tạo hiệu ứng nhấp nháy bằng Tween (Lặp 5 lần chớp tắt, tổng cộng 0.75s)
+	var tween = create_tween()
+	tween.set_loops(5)
+	tween.tween_property(animated_sprite, "modulate:a", 0.3, 0.075) # Mờ đi
+	tween.tween_property(animated_sprite, "modulate:a", 1.0, 0.075) # Sáng lại
+	
+	# Chờ hết 0.75s rồi tắt trạng thái bất tử
+	await get_tree().create_timer(invincibility_time).timeout
+	is_invincible = false
+	animated_sprite.modulate.a = 1.0 # Đảm bảo ảnh hiện rõ 100% khi hết giờ
 # --- HÀM SỬ DỤNG BÌNH THUỐC (HỒI MÁU & TĂNG MÁU TỐI ĐA) ---
 func consume_potion(heal_amount: int, bonus_max_hp: int) -> void:
 	if is_dead:

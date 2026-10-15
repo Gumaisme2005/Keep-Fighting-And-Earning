@@ -1,6 +1,6 @@
 extends Area2D
 
-@export var speed: float = 250.0 # Tốc độ đạn của Boss nên để nhanh hơn quái thường một chút
+@export var speed: float = 150.0 # Tốc độ đạn của Boss nên để nhanh hơn quái thường một chút
 var direction: Vector2 = Vector2.ZERO
 
 func _ready() -> void:

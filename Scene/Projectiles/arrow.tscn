@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://2ghkboxexty4"]
+
+[ext_resource type="Script" uid="uid://cleqlx1hhh37e" path="res://Scene/Projectiles/arrow.gd" id="1_y44jd"]
+[ext_resource type="Texture2D" uid="uid://bhckdqmet03ya" path="res://Assets/Projectiles/Human_Archer_Extras.png" id="2_eicrb"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fempv"]
+atlas = ExtResource("2_eicrb")
+region = Rect2(0, 80, 80, 80)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mmqkc"]
+atlas = ExtResource("2_eicrb")
+region = Rect2(80, 80, 80, 80)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ncuov"]
+atlas = ExtResource("2_eicrb")
+region = Rect2(160, 80, 80, 80)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4g0u8"]
+atlas = ExtResource("2_eicrb")
+region = Rect2(240, 80, 80, 80)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1vivr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fempv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mmqkc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ncuov")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4g0u8")
+}],
+"loop": 1,
+"name": &"fly",
+"speed": 8.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1vivr"]
+size = Vector2(16, 5)
+
+[node name="Arrow" type="Area2D" unique_id=647284908]
+script = ExtResource("1_y44jd")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1505121199]
+position = Vector2(1.9073486e-06, 0)
+scale = Vector2(1.2125, 1.1375)
+sprite_frames = SubResource("SpriteFrames_1vivr")
+animation = &"fly"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=555992520]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_1vivr")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
