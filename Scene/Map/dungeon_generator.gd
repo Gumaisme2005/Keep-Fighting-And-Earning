@@ -14,7 +14,10 @@ const PLAYER_SCENE = preload("res://Scene/Character/Player.tscn")
 const CHEST_SCENE = preload("res://Scene/Items/Chest/chest.tscn") 
 const SPIKE_TRAP = preload("res://Scene/Map/SpikeTrap.tscn")
 
-const BOSS_SCENE = preload("res://Scene/Enemies/Boss/Kitsune/Kitsune.tscn")
+# --- THAY THẾ KHAI BÁO BOSS CŨ BẰNG 2 DÒNG NÀY ---
+const KITSUNE_SCENE = preload("res://Scene/Enemies/Boss/Kitsune/Kitsune.tscn")
+# LƯU Ý: Cậu nhớ sửa lại đường dẫn dưới đây cho đúng với thư mục cậu lưu Necromancer nhé!
+const NECROMANCER_SCENE = preload("res://Scene/Enemies/Boss/Necromancer/necromancer.tscn")
 
 var enemy_scenes: Array[PackedScene] = [
 	preload("res://Scene/Enemies/Orc/orc.tscn"),
@@ -363,14 +366,28 @@ func spawn_entities():
 			manager.tilemap = self
 			manager.entrances = entrances
 			
-			# 3. CHỈ SINH DUY NHẤT 1 BOSS TỰ ĐỘNG BẰNG PRELOAD
-			var boss = BOSS_SCENE.instantiate()
-			boss.add_to_group("enemies") # Đưa vào group để TestArena và RoomManager nhận diện
-			add_child(boss)
+			# ==========================================
+			# 3. LUÂN PHIÊN SINH BOSS THEO TẦNG
+			# ==========================================
+			var boss_instance
+			
+			# Nếu là tầng lẻ (1, 3, 5...) -> Sinh Necromancer
+			if current_level % 2 != 0: 
+				boss_instance = NECROMANCER_SCENE.instantiate()
+				print("🦇 Tầng ", current_level, " - Boss: Necromancer xuất hiện!")
+				
+			# Nếu là tầng chẵn (2, 4, 6...) -> Sinh Kitsune
+			else: 
+				boss_instance = KITSUNE_SCENE.instantiate()
+				print("🦊 Tầng ", current_level, " - Boss: Kitsune xuất hiện!")
+				
+			# Đưa Boss vào game
+			boss_instance.add_to_group("enemies") 
+			add_child(boss_instance)
 			
 			# Đặt Boss ở chính giữa tâm phòng
-			boss.global_position = to_global(map_to_local(room.get_center()))
-			manager.enemies.append(boss)
+			boss_instance.global_position = to_global(map_to_local(room.get_center()))
+			manager.enemies.append(boss_instance)
 
 # --- CƠ CHẾ QUA MÀN ---
 func spawn_portal(pos: Vector2):

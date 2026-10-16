@@ -358,7 +358,7 @@ size = Vector2(17.625, 20)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g2c4u"]
 size = Vector2(61.90625, 20)
 
-[node name="Orc" type="CharacterBody2D" unique_id=631054120]
+[node name="Armored_Orc" type="CharacterBody2D" unique_id=631054120]
 script = ExtResource("1_g2c4u")
 world_item_scene = ExtResource("2_fvvsv")
 loot_table = Array[ExtResource("3_n5nvd")]([ExtResource("4_abr3b"), ExtResource("5_wnfnw")])
