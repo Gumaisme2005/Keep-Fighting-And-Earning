@@ -12,8 +12,8 @@ script = ExtResource("1_prmxy")
 item_name = "Kiếm tai ương"
 type = 2
 icon = SubResource("AtlasTexture_6ad7n")
-description = "tăng 3 sát thương cận chiến
-Tăng 1 giáp tối đa"
-damage = 3
+description = "+1 DMG
++1 Giáp"
+damage = 2
 armor = 1
 metadata/_custom_type_script = "uid://cfc0cqlwptxu6"

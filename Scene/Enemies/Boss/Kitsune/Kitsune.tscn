@@ -265,7 +265,7 @@ animations = [{
 }],
 "loop": 0,
 "name": &"attack_1",
-"speed": 15.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -401,7 +401,7 @@ animations = [{
 }],
 "loop": 1,
 "name": &"idle",
-"speed": 12.0
+"speed": 7.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -430,43 +430,47 @@ animations = [{
 }],
 "loop": 1,
 "name": &"walk",
-"speed": 15.0
+"speed": 12.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_v5gy4"]
+radius = 4.0
+height = 16.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1vivr"]
-size = Vector2(29, 90)
+size = Vector2(15, 57)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8vrlf"]
-size = Vector2(40.75, 66.375)
+size = Vector2(55, 38)
 
 [node name="Kitsune" type="CharacterBody2D" unique_id=1032551452]
 script = ExtResource("1_sxkt5")
 fireball_scene = ExtResource("2_1qc6m")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1003214544]
-position = Vector2(1, -65)
+position = Vector2(0, -49)
+scale = Vector2(0.75, 0.75)
 sprite_frames = SubResource("SpriteFrames_1vivr")
-animation = &"walk"
+animation = &"attack_1"
 autoplay = "idle"
+frame = 9
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=543180591]
-position = Vector2(2, 1)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_v5gy4")
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=1069670160]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=236706186]
-position = Vector2(2.5, -35)
+position = Vector2(0, -24)
 shape = SubResource("RectangleShape2D_1vivr")
 
 [node name="SwordHitbox" type="Area2D" parent="." unique_id=1490794041]
 position = Vector2(0, 4)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SwordHitbox" unique_id=781200101]
-position = Vector2(41.375, -25.8125)
+position = Vector2(20.5, -24)
 shape = SubResource("RectangleShape2D_8vrlf")
 disabled = true
 
