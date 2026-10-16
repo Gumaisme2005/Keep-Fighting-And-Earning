@@ -4,9 +4,9 @@ extends TileMap
 enum RoomType { START, COMBAT, TREASURE, BOSS }
 
 @export var map_seed: String = "ALOALO1234"
-@export var num_rooms: int = 14
+@export var num_rooms: int = 16
 @export var cell_size: int = 40
-@export var room_min_size: int = 15
+@export var room_min_size: int = 16
 @export var room_max_size: int = 25
 
 # --- ĐƯỜNG DẪN SCENE (Đã giữ nguyên theo code của cậu) ---
@@ -64,6 +64,11 @@ func _ready():
 func generate_dungeon():
 	clear()
 	rng.seed = map_seed.hash()
+	build_dungeon_layout()
+	scatter_decorations()
+
+# --- HÀM MỚI: TỰ ĐỘNG XÂY DỰNG TOÀN BỘ KHUNG BẢN ĐỒ ---
+func build_dungeon_layout():
 	room_grid.clear()
 	edges.clear()
 	generated_rooms.clear() 
@@ -84,19 +89,48 @@ func generate_dungeon():
 			room_grid[new_pos] = true
 			edges.append([pick, new_pos])
 			
-	var possible_treasure_rooms = range(1, num_rooms - 1)
-	var treasure_indices = []
+	# ========================================================
+	# THUẬT TOÁN BFS: TÌM PHÒNG CÁCH XA PHÒNG START (0, 0) NHẤT
+	# ========================================================
+	var adj_list = {}
+	for pos in room_grid.keys():
+		adj_list[pos] = []
+	for edge in edges:
+		adj_list[edge[0]].append(edge[1])
+		adj_list[edge[1]].append(edge[0])
+
+	var queue = [Vector2i(0, 0)]
+	var visited = {Vector2i(0, 0): true}
+	var boss_grid_pos = Vector2i(0, 0)
+
+	while queue.size() > 0:
+		var current = queue.pop_front()
+		boss_grid_pos = current # Căn phòng cuối cùng được duyệt sẽ là phòng xa nhất!
+		
+		for neighbor in adj_list[current]:
+			if not visited.has(neighbor):
+				visited[neighbor] = true
+				queue.append(neighbor)
+	# ========================================================
+
+	# 1. Chọn phòng kho báu (Loại trừ phòng Start và Boss)
+	var available_rooms = room_grid.keys().duplicate()
+	available_rooms.erase(Vector2i(0, 0))
+	available_rooms.erase(boss_grid_pos) 
+	
+	var treasure_positions = []
 	var num_treasure_rooms = rng.randi_range(2, 3)
-	num_treasure_rooms = min(num_treasure_rooms, possible_treasure_rooms.size())
+	num_treasure_rooms = min(num_treasure_rooms, available_rooms.size())
 	
 	for i in range(num_treasure_rooms):
-		var random_pick_idx = rng.randi() % possible_treasure_rooms.size()
-		treasure_indices.append(possible_treasure_rooms[random_pick_idx])
-		possible_treasure_rooms.remove_at(random_pick_idx)
+		var pick_idx = rng.randi() % available_rooms.size()
+		treasure_positions.append(available_rooms[pick_idx])
+		available_rooms.remove_at(pick_idx)
 
 	var actual_rooms_dict = {}
 	var room_index = 0 
 	
+	# 2. Xây phòng và phân loại dựa trên tọa độ (thay vì thứ tự)
 	for grid_pos in room_grid.keys():
 		var rw = rng.randi_range(room_min_size, room_max_size)
 		var rh = rng.randi_range(room_min_size, room_max_size)
@@ -107,20 +141,23 @@ func generate_dungeon():
 		actual_rooms_dict[grid_pos] = main_rect
 		generated_rooms.append(main_rect)
 		
-		if room_index == 0: room_types.append(RoomType.START)
-		elif room_index == num_rooms - 1: room_types.append(RoomType.BOSS)
-		elif room_index in treasure_indices: room_types.append(RoomType.TREASURE)
-		else: room_types.append(RoomType.COMBAT)
+		# Gán loại phòng chuẩn xác
+		if grid_pos == Vector2i(0, 0):
+			room_types.append(RoomType.START)
+		elif grid_pos == boss_grid_pos:
+			room_types.append(RoomType.BOSS)
+		elif grid_pos in treasure_positions:
+			room_types.append(RoomType.TREASURE)
+		else:
+			room_types.append(RoomType.COMBAT)
 			
-		# Xây phòng dáng hữu cơ
 		carve_room(main_rect)
-		
-		# Trồng thêm cột cản đạn nếu là phòng đánh nhau
 		if room_types[room_index] == RoomType.COMBAT or room_types[room_index] == RoomType.BOSS:
 			decorate_pillars(main_rect)
 		
 		room_index += 1
 		
+	# 3. Nối hành lang và xây tường bao quanh
 	for edge in edges:
 		var r1 = actual_rooms_dict[edge[0]]
 		var r2 = actual_rooms_dict[edge[1]]
@@ -130,7 +167,6 @@ func generate_dungeon():
 		else: carve_corridor_h(c1.x, c2.x, c1.y)
 			
 	build_walls()
-	scatter_decorations()
 
 # --- CÁC HÀM XÂY DỰNG ---
 func carve_room(room: Rect2i):
@@ -184,6 +220,62 @@ func decorate_pillars(room: Rect2i):
 		set_cell(LAYER_FLOOR, Vector2i(px+1, py+1), SOURCE_WALLS, WALL_COORD)
 
 func scatter_decorations():
+	# ĐỊNH NGHĨA CÁC KHUÔN MẪU KHỐI (PATTERNS)
+	# Số 1 đại diện cho ô sẽ đặt đồ, số 0 là ô trống.
+	# Mỗi mảng bên trong là một hàng (Y), các phần tử trong mảng là cột (X).
+	# ĐỊNH NGHĨA CÁC KHUÔN MẪU KHỐI (PATTERNS)
+	var decor_patterns = [
+		# 1. Khối vuông 2x2
+		[
+			[1, 1],
+			[1, 1]
+		],
+		# 2. Hình chữ L góc vuông
+		[
+			[1, 0],
+			[1, 1]
+		],
+		# 3. Hình bậc thang
+		[
+			[1, 0, 0],
+			[0, 1, 0],
+			[0, 0, 1]
+		],
+		# 4. Cụm chữ T
+		[
+			[1, 1, 1],
+			[0, 1, 0]
+		],
+		# --- CÁC HÌNH KHỐI MỚI ---
+		# 5. Hình dấu cộng 5x5
+		[
+			[0, 0, 1, 0, 0],
+			[0, 0, 1, 0, 0],
+			[1, 1, 1, 1, 1],
+			[0, 0, 1, 0, 0],
+			[0, 0, 1, 0, 0]
+		],
+		# 6. Hình chữ Z
+		[
+			[1, 1, 0],
+			[0, 1, 0],
+			[0, 1, 1]
+		],
+		# 7. Hình vuông 3x3
+		[
+			[1, 1, 1],
+			[1, 1, 1],
+			[1, 1, 1]
+		],
+		# 8. Hình vuông to 4x4
+		[
+			[1, 1, 1, 1],
+			[1, 1, 1, 1],
+			[1, 1, 1, 1],
+			[1, 1, 1, 1]
+		]
+	]
+
 	# Duyệt qua từng phòng đã tạo
 	for i in range(generated_rooms.size()):
 		var room = generated_rooms[i]
@@ -193,43 +285,49 @@ func scatter_decorations():
 			continue
 			
 		var center = room.get_center()
-		# Số lượng cụm đồ đạc trong 1 phòng (từ 2 đến 5 cụm tùy độ to của phòng)
-		var num_clusters = rng.randi_range(2, 5) 
+		# Số lượng cụm đồ đạc trong 1 phòng (ít lại một chút vì giờ 1 cụm rất to)
+		var num_clusters = rng.randi_range(1, 3) 
 		
 		for c in range(num_clusters):
-			# 1. Tìm một điểm neo (Anchor) ngẫu nhiên trong phòng
-			var anchor_x = rng.randi_range(room.position.x + 2, room.end.x - 3)
-			var anchor_y = rng.randi_range(room.position.y + 2, room.end.y - 3)
+			# 1. Bốc ngẫu nhiên 1 khuôn mẫu
+			var selected_pattern = decor_patterns[rng.randi() % decor_patterns.size()]
+			var pattern_height = selected_pattern.size()
+			var pattern_width = selected_pattern[0].size()
+			
+			# 2. Tìm một điểm neo (Góc trên cùng bên trái của khuôn mẫu)
+			# Phải trừ đi kích thước pattern để khối đồ không bị đâm xuyên ra ngoài tường
+			var anchor_x = rng.randi_range(room.position.x + 2, room.end.x - pattern_width - 2)
+			var anchor_y = rng.randi_range(room.position.y + 2, room.end.y - pattern_height - 2)
 			var anchor = Vector2i(anchor_x, anchor_y)
 			
-			# Kiểm tra: Không rải đồ ở hành lang, và không rải quá gần TÂM PHÒNG (để dành chỗ đánh nhau)
-			if corridor_cells.has(anchor) or anchor.distance_to(center) < 3.0:
+			# Kiểm tra xem điểm neo này có quá gần tâm phòng (chỗ đánh nhau) không
+			if anchor.distance_to(center) < 4.0:
 				continue
 				
-			# 2. Bốc ngẫu nhiên 1 loại đồ vật cho TOÀN BỘ cụm này (ví dụ: toàn thùng gỗ)
+			# 3. Bốc ngẫu nhiên 1 loại đồ vật cho TOÀN BỘ cụm này (để trông đồng nhất)
 			var cluster_decor = decor_coords[rng.randi() % decor_coords.size()]
 			
-			# 3. Tạo hình dáng cụm (1 đến 4 đồ vật xếp dính vào nhau)
-			var cluster_size = rng.randi_range(1, 4)
-			var items_placed = 0
-			
-			# Các hướng để xếp đồ dính vào nhau (tạo hình vuông, hình chữ L)
-			var offsets = [Vector2i(0,0), Vector2i(1,0), Vector2i(0,1), Vector2i(1,1), Vector2i(-1,0), Vector2i(0,-1)]
-			offsets.shuffle() # Xáo trộn mảng để hình dáng đống đồ ngẫu nhiên
-			
-			for offset in offsets:
-				var target_cell = anchor + offset
+			# 4. Kiểm tra trước: Liệu TOÀN BỘ khu vực ốp pattern này có vướng hành lang không?
+			var can_place = true
+			for y in range(pattern_height):
+				for x in range(pattern_width):
+					if selected_pattern[y][x] == 1:
+						var check_cell = anchor + Vector2i(x, y)
+						if corridor_cells.has(check_cell) or get_cell_atlas_coords(LAYER_FLOOR, check_cell) != FLOOR_COORD:
+							can_place = false
+							break
+				if not can_place: break
 				
-				# Kiểm tra xem ô này có phải là mặt sàn hợp lệ, không phải hành lang, và chưa có đồ vật nào không
-				if get_cell_atlas_coords(LAYER_FLOOR, target_cell) == FLOOR_COORD:
-					if not corridor_cells.has(target_cell):
-						if get_cell_source_id(LAYER_DECOR, target_cell) == -1: # Ô Decor đang trống
-							set_cell(LAYER_DECOR, target_cell, SOURCE_OBJECTS, cluster_decor)
-							items_placed += 1
-							
-				# Đã đặt đủ số lượng đồ cho cụm này thì dừng lại
-				if items_placed >= cluster_size:
-					break
+			# 5. Nếu khu vực trống trải hợp lệ, tiến hành "xây" đồ vật theo khuôn!
+			if can_place:
+				for y in range(pattern_height):
+					for x in range(pattern_width):
+						# Chỉ đặt đồ ở những ô có số 1 trong khuôn mẫu
+						if selected_pattern[y][x] == 1:
+							var target_cell = anchor + Vector2i(x, y)
+							# Đảm bảo chưa có đồ nào khác đè lên trước đó
+							if get_cell_source_id(LAYER_DECOR, target_cell) == -1: 
+								set_cell(LAYER_DECOR, target_cell, SOURCE_OBJECTS, cluster_decor)
 
 # --- THẢ QUÁI / PLAYER ---
 func spawn_entities():
@@ -302,7 +400,7 @@ func spawn_entities():
 			var trap_positions = [] # Mảng chứa tọa độ của các bẫy sẽ sinh ra
 			
 			# Lăn xúc xắc để chọn ngẫu nhiên 1 trong 3 sơ đồ bẫy
-			var pattern_type = rng.randi() % 3
+			var pattern_type = rng.randi() % 2
 			
 			if pattern_type == 0:
 				# SƠ ĐỒ 1: HÌNH CHỮ THẬP (CROSS)
@@ -323,16 +421,7 @@ func spawn_entities():
 				trap_positions.append(center + Vector2i(offset, -offset))  # Góc trên-phải
 				trap_positions.append(center + Vector2i(-offset, offset))  # Góc dưới-trái
 				trap_positions.append(center + Vector2i(offset, offset))   # Góc dưới-phải
-				
-			elif pattern_type == 2:
-				# SƠ ĐỒ 3: VÒNG TRÒN LỬA (SQUARE RING)
-				# Vẽ một viền vuông rỗng bao quanh tâm (cách tâm 2 ô)
-				var radius = 2
-				for x in range(center.x - radius, center.x + radius + 1):
-					for y in range(center.y - radius, center.y + radius + 1):
-						# Chỉ lấy các ô nằm ở rìa viền ngoài
-						if x == center.x - radius or x == center.x + radius or y == center.y - radius or y == center.y + radius:
-							trap_positions.append(Vector2i(x, y))
+
 
 			# BẮT ĐẦU RẢI BẪY LÊN BẢN ĐỒ DỰA TRÊN SƠ ĐỒ ĐÃ CHỌN
 			for tile_pos in trap_positions:
@@ -400,78 +489,14 @@ func next_level():
 	current_level += 1
 	print("🚀 Đang dịch chuyển đến Hầm ngục tầng ", current_level, "...")
 	
-	# 1. Dọn dẹp sạch sẽ bản đồ cũ (Giữ lại duy nhất Player)
 	for child in get_children():
 		if child != the_player and not child is Camera2D: 
 			child.queue_free()
 			
-	# 2. Xóa gạch nền cũ
 	clear()
-	
-	# 3. Ép Seed mới một cách CỐ ĐỊNH để hỗ trợ tính năng Replay Run
 	rng.seed = (map_seed + "_" + str(current_level)).hash()
 	
-	# 4. Sinh lại các phòng và vẽ lại tường
-	room_grid.clear()
-	edges.clear()
-	generated_rooms.clear() 
-	room_types.clear()
-	corridor_cells.clear()
-	
-	# (Copy lại phần lõi của hàm generate_dungeon cũ)
-	var current_pos = Vector2i(0, 0)
-	room_grid[current_pos] = true 
-	var directions = [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]
-	
-	while room_grid.size() < num_rooms:
-		var rooms_array = room_grid.keys()
-		var pick = rooms_array[rng.randi() % rooms_array.size()]
-		var dir = directions[rng.randi() % directions.size()]
-		var new_pos = pick + dir
-		if not room_grid.has(new_pos):
-			room_grid[new_pos] = true
-			edges.append([pick, new_pos])
-			
-	var possible_treasure_rooms = range(1, num_rooms - 1)
-	var treasure_indices = []
-	var num_treasure_rooms = rng.randi_range(2, 3)
-	num_treasure_rooms = min(num_treasure_rooms, possible_treasure_rooms.size())
-	for i in range(num_treasure_rooms):
-		var random_pick_idx = rng.randi() % possible_treasure_rooms.size()
-		treasure_indices.append(possible_treasure_rooms[random_pick_idx])
-		possible_treasure_rooms.remove_at(random_pick_idx)
-
-	var actual_rooms_dict = {}
-	var room_index = 0 
-	for grid_pos in room_grid.keys():
-		var rw = rng.randi_range(room_min_size, room_max_size)
-		var rh = rng.randi_range(room_min_size, room_max_size)
-		var rx = grid_pos.x * cell_size + int((cell_size - rw) / 2.0)
-		var ry = grid_pos.y * cell_size + int((cell_size - rh) / 2.0)
-		var main_rect = Rect2i(rx, ry, rw, rh)
-		actual_rooms_dict[grid_pos] = main_rect
-		generated_rooms.append(main_rect)
-		
-		if room_index == 0: room_types.append(RoomType.START)
-		elif room_index == num_rooms - 1: room_types.append(RoomType.BOSS)
-		elif room_index in treasure_indices: room_types.append(RoomType.TREASURE)
-		else: room_types.append(RoomType.COMBAT)
-			
-		carve_room(main_rect)
-		if room_types[room_index] == RoomType.COMBAT or room_types[room_index] == RoomType.BOSS:
-			decorate_pillars(main_rect)
-		room_index += 1
-		
-	for edge in edges:
-		var r1 = actual_rooms_dict[edge[0]]
-		var r2 = actual_rooms_dict[edge[1]]
-		var c1 = r1.get_center()
-		var c2 = r2.get_center()
-		if edge[0].x == edge[1].x: carve_corridor_v(c1.y, c2.y, c1.x)
-		else: carve_corridor_h(c1.x, c2.x, c1.y)
-			
-	build_walls()
+	# Gọi lại hàm dùng chung cho sạch sẽ!
+	build_dungeon_layout()
 	scatter_decorations()
-	
-	# 5. Sinh quái, bẫy và bế Player về phòng Start!
 	call_deferred("spawn_entities")
