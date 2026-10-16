@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://7gpghruvdd6s" path="res://Assets/Character/Human_knight/Human_Knight.png" id="3_ri6ba"]
 [ext_resource type="Texture2D" uid="uid://bvdr127jnigh5" path="res://Assets/Character/Human_Archer/Human_Archer.png" id="4_7k870"]
 [ext_resource type="Texture2D" uid="uid://47ovclbqbopo" path="res://Assets/Character/Soldier/Soldier/Soldier_Idle.png" id="4_oufkq"]
+[ext_resource type="Texture2D" uid="uid://dvj0rq24mg1kd" path="res://Assets/Character/Swordsman/Swordsman_Idle.png" id="5_v3tgs"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1vivr"]
 atlas = ExtResource("4_oufkq")
@@ -16,6 +17,10 @@ region = Rect2(32, 24, 24, 24)
 [sub_resource type="AtlasTexture" id="AtlasTexture_v5gy4"]
 atlas = ExtResource("4_7k870")
 region = Rect2(32, 24, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iqy1v"]
+atlas = ExtResource("5_v3tgs")
+region = Rect2(42, 40, 22, 21)
 
 [node name="CharacterSelect" type="Control" unique_id=157718013]
 layout_mode = 3
@@ -87,6 +92,16 @@ layout_mode = 2
 text = "Miya
 HP:3, SP:1, DMG: 2"
 icon = SubResource("AtlasTexture_v5gy4")
+icon_alignment = 1
+vertical_icon_alignment = 0
+expand_icon = true
+
+[node name="Char_4" type="Button" parent="HBoxContainer" unique_id=514536605]
+texture_filter = 1
+layout_mode = 2
+text = "Mitsuha
+HP: 5,SP: 0, DMG: 2"
+icon = SubResource("AtlasTexture_iqy1v")
 icon_alignment = 1
 vertical_icon_alignment = 0
 expand_icon = true
