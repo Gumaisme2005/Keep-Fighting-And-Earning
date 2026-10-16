@@ -8,42 +8,55 @@ var is_cleared: bool = false
 
 var is_boss_room: bool = false
 
-const GATE_COORD = Vector2i(1, 3) # Tạm dùng viên gạch tường làm cửa đóng
-const LAYER_DOOR = 2 # Lớp cửa cậu vừa tạo ở Bước 2
+const GATE_COORD = Vector2i(1, 3) 
+const LAYER_DOOR = 2 
 
 func _ready():
 	body_entered.connect(_on_body_entered)
 
 func _on_body_entered(body):
-	# Nếu người chơi bước vào phòng và phòng chưa bị khóa
+	# Nếu người chơi bước vào phòng và phòng chưa dọn dẹp xong
 	if body.is_in_group("player") and not is_locked and not is_cleared:
-		lock_room()
+		
+		# QUÉT KIỂM TRA: Xem trong phòng còn con quái nào sống không
+		var alive_enemies = 0
+		for enemy in enemies:
+			if is_instance_valid(enemy) and not enemy.is_queued_for_deletion():
+				alive_enemies += 1
+		
+		# Nếu vẫn còn quái sống -> Khóa cửa đánh nhau
+		if alive_enemies > 0:
+			lock_room()
+		else:
+			# Nếu quái đã chết hết từ trước (do lỗi hoặc dính bẫy) -> Mở toang cửa luôn!
+			is_cleared = true
+			if is_boss_room and tilemap.has_method("spawn_portal"):
+				tilemap.spawn_portal(global_position)
 
 func lock_room():
 	is_locked = true
-	# 1. Vẽ gạch chặn mọi lối ra vào
+	# Vẽ gạch chặn mọi lối ra vào
 	for pos in entrances:
 		tilemap.set_cell(LAYER_DOOR, pos, 0, GATE_COORD)
 	
-	# 2. Đánh thức toàn bộ quái trong phòng
+	# Đánh thức toàn bộ quái trong phòng (TẮT TRẠNG THÁI BẤT TỬ)
 	for enemy in enemies:
 		if is_instance_valid(enemy):
 			enemy.is_active = true
-			enemy.tree_exited.connect(_on_enemy_died) # Lắng nghe sự kiện quái chết
+			# Kết nối tín hiệu an toàn
+			if not enemy.tree_exited.is_connected(_on_enemy_died):
+				enemy.tree_exited.connect(_on_enemy_died) 
 
 func _on_enemy_died():
-	# Quét xem còn con quái nào sống không
 	var all_dead = true
 	for enemy in enemies:
 		if is_instance_valid(enemy) and not enemy.is_queued_for_deletion():
 			all_dead = false
 			break
 	
-	# Nếu chết hết -> Mở cửa
 	if all_dead:
 		unlock_room()
 
-# 2. CẬP NHẬT HÀM NÀY:
 func unlock_room():
 	is_cleared = true
 	is_locked = false
@@ -51,6 +64,5 @@ func unlock_room():
 	for pos in entrances:
 		tilemap.set_cell(LAYER_DOOR, pos, -1)
 		
-	# NẾU ĐÂY LÀ PHÒNG BOSS VÀ QUÁI ĐÃ CHẾT HẾT -> GỌI CỔNG RA!
 	if is_boss_room and tilemap.has_method("spawn_portal"):
 		tilemap.spawn_portal(global_position)

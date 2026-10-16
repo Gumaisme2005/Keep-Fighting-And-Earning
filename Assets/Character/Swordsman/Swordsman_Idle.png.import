@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://oric7njy6pqt"
-path="res://.godot/imported/Necromancer_Attack02(With magic effects).png-37bfa3761f054b06e443f215b251f155.ctex"
+uid="uid://dvj0rq24mg1kd"
+path="res://.godot/imported/Swordsman_Idle.png-c40db0dd624fbe3c92fb1aa61a496599.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Character/Necromancer/Necromancer_Attack02(With magic effects).png"
-dest_files=["res://.godot/imported/Necromancer_Attack02(With magic effects).png-37bfa3761f054b06e443f215b251f155.ctex"]
+source_file="res://Assets/Character/Swordsman/Swordsman_Idle.png"
+dest_files=["res://.godot/imported/Swordsman_Idle.png-c40db0dd624fbe3c92fb1aa61a496599.ctex"]
 
 [params]
 

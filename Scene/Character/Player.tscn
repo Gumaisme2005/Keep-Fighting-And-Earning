@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://baj5ax14npcg7"]
+[gd_scene format=3 uid="uid://68p8v41b5p2u"]
 
 [ext_resource type="Script" uid="uid://k6tqs5ecod6l" path="res://Scene/Character/player.gd" id="1_kne1u"]
 [ext_resource type="Texture2D" uid="uid://dahxvyxkbbyfw" path="res://Assets/Character/Soldier/Soldier/Soldier_Attack01.png" id="2_cxr5p"]
