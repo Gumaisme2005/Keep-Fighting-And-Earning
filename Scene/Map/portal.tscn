@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://bcprc01t32rc"]
+
+[ext_resource type="Script" uid="uid://cl6c00lys12kf" path="res://Scene/Map/portal.gd" id="1_ks0pv"]
+[ext_resource type="Texture2D" uid="uid://cox1sntsd0c4k" path="res://Assets/Map/Dimensional_Portal.png" id="2_n70v4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hxyjx"]
+atlas = ExtResource("2_n70v4")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0k67e"]
+atlas = ExtResource("2_n70v4")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pmgrt"]
+atlas = ExtResource("2_n70v4")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s7yc8"]
+atlas = ExtResource("2_n70v4")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qlwxw"]
+atlas = ExtResource("2_n70v4")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_temx3"]
+atlas = ExtResource("2_n70v4")
+region = Rect2(64, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1vivr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hxyjx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0k67e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pmgrt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s7yc8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qlwxw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_temx3")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1vivr"]
+radius = 9.0
+height = 60.0
+
+[node name="Portal" type="Area2D" unique_id=576914260]
+position = Vector2(-1, 0)
+script = ExtResource("1_ks0pv")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=856260635]
+position = Vector2(4.7683716e-07, -31.000004)
+scale = Vector2(1.3750002, 1.8906251)
+sprite_frames = SubResource("SpriteFrames_1vivr")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.8601286
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=279220936]
+position = Vector2(1, -29)
+shape = SubResource("CapsuleShape2D_1vivr")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

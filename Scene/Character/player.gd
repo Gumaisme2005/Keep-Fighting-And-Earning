@@ -144,14 +144,27 @@ func take_damage(amount: int) -> void:
 			
 		# KÍCH HOẠT TRẠNG THÁI BẤT TỬ KHI MÁU CÒN > 0
 		start_invincibility()
+	# ... (phía trên là lúc máu > 0)
 	else:
-		is_dead = true
-		regen_delay_timer.stop()
-		regen_tick_timer.stop()
-		animated_sprite.play("death")
-		set_physics_process(false)
-		print("💀 Nhân vật đã gục ngã!")
-		$PlayerHurtbox/CollisionShape2D.set_deferred("disabled", true)
+		# Thêm dòng check if not is_dead để tránh việc game đếm chết nhiều lần nếu bị quái xúm lại đánh
+		if not is_dead:
+			is_dead = true
+			regen_delay_timer.stop()
+			regen_tick_timer.stop()
+			animated_sprite.play("death")
+			set_physics_process(false) # Khóa di chuyển
+			print("💀 Nhân vật đã gục ngã! GAME OVER!")
+			
+			if has_node("PlayerHurtbox/CollisionShape2D"):
+				$PlayerHurtbox/CollisionShape2D.set_deferred("disabled", true)
+			
+			# --- CƠ CHẾ GAME OVER ---
+			# Đợi 2 giây để chiếu hết hoạt ảnh ngã xuống và tạo độ nghẹt thở
+			await get_tree().create_timer(2.0).timeout
+			
+			# Đưa người chơi về lại Màn hình chọn nhân vật
+			# LƯU Ý: Cậu hãy sửa lại đường dẫn "res://..." dưới đây cho ĐÚNG với vị trí file CharacterSelect.tscn trong máy cậu nhé!
+			get_tree().change_scene_to_file("res://Scene/UI/CharacterSelect.tscn")
 
 # --- HÀM TẠO HIỆU ỨNG BẤT TỬ NHẤP NHÁY (I-FRAMES) ---
 func start_invincibility() -> void:

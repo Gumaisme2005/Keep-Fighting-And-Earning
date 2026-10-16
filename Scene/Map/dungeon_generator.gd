@@ -3,8 +3,8 @@ extends TileMap
 # 1. ĐỊNH NGHĨA CÁC LOẠI PHÒNG
 enum RoomType { START, COMBAT, TREASURE, BOSS }
 
-@export var map_seed: String = "ORGANIC-DUNGEON"
-@export var num_rooms: int = 10
+@export var map_seed: String = "ALOALO1234"
+@export var num_rooms: int = 14
 @export var cell_size: int = 40
 @export var room_min_size: int = 15
 @export var room_max_size: int = 25
@@ -20,8 +20,13 @@ var enemy_scenes: Array[PackedScene] = [
 	preload("res://Scene/Enemies/Orc/orc.tscn"),
 	preload("res://Scene/Enemies/Skeleton/skeleton.tscn"),
 	preload("res://Scene/Enemies/Blood Monster/blood_monster.tscn"),
-	preload("res://Scene/Enemies/Vampire/vampire.tscn")
+	preload("res://Scene/Enemies/Vampire/vampire.tscn"),
+	preload("res://Scene/Enemies/Armored_Orc/armored_orc.tscn") # <--- Thêm con quái mới vào đây
 ]
+# Thêm 3 dòng này vào dưới các dòng preload của cậu
+@export var current_level: int = 1
+const PORTAL_SCENE = preload("res://Scene/Map/portal.tscn") # Đảm bảo đường dẫn đúng
+var the_player: Node2D = null # Lưu con trỏ Player để bế qua màn mới
 
 @export var min_enemies: int = 2
 @export var max_enemies: int = 6
@@ -224,19 +229,23 @@ func scatter_decorations():
 					break
 
 # --- THẢ QUÁI / PLAYER ---
-# --- THẢ QUÁI / PLAYER ---
 func spawn_entities():
 	if generated_rooms.is_empty(): return
 	
-	# Kiểm tra xem GameManager đã lưu nhân vật nào chưa, nếu có thì dùng, không thì lấy mặc định
-	var character_to_spawn = PLAYER_SCENE
-	if GameManager.selected_character_scene != null:
-		character_to_spawn = GameManager.selected_character_scene
-		
-	var player_instance = character_to_spawn.instantiate()
-	player_instance.name = "Player"
-	add_child(player_instance)
-	player_instance.global_position = to_global(map_to_local(generated_rooms[0].get_center()))
+	# CHỈ TẠO PLAYER MỚI NẾU ĐÂY LÀ MÀN 1
+	if the_player == null:
+		var character_to_spawn = PLAYER_SCENE
+		if GameManager.selected_character_scene != null:
+			character_to_spawn = GameManager.selected_character_scene
+			
+		the_player = character_to_spawn.instantiate()
+		the_player.name = "Player"
+		add_child(the_player)
+	
+	# Luôn bế người chơi (cùng toàn bộ đồ đạc) đặt vào chính giữa phòng START của map mới
+	the_player.global_position = to_global(map_to_local(generated_rooms[0].get_center()))
+	
+	# ... (Vòng lặp for sinh rương, quái, bẫy phía dưới giữ nguyên) ...
 	
 	for i in range(1, generated_rooms.size()):
 		var room = generated_rooms[i]
@@ -334,6 +343,7 @@ func spawn_entities():
 		elif type == RoomType.BOSS:
 			# 1. Sinh bộ cảm biến phòng
 			var manager = ROOM_MANAGER.instantiate()
+			manager.is_boss_room = true # <--- THÊM DÒNG NÀY
 			add_child(manager)
 			
 			# Chỉnh kích thước cảm biến hụt đi 2 ô so với phòng (để Player vào hẳn giữa phòng mới sập bẫy)
@@ -361,3 +371,90 @@ func spawn_entities():
 			# Đặt Boss ở chính giữa tâm phòng
 			boss.global_position = to_global(map_to_local(room.get_center()))
 			manager.enemies.append(boss)
+
+# --- CƠ CHẾ QUA MÀN ---
+func spawn_portal(pos: Vector2):
+	print("🏆 Boss đã gục ngã! Triệu hồi Cổng Dịch Chuyển...")
+	var portal = PORTAL_SCENE.instantiate()
+	add_child(portal)
+	portal.global_position = pos
+
+func next_level():
+	current_level += 1
+	print("🚀 Đang dịch chuyển đến Hầm ngục tầng ", current_level, "...")
+	
+	# 1. Dọn dẹp sạch sẽ bản đồ cũ (Giữ lại duy nhất Player)
+	for child in get_children():
+		if child != the_player and not child is Camera2D: 
+			child.queue_free()
+			
+	# 2. Xóa gạch nền cũ
+	clear()
+	
+	# 3. Ép Seed mới một cách CỐ ĐỊNH để hỗ trợ tính năng Replay Run
+	rng.seed = (map_seed + "_" + str(current_level)).hash()
+	
+	# 4. Sinh lại các phòng và vẽ lại tường
+	room_grid.clear()
+	edges.clear()
+	generated_rooms.clear() 
+	room_types.clear()
+	corridor_cells.clear()
+	
+	# (Copy lại phần lõi của hàm generate_dungeon cũ)
+	var current_pos = Vector2i(0, 0)
+	room_grid[current_pos] = true 
+	var directions = [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]
+	
+	while room_grid.size() < num_rooms:
+		var rooms_array = room_grid.keys()
+		var pick = rooms_array[rng.randi() % rooms_array.size()]
+		var dir = directions[rng.randi() % directions.size()]
+		var new_pos = pick + dir
+		if not room_grid.has(new_pos):
+			room_grid[new_pos] = true
+			edges.append([pick, new_pos])
+			
+	var possible_treasure_rooms = range(1, num_rooms - 1)
+	var treasure_indices = []
+	var num_treasure_rooms = rng.randi_range(2, 3)
+	num_treasure_rooms = min(num_treasure_rooms, possible_treasure_rooms.size())
+	for i in range(num_treasure_rooms):
+		var random_pick_idx = rng.randi() % possible_treasure_rooms.size()
+		treasure_indices.append(possible_treasure_rooms[random_pick_idx])
+		possible_treasure_rooms.remove_at(random_pick_idx)
+
+	var actual_rooms_dict = {}
+	var room_index = 0 
+	for grid_pos in room_grid.keys():
+		var rw = rng.randi_range(room_min_size, room_max_size)
+		var rh = rng.randi_range(room_min_size, room_max_size)
+		var rx = grid_pos.x * cell_size + int((cell_size - rw) / 2.0)
+		var ry = grid_pos.y * cell_size + int((cell_size - rh) / 2.0)
+		var main_rect = Rect2i(rx, ry, rw, rh)
+		actual_rooms_dict[grid_pos] = main_rect
+		generated_rooms.append(main_rect)
+		
+		if room_index == 0: room_types.append(RoomType.START)
+		elif room_index == num_rooms - 1: room_types.append(RoomType.BOSS)
+		elif room_index in treasure_indices: room_types.append(RoomType.TREASURE)
+		else: room_types.append(RoomType.COMBAT)
+			
+		carve_room(main_rect)
+		if room_types[room_index] == RoomType.COMBAT or room_types[room_index] == RoomType.BOSS:
+			decorate_pillars(main_rect)
+		room_index += 1
+		
+	for edge in edges:
+		var r1 = actual_rooms_dict[edge[0]]
+		var r2 = actual_rooms_dict[edge[1]]
+		var c1 = r1.get_center()
+		var c2 = r2.get_center()
+		if edge[0].x == edge[1].x: carve_corridor_v(c1.y, c2.y, c1.x)
+		else: carve_corridor_h(c1.x, c2.x, c1.y)
+			
+	build_walls()
+	scatter_decorations()
+	
+	# 5. Sinh quái, bẫy và bế Player về phòng Start!
+	call_deferred("spawn_entities")

@@ -6,6 +6,8 @@ var tilemap: TileMap
 var is_locked: bool = false
 var is_cleared: bool = false
 
+var is_boss_room: bool = false
+
 const GATE_COORD = Vector2i(1, 3) # Tạm dùng viên gạch tường làm cửa đóng
 const LAYER_DOOR = 2 # Lớp cửa cậu vừa tạo ở Bước 2
 
@@ -41,9 +43,14 @@ func _on_enemy_died():
 	if all_dead:
 		unlock_room()
 
+# 2. CẬP NHẬT HÀM NÀY:
 func unlock_room():
 	is_cleared = true
 	is_locked = false
 	# Xóa gạch chặn cửa
 	for pos in entrances:
 		tilemap.set_cell(LAYER_DOOR, pos, -1)
+		
+	# NẾU ĐÂY LÀ PHÒNG BOSS VÀ QUÁI ĐÃ CHẾT HẾT -> GỌI CỔNG RA!
+	if is_boss_room and tilemap.has_method("spawn_portal"):
+		tilemap.spawn_portal(global_position)

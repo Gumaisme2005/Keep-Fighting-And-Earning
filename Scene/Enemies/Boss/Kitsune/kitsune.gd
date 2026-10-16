@@ -6,8 +6,8 @@ extends CharacterBody2D
 @export var fireball_scene: PackedScene 
 @export var attack_cooldown: float = 1.0 
 
-var max_hp: int = 20
-var hp: int = 20
+var max_hp: int = 60
+var hp: int = 60
 var is_dead: bool = false
 var is_attacking: bool = false
 var is_casting_special: bool = false 
