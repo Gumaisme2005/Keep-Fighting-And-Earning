@@ -4,6 +4,7 @@ extends "res://Scene/Character/player.gd"
 @export var arrow_scene: PackedScene 
 # THÊM BIẾN NÀY ĐỂ CHỨA QUẢ BOM
 @export var bomb_scene: PackedScene
+
 func _ready() -> void:
 	# Cung thủ: Nhạy bén, máu giấy, sát thương cao
 	speed = 180.0
@@ -55,9 +56,13 @@ func use_special_skill() -> void:
 		var mouse_pos = get_global_mouse_position()
 		bomb.throw_bomb(global_position, mouse_pos)
 
-	# Chờ 0.5s cho động tác ném hoàn tất rồi cho phép đi lại
+	# Chờ 0.5s cho động tác ném hoàn tất
 	await get_tree().create_timer(0.5).timeout
-	is_casting_skill = false
 	
-	if not is_dead:
-		animated_sprite.play("idle")
+	# BẢN VÁ LỖI ĐƠ NHÂN VẬT:
+	# Chỉ ép về trạng thái "idle" nếu nhân vật bình an vô sự.
+	# Nếu bị đánh (is_hurt = true), file cha (player.gd) sẽ tự lo việc mở khóa.
+	if not is_dead and not is_hurt:
+		is_casting_skill = false
+		if animated_sprite.animation == "skill":
+			animated_sprite.play("idle")

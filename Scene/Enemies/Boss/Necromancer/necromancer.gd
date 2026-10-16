@@ -94,6 +94,9 @@ func attack_poison():
 		explosion.global_position = target_pos
 
 func take_damage(damage_amount: int) -> void:
+	# CƠ CHẾ BẤT TỬ: Nếu chưa được kích hoạt (cửa chưa đóng) thì miễn nhiễm sát thương!
+	if not is_active: 
+		return
 	if is_dead or is_casting_special: return 
 	hp -= damage_amount
 	
