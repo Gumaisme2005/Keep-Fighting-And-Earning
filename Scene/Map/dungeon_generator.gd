@@ -171,6 +171,10 @@ func build_dungeon_layout():
 
 # --- HÀM TẠO VÙNG CẤM CỦA BẪY ---
 func plan_traps():
+	# BẢN VÁ LỖI: Xóa sạch dữ liệu bẫy cũ mỗi khi hàm này được gọi!
+	reserved_trap_positions.clear()
+	forbidden_decor_cells.clear()
+	
 	for i in range(1, generated_rooms.size()):
 		if room_types[i] == RoomType.COMBAT:
 			var room = generated_rooms[i]
@@ -202,7 +206,6 @@ func plan_traps():
 					for dx in range(-2, 2):
 						for dy in range(-2, 2):
 							forbidden_decor_cells[pos + Vector2i(dx, dy)] = true
-
 
 # --- CÁC HÀM XÂY DỰNG TƯỜNG & ĐỒ VẬT ---
 func carve_room(room: Rect2i):

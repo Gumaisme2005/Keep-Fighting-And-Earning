@@ -2,8 +2,9 @@
 
 [ext_resource type="Script" uid="uid://78p1adxiwwg8" path="res://Scene/Enemies/Boss/Necromancer/necromancer.gd" id="1_kykvt"]
 [ext_resource type="PackedScene" uid="uid://hd36nx58eb5c" path="res://Scene/Enemies/Skeleton/skeleton.tscn" id="2_jhpd1"]
+[ext_resource type="PackedScene" uid="uid://3vk6cejb0q7r" path="res://Scene/Projectiles/poison_explosion.tscn" id="3_jhpd1"]
+[ext_resource type="Texture2D" uid="uid://b4lfuog8efi7f" path="res://Assets/Character/Necromancer/Necromancer_Attack02.png" id="4_kykvt"]
 [ext_resource type="Texture2D" uid="uid://cd271opn50ehp" path="res://Assets/Character/Necromancer/Necromancer_Attack01.png" id="6_asa8e"]
-[ext_resource type="Texture2D" uid="uid://oric7njy6pqt" path="res://Assets/Character/Necromancer/Necromancer_Attack02(With magic effects).png" id="7_yepne"]
 [ext_resource type="Texture2D" uid="uid://c22esu5pubknw" path="res://Assets/Character/Necromancer/Necromancer_DEATH.png" id="8_xut7a"]
 [ext_resource type="Texture2D" uid="uid://dbw33a51qleie" path="res://Assets/Character/Necromancer/Necromancer_Hurt.png" id="9_qgcco"]
 [ext_resource type="Texture2D" uid="uid://dmajhb4uel8cb" path="res://Assets/Character/Necromancer/Necromancer_Idle.png" id="10_1qlcs"]
@@ -46,44 +47,44 @@ region = Rect2(700, 0, 100, 100)
 atlas = ExtResource("6_asa8e")
 region = Rect2(800, 0, 100, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_tltj4"]
-atlas = ExtResource("7_yepne")
+[sub_resource type="AtlasTexture" id="AtlasTexture_jhpd1"]
+atlas = ExtResource("4_kykvt")
 region = Rect2(0, 0, 100, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_5mvda"]
-atlas = ExtResource("7_yepne")
+[sub_resource type="AtlasTexture" id="AtlasTexture_e2r77"]
+atlas = ExtResource("4_kykvt")
 region = Rect2(100, 0, 100, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_dayf8"]
-atlas = ExtResource("7_yepne")
+[sub_resource type="AtlasTexture" id="AtlasTexture_asa8e"]
+atlas = ExtResource("4_kykvt")
 region = Rect2(200, 0, 100, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_sgsis"]
-atlas = ExtResource("7_yepne")
+[sub_resource type="AtlasTexture" id="AtlasTexture_yepne"]
+atlas = ExtResource("4_kykvt")
 region = Rect2(300, 0, 100, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_j0jky"]
-atlas = ExtResource("7_yepne")
+[sub_resource type="AtlasTexture" id="AtlasTexture_xut7a"]
+atlas = ExtResource("4_kykvt")
 region = Rect2(400, 0, 100, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_tx66o"]
-atlas = ExtResource("7_yepne")
+[sub_resource type="AtlasTexture" id="AtlasTexture_qgcco"]
+atlas = ExtResource("4_kykvt")
 region = Rect2(500, 0, 100, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_1d231"]
-atlas = ExtResource("7_yepne")
+[sub_resource type="AtlasTexture" id="AtlasTexture_1qlcs"]
+atlas = ExtResource("4_kykvt")
 region = Rect2(600, 0, 100, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_mewrt"]
-atlas = ExtResource("7_yepne")
+[sub_resource type="AtlasTexture" id="AtlasTexture_a3ssl"]
+atlas = ExtResource("4_kykvt")
 region = Rect2(700, 0, 100, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_10vgk"]
-atlas = ExtResource("7_yepne")
+[sub_resource type="AtlasTexture" id="AtlasTexture_sepas"]
+atlas = ExtResource("4_kykvt")
 region = Rect2(800, 0, 100, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_0rm30"]
-atlas = ExtResource("7_yepne")
+[sub_resource type="AtlasTexture" id="AtlasTexture_tltj4"]
+atlas = ExtResource("4_kykvt")
 region = Rect2(900, 0, 100, 100)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yuy2d"]
@@ -274,34 +275,34 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_jhpd1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e2r77")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_asa8e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yepne")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xut7a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qgcco")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1qlcs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a3ssl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sepas")
+}, {
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_tltj4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5mvda")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dayf8")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_sgsis")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_j0jky")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_tx66o")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_1d231")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_mewrt")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_10vgk")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_0rm30")
 }],
 "loop": 0,
 "name": &"attack_2",
@@ -457,12 +458,10 @@ size = Vector2(18, 43.5)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8vrlf"]
 size = Vector2(85.40625, 85)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_g2c4u"]
-size = Vector2(51, 52.5)
-
 [node name="Necromancer" type="CharacterBody2D" unique_id=631054120]
 script = ExtResource("1_kykvt")
 summon_enemy_scene = ExtResource("2_jhpd1")
+poison_explosion_scene = ExtResource("3_jhpd1")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1543451136]
 position = Vector2(0, -10)
@@ -470,7 +469,6 @@ scale = Vector2(1.295, 1.4449999)
 sprite_frames = SubResource("SpriteFrames_1vivr")
 animation = &"attack_2"
 autoplay = "idle"
-frame = 9
 frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=724055234]
@@ -490,13 +488,5 @@ position = Vector2(20.296875, -22.5)
 shape = SubResource("RectangleShape2D_8vrlf")
 disabled = true
 
-[node name="PoisonHitbox" type="Area2D" parent="." unique_id=1977155421]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PoisonHitbox" unique_id=730206973]
-position = Vector2(35.5, -22.75)
-shape = SubResource("RectangleShape2D_g2c4u")
-disabled = true
-
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="area_entered" from="ScytheHitbox" to="." method="_on_scythe_hitbox_area_entered"]
-[connection signal="area_entered" from="PoisonHitbox" to="." method="_on_poison_hitbox_area_entered"]
