@@ -10,7 +10,7 @@ enum RoomType { START, COMBAT, TREASURE, BOSS }
 @export var room_max_size: int = 25
 
 # --- ĐƯỜNG DẪN SCENE ---
-const PLAYER_SCENE = preload("res://Scene/Character/Player.tscn")
+const PLAYER_SCENE = preload("res://Scene/Character/Player 1_Pyrois/player.gd")
 const CHEST_SCENE = preload("res://Scene/Items/Chest/chest.tscn") 
 const SPIKE_TRAP = preload("res://Scene/Map/SpikeTrap.tscn")
 
@@ -22,7 +22,7 @@ var enemy_scenes: Array[PackedScene] = [
 	preload("res://Scene/Enemies/Skeleton/skeleton.tscn"),
 	preload("res://Scene/Enemies/Blood Monster/blood_monster.tscn"),
 	preload("res://Scene/Enemies/Vampire/vampire.tscn"),
-	preload("res://Scene/Enemies/Armored_Orc/armored_orc.tscn") 
+	preload("res://Scene/Enemies/Armored_orc/armored_orc.tscn") 
 ]
 
 @export var current_level: int = 1

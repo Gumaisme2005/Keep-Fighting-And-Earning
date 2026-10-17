@@ -1,4 +1,4 @@
-extends "res://Scene/Character/player.gd"
+extends "res://Scene/Character/Player 1_Pyrois/player.gd"
 
 @export var buff_duration: float = 5.0 # Thời gian duy trì buff (5 giây)
 @export var damage_multiplier: int = 2 # Sát thương nhân đôi
