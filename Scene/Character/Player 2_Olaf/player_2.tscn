@@ -294,6 +294,7 @@ size = Vector2(37, 33)
 size = Vector2(18, 32)
 
 [node name="player_2" type="CharacterBody2D" unique_id=1500814557 groups=["player"]]
+y_sort_enabled = true
 script = ExtResource("1_wmu1l")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=142502771]

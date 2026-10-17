@@ -586,10 +586,15 @@ sources/0 = SubResource("TileSetAtlasSource_dwbse")
 sources/1 = SubResource("TileSetAtlasSource_aqk2v")
 
 [node name="Node2D" type="Node2D" unique_id=569670354]
+y_sort_enabled = true
 
 [node name="TileMap" type="TileMap" parent="." unique_id=874230329]
+y_sort_enabled = true
 tile_set = SubResource("TileSet_1vivr")
 format = 2
+layer_0/z_index = -1
 layer_1/name = "Decor"
+layer_1/y_sort_enabled = true
 layer_2/name = "Doors"
+layer_2/y_sort_enabled = true
 script = ExtResource("6_dwbse")

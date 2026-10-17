@@ -282,6 +282,7 @@ size = Vector2(30, 21)
 size = Vector2(16, 21.5)
 
 [node name="Player" type="CharacterBody2D" unique_id=1500814557 groups=["player"]]
+y_sort_enabled = true
 script = ExtResource("1_gwykh")
 arrow_scene = ExtResource("2_xo75r")
 bomb_scene = ExtResource("3_xo75r")
