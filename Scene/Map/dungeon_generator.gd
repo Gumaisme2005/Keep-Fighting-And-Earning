@@ -14,7 +14,7 @@ const PLAYER_SCENE = preload("res://Scene/Character/Player 1_Pyrois/player.gd")
 const CHEST_SCENE = preload("res://Scene/Items/Chest/chest.tscn") 
 const SPIKE_TRAP = preload("res://Scene/Map/SpikeTrap.tscn")
 
-const KITSUNE_SCENE = preload("res://Scene/Enemies/Boss/Kitsune/Kitsune.tscn")
+const RIDER_ORC_SCENE = preload("res://Scene/Enemies/Boss/Orc Rider/orc_rider.tscn")
 const NECROMANCER_SCENE = preload("res://Scene/Enemies/Boss/Necromancer/necromancer.tscn")
 
 var enemy_scenes: Array[PackedScene] = [
@@ -397,7 +397,7 @@ func spawn_entities():
 				boss_instance = NECROMANCER_SCENE.instantiate()
 				print("🦇 Tầng ", current_level, " - Boss: Necromancer xuất hiện!")
 			else: 
-				boss_instance = KITSUNE_SCENE.instantiate()
+				boss_instance = RIDER_ORC_SCENE.instantiate()
 				print("🦊 Tầng ", current_level, " - Boss: Kitsune xuất hiện!")
 				
 			boss_instance.add_to_group("enemies") 

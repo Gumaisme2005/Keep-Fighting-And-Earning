@@ -14,6 +14,6 @@ type = 2
 icon = SubResource("AtlasTexture_6ad7n")
 description = "+1 DMG
 +1 Giáp"
-damage = 2
+damage = 8
 armor = 1
 metadata/_custom_type_script = "uid://cfc0cqlwptxu6"

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://btt50j8kh838"
-path="res://.godot/imported/Attack_1.png-6adf672f1f6f29c5db67eb5397fcc034.ctex"
+uid="uid://vimtgogltjdg"
+path="res://.godot/imported/Orc rider_Death.png-0476f2212090e3951af335c990c32aa0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Character/Boss_Kitsune/Attack_1.png"
-dest_files=["res://.godot/imported/Attack_1.png-6adf672f1f6f29c5db67eb5397fcc034.ctex"]
+source_file="res://Assets/Character/Orc Rider/Orc rider_Death.png"
+dest_files=["res://.godot/imported/Orc rider_Death.png-0476f2212090e3951af335c990c32aa0.ctex"]
 
 [params]
 

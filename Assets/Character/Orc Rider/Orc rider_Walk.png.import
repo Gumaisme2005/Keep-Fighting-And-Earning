@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://chvnck0u6ryeq"
-path="res://.godot/imported/Fire_2.png-390fa8e9e99eb6e9017a0a41877e77f6.ctex"
+uid="uid://dmcdea2wtsnqa"
+path="res://.godot/imported/Orc rider_Walk.png-d641f4eb9336b3121c1728f3dc8410fe.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Character/Boss_Kitsune/Fire_2.png"
-dest_files=["res://.godot/imported/Fire_2.png-390fa8e9e99eb6e9017a0a41877e77f6.ctex"]
+source_file="res://Assets/Character/Orc Rider/Orc rider_Walk.png"
+dest_files=["res://.godot/imported/Orc rider_Walk.png-d641f4eb9336b3121c1728f3dc8410fe.ctex"]
 
 [params]
 
