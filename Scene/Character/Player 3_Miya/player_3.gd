@@ -1,4 +1,4 @@
-extends "res://Scene/Character/player.gd"
+extends "res://Scene/Character/Player 1_Pyrois/player.gd"
 
 # Sẽ xuất hiện 1 ô bên bảng Inspector để cậu kéo thả file arrow.tscn vào
 @export var arrow_scene: PackedScene 

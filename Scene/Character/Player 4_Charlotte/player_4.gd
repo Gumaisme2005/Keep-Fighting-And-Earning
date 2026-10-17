@@ -1,4 +1,4 @@
-extends "res://Scene/Character/player.gd"
+extends "res://Scene/Character/Player 1_Pyrois/player.gd"
 
 # --- THỜI GIAN HỒI CHIÊU ---
 @export var q_skill_cooldown: float = 3.0

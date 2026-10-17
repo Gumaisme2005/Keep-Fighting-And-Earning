@@ -379,20 +379,21 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8vrlf"]
-radius = 3.9999998
+radius = 3.0
 height = 14.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v5gy4"]
-size = Vector2(14, 21)
+size = Vector2(14, 23)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1vivr"]
-size = Vector2(7, 17)
+size = Vector2(8.5, 23)
 
 [node name="Vampire" type="CharacterBody2D" unique_id=1637879376]
 script = ExtResource("1_mx0yj")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1977051638]
-position = Vector2(0, -14)
+position = Vector2(0.9999995, -16)
+scale = Vector2(1.4375, 1.1875)
 sprite_frames = SubResource("SpriteFrames_1vivr")
 animation = &"idle"
 autoplay = "idle"
@@ -405,13 +406,13 @@ shape = SubResource("CapsuleShape2D_8vrlf")
 [node name="Hurtbox" type="Area2D" parent="." unique_id=862928991]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1624390140]
-position = Vector2(-3, -6.5)
+position = Vector2(-3, -8.5)
 shape = SubResource("RectangleShape2D_v5gy4")
 
 [node name="BiteHitbox" type="Area2D" parent="." unique_id=341082687]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BiteHitbox" unique_id=764606490]
-position = Vector2(5.5, -6.5)
+position = Vector2(8, -8.5)
 shape = SubResource("RectangleShape2D_1vivr")
 disabled = true
 

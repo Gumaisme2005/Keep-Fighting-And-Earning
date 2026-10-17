@@ -1,10 +1,10 @@
 extends Control
 
 # Tự động nạp sẵn 4 nhân vật
-@export var char_1_scene: PackedScene = preload("res://Scene/Character/player.tscn")
-@export var char_2_scene: PackedScene = preload("res://Scene/Character/player_2.tscn")
-@export var char_3_scene: PackedScene = preload("res://Scene/Character/player_3.tscn") 
-@export var char_4_scene: PackedScene = preload("res://Scene/Character/player_4.tscn") # Thêm Nữ Kiếm Sĩ
+@export var char_1_scene: PackedScene = preload("res://Scene/Character/Player 1_Pyrois/player.tscn")
+@export var char_2_scene: PackedScene = preload("res://Scene/Character/Player 2_Olaf/player_2.tscn")
+@export var char_3_scene: PackedScene = preload("res://Scene/Character/Player 3_Miya/player_3.tscn") 
+@export var char_4_scene: PackedScene = preload("res://Scene/Character/Player 4_Charlotte/player_4.tscn") # Thêm Nữ Kiếm Sĩ
 
 # Đường dẫn tới màn chơi chính
 @export_file("*.tscn") var game_world_path: String = "res://world.tscn"

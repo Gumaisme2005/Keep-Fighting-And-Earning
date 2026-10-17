@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://68p8v41b5p2u"]
 
-[ext_resource type="Script" uid="uid://k6tqs5ecod6l" path="res://Scene/Character/player.gd" id="1_kne1u"]
+[ext_resource type="Script" uid="uid://k6tqs5ecod6l" path="res://Scene/Character/Player 1_Pyrois/player.gd" id="1_kne1u"]
 [ext_resource type="Texture2D" uid="uid://dahxvyxkbbyfw" path="res://Assets/Character/Soldier/Soldier/Soldier_Attack01.png" id="2_cxr5p"]
 [ext_resource type="Texture2D" uid="uid://47ovclbqbopo" path="res://Assets/Character/Soldier/Soldier/Soldier_Idle.png" id="2_e80uo"]
 [ext_resource type="Texture2D" uid="uid://bik5506flef6b" path="res://Assets/Character/Soldier/Soldier/Soldier_Walk.png" id="3_cxr5p"]
 [ext_resource type="Texture2D" uid="uid://k146yosqp16l" path="res://Assets/Character/Soldier/Soldier/Soldier_Death.png" id="3_tdg3f"]
+[ext_resource type="Texture2D" uid="uid://cr85v4x3dbfhj" path="res://Assets/Character/Soldier/Soldier/Soldier_Attack02.png" id="3_y5mr3"]
 [ext_resource type="Texture2D" uid="uid://bc4itlskv021l" path="res://Assets/Character/Soldier/Soldier/Soldier_Hurt.png" id="4_dtqjt"]
 [ext_resource type="Script" uid="uid://cqm4110dqn65t" path="res://Scene/Character/InventoryManager.gd" id="7_rlyac"]
 [ext_resource type="PackedScene" uid="uid://c88b4e2b3wqrw" path="res://Scene/UI/GameUI.tscn" id="8_ec6a5"]
@@ -31,6 +32,30 @@ region = Rect2(400, 0, 100, 100)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2n1s8"]
 atlas = ExtResource("2_cxr5p")
+region = Rect2(500, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bu1n7"]
+atlas = ExtResource("3_y5mr3")
+region = Rect2(0, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ln382"]
+atlas = ExtResource("3_y5mr3")
+region = Rect2(100, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_du4od"]
+atlas = ExtResource("3_y5mr3")
+region = Rect2(200, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6hv4w"]
+atlas = ExtResource("3_y5mr3")
+region = Rect2(300, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ws2aw"]
+atlas = ExtResource("3_y5mr3")
+region = Rect2(400, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ax4u5"]
+atlas = ExtResource("3_y5mr3")
 region = Rect2(500, 0, 100, 100)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3vjad"]
@@ -148,6 +173,29 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_bu1n7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ln382")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_du4od")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6hv4w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ws2aw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ax4u5")
+}],
+"loop": 0,
+"name": &"attack_2",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_3vjad")
 }, {
 "duration": 1.0,
@@ -235,21 +283,22 @@ animations = [{
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1vivr"]
 radius = 3.0
-height = 16.0
+height = 18.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1vivr"]
-size = Vector2(30, 21)
+size = Vector2(38, 27)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8vrlf"]
-size = Vector2(16, 20.5)
+size = Vector2(18, 26.5)
 
 [node name="Player" type="CharacterBody2D" unique_id=1500814557 groups=["player"]]
 script = ExtResource("1_kne1u")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=142502771]
-position = Vector2(0, -7)
+position = Vector2(0, -10.000001)
+scale = Vector2(1.3550001, 1.3025001)
 sprite_frames = SubResource("SpriteFrames_65baf")
-animation = &"hurt"
+animation = &"attack_2"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1165885128]
@@ -259,14 +308,14 @@ shape = SubResource("CapsuleShape2D_1vivr")
 [node name="SwordHitbox" type="Area2D" parent="." unique_id=1952238041 groups=["player"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SwordHitbox" unique_id=1063299358]
-position = Vector2(7, -7.5)
+position = Vector2(10, -10.5)
 shape = SubResource("RectangleShape2D_1vivr")
 disabled = true
 
 [node name="PlayerHurtbox" type="Area2D" parent="." unique_id=1895165731]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerHurtbox" unique_id=1778319602]
-position = Vector2(0, -7.75)
+position = Vector2(0, -10.75)
 shape = SubResource("RectangleShape2D_8vrlf")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=469432286]

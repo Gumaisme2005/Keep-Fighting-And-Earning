@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c23vpswb8oj27"]
 
-[ext_resource type="Script" uid="uid://bw7ufr4all07" path="res://Scene/Character/player_3.gd" id="1_gwykh"]
+[ext_resource type="Script" uid="uid://bw7ufr4all07" path="res://Scene/Character/Player 3_Miya/player_3.gd" id="1_gwykh"]
 [ext_resource type="Texture2D" uid="uid://bvdr127jnigh5" path="res://Assets/Character/Human_Archer/Human_Archer.png" id="2_eswf3"]
 [ext_resource type="PackedScene" uid="uid://2ghkboxexty4" path="res://Scene/Projectiles/arrow.tscn" id="2_xo75r"]
 [ext_resource type="PackedScene" uid="uid://clfnfi34cpclr" path="res://Scene/Projectiles/bomb.tscn" id="3_xo75r"]
