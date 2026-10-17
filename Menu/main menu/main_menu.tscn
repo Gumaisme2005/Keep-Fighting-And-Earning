@@ -1,0 +1,90 @@
+[gd_scene format=3 uid="uid://xvemgenba6x2"]
+
+[ext_resource type="Script" uid="uid://bwp8oxkw0i6tm" path="res://Menu/main menu/main_menu.gd" id="1_8f8xy"]
+[ext_resource type="Texture2D" uid="uid://dahpbk2urojhs" path="res://Assets/UI/Background/Dungeon.png" id="1_cok42"]
+
+[sub_resource type="SystemFont" id="SystemFont_8f8xy"]
+font_names = PackedStringArray("Impact")
+
+[sub_resource type="SystemFont" id="SystemFont_tvcto"]
+font_names = PackedStringArray("Impact")
+subpixel_positioning = 0
+
+[node name="Main_menu" type="Control" unique_id=985923920]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8f8xy")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=630761748]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_cok42")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=160568915]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1546792913]
+layout_mode = 2
+theme_override_constants/separation = 60
+
+[node name="Seperator" type="Control" parent="MarginContainer/VBoxContainer" unique_id=1805553697]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=2029599157]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0.07058824, 0.07058824, 0.07058824, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 7
+theme_override_constants/shadow_offset_y = 7
+theme_override_constants/outline_size = 24
+theme_override_fonts/font = SubResource("SystemFont_8f8xy")
+theme_override_font_sizes/font_size = 64
+text = "Dungeon: Entropy Effect"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1321641101]
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1143167629]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="Start_button" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=852765382]
+custom_minimum_size = Vector2(120, 32)
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_tvcto")
+theme_override_font_sizes/font_size = 24
+text = "Start Game"
+
+[node name="Seperator3" type="Control" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=2101794756]
+layout_mode = 2
+
+[node name="Exit_button" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=246778902]
+custom_minimum_size = Vector2(120, 32)
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_tvcto")
+theme_override_font_sizes/font_size = 24
+text = "Exit Game"
+
+[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Start_button" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Exit_button" to="." method="_on_exit_button_pressed"]
