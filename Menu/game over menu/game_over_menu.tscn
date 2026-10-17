@@ -1,0 +1,90 @@
+[gd_scene format=3 uid="uid://ck6udcm1nm3os"]
+
+[ext_resource type="Script" uid="uid://cjut7d07c1p4p" path="res://Menu/game over menu/game_over_menu.gd" id="1_64ni6"]
+
+[sub_resource type="SystemFont" id="SystemFont_u2xv2"]
+font_names = PackedStringArray("Impact")
+subpixel_positioning = 0
+
+[sub_resource type="SystemFont" id="SystemFont_icuge"]
+font_names = PackedStringArray("Impact")
+subpixel_positioning = 0
+
+[node name="game_over_menu" type="Control" unique_id=445345640]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_64ni6")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=590316044]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.07058824, 0.07058824, 0.07058824, 0.19215687)
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1659788909]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=431141369]
+layout_mode = 2
+theme_override_constants/separation = 120
+
+[node name="Seperater" type="Control" parent="MarginContainer/VBoxContainer" unique_id=1577238324]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=49368095]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3019608, 0.09019608, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = SubResource("SystemFont_u2xv2")
+theme_override_font_sizes/font_size = 64
+text = "GAME OVER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1211527400]
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1179487881]
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="Seperater" type="Control" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=1329163210]
+layout_mode = 2
+
+[node name="Retry_button" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=1545327969]
+custom_minimum_size = Vector2(120, 32)
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_icuge")
+theme_override_font_sizes/font_size = 24
+text = "Retry"
+
+[node name="Exit_button" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=281275448]
+custom_minimum_size = Vector2(120, 32)
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_icuge")
+theme_override_font_sizes/font_size = 24
+text = "Quit"
+
+[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Retry_button" to="." method="_on_retry_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Exit_button" to="." method="_on_exit_button_pressed"]

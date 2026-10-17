@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://cpcn5e3epu68a"]
 
 [ext_resource type="Texture2D" uid="uid://ij34crdb1rh4" path="res://Assets/Map/Objects.png" id="2_tlwt5"]
+[ext_resource type="PackedScene" uid="uid://cxuf6kvn5wh7r" path="res://Menu/pause menu/pause_menu.tscn" id="4_aqk2v"]
+[ext_resource type="PackedScene" path="res://Menu/game over menu/game_over_menu.tscn" id="7_game_over"]
 [ext_resource type="Texture2D" uid="uid://chuifes2qyj7j" path="res://Assets/Map/walls_floor.png" id="5_036b0"]
 [ext_resource type="Script" uid="uid://cmiei2e6vb4e2" path="res://Scene/Map/dungeon_generator.gd" id="6_dwbse"]
 
@@ -598,3 +600,9 @@ layer_1/y_sort_enabled = true
 layer_2/name = "Doors"
 layer_2/y_sort_enabled = true
 script = ExtResource("6_dwbse")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=439789130]
+
+[node name="pause_menu" parent="CanvasLayer" unique_id=445345640 instance=ExtResource("4_aqk2v")]
+
+[node name="game_over_menu" parent="CanvasLayer" instance=ExtResource("7_game_over")]

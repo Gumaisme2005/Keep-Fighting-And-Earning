@@ -149,7 +149,7 @@ func take_damage(amount: int) -> void:
 				$PlayerHurtbox/CollisionShape2D.set_deferred("disabled", true)
 			
 			await get_tree().create_timer(2.0).timeout
-			get_tree().change_scene_to_file("res://Scene/UI/CharacterSelect.tscn")
+			get_tree().call_group("game_over_menu", "pause")
 
 func start_invincibility() -> void:
 	is_invincible = true
