@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bsiyj82sborkw"
-path="res://.godot/imported/flamethrower_2_2.png-afdfdd6e1032df46ea9b211be89ca608.ctex"
+uid="uid://byqmioiwlynh6"
+path="res://.godot/imported/Skeleton Archer.png-c3cb42c4823ec7cc6312153c5683f9d5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Projectiles/flamethrower_2_2.png"
-dest_files=["res://.godot/imported/flamethrower_2_2.png-afdfdd6e1032df46ea9b211be89ca608.ctex"]
+source_file="res://Assets/Character/Skeleton Archer/Skeleton Archer.png"
+dest_files=["res://.godot/imported/Skeleton Archer.png-c3cb42c4823ec7cc6312153c5683f9d5.ctex"]
 
 [params]
 

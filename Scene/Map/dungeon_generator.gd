@@ -20,9 +20,9 @@ const NECROMANCER_SCENE = preload("res://Scene/Enemies/Boss/Necromancer/necroman
 var enemy_scenes: Array[PackedScene] = [
 	preload("res://Scene/Enemies/Orc/orc.tscn"),
 	preload("res://Scene/Enemies/Skeleton/skeleton.tscn"),
-	preload("res://Scene/Enemies/Blood Monster/blood_monster.tscn"),
 	preload("res://Scene/Enemies/Vampire/vampire.tscn"),
-	preload("res://Scene/Enemies/Armored_orc/armored_orc.tscn") 
+	preload("res://Scene/Enemies/Armored_orc/armored_orc.tscn"),
+	preload("res://Scene/Enemies/Skeleton Archer/skeleton_archer.tscn") 
 ]
 
 @export var current_level: int = 1

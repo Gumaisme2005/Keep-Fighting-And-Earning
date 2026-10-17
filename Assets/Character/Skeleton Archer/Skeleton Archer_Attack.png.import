@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ckp5dowolfcjs"
-path="res://.godot/imported/Blood Monster_A_Death.png-2ba440f8e099b3dd30c02b7102000e4e.ctex"
+uid="uid://drdq5c06frptp"
+path="res://.godot/imported/Skeleton Archer_Attack.png-c77a717acebc8678f0cb50e83fb275a2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Character/Blood Monster_A/Blood Monster_A with shadows/Blood Monster_A_Death.png"
-dest_files=["res://.godot/imported/Blood Monster_A_Death.png-2ba440f8e099b3dd30c02b7102000e4e.ctex"]
+source_file="res://Assets/Character/Skeleton Archer/Skeleton Archer_Attack.png"
+dest_files=["res://.godot/imported/Skeleton Archer_Attack.png-c77a717acebc8678f0cb50e83fb275a2.ctex"]
 
 [params]
 

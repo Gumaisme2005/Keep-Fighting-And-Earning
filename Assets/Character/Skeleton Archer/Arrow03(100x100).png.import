@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cuxnxku20dpwo"
-path="res://.godot/imported/Blood Monster_A_Hurt.png-35faaf55f2c411e6f9d3e26b5e9c955d.ctex"
+uid="uid://dkpd2s48fm3au"
+path="res://.godot/imported/Arrow03(100x100).png-47e529ae34f38b2692abe7905254fa11.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Character/Blood Monster_A/Blood Monster_A with shadows/Blood Monster_A_Hurt.png"
-dest_files=["res://.godot/imported/Blood Monster_A_Hurt.png-35faaf55f2c411e6f9d3e26b5e9c955d.ctex"]
+source_file="res://Assets/Character/Skeleton Archer/Arrow03(100x100).png"
+dest_files=["res://.godot/imported/Arrow03(100x100).png-47e529ae34f38b2692abe7905254fa11.ctex"]
 
 [params]
 

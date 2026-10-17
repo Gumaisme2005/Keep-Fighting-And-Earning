@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dqs7g7urnwkw4"
-path="res://.godot/imported/Blood Monster_A_Attack01.png-dbb3981f5a40b1bc50be3e8403182dd2.ctex"
+uid="uid://bgncs3vuqysdm"
+path="res://.godot/imported/Skeleton Archer_Summon.png-b5bcb324ffe47524dfa5d400c0560b23.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Character/Blood Monster_A/Blood Monster_A/Blood Monster_A_Attack01.png"
-dest_files=["res://.godot/imported/Blood Monster_A_Attack01.png-dbb3981f5a40b1bc50be3e8403182dd2.ctex"]
+source_file="res://Assets/Character/Skeleton Archer/Skeleton Archer_Summon.png"
+dest_files=["res://.godot/imported/Skeleton Archer_Summon.png-b5bcb324ffe47524dfa5d400c0560b23.ctex"]
 
 [params]
 
