@@ -475,6 +475,7 @@ shape = SubResource("CapsuleShape2D_1vivr")
 [node name="SwordHitbox" type="Area2D" parent="." unique_id=1952238041 groups=["player"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SwordHitbox" unique_id=1063299358]
+y_sort_enabled = true
 position = Vector2(15, -9)
 shape = SubResource("RectangleShape2D_1vivr")
 disabled = true
