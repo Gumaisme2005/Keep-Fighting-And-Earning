@@ -265,29 +265,34 @@ func use_special_skill() -> void:
 	start_skill_cooldown()
 	is_casting_skill = true
 	
+	# --- BẬT BẤT TỬ (I-FRAMES) KHI TUNG CHIÊU Q ---
+	is_invincible = true 
+	
+	# Tùy chọn: Làm nhân vật phát sáng một chút để người chơi nhận ra mình đang bất tử
+	animated_sprite.modulate = Color(1.5, 1.5, 2.0) 
+	
 	# Tạo lực nhảy vọt nhẹ về phía trước cho ngầu
 	var face_direction = -1 if animated_sprite.flip_h else 1
 	velocity.x = face_direction * 150.0 
 	
 	animated_sprite.play("attack_2")
-	print("⚔️ Soldier nhảy bổ kiếm!")
+	print("⚔️ Soldier nhảy bổ kiếm (I-Frames đang bật)!")
 	
 	# Đợi 0.3s để nhân vật nhảy lên tới đỉnh không trung rồi mới bật sát thương
 	await get_tree().create_timer(0.3).timeout
 	
-	# CHỐT CHẶN: Nếu bị quái tát ngã trong lúc đang nhảy -> Hủy chiêu!
-	if is_dead or is_hurt: return
-	
 	# Dừng lướt và đập kiếm xuống đất
 	velocity.x = 0
 	sword_collision.set_deferred("disabled", false)
-	await get_tree().create_timer(0.2).timeout
 	
-	# Kiểm tra lần 2 trước khi tắt để tránh tạo bóng ma sát thương
-	if is_dead or is_hurt: return
+	await get_tree().create_timer(0.2).timeout
 	
 	sword_collision.set_deferred("disabled", true)
 	is_casting_skill = false
+	
+	# --- TẮT BẤT TỬ KHI CHIÊU Q KẾT THÚC ---
+	is_invincible = false 
+	animated_sprite.modulate = Color.WHITE # Trả lại màu sắc ban đầu
 	
 	if not is_dead and not is_hurt and animated_sprite.animation == "attack_2":
 		animated_sprite.play("idle")
