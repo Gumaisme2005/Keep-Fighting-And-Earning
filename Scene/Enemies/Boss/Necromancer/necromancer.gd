@@ -5,8 +5,6 @@ extends CharacterBody2D
 @export var poison_range: float = 200.0 # Tăng tầm nổ độc lên cho xa
 @export var attack_cooldown: float = 1.5 
 @export var summon_enemy_scene: PackedScene 
-
-# THÊM BIẾN MỚI: Kéo file poison_explosion.tscn vào đây!
 @export var poison_explosion_scene: PackedScene 
 
 var max_hp: int = 30 
@@ -74,30 +72,23 @@ func attack_melee():
 	anim.play("attack_1")
 	scythe_collision.disabled = false
 
-# --- HÀM NỔ ĐỘC TỪ XA CẬP NHẬT MỚI ---
 func attack_poison():
 	is_attacking = true
 	can_attack = false
 	velocity = Vector2.ZERO
 	anim.play("attack_2") 
 	
-	# Lấy đúng vị trí hiện tại của Player
 	if is_instance_valid(player) and poison_explosion_scene != null:
 		var target_pos = player.global_position
-		
-		# Khởi tạo vụ nổ
 		var explosion = poison_explosion_scene.instantiate()
-		explosion.damage = poison_damage # Truyền sát thương của Boss (có thể tăng theo Phase) vào vụ nổ!
-		
-		# Dùng call_deferred để quăng vụ nổ ra map một cách an toàn
+		explosion.damage = poison_damage 
 		get_parent().call_deferred("add_child", explosion)
 		explosion.global_position = target_pos
 
+# --- HÀM NHẬN SÁT THƯƠNG & CHUYỂN PHASE ---
 func take_damage(damage_amount: int) -> void:
-	# CƠ CHẾ BẤT TỬ: Nếu chưa được kích hoạt (cửa chưa đóng) thì miễn nhiễm sát thương!
-	if not is_active: 
-		return
-	if is_dead or is_casting_special: return 
+	if not is_active or is_dead or is_casting_special: return 
+	
 	hp -= damage_amount
 	
 	if hp <= max_hp / 3.0 and not phase_3_triggered:
@@ -122,12 +113,13 @@ func take_damage(damage_amount: int) -> void:
 		scythe_collision.set_deferred("disabled", true)
 	else:
 		is_dead = true
+		anim.modulate = Color.WHITE # Xóa hiệu ứng gồng màu đỏ nếu bị giết
 		anim.play("death")
 		$Hurtbox/CollisionShape2D.set_deferred("disabled", true)
 		$CollisionShape2D.set_deferred("disabled", true)
 		scythe_collision.set_deferred("disabled", true)
 
-# --- KỸ NĂNG ĐẶC BIỆT: GỌI QUÁI VÀ NỔ 8 HƯỚNG (PHASE 2 & 3) ---
+# --- KỸ NĂNG ĐẶC BIỆT: GỌI QUÁI VÀ NỔ 8 HƯỚNG ---
 func cast_summon_skill():
 	is_casting_special = true
 	is_attacking = false
@@ -135,36 +127,42 @@ func cast_summon_skill():
 	anim.play("summon")
 	scythe_collision.set_deferred("disabled", true)
 	
-	# Đợi hoạt ảnh vẽ vòng tròn phép 0.5s
-	await get_tree().create_timer(0.5).timeout 
+	# CẢNH BÁO NHẤP NHÁY ĐỎ 2 GIÂY TRƯỚC KHI SPAWN
+	var tween = create_tween()
+	tween.set_loops(8) 
+	tween.tween_property(anim, "modulate", Color(1, 0.2, 0.2), 0.125)
+	tween.tween_property(anim, "modulate", Color.WHITE, 0.125)
 	
-	if is_dead: return
+	await get_tree().create_timer(2.0).timeout 
 	
-	# 1. GỌI TỪ 5-7 CON QUÁI Ở VÒNG TRONG (Bán kính 40)
+	if is_dead: 
+		tween.kill()
+		return
+	
+	# SPAWN QUÁI THEO VÒNG TRÒN
 	if summon_enemy_scene != null:
 		var num_mobs = randi_range(5, 7)
 		for i in range(num_mobs):
 			var minion = summon_enemy_scene.instantiate()
 			get_parent().call_deferred("add_child", minion)
-			var angle = i * (TAU / num_mobs) # TAU = 360 độ
-			var spawn_offset = Vector2(cos(angle), sin(angle)) * 40.0
+			var angle = i * (TAU / num_mobs) 
+			var spawn_offset = Vector2(cos(angle), sin(angle)) * 70.0 
 			minion.global_position = global_position + spawn_offset
-			minion.is_active = true
+			
+			get_tree().create_timer(0.1).timeout.connect(func(): if is_instance_valid(minion): minion.is_active = true)
 
-	# 2. TẠO BOM ĐỘC Ở 8 HƯỚNG VÒNG NGOÀI (Bán kính 90)
+	# SPAWN 8 BOM ĐỘC VÒNG NGOÀI
 	if poison_explosion_scene != null:
 		for i in range(8):
 			var explosion = poison_explosion_scene.instantiate()
-			explosion.damage = poison_damage # Kế thừa sát thương của Boss
+			explosion.damage = poison_damage 
 			get_parent().call_deferred("add_child", explosion)
 			
-			# i * (PI / 4) sẽ tạo ra 8 góc: 0, 45, 90, 135, 180, 225, 270, 315 độ
 			var angle = i * (PI / 4.0) 
-			var explosion_offset = Vector2(cos(angle), sin(angle)) * 90.0 # Bán kính nổ cách Boss 90 pixel
+			var explosion_offset = Vector2(cos(angle), sin(angle)) * 110.0 
 			explosion.global_position = global_position + explosion_offset
 	
-	# Boss đứng niệm chú thêm 1 giây để ngầu
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(0.5).timeout
 	
 	is_casting_special = false
 	can_attack = true 

@@ -132,9 +132,9 @@ func _stop_charge() -> void:
 	if not is_dead and not is_hurt and not is_preparing_spin:
 		perform_attack(1) 
 	
-	# Thời gian hồi 10s cho lần lao tiếp theo
+	# Thời gian hồi 5s cho lần lao tiếp theo
 	can_charge = false
-	await get_tree().create_timer(10.0).timeout
+	await get_tree().create_timer(5.0).timeout
 	can_charge = true
 
 # --- CƠ CHẾ CHUYỂN PHASE (ĐỨNG IM XOAY RÌU) ---
