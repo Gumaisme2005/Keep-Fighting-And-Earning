@@ -1,107 +1,162 @@
 [gd_scene format=3 uid="uid://0v00bp2oh1wx"]
 
-[ext_resource type="Script" uid="uid://cskigi0mvxkjr" path="res://Scene/UI/CharacterSelect.gd" id="1_v3tgs"]
-[ext_resource type="Texture2D" uid="uid://7gpghruvdd6s" path="res://Assets/Character/Human_knight/Human_Knight.png" id="3_ri6ba"]
-[ext_resource type="Texture2D" uid="uid://bvdr127jnigh5" path="res://Assets/Character/Human_Archer/Human_Archer.png" id="4_7k870"]
-[ext_resource type="Texture2D" uid="uid://47ovclbqbopo" path="res://Assets/Character/Soldier/Soldier/Soldier_Idle.png" id="4_oufkq"]
-[ext_resource type="Texture2D" uid="uid://dvj0rq24mg1kd" path="res://Assets/Character/Swordsman/Swordsman_Idle.png" id="5_v3tgs"]
+[ext_resource type="Texture2D" uid="uid://vnj30okp88w8" path="res://Assets/UI/Button&Character/Human_Knight.png" id="1_1d8pj"]
+[ext_resource type="Texture2D" uid="uid://5kv7y2rlpcun" path="res://Assets/UI/Button&Character/Human_Archer.png" id="1_7k870"]
+[ext_resource type="Script" uid="uid://4jl50o1gj3fc" path="res://Scene/UI/character_select.gd" id="1_v3tgs"]
+[ext_resource type="Texture2D" uid="uid://d0dx15kb72hlh" path="res://Assets/UI/Button&Character/Soldier.png" id="2_ri6ba"]
+[ext_resource type="Texture2D" uid="uid://dqlpo82dcxm55" path="res://Assets/UI/Button&Character/Swordsman.png" id="3_ri6ba"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_1vivr"]
-atlas = ExtResource("4_oufkq")
-region = Rect2(41, 40, 17, 19)
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_4fsta"]
+load_path = "res://.godot/imported/arrow.png-2dc01c71bb545ecb8bf3f1f2edd2281f.ctex"
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_h7f1q"]
-atlas = ExtResource("3_ri6ba")
-region = Rect2(32, 24, 24, 24)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4fsta"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_v5gy4"]
-atlas = ExtResource("4_7k870")
-region = Rect2(32, 24, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_iqy1v"]
-atlas = ExtResource("5_v3tgs")
-region = Rect2(42, 40, 22, 21)
-
-[node name="CharacterSelect" type="Control" unique_id=157718013]
+[node name="CharacterSelect" type="Control" unique_id=1623622612]
+custom_minimum_size = Vector2(500, 280)
 layout_mode = 3
+anchors_preset = 0
+offset_right = 500.0
+offset_bottom = 280.0
+script = ExtResource("1_v3tgs")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=139151380]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_v3tgs")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=1478331559]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=1840225144]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
 
-[node name="Label" type="Label" parent="." unique_id=483572696]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=822034394]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1921021139]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 50
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1118790587]
+custom_minimum_size = Vector2(30, 30)
+custom_maximum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 4
+texture = SubResource("CompressedTexture2D_4fsta")
+expand_mode = 1
+
+[node name="PreviousButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/TextureRect" unique_id=379666242]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -92.5
-offset_right = 92.5
-offset_bottom = 23.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
-text = "Choose Your Teammate"
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_4fsta")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=776851189]
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1989216205]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/ScrollContainer" unique_id=1259690389]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+theme_override_constants/separation = 25
+
+[node name="MarginContainer2" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/ScrollContainer/HBoxContainer" unique_id=1257163374]
+layout_mode = 2
+theme_override_constants/margin_left = 70
+theme_override_constants/margin_right = 0
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/ScrollContainer/HBoxContainer" unique_id=1037403381]
+custom_minimum_size = Vector2(90, 90)
+custom_maximum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("1_7k870")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/ScrollContainer/HBoxContainer" unique_id=209462655]
+custom_maximum_size = Vector2(90, 90)
+layout_mode = 2
+texture = ExtResource("1_1d8pj")
+
+[node name="TextureRect3" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/ScrollContainer/HBoxContainer" unique_id=1786432392]
+custom_maximum_size = Vector2(90, 90)
+layout_mode = 2
+texture = ExtResource("2_ri6ba")
+
+[node name="TextureRect4" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/ScrollContainer/HBoxContainer" unique_id=818576624]
+custom_maximum_size = Vector2(90, 90)
+layout_mode = 2
+texture = ExtResource("3_ri6ba")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/ScrollContainer/HBoxContainer" unique_id=2088715222]
+layout_mode = 2
+theme_override_constants/margin_right = 70
+
+[node name="TextureRect2" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=332604784]
+custom_minimum_size = Vector2(30, 30)
+custom_maximum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 4
+texture = SubResource("CompressedTexture2D_4fsta")
+expand_mode = 1
+flip_h = true
+
+[node name="PreviousButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/TextureRect2" unique_id=1436213532]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_4fsta")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_4fsta")
+
+[node name="HeroSelectionButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1673283373]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "SELECT HERO"
+
+[node name="SelectMaker" type="Control" parent="." unique_id=1310351702]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -210.0
-offset_top = -100.0
-offset_right = 210.0
-offset_bottom = 100.0
+offset_left = -2.5
+offset_top = -2.5
+offset_right = 2.5
+offset_bottom = 2.5
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 60
-
-[node name="Char_1" type="Button" parent="HBoxContainer" unique_id=611059059]
-texture_filter = 1
-custom_minimum_size = Vector2(180, 200)
-layout_mode = 2
-size_flags_horizontal = 0
-text = "Pyrois
-HP:5, SP: 2, DMG: 1"
-icon = SubResource("AtlasTexture_1vivr")
-icon_alignment = 1
-vertical_icon_alignment = 0
-expand_icon = true
-
-[node name="Char_2" type="Button" parent="HBoxContainer" unique_id=1022526851]
-texture_filter = 1
-custom_minimum_size = Vector2(180, 200)
-layout_mode = 2
-text = "Olaf
-HP: 6, SP: 2, DMG: 2
-"
-icon = SubResource("AtlasTexture_h7f1q")
-icon_alignment = 1
-vertical_icon_alignment = 0
-expand_icon = true
-
-[node name="Char_3" type="Button" parent="HBoxContainer" unique_id=1977491269]
-texture_filter = 1
-layout_mode = 2
-text = "Miya
-HP:3, SP:1, DMG: 2"
-icon = SubResource("AtlasTexture_v5gy4")
-icon_alignment = 1
-vertical_icon_alignment = 0
-expand_icon = true
-
-[node name="Char_4" type="Button" parent="HBoxContainer" unique_id=514536605]
-texture_filter = 1
-layout_mode = 2
-text = "Mitsuha
-HP: 5,SP: 0, DMG: 2"
-icon = SubResource("AtlasTexture_iqy1v")
-icon_alignment = 1
-vertical_icon_alignment = 0
-expand_icon = true
+offset_transform_enabled = true
