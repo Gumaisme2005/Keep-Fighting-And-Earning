@@ -465,8 +465,10 @@ script = ExtResource("1_8fftu")
 position = Vector2(-1.9073486e-06, -9)
 scale = Vector2(1.23, 1.21)
 sprite_frames = SubResource("SpriteFrames_65baf")
-animation = &"idle"
+animation = &"attack_3"
 autoplay = "idle"
+frame = 11
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1165885128]
 rotation = -1.5707964
