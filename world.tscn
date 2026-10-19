@@ -2,9 +2,9 @@
 
 [ext_resource type="Texture2D" uid="uid://ij34crdb1rh4" path="res://Assets/Map/Objects.png" id="2_tlwt5"]
 [ext_resource type="PackedScene" uid="uid://cxuf6kvn5wh7r" path="res://Menu/pause menu/pause_menu.tscn" id="4_aqk2v"]
-[ext_resource type="PackedScene" path="res://Menu/game over menu/game_over_menu.tscn" id="7_game_over"]
 [ext_resource type="Texture2D" uid="uid://chuifes2qyj7j" path="res://Assets/Map/walls_floor.png" id="5_036b0"]
 [ext_resource type="Script" uid="uid://cmiei2e6vb4e2" path="res://Scene/Map/dungeon_generator.gd" id="6_dwbse"]
+[ext_resource type="PackedScene" uid="uid://ck6udcm1nm3os" path="res://Menu/game over menu/game_over_menu.tscn" id="7_game_over"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dwbse"]
 texture = ExtResource("5_036b0")
@@ -239,14 +239,12 @@ texture = ExtResource("5_036b0")
 5:12/0/terrain = 0
 5:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 5:12/0/terrains_peering_bit/right_side = 0
-5:12/0/terrains_peering_bit/bottom_right_corner = 0
 5:12/0/terrains_peering_bit/bottom_side = 0
 6:12/0 = 0
 6:12/0/terrain_set = 0
 6:12/0/terrain = 0
 6:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 6:12/0/terrains_peering_bit/bottom_side = 0
-6:12/0/terrains_peering_bit/bottom_left_corner = 0
 6:12/0/terrains_peering_bit/left_side = 0
 7:12/0 = 0
 7:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
@@ -330,7 +328,6 @@ texture = ExtResource("5_036b0")
 5:15/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 5:15/0/terrains_peering_bit/right_side = 0
 5:15/0/terrains_peering_bit/top_side = 0
-5:15/0/terrains_peering_bit/top_right_corner = 0
 6:15/0 = 0
 6:15/0/terrain_set = 0
 6:15/0/terrain = 0
@@ -605,4 +602,4 @@ script = ExtResource("6_dwbse")
 
 [node name="pause_menu" parent="CanvasLayer" unique_id=445345640 instance=ExtResource("4_aqk2v")]
 
-[node name="game_over_menu" parent="CanvasLayer" instance=ExtResource("7_game_over")]
+[node name="game_over_menu" parent="CanvasLayer" unique_id=684603679 instance=ExtResource("7_game_over")]
