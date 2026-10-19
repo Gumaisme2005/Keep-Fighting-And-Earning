@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://m2lg0r5fdlxa"]
+
+[ext_resource type="Script" uid="uid://dwu3aqk4opxtd" path="res://benchmark/dungeon_benchmark.gd" id="1_benchmark"]
+
+[node name="DungeonBenchmark" type="Node" unique_id=1440818017]
+script = ExtResource("1_benchmark")

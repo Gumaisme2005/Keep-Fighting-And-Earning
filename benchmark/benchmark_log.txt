@@ -1,0 +1,14 @@
+KEEP FIGHTING AND EARNING - DUNGEON BENCHMARK
+Game branch/commit: [fill in manually]
+Godot version: 4.7.2-stable (official)
+Operating system: Windows
+Tested seed count: 100
+Dungeon rooms configured: 16
+Average generation time: 99.052 ms
+Fastest generation: 90.331 ms
+Slowest generation: 118.927 ms
+Seed reproducibility: 100/100
+Valid structures and graph connectivity: 100/100
+Failed seeds: none
+Scope: dungeon geometry, room types, graph connectivity and tile layers.
+Not measured: enemy spawning, live gameplay FPS, RAM, tile-level player pathfinding.
