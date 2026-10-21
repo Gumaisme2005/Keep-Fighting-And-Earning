@@ -19,6 +19,8 @@ var player: Node2D = null
 func _ready() -> void:
 	animated_sprite.play("idle")
 	axe_collision.disabled = true
+	axe_hitbox.position = Vector2(0, -7)
+	axe_hitbox.scale = Vector2.ONE
 	var players = get_tree().get_nodes_in_group("player")
 	if players.size() > 0:
 		player = players[0]
@@ -31,16 +33,18 @@ func _physics_process(_delta: float) -> void:
 	var distance = global_position.distance_to(player.global_position)
 	var direction = global_position.direction_to(player.global_position)
 
-	# Luôn quay mặt và lật Hitbox Rìu về phía Player
+	# Luôn quay mặt về phía Player
 	if direction.x < 0:
 		animated_sprite.flip_h = true
-		axe_hitbox.scale.x = -1
-	else:
+	elif direction.x > 0:
 		animated_sprite.flip_h = false
-		axe_hitbox.scale.x = 1
 
 	if is_attacking:
 		return # Đang vung rìu thì không đi bám theo nữa
+
+	# Định hướng hitbox rìu về phía Player
+	if direction != Vector2.ZERO:
+		axe_hitbox.rotation = direction.angle()
 
 	if distance <= attack_range:
 		attack() # Kích hoạt chém
@@ -51,6 +55,10 @@ func _physics_process(_delta: float) -> void:
 
 func attack():
 	is_attacking = true
+	if player != null:
+		var dir = global_position.direction_to(player.global_position)
+		if dir != Vector2.ZERO:
+			axe_hitbox.rotation = dir.angle()
 	animated_sprite.play("attack")
 	axe_collision.disabled = false # Bật sát thương rìu
 

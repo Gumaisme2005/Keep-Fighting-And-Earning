@@ -242,7 +242,7 @@ height = 14.0
 size = Vector2(14, 19)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8vrlf"]
-size = Vector2(8.625, 19)
+size = Vector2(32, 26)
 
 [node name="Orc" type="CharacterBody2D" unique_id=631054120]
 script = ExtResource("1_iqx3e")
@@ -266,9 +266,10 @@ position = Vector2(0, -6.5)
 shape = SubResource("RectangleShape2D_1vivr")
 
 [node name="AxeHitbox" type="Area2D" parent="." unique_id=1150775611]
+position = Vector2(0, -7)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AxeHitbox" unique_id=2058288360]
-position = Vector2(9.6875, -6.5)
+position = Vector2(18, 0)
 shape = SubResource("RectangleShape2D_8vrlf")
 disabled = true
 
