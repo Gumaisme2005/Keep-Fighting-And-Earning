@@ -1,0 +1,12 @@
+﻿nhom,so_phong,so_mau,trung_binh_ms,trung_vi_ms,p95_nearest_rank_ms,nhanh_nhat_ms,cham_nhat_ms,ghi_chu
+quy_mo,8,100,45.140,42.130,58.744,37.288,88.918,Tong thoi gian; moi cau hinh 100 seed
+quy_mo,16,100,109.393,97.511,162.758,83.576,183.153,Tong thoi gian; moi cau hinh 100 seed
+quy_mo,24,100,190.047,182.303,257.994,148.296,290.554,Tong thoi gian; moi cau hinh 100 seed
+quy_mo,32,100,264.606,256.272,330.956,213.431,389.816,Tong thoi gian; moi cau hinh 100 seed
+stress,16,1000,99.617,96.517,121.197,84.415,188.280,Tong thoi gian; moi cau hinh 1000 seed
+stress,32,1000,247.178,233.448,315.198,209.020,410.899,Tong thoi gian; moi cau hinh 1000 seed
+walls_sau_toi_uu,16,100,78.785,76.070,101.705,65.722,129.682,Do rieng build_walls()
+walls_sau_toi_uu,32,100,178.046,172.785,214.562,147.378,304.863,Do rieng build_walls()
+walls_truoc_toi_uu_CSV_khong_day_du,16,100,115.734,114.055,142.336,82.045,184.226,16 phong du 100 mau; 32 phong chi co 18 mau
+walls_truoc_toi_uu_CSV_khong_day_du,32,18,302.773,301.610,375.371,221.089,375.371,16 phong du 100 mau; 32 phong chi co 18 mau
+walls_truoc_toi_uu_anh_PowerShell,32,100,301.123,,,,,"Theo anh terminal, khong co CSV day du de xac minh"
