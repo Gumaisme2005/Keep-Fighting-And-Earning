@@ -23,20 +23,21 @@
 ## 2026-10-27
 
 ### QA
-- **23:58** - Updated the test case execution statuses in the test case spreadsheet. Initially, all test cases were marked as **Not Run**.
-- Reviewed the test execution results to track the current testing progress.
-- **2 test cases failed**, and the remaining executed test cases passed.
+- **23:58** - Updated the test case execution statuses in the test case spreadsheet.
+- Total test cases: **182**.
+- Executed: **53 test cases** — 51 Passed and 2 Failed.
+- Not Run: **129 test cases**.
+- Pass rate among executed test cases: **96.23%**.
 
 ### Bug
-- Logged a Jira bug: **[Pyrois] Inconsistency Between README Character Stats and In-Game HUD**
-- **Bug Type:** Functional / Data Inconsistency
-- **Priority:** Medium
-- **Related Test Case:** Character Stats Consistency Test
-- **Status:** To Do
-- **Issue:** The in-game HUD displays 4 red heart icons, while the README documents Pyrois's HP as 5. The displayed HP value requires further investigation to determine whether the issue lies in the game implementation or the documentation.
+- Logged a Jira bug: **[Pyrois] Inconsistency Between README Character Stats and In-Game HUD**.
+- **Bug Type:** Functional / Data Inconsistency.
+- **Priority:** Medium.
+- **Related Test Case:** TC-PY-01.
+- **Status:** To Do.
 
 ### Progress
-- Updated the test case statuses to reflect the latest execution results.
-- Identified **2 failed test cases** and documented the corresponding issues.
-- **1 issue has been fixed**, while the remaining issue requires further investigation.
-- Logged the Pyrois character statistics inconsistency in Jira for tracking and follow-up.
+- Updated the test execution statuses to reflect the current QA progress.
+- Identified and documented 2 failed test cases.
+- 1 issue has been fixed; regression testing and status updates should be performed where applicable.
+- Continued tracking the discrepancy between the README documentation and the in-game character statistics.
