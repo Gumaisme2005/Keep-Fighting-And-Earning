@@ -1,86 +1,86 @@
-﻿ID,Module,Chức năng,Tiêu đề test case,Điều kiện tiên quyết,Các bước thực hiện,Dữ liệu test,Kết quả mong đợi,Loại,Ưu tiên,Kết quả thực tế,Trạng thái,Người test,Ngày test,Ghi chú
-TC-MN-01,Menu chính,Hiển thị,Main Menu hiển thị khi khởi chạy game,Đã import dự án vào Godot,1. Nhấn F5 để chạy game,-,Hiển thị Main Menu có nút Start và Exit; không có lỗi trong Output,Chức năng,Cao,,Chưa chạy,,,README ghi có thêm nút Options nhưng script main_menu.gd chỉ xử lý Start và Exit
-TC-MN-02,Menu chính,Start,Nhấn Start chuyển sang màn Chọn nhân vật,Đang ở Main Menu,1. Nhấn nút Start,-,"Chuyển sang scene CharacterSelect, hiển thị 4 nút nhân vật",Chức năng,Cao,,Chưa chạy,,,
-TC-MN-03,Menu chính,Exit,Nhấn Exit thoát game,Đang ở Main Menu,1. Nhấn nút Exit,-,"Cửa sổ game đóng, tiến trình dừng",Chức năng,Cao,,Chưa chạy,,,
-TC-MN-04,Menu chính,Start,Nhấn Start nhiều lần liên tiếp,Đang ở Main Menu,1. Nhấn nhanh nút Start 5 lần,-,"Chỉ chuyển scene một lần, không lỗi, không tạo scene trùng",Tiêu cực,Trung bình,,Chưa chạy,,,Script dùng button_down nên kích hoạt ngay khi nhấn xuống
+ID,Module,Chức năng,Tiêu đề test case,Điều kiện tiên quyết,Các bước thực hiện,Dữ liệu test,Kết quả mong đợi,Loại,Ưu tiên,Kết quả thực tế,Trạng thái,Người test,Ngày test,Ghi chú
+TC-MN-01,Menu chính,Hiển thị,Main Menu hiển thị khi khởi chạy game,Đã import dự án vào Godot,1. Nhấn F5 để chạy game,-,Hiển thị Main Menu có nút Start và Exit; không có lỗi trong Output,Chức năng,Cao,,Đạt,,,README ghi có thêm nút Options nhưng script main_menu.gd chỉ xử lý Start và Exit
+TC-MN-02,Menu chính,Start,Nhấn Start chuyển sang màn Chọn nhân vật,Đang ở Main Menu,1. Nhấn nút Start,-,"Chuyển sang scene CharacterSelect, hiển thị 4 nút nhân vật",Chức năng,Cao,,Đạt,,,
+TC-MN-03,Menu chính,Exit,Nhấn Exit thoát game,Đang ở Main Menu,1. Nhấn nút Exit,-,"Cửa sổ game đóng, tiến trình dừng",Chức năng,Cao,,Đạt,,,
+TC-MN-04,Menu chính,Start,Nhấn Start nhiều lần liên tiếp,Đang ở Main Menu,1. Nhấn nhanh nút Start 5 lần,-,"Chỉ chuyển scene một lần, không lỗi, không tạo scene trùng",Tiêu cực,Trung bình,,Đạt,,,Script dùng button_down nên kích hoạt ngay khi nhấn xuống
 TC-CS-01,Chọn nhân vật,Chọn nhân vật,Chọn Pyrois vào game thành công,Đang ở màn Chọn nhân vật,"1. Nhấn nút nhân vật 1 (Pyrois)
-2. Quan sát màn chơi và HUD",Nhân vật: Pyrois,"Vào world.tscn, nhân vật Pyrois xuất hiện ở phòng xuất phát; HUD hiển thị 4 tim và 4 giáp (chưa trang bị)",Chức năng,Cao,,Chưa chạy,,,README ghi Pyrois 'khởi điểm 5 máu' nhưng code: hp = max_hp = base_max_hp (4)
+2. Quan sát màn chơi và HUD",Nhân vật: Pyrois,"Vào world.tscn, nhân vật Pyrois xuất hiện ở phòng xuất phát; HUD hiển thị 4 tim và 4 giáp (chưa trang bị)",Chức năng,Cao,,Đạt,,,README ghi Pyrois 'khởi điểm 5 máu' nhưng code: hp = max_hp = base_max_hp (4)
 TC-CS-02,Chọn nhân vật,Chọn nhân vật,Chọn Olaf vào game thành công,Đang ở màn Chọn nhân vật,"1. Nhấn nút nhân vật 2 (Olaf)
-2. Quan sát màn chơi và HUD",Nhân vật: Olaf,"Vào world.tscn, nhân vật Olaf xuất hiện ở phòng xuất phát; HUD hiển thị 6 tim và 1 giáp (chưa trang bị)",Chức năng,Cao,,Chưa chạy,,,
+2. Quan sát màn chơi và HUD",Nhân vật: Olaf,"Vào world.tscn, nhân vật Olaf xuất hiện ở phòng xuất phát; HUD hiển thị 6 tim và 1 giáp (chưa trang bị)",Chức năng,Cao,,Đạt,,,
 TC-CS-03,Chọn nhân vật,Chọn nhân vật,Chọn Miya vào game thành công,Đang ở màn Chọn nhân vật,"1. Nhấn nút nhân vật 3 (Miya)
-2. Quan sát màn chơi và HUD",Nhân vật: Miya,"Vào world.tscn, nhân vật Miya xuất hiện ở phòng xuất phát; HUD hiển thị 4 tim và 1 giáp (chưa trang bị)",Chức năng,Cao,,Chưa chạy,,,
+2. Quan sát màn chơi và HUD",Nhân vật: Miya,"Vào world.tscn, nhân vật Miya xuất hiện ở phòng xuất phát; HUD hiển thị 4 tim và 1 giáp (chưa trang bị)",Chức năng,Cao,,Đạt,,,
 TC-CS-04,Chọn nhân vật,Chọn nhân vật,Chọn Charlotte vào game thành công,Đang ở màn Chọn nhân vật,"1. Nhấn nút nhân vật 4 (Charlotte)
-2. Quan sát màn chơi và HUD",Nhân vật: Charlotte,"Vào world.tscn, nhân vật Charlotte xuất hiện ở phòng xuất phát; HUD hiển thị 5 tim và 0 giáp (chưa trang bị)",Chức năng,Cao,,Chưa chạy,,,
+2. Quan sát màn chơi và HUD",Nhân vật: Charlotte,"Vào world.tscn, nhân vật Charlotte xuất hiện ở phòng xuất phát; HUD hiển thị 5 tim và 0 giáp (chưa trang bị)",Chức năng,Cao,,Đạt,,,
 TC-CS-05,Chọn nhân vật,Chọn nhân vật,Nhân vật đã chọn được giữ khi Retry,Đã chơi và chết với Olaf,"1. Ở màn Game Over nhấn Retry
 2. Chọn Miya
-3. Quan sát nhân vật trong game",-,"Vào game với Miya, không bị dùng lại Olaf",Chức năng,Trung bình,,Chưa chạy,,,
+3. Quan sát nhân vật trong game",-,"Vào game với Miya, không bị dùng lại Olaf",Chức năng,Trung bình,,Đạt,,,
 TC-CS-06,Chọn nhân vật,Chọn nhân vật,Nhân vật cũ không bị giữ khi chọn lại,Đã chơi 1 ván với Pyrois rồi Retry,"1. Chọn Charlotte
-2. Vào game",-,Nhân vật là Charlotte (GameManager cập nhật đúng),Chức năng,Trung bình,,Chưa chạy,,,
-TC-CS-07,Chọn nhân vật,Chọn nhân vật,Nhấn nhanh 2 nút nhân vật liên tiếp,Đang ở màn Chọn nhân vật,1. Nhấn nút Char_1 rồi Char_4 thật nhanh,-,"Game vào world một lần, không lỗi hoặc crash",Tiêu cực,Thấp,,Chưa chạy,,,
-TC-PA-01,Pause Menu,Pause,ESC mở Pause Menu,Đang trong màn chơi,1. Nhấn ESC,-,"Pause Menu hiện, game dừng (quái, bẫy, đạn đứng yên)",Chức năng,Cao,,Chưa chạy,,,
-TC-PA-02,Pause Menu,Pause,ESC lần 2 tiếp tục game,Pause Menu đang mở,1. Nhấn ESC lần nữa,-,"Menu ẩn, game chạy tiếp",Chức năng,Cao,,Chưa chạy,,,
-TC-PA-03,Pause Menu,Pause,Nút Resume tiếp tục game,Pause Menu đang mở,1. Nhấn Resume,-,"Menu ẩn, game chạy tiếp",Chức năng,Cao,,Chưa chạy,,,
-TC-PA-04,Pause Menu,Pause,Nút Restart tải lại màn chơi,Đang chơi tầng 2 hoặc đã nhặt đồ,"1. Mở Pause, nhấn Restart",-,"Scene world tải lại, tầng về giá trị khởi đầu, túi đồ và chỉ số được khởi tạo lại; vẫn dùng nhân vật đã chọn",Chức năng,Cao,,Chưa chạy,,,Restart dùng reload_current_scene nên không quay về màn Chọn nhân vật
-TC-PA-05,Pause Menu,Pause,Nút Exit thoát game,Pause Menu đang mở,1. Nhấn Exit,-,Game đóng,Chức năng,Trung bình,,Chưa chạy,,,
-TC-PA-06,Pause Menu,Pause,Không bấm được hành động khi game tạm dừng,Pause Menu đang mở,"1. Click chuột, nhấn WASD, Q, 1-9",-,Nhân vật không di chuyển/tấn công/dùng vật phẩm khi đang pause,Tiêu cực,Trung bình,,Chưa chạy,,,
-TC-PA-07,Pause Menu,Pause,ESC không mở Pause khi đang Game Over,"Nhân vật vừa chết, Game Over Menu đang hiện",1. Nhấn ESC,-,Pause Menu không hiện (bị chặn bởi kiểm tra game_over_menu),Tiêu cực,Trung bình,,Chưa chạy,,,
+2. Vào game",-,Nhân vật là Charlotte (GameManager cập nhật đúng),Chức năng,Trung bình,,Đạt,,,
+TC-CS-07,Chọn nhân vật,Chọn nhân vật,Nhấn nhanh 2 nút nhân vật liên tiếp,Đang ở màn Chọn nhân vật,1. Nhấn nút Char_1 rồi Char_4 thật nhanh,-,"Game vào world một lần, không lỗi hoặc crash",Tiêu cực,Thấp,,Đạt,,,
+TC-PA-01,Pause Menu,Pause,ESC mở Pause Menu,Đang trong màn chơi,1. Nhấn ESC,-,"Pause Menu hiện, game dừng (quái, bẫy, đạn đứng yên)",Chức năng,Cao,,Đạt,,,
+TC-PA-02,Pause Menu,Pause,ESC lần 2 tiếp tục game,Pause Menu đang mở,1. Nhấn ESC lần nữa,-,"Menu ẩn, game chạy tiếp",Chức năng,Cao,,Đạt,,,
+TC-PA-03,Pause Menu,Pause,Nút Resume tiếp tục game,Pause Menu đang mở,1. Nhấn Resume,-,"Menu ẩn, game chạy tiếp",Chức năng,Cao,,Đạt,,,
+TC-PA-04,Pause Menu,Pause,Nút Restart tải lại màn chơi,Đang chơi tầng 2 hoặc đã nhặt đồ,"1. Mở Pause, nhấn Restart",-,"Scene world tải lại, tầng về giá trị khởi đầu, túi đồ và chỉ số được khởi tạo lại; vẫn dùng nhân vật đã chọn",Chức năng,Cao,,Đạt,,,Restart dùng reload_current_scene nên không quay về màn Chọn nhân vật
+TC-PA-05,Pause Menu,Pause,Nút Exit thoát game,Pause Menu đang mở,1. Nhấn Exit,-,Game đóng,Chức năng,Trung bình,,Đạt,,,
+TC-PA-06,Pause Menu,Pause,Không bấm được hành động khi game tạm dừng,Pause Menu đang mở,"1. Click chuột, nhấn WASD, Q, 1-9",-,Nhân vật không di chuyển/tấn công/dùng vật phẩm khi đang pause,Tiêu cực,Trung bình,,Đạt,,,
+TC-PA-07,Pause Menu,Pause,ESC không mở Pause khi đang Game Over,"Nhân vật vừa chết, Game Over Menu đang hiện",1. Nhấn ESC,-,Pause Menu không hiện (bị chặn bởi kiểm tra game_over_menu),Tiêu cực,Trung bình,,Đạt,,,
 TC-PA-08,Pause Menu,Pause,Timer tạm dừng cùng game,Cooldown kỹ năng Q đang đếm,"1. Nhấn Q
 2. Ngay lập tức pause 10 giây
 3. Resume
-4. Quan sát cooldown",-,Cooldown không giảm trong lúc pause,Biên,Thấp,,Chưa chạy,,,
+4. Quan sát cooldown",-,Cooldown không giảm trong lúc pause,Biên,Thấp,,Đạt,,,
 TC-GO-01,Game Over,Game Over,Hiện Game Over khi hết máu,"Nhân vật còn 1 máu, giáp = 0","1. Để quái đánh trúng nhân vật
-2. Chờ 2 giây sau hoạt ảnh chết",-,Phát hoạt ảnh death; sau 2 giây hiện Game Over Menu và game tạm dừng,Chức năng,Cao,,Chưa chạy,,,
-TC-GO-02,Game Over,Game Over,Nút Retry quay về Chọn nhân vật,Game Over Menu đang hiện,1. Nhấn Retry,-,Game bỏ pause và chuyển về màn Chọn nhân vật,Chức năng,Cao,,Chưa chạy,,,
-TC-GO-03,Game Over,Game Over,Nút Exit thoát game,Game Over Menu đang hiện,1. Nhấn Exit,-,Game đóng,Chức năng,Trung bình,,Chưa chạy,,,
-TC-GO-04,Game Over,Game Over,Nhân vật chết không còn nhận thêm sát thương,Nhân vật vừa chết,1. Để quái/bẫy đánh tiếp trong 2 giây chờ,-,Không phát sinh thêm lỗi; Game Over chỉ hiện một lần,Tiêu cực,Trung bình,,Chưa chạy,,,
+2. Chờ 2 giây sau hoạt ảnh chết",-,Phát hoạt ảnh death; sau 2 giây hiện Game Over Menu và game tạm dừng,Chức năng,Cao,,Đạt,,,
+TC-GO-02,Game Over,Game Over,Nút Retry quay về Chọn nhân vật,Game Over Menu đang hiện,1. Nhấn Retry,-,Game bỏ pause và chuyển về màn Chọn nhân vật,Chức năng,Cao,,Đạt,,,
+TC-GO-03,Game Over,Game Over,Nút Exit thoát game,Game Over Menu đang hiện,1. Nhấn Exit,-,Game đóng,Chức năng,Trung bình,,Đạt,,,
+TC-GO-04,Game Over,Game Over,Nhân vật chết không còn nhận thêm sát thương,Nhân vật vừa chết,1. Để quái/bẫy đánh tiếp trong 2 giây chờ,-,Không phát sinh thêm lỗi; Game Over chỉ hiện một lần,Tiêu cực,Trung bình,,Đạt,,,
 TC-GO-05,Game Over,Game Over,Không điều khiển được khi đã chết,Nhân vật vừa chết (trong 2 giây chờ),"1. Nhấn WASD, Q, chuột trái, phím 1-9",-,Nhân vật không phản hồi (is_dead = true),Tiêu cực,Trung bình,,Chưa chạy,,,
-TC-MV-01,Di chuyển & điều khiển,Di chuyển,Di chuyển 4 hướng W/A/S/D,"Đang trong màn chơi, Pyrois","1. Nhấn lần lượt W, A, S, D",-,"Nhân vật di chuyển lên, trái, xuống, phải; phát hoạt ảnh walk; dừng thì phát idle",Chức năng,Cao,,Chưa chạy,,,
+TC-MV-01,Di chuyển & điều khiển,Di chuyển,Di chuyển 4 hướng W/A/S/D,"Đang trong màn chơi, Pyrois","1. Nhấn lần lượt W, A, S, D",-,"Nhân vật di chuyển lên, trái, xuống, phải; phát hoạt ảnh walk; dừng thì phát idle",Chức năng,Cao,,Đạt,,,
 TC-MV-02,Di chuyển & điều khiển,Di chuyển,Di chuyển chéo không nhanh hơn,"Pyrois, tốc độ 150","1. Giữ W+D cùng lúc và đo quãng đường trong 2 giây
-2. So sánh với chỉ giữ D",-,Tốc độ chéo bằng tốc độ thẳng (vector chuẩn hóa),Biên,Trung bình,,Chưa chạy,,,
-TC-MV-03,Di chuyển & điều khiển,Di chuyển,Nhấn hai phím ngược chiều,-,1. Giữ A và D cùng lúc,-,"Nhân vật đứng yên, phát idle",Biên,Thấp,,Chưa chạy,,,
+2. So sánh với chỉ giữ D",-,Tốc độ chéo bằng tốc độ thẳng (vector chuẩn hóa),Biên,Trung bình,,Đạt,,,
+TC-MV-03,Di chuyển & điều khiển,Di chuyển,Nhấn hai phím ngược chiều,-,1. Giữ A và D cùng lúc,-,"Nhân vật đứng yên, phát idle",Biên,Thấp,,Đạt,,,
 TC-MV-04,Di chuyển & điều khiển,Di chuyển,Quay mặt theo chuột,-,"1. Di chuột sang bên trái nhân vật
-2. Di chuột sang bên phải",-,Sprite lật trái/phải theo vị trí chuột; hitbox kiếm lật theo,Chức năng,Trung bình,,Chưa chạy,,,
-TC-MV-05,Di chuyển & điều khiển,Di chuyển,Va chạm với tường,-,1. Đi thẳng vào tường,-,"Nhân vật bị chặn, không đi xuyên tường hay cột đá",Chức năng,Cao,,Chưa chạy,,,
-TC-MV-06,Di chuyển & điều khiển,Di chuyển,Không thể di chuyển khi đang tấn công,Pyrois,1. Nhấn chuột trái và giữ W ngay khi vung kiếm,-,"Nhân vật đứng yên trong lúc hoạt ảnh attack_1 chạy, sau đó di chuyển lại bình thường",Chức năng,Trung bình,,Chưa chạy,,,
+2. Di chuột sang bên phải",-,Sprite lật trái/phải theo vị trí chuột; hitbox kiếm lật theo,Chức năng,Trung bình,,Đạt,,,
+TC-MV-05,Di chuyển & điều khiển,Di chuyển,Va chạm với tường,-,1. Đi thẳng vào tường,-,"Nhân vật bị chặn, không đi xuyên tường hay cột đá",Chức năng,Cao,,Đạt,,,
+TC-MV-06,Di chuyển & điều khiển,Di chuyển,Không thể di chuyển khi đang tấn công,Pyrois,1. Nhấn chuột trái và giữ W ngay khi vung kiếm,-,"Nhân vật đứng yên trong lúc hoạt ảnh attack_1 chạy, sau đó di chuyển lại bình thường",Chức năng,Trung bình,,Đạt,,,
 TC-MV-07,Di chuyển & điều khiển,Di chuyển,Không thể di chuyển khi bị thương,Pyrois bị đánh,"1. Để quái đánh trúng
-2. Giữ phím di chuyển",-,Nhân vật đứng yên đến khi hoạt ảnh hurt kết thúc,Chức năng,Trung bình,,Chưa chạy,,,
-TC-HP-01,Máu / Giáp / Bất tử,Sát thương,Sát thương trừ vào Giáp trước,"Pyrois: Giáp 4/4, Máu 4/4",1. Nhận 1 sát thương từ Orc,Sát thương = 1,"Giáp 3/4, Máu giữ nguyên 4/4; HUD cập nhật",Chức năng,Cao,,Chưa chạy,,,
-TC-HP-02,Máu / Giáp / Bất tử,Sát thương,Sát thương tràn sang Máu khi vỡ Giáp,"Pyrois: Giáp 1/4, Máu 4/4",1. Nhận 3 sát thương (vd. Armored Orc rage),Sát thương = 3,"Giáp về 0, Máu mất 2 (còn 2/4)",Biên,Cao,,Chưa chạy,,,
-TC-HP-03,Máu / Giáp / Bất tử,Sát thương,Sát thương đúng bằng Giáp hiện có,Pyrois: Giáp 2/4,1. Nhận 2 sát thương,Sát thương = 2,"Giáp về 0, Máu giữ nguyên",Biên,Trung bình,,Chưa chạy,,,
-TC-HP-04,Máu / Giáp / Bất tử,Sát thương,Nhận sát thương khi Giáp = 0,"Giáp 0/4, Máu 4/4",1. Nhận 1 sát thương,Sát thương = 1,Máu còn 3/4,Chức năng,Cao,,Chưa chạy,,,
-TC-HP-05,Máu / Giáp / Bất tử,Sát thương,Sát thương <= 0 bị bỏ qua,-,1. Gọi take_damage(0) hoặc take_damage(-1) (qua debug),"0, -1","Không đổi Giáp/Máu, không phát I-Frames",Tiêu cực,Thấp,,Chưa chạy,,,
+2. Giữ phím di chuyển",-,Nhân vật đứng yên đến khi hoạt ảnh hurt kết thúc,Chức năng,Trung bình,,Đạt,,,
+TC-HP-01,Máu / Giáp / Bất tử,Sát thương,Sát thương trừ vào Giáp trước,"Pyrois: Giáp 4/4, Máu 4/4",1. Nhận 1 sát thương từ Orc,Sát thương = 1,"Giáp 3/4, Máu giữ nguyên 4/4; HUD cập nhật",Chức năng,Cao,,Đạt,,,
+TC-HP-02,Máu / Giáp / Bất tử,Sát thương,Sát thương tràn sang Máu khi vỡ Giáp,"Pyrois: Giáp 1/4, Máu 4/4",1. Nhận 3 sát thương (vd. Armored Orc rage),Sát thương = 3,"Giáp về 0, Máu mất 2 (còn 2/4)",Biên,Cao,,Đạt,,,
+TC-HP-03,Máu / Giáp / Bất tử,Sát thương,Sát thương đúng bằng Giáp hiện có,Pyrois: Giáp 2/4,1. Nhận 2 sát thương,Sát thương = 2,"Giáp về 0, Máu giữ nguyên",Biên,Trung bình,,Đạt,,,
+TC-HP-04,Máu / Giáp / Bất tử,Sát thương,Nhận sát thương khi Giáp = 0,"Giáp 0/4, Máu 4/4",1. Nhận 1 sát thương,Sát thương = 1,Máu còn 3/4,Chức năng,Cao,,Đạt,,,
+TC-HP-05,Máu / Giáp / Bất tử,Sát thương,Sát thương <= 0 bị bỏ qua,-,1. Gọi take_damage(0) hoặc take_damage(-1) (qua debug),"0, -1","Không đổi Giáp/Máu, không phát I-Frames",Tiêu cực,Thấp,,Đạt,,,
 TC-HP-06,Máu / Giáp / Bất tử,Bất tử,I-Frames 0.75 giây sau khi bị đánh,"Pyrois, đứng cạnh 2 quái","1. Bị đánh lần 1
-2. Trong 0.75 giây bị đánh thêm",-,Nhân vật nhấp nháy 5 lần; đòn thứ 2 trong 0.75 giây không gây sát thương,Chức năng,Cao,,Chưa chạy,,,
+2. Trong 0.75 giây bị đánh thêm",-,Nhân vật nhấp nháy 5 lần; đòn thứ 2 trong 0.75 giây không gây sát thương,Chức năng,Cao,,Đạt,,,
 TC-HP-07,Máu / Giáp / Bất tử,Bất tử,Hết I-Frames nhận sát thương trở lại,-,"1. Bị đánh
 2. Chờ > 0.75 giây
-3. Bị đánh tiếp",-,Đòn sau 0.75 giây gây sát thương bình thường; alpha sprite về 1.0,Biên,Trung bình,,Chưa chạy,,,
+3. Bị đánh tiếp",-,Đòn sau 0.75 giây gây sát thương bình thường; alpha sprite về 1.0,Biên,Trung bình,,Đạt,,,
 TC-HP-08,Máu / Giáp / Bất tử,Hồi giáp,Giáp tự hồi sau 4 giây không bị đánh,Giáp 1/4,"1. Tránh mọi sát thương
-2. Quan sát giáp sau 4 giây","Delay 4s, tốc độ 1 giáp/giây",Sau 4 giây giáp bắt đầu hồi +1 mỗi giây đến khi đầy 4/4,Chức năng,Cao,,Chưa chạy,,,
-TC-HP-09,Máu / Giáp / Bất tử,Hồi giáp,Bị đánh khi đang hồi giáp thì reset,Giáp đang hồi (2/4),1. Nhận 1 sát thương khi đang hồi,-,"Dừng hồi giáp, đếm lại 4 giây rồi mới hồi tiếp",Biên,Cao,,Chưa chạy,,,
-TC-HP-10,Máu / Giáp / Bất tử,Hồi giáp,Hồi giáp dừng khi đầy,-,1. Chờ giáp hồi đầy,-,"Giáp dừng ở mức tối đa, không vượt quá",Biên,Trung bình,,Chưa chạy,,,
-TC-HP-11,Máu / Giáp / Bất tử,Chết,Nhân vật chết khi Máu về 0,"Giáp 0, Máu 1",1. Nhận 1 sát thương,-,"Phát hoạt ảnh death, tắt physics, vô hiệu hóa PlayerHurtbox",Chức năng,Cao,,Chưa chạy,,,
-TC-HP-12,Máu / Giáp / Bất tử,Chết,Sát thương quá lớn vượt Máu,"Giáp 0, Máu 1",1. Nhận sát thương 5,-,"Máu = 0 (không âm), nhân vật chết",Biên,Trung bình,,Chưa chạy,,,
-TC-HP-13,Máu / Giáp / Bất tử,Bất tử,Bị thương hủy hành động đang thực hiện,Pyrois đang vung kiếm,1. Bị quái đánh trúng lúc đang attack,-,"Hủy attack, tắt hitbox kiếm, chuyển hurt, không bị đơ nhân vật",Tiêu cực,Cao,,Chưa chạy,,,
-TC-PY-01,Pyrois,Chỉ số,Chỉ số khởi đầu của Pyrois,Chọn Pyrois,"1. Vào game, kiểm tra HUD, tốc độ, sát thương",-,"Tốc độ 150, Máu 4, Giáp 4, Sát thương 1",Chức năng,Cao,,Chưa chạy,,,
+2. Quan sát giáp sau 4 giây","Delay 4s, tốc độ 1 giáp/giây",Sau 4 giây giáp bắt đầu hồi +1 mỗi giây đến khi đầy 4/4,Chức năng,Cao,,Đạt,,,
+TC-HP-09,Máu / Giáp / Bất tử,Hồi giáp,Bị đánh khi đang hồi giáp thì reset,Giáp đang hồi (2/4),1. Nhận 1 sát thương khi đang hồi,-,"Dừng hồi giáp, đếm lại 4 giây rồi mới hồi tiếp",Biên,Cao,,Đạt,,,
+TC-HP-10,Máu / Giáp / Bất tử,Hồi giáp,Hồi giáp dừng khi đầy,-,1. Chờ giáp hồi đầy,-,"Giáp dừng ở mức tối đa, không vượt quá",Biên,Trung bình,,Đạt,,,
+TC-HP-11,Máu / Giáp / Bất tử,Chết,Nhân vật chết khi Máu về 0,"Giáp 0, Máu 1",1. Nhận 1 sát thương,-,"Phát hoạt ảnh death, tắt physics, vô hiệu hóa PlayerHurtbox",Chức năng,Cao,,Đạt,,,
+TC-HP-12,Máu / Giáp / Bất tử,Chết,Sát thương quá lớn vượt Máu,"Giáp 0, Máu 1",1. Nhận sát thương 5,-,"Máu = 0 (không âm), nhân vật chết",Biên,Trung bình,,Đạt,,,
+TC-HP-13,Máu / Giáp / Bất tử,Bất tử,Bị thương hủy hành động đang thực hiện,Pyrois đang vung kiếm,1. Bị quái đánh trúng lúc đang attack,-,"Hủy attack, tắt hitbox kiếm, chuyển hurt, không bị đơ nhân vật",Tiêu cực,Cao,,Đạt,,,
+TC-PY-01,Pyrois,Chỉ số,Chỉ số khởi đầu của Pyrois,Chọn Pyrois,"1. Vào game, kiểm tra HUD, tốc độ, sát thương",-,"Tốc độ 150, Máu 4, Giáp 4, Sát thương 1",Chức năng,Cao,,Không đạt,,,
 TC-PY-02,Pyrois,Tấn công,Chém kiếm bằng chuột trái,"Pyrois, trước mặt có quái đã kích hoạt","1. Hướng chuột vào quái
 2. Nhấn chuột trái",-,"Phát attack_1, quái mất 1 máu (chưa vũ khí)",Chức năng,Cao,,Chưa chạy,,,
 TC-PY-03,Pyrois,Tấn công,Chém trúng nhiều quái cùng lúc,2 quái đứng trong tầm kiếm,1. Chém 1 lần,-,Cả 2 quái nhận sát thương,Chức năng,Trung bình,,Chưa chạy,,,
 TC-PY-04,Pyrois,Tấn công,Chém khi quái chưa kích hoạt,"Đang ở ngoài phòng chiến đấu, quái chưa active",1. Chém quái,-,Quái không mất máu (miễn nhiễm khi is_active = false),Tiêu cực,Trung bình,,Chưa chạy,,,
-TC-PY-05,Pyrois,Tấn công,Spam chuột trái,-,1. Click liên tục 20 lần trong 3 giây,-,Không đơ/crash; mỗi đòn chờ hoạt ảnh kết thúc mới chém tiếp,Tiêu cực,Trung bình,,Chưa chạy,,,
-TC-PY-06,Pyrois,Kỹ năng Q,Kỹ năng Q: nhảy bổ kiếm,"Pyrois, quái ở phía trước",1. Nhấn Q hướng về quái,Sát thương Q = base + 2,Nhân vật lướt 150 px/s trong 0.3 giây rồi bổ xuống; quái nhận base + 2 = 3 sát thương,Chức năng,Cao,,Chưa chạy,,,
-TC-PY-07,Pyrois,Kỹ năng Q,I-Frames trong lúc dùng Q,Quái đang tấn công gần Pyrois,1. Nhấn Q và để quái đánh trúng trong lúc nhảy,-,Không nhận sát thương; sprite ánh xanh; hết kỹ năng thì tắt bất tử,Chức năng,Cao,,Chưa chạy,,,
+TC-PY-05,Pyrois,Tấn công,Spam chuột trái,-,1. Click liên tục 20 lần trong 3 giây,-,Không đơ/crash; mỗi đòn chờ hoạt ảnh kết thúc mới chém tiếp,Tiêu cực,Trung bình,,Đạt,,,
+TC-PY-06,Pyrois,Kỹ năng Q,Kỹ năng Q: nhảy bổ kiếm,"Pyrois, quái ở phía trước",1. Nhấn Q hướng về quái,Sát thương Q = base + 2,Nhân vật lướt 150 px/s trong 0.3 giây rồi bổ xuống; quái nhận base + 2 = 3 sát thương,Chức năng,Cao,,Đạt,,,
+TC-PY-07,Pyrois,Kỹ năng Q,I-Frames trong lúc dùng Q,Quái đang tấn công gần Pyrois,1. Nhấn Q và để quái đánh trúng trong lúc nhảy,-,Không nhận sát thương; sprite ánh xanh; hết kỹ năng thì tắt bất tử,Chức năng,Cao,,Đạt,,,
 TC-PY-08,Pyrois,Kỹ năng Q,Cooldown Q 5 giây,-,"1. Nhấn Q
 2. Nhấn Q lại sau 2 giây
-3. Nhấn Q lại sau 5 giây",Cooldown 5.0s,Lần 2 không kích hoạt; lần 3 kích hoạt thành công,Biên,Cao,,Chưa chạy,,,
+3. Nhấn Q lại sau 5 giây",Cooldown 5.0s,Lần 2 không kích hoạt; lần 3 kích hoạt thành công,Biên,Cao,,Đạt,,,
 TC-PY-09,Pyrois,Kỹ năng Q,Không dùng Q khi đang tấn công/bị thương,-,"1. Chém rồi nhấn Q ngay
 2. Bị thương rồi nhấn Q",-,Q không kích hoạt trong 2 trạng thái này,Tiêu cực,Trung bình,,Chưa chạy,,,
 TC-PY-10,Pyrois,Kỹ năng Q,Q hướng theo mặt nhân vật,Chuột bên trái nhân vật,1. Nhấn Q,-,Nhân vật lướt về bên trái,Chức năng,Thấp,,Chưa chạy,,,
-TC-OL-01,Olaf,Chỉ số,Chỉ số khởi đầu của Olaf,Chọn Olaf,"1. Kiểm tra HUD, tốc độ, sát thương",-,"Tốc độ 160, Máu 6, Giáp 1, Sát thương 2",Chức năng,Cao,,Chưa chạy,,,
+TC-OL-01,Olaf,Chỉ số,Chỉ số khởi đầu của Olaf,Chọn Olaf,"1. Kiểm tra HUD, tốc độ, sát thương",-,"Tốc độ 160, Máu 6, Giáp 1, Sát thương 2",Chức năng,Cao,,Đạt,,,
 TC-OL-02,Olaf,Kỹ năng Q,Cuồng nộ nhân đôi sát thương,"Olaf, base_damage = 2","1. Nhấn Q
-2. Chém quái trong 5 giây",Buff 5s,Sát thương đòn đánh = 4 trong thời gian buff,Chức năng,Cao,,Chưa chạy,,,
+2. Chém quái trong 5 giây",Buff 5s,Sát thương đòn đánh = 4 trong thời gian buff,Chức năng,Cao,,Đạt,,,
 TC-OL-03,Olaf,Kỹ năng Q,Hết buff sát thương trở về bình thường,-,"1. Nhấn Q
 2. Chờ 5 giây
-3. Chém quái",-,Sát thương về 2; không bị cộng dồn hay thấp hơn ban đầu,Biên,Cao,,Chưa chạy,,,
+3. Chém quái",-,Sát thương về 2; không bị cộng dồn hay thấp hơn ban đầu,Biên,Cao,,Đạt,,,
 TC-OL-04,Olaf,Kỹ năng Q,Buff cộng đúng khi có vũ khí,Olaf đã trang bị Kiếm sắt (+1),"1. Nhấn Q
 2. Chém quái","base 2, vũ khí +1",Sát thương trong buff = (2 + 2) + 1 = 5; hết buff về 2 + 1 = 3,Biên,Trung bình,,Chưa chạy,,,Kiểm tra README ghi 'nhân đôi sát thương của đòn đánh'; vũ khí không được nhân đôi
 TC-OL-05,Olaf,Kỹ năng Q,Cooldown Q 5 giây,-,"1. Nhấn Q
@@ -190,8 +190,8 @@ TC-PT-05,Cổng & qua màn,Cổng,Bản đồ tầng mới khác tầng cũ,-,1.
 TC-PT-06,Cổng & qua màn,Cổng,Boss luân phiên theo tầng,-,"1. Quan sát Boss tầng 1, 2, 3",-,Tầng lẻ: Necromancer; tầng chẵn: Orc Rider,Chức năng,Trung bình,,Chưa chạy,,,README nhắc Kitsune nhưng repo không có Kitsune
 TC-PT-07,Cổng & qua màn,Cổng,Không còn quái/đạn/bẫy của tầng cũ,-,1. Qua tầng,-,"Các node tầng cũ bị xóa, không còn đạn, vật phẩm cũ",Biên,Trung bình,,Chưa chạy,,,
 TC-PT-08,Cổng & qua màn,Cổng,Qua nhiều tầng liên tiếp,-,1. Qua 5 tầng liên tiếp (có thể giảm máu Boss),-,"Không lỗi, không rò rỉ bộ nhớ, tầng tăng đúng",Biên,Thấp,,Chưa chạy,,,
-TC-EN-01,Quái thường,Orc,Orc: chỉ số cơ bản,"Phòng có Orc, đã khóa","1. Quan sát tốc độ, chém Orc","HP 3, speed 70, range 35",Orc chết sau tổng sát thương 3; đuổi theo và vung rìu khi cách ≤ 35 px,Chức năng,Cao,,Chưa chạy,,,
-TC-EN-02,Quái thường,Orc,Orc gây sát thương cận chiến,-,1. Để Orc đánh trúng,-,Người chơi nhận sát thương (giáp trước),Chức năng,Cao,,Chưa chạy,,,
+TC-EN-01,Quái thường,Orc,Orc: chỉ số cơ bản,"Phòng có Orc, đã khóa","1. Quan sát tốc độ, chém Orc","HP 3, speed 70, range 35",Orc chết sau tổng sát thương 3; đuổi theo và vung rìu khi cách ≤ 35 px,Chức năng,Cao,,Không đạt,,,
+TC-EN-02,Quái thường,Orc,Orc gây sát thương cận chiến,-,1. Để Orc đánh trúng,-,Người chơi nhận sát thương (giáp trước),Chức năng,Cao,,Đạt,,,
 TC-EN-03,Quái thường,Armored Orc,Giáp của Armored Orc hấp thụ sát thương,"Armored Orc, giáp 5, máu 3",1. Chém 2 lần (1 sát thương mỗi lần),armor 5,"Giáp còn 3, máu giữ nguyên, phát animation block",Chức năng,Cao,,Chưa chạy,,,
 TC-EN-04,Quái thường,Armored Orc,Sát thương tràn khi vỡ giáp,Giáp còn 1,1. Chém với sát thương 3,-,"Giáp = 0, máu mất 2",Biên,Cao,,Chưa chạy,,,
 TC-EN-05,Quái thường,Armored Orc,Rage damage sau khi vỡ giáp,Giáp = 0,1. Để Armored Orc đánh trúng,"normal 1, rage 3",Sát thương gây ra = 3 (đòn thường chỉ 1 khi còn giáp),Chức năng,Cao,,Chưa chạy,,,
