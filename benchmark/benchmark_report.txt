@@ -1,0 +1,44 @@
+KẾT QUẢ BENCHMARK — KEEP FIGHTING AND EARNING
+
+1. THỜI GIAN SINH DUNGEON
+- Cách đo: Sinh 100 Dungeon bằng 100 seed khác nhau, mỗi Dungeon cấu hình 16 phòng; ghi thời gian sinh từng bản đồ.
+- Kết quả:
+  + Trung bình: 99.052 ms.
+  + Nhanh nhất: 90.331 ms.
+  + Chậm nhất: 118.927 ms.
+- Nhận xét: Các lần đo đều hoàn tất; chưa ghi nhận seed sinh bản đồ thất bại trong 100 seed đã chạy. Chưa có ngưỡng hiệu năng chính thức để kết luận đạt chuẩn hay chưa.
+
+2. KHẢ NĂNG TÁI LẬP SEED
+- Cách đo: Sinh lại Dungeon với cùng seed và đối chiếu dữ liệu phòng, loại phòng, các cạnh nối và lớp tile.
+- Kết quả: 100/100 seed cho dữ liệu tái lập trùng khớp.
+- Vấn đề ghi nhận: Không phát hiện khác biệt trong phạm vi các dữ liệu được so sánh.
+
+3. TÍNH HỢP LỆ CỦA CẤU TRÚC DUNGEON
+- Cách đo: Kiểm tra số phòng, phòng Start/Boss và sự kết nối giữa các phòng bằng bộ kiểm tra tự động.
+- Kết quả: 100/100 Dungeon hợp lệ theo các điều kiện đã kiểm tra; không có seed thất bại.
+- Giới hạn: Mới kiểm tra kết nối ở mức cấu trúc/đồ thị; chưa xác minh đường đi thực tế của nhân vật trên từng ô tile.
+
+4. HIỆU NĂNG FPS
+- Cách đo: Quan sát FPS bằng Godot Debugger → Monitors khi đứng yên, di chuyển qua các phòng và chiến đấu với quái.
+- Kết quả:
+  + Đứng yên: khoảng 144 FPS.
+  + Di chuyển: khoảng 143–144 FPS.
+  + Chiến đấu: khoảng 144 FPS.
+  + Process Time quan sát: khoảng 7.1–7.5 ms.
+- Nhận xét: Không thấy tụt FPS rõ rệt trong các tình huống đã quan sát. Đây là giá trị quan sát thủ công, chưa phải FPS trung bình, thấp nhất hoặc 1% low; mức 144 FPS có thể chịu ảnh hưởng của giới hạn khung hình/VSync.
+
+5. HIỆU NĂNG BỘ NHỚ (RAM)
+- Cách đo: Quan sát Godot Debugger → Monitors và Windows Task Manager ở các thời điểm di chuyển, chiến đấu.
+- Kết quả:
+  + Godot Static Memory: khoảng 94.80–94.89 MiB.
+  + Godot Static Max ghi nhận: 95.52 MiB.
+  + Nhóm 2 tiến trình Godot khi di chuyển: 116.8 MB.
+  + Nhóm 2 tiến trình Godot khi đánh quái: 124.1 MB.
+  + Chênh lệch của nhóm tiến trình giữa hai ảnh: khoảng 7.3 MB.
+- Giới hạn: Số liệu Task Manager tính cho nhóm tiến trình Godot, có thể gồm cả Editor và game. Chưa xác nhận PID của riêng game; vì vậy không coi các số trên là RAM của riêng game và chưa đủ dữ liệu kết luận về rò rỉ bộ nhớ.
+
+6. KẾT LUẬN
+- Benchmark Dungeon trên 100 seed cho kết quả tái lập 100/100 và cấu trúc hợp lệ 100/100; thời gian sinh trung bình 99.052 ms cho cấu hình 16 phòng.
+- FPS quan sát khi đứng yên, di chuyển và chiến đấu duy trì khoảng 143–144, chưa phát hiện sụt giảm đáng kể trong phạm vi quan sát.
+- Bộ nhớ đã được ghi nhận sơ bộ, nhưng cần đo theo đúng tiến trình game trong một phiên dài hơn để có kết luận chính xác.
+- Nhìn chung, kết quả Benchmark ban đầu khả quan. Các kết quả chỉ áp dụng cho những cấu hình và tình huống đã đo, không khẳng định hiệu năng của mọi máy hoặc mọi tình huống chơi.
