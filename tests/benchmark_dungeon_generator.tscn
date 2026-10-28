@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://tests/benchmark_dungeon_generator.gd" id="1_bench"]
+
+[node name="BenchmarkDungeonGenerator" type="Node2D"]
+script = ExtResource("1_bench")
+
