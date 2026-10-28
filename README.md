@@ -89,7 +89,7 @@ Keep-Fighting-And-Earning/
 
 | Nhân vật | Vai trò | Tốc độ | Máu | Giáp | Kỹ năng đặc biệt (Phím Q / Chuột phải) |
 | :--- | :--- | :---: | :---: | :---: | :--- |
-| **Pyrois** | Kiếm sĩ Cân bằng | 150 | 5 | 4 | **Nhảy chém:** Lao vút về phía trước với I-Frames, bổ kiếm gây sát thương lớn khi tiếp đất (Hồi chiêu: 5s). |
+| **Pyrois** | Kiếm sĩ Cân bằng | 150 | 4 | 4 | **Nhảy chém:** Lao vút về phía trước với I-Frames, bổ kiếm gây sát thương lớn khi tiếp đất (Hồi chiêu: 5s). |
 | **Olaf** | Chiến binh Cuồng nộ | 160 | 6 | 1 | **Cuồng nộ:** Kích hoạt trạng thái tăng gấp đôi sát thương đòn đánh trong 5 giây (Hồi chiêu: 5s). |
 | **Miya** | Cung thủ Thiện xạ | 180 | 4 | 1 | **Ném bom:** Quăng bộc phá vào vị trí con trỏ chuột, gây nổ diện rộng x3 sát thương cơ bản (Hồi chiêu: 5s). |
 | **Charlotte** | Nữ Kiếm sĩ Cơ động | 180 | 5 | 0 | **Q:** Chém 3 nhịp liên hoàn tại chỗ. <br>**Chuột phải:** Lướt 400px với I-Frames rồi đâm kiếm liên thanh 4 nhịp (Hồi chiêu: 5s). |
@@ -97,8 +97,8 @@ Keep-Fighting-And-Earning/
 ### Kẻ địch & Trùm cuối (Bosses)
 
 #### Kẻ địch thường
-- **Orc:** Quái cận chiến hung hãn, vung rìu bao phủ phạm vi 35px theo mọi góc độ.
-- **Armored Orc:** Sở hữu lớp giáp dày 5 điểm, chuyển sang trạng thái cuồng nộ (Rage) khi vỡ giáp.
+- **Orc:** Quái cận chiến hung hãn, áp sát mục tiêu (cự ly 20px) rồi vung rìu bao phủ phạm vi 35px theo mọi góc độ.
+- **Armored Orc:** Sở hữu lớp giáp dày 5 điểm, áp sát tấn công và chuyển sang trạng thái cuồng nộ (Rage) khi vỡ giáp.
 - **Skeleton & Skeleton Archer:** Bộ xương nhanh nhẹn cận chiến và cung thủ tầm xa duy trì khoảng cách bắn tên.
 - **Vampire:** Di chuyển chậm nhưng lượng máu lớn, áp sát để hút máu người chơi.
 

@@ -4,6 +4,22 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 
 ---
 
+## [2026-10-28]
+
+### Sửa lỗi (Bug Fixes)
+- **[ENEMY] Quái cận chiến (Orc, Armored Orc, Vampire) đứng xa spam vung đòn vào không khí**:
+  - **Trạng thái:** Resolved / Closed.
+  - **Nguyên nhân:** Trước đây `attack_range` đặt ở mức $35.0\text{px} \sim 40.0\text{px}$, bằng đúng mép ngoài cùng của tầm đánh hitbox. Khi người chơi đứng cách một khoảng hoặc di chuyển giật lùi nhẹ, quái nhận diện mục tiêu $\le \text{attack\_range}$ nên lập tức dừng di chuyển và liên tục vung đòn vào không khí mà không chịu áp sát. Người chơi chỉ nhận sát thương khi áp sát hẳn vào thân quái.
+  - **Khắc phục:**
+    - Hiệu chỉnh `attack_range = 20.0px` trong [orc.gd](Scene/Enemies/Orc/orc.gd), [armored_orc.gd](Scene/Enemies/Armored_orc/armored_orc.gd) và [vampire.gd](Scene/Enemies/Vampire/vampire.gd).
+    - Quái sẽ chủ động chạy đuổi áp sát người chơi trong cự ly $20.0\text{px}$ mới vung vũ khí/cắn, đảm bảo đòn đánh bao trọn vẹn và trúng đích chính xác.
+
+### Tài liệu & Cân bằng (Documentation & Balance)
+- **Đồng bộ chỉ số khởi đầu nhân vật Pyrois**:
+  - Sửa lại bảng thông số trong [README.md](README.md): Máu khởi đầu của Pyrois là **4**, Giáp là **4** (thay vì ghi nhầm Máu là 5), đồng bộ chuẩn xác 100% với hiển thị HUD 4 Tim / 4 Khiên và code [player.gd](Scene/Character/Player 1_Pyrois/player.gd).
+
+---
+
 ## [2026-10-21]
 
 ### Sửa lỗi (Bug Fixes)
