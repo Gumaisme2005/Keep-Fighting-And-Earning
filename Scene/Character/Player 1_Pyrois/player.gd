@@ -7,7 +7,7 @@ signal stats_changed(current_hp, max_hp, current_armor, max_armor)
 @export var speed: float = 150.0
 @export var base_damage: int = 1 
 @export var base_max_hp: int = 4 
-@export var max_hp: int = 5      
+@export var max_hp: int = 4      
 @export var base_armor: int = 4      
 @export var armor_regen_delay: float = 4.0 
 @export var armor_regen_rate: float = 1.0  
@@ -19,9 +19,9 @@ var is_casting_skill: bool = false
 
 var is_invincible: bool = false
 @export var invincibility_time: float = 0.75 
-var hp: int = 5
-var max_armor: int = 2
-var current_armor: int = 2
+var hp: int = 4
+var max_armor: int = 4
+var current_armor: int = 4
 
 var is_dead: bool = false
 var is_attacking: bool = false
