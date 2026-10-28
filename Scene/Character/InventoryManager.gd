@@ -23,7 +23,7 @@ func add_item(item: ItemData) -> bool:
 # 2. BẤM PHÍM SỐ (HOẶC CLICK CHUỘT) ĐỂ MẶC HOẶC DÙNG ĐỒ
 func use_or_equip_item(index: int, player: Node2D) -> void:
 	if index < 0 or index >= bag.size():
-		print("⚠️ Ô phím số [", index + 1, "] đang trống!")
+		print("[INVENTORY] Ô phím số [", index + 1, "] đang trống!")
 		return
 		
 	var item = bag[index]
@@ -41,8 +41,7 @@ func use_or_equip_item(index: int, player: Node2D) -> void:
 			else:
 				bag.remove_at(index)
 			equipped_helmet = item
-			# SỬA DÒNG PRINT NÀY:
-			print("🪖 Đã đội [", item.item_name, "] (+", item.armor, " Giáp, +", item.max_hp_bonus, " Máu). Tổng giáp: ", get_total_defense())
+			print("[EQUIP] Đã đội [", item.item_name, "] (+", item.armor, " Giáp, +", item.max_hp_bonus, " Máu). Tổng giáp: ", get_total_defense())
 			equipment_changed.emit()
 			
 		ItemData.ItemType.ARMOR:
@@ -51,8 +50,7 @@ func use_or_equip_item(index: int, player: Node2D) -> void:
 			else:
 				bag.remove_at(index)
 			equipped_armor = item
-			# SỬA DÒNG PRINT NÀY:
-			print("🛡️ Đã mặc [", item.item_name, "] (+", item.armor, " Giáp, +", item.max_hp_bonus, " Máu). Tổng giáp: ", get_total_defense())
+			print("[EQUIP] Đã mặc [", item.item_name, "] (+", item.armor, " Giáp, +", item.max_hp_bonus, " Máu). Tổng giáp: ", get_total_defense())
 			equipment_changed.emit()
 			
 		ItemData.ItemType.WEAPON:
@@ -61,8 +59,7 @@ func use_or_equip_item(index: int, player: Node2D) -> void:
 			else:
 				bag.remove_at(index)
 			equipped_weapon = item
-			# SỬA DÒNG PRINT NÀY:
-			print("⚔️ Đã cầm [", item.item_name, "] (+", item.damage, " ST, +", item.max_hp_bonus, " Máu)")
+			print("[EQUIP] Đã cầm [", item.item_name, "] (+", item.damage, " ST, +", item.max_hp_bonus, " Máu)")
 			equipment_changed.emit()
 			
 	inventory_changed.emit()

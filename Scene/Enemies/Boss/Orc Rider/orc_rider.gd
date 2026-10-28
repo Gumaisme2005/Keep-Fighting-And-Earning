@@ -1,6 +1,9 @@
 extends CharacterBody2D
 
-# --- CHỈ SỐ GỐC ---
+signal boss_hp_changed(current_hp: int, max_hp: int, phase: int, boss_name: String)
+
+const BOSS_NAME: String = "ORC RIDER — KỴ BINH HỦY DIỆT"
+
 @export var max_hp: int = 30
 var hp: int
 
@@ -8,25 +11,21 @@ var hp: int
 var current_speed: float
 
 @export var base_damage: int = 2
-var active_damage: int 
+var active_damage: int
 
-# --- QUẢN LÝ TRẠNG THÁI & PHASE ---
 var current_phase: int = 1
-var is_active: bool = false 
+var is_active: bool = false
 var is_dead: bool = false
 var is_attacking: bool = false
 var is_hurt: bool = false
 
-# --- LAO TỚI (CHARGE) ---
 var can_charge: bool = true
 var is_preparing_charge: bool = false
 var is_charging: bool = false
 var charge_dir: Vector2 = Vector2.ZERO
 
-# --- QUAY RÌU (SPIN) ---
 var is_preparing_spin: bool = false
 
-# --- VẼ CẢNH BÁO (TELEGRAPH) ---
 var show_charge_warning: bool = false
 var show_spin_warning: bool = false
 var flash_tween: Tween
@@ -42,192 +41,201 @@ func _ready() -> void:
 	hp = max_hp
 	current_speed = base_speed
 	active_damage = base_damage
-	
-	_disable_all_hitboxes() 
-	
+
+	_disable_all_hitboxes()
+
 	var players = get_tree().get_nodes_in_group("player")
 	if players.size() > 0:
 		player = players[0]
 	anim.play("idle")
 
-# === HÀM VẼ KHU VỰC CẢNH BÁO ===
 func _draw() -> void:
 	if show_charge_warning:
-		var local_dir = to_local(global_position + charge_dir) 
+		var local_dir = to_local(global_position + charge_dir)
 		draw_line(Vector2.ZERO, local_dir * 500.0, Color(1.0, 0.2, 0.2, 0.4), 40.0)
-		
+
 	if show_spin_warning:
 		draw_circle(Vector2.ZERO, 65.0, Color(1.0, 0.2, 0.2, 0.4))
 
 func _physics_process(_delta: float) -> void:
-	if not is_active or is_dead or is_hurt or player == null:
+	if not is_active or is_dead or is_hurt:
 		return
-		
+	if player == null or not is_instance_valid(player):
+		var players = get_tree().get_nodes_in_group("player")
+		if players.size() > 0:
+			player = players[0]
+		else:
+			return
+
 	var distance = global_position.distance_to(player.global_position)
 	var direction = global_position.direction_to(player.global_position)
-	
+
 	if not is_preparing_charge and not is_charging and not is_preparing_spin and not is_attacking:
 		anim.flip_h = direction.x < 0
-		if anim.flip_h: $Hitbox.scale.x = -1
-		else: $Hitbox.scale.x = 1
-			
+		if anim.flip_h:
+			$Hitbox.scale.x = -1
+		else:
+			$Hitbox.scale.x = 1
+
 	if is_preparing_charge or is_preparing_spin or is_attacking:
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
-		
+
 	if is_charging:
-		velocity = charge_dir * (base_speed * 4.0) 
+		velocity = charge_dir * (base_speed * 4.0)
 		move_and_slide()
 		if is_on_wall():
-			_stop_charge() # Đụng tường thì phanh lại
+			_stop_charge()
 		return
-		
-	# --- TƯ DUY KHOẢNG CÁCH MỚI ---
-	if distance > 150.0 and can_charge: 
-		prep_charge() 
-	elif distance > 45.0: 
+
+	if distance > 150.0 and can_charge:
+		prep_charge()
+	elif distance > 45.0:
 		velocity = direction * current_speed
 		anim.play("walk")
 		move_and_slide()
-	else: 
+	else:
 		velocity = Vector2.ZERO
-		perform_attack(2) # KHI LẠI GẦN, BẮT BUỘC CHỈ DÙNG ĐÒN 2
+		perform_attack(2)
 
-# --- CƠ CHẾ GỒNG VÀ LAO TỚI ---
 func prep_charge() -> void:
 	is_preparing_charge = true
 	anim.play("idle")
 	charge_dir = global_position.direction_to(player.global_position)
-	
+
 	show_charge_warning = true
-	queue_redraw() 
-	
+	queue_redraw()
+
 	_start_flash_effect()
-	await get_tree().create_timer(2.0).timeout 
-	
+	await get_tree().create_timer(2.0).timeout
+
 	show_charge_warning = false
-	queue_redraw() 
-	
-	if not is_preparing_charge or is_dead: return
-		
+	queue_redraw()
+
+	if not is_preparing_charge or is_dead:
+		return
+
 	is_preparing_charge = false
 	start_charge()
 
 func start_charge() -> void:
 	is_charging = true
-	anim.play("walk") 
-	
-	# Lao tối đa 1.2 giây sẽ tự động phanh (nếu không đụng tường)
+	anim.play("walk")
+
 	await get_tree().create_timer(1.2).timeout
 	if is_charging:
 		_stop_charge()
 
 func _stop_charge() -> void:
-	if not is_charging: return
+	if not is_charging:
+		return
 	is_charging = false
 	velocity = Vector2.ZERO
-	
-	# Chỉ bổ đòn 1 tại điểm lao nếu Boss không bị ép chuyển phase
+
 	if not is_dead and not is_hurt and not is_preparing_spin:
-		perform_attack(1) 
-	
-	# Thời gian hồi 5s cho lần lao tiếp theo
+		perform_attack(1)
+
 	can_charge = false
 	await get_tree().create_timer(5.0).timeout
 	can_charge = true
 
-# --- CƠ CHẾ CHUYỂN PHASE (ĐỨNG IM XOAY RÌU) ---
 func prep_spin_attack() -> void:
 	is_preparing_spin = true
 	anim.play("idle")
-	
-	show_spin_warning = true
-	queue_redraw() 
-	
-	_start_flash_effect()
-	await get_tree().create_timer(2.0).timeout 
-	
-	show_spin_warning = false
-	queue_redraw() 
-	
-	if not is_preparing_spin or is_dead: return
-		
-	is_preparing_spin = false
-	perform_attack(3) # Bổ đòn 3
 
-# --- BỘ QUẢN LÝ TUNG ĐÒN ĐÁNH TỔNG HỢP ---
+	show_spin_warning = true
+	queue_redraw()
+
+	_start_flash_effect()
+	await get_tree().create_timer(2.0).timeout
+
+	show_spin_warning = false
+	queue_redraw()
+
+	if not is_preparing_spin or is_dead:
+		return
+
+	is_preparing_spin = false
+	perform_attack(3)
+
 func perform_attack(type: int) -> void:
 	is_attacking = true
-	var active_shape = null 
-	
-	if type == 1: 
-		active_damage = base_damage * 2 # Đòn 1 tại điểm phanh: x2 sát thương
+	var active_shape = null
+
+	if type == 1:
+		active_damage = base_damage * 2
 		anim.play("attack_1")
 		active_shape = shape_1
-	elif type == 2: 
-		active_damage = base_damage     # Đòn 2 chém thường: Sát thương gốc
+	elif type == 2:
+		active_damage = base_damage
 		anim.play("attack_2")
 		active_shape = shape_2
-	elif type == 3: 
-		active_damage = base_damage * 3 # Đòn 3 xoay búa: x3 sát thương
+	elif type == 3:
+		active_damage = base_damage * 3
 		anim.play("attack_3")
 		active_shape = shape_3
-		
-	await get_tree().create_timer(0.3).timeout 
-	if not is_attacking or is_dead: return # Ngắt chiêu lập tức nếu bị hủy
-	
-	if active_shape: active_shape.set_deferred("disabled", false)
-	
+
+	await get_tree().create_timer(0.3).timeout
+	if not is_attacking or is_dead:
+		return
+
+	if active_shape:
+		active_shape.set_deferred("disabled", false)
+
 	await get_tree().create_timer(0.2).timeout
-	
-	if active_shape: active_shape.set_deferred("disabled", true)
-	if not is_attacking or is_dead: return
-	
+
+	if active_shape:
+		active_shape.set_deferred("disabled", true)
+	if not is_attacking or is_dead:
+		return
+
 	await get_tree().create_timer(0.6).timeout
-	
-	# Mở khóa đánh nếu Boss không bắt đầu gồng chiêu khác
+
 	if not is_preparing_spin and not is_preparing_charge:
 		is_attacking = false
 
 func _start_flash_effect() -> void:
-	if flash_tween: flash_tween.kill()
+	if flash_tween:
+		flash_tween.kill()
 	flash_tween = create_tween()
-	flash_tween.set_loops(8) 
+	flash_tween.set_loops(8)
 	flash_tween.tween_property(anim, "modulate", Color(1, 0.2, 0.2), 0.125)
 	flash_tween.tween_property(anim, "modulate", Color.WHITE, 0.125)
 
-# --- NHẬN SÁT THƯƠNG & KIỂM TRA CHUYỂN PHASE KHẨN CẤP ---
 func take_damage(amount: int) -> void:
-	if not is_active or is_dead: return
-	
-	# 🛡️ CƠ CHẾ BẤT TỬ: Khóa toàn bộ sát thương khi đang gồng xoay búa
-	if is_preparing_spin:
-		print("🛡️ Boss đang gồng! Bất tử, miễn nhiễm mọi sát thương!")
+	if not is_active or is_dead:
 		return
-	
-	hp -= amount
-	var phased = check_phase() 
-	
+
+	if is_preparing_spin:
+		print("[BOSS] Boss đang gồng! Bất tử, miễn nhiễm mọi sát thương!")
+		return
+
+	hp = max(0, hp - amount)
+	if get_tree():
+		get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -30), amount, Color(1.0, 0.5, 0.2))
+	var phased = check_phase()
+	boss_hp_changed.emit(hp, max_hp, current_phase, BOSS_NAME)
+
 	if hp <= 0:
 		is_dead = true
+		if get_node_or_null("/root/GameManager") != null:
+			GameManager.register_enemy_kill()
 		_cancel_all_actions()
 		$CollisionShape2D.set_deferred("disabled", true)
-		if has_node("Hurtbox/CollisionShape2D"): $Hurtbox/CollisionShape2D.set_deferred("disabled", true)
+		if has_node("Hurtbox/CollisionShape2D"):
+			$Hurtbox/CollisionShape2D.set_deferred("disabled", true)
 		anim.play("death")
 		return
 
-	# NẾU QUA NGƯỠNG MÁU -> HỦY MỌI ĐÒN ĐANG ĐÁNH ĐỂ ĐỨNG IM XOAY BÚA!
 	if phased:
 		_cancel_all_actions()
 		prep_spin_attack()
 		return
 
-	# SUPER ARMOR: Nếu đang gồng lao, đang lao hoặc đang đánh thì không bị khựng lại
 	if is_preparing_charge or is_charging or is_attacking:
-		return 
-		
-	# Nhận sát thương khựng lại bình thường
+		return
+
 	_cancel_all_actions()
 	is_hurt = true
 	anim.play("hurt")
@@ -235,24 +243,17 @@ func take_damage(amount: int) -> void:
 func check_phase() -> bool:
 	if current_phase == 1 and hp <= max_hp * 0.66:
 		current_phase = 2
-		current_speed = base_speed + 40.0 
-		print("⚠️ ORC RIDER TỤT MÁU! Dừng mọi hành động, chuẩn bị xoay búa!")
-		
-		# Phòng hờ sát thương quá lớn tụt xuống luôn 33%
+		current_speed = base_speed + 40.0
 		if hp <= max_hp * 0.33:
 			current_phase = 3
-			current_speed = base_speed + 70.0 
+			current_speed = base_speed + 70.0
 		return true
-		
 	elif current_phase == 2 and hp <= max_hp * 0.33:
 		current_phase = 3
-		current_speed = base_speed + 70.0 
-		print("🔥 ORC RIDER BÁO ĐỘNG ĐỎ! Chuẩn bị xoay búa lần cuối!")
+		current_speed = base_speed + 70.0
 		return true
-		
 	return false
 
-# --- HÀM HỖ TRỢ DỌN DẸP KHẨN CẤP ---
 func _cancel_all_actions() -> void:
 	is_attacking = false
 	is_preparing_charge = false
@@ -261,8 +262,9 @@ func _cancel_all_actions() -> void:
 	show_charge_warning = false
 	show_spin_warning = false
 	queue_redraw()
-	
-	if flash_tween: flash_tween.kill()
+
+	if flash_tween:
+		flash_tween.kill()
 	anim.modulate = Color.WHITE
 	_disable_all_hitboxes()
 	velocity = Vector2.ZERO
@@ -270,7 +272,8 @@ func _cancel_all_actions() -> void:
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if anim.animation == "hurt":
 		is_hurt = false
-		if not is_dead: anim.play("idle")
+		if not is_dead:
+			anim.play("idle")
 	elif anim.animation == "death":
 		queue_free()
 
