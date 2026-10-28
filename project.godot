@@ -17,9 +17,14 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 [autoload]
 
 GameManager="*uid://qw6g4q4dop7n"
+AudioManager="*res://Scene/AudioManager.gd"
 
 [display]
 
+window/size/viewport_width=1152
+window/size/viewport_height=648
+window/size/window_width_override=1280
+window/size/window_height_override=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
@@ -72,6 +77,7 @@ esc={
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
