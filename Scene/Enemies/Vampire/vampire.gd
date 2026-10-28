@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 @export var speed: float = 60.0 # Đi chậm lù đù
-@export var attack_range: float = 40.0 # Tầm cắn cận chiến
+@export var attack_range: float = 20.0 # Tầm cắn cận chiến (áp sát 20px)
 
 var hp: int = 4 # Máu trâu hơn các con khác
 var is_dead: bool = false

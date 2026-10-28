@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 @export var speed: float = 70.0
-@export var attack_range: float = 35.0 # Đến gần 35 pixel thì dừng lại vung rìu
+@export var attack_range: float = 20.0 # Chạy lại gần khoảng 20 pixel mới vung rìu
 @export var world_item_scene: PackedScene 
 @export var loot_table: Array[ItemData] = []
 @export var drop_chance: float = 0.3 # Quái thường chỉ có 30% rớt đồ
