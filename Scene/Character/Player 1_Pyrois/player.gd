@@ -21,7 +21,7 @@ var rmb_cd_remaining: float = 0.0
 var rmb_cd_max: float = 0.0
 
 var is_invincible: bool = false
-@export var invincibility_time: float = 0.75
+@export var invincibility_time: float = 0.95
 var hp: int = 4
 var max_armor: int = 4
 var current_armor: int = 4
@@ -29,6 +29,8 @@ var current_armor: int = 4
 var is_dead: bool = false
 var is_attacking: bool = false
 var is_hurt: bool = false
+var _hurt_timer: float = 0.0
+var _attack_timer: float = 0.0
 
 var regen_delay_timer: Timer
 var regen_tick_timer: Timer
@@ -89,9 +91,20 @@ func _process(delta: float) -> void:
 	if updated:
 		skill_cooldown_changed.emit(q_cd_remaining, skill_cooldown, rmb_cd_remaining, rmb_cd_max)
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if is_dead:
 		return
+
+	if is_hurt:
+		_hurt_timer -= delta
+		if _hurt_timer <= 0.0:
+			is_hurt = false
+
+	if is_attacking:
+		_attack_timer -= delta
+		if _attack_timer <= 0.0:
+			is_attacking = false
+			sword_collision.set_deferred("disabled", true)
 
 	var gm = get_node_or_null("/root/GameManager")
 	var replaying: bool = gm != null and gm.is_replaying
@@ -143,11 +156,6 @@ func _physics_process(_delta: float) -> void:
 	if hotbar_to_use >= 0:
 		inventory.use_or_equip_item(hotbar_to_use, self)
 
-	if is_hurt:
-		velocity = Vector2.ZERO
-		move_and_slide()
-		return
-
 	var aim_pos = global_position + current_aim_offset
 	if aim_pos.x < global_position.x:
 		animated_sprite.flip_h = true
@@ -156,42 +164,51 @@ func _physics_process(_delta: float) -> void:
 		animated_sprite.flip_h = false
 		sword_hitbox.scale.x = 1
 
-	if want_q and can_use_skill and not is_attacking and not is_casting_skill and not is_hurt:
+	# Khi dính sát thương (đang nhấp nháy bất tử), cho phép nhân vật di chuyển thoát vây mượt mà (tăng nhẹ 15% tốc chạy thoát thân)
+	var effective_speed: float = speed * 1.15 if is_invincible else speed
+
+	if want_q and can_use_skill and not is_attacking and not is_casting_skill:
 		use_special_skill()
 		return
 
 	if want_rmb:
 		_on_rmb_skill_triggered()
 
-	if is_attacking or is_casting_skill:
+	if is_casting_skill:
 		move_and_slide()
 		return
 
-	velocity = direction * speed
+	if is_attacking:
+		velocity = direction * (effective_speed * 0.65)
+		move_and_slide()
+		return
+
+	velocity = direction * effective_speed
 	move_and_slide()
 
 	if want_attack:
 		attack()
 		return
 
-	if direction != Vector2.ZERO:
-		animated_sprite.play("walk")
-	else:
-		animated_sprite.play("idle")
+	if not is_hurt:
+		if direction != Vector2.ZERO:
+			animated_sprite.play("walk")
+		else:
+			animated_sprite.play("idle")
 
 func _on_rmb_skill_triggered() -> void:
 	pass
 
 func attack() -> void:
 	is_attacking = true
-	velocity = Vector2.ZERO
+	_attack_timer = 0.32
 	animated_sprite.play("attack_1")
 	sword_collision.disabled = false
 	if get_node_or_null("/root/AudioManager") != null:
 		AudioManager.play_sfx("slash")
 
 func take_damage(amount: int) -> void:
-	if is_dead or is_hurt or is_invincible or amount <= 0:
+	if is_dead or is_invincible or amount <= 0:
 		return
 
 	if get_node_or_null("/root/AudioManager") != null:
@@ -215,13 +232,9 @@ func take_damage(amount: int) -> void:
 
 	if hp > 0:
 		is_hurt = true
-		animated_sprite.play("hurt")
-
-		if is_attacking or is_casting_skill:
-			is_attacking = false
-			is_casting_skill = false
-			sword_collision.set_deferred("disabled", true)
-
+		_hurt_timer = 0.18
+		if not is_attacking and not is_casting_skill:
+			animated_sprite.play("hurt")
 		start_invincibility()
 	else:
 		if not is_dead:

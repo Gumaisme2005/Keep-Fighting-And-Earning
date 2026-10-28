@@ -24,7 +24,7 @@ func _on_rmb_skill_triggered() -> void:
 		perform_attack_3()
 
 func _input(event: InputEvent) -> void:
-	if is_dead or is_hurt or is_casting_skill or is_attacking:
+	if is_dead or is_casting_skill or is_attacking:
 		return
 	if get_node_or_null("/root/GameManager") != null and GameManager.is_replaying:
 		return
@@ -47,18 +47,18 @@ func perform_attack_2():
 	animated_sprite.play("attack_2")
 
 	for i in range(3):
-		if is_dead or is_hurt:
+		if is_dead:
 			break
 
 		sword_collision.set_deferred("disabled", false)
 		await get_tree().create_timer(0.1).timeout
 
-		if is_dead or is_hurt:
+		if is_dead:
 			sword_collision.set_deferred("disabled", true)
 			break
 
 		sword_collision.set_deferred("disabled", true)
-		await get_tree().create_timer(0.2).timeout
+		await get_tree().create_timer(0.18).timeout
 
 	_cleanup_skill("attack_2")
 	start_cooldown("q")
@@ -79,6 +79,7 @@ func perform_attack_3():
 
 	if is_dead:
 		is_invincible = false
+		is_casting_skill = false
 		animated_sprite.modulate = Color.WHITE
 		return
 
@@ -105,11 +106,11 @@ func perform_attack_3():
 	start_cooldown("right_click")
 
 func _cleanup_skill(anim_name: String) -> void:
-	if not is_dead and not is_hurt:
+	# Luôn luôn giải phóng trạng thái is_casting_skill bất kể đang bị thương hay không để chống kẹt di chuyển
+	sword_collision.set_deferred("disabled", true)
+	is_casting_skill = false
+	if not is_dead:
 		velocity = Vector2.ZERO
-		sword_collision.set_deferred("disabled", true)
-		is_casting_skill = false
-
 		if animated_sprite.animation == anim_name:
 			animated_sprite.play("idle")
 

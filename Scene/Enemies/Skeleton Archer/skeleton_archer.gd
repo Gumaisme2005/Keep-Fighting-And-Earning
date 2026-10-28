@@ -117,14 +117,20 @@ func attack() -> void:
 	can_attack = true
 
 func shoot_arrow() -> void:
+	if arrow_scene == null or get_parent() == null or not is_instance_valid(player):
+		return
 	var arrow = arrow_scene.instantiate()
-	get_parent().call_deferred("add_child", arrow)
-
-	var shoot_dir = global_position.direction_to(player.global_position)
-	arrow.global_position = global_position + (shoot_dir * 8.0)
+	var shoot_dir = global_position.direction_to(player.global_position).normalized()
+	if shoot_dir == Vector2.ZERO:
+		shoot_dir = Vector2.RIGHT
+	var spawn_pos: Vector2 = global_position + (shoot_dir * 6.0)
+	if get_parent() is Node2D:
+		arrow.position = (get_parent() as Node2D).to_local(spawn_pos)
 	arrow.direction = shoot_dir
 	arrow.rotation = shoot_dir.angle()
 	arrow.damage = damage
+	get_parent().add_child(arrow)
+	arrow.global_position = spawn_pos
 
 func take_damage(amount: int) -> void:
 	if not is_active or is_dead:

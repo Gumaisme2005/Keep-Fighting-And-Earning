@@ -40,16 +40,23 @@ func _is_player_deep_inside_room(p: Node2D) -> bool:
 	if tilemap == null or not is_instance_valid(p) or room_rect.size == Vector2i.ZERO:
 		return false
 	var cell: Vector2i = tilemap.local_to_map(tilemap.to_local(p.global_position))
-	return room_rect.grow(-2).has_point(cell)
+	# Cửa nằm ở viền ngoài room_rect (position - 1 và end), nên bước vào room_rect.grow(-1) là đã qua hẳn cửa 2 ô gạch
+	return room_rect.grow(-1).has_point(cell)
 
 func _keep_combatants_inside_locked_room(p: Node2D) -> void:
 	if room_rect.size == Vector2i.ZERO or tilemap == null:
 		return
-	var min_local: Vector2 = Vector2(room_rect.position + Vector2i(1, 1)) * 16.0
-	var max_local: Vector2 = Vector2(room_rect.end - Vector2i(1, 1)) * 16.0
-	var p_local: Vector2 = tilemap.to_local(p.global_position)
-	if p_local.x < min_local.x or p_local.x > max_local.x or p_local.y < min_local.y or p_local.y > max_local.y:
-		p.global_position = tilemap.to_global(p_local.clamp(min_local + Vector2(8, 8), max_local - Vector2(8, 8)))
+	var min_local: Vector2 = Vector2(room_rect.position) * 16.0 + Vector2(10.0, 10.0)
+	var max_local: Vector2 = Vector2(room_rect.end) * 16.0 - Vector2(10.0, 10.0)
+	if is_instance_valid(p):
+		var p_local: Vector2 = tilemap.to_local(p.global_position)
+		if p_local.x < min_local.x or p_local.x > max_local.x or p_local.y < min_local.y or p_local.y > max_local.y:
+			p.global_position = tilemap.to_global(p_local.clamp(min_local, max_local))
+	for enemy in enemies:
+		if is_instance_valid(enemy) and not enemy.is_queued_for_deletion() and not enemy.get("is_dead"):
+			var e_local: Vector2 = tilemap.to_local(enemy.global_position)
+			if e_local.x < min_local.x or e_local.x > max_local.x or e_local.y < min_local.y or e_local.y > max_local.y:
+				enemy.global_position = tilemap.to_global(e_local.clamp(min_local, max_local))
 
 func _on_body_entered(body: Node2D) -> void:
 	if spawn_grace_frames > 0:

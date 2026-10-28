@@ -6,6 +6,9 @@ var direction: Vector2 = Vector2.ZERO
 var is_broken: bool = false
 
 func _ready() -> void:
+	z_index = 3
+	if has_node("AnimatedSprite2D"):
+		$AnimatedSprite2D.play("fly")
 	await get_tree().create_timer(3.0).timeout
 	if is_instance_valid(self):
 		queue_free()

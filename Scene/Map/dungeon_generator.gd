@@ -72,8 +72,11 @@ var visited_rooms: Dictionary = {0: true}
 var active_boss: Node2D = null
 
 func _ready():
+	set_layer_z_index(0, -1)
+	if get_layers_count() > 1:
+		set_layer_z_index(1, 0)
 	if get_layers_count() > 2:
-		set_layer_z_index(2, -1)
+		set_layer_z_index(2, 0)
 	if get_node_or_null("/root/GameManager") != null:
 		if not GameManager.current_seed.strip_edges().is_empty():
 			map_seed = GameManager.current_seed
@@ -500,6 +503,7 @@ func spawn_entities():
 				var enemy = enemy_scenes[spawn_info["enemy_idx"]].instantiate()
 				if "loot_seed" in enemy:
 					enemy.loot_seed = spawn_info["loot_seed"]
+				enemy.z_index = 2
 				enemy.add_to_group("enemies")
 				add_child(enemy)
 				enemy.global_position = to_global(map_to_local(spawn_info["cell"]))
@@ -536,6 +540,7 @@ func spawn_entities():
 				boss_instance = RIDER_ORC_SCENE.instantiate()
 				print("[BOSS] Tầng ", current_level, " - Boss: Orc Rider xuất hiện!")
 
+			boss_instance.z_index = 2
 			boss_instance.add_to_group("enemies")
 			boss_instance.add_to_group("boss")
 			add_child(boss_instance)

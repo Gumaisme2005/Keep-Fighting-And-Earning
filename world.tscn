@@ -594,10 +594,8 @@ format = 2
 layer_0/z_index = -1
 layer_1/name = "Decor"
 layer_1/y_sort_enabled = true
-layer_1/z_index = -1
 layer_2/name = "Doors"
 layer_2/y_sort_enabled = true
-layer_2/z_index = -1
 script = ExtResource("6_dwbse")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=439789130]

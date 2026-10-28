@@ -22,6 +22,7 @@ func _ready() -> void:
 	_test_ut09_ui_scenes_and_theme_integrity()
 	_test_ut10_minimap_door_zindex_atmosphere_and_audio()
 	_test_ut11_wall_line_of_sight_and_room_lock_protection()
+	_test_ut12_archer_arrow_shooting_and_anti_stunlock()
 
 	print("------------------------------------------------------------------")
 	print("[SUMMARY] UNIT TESTS: %d PASSED | %d FAILED" % [passed_count, failed_count])
@@ -247,11 +248,16 @@ func _test_ut10_minimap_door_zindex_atmosphere_and_audio() -> void:
 	add_child(gen.get_parent())
 	gen.spawn_entities()
 
-	# 1. Kiểm tra Door Layer (Layer 2) có z_index = -1 và Player có z_index = 2 để cửa đóng không bao giờ đè lên nhân vật
-	var door_z_ok: bool = (gen.get_layer_z_index(2) == -1 and gen.the_player != null and gen.the_player.z_index >= 1)
+	# 1. Kiểm tra phân tầng Z-Index: Floor (layer_0 = -1) < Doors (layer_2 = 0) < Player (z_index = 2) để cửa hiện rõ trên sàn nhưng không đè lên nhân vật
+	var door_z_ok: bool = (
+		gen.get_layer_z_index(0) == -1
+		and gen.get_layer_z_index(2) == 0
+		and gen.the_player != null
+		and gen.the_player.z_index == 2
+	)
 	_assert_true(
 		door_z_ok,
-		"UT-10a: Door layer (layer_2) has z_index=-1 and Player has z_index=2 (prevents closed door overlap bug)"
+		"UT-10a: Z-Index hierarchy Floor(-1) < Doors(0) < Player(2) ensures closed doors are visible on floor without covering actors"
 	)
 
 	# 2. Kiểm tra Minimap theo dõi đúng vị trí thực tế (real-time) khi người chơi di chuyển sang phòng khác và hành lang
@@ -270,16 +276,27 @@ func _test_ut10_minimap_door_zindex_atmosphere_and_audio() -> void:
 		"room=%d, grid=(%.2f, %.2f) vs target=(%d, %d)" % [detected_room, exact_grid.x, exact_grid.y, target_gp.x, target_gp.y]
 	)
 
-	# 3. Kiểm tra bầu không khí ngục tối (Đuốc lửa & Bóng xanh lượn lờ) và AudioManager
+	# 3. Kiểm tra đuốc lửa đính trực tiếp lên gạch tường (không đặt trên sàn) & AudioManager
 	var atmo_node = gen.get_node_or_null("DungeonAtmosphere")
 	var audio_mgr = get_node_or_null("/root/AudioManager")
+	var torches_on_walls := true
+	var torch_count := 0
+	if atmo_node != null:
+		for child in atmo_node.get_children():
+			if "wall_side" in child:
+				torch_count += 1
+				var t_cell: Vector2i = gen.local_to_map(child.position)
+				if gen.get_cell_atlas_coords(0, t_cell) == gen.FLOOR_COORD:
+					torches_on_walls = false
+					break
 	var atmo_audio_ok: bool = (
-		atmo_node != null and atmo_node.get_child_count() >= 16
+		atmo_node != null and torch_count >= 16 and torches_on_walls
 		and audio_mgr != null and audio_mgr.bgm_streams.size() == 3 and audio_mgr.sfx_streams.size() == 4
 	)
 	_assert_true(
 		atmo_audio_ok,
-		"UT-10c: DungeonAtmosphere spawns torches + ghostly blue wisps and AudioManager loads all 3 BGM + 4 SFX tracks"
+		"UT-10c: DungeonAtmosphere mounts all torches strictly on wall tiles (0 on floor) + wisps & AudioManager tracks",
+		"wall_torches=%d" % torch_count
 	)
 
 	gen.get_parent().free()
@@ -311,6 +328,41 @@ func _test_ut11_wall_line_of_sight_and_room_lock_protection() -> void:
 	_assert_true(
 		los_clear and los_blocked_by_wall and rm_ok,
 		"UT-11: Line-of-Sight blocks attacks through walls/doors & RoomManager rejects corridor false-locks (Seed: SEED-Q244GL_2)"
+	)
+
+	gen.get_parent().free()
+
+func _test_ut12_archer_arrow_shooting_and_anti_stunlock() -> void:
+	var gen = _create_generator("SEED-Q244GL", 16, 1)
+	add_child(gen.get_parent())
+
+	var archer_scene := load("res://Scene/Character/Player 3_Miya/player_3.tscn") as PackedScene
+	var archer = archer_scene.instantiate()
+	gen.the_player = archer
+	gen.add_child(archer)
+	archer.global_position = gen.to_global(gen.map_to_local(gen.generated_rooms[0].get_center()))
+
+	# 1. Kiểm tra Miya bắn cung sinh ra Arrow hợp lệ và bay đi không bị tự hủy tại (0, 0)
+	archer.attack()
+	var spawned_arrow: Area2D = null
+	for child in gen.get_children():
+		if child is Area2D and "shooter_origin" in child:
+			spawned_arrow = child
+			break
+
+	var arrow_ok: bool = false
+	if spawned_arrow != null and not spawned_arrow.is_queued_for_deletion() and not spawned_arrow.get("is_broken"):
+		var start_p: Vector2 = spawned_arrow.global_position
+		spawned_arrow._physics_process(0.05)
+		arrow_ok = (not spawned_arrow.get("is_broken") and spawned_arrow.global_position.distance_to(start_p) > 5.0)
+
+	# 2. Kiểm tra khi nhận sát thương liên tục, nhân vật vẫn di chuyển thoát vây được (không bị khóa velocity = 0)
+	archer.take_damage(1)
+	var can_move_while_hurt: bool = (archer.is_hurt and archer.is_invincible and archer._hurt_timer > 0.0)
+
+	_assert_true(
+		arrow_ok and can_move_while_hurt,
+		"UT-12: Archer (Miya) shoots flying arrows properly & continuous damage never stun-locks player movement"
 	)
 
 	gen.get_parent().free()

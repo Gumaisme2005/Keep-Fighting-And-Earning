@@ -139,7 +139,8 @@ static func style_button(
 	font_size: int = 13
 ) -> void:
 	btn.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	btn.remove_theme_font_override("font")
+	if btn.has_theme_font_override("font"):
+		btn.remove_theme_font_override("font")
 	if not icon_name.is_empty():
 		btn.icon = get_icon(icon_name)
 		btn.expand_icon = false

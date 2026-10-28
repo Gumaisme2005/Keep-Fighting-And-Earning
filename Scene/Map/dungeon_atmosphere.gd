@@ -29,11 +29,12 @@ class TorchNode extends Node2D:
 	var flame_color: Color = Color(1.0, 0.55, 0.16, 1.0)
 	var core_color: Color = Color(1.0, 0.92, 0.42, 1.0)
 	var phase: float = 0.0
+	var wall_side: String = "top" # "top", "bottom", "left", "right"
 	var point_light: PointLight2D = null
 	var base_energy: float = 0.88
 
 	func _ready() -> void:
-		z_index = 2
+		z_index = 1
 		if DisplayServer.get_name() == "headless":
 			set_process(false)
 			return
@@ -48,15 +49,15 @@ class TorchNode extends Node2D:
 		add_child(point_light)
 
 		var sparks := CPUParticles2D.new()
-		sparks.amount = 7
-		sparks.lifetime = 0.75
+		sparks.amount = 6
+		sparks.lifetime = 0.65
 		sparks.direction = Vector2(0, -1)
-		sparks.spread = 28.0
-		sparks.gravity = Vector2(0, -26.0)
-		sparks.initial_velocity_min = 8.0
-		sparks.initial_velocity_max = 18.0
-		sparks.scale_amount_min = 1.5
-		sparks.scale_amount_max = 2.6
+		sparks.spread = 24.0
+		sparks.gravity = Vector2(0, -24.0)
+		sparks.initial_velocity_min = 6.0
+		sparks.initial_velocity_max = 15.0
+		sparks.scale_amount_min = 1.2
+		sparks.scale_amount_max = 2.2
 		sparks.color = flame_color.lightened(0.25)
 		sparks.position = Vector2(0, -6)
 		add_child(sparks)
@@ -71,23 +72,40 @@ class TorchNode extends Node2D:
 
 	func _draw() -> void:
 		var t: float = Time.get_ticks_msec() * 0.008 + phase
-		var sway: float = sin(t * 3.1) * 1.4
-		var h_pulse: float = cos(t * 4.7) * 1.5
+		var sway: float = sin(t * 3.1) * 1.1
+		var h_pulse: float = cos(t * 4.7) * 1.2
 
-		# Đế sắt & thân đuốc pixel-art
-		draw_rect(Rect2(-3, 2, 6, 3), Color(0.22, 0.24, 0.28, 0.95), true)
-		draw_rect(Rect2(-2, -3, 4, 7), Color(0.42, 0.26, 0.14, 0.98), true)
-		draw_rect(Rect2(-3, -4, 6, 2), Color(0.28, 0.30, 0.35, 0.98), true)
+		# Giá sắt đính trực tiếp vào gạch tường (Wall Sconce Bracket)
+		var iron_dark := Color(0.16, 0.17, 0.22, 0.98)
+		var iron_mid := Color(0.28, 0.31, 0.38, 0.98)
+		var wood_col := Color(0.44, 0.27, 0.14, 0.98)
 
-		# Quầng sáng nền dưới chân đuốc
-		draw_circle(Vector2(0, -6), 9.0 + h_pulse, Color(flame_color.r, flame_color.g, flame_color.b, 0.18))
+		if wall_side == "left":
+			# Bản lề sắt đóng chặt vào tường bên trái
+			draw_rect(Rect2(-6, -3, 3, 7), iron_dark, true)
+			draw_rect(Rect2(-4, -1, 5, 2), iron_mid, true)
+		elif wall_side == "right":
+			# Bản lề sắt đóng chặt vào tường bên phải
+			draw_rect(Rect2(3, -3, 3, 7), iron_dark, true)
+			draw_rect(Rect2(-1, -1, 5, 2), iron_mid, true)
+		else:
+			# Bản lề sắt đóng vào tường Bắc/Nam
+			draw_rect(Rect2(-3, -2, 6, 5), iron_dark, true)
+			draw_rect(Rect2(-2, 1, 4, 2), iron_mid, true)
 
-		# Ngọn lửa ngoài bập bùng
-		draw_circle(Vector2(sway * 0.4, -7.0), 4.2 + h_pulse * 0.3, Color(flame_color.r, flame_color.g, flame_color.b, 0.88))
-		draw_circle(Vector2(sway * 0.8, -10.5 - absf(h_pulse) * 0.5), 2.8, Color(flame_color.r, flame_color.g * 0.8, flame_color.b, 0.82))
-		# Lõi lửa vàng rực
-		draw_circle(Vector2(sway * 0.3, -6.5), 2.3, core_color)
-		draw_circle(Vector2(sway * 0.6, -9.0), 1.4, Color(1.0, 0.98, 0.85, 0.95))
+		# Thân đuốc gỗ & vòng sắt kẹp trên tường
+		draw_rect(Rect2(-1.5, -4, 3, 6), wood_col, true)
+		draw_rect(Rect2(-2.5, -4, 5, 1.5), iron_mid, true)
+
+		# Quầng sáng hắt lên mặt gạch tường
+		draw_circle(Vector2(0, -6.5), 7.5 + h_pulse, Color(flame_color.r, flame_color.g, flame_color.b, 0.16))
+
+		# Ngọn lửa bập bùng sát tường
+		draw_circle(Vector2(sway * 0.35, -6.5), 3.6 + h_pulse * 0.25, Color(flame_color.r, flame_color.g, flame_color.b, 0.90))
+		draw_circle(Vector2(sway * 0.7, -9.5 - absf(h_pulse) * 0.4), 2.3, Color(flame_color.r, flame_color.g * 0.78, flame_color.b, 0.84))
+		# Lõi lửa vàng sáng
+		draw_circle(Vector2(sway * 0.25, -6.2), 2.0, core_color)
+		draw_circle(Vector2(sway * 0.5, -8.3), 1.2, Color(1.0, 0.98, 0.85, 0.95))
 
 
 class GhostlyWispNode extends Node2D:
@@ -170,6 +188,56 @@ class GhostlyWispNode extends Node2D:
 		draw_rect(Rect2(0.8, -1.2, 1.2, 1.5), Color(0.04, 0.12, 0.22, 0.85), true)
 
 
+static func _is_wall_tile(tilemap: TileMap, cell: Vector2i) -> bool:
+	return tilemap.get_cell_source_id(0, cell) != -1 and tilemap.get_cell_atlas_coords(0, cell) != Vector2i(1, 6)
+
+static func _find_wall_torch_mounts(tilemap: TileMap, room: Rect2i) -> Array[Dictionary]:
+	var mounts: Array[Dictionary] = []
+
+	# 1. Hai ngọn đuốc đính trực tiếp lên Tường Bắc (y = room.position.y - 1)
+	var top_y: int = room.position.y - 1
+	var top_targets: Array[int] = [room.position.x + 3, room.end.x - 4]
+	for base_x in top_targets:
+		for dx in [0, 1, -1, 2, -2, 3, -3]:
+			var tx: int = clampi(base_x + dx, room.position.x + 1, room.end.x - 2)
+			var c := Vector2i(tx, top_y)
+			if _is_wall_tile(tilemap, c) and _is_wall_tile(tilemap, c + Vector2i(-1, 0)) and _is_wall_tile(tilemap, c + Vector2i(1, 0)):
+				mounts.append({
+					"cell": c,
+					"pos": tilemap.map_to_local(c) + Vector2(0, 4),
+					"side": "top"
+				})
+				break
+
+	# 2. Một ngọn đuốc đính lên Tường Tây (x = room.position.x - 1)
+	var left_x: int = room.position.x - 1
+	var mid_y: int = room.position.y + int(room.size.y / 2)
+	for dy in [-3, 3, -4, 4, -2, 2, 0]:
+		var ty: int = clampi(mid_y + dy, room.position.y + 2, room.end.y - 3)
+		var c := Vector2i(left_x, ty)
+		if _is_wall_tile(tilemap, c) and _is_wall_tile(tilemap, c + Vector2i(0, -1)) and _is_wall_tile(tilemap, c + Vector2i(0, 1)):
+			mounts.append({
+				"cell": c,
+				"pos": tilemap.map_to_local(c) + Vector2(4, 0),
+				"side": "left"
+			})
+			break
+
+	# 3. Một ngọn đuốc đính lên Tường Đông (x = room.end.x)
+	var right_x: int = room.end.x
+	for dy in [-3, 3, -4, 4, -2, 2, 0]:
+		var ty: int = clampi(mid_y + dy, room.position.y + 2, room.end.y - 3)
+		var c := Vector2i(right_x, ty)
+		if _is_wall_tile(tilemap, c) and _is_wall_tile(tilemap, c + Vector2i(0, -1)) and _is_wall_tile(tilemap, c + Vector2i(0, 1)):
+			mounts.append({
+				"cell": c,
+				"pos": tilemap.map_to_local(c) + Vector2(-4, 0),
+				"side": "right"
+			})
+			break
+
+	return mounts
+
 static func setup_dungeon_atmosphere(tilemap: TileMap, player: Node2D, rng_seed: int) -> Node2D:
 	# Dọn bầu không khí cũ nếu có
 	var old_atmo := tilemap.get_node_or_null("DungeonAtmosphere")
@@ -207,7 +275,7 @@ static func setup_dungeon_atmosphere(tilemap: TileMap, player: Node2D, rng_seed:
 	if rooms == null or rooms.is_empty():
 		return root
 
-	# 3. Đặt đuốc lửa bập bùng & những bóng ma xanh lượn lờ trong từng phòng
+	# 3. Đính đuốc lửa bập bùng trực tiếp lên gạch tường & thả những bóng ma xanh lượn lờ
 	for i in range(rooms.size()):
 		var room: Rect2i = rooms[i]
 		var r_type: int = types[i] if i < types.size() else 1
@@ -219,18 +287,13 @@ static func setup_dungeon_atmosphere(tilemap: TileMap, player: Node2D, rng_seed:
 		elif r_type == 2: # TREASURE
 			f_col = Color(1.0, 0.78, 0.22, 1.0)
 
-		var torch_cells: Array[Vector2i] = [
-			Vector2i(room.position.x + 2, room.position.y + 1),
-			Vector2i(room.end.x - 3, room.position.y + 1),
-			Vector2i(room.position.x + 2, room.end.y - 2),
-			Vector2i(room.end.x - 3, room.end.y - 2)
-		]
-
-		for tc in torch_cells:
+		var wall_mounts: Array[Dictionary] = _find_wall_torch_mounts(tilemap, room)
+		for m in wall_mounts:
 			var torch := TorchNode.new()
 			torch.flame_color = f_col
+			torch.wall_side = String(m.get("side", "top"))
 			torch.phase = atmo_rng.randf_range(0.0, TAU)
-			torch.position = tilemap.map_to_local(tc)
+			torch.position = m.get("pos", Vector2.ZERO)
 			root.add_child(torch)
 
 		# Thả 2-3 bóng xanh lượn lờ (Ghostly Blue Wisps) trong mỗi phòng
