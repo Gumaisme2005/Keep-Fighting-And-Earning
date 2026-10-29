@@ -2,7 +2,8 @@ extends CharacterBody2D
 
 signal boss_hp_changed(current_hp: int, max_hp: int, phase: int, boss_name: String)
 
-const BOSS_NAME: String = "ORC RIDER — KỴ BINH HỦY DIỆT"
+const BalanceData = preload("res://Scene/BalanceConfig.gd")
+const BOSS_NAME: String = "THỦ LĨNH KỴ BINH WARG — ĐẠI TƯỚNG MORIA"
 
 @export var max_hp: int = 30
 var hp: int
@@ -38,6 +39,10 @@ var flash_tween: Tween
 var player: Node2D = null
 
 func _ready() -> void:
+	var cfg: Dictionary = BalanceData.get_boss_stats("orc_rider")
+	max_hp = int(cfg.get("hp", max_hp))
+	base_speed = float(cfg.get("speed", base_speed))
+	base_damage = int(cfg.get("damage", base_damage))
 	hp = max_hp
 	current_speed = base_speed
 	active_damage = base_damage

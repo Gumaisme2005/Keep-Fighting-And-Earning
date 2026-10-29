@@ -26,7 +26,7 @@ echo   Godot: !GODOT_BIN!
 echo ==================================================================
 
 echo.
-echo [1/4] Chay Unit Tests (UT-01 .. UT-07)...
+echo [1/4] Chay Unit Tests (UT-01 .. UT-13)...
 "!GODOT_BIN!" --headless --path . "res://tests/test_dungeon_generator_unit.tscn"
 if !ERRORLEVEL! NEQ 0 (
     echo [THAT BAI] Unit Tests gap loi!

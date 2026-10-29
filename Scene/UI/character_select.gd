@@ -107,7 +107,7 @@ func _build_hero_details_and_seed_bar() -> void:
 	)
 	header_hbox.add_child(back_btn)
 
-	var title_box := UITheme.create_icon_header("soul_stone", "SẢNH ANH HÙNG — CHỌN THỢ SĂN & TỌA ĐỘ SEED", 18, Color(1.0, 0.88, 0.36), 24)
+	var title_box := UITheme.create_icon_header("soul_stone", "ĐOÀN HỘ NHẪN TRUNG ĐỊA — CHỌN ANH HÙNG & TỌA ĐỘ PALANTÍR", 17, Color(1.0, 0.88, 0.36), 24)
 	title_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	title_box.alignment = BoxContainer.ALIGNMENT_CENTER
 	header_hbox.add_child(title_box)
@@ -302,6 +302,8 @@ func _select_deselect_highlight() -> void:
 func _update_hero_info_display() -> void:
 	if hero_name_label == null or get_node_or_null("/root/GameManager") == null:
 		return
+	if GameManager.has_method("refresh_balance_data"):
+		GameManager.refresh_balance_data()
 	var info: Dictionary = GameManager.CHARACTER_INFO[clampi(selected_index, 0, GameManager.CHARACTER_INFO.size() - 1)]
 	hero_name_label.text = "%s  —  %s  (%s)" % [
 		String(info.get("name", "Hero")).to_upper(),

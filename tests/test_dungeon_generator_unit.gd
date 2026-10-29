@@ -1,6 +1,7 @@
 extends Node2D
 
 const UITheme = preload("res://Scene/UI/UITheme.gd")
+const BalanceConfig = preload("res://Scene/BalanceConfig.gd")
 const WORLD_SCENE = preload("res://world.tscn")
 
 var passed_count: int = 0
@@ -23,6 +24,7 @@ func _ready() -> void:
 	_test_ut10_minimap_door_zindex_atmosphere_and_audio()
 	_test_ut11_wall_line_of_sight_and_room_lock_protection()
 	_test_ut12_archer_arrow_shooting_and_anti_stunlock()
+	_test_ut13_balance_config_archer_nerf_and_lotr_lore()
 
 	print("------------------------------------------------------------------")
 	print("[SUMMARY] UNIT TESTS: %d PASSED | %d FAILED" % [passed_count, failed_count])
@@ -367,8 +369,44 @@ func _test_ut12_archer_arrow_shooting_and_anti_stunlock() -> void:
 
 	gen.get_parent().free()
 
+func _test_ut13_balance_config_archer_nerf_and_lotr_lore() -> void:
+	# 1. Kiểm tra thông số Nerf của Cung thủ Miya trong BalanceConfig & khi khởi tạo thực tế
+	var miya_cfg: Dictionary = BalanceConfig.get_hero_stats("miya")
+	var archer_scene := load("res://Scene/Character/Player 3_Miya/player_3.tscn") as PackedScene
+	var archer = archer_scene.instantiate()
+	add_child(archer)
 
+	var archer_nerfed_ok: bool = (
+		int(miya_cfg.get("hp", 0)) == 3
+		and int(miya_cfg.get("damage", 0)) == 1
+		and int(miya_cfg.get("speed", 0)) == 165
+		and is_equal_approx(float(miya_cfg.get("attack_cooldown", 0.0)), 0.46)
+		and is_equal_approx(float(miya_cfg.get("skill_cooldown", 0.0)), 6.5)
+		and archer.max_hp == 3
+		and archer.base_damage == 1
+		and is_equal_approx(archer.speed, 165.0)
+	)
+	archer.free()
 
+	# 2. Kiểm tra cơ chế Buff/Nerf động qua BalanceConfig.set_unit_stat()
+	var old_orc_hp: int = int(BalanceConfig.get_enemy_stats("orc").get("hp", 10))
+	BalanceConfig.set_unit_stat("enemy", "orc", "hp", 15)
+	var orc_scene := load("res://Scene/Enemies/Orc/orc.tscn") as PackedScene
+	var orc = orc_scene.instantiate()
+	add_child(orc)
+	var dynamic_buff_ok: bool = (orc.hp == 15)
+	orc.free()
+	BalanceConfig.set_unit_stat("enemy", "orc", "hp", old_orc_hp)
 
+	# 3. Kiểm tra cốt truyện Chúa Tể Của Những Chiếc Nhẫn (Moria / Khazad-dûm) đồng bộ trong GameManager
+	var lore_ok: bool = (
+		str(GameManager.WORLD_LORE.get("title", "")).contains("TRUNG ĐỊA")
+		and str(GameManager.WORLD_LORE.get("story", "")).contains("Moria")
+		and GameManager.CHARACTER_INFO.size() == 4
+	)
 
+	_assert_true(
+		archer_nerfed_ok and dynamic_buff_ok and lore_ok,
+		"UT-13: Centralized BalanceConfig applies Archer (Miya) nerf, dynamic unit buff/nerf & Lord of the Rings lore"
+	)
 

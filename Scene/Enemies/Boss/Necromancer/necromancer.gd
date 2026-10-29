@@ -2,7 +2,8 @@ extends CharacterBody2D
 
 signal boss_hp_changed(current_hp: int, max_hp: int, phase: int, boss_name: String)
 
-const BOSS_NAME: String = "NECROMANCER — CHÚA TỂ HẮC ÁM"
+const BalanceData = preload("res://Scene/BalanceConfig.gd")
+const BOSS_NAME: String = "TỬ LINH PHÁP SƯ DOL GULDUR — HÓA THÂN SAURON"
 
 @export var speed: float = 50.0
 @export var melee_range: float = 60.0
@@ -35,7 +36,15 @@ var rng := RandomNumberGenerator.new()
 var player: Node2D = null
 
 func _ready() -> void:
+	var cfg: Dictionary = BalanceData.get_boss_stats("necromancer")
+	max_hp = int(cfg.get("hp", max_hp))
 	hp = max_hp
+	speed = float(cfg.get("speed", speed))
+	melee_damage = int(cfg.get("melee_damage", melee_damage))
+	poison_damage = int(cfg.get("poison_damage", poison_damage))
+	melee_range = float(cfg.get("melee_range", melee_range))
+	poison_range = float(cfg.get("poison_range", poison_range))
+	attack_cooldown = float(cfg.get("attack_cooldown", attack_cooldown))
 	if get_node_or_null("/root/GameManager") != null:
 		rng.seed = (GameManager.current_seed + "_necro").hash()
 	else:

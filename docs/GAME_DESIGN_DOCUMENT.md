@@ -1,50 +1,56 @@
 # GAME DESIGN DOCUMENT (GDD) — KEEP FIGHTING & EARNING
-**Đề tài:** *Procedural Dungeon: Roguelike có Seed tái lập (Cảm hứng: Soul Knight)*  
+**Đề tài:** *Procedural Dungeon: Roguelike có Seed tái lập (Bối cảnh: Chúa Tể Của Những Chiếc Nhẫn — Cảm hứng: Soul Knight)*  
 **Engine:** Godot Engine 4.7.2 (2D Pixel-Art Nearest-Neighbor Rendering)
 
 ---
 
-## 1. Bối Cảnh & Cốt Truyện (Worldbuilding & Storyline)
+## 1. Bối Cảnh & Cốt Truyện (Worldbuilding & Storyline: The Lord of the Rings)
 
-### 1.1. Biên Niên Sử Đá Linh Hồn (The Soul Stone Chronicles)
-Tại lục địa cổ đại **Aethelgard**, viên **Đá Linh Hồn (Soul Core)** — bảo vật duy trì trật tự không-thời gian — đã bị đánh cắp bởi hai thế lực hắc ám: **Hắc Pháp Sư Malakor (The Necromancer)** và **Thủ Lĩnh Chiến Lang (Orc Rider)**. Chúng đập vỡ viên đá thành nhiều mảnh và giấu xuống đáy **Mê Cung Vô Định (The Shifting Dungeon)** — một hầm ngục sống tự tái cấu trúc hình học mỗi khi có kẻ bước vào.
+### 1.1. Biên Niên Sử Trung Địa: Hầm Mỏ Moria (The Mines of Moria / Khazad-dûm)
+Tại vùng đất **Trung Địa (Middle-earth)**, sâu dưới lòng dãy núi sương mù **Misty Mountains**, vương quốc ngầm vĩ đại của người Lùn — **Hầm Mỏ Moria (Khazad-dûm)** — đã chìm vào bóng tối sau khi loài Orc và những sinh vật tà ác của Sauron tràn vào chiếm đóng.
 
-### 1.2. La Bàn Nhân Quả (Seed Compass) & Thạch Lưu Ảnh (Replay Crystal)
-Để đối phó với sự biến thiên của mê cung, **Hội Thợ Săn Tiền Thưởng (Keep Fighting & Earning Guild)** đã chế tạo hai cổ vật:
-1. **La Bàn Nhân Quả (Deterministic Seed Compass):** Mỗi mã **Seed** (ví dụ: `ALOALO1234`, `SOUL_KNIGHT_2026`) là một tọa độ Thời-Không bất biến. Cùng một mã Seed sẽ khóa chặt 100% cấu trúc đồ thị phòng (Graph/Grid), hành lang chữ L, vị trí bẫy gai, rương báu, đội hình quái vật và vật phẩm rơi ra.
-2. **Thạch Lưu Ảnh (60Hz Action Replay Crystal):** Ghi lại toàn bộ chuỗi tín hiệu điều khiển của Thợ Săn ở tần số vật lý 60Hz, cho phép phát lại (Replay a Run) hoặc tiếp quản điều khiển bất kỳ lúc nào.
+Những tàn tích cổ xưa này ẩn chứa vô số bí mật, bẫy đá cổ, và sự chiếm đóng của các quân đoàn hắc ám do **Tử Linh Pháp Sư Dol Guldur (Necromancer)** và **Thủ Lĩnh Kỵ Binh Warg (Orc Rider)** thống lĩnh. Mỗi cánh cổng đá đóng sập lại là một phòng tử địa mà người thâm nhập buộc phải quét sạch lũ quái vật để mở đường tiếp tục hành trình.
+
+### 1.2. Thủy Tinh Cầu Palantír (Deterministic Seed) & Thạch Lưu Ảnh (Replay Crystal)
+Để vượt qua mê cung lòng đất ngàn lối đi không hồi kết, các chiến binh sử dụng:
+1. **Thủy Tinh Cầu Palantír (Deterministic Seed):** Mỗi mã **Seed** (ví dụ: `ALOALO1234`, `MORIA_DWARF_RUN`) là một tọa độ quang học bất biến phản chiếu chính xác cấu trúc phòng ngục cổ xưa. Cùng một mã Seed sẽ khóa chặt 100% cấu trúc đồ thị phòng (Graph/Grid Spanning Tree), hành lang đá 5 ô, vị trí bẫy gai, rương báu, đội hình quái vật và vật phẩm rơi.
+2. **Thạch Lưu Ảnh (60Hz Action Replay Crystal):** Ghi lại toàn bộ chuỗi tín hiệu điều khiển ở tần số vật lý 60Hz, cho phép phát lại (Replay a Run) hoặc tiếp quản điều khiển bất kỳ lúc nào để phân tích chiến thuật và gỡ lỗi.
 
 ---
 
-## 2. Hồ Sơ 4 Thợ Săn Tiền Thưởng (Playable Heroes)
+## 2. Hồ Sơ 4 Anh Hùng Trung Địa (Playable Heroes) & Hệ Thống Cân Bằng (BalanceConfig)
 
-| Thợ Săn | Danh Hiệu / Vai Trò | Máu (HP) | Giáp (Armor) | Sát Thương | Tốc Độ | Vũ Khí & Tuyệt Kỹ Chủ Động |
+Toàn bộ chỉ số anh hùng được quản lý tập trung tại `Scene/BalanceConfig.gd` (Single Source of Truth), cho phép tinh chỉnh buff/nerf mà không cần sửa rải rác từng file nhân vật.
+
+| Anh Hùng | Danh Hiệu / Bối Cảnh | Máu (HP) | Giáp (Armor) | Sát Thương | Tốc Độ | Vũ Khí & Tuyệt Kỹ Chủ Động |
 | :--- | :--- | :---: | :---: | :---: | :---: | :--- |
-| **Pyrois** | Hiệp Sĩ Khiên Thánh (*Vanguard Knight*) | 4 | 4 | 1 | 150 | **Trường Kiếm & Khiên Thánh** — `[Q]` *Nhảy Chém Dũng Mãnh*: Lao tới kèm I-Frames, gây +2 sát thương (CD: 5s). |
-| **Olaf** | Chiến Binh Cuồng Nộ (*Berserker*) | 6 | 1 | 2 | 160 | **Chiến Rìu Bắc Cực** — `[Q]` *Huyết Nộ Bắc Cực*: Nhân đôi sát thương đòn đánh trong 5 giây (CD: 5s). |
-| **Miya** | Cung Thủ Thiện Xạ (*Woodland Ranger*) | 4 | 1 | 2 | 180 | **Cung Tinh Linh & Bộc Phá** — `[Q]` *Bộc Phá Hỏa Mai*: Quăng bom tới vị trí trỏ chuột, nổ diện rộng x3 sát thương (CD: 5s). |
-| **Charlotte** | Kiếm Khách Ảnh Vũ (*Shadow Duelist*) | 5 | 0 | 2 | 180 | **Song Kiếm Lưu Ảnh** — `[Q]` *Tam Đoạn Trảm* (3 nhịp, CD: 3s) & `[Chuột Phải]` *Ảnh Bộ Đột Kích* (lướt 400px + đâm 4 nhịp, CD: 5s). |
+| **Pyrois** | Vệ Binh Gondor (*Gondor Vanguard*) | 4 | 4 | 1 | 150 | **Trường Kiếm & Khiên Trắng** — `[Q]` *Khiên Trắng Xung Kích*: Lao tới kèm I-Frames, gây +2 sát thương (CD: 5s). |
+| **Olaf** | Chiến Binh Erebor (*Erebor Berserker*) | 6 | 1 | 2 | 160 | **Chiến Rìu Khazad** — `[Q]` *Huyết Thạch Nộ*: Nhân đôi sát thương đòn đánh trong 5 giây (CD: 5s). |
+| **Miya** *(Nerfed)* | Thiện Xạ Mirkwood (*Mirkwood Ranger*) | 3 | 1 | 1 | 165 | **Cung Gỗ Tinh Linh** — Tốc độ bắn nhịp nhàng (CD: 0.46s, tên bay 280px/s); `[Q]` *Lửa Orthanc*: Quăng bộc phá tầm xa nổ 3 sát thương diện rộng (CD: 6.5s). |
+| **Charlotte** | Du Côn Dúnedain (*Dúnedain Duelist*) | 5 | 0 | 2 | 180 | **Song Đoản Kiếm Elendil** — `[Q]` *Tam Đoạn Trảm* (3 nhịp, CD: 3s) & `[Chuột Phải]` *Ảnh Bộ Dúnedain* (lướt 400px + đâm 4 nhịp, CD: 5s). |
 
 ---
 
-## 3. Hệ Sinh Thái Quái Vật & Đại Thủ Lĩnh (Bestiary)
+## 3. Hệ Sinh Thái Quái Vật & Đại Thủ Lĩnh Trung Địa (Bestiary)
 
-### 3.1. Năm Chủng Loại Quái Vật Thường (5 Regular Enemy Types — Vượt yêu cầu tối thiểu 3 loại)
-1. **Orc Chiến Binh (`Scene/Enemies/Orc/`):** Quái cận chiến cơ bản, tuần tra và truy đuổi người chơi khi phòng bị khóa.
-2. **Armored Orc — Orc Thiết Giáp (`Scene/Enemies/Armored_orc/`):** Quái hạng nặng máu cao, sở hữu đòn bổ rìu diện rộng và khả năng đỡ đòn.
-3. **Skeleton — Chiến Binh Xương (`Scene/Enemies/Skeleton/`):** Tốc độ di chuyển nhanh, áp sát số đông.
-4. **Skeleton Archer — Xạ Thủ Xương (`Scene/Enemies/Skeleton Archer/`):** Giữ khoảng cách và bắn tên xương tầm xa (`enemy_arrow.tscn`).
-5. **Vampire — Ma Cà Rồng Quý Tộc (`Scene/Enemies/Vampire/`):** Kẻ địch tinh nhuệ tốc độ cao, đòn cào cận chiến nguy hiểm.
+### 3.1. Năm Chủng Loại Quái Thường (5 Regular Enemy Types)
+1. **Orc Moria (`Scene/Enemies/Orc/`):** Cận chiến tiên phong, tuần tra và truy đuổi người chơi bằng rìu khi cửa phòng sập xuống (`HP: 3`, `ST: 1`).
+2. **Uruk-hai Thiết Giáp (`Scene/Enemies/Armored_orc/`):** Quái hạng nặng mang giáp sắt, khi vỡ 5 điểm giáp sẽ kích hoạt trạng thái Cuồng Nộ x2 tốc độ và gây 3 sát thương (`5 Giáp + 3 Máu`, `ST: 1 -> 3`).
+3. **Hài Cốt Barrow-wight (`Scene/Enemies/Skeleton/`):** Xương khô tốc kích di chuyển nhanh (`Tốc độ: 100`), thường ùa ra theo bầy hoặc do Boss triệu hồi (`HP: 2`, `ST: 1`).
+4. **Cung Thủ Xương Minas Morgul (`Scene/Enemies/Skeleton Archer/`):** Xạ thủ thông minh có AI thả diều (Kiting AI), lùi khi bị áp sát dưới 85px, né ngang và tự vòng tránh chướng ngại vật/cột đá để lấy tầm nhìn bắn tên (`HP: 4`, `ST: 1`).
+5. **Ác Linh Huyết Quỷ Angmar (`Scene/Enemies/Vampire/`):** Quái tinh nhuệ áp sát nhanh trong góc hẹp hầm ngục (`HP: 4`, `ST: 1`).
 
-### 3.2. Hai Đại Thủ Lĩnh Đa Giai Đoạn (2 Multi-Phase Bosses — Vượt yêu cầu tối thiểu 1 Boss)
-1. **Hắc Pháp Sư Malakor — Necromancer (`Scene/Enemies/Boss/Necromancer/`):**
+### 3.2. Hai Đại Thủ Lĩnh Đa Giai Đoạn (2 Multi-Phase Bosses)
+1. **Tử Linh Pháp Sư Dol Guldur — Necromancer (`Scene/Enemies/Boss/Necromancer/`):**
    - Xuất hiện tại phòng Boss các tầng lẻ (Tầng 1, 3, 5...).
-   - **Phase 1 (100% – 50% HP):** Bắn cầu năng lượng Hắc Ám và triệu hồi lính Skeleton.
-   - **Phase 2 (< 50% HP):** Cường hóa tốc độ phép, kích hoạt chuỗi vụ nổ độc địa (`poison_explosion.tscn`).
-2. **Thủ Lĩnh Kỵ Binh — Orc Rider (`Scene/Enemies/Boss/Orc Rider/`):**
+   - **Phase 1 (> 20 HP):** Bắn cầu năng lượng Hắc Ám và triệu hồi 3 Hài Cốt Barrow-wight.
+   - **Phase 2 (11–20 HP):** Kích nổ chuỗi 8 cột độc tố bóng đêm xung quanh.
+   - **Phase 3 (<= 10 HP):** Cuồng nộ tốc độ x1.5, giảm nửa thời gian hồi chiêu.
+2. **Thủ Lĩnh Kỵ Binh Warg — Orc Rider (`Scene/Enemies/Boss/Orc Rider/`):**
    - Xuất hiện tại phòng Boss các tầng chẵn (Tầng 2, 4, 6...).
-   - **Phase 1 (100% – 50% HP):** Xung kích tốc độ cao và chém rìu 2 nhịp.
-   - **Phase 2 (< 50% HP):** Tung liên hoàn trảm 3 nhịp và dựng Khiên Thiết Giáp miễn nhiễm sát thương khi gồng chiêu.
+   - **Phase 1 (> 20 HP):** Bổ giáo cận chiến diện rộng.
+   - **Phase 2 (11–20 HP):** Cảnh báo vệt đỏ rồi cưỡi sói Warg lao tông tốc độ x4.
+   - **Phase 3 (<= 10 HP):** Xoay giáo bão tố liên hoàn kết hợp lao tông và tạo khiên đỡ đòn.
 
 ---
 

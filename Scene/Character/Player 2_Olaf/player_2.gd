@@ -4,10 +4,10 @@ extends "res://Scene/Character/Player 1_Pyrois/player.gd"
 @export var damage_multiplier: int = 2
 
 func _ready() -> void:
-	speed = 160.0
-	base_max_hp = 6
-	base_armor = 1
-	base_damage = 2
+	hero_balance_id = "olaf"
+	var cfg: Dictionary = BalanceData.get_hero_stats("olaf")
+	buff_duration = float(cfg.get("buff_duration", 5.0))
+	damage_multiplier = int(cfg.get("damage_multiplier", 2))
 	super._ready()
 
 func use_special_skill() -> void:

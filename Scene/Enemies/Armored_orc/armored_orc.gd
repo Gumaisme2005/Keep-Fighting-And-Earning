@@ -1,5 +1,6 @@
 extends CharacterBody2D
 
+const BalanceData = preload("res://Scene/BalanceConfig.gd")
 @export var speed: float = 70.0
 @export var attack_range: float = 20.0
 @export var world_item_scene: PackedScene
@@ -26,7 +27,15 @@ var is_active = false
 var player: Node2D = null
 
 func _ready() -> void:
+	var cfg: Dictionary = BalanceData.get_enemy_stats("armored_orc")
+	hp = int(cfg.get("hp", hp))
+	max_armor = int(cfg.get("armor", max_armor))
 	current_armor = max_armor
+	normal_damage = int(cfg.get("damage", normal_damage))
+	rage_damage = int(cfg.get("rage_damage", rage_damage))
+	speed = float(cfg.get("speed", speed))
+	attack_range = float(cfg.get("attack_range", attack_range))
+	drop_chance = float(cfg.get("drop_chance", drop_chance))
 	animated_sprite.play("idle")
 	axe_collision.disabled = true
 	rage_collision.disabled = true

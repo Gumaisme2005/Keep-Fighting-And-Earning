@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+const BalanceData = preload("res://Scene/BalanceConfig.gd")
+@export var damage: int = 1
 @export var speed: float = 100.0
 @export var attack_range: float = 18.0
 @export var world_item_scene: PackedScene = preload("res://Scene/Items/WorldItem/WorldItem.tscn")
@@ -21,6 +23,12 @@ var is_active = false
 var player: Node2D = null
 
 func _ready() -> void:
+	var cfg: Dictionary = BalanceData.get_enemy_stats("skeleton")
+	hp = int(cfg.get("hp", hp))
+	damage = int(cfg.get("damage", damage))
+	speed = float(cfg.get("speed", speed))
+	attack_range = float(cfg.get("attack_range", attack_range))
+	drop_chance = float(cfg.get("drop_chance", drop_chance))
 	animated_sprite.play("idle")
 	sword_collision.disabled = true
 	sword_hitbox.position = Vector2(0, -6)
@@ -115,7 +123,7 @@ func _on_sword_hitbox_area_entered(area: Area2D) -> void:
 		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
 			return
 		if target.has_method("take_damage"):
-			target.take_damage(1)
+			target.take_damage(damage)
 
 func drop_loot() -> void:
 	if world_item_scene != null and loot_table.size() > 0:

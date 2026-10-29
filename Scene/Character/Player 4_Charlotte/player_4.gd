@@ -7,10 +7,10 @@ var can_use_q: bool = true
 var can_use_right_click: bool = true
 
 func _ready() -> void:
-	speed = 180.0
-	base_max_hp = 5
-	base_armor = 0
-	base_damage = 2
+	hero_balance_id = "charlotte"
+	var cfg: Dictionary = BalanceData.get_hero_stats("charlotte")
+	q_skill_cooldown = float(cfg.get("skill_cooldown", 3.0))
+	right_click_cooldown = float(cfg.get("rmb_cooldown", 5.0))
 	skill_cooldown = q_skill_cooldown
 	rmb_cd_max = right_click_cooldown
 	super._ready()

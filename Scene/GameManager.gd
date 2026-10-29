@@ -16,6 +16,8 @@ const MAX_DISK_REPLAY_FRAMES: int = 3600
 const MAX_SAVE_FILE_BYTES: int = 2097152 # 2 MB chống DoS / Memory Exhaustion
 const ALLOWED_SEED_CHARS: String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
 
+const BalanceData = preload("res://Scene/BalanceConfig.gd")
+
 const CHARACTER_SCENES: Array[PackedScene] = [
 	preload("res://Scene/Character/Player 3_Miya/player_3.tscn"),
 	preload("res://Scene/Character/Player 2_Olaf/player_2.tscn"),
@@ -23,68 +25,12 @@ const CHARACTER_SCENES: Array[PackedScene] = [
 	preload("res://Scene/Character/Player 4_Charlotte/player_4.tscn"),
 ]
 
-const WORLD_LORE: Dictionary = {
-	"title": "BIÊN NIÊN SỬ ĐÁ LINH HỒN (THE SOUL STONE CHRONICLES)",
-	"subtitle": "Thợ Săn Tiền Thưởng & Mê Cung Thời-Không Tái Lập",
-	"story": """Tại lục địa cổ đại Aethelgard, viên Đá Linh Hồn (Soul Core) — bảo vật giữ cân bằng không-thời gian — đã bị đánh cắp bởi Hắc Pháp Sư Malakor (Necromancer) và Thủ Lĩnh Chiến Lang (Orc Rider). Chúng đập vỡ viên đá và giấu các mảnh vỡ xuống đáy Mê Cung Vô Định (The Shifting Dungeon), nơi cấu trúc địa hình tự biến đổi không ngừng.
+var WORLD_LORE: Dictionary = BalanceData.WORLD_LORE
+var CHARACTER_INFO: Array[Dictionary] = BalanceData.get_hero_list_for_ui()
 
-Hội Thợ Săn Tiền Thưởng 'Keep Fighting & Earning' đã chế tạo thành công La Bàn Nhân Quả (Seed Compass). Mỗi mã Seed là một tọa độ Thời-Không bất biến: cùng một Seed sẽ cố định 100% cấu trúc đồ thị phòng (Graph/Grid), hành lang chữ L, vị trí bẫy gai, rương báu, đội hình quái vật và vật phẩm rơi ra. Kèm theo đó, Thạch Lưu Ảnh (Replay Crystal) ghi lại từng khung hình chiến đấu ở tần số 60Hz, giúp tái hiện hoàn hảo mọi hành trình dưới đáy vực."""
-}
-
-const CHARACTER_INFO: Array[Dictionary] = [
-	{
-		"name": "Miya",
-		"role": "Cung Thủ Thiện Xạ",
-		"weapon": "Cung Tinh Linh & Bộc Phá",
-		"skill_icon": "skill_aim",
-		"hp": 4,
-		"armor": 1,
-		"speed": 180,
-		"damage": 2,
-		"lore": "Thợ săn rừng sâu tốc độ cao của Hội Tiền Thưởng. Giữ khoảng cách an toàn và tiêu diệt mục tiêu từ xa bằng tên xuyên phá cùng bom giả kim.",
-		"skill_q": "[Q] Bộc Phá Hỏa Mai: Ném bom tới vị trí trỏ chuột, phát nổ diện rộng gây x3 sát thương (Hồi chiêu: 5s).",
-		"skill_rmb": "[Chuột Trái] Tên Tinh Linh: Bắn tên tầm xa chính xác theo hướng trỏ chuột."
-	},
-	{
-		"name": "Olaf",
-		"role": "Chiến Binh Cuồng Nộ",
-		"weapon": "Chiến Rìu Bắc Cực",
-		"skill_icon": "flame",
-		"hp": 6,
-		"armor": 1,
-		"speed": 160,
-		"damage": 2,
-		"lore": "Chiến binh phương Bắc săn tiền thưởng để khôi phục bộ tộc. Sở hữu lượng máu dồi dào nhất và khả năng bùng nổ sát thương cận chiến khủng khiếp.",
-		"skill_q": "[Q] Huyết Nộ Bắc Cực: Kích hoạt trạng thái cuồng chiến, nhân đôi sát thương đòn đánh trong 5 giây (Hồi chiêu: 5s).",
-		"skill_rmb": "[Chuột Trái] Bổ Rìu Hạng Nặng: Đòn bổ cận chiến uy lực quét sạch kẻ địch trước mặt."
-	},
-	{
-		"name": "Pyrois",
-		"role": "Hiệp Sĩ Khiên Thánh",
-		"weapon": "Trường Kiếm & Khiên Thánh",
-		"skill_icon": "skill_shield",
-		"hp": 4,
-		"armor": 4,
-		"speed": 150,
-		"damage": 1,
-		"lore": "Cựu đội trưởng Cận Vệ Hoàng Gia dẫn đầu chiến dịch thu hồi Đá Linh Hồn. Công thủ toàn diện với lớp Khiên Thánh dày tự hồi phục sau giao tranh.",
-		"skill_q": "[Q] Nhảy Chém Dũng Mãnh: Lao tới phía trước với trạng thái Bất Tử (I-Frames), bổ kiếm gây +2 sát thương (Hồi chiêu: 5s).",
-		"skill_rmb": "[Chuột Trái] Kiếm Thuật Chuẩn Mực: Chém kiếm tốc độ cân bằng, an toàn và ổn định."
-	},
-	{
-		"name": "Charlotte",
-		"role": "Kiếm Khách Ảnh Vũ",
-		"weapon": "Song Kiếm Lưu Ảnh",
-		"skill_icon": "skill_stealth",
-		"hp": 5,
-		"armor": 0,
-		"speed": 180,
-		"damage": 2,
-		"lore": "Nữ kiếm khách đánh thuê bí ẩn theo trường phái Nhất Kích Tất Sát. Đánh đổi toàn bộ giáp phòng ngự để lấy tốc độ di chuyển và bộ kỹ năng kép cơ động.",
-		"skill_q": "[Q] Tam Đoạn Trảm: Tung liên hoàn 3 nhát kiếm chớp nhoáng tại chỗ (Hồi chiêu: 3s).",
-		"skill_rmb": "[Chuột Phải] Ảnh Bộ Đột Kích: Lướt nhanh 400px bật I-Frames rồi đâm liên tiếp 4 nhịp (Hồi chiêu: 5s)."
-	}
-]
+func refresh_balance_data() -> void:
+	WORLD_LORE = BalanceData.WORLD_LORE
+	CHARACTER_INFO = BalanceData.get_hero_list_for_ui()
 
 var selected_character_index: int = 2
 var selected_character_scene: PackedScene = CHARACTER_SCENES[2]

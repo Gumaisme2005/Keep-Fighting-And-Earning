@@ -73,7 +73,7 @@ func _enhance_main_menu_ui() -> void:
 		sub_hbox.add_theme_constant_override("separation", 10)
 		sub_hbox.add_child(UITheme.create_icon_rect("soul_stone", 24))
 		var sub_lbl := Label.new()
-		sub_lbl.text = "BIÊN NIÊN SỬ ĐÁ LINH HỒN  —  PROCEDURAL DUNGEON ROGUELIKE"
+		sub_lbl.text = "BIÊN NIÊN SỬ TRUNG ĐỊA: HẦM MỎ MORIA  —  PROCEDURAL DUNGEON ROGUELIKE"
 		sub_lbl.add_theme_font_size_override("font_size", 14)
 		sub_lbl.add_theme_color_override("font_color", Color(0.62, 0.90, 1.0))
 		sub_lbl.add_theme_color_override("font_outline_color", Color(0.03, 0.03, 0.06, 1.0))
@@ -104,7 +104,7 @@ func _enhance_main_menu_ui() -> void:
 	seed_vbox.add_theme_constant_override("separation", 6)
 	seed_panel.add_child(seed_vbox)
 
-	var seed_header := UITheme.create_icon_header("seed", "LA BÀN NHÂN QUẢ — SEED HẦM NGỤC (TÁI LẬP 100%):", 12, Color(0.65, 0.95, 0.78), 18)
+	var seed_header := UITheme.create_icon_header("seed", "THỦY TINH CẦU PALANTÍR — SEED HẦM MỎ MORIA (TÁI LẬP 100%):", 12, Color(0.65, 0.95, 0.78), 18)
 	seed_vbox.add_child(seed_header)
 
 	var seed_hbox := HBoxContainer.new()
@@ -384,7 +384,7 @@ func _build_lore_modal() -> void:
 
 	var header := HBoxContainer.new()
 	vbox.add_child(header)
-	var h_title := UITheme.create_icon_header("soul_stone", "BIÊN NIÊN SỬ ĐÁ LINH HỒN — BỐI CẢNH & CỐT TRUYỆN", 15, Color(0.55, 0.90, 1.0), 22)
+	var h_title := UITheme.create_icon_header("soul_stone", "BIÊN NIÊN SỬ TRUNG ĐỊA — HẦM MỎ MORIA (CHÚA TỂ NHỮNG CHIẾC NHẪN)", 14, Color(0.55, 0.90, 1.0), 22)
 	h_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(h_title)
 
@@ -406,14 +406,14 @@ func _build_lore_modal() -> void:
 	story_lbl.add_theme_font_size_override("font_size", 12)
 	story_lbl.add_theme_color_override("font_color", Color(0.92, 0.94, 0.98))
 	story_lbl.text = GameManager.WORLD_LORE["story"] + "\n\n" + \
-		"• 4 THỢ SĂN TIỀN THƯỞNG (SOUL HUNTERS):\n" + \
-		"  1. Pyrois (Hiệp Sĩ Khiên Thánh): Cân bằng công thủ, Giáp tự hồi phục, Kỹ năng Nhảy Chém Bất Tử.\n" + \
-		"  2. Olaf (Chiến Binh Cuồng Nộ): Máu tối đa cao nhất (6 HP), Kỹ năng Huyết Nộ nhân đôi sát thương.\n" + \
-		"  3. Miya (Cung Thủ Thiện Xạ): Bắn tên tầm xa & quăng Bộc Phá Hỏa Mai sát thương diện rộng x3.\n" + \
-		"  4. Charlotte (Kiếm Khách Ảnh Vũ): Tốc độ cao, bộ kỹ năng kép Tam Đoạn Trảm [Q] & Ảnh Bộ Đột Kích [Chuột Phải].\n\n" + \
-		"• QUÂN ĐOÀN HẮC ÁM (5 QUÁI THƯỜNG & 2 ĐẠI THỦ LĨNH):\n" + \
-		"  - Quái vật: Orc Chiến Binh, Armored Orc (Thiết Giáp), Skeleton, Skeleton Archer (Cung Thủ Xương), Vampire (Ma Cà Rồng).\n" + \
-		"  - Đại Thủ Lĩnh (Boss): Hắc Pháp Sư Malakor (Necromancer - triệu hồi & nổ độc) và Thủ Lĩnh Kỵ Binh (Orc Rider - xung kích & dựng khiên)."
+		"• 4 ANH HÙNG ĐOÀN HỘ NHẪN (THE FELLOWSHIP VANGUARD):\n" + \
+		"  1. Pyrois — Hiệp Sĩ Thành Gondor (HP: 4 | Giáp: 4 | ST: 1): Kiếm Andúril & Khiên Minas Tirith tự hồi phục, [Q] Xung Kích Vương Giả.\n" + \
+		"  2. Olaf — Chiến Binh Người Lùn Erebor (HP: 6 | Giáp: 1 | ST: 2): Chiến Rìu Khazad-dûm, [Q] Chiến Nộ Durin nhân đôi sát thương.\n" + \
+		"  3. Miya — Cung Thủ Tiên Tộc Mirkwood (HP: 3 | Giáp: 1 | ST: 1): Cung Galadhrim tầm xa & [Q] Lửa Orthanc nổ diện rộng.\n" + \
+		"  4. Charlotte — Biệt Kích Dúnedain (HP: 5 | Giáp: 0 | ST: 2): Song Kiếm Narsil, [Q] Tam Đoạn Trảm & [Chuột Phải] Ảnh Bộ Đột Kích.\n\n" + \
+		"• QUÂN ĐOÀN HẮC ÁM MORDOR & MORIA (5 QUÁI THƯỜNG & 2 ĐẠI THỦ LĨNH):\n" + \
+		"  - Quái vật: Orc Moria, Uruk-hai Thiết Giáp, Hài Cốt Barrow-wight, Cung Thủ Xương Minas Morgul, Ác Linh Huyết Quỷ Angmar.\n" + \
+		"  - Đại Thủ Lĩnh (Boss): Tử Linh Pháp Sư Dol Guldur (triệu hồi vong hồn & nổ độc) và Thủ Lĩnh Kỵ Binh Warg (xung kích & xoay giáo)."
 	content_vbox.add_child(story_lbl)
 
 func _build_help_modal() -> void:

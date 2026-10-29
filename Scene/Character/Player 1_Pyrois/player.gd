@@ -42,15 +42,27 @@ var pending_q_skill: bool = false
 var pending_rmb_skill: bool = false
 var current_aim_offset: Vector2 = Vector2.RIGHT * 32.0
 
+const BalanceData = preload("res://Scene/BalanceConfig.gd")
+@export var hero_balance_id: String = "pyrois"
+
 @onready var animated_sprite = $AnimatedSprite2D
 @onready var sword_hitbox = $SwordHitbox
 @onready var sword_collision = $SwordHitbox/CollisionShape2D
 @onready var inventory = $Inventory
 
+func _apply_balance_config() -> void:
+	var cfg: Dictionary = BalanceData.get_hero_stats(hero_balance_id)
+	speed = float(cfg.get("speed", speed))
+	base_max_hp = int(cfg.get("hp", base_max_hp))
+	base_armor = int(cfg.get("armor", base_armor))
+	base_damage = int(cfg.get("damage", base_damage))
+	skill_cooldown = float(cfg.get("skill_cooldown", skill_cooldown))
+
 func _ready() -> void:
 	name = "Player"
 	z_index = 2
 	add_to_group("player")
+	_apply_balance_config()
 
 	sword_collision.disabled = true
 
