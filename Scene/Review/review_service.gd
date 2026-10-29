@@ -1,7 +1,11 @@
 extends RefCounted
 ## ReviewService (VT-075) - vai tro reviewer: doc + phe duyet, khong sua du lieu goc.
-## Ban v0 (ban nhap dau tien): moi accessor tu khoa Mutex, nhung chuoi "doc -> kiem tra -> ghi"
-## o approve/update_note/add_record/remove_record KHONG nam trong mot vung khoa.
+## Ban v1: moi API ghi (add_record/update_note/remove_record/approve) chay tron ven trong MOT vung
+## khoa (chuoi "doc -> kiem tra -> luu -> commit" la nguyen tu). Mutex cua Godot la recursive nen cac
+## accessor khoa long ben trong van an toan. Moi nhanh tra ve deu di qua wrapper nen luon nha khoa.
+##
+## Hop dong: INV-1 approval ton tai => approval.revision == record.revision (toi da 1 approval/record);
+##           INV-2 reviewer khong bao gio thay doi record goc.
 
 const GameManagerScript = preload("res://Scene/GameManager.gd")
 
@@ -143,6 +147,12 @@ func get_audit_log(role: String) -> Dictionary:
 # --- API ghi (chi player) ---
 
 func add_record(role: String, record_id: String, seed_text: String, note: String) -> Dictionary:
+	_mutex.lock()
+	var res: Dictionary = _add_record_locked(role, record_id, seed_text, note)
+	_mutex.unlock()
+	return res
+
+func _add_record_locked(role: String, record_id: String, seed_text: String, note: String) -> Dictionary:
 	if role != ROLE_PLAYER:
 		return _result(ERR_FORBIDDEN)
 	if not _valid_id(record_id):
@@ -161,6 +171,12 @@ func add_record(role: String, record_id: String, seed_text: String, note: String
 	return _result(OK, 1)
 
 func update_note(role: String, record_id: String, note: String) -> Dictionary:
+	_mutex.lock()
+	var res: Dictionary = _update_note_locked(role, record_id, note)
+	_mutex.unlock()
+	return res
+
+func _update_note_locked(role: String, record_id: String, note: String) -> Dictionary:
 	if role != ROLE_PLAYER:
 		return _result(ERR_FORBIDDEN)
 	if not _valid_id(record_id):
@@ -177,6 +193,12 @@ func update_note(role: String, record_id: String, note: String) -> Dictionary:
 	return _result(OK, int(rec["revision"]))
 
 func remove_record(role: String, record_id: String) -> Dictionary:
+	_mutex.lock()
+	var res: Dictionary = _remove_record_locked(role, record_id)
+	_mutex.unlock()
+	return res
+
+func _remove_record_locked(role: String, record_id: String) -> Dictionary:
 	if role != ROLE_PLAYER:
 		return _result(ERR_FORBIDDEN)
 	if not _valid_id(record_id):
@@ -208,6 +230,12 @@ func import_run_history(role: String, history: Array) -> Dictionary:
 # --- API phe duyet (chi reviewer) ---
 
 func approve(role: String, reviewer_id: String, record_id: String, expected_revision: int) -> Dictionary:
+	_mutex.lock()
+	var res: Dictionary = _approve_locked(role, reviewer_id, record_id, expected_revision)
+	_mutex.unlock()
+	return res
+
+func _approve_locked(role: String, reviewer_id: String, record_id: String, expected_revision: int) -> Dictionary:
 	if role != ROLE_REVIEWER:
 		return _result(ERR_FORBIDDEN)
 	if not _valid_id(reviewer_id) or not _valid_id(record_id) or expected_revision < 1:
