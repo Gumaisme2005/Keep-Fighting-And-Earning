@@ -91,3 +91,4 @@ Danh doi: phai co ham import tu `run_history` de khong tach roi khoi repo, va ch
 ### 5.7 Pham vi vertical slice
 Service (RBAC + approve + revision + mutex) + import tu `run_history` + test. **Khong** lam UI reviewer: E2E qua giao dien
 khong can thiet cho lat cat nay (rui ro nam o tang service); UT-09 hien co van la lop bao ve hoi quy cho cac scene UI.
+

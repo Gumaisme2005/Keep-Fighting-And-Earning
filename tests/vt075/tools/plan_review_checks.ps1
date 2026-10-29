@@ -27,3 +27,4 @@ Select-String -Path Scene/GameManager.gd -Pattern "saved_data_changed.emit|SAVE_
 "== CI pin Godot version =="
 Select-String -Path .github/workflows/ci.yml -Pattern "GODOT_VERSION" | ForEach-Object { $_.Line.Trim() }
 & $godot --version
+

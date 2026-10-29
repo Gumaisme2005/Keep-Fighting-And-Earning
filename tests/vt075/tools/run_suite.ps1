@@ -33,3 +33,4 @@ $lines | Set-Content -Path $Out -Encoding UTF8
 foreach ($k in $saved.Keys) { [Environment]::SetEnvironmentVariable($k, $saved[$k]) }
 if (-not $Quiet) { $lines }
 exit $code
+

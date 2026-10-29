@@ -104,6 +104,22 @@ Chạy toàn bộ bộ kiểm thử tự động (Unit Tests, Security Tests, Pr
 3. **Combat & Inventory Tests ([`Scene/Test/test_combat.gd`](Scene/Test/test_combat.gd)):** `5/5 PASS` (Kiểm chứng trừ Giáp trước Máu, hồi Giáp, cộng dồn chỉ số Trang bị và bất tử I-Frames).
 4. **Benchmark ([`docs/BENCHMARK_REPORT.md`](docs/BENCHMARK_REPORT.md)):** Đo thời gian sinh ngục từ `10` đến `50` phòng.
 5. **Tài liệu Thiết kế, Bảo mật & Seed Bug Issues:** Xem tại [`docs/GAME_DESIGN_DOCUMENT.md`](docs/GAME_DESIGN_DOCUMENT.md), [`docs/SECURITY.md`](docs/SECURITY.md) và [`docs/SEED_BUG_ISSUES.md`](docs/SEED_BUG_ISSUES.md).
+6. **BT Cá Nhân 3 — Biến Thể VT-075 (Reviewer Role & Concurrency Testing):**
+   - **Mã sinh viên:** 23001837 — Bùi Quang Chiến (Nhóm SE2026-T19).
+   - **Change Request:** Thêm vai trò Reviewer có quyền đọc và phê duyệt run nhưng không được sửa dữ liệu gốc ([`Scene/Review/review_service.gd`](Scene/Review/review_service.gd)).
+   - **Lệnh chạy kiểm thử VT-075 (24/24 PASS):**
+     ```powershell
+     & "B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe" --headless "res://tests/test_reviewer_concurrency.tscn"
+     ```
+   - **Lệnh chạy kiểm chứng tải 120 tác vụ đồng thời (p95 <= 3.5s):**
+     ```powershell
+     & "B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe" --headless "res://tests/vt075/load_p95.tscn"
+     ```
+   - **Báo cáo kỹ thuật chi tiết:**
+     - Đặc tả & AI Plan Review: [`docs/vt075/01_spec_and_plan.md`](docs/vt075/01_spec_and_plan.md)
+     - Chiến lược kiểm thử & Concurrency: [`docs/vt075/02_test_strategy.md`](docs/vt075/02_test_strategy.md)
+     - Đánh giá Mutation & Đo tải: [`docs/vt075/03_test_evaluation.md`](docs/vt075/03_test_evaluation.md)
+     - Ma trận truy vết, AI Usage Log & Reflection: [`docs/vt075/04_engineering_evidence_and_reflection.md`](docs/vt075/04_engineering_evidence_and_reflection.md)
 
 ---
 

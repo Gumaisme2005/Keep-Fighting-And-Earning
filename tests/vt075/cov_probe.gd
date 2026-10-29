@@ -15,3 +15,4 @@ static func dump() -> String:
 	var s: String = JSON.stringify(_hits)
 	_mutex.unlock()
 	return s
+

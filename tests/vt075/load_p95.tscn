@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://tests/vt075/load_p95.gd" id="1_load"]
+
+[node name="LoadP95" type="Node"]
+script = ExtResource("1_load")
+

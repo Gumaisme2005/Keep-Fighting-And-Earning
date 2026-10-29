@@ -68,6 +68,7 @@ func _ready() -> void:
 		["TC-18", _tc18_no_lost_update],
 		["TC-19", _tc19_note_sanitized],
 		["TC-20", _tc20_record_cap],
+		["TC-21", _tc21_player_remove_record],
 	]
 	var only: String = OS.get_environment("VT075_ONLY")
 	if not only.is_empty():
@@ -532,3 +533,15 @@ func _tc20_record_cap() -> void:
 	var n: int = (svc.list_records(REVIEWER)["records"] as Array).size()
 	_check(last_ok and over["code"] == C_INVALID and n == 500,
 		"TC-20 NFR4 (negative): vuot gioi han 500 ban ghi -> INVALID_INPUT (chong cap phat vo han)", "count=%d" % n)
+
+func _tc21_player_remove_record() -> void:
+	var svc: Object = _new_service(0)
+	svc.add_record(PLAYER, "run-del", "SEED-DEL", "xoa thu")
+	svc.approve(REVIEWER, "rev-1", "run-del", 1)
+	var bad_id: Dictionary = svc.remove_record(PLAYER, "bad id<script>")
+	var not_found: Dictionary = svc.remove_record(PLAYER, "run-none")
+	var ok_del: Dictionary = svc.remove_record(PLAYER, "run-del")
+	var check_gone: Dictionary = svc.get_record(REVIEWER, "run-del")
+	_check(bad_id["code"] == C_INVALID and not_found["code"] == C_NOT_FOUND and ok_del["ok"] and check_gone["code"] == C_NOT_FOUND,
+		"TC-21 (unit/lifecycle): player xoa ban ghi ton tai thanh cong, duyet bi xoa, id sai/khong ton tai bi bat loi")
+

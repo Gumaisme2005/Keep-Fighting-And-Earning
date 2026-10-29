@@ -1,0 +1,24 @@
+﻿# commit: c00ffaf12dab2cbe2c39246fd48bf38b47692fa7 (dirty) branch: feat/vt-075-reviewer-concurrency
+# date: 2026-10-29 17:58:09 +07:00
+# godot: 4.7.2.stable.official.ed1daf0bf
+# cmd: godot --headless res://tests/vt075/load_p95.tscn   env: 
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+==================================================================
+[VT-075 LOAD] 120 concurrent tasks, target p95 <= 3500 ms, rounds=20
+==================================================================
+[CALIB] ghi file JSON 500 ban ghi vao user://: median=0.42 ms (30 lan)
+[LOAD] no-delay (persist=0)         eff.persist=   0.00ms rounds=20 samples= 2400 p50=     4.8 p95=     9.2 p99=    11.3 max=    12.4 ms | worst-round p95=    12.0 ms | MEETS 3.5s | invariants=true timeouts=0
+[LOAD] calibrated real file write   eff.persist=   1.77ms rounds=20 samples= 2400 p50=    67.7 p95=   192.6 p99=   682.5 max=   715.0 ms | worst-round p95=   698.6 ms | MEETS 3.5s | invariants=true timeouts=0
+[LOAD] nominal hook 300us           eff.persist=  14.66ms rounds=20 samples= 2400 p50=   521.7 p95=   734.6 p99=   764.7 max=   775.5 ms | worst-round p95=   774.9 ms | MEETS 3.5s | invariants=true timeouts=0
+[LOAD] sensitivity 5ms              eff.persist=  14.75ms rounds=20 samples= 2400 p50=   490.1 p95=   693.1 p99=   712.3 max=   742.7 ms | worst-round p95=   731.3 ms | MEETS 3.5s | invariants=true timeouts=0
+[LOAD] sensitivity 20ms             eff.persist=  30.05ms rounds=20 samples= 2400 p50=   991.8 p95=  1431.7 p99=  1491.0 max=  1521.6 ms | worst-round p95=  1520.9 ms | MEETS 3.5s | invariants=true timeouts=0
+[LOAD] sensitivity 50ms             eff.persist=  60.82ms rounds= 5 samples=  600 p50=  2048.4 p95=  2786.1 p99=  2918.0 max=  3041.0 ms | worst-round p95=  2918.0 ms | MEETS 3.5s | invariants=true timeouts=0
+[LOAD] sensitivity 100ms            eff.persist= 109.02ms rounds= 5 samples=  600 p50=  3494.3 p95=  5035.3 p99=  5139.5 max=  5142.9 ms | worst-round p95=  5139.3 ms | EXCEEDS 3.5s | invariants=true timeouts=0
+[LOAD] sensitivity 150ms            eff.persist= 155.40ms rounds= 5 samples=  600 p50=  5621.8 p95=  7185.8 p99=  7347.8 max=  7502.8 ms | worst-round p95=  7347.4 ms | EXCEEDS 3.5s | invariants=true timeouts=0
+------------------------------------------------------------------
+[SUMMARY] LOAD: primary scenarios PASS (p95 <= 3.5s and invariants hold)
+==================================================================
+
+# exit code: 0

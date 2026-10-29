@@ -45,6 +45,10 @@ jobs:
         run: |
           godot --headless "res://tests/benchmark_dungeon_generator.tscn" | tee benchmark_output.log
 
+      - name: 5. Run VT-075 Reviewer Role & Concurrency Tests (TC-01 .. TC-21)
+        run: |
+          godot --headless "res://tests/test_reviewer_concurrency.tscn"
+
       - name: Upload Benchmark Evidence Artifact
         uses: actions/upload-artifact@v4
         with:

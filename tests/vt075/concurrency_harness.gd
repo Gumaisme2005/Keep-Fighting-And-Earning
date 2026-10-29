@@ -97,3 +97,4 @@ static func make_mixed_tasks(svc: Object, record_ids: Array) -> Array:
 			res["id"] = id
 			return res)
 	return tasks
+

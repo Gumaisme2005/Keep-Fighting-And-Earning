@@ -32,3 +32,4 @@ func _init() -> void:
 	print("threads=%d expected=%d unsafe_counter=%d safe_counter=%d" % [N, N * 2000, _counter_unsafe, _counter_safe])
 	print("lost_updates_without_lock=%d" % (N * 2000 - _counter_unsafe))
 	quit(0)
+

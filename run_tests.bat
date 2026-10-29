@@ -53,7 +53,7 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 echo.
-echo [4/4] Chay Benchmark Hieu Nang Bo Sinh Nguc...
+echo [4/5] Chay Benchmark Hieu Nang Bo Sinh Nguc...
 "!GODOT_BIN!" --headless --path . "res://tests/benchmark_dungeon_generator.tscn"
 if !ERRORLEVEL! NEQ 0 (
     echo [THAT BAI] Benchmark gap loi!
@@ -62,7 +62,16 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 echo.
+echo [5/5] Chay VT-075 Reviewer Role & Concurrency Tests (24/24 PASS)...
+"!GODOT_BIN!" --headless --path . "res://tests/test_reviewer_concurrency.tscn"
+if !ERRORLEVEL! NEQ 0 (
+    echo [THAT BAI] VT-075 Concurrency Tests gap loi!
+    pause
+    exit /b 1
+)
+
+echo.
 echo ==================================================================
-echo   [THANH CONG] TAT CA UNIT, PROPERTY, COMBAT VA BENCHMARK PASS 100%%!
+echo   [THANH CONG] TAT CA UNIT, PROPERTY, COMBAT, BENCHMARK VA VT-075 PASS 100%%!
 echo ==================================================================
 pause
