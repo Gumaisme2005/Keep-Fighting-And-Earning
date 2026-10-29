@@ -6,6 +6,7 @@ extends Node
 ##   VT075_PERSIST_US    do tre mo phong buoc ghi dia (mac dinh 300 us)
 ##   VT075_ORDER         forward | reverse | shuffle:<seed>  (kiem tra phu thuoc thu tu)
 ##   VT075_COV=1         in du lieu coverage khi chay ban instrument
+##   VT075_ONLY          danh sach test id (vd "TC-01,TC-02") - chi chay cac test nay
 
 const HarnessScript = preload("res://tests/vt075/concurrency_harness.gd")
 const DEFAULT_SERVICE_PATH: String = "res://Scene/Review/review_service.gd"
@@ -65,7 +66,13 @@ func _ready() -> void:
 		["TC-16", _tc16_persist_failure_paths],
 		["TC-17", _tc17_concurrent_duplicate_add],
 		["TC-18", _tc18_no_lost_update],
+		["TC-19", _tc19_note_sanitized],
+		["TC-20", _tc20_record_cap],
 	]
+	var only: String = OS.get_environment("VT075_ONLY")
+	if not only.is_empty():
+		var wanted: PackedStringArray = only.split(",", false)
+		tests = tests.filter(func(t: Array) -> bool: return wanted.has(t[0]))
 	var order: String = OS.get_environment("VT075_ORDER")
 	if order == "reverse":
 		tests.reverse()
@@ -493,3 +500,35 @@ func _tc18_no_lost_update() -> void:
 	_check(all_ok and revs.size() == LOAD_TASKS and g["revision"] == 1 + LOAD_TASKS,
 		"TC-18 (concurrency): 120 update dong thoi -> revision cuoi = 121, 120 revision tra ve khac nhau (khong lost update)",
 		"final_rev=%d distinct_revs=%d" % [g["revision"], revs.size()])
+
+# ---------------------------------------------------------------- bo sung sau mutation round 1 (M9, M10 song sot)
+
+func _tc19_note_sanitized() -> void:
+	# Mutant M9 (bo sanitize_note) song sot o vong 1 vi chua co test nao kiem tra lam sach ghi chu.
+	var raw: String = "<script>alert(1)</script>\n\tok " + "x".repeat(200)
+	var gm: Node = get_node_or_null("/root/GameManager")
+	var expected: String = str(gm.call("sanitize_note", raw)) if gm != null else ""
+	var svc: Object = _new_service(0)
+	svc.add_record(PLAYER, "run-0", "SEED-A", raw)
+	var from_add: String = svc.get_record(REVIEWER, "run-0")["record"]["note"]
+	svc.update_note(PLAYER, "run-0", raw)
+	var from_update: String = svc.get_record(REVIEWER, "run-0")["record"]["note"]
+	var clean: bool = true
+	for s in [from_add, from_update]:
+		if s.contains("<") or s.contains(">") or s.contains("\n") or s.contains("\t") or s.length() > 80:
+			clean = false
+	_check(clean and from_add == expected and from_update == expected,
+		"TC-19 NFR4 (negative): ghi chu chua the HTML/ky tu dieu khien/qua dai duoc lam sach o add va update",
+		"len=%d" % from_update.length())
+
+func _tc20_record_cap() -> void:
+	# Mutant M10 (bo gioi han MAX_RECORDS) song sot o vong 1.
+	var svc: Object = _new_service(0)
+	var last_ok: bool = true
+	for i in range(500):
+		if not svc.add_record(PLAYER, "r-%d" % i, "SEED-A", "x")["ok"]:
+			last_ok = false
+	var over: Dictionary = svc.add_record(PLAYER, "r-500", "SEED-A", "x")
+	var n: int = (svc.list_records(REVIEWER)["records"] as Array).size()
+	_check(last_ok and over["code"] == C_INVALID and n == 500,
+		"TC-20 NFR4 (negative): vuot gioi han 500 ban ghi -> INVALID_INPUT (chong cap phat vo han)", "count=%d" % n)

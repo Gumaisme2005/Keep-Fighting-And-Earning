@@ -2,3 +2,7 @@
 .godot/
 /android/
 .codegraph/
+
+# VT-075 generated artifacts
+tests/vt075/_mutant/
+tests/vt075/_cov/
