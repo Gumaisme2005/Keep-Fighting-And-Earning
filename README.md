@@ -69,7 +69,7 @@ Toàn bộ chỉ số nhân vật được đồng bộ tự động từ [`Scen
   - Đuốc lửa treo tường bập bùng theo thời gian thực (lửa cam ở phòng thường, lửa vàng ở phòng Kho báu, lửa đỏ huyết ngục ở phòng Boss).
   - Những **bóng ma xanh lượn lờ (Ghostly Blue Wisps)** bay theo quỹ đạo sin/vô cực phát sáng ma mị trong từng căn phòng.
 - **Hệ Thống Soundtrack & SFX (`Scene/AudioManager.gd`):**
-  - Tự động chuyển nhạc nền giữa **Main Menu (`bgm_menu.wav`)**, **Khám phá Ngục tối (`bgm_dungeon.wav`)** và **Giao tranh Boss (`bgm_boss.wav`)**.
+  - Đồng bộ bản nhạc hùng tráng **Glorious Morning (Waterflame — Age of War)** cho toàn bộ **Main Menu (`bgm_menu.wav`)**, **Khám phá Ngục tối (`bgm_dungeon.wav`)** và **Giao tranh Boss (`bgm_boss.wav`)**.
   - Hiệu ứng âm thanh chiến đấu (`sfx_slash`, `sfx_hit`, `sfx_pickup`, `sfx_portal`) kèm nút bật/tắt âm thanh nhanh (`Phím N`).
 - **Tùy Biến Asset Dễ Dàng:** Toàn bộ Sprite của Tướng và Quái đặt tại `Assets/Character/`, hiển thị sắc nét với chế độ `Nearest-Neighbor Pixel Filtering` (`default_texture_filter=0`).
 
@@ -99,7 +99,7 @@ Chạy toàn bộ bộ kiểm thử tự động (Unit Tests, Security Tests, Pr
 .\run_tests.bat
 ```
 
-1. **Unit, Security, UI & Audio Tests ([`tests/test_dungeon_generator_unit.gd`](tests/test_dungeon_generator_unit.gd)):** `17/17 PASS` (`UT-01` đến `UT-11` kiểm tra cấu trúc đồ thị, BFS Boss, vùng cấm bẫy, chống XSS/SQLi/Path Traversal, Z-Index cửa đóng, vị trí thực tế trên Minimap, Đuốc/Bóng ma xanh, `AudioManager` và chặn đánh xuyên tường/khóa phòng nhầm tại Seed `SEED-Q244GL`).
+1. **Unit, Security, UI & Audio Tests ([`tests/test_dungeon_generator_unit.gd`](tests/test_dungeon_generator_unit.gd)):** `19/19 PASS` (`UT-01` đến `UT-13` kiểm tra cấu trúc đồ thị, BFS Boss, vùng cấm bẫy, chống XSS/SQLi/Path Traversal, Z-Index cửa đóng, vị trí thực tế trên Minimap, Đuốc/Bóng ma xanh, `AudioManager` nạp nhạc Glorious Morning, chặn đánh xuyên tường/khóa phòng nhầm tại Seed `SEED-Q244GL`, bắn cung Miya không bị stunlock và cấu hình cân bằng tập trung `BalanceConfig`).
 2. **Property-Based Tests ([`tests/test_dungeon_properties.gd`](tests/test_dungeon_properties.gd)):** `5/5 PASS` (`500/500` phép kiểm chứng trên 100 Seeds ngẫu nhiên cho tính tái lập, liên thông đồ thị, Flood-Fill lưới gạch, tối ưu BFS Boss và an toàn tọa độ sinh thực thể).
 3. **Combat & Inventory Tests ([`Scene/Test/test_combat.gd`](Scene/Test/test_combat.gd)):** `5/5 PASS` (Kiểm chứng trừ Giáp trước Máu, hồi Giáp, cộng dồn chỉ số Trang bị và bất tử I-Frames).
 4. **Benchmark ([`docs/BENCHMARK_REPORT.md`](docs/BENCHMARK_REPORT.md)):** Đo thời gian sinh ngục từ `10` đến `50` phòng.
