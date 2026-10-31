@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Báo Cáo BT3 - Bùi Quang Chiến - 23001837 - VT-075</title>
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 14mm 14mm 14mm 14mm;
+    @bottom-right {
+      content: counter(page);
+    }
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 9.2pt;
+    line-height: 1.38;
+    color: #1a1a1a;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+  }
+  .page-break {
+    page-break-before: always;
+  }
+  .header-box {
+    border: 1.5px solid #1e3a8a;
+    background: #f0f4ff;
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+  .header-box h1 {
+    font-size: 13.5pt;
+    color: #1e3a8a;
+    margin: 0 0 4px 0;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .header-box .subtitle {
+    text-align: center;
+    font-size: 9.5pt;
+    color: #3b82f6;
+    margin: 0 0 8px 0;
+    font-weight: 600;
+  }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 14px;
+    font-size: 8.8pt;
+    border-top: 1px solid #cbd5e1;
+    padding-top: 6px;
+  }
+  .meta-grid div strong {
+    color: #1e293b;
+  }
+  .commitment {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed #94a3b8;
+    font-style: italic;
+    color: #0f172a;
+    font-size: 8.5pt;
+    text-align: center;
+  }
+  h2 {
+    font-size: 11pt;
+    color: #1e3a8a;
+    border-bottom: 1.5px solid #1e3a8a;
+    padding-bottom: 3px;
+    margin: 12px 0 6px 0;
+    text-transform: uppercase;
+  }
+  h3 {
+    font-size: 9.6pt;
+    color: #0f172a;
+    margin: 8px 0 4px 0;
+    font-weight: 700;
+  }
+  p {
+    margin: 0 0 5px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 5px 0 8px 0;
+    font-size: 8.2pt;
+  }
+  table, th, td {
+    border: 1px solid #cbd5e1;
+  }
+  th {
+    background: #e2e8f0;
+    color: #0f172a;
+    padding: 4px 6px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 3.5px 6px;
+    vertical-align: top;
+  }
+  tr:nth-child(even) {
+    background: #f8fafc;
+  }
+  .badge-pass {
+    background: #dcfce7;
+    color: #15803d;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-weight: bold;
+    font-size: 7.8pt;
+  }
+  .badge-fail {
+    background: #fee2e2;
+    color: #b91c1c;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-weight: bold;
+    font-size: 7.8pt;
+  }
+  .badge-opt {
+    background: #e0e7ff;
+    color: #4338ca;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-weight: bold;
+  }
+  code {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 8pt;
+    background: #f1f5f9;
+    padding: 1px 3px;
+    border-radius: 2px;
+    color: #0f172a;
+  }
+  pre {
+    background: #0f172a;
+    color: #f8fafc;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 7.8pt;
+    line-height: 1.3;
+    overflow-x: auto;
+    margin: 4px 0 7px 0;
+    font-family: Consolas, monospace;
+  }
+  .alert-box {
+    background: #fffbeb;
+    border-left: 3px solid #f59e0b;
+    padding: 5px 8px;
+    margin: 5px 0;
+    font-size: 8.3pt;
+  }
+  .appendix-header {
+    background: #475569;
+    color: #fff;
+    padding: 6px 10px;
+    font-size: 11pt;
+    font-weight: bold;
+    border-radius: 3px;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<!-- TRANG 1 -->
+<div class="header-box">
+  <h1>BÀI TẬP CÁ NHÂN 3 — CÔNG NGHỆ PHẦN MỀM 2026</h1>
+  <div class="subtitle">AI-assisted Software Development & Software Testing & Quality Engineering</div>
+  <div class="meta-grid">
+    <div><strong>Họ và tên:</strong> Bùi Quang Chiến</div>
+    <div><strong>Mã sinh viên:</strong> 23001837</div>
+    <div><strong>Mã biến thể cá nhân:</strong> VT-075</div>
+    <div><strong>Team ID:</strong> SE2026-T19 | <strong>Vai trò:</strong> Thành viên</div>
+    <div><strong>Đề tài:</strong> GAME-2D-02 – Procedural Dungeon: roguelike có seed tái lập</div>
+    <div><strong>Repository:</strong> https://github.com/Gumaisme2005/Keep-Fighting-And-Earning</div>
+    <div><strong>Baseline Commit:</strong> <code>232f261c88ec7748f73d5ba6c912a91c517f1ce5</code></div>
+    <div><strong>Branch / PR:</strong> <code>feat/vt-075-reviewer-concurrency</code></div>
+  </div>
+  <div class="commitment">
+    “Tôi chịu trách nhiệm về toàn bộ code, test và nội dung bài làm; tôi đã khai báo việc sử dụng AI.”
+  </div>
+</div>
+
+<h2>1. Specification, Acceptance Criteria & Invariant (VT-075)</h2>
+<p><strong>1.1. Problem Statement:</strong> Dữ liệu run lưu trữ (<code>GameManager.run_history</code>, <code>saved_seeds</code>) là bằng chứng bất biến để tái lập hầm ngục và chấm điểm run theo Seed. Trước đây chỉ có duy nhất vai trò người chơi (player) được phép ghi dữ liệu, không có cơ chế cho giám khảo/người chấm độc lập thẩm định tính hợp lệ của run mà không làm biến dạng dữ liệu gốc. Cần bổ sung vai trò <strong>Reviewer (Thẩm định viên)</strong> có quyền đọc và phê duyệt (approve) chính xác một lần trên đúng phiên bản (revision) đã xem, tuyệt đối <strong>không được sửa/xóa dữ liệu gốc</strong>. Khi có 120 yêu cầu đồng thời tranh chấp (nhiều reviewer cùng approve, hoặc vừa approve vừa edit), dữ liệu phải giữ tính nhất quán toàn vẹn.</p>
+
+<p><strong>1.2. Acceptance Criteria (Kiểm thử được):</strong></p>
+<table>
+  <tr><th style="width:12%">Mã AC</th><th style="width:48%">Tiêu chí chấp nhận</th><th style="width:40%">Phương pháp kiểm chứng</th></tr>
+  <tr>
+    <td><strong>AC1</strong></td>
+    <td>Reviewer đọc được danh sách và chi tiết bản ghi. Dữ liệu trả về là snapshot độc lập; việc sửa đổi trên snapshot không làm thay đổi bản ghi gốc.</td>
+    <td>Assert nội dung đối chiếu hash SHA-256 dữ liệu gốc trước và sau khi can thiệp (<code>TC-01</code>, <code>TC-02</code>).</td>
+  </tr>
+  <tr>
+    <td><strong>AC2</strong></td>
+    <td>Reviewer cố tình gọi thao tác ghi (<code>add_record</code>, <code>update_note</code>, <code>remove_record</code>, <code>import_run_history</code>) phải bị từ chối ngay lập tức với mã <code>FORBIDDEN</code>; dữ liệu gốc và số revision không đổi.</td>
+    <td>Negative Unit Tests + Concurrency Tests kiểm tra mã trả về và hash bộ nhớ (<code>TC-03</code>, <code>TC-04</code>, <code>TC-15</code>).</td>
+  </tr>
+  <tr>
+    <td><strong>AC3</strong></td>
+    <td>Phê duyệt (<code>approve</code>) chỉ thành công khi: <code>role=reviewer</code>, <code>expected_revision == record.revision</code>, record tồn tại và chưa từng được approve. Dữ liệu approval lưu tách riêng. Player gọi -> <code>FORBIDDEN</code>; ID lạ -> <code>NOT_FOUND</code>; revision cũ -> <code>STALE_REVISION</code>.</td>
+    <td>Happy-path, Negative tests cho từng ca lỗi, kiểm tra audit log và cấu trúc dữ liệu approval (<code>TC-06</code>..<code>TC-09</code>).</td>
+  </tr>
+  <tr>
+    <td><strong>AC4</strong></td>
+    <td>Khi 120 reviewer cùng phê duyệt đồng thời 1 record, hệ thống chỉ chấp nhận đúng 1 phê duyệt (<code>OK</code>), 119 yêu cầu còn lại nhận <code>ALREADY_APPROVED</code>. Số lượng approval cuối cùng = 1.</td>
+    <td>Concurrency test với Semaphore cổng xuất phát 120 luồng (<code>TC-13</code>, <code>TC-13b</code>).</td>
+  </tr>
+  <tr>
+    <td><strong>AC5</strong></td>
+    <td>Khi phê duyệt diễn ra đồng thời với thao tác cập nhật của player, trạng thái cuối cùng phải toàn vẹn: nếu có approval thì <code>approval.revision == record.revision</code>; không xảy ra lost update.</td>
+    <td>Concurrency test kết hợp 80 reviewer và 40 player updates đồng thời (<code>TC-14</code>).</td>
+  </tr>
+</table>
+
+<p><strong>1.3. Non-Functional Constraints (NFR):</strong></p>
+<ul>
+  <li><strong>NFR1 (Hiệu năng):</strong> Mức tải kiểm chứng 120 tác vụ đồng thời; độ trễ phân vị 95 (p95) từ lúc phát lệnh đến khi hoàn tất không quá 3.5 giây.</li>
+  <li><strong>NFR2 (Tính ổn định / Anti-flaky):</strong> Test không phụ thuộc vào may rủi lịch biểu CPU; chạy lặp lại 30 lần liên tục phải cho kết quả đồng nhất 100%.</li>
+  <li><strong>NFR3 (Tương thích Engine):</strong> Tương thích hoàn toàn với Godot 4.3 (phiên bản ghim trong GitHub CI) và Godot 4.7.2 local.</li>
+  <li><strong>NFR4 (Bảo mật đầu vào):</strong> Áp dụng nguyên tắc Deny-by-default cho mọi vai trò lạ; mọi chuỗi input được làm sạch qua <code>sanitize_seed/sanitize_note</code>; chặn DoS bộ nhớ trần 500 bản ghi.</li>
+</ul>
+
+<p><strong>1.4. Invariant / Contract Quan Trọng Nhất:</strong><br>
+<strong>INV-1: Ràng buộc phê duyệt đúng phiên bản.</strong> Với mọi bản ghi, tồn tại tối đa một phê duyệt hoạt động, và nếu phê duyệt tồn tại thì <code>approval.revision == record.revision</code>. (Kèm bất biến phụ <strong>INV-2: Dữ liệu gốc bất biến đối với mọi tác vụ của reviewer</strong>).</p>
+
+<h2>2. AI-Assisted Implementation Plan & Review Đối Chiếu Repository</h2>
+<p><strong>2.1. Hai phương án do AI đề xuất:</strong></p>
+<ul>
+  <li><span class="badge-opt">Phương án A:</span> Thêm thuộc tính <code>current_role</code> trực tiếp vào Autoload <code>GameManager.gd</code>, bổ sung lệnh kiểm tra role vào <code>save_seed_entry</code>, <code>remove_saved_seed</code>, <code>finish_run</code> và lưu trực tiếp approval vào mảng <code>run_history</code>.</li>
+  <li><span class="badge-opt">Phương án B (Được chọn):</span> Thiết kế module độc lập <code>Scene/Review/review_service.gd</code> (kế thừa <code>RefCounted</code>) quản lý kho lưu trữ bản ghi và approvals riêng biệt; tự bảo vệ bằng <code>Mutex</code> đơn khối; cung cấp hàm import dữ liệu từ <code>GameManager.run_history</code> mà không can thiệp mã nguồn game gốc.</li>
+</ul>
+
+<p><strong>2.2. Review phản biện kế hoạch AI bằng Evidence thực tế từ Repository:</strong></p>
+<table>
+  <tr><th style="width:25%">Giả định ban đầu của AI</th><th style="width:20%">Kết luận kiểm tra</th><th style="width:55%">Bằng chứng từ Repository thật (Evidence)</th></tr>
+  <tr>
+    <td><strong>A1:</strong> Dự án có lớp mạng/API nên cần viết HTTP/API test.</td>
+    <td><strong>BÁC BỎ</strong></td>
+    <td>Lệnh <code>Select-String</code> quét toàn bộ <code>Scene/</code> và <code>Menu/</code> với pattern <code>HTTPRequest|WebSocket|ENet</code> trả về 0 kết quả (xem <code>00_plan_review_checks.log</code>). Đây là game 2D offline. Thay thế bằng integration test ở mức Service.</td>
+  </tr>
+  <tr>
+    <td><strong>A2:</strong> Dùng framework GUT / gdUnit4 để chạy test và đo coverage.</td>
+    <td><strong>BÁC BỎ</strong></td>
+    <td>Repo không hề có thư mục <code>addons/</code>. Hệ thống test hiện có chạy hoàn toàn bằng script Godot tự viết qua <code>godot --headless &lt;scene&gt;</code>. Tuân thủ convention sẵn có của dự án.</td>
+  </tr>
+  <tr>
+    <td><strong>A3:</strong> Khuyên chọn Phương án A vì "ít file hơn, tận dụng biến toàn cục".</td>
+    <td><strong>BÁC BỎ PHƯƠNG ÁN A<br>(CHỌN PHƯƠNG ÁN B)</strong></td>
+    <td>Soi mã <code>GameManager.gd:7, 195, 261</code>: Mọi mutator đều phát tín hiệu <code>saved_data_changed.emit()</code> lên UI và ghi đè file đĩa thật <code>SAVE_FILE_PATH</code> mà không có Mutex. Bắn 120 thread vào GameManager sẽ gây crash thread-safety của Godot UI signal và làm hỏng file save thật! Module độc lập B giải quyết triệt để vấn đề này.</td>
+  </tr>
+  <tr>
+    <td><strong>A4:</strong> Thread/Mutex/Semaphore chạy ổn định ở chế độ <code>--headless</code>.</td>
+    <td><strong>XÁC NHẬN (Có sửa đổi)</strong></td>
+    <td>Đã viết probe <code>thread_probe.gd</code>: 120 thread không khóa bị mất 11,173 cập nhật; có khóa bảo vệ an toàn 240,000/240,000. Cần cơ chế Semaphore cổng xuất phát để các luồng tranh chấp thực sự.</td>
+  </tr>
+  <tr>
+    <td><strong>A5:</strong> Godot Engine hỗ trợ sẵn cờ tính line coverage từ CLI.</td>
+    <td><strong>BÁC BỎ</strong></td>
+    <td>Lệnh <code>godot --help</code> không có cờ coverage nào (chỉ có <code>--profiling</code>). Tự xây dựng công cụ instrument mã nguồn bằng Python (<code>coverage.py</code>).</td>
+  </tr>
+</table>
+
+<!-- TRANG 2 -->
+<div class="page-break"></div>
+
+<h2>3. Risk-Based Test Strategy & Danh Mục 24 Test Cases</h2>
+<p><strong>3.1. Chiến lược kiểm thử dựa trên rủi ro:</strong> Tập trung tối đa nguồn lực vào rủi ro trọng tâm <strong>Race Condition</strong> trong mô hình kiểm tra-rồi-làm (Check-then-act) và rủi ro vi phạm tính toàn vẹn dữ liệu gốc. Loại bỏ E2E UI và HTTP networking không cần thiết, dồn sức vào Concurrency Testing trên 120 OS Threads thật với oracle kiểm đếm chính xác.</p>
+
+<p><strong>3.2. Bảng Danh Mục Test Cases (Bao gồm Concurrency, Negative Paths & Failure Paths):</strong></p>
+<table>
+  <tr>
+    <th style="width:7%">Mã ID</th>
+    <th style="width:23%">Rủi ro / Yêu cầu kiểm tra</th>
+    <th style="width:10%">Mức test</th>
+    <th style="width:30%">Điều kiện tiên quyết / Dữ liệu đầu vào</th>
+    <th style="width:22%">Kết quả mong đợi</th>
+    <th style="width:8%">Độ ưu tiên</th>
+  </tr>
+  <tr><td><strong>TC-01</strong></td><td>AC1: Reviewer đọc danh sách/chi tiết</td><td>Unit</td><td>2 bản ghi có sẵn; role="reviewer" gọi list/get</td><td>Trả về <code>OK</code>, đúng 2 record, snapshot độc lập</td><td>P0</td></tr>
+  <tr><td><strong>TC-02</strong></td><td>AC1/INV-2: Snapshot isolation</td><td>Unit</td><td>Lấy snapshot, sửa trường note, xóa mảng list</td><td>Hash bản ghi gốc và kích thước kho không đổi</td><td>P0</td></tr>
+  <tr><td><strong>TC-03</strong></td><td>AC2: Reviewer sửa note (Negative)</td><td>Unit</td><td>Reviewer gọi <code>update_note()</code></td><td>Trả về <code>FORBIDDEN</code>; dữ liệu gốc giữ nguyên</td><td>P0</td></tr>
+  <tr><td><strong>TC-04</strong></td><td>AC2: Reviewer add/remove (Negative)</td><td>Unit</td><td>Reviewer gọi <code>add_record</code>, <code>remove_record</code></td><td>Đều trả về <code>FORBIDDEN</code>; kho không thay đổi</td><td>P0</td></tr>
+  <tr><td><strong>TC-05</strong></td><td>Deny-by-default role lạ (Negative)</td><td>Unit</td><td>Role rỗng, "admin", "Player", "root" x 7 API</td><td>100% trả về <code>FORBIDDEN</code></td><td>P0</td></tr>
+  <tr><td><strong>TC-06</strong></td><td>AC3: Phê duyệt hợp lệ (Happy path)</td><td>Unit</td><td>Reviewer approve đúng <code>expected_revision=1</code></td><td>Trả về <code>OK</code>; lưu approval riêng; record không đổi</td><td>P0</td></tr>
+  <tr><td><strong>TC-07</strong></td><td>AC3: Player phê duyệt (Negative)</td><td>Unit</td><td>Role="player" gọi <code>approve()</code></td><td>Trả về <code>FORBIDDEN</code>; không sinh approval</td><td>P0</td></tr>
+  <tr><td><strong>TC-08</strong></td><td>Tham số đầu vào độc hại (Negative)</td><td>Unit</td><td>Revision <= 0, ID chứa <code>&lt;script&gt;</code>, Path traversal</td><td>Đều trả về <code>INVALID_INPUT</code> hoặc <code>NOT_FOUND</code></td><td>P1</td></tr>
+  <tr><td><strong>TC-09</strong></td><td>AC3/INV-1: Approve revision cũ</td><td>Unit</td><td>Player sửa lên rev 2; Reviewer approve(rev=1)</td><td>Trả về <code>STALE_REVISION</code>; approve(rev=2) thành công</td><td>P0</td></tr>
+  <tr><td><strong>TC-10</strong></td><td>INV-1: Thu hồi khi bị sửa</td><td>Unit</td><td>Approve rev 1; sau đó Player update note</td><td>Approval cũ bị xóa; cho phép approve lại ở rev 2</td><td>P0</td></tr>
+  <tr><td><strong>TC-11</strong></td><td>AC4: Phê duyệt lần hai tuần tự</td><td>Unit</td><td>Reviewer 1 approve xong; Reviewer 2 approve tiếp</td><td>Yêu cầu 2 trả về <code>ALREADY_APPROVED</code></td><td>P1</td></tr>
+  <tr><td><strong>TC-12</strong></td><td>Tích hợp import GameManager</td><td>Integration</td><td>Nạp mảng <code>run_history</code> thật (chứa HTML, phần tử rác)</td><td>Import lọc sạch qua sanitize; mảng gốc không đổi</td><td>P1</td></tr>
+  <tr><td><strong>TC-13</strong></td><td>AC4: 120 Reviewer approve đồng thời</td><td>Concurrency</td><td>120 thread cùng gọi <code>approve(rev=1)</code> qua cổng Semaphore</td><td>Đúng 1 <code>OK</code>, 119 <code>ALREADY_APPROVED</code>; 1 approval</td><td>P0</td></tr>
+  <tr><td><strong>TC-13b</strong></td><td>AC4: Cặp đua tối thiểu (2 luồng)</td><td>Concurrency</td><td>100 vòng x 2 luồng tranh chấp trên record mới</td><td>100% các vòng có đúng 1 <code>OK</code> và 1 <code>ALREADY</code></td><td>P0</td></tr>
+  <tr><td><strong>TC-14</strong></td><td>AC5/INV-1: Đua Approve vs Update</td><td>Concurrency</td><td>80 Reviewer approve đua với 40 Player updates</td><td>Revision cuối = 41; approval khớp revision; không lost</td><td>P0</td></tr>
+  <tr><td><strong>TC-15</strong></td><td>NFR1: Tải hỗn hợp 120 tác vụ</td><td>Concurrency/Load</td><td>120 tác vụ hỗn hợp trên 12 records; đo latency</td><td>Bảo vệ invariant; <strong>$p95 \le 3.5	ext{ giây}$</strong></td><td>P1</td></tr>
+  <tr><td><strong>TC-16a</strong></td><td>Failure-path: Lỗi lưu đĩa tuần tự</td><td>Failure path</td><td>Mô phỏng hook lưu đĩa trả <code>false</code> rồi <code>true</code></td><td>Báo <code>PERSIST_FAILED</code>; không deadlock, cho phép thử lại</td><td>P0</td></tr>
+  <tr><td><strong>TC-16b</strong></td><td>Failure-path: Lỗi lưu đĩa đồng thời</td><td>Concurrency/Fail</td><td>120 luồng approve, 5 lần lưu đĩa đầu tiên thất bại</td><td>Đúng 5 <code>PERSIST_FAILED</code>, 1 <code>OK</code>, 114 <code>ALREADY</code></td><td>P0</td></tr>
+  <tr><td><strong>TC-17</strong></td><td>Race condition: Tạo trùng ID</td><td>Concurrency</td><td>120 thread cùng gọi <code>add_record</code> chung 1 ID</td><td>Đúng 1 <code>OK</code>, 119 <code>DUPLICATE</code>; kho có đúng 1 record</td><td>P1</td></tr>
+  <tr><td><strong>TC-18</strong></td><td>Lost Update: Sửa đồng thời</td><td>Concurrency</td><td>120 thread cùng gọi <code>update_note</code> trên 1 record</td><td>Revision cuối = 121; 120 revision trả về khác nhau</td><td>P0</td></tr>
+  <tr><td><strong>TC-19</strong></td><td>NFR4: Làm sạch ghi chú (Negative)</td><td>Unit</td><td>Note chứa <code>&lt;script&gt;</code>, ký tự điều khiển, > 80 ký tự</td><td>Lọc sạch mã độc; độ dài cắt chuẩn ≤ 80</td><td>P1</td></tr>
+  <tr><td><strong>TC-20</strong></td><td>NFR4: Giới hạn trần bản ghi (Negative)</td><td>Unit</td><td>Thêm 500 bản ghi, sau đó thêm bản ghi thứ 501</td><td>Bản ghi 501 nhận <code>INVALID_INPUT</code>; kho cố định 500</td><td>P2</td></tr>
+  <tr><td><strong>TC-21</strong></td><td>Lifecycle: Player xóa bản ghi</td><td>Unit</td><td>Player gọi xóa record đã approve; kiểm tra ID sai</td><td>Xóa thành công; thu hồi approval; bắt lỗi ID lạ</td><td>P1</td></tr>
+  <tr><td><strong>GUARD</strong></td><td>Bảo vệ dữ liệu gốc repository</td><td>Guard/Integrity</td><td>So sánh SHA-256 <code>GameManager.saved_seeds</code> trước/sau</td><td>Hash giống nhau 100%; không làm bẩn repo thật</td><td>P0</td></tr>
+</table>
+
+<h2>4. Test-First Implementation: Quá Trình Đổi Màu RED → GREEN</h2>
+<p><strong>4.1. Bản thảo v0 và Bằng chứng Thất bại Đúng Lý Do (RED Evidence):</strong></p>
+<p>Tại commit <code>14982e4</code>, bản nháp v0 chỉ khóa Mutex trong từng hàm accessor nội bộ riêng rẽ (<code>_read_record</code>, <code>_write_record</code>), khiến chuỗi thao tác "Đọc → Kiểm tra → Ghi" (Check-then-act) bị đan xen giữa các luồng. Kết quả chạy test trên v0 ghi nhận <strong>7 FAILED / 14 PASSED</strong> (xem [`01_red_v0.log`](docs/vt075/evidence/01_red_v0.log)):</p>
+<pre>
+[FAIL] TC-13 AC4 (concurrency): 120 reviewer cung approve -> dung 1 OK, 119 ALREADY_APPROVED - { "OK": 120 }
+[FAIL] TC-13b AC4 (concurrency, cap toi thieu): 100 vong x 2 luong -> moi vong dung 1 OK - bad_rounds=100
+[FAIL] TC-14 AC5/INV-1 (concurrency): 80 approve + 40 update dong thoi -> ... distinct=false
+[FAIL] TC-17 (concurrency): 120 add_record cung id -> dung 1 OK, 119 DUPLICATE - { "OK": 120 }
+[FAIL] TC-18 (concurrency): 120 update dong thoi -> revision cuoi = 121 ... - final_rev=2 distinct_revs=1
+</pre>
+<p><em>Phân tích:</em> Toàn bộ 120 luồng đều vượt qua khâu kiểm tra và đồng loạt ghi đè (tất cả trả về <code>OK</code>), minh chứng rõ nét lỗi Race Condition đúng như dự kiến trước khi vá.</p>
+
+<p><strong>4.2. Review Patch và Bằng chứng Vượt qua Kiểm thử (GREEN Evidence):</strong></p>
+<p>Patch (commit <code>a89b250</code>, thay đổi vỏn vẹn +30/-2 dòng) bọc toàn bộ chuỗi Check-then-act của các API ghi trong một vùng khóa nguyên tử duy nhất thông qua các hàm helper <code>*_locked()</code>. Do `Mutex` của Godot 4 là Reentrant/Recursive Mutex, việc các accessor con gọi khóa lồng nhau bên trong vẫn hoàn toàn an toàn và không gây deadlock. Sau khi áp patch, toàn bộ test suite chuyển sang <strong>GREEN (100% PASS)</strong> (xem [`02_green_v1.log`](docs/vt075/evidence/02_green_v1.log)):</p>
+<pre>
+[PASS] TC-13 AC4 (concurrency): 120 reviewer cung approve -> dung 1 OK, 119 ALREADY_APPROVED - { "ALREADY_APPROVED": 119, "OK": 1 }
+[PASS] TC-14 AC5/INV-1 (concurrency): 80 approve + 40 update dong thoi -> final_rev=41 ok_updates=40 inv1=true distinct=true
+[PERF] tasks=120 p50=69.8ms p95=90.2ms p99=93.2ms max=93.3ms wall=95.1ms (target p95<=3500ms)
+[SUMMARY] VT-075 TESTS: 24 PASSED | 0 FAILED (Exit Code: 0)
+</pre>
+
+<!-- TRANG 3 -->
+<div class="page-break"></div>
+
+<h2>5. Đánh Giá Sức Mạnh Test Suite: Mutation Testing, Coverage & Flaky Review</h2>
+
+<p><strong>5.1. Thí nghiệm Deliberate Bug / Mutation Testing:</strong></p>
+<p>Chúng tôi đã triển khai công cụ sinh đột biến tự động <code>tests/vt075/tools/mutation_run.py</code> kiểm chứng 19 mutants:</p>
+<ul>
+  <li><strong>Mutant bắt buộc M1:</strong> Bỏ kiểm tra quyền của reviewer trong <code>update_note</code>. Được commit lên nhánh tạm <code>mutation/vt075-m1-remove-role-guard</code> (commit <code>ad2975b</code>). Test suite phát hiện và tiêu diệt ngay lập tức tại <code>TC-03</code>, <code>TC-05</code>, <code>TC-15</code>. Nhánh nộp bài hoàn toàn sạch không chứa code mutant.</li>
+  <li><strong>Vòng 1 (18 mutants):</strong> Tiêu diệt 16/18 mutants (89%). Hai mutant sống sót là <code>M9</code> (bỏ lọc mã độc ghi chú) và <code>M10</code> (bỏ giới hạn 500 bản ghi).</li>
+  <li><strong>Vòng 2 (Bổ sung test):</strong> Thêm <code>TC-19</code> và <code>TC-20</code>; cả <code>M9</code>, <code>M10</code> và <code>M19</code> đều bị tiêu diệt. <strong>Mutation Score đạt tuyệt đối: 19/19 (100%)</strong>.</li>
+</ul>
+
+<p><strong>5.2. Phân Tích Độ Phủ (Coverage Analysis):</strong></p>
+<p>Sử dụng công cụ instrument mã nguồn nội bộ <code>coverage.py</code> chèn đầu dò <code>cov_probe.gd</code>:</p>
+<ul>
+  <li><strong>Line Coverage:</strong> <strong>158 / 164 dòng (96.3%)</strong>.</li>
+  <li><strong>Branch (Arm) Coverage:</strong> <strong>58 / 64 nhánh điều kiện (90.6%)</strong>.</li>
+  <li><em>Nhận định:</em> 6 dòng chưa phủ là các nhánh thoát lỗi ngoại lệ giả lập khi I/O thất bại ở các hàm phụ (đã được bao phủ ở luồng phê duyệt chính). Độ phủ cao được kết hợp chặt chẽ cùng 100% Mutation Score và Ma trận Traceability đảm bảo chất lượng kiểm thử thực chất.</li>
+</ul>
+
+<p><strong>5.3. Kiểm Tra Flaky Tests (30 Vòng Lặp Liên Tiếp):</strong></p>
+<p>Chạy script <code>flaky_runs.py</code> 30 lần liên tục (mỗi lần kích hoạt 120 luồng đồng thời): <strong>30/30 lần đạt ALL-GREEN (0 ca lỗi, 0 lần timeout)</strong>. Độ trễ p95 dao động ổn định trong khoảng 79.4ms – 97.8ms. Hệ thống cũng vượt qua thử nghiệm đảo ngược thứ tự test (<code>VT075_ORDER=reverse</code>) và xáo trộn ngẫu nhiên (<code>shuffle:&lt;seed&gt;</code>).</p>
+
+<h2>6. Thí Nghiệm Kiểm Chứng Tải: 120 Tác Vụ Đồng Thời & Mục Tiêu p95 ≤ 3.5s</h2>
+<p>Harness kiểm chứng tải <code>tests/vt075/load_p95.gd</code> giải phóng đồng loạt 120 Thread vật lý qua Semaphore. Đo đạc thực nghiệm ghi file JSON 500 bản ghi thực tế trên đĩa (median = 0.42ms):</p>
+<table>
+  <tr>
+    <th style="width:25%">Kịch bản kiểm nghiệm</th>
+    <th style="width:15%">Độ trễ mô phỏng</th>
+    <th style="width:12%">Số mẫu đo</th>
+    <th style="width:12%">p50 (ms)</th>
+    <th style="width:12%">p95 (ms)</th>
+    <th style="width:12%">Max (ms)</th>
+    <th style="width:12%">Đánh giá (p95 ≤ 3.5s)</th>
+  </tr>
+  <tr><td><strong>1. No-delay</strong></td><td>0 ms</td><td>2400</td><td>4.8</td><td><strong>9.2</strong></td><td>12.4</td><td><span class="badge-pass">ĐẠT (VƯỢT TRỘI)</span></td></tr>
+  <tr><td><strong>2. Calibrated real write</strong></td><td>1.77 ms</td><td>2400</td><td>67.7</td><td><strong>192.6</strong></td><td>715.0</td><td><span class="badge-pass">ĐẠT (192.6ms &lt;&lt; 3.5s)</span></td></tr>
+  <tr><td><strong>3. Nominal hook</strong></td><td>300 µs</td><td>2400</td><td>521.7</td><td><strong>734.6</strong></td><td>775.5</td><td><span class="badge-pass">ĐẠT (734.6ms &lt; 3.5s)</span></td></tr>
+  <tr><td><strong>4. Sensitivity 20ms</strong></td><td>20 ms</td><td>2400</td><td>991.8</td><td><strong>1431.7</strong></td><td>1521.6</td><td><span class="badge-pass">ĐẠT</span></td></tr>
+  <tr><td><strong>5. Sensitivity 50ms</strong></td><td>50 ms</td><td>600</td><td>2048.4</td><td><strong>2786.1</strong></td><td>3041.0</td><td><span class="badge-pass">ĐẠT (2.78s &lt; 3.5s)</span></td></tr>
+  <tr><td><strong>6. Bão hòa (Saturation)</strong></td><td>100 ms</td><td>600</td><td>3494.3</td><td><strong>5035.3</strong></td><td>5142.9</td><td><span class="badge-fail">VƯỢT NGƯỠNG (5.03s)</span></td></tr>
+</table>
+<p><em>Giới hạn trung thực:</em> Thử nghiệm phản ánh chính xác hiện tượng tranh chấp vùng khóa (Lock Contention) trên tiến trình cục bộ, chưa bao gồm độ trễ vật lý và mất gói tin của đường truyền mạng.</p>
+
+<h2>7. Ma Trận Truy Vết (Traceability Matrix)</h2>
+<table>
+  <tr><th style="width:25%">Acceptance Criterion / Risk</th><th style="width:15%">Test Case ID</th><th style="width:30%">Tập tin kiểm thử</th><th style="width:18%">Commit / Log</th><th style="width:12%">Kết quả</th></tr>
+  <tr><td>AC1: Đọc danh sách & snapshot</td><td>TC-01, TC-02</td><td><code>tests/test_reviewer_concurrency.gd</code></td><td><code>c00ffaf</code> / <code>02_green_v1.log</code></td><td><span class="badge-pass">PASS</span></td></tr>
+  <tr><td>AC2: Reviewer không được sửa/xóa</td><td>TC-03, TC-04, TC-15</td><td><code>tests/test_reviewer_concurrency.gd</code></td><td><code>c00ffaf</code> / <code>02_green_v1.log</code></td><td><span class="badge-pass">PASS</span></td></tr>
+  <tr><td>AC3: Phê duyệt theo đúng revision</td><td>TC-06, TC-07, TC-09</td><td><code>tests/test_reviewer_concurrency.gd</code></td><td><code>c00ffaf</code> / <code>02_green_v1.log</code></td><td><span class="badge-pass">PASS</span></td></tr>
+  <tr><td>AC4: Đua 120 Reviewer cùng approve</td><td>TC-11, TC-13, TC-13b</td><td><code>tests/test_reviewer_concurrency.gd</code></td><td><code>c00ffaf</code> / <code>02_green_v1.log</code></td><td><span class="badge-pass">PASS</span></td></tr>
+  <tr><td>AC5 / INV-1: Đua Approve vs Update</td><td>TC-10, TC-14</td><td><code>tests/test_reviewer_concurrency.gd</code></td><td><code>c00ffaf</code> / <code>02_green_v1.log</code></td><td><span class="badge-pass">PASS</span></td></tr>
+  <tr><td>Failure-path & Chống Deadlock</td><td>TC-16a, TC-16b</td><td><code>tests/test_reviewer_concurrency.gd</code></td><td><code>c00ffaf</code> / <code>02_green_v1.log</code></td><td><span class="badge-pass">PASS</span></td></tr>
+  <tr><td>NFR1: Tải 120 tác vụ, p95 <= 3.5s</td><td>TC-15, LoadHarness</td><td><code>tests/vt075/load_p95.tscn</code></td><td><code>8d0ee13</code> / <code>09_load_120_p95.log</code></td><td><span class="badge-pass">PASS</span></td></tr>
+  <tr><td>NFR4: Input sanitization & Memory DoS</td><td>TC-05, TC-08, TC-19, TC-20</td><td><code>tests/test_reviewer_concurrency.gd</code></td><td><code>c00ffaf</code> / <code>05_suite_after_round2.log</code></td><td><span class="badge-pass">PASS</span></td></tr>
+  <tr><td>Bảo toàn dữ liệu repo thật</td><td>GUARD</td><td><code>tests/test_reviewer_concurrency.gd</code></td><td><code>c00ffaf</code> / <code>02_green_v1.log</code></td><td><span class="badge-pass">PASS</span></td></tr>
+</table>
+
+<h2>8. Đoạn Văn Suy Ngẫm Kỹ Thuật (Engineering Reflection — 298 Từ)</h2>
+<p>
+Quá trình áp dụng nghiêm ngặt chu trình kỹ nghệ phần mềm <strong>Spec → Test → AI-assisted Change → Verify → Review</strong> trên biến thể VT-075 đã mang lại những bài học sâu sắc về kiểm thử tự động và kiểm soát chất lượng.
+</p>
+<p>
+Yếu tố quan trọng nhất giúp gia tăng mức độ tự tin (<strong>confidence</strong>) vào hệ thống là việc áp dụng phương pháp <strong>Test-First song hành cùng Mutation Testing</strong>. Thay vì chỉ nhìn vào chỉ số độ phủ dòng (Line Coverage đạt 96.3%), việc cố tình tiêm lỗi bắt buộc M1 (bỏ kiểm tra quyền của Reviewer) lên nhánh tạm thời và quan sát thấy bộ test lập tức đánh chặn thành công đã chứng minh test suite có "răng nanh" thực sự. Hơn thế nữa, bài học từ hai mutant sống sót M9 (bỏ lọc mã độc) và M10 (bỏ chặn trần bộ nhớ) ở Vòng 1 đã cảnh tỉnh tư duy: nếu không có mutation testing, lập trình viên rất dễ rơi vào ảo tưởng an toàn của con số coverage cao. Cùng với đó, việc thiết kế cổng xuất phát Semaphore cho 120 luồng đồng thời đã loại bỏ hoàn toàn tính chất hên xui của scheduler, giúp bộ test chạy ổn định qua hàng chục vòng lặp mà không gặp bất kỳ flaky test nào.
+</p>
+<p>
+Tuy nhiên, rủi ro tồn dư (<strong>residual risk</strong>) vẫn chưa được chứng minh nằm ở chỗ: toàn bộ 120 tác vụ đồng thời hiện mới được kiểm chứng trên các luồng hệ điều hành nội bộ (In-Process OS Threads) chia sẻ chung một Mutex đệ quy trên một tiến trình duy nhất. Hệ thống chưa hề trải qua thử nghiệm rớt gói tin mạng (Packet Loss), phân mảnh mạng (Network Partitioning) hoặc tắc nghẽn I/O khi nhiều tiến trình độc lập cùng tranh chấp một file vật lý trên hệ điều hành.
+</p>
+<p>
+Do đó, <strong>bài kiểm thử tiếp theo có giá trị cao nhất</strong> sẽ là: Xây dựng một bài kiểm thử tích hợp End-to-End phân tán (Distributed Integration Test) bọc <code>ReviewService</code> sau một HTTP microservice thực tế, sử dụng công cụ như k6 hoặc Locust để bắn tải 120 kết nối HTTP/WebSocket đồng thời từ nhiều máy client, kết hợp kiểm chứng cơ chế khóa tập trung (như Redis Redlock hoặc Optimistic Locking qua ETag/Version Header) để đảm bảo an toàn tuyệt đối khi vận hành online.
+</p>
+
+<!-- PHỤ LỤC: KHÔNG TÍNH VÀO GIỚI HẠN TRANG CHÍNH -->
+<div class="page-break"></div>
+<div class="appendix-header">PHỤ LỤC 1: NHẬT KÝ SỬ DỤNG AI (AI USAGE LOG)</div>
+<p style="margin-top:5px; font-size:8pt; color:#475569;"><em>(Phần phụ lục ghi nhận tương tác trợ lý AI, không tính vào giới hạn 8 trang nội dung chính)</em></p>
+<table>
+  <tr><th style="width:6%">STT</th><th style="width:16%">Công cụ AI</th><th style="width:28%">Lời gọi / Prompt chính</th><th style="width:25%">Output nhận được từ AI</th><th style="width:25%">Đánh giá, Sửa đổi hoặc Bác bỏ</th></tr>
+  <tr>
+    <td><strong>1</strong></td>
+    <td>Antigravity (Claude 3.5 / Gemini)</td>
+    <td>"Đọc repo Godot này. Change request: thêm vai trò reviewer có quyền đọc và phê duyệt nhưng không được sửa dữ liệu gốc. Risk: race condition. Đề xuất 2 phương án và lập plan."</td>
+    <td>Đề xuất Phương án A (sửa <code>GameManager.gd</code>) và Phương án B (tạo <code>ReviewService.gd</code>). Khuyên nên chọn Phương án A.</td>
+    <td><strong>BÁC BỎ PHƯƠNG ÁN A.</strong> Evidence: <code>GameManager.gd</code> tự ghi đè đĩa và emit signal UI không an toàn trên luồng phụ. Chọn Phương án B để cô lập dữ liệu kiểm thử.</td>
+  </tr>
+  <tr>
+    <td><strong>2</strong></td>
+    <td>Antigravity</td>
+    <td>"Viết script concurrency test cho 120 thread trong Godot."</td>
+    <td>Mã sinh ra dùng vòng lặp <code>for i in 120: t.start(worker)</code> và cho rằng các thread sẽ tự động tranh chấp.</td>
+    <td><strong>SỬA ĐỔI.</strong> Khởi tạo tuần tự khiến các thread chạy xong trước khi luồng cuối kịp chạy. Đã sửa lại bằng cơ chế <strong>Gated Semaphore Barrier</strong> (<code>concurrency_harness.gd</code>).</td>
+  </tr>
+  <tr>
+    <td><strong>3</strong></td>
+    <td>Antigravity</td>
+    <td>"Tạo patch sửa lỗi race condition giữa v0 và v1."</td>
+    <td>Đề xuất bọc từng thao tác bằng <code>_mutex.lock()</code> trong wrapper <code>_locked()</code>.</td>
+    <td><strong>CHẤP NHẬN SAU KHI REVIEW DIFF.</strong> Kiểm tra tính chất Recursive Mutex của Godot đảm bảo an toàn, không deadlock. Chuyển RED sang GREEN 100%.</td>
+  </tr>
+  <tr>
+    <td><strong>4</strong></td>
+    <td>Antigravity</td>
+    <td>"Sinh các ca kiểm thử mutation testing."</td>
+    <td>Đề xuất 18 mutations mô phỏng các sai sót logic.</td>
+    <td><strong>CHẤP NHẬN & PHÁT HIỆN SƠ HỞ.</strong> Ở Vòng 1, M9 và M10 sống sót, chỉ ra bộ test còn thiếu kiểm tra <code>sanitize_note</code> và <code>MAX_RECORDS</code>. Đã thêm TC-19, TC-20 để diệt 100%.</td>
+  </tr>
+</table>
+
+<div class="appendix-header" style="margin-top:15px;">PHỤ LỤC 2: 2 ĐIỂM CODE/TEST DO AI ĐỀ XUẤT TRÔNG HỢP LÝ NHƯNG KHÔNG ĐÁNG TIN NGAY</div>
+<div class="alert-box" style="margin-top:8px;">
+  <strong>1. Phương án sửa trực tiếp Autoload GameManager.gd (Phương án A):</strong><br>
+  <em>Biểu hiện hợp lý:</em> Tiết kiệm số file mới, tận dụng biến toàn cục <code>run_history</code> có sẵn trong toàn bộ dự án game.<br>
+  <em>Lý do không đáng tin & bằng chứng thực tế:</em> Soi mã nguồn <code>GameManager.gd:7, 195, 219, 261</code> cho thấy mọi mutator đều phát tín hiệu <code>saved_data_changed.emit()</code> lên Scene tree và mở file <code>user://roguelike_save_data.json</code> để ghi đè. Trong kiến trúc Godot Engine, việc phát tín hiệu UI từ 120 luồng phụ nền (Background OS Threads) sẽ gây crash bộ nhớ đa luồng (thread unsafe), đồng thời phá hủy file lưu game thật của người dùng.
+</div>
+<div class="alert-box">
+  <strong>2. Kỹ thuật đồng bộ luồng bằng sleep ngẫu nhiên (OS.delay_usec):</strong><br>
+  <em>Biểu hiện hợp lý:</em> Thường thấy trong các hướng dẫn lập trình phân tán để mô phỏng độ trễ mạng ngẫu nhiên giữa các client.<br>
+  <em>Lý do không đáng tin & bằng chứng thực tế:</em> Dùng sleep không đảm bảo các luồng thực sự chạm vào critical section cùng một microsecond. Nếu CPU máy chấm bài bị quá tải hoặc luồng bị hệ điều hành hoãn lịch biểu, các yêu cầu sẽ dàn trải tuần tự và race condition biến mất, biến bài test thành <strong>Flaky Test</strong> (chạy lúc đỗ lúc trượt). Việc áp dụng Semaphore rào chắn giải phóng đồng loạt là giải pháp kỹ thuật bắt buộc để đảm bảo tính tái lập 100%.
+</div>
+
+</body>
+</html>

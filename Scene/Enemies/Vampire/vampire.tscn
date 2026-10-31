@@ -386,7 +386,7 @@ height = 14.0
 size = Vector2(14, 23)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1vivr"]
-size = Vector2(8.5, 23)
+size = Vector2(26, 24)
 
 [node name="Vampire" type="CharacterBody2D" unique_id=1637879376]
 script = ExtResource("1_mx0yj")
@@ -410,9 +410,10 @@ position = Vector2(-3, -8.5)
 shape = SubResource("RectangleShape2D_v5gy4")
 
 [node name="BiteHitbox" type="Area2D" parent="." unique_id=341082687]
+position = Vector2(0, -8)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BiteHitbox" unique_id=764606490]
-position = Vector2(8, -8.5)
+position = Vector2(12, 0)
 shape = SubResource("RectangleShape2D_1vivr")
 disabled = true
 

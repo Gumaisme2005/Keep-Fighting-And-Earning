@@ -1,12 +1,16 @@
 extends CharacterBody2D
 
+const BalanceData = preload("res://Scene/BalanceConfig.gd")
+@export var damage: int = 1
 @export var speed: float = 70.0
-@export var attack_range: float = 35.0 # Đến gần 35 pixel thì dừng lại vung rìu
-@export var world_item_scene: PackedScene 
+@export var attack_range: float = 20.0 # Chạy lại gần khoảng 20 pixel mới vung rìu
+@export var world_item_scene: PackedScene
 @export var loot_table: Array[ItemData] = []
-@export var drop_chance: float = 0.3 # Quái thường chỉ có 30% rớt đồ
+@export var drop_chance: float = 0.3
+var loot_seed: int = 0
 
-var hp: int = 3 
+var hp: int = 3
+var max_hp: int = 3
 var is_dead: bool = false
 var is_attacking: bool = false
 var is_active = false
@@ -17,6 +21,13 @@ var is_active = false
 var player: Node2D = null
 
 func _ready() -> void:
+	var cfg: Dictionary = BalanceData.get_enemy_stats("orc")
+	hp = int(cfg.get("hp", hp))
+	max_hp = hp
+	damage = int(cfg.get("damage", damage))
+	speed = float(cfg.get("speed", speed))
+	attack_range = float(cfg.get("attack_range", attack_range))
+	drop_chance = float(cfg.get("drop_chance", drop_chance))
 	animated_sprite.play("idle")
 	axe_collision.disabled = true
 	axe_hitbox.position = Vector2(0, -7)
@@ -26,8 +37,15 @@ func _ready() -> void:
 		player = players[0]
 
 func _physics_process(_delta: float) -> void:
-	if not is_active: return
-	if is_dead or player == null or animated_sprite.animation == "hurt":
+	if not is_active:
+		return
+	if player == null or not is_instance_valid(player):
+		var players = get_tree().get_nodes_in_group("player")
+		if players.size() > 0:
+			player = players[0]
+		else:
+			return
+	if is_dead or animated_sprite.animation == "hurt":
 		return
 
 	var distance = global_position.distance_to(player.global_position)
@@ -40,72 +58,84 @@ func _physics_process(_delta: float) -> void:
 		animated_sprite.flip_h = false
 
 	if is_attacking:
-		return # Đang vung rìu thì không đi bám theo nữa
+		return
 
 	# Định hướng hitbox rìu về phía Player
 	if direction != Vector2.ZERO:
 		axe_hitbox.rotation = direction.angle()
 
-	if distance <= attack_range:
-		attack() # Kích hoạt chém
+	var tmap = get_parent()
+	var has_los: bool = (tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position))
+
+	if distance <= attack_range and has_los:
+		attack()
 	else:
-		velocity = direction * speed
+		var move_dir: Vector2 = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
+		velocity = move_dir * speed
 		move_and_slide()
 		animated_sprite.play("walk")
 
 func attack():
 	is_attacking = true
-	if player != null:
+	if player != null and is_instance_valid(player):
 		var dir = global_position.direction_to(player.global_position)
 		if dir != Vector2.ZERO:
 			axe_hitbox.rotation = dir.angle()
 	animated_sprite.play("attack")
-	axe_collision.disabled = false # Bật sát thương rìu
+	axe_collision.disabled = false
 
 func take_damage(damage_amount: int) -> void:
-	# CƠ CHẾ BẤT TỬ: Nếu chưa được kích hoạt (cửa chưa đóng) thì miễn nhiễm sát thương!
-	if not is_active: 
+	if not is_active or is_dead:
 		return
-	if is_dead: return 
-	
+
 	hp -= damage_amount
+	_spawn_damage_popup(damage_amount)
 	if hp > 0:
 		animated_sprite.play("hurt")
 		is_attacking = false
 		axe_collision.set_deferred("disabled", true)
 	else:
 		is_dead = true
+		if get_node_or_null("/root/GameManager") != null:
+			GameManager.register_enemy_kill()
 		animated_sprite.play("death")
 		$Hurtbox/CollisionShape2D.set_deferred("disabled", true)
 		$CollisionShape2D.set_deferred("disabled", true)
 		axe_collision.set_deferred("disabled", true)
 
+func _spawn_damage_popup(amount: int) -> void:
+	if get_tree():
+		get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -20), amount, Color(1.0, 0.9, 0.3))
+
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if animated_sprite.animation == "death":
 		drop_loot()
-		queue_free() 
+		queue_free()
 	elif animated_sprite.animation == "hurt":
 		if not is_dead:
-			animated_sprite.play("idle") 
-	elif animated_sprite.animation == "attack": # Khai báo khi chém xong
+			animated_sprite.play("idle")
+	elif animated_sprite.animation == "attack":
 		is_attacking = false
 		axe_collision.disabled = true
 		animated_sprite.play("idle")
 
-
 func _on_axe_hitbox_area_entered(area: Area2D) -> void:
-	# Nếu cái vùng Rìu vung qua tên là PlayerHurtbox
 	if area.name == "PlayerHurtbox":
-		var target = area.get_parent() # Lấy node Player
+		var target = area.get_parent()
+		var tmap = get_parent()
+		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
+			return
 		if target.has_method("take_damage"):
-			target.take_damage(1) # Trừ 1 máu
-			
-# Hàm rớt đồ
+			target.take_damage(damage)
+
 func drop_loot() -> void:
 	if world_item_scene != null and loot_table.size() > 0:
-		if randf() <= drop_chance:
-			var random_item = loot_table.pick_random()
+		var rng := RandomNumberGenerator.new()
+		rng.seed = loot_seed if loot_seed != 0 else (int(global_position.x * 911) ^ int(global_position.y * 3571))
+		if rng.randf() <= drop_chance:
+			var random_item = loot_table[rng.randi() % loot_table.size()]
 			var item_drop = world_item_scene.instantiate()
 			item_drop.item_data = random_item
-			item_drop.global_position = global_position # Rớt đúng chỗ quái chết
-			get_tree().current_scene.call_deferred("add_child", item_drop)
+			item_drop.global_position = global_position
+			var parent_node = get_parent() if get_parent() != null else get_tree().current_scene
+			parent_node.call_deferred("add_child", item_drop)
