@@ -82,3 +82,4 @@ thì bộ test suite mới thực sự đáng tin cậy.
 ### 4.3. Giới hạn kết luận trung thực
 1. **Môi trường giả lập:** 120 tác vụ được thực thi bằng 120 Native OS Threads của Godot trên cùng 1 CPU vật lý trong 1 tiến trình máy chủ/local process. Nó phản ánh chính xác hiện tượng tranh chấp tài nguyên vùng khóa (Lock Contention) và năng lực xử lý đồng thời của engine, nhưng chưa bao gồm độ trễ gói tin vật lý (network round-trip time) hay rớt mạng (packet loss).
 2. **Khả năng mở rộng:** Với thuật toán Mutex đơn khối hiện tại, hệ thống duy trì được $p95 \le 3.5\text{s}$ khi I/O đĩa dưới $70\text{ ms}$. Nếu mở rộng lên hàng nghìn reviewer trên môi trường phân tán thực tế, kiến trúc sẽ cần chuyển dịch sang cơ chế Phân đoạn khóa theo ID (Sharded Locks / Key-based Mutexes) hoặc Khóa lạc quan (Optimistic Concurrency Control với cơ sở dữ liệu phân tán).
+

@@ -222,7 +222,7 @@
 
 <p><strong>1.3. Non-Functional Constraints (NFR):</strong></p>
 <ul>
-  <li><strong>NFR1 (Hiệu năng):</strong> Mức tải kiểm chứng 120 tác vụ đồng thời; độ trễ phân vị 95 ($p95$) từ lúc phát lệnh đến khi hoàn tất không quá $3.5	ext{ giây}$.</li>
+  <li><strong>NFR1 (Hiệu năng):</strong> Mức tải kiểm chứng 120 tác vụ đồng thời; độ trễ phân vị 95 (p95) từ lúc phát lệnh đến khi hoàn tất không quá 3.5 giây.</li>
   <li><strong>NFR2 (Tính ổn định / Anti-flaky):</strong> Test không phụ thuộc vào may rủi lịch biểu CPU; chạy lặp lại 30 lần liên tục phải cho kết quả đồng nhất 100%.</li>
   <li><strong>NFR3 (Tương thích Engine):</strong> Tương thích hoàn toàn với Godot 4.3 (phiên bản ghim trong GitHub CI) và Godot 4.7.2 local.</li>
   <li><strong>NFR4 (Bảo mật đầu vào):</strong> Áp dụng nguyên tắc Deny-by-default cho mọi vai trò lạ; mọi chuỗi input được làm sạch qua <code>sanitize_seed/sanitize_note</code>; chặn DoS bộ nhớ trần 500 bản ghi.</li>
@@ -304,15 +304,15 @@
   <tr><td><strong>TC-16b</strong></td><td>Failure-path: Lỗi lưu đĩa đồng thời</td><td>Concurrency/Fail</td><td>120 luồng approve, 5 lần lưu đĩa đầu tiên thất bại</td><td>Đúng 5 <code>PERSIST_FAILED</code>, 1 <code>OK</code>, 114 <code>ALREADY</code></td><td>P0</td></tr>
   <tr><td><strong>TC-17</strong></td><td>Race condition: Tạo trùng ID</td><td>Concurrency</td><td>120 thread cùng gọi <code>add_record</code> chung 1 ID</td><td>Đúng 1 <code>OK</code>, 119 <code>DUPLICATE</code>; kho có đúng 1 record</td><td>P1</td></tr>
   <tr><td><strong>TC-18</strong></td><td>Lost Update: Sửa đồng thời</td><td>Concurrency</td><td>120 thread cùng gọi <code>update_note</code> trên 1 record</td><td>Revision cuối = 121; 120 revision trả về khác nhau</td><td>P0</td></tr>
-  <tr><td><strong>TC-19</strong></td><td>NFR4: Làm sạch ghi chú (Negative)</td><td>Unit</td><td>Note chứa <code>&lt;script&gt;</code>, ký tự điều khiển, > 80 ký tự</td><td>Lọc sạch mã độc; độ dài cắt chuẩn $\le 80$</td><td>P1</td></tr>
+  <tr><td><strong>TC-19</strong></td><td>NFR4: Làm sạch ghi chú (Negative)</td><td>Unit</td><td>Note chứa <code>&lt;script&gt;</code>, ký tự điều khiển, > 80 ký tự</td><td>Lọc sạch mã độc; độ dài cắt chuẩn ≤ 80</td><td>P1</td></tr>
   <tr><td><strong>TC-20</strong></td><td>NFR4: Giới hạn trần bản ghi (Negative)</td><td>Unit</td><td>Thêm 500 bản ghi, sau đó thêm bản ghi thứ 501</td><td>Bản ghi 501 nhận <code>INVALID_INPUT</code>; kho cố định 500</td><td>P2</td></tr>
   <tr><td><strong>TC-21</strong></td><td>Lifecycle: Player xóa bản ghi</td><td>Unit</td><td>Player gọi xóa record đã approve; kiểm tra ID sai</td><td>Xóa thành công; thu hồi approval; bắt lỗi ID lạ</td><td>P1</td></tr>
   <tr><td><strong>GUARD</strong></td><td>Bảo vệ dữ liệu gốc repository</td><td>Guard/Integrity</td><td>So sánh SHA-256 <code>GameManager.saved_seeds</code> trước/sau</td><td>Hash giống nhau 100%; không làm bẩn repo thật</td><td>P0</td></tr>
 </table>
 
-<h2>4. Test-First Implementation: Quá Trình Đổi Màu RED $	o$ GREEN</h2>
+<h2>4. Test-First Implementation: Quá Trình Đổi Màu RED → GREEN</h2>
 <p><strong>4.1. Bản thảo v0 và Bằng chứng Thất bại Đúng Lý Do (RED Evidence):</strong></p>
-<p>Tại commit <code>14982e4</code>, bản nháp v0 chỉ khóa Mutex trong từng hàm accessor nội bộ riêng rẽ (<code>_read_record</code>, <code>_write_record</code>), khiến chuỗi thao tác "Đọc $	o$ Kiểm tra $	o$ Ghi" (Check-then-act) bị đan xen giữa các luồng. Kết quả chạy test trên v0 ghi nhận <strong>7 FAILED / 14 PASSED</strong> (xem [`01_red_v0.log`](docs/vt075/evidence/01_red_v0.log)):</p>
+<p>Tại commit <code>14982e4</code>, bản nháp v0 chỉ khóa Mutex trong từng hàm accessor nội bộ riêng rẽ (<code>_read_record</code>, <code>_write_record</code>), khiến chuỗi thao tác "Đọc → Kiểm tra → Ghi" (Check-then-act) bị đan xen giữa các luồng. Kết quả chạy test trên v0 ghi nhận <strong>7 FAILED / 14 PASSED</strong> (xem [`01_red_v0.log`](docs/vt075/evidence/01_red_v0.log)):</p>
 <pre>
 [FAIL] TC-13 AC4 (concurrency): 120 reviewer cung approve -> dung 1 OK, 119 ALREADY_APPROVED - { "OK": 120 }
 [FAIL] TC-13b AC4 (concurrency, cap toi thieu): 100 vong x 2 luong -> moi vong dung 1 OK - bad_rounds=100
@@ -353,19 +353,19 @@
 </ul>
 
 <p><strong>5.3. Kiểm Tra Flaky Tests (30 Vòng Lặp Liên Tiếp):</strong></p>
-<p>Chạy script <code>flaky_runs.py</code> 30 lần liên tục (mỗi lần kích hoạt 120 luồng đồng thời): <strong>30/30 lần đạt ALL-GREEN (0 ca lỗi, 0 lần timeout)</strong>. Độ trễ $p95$ dao động ổn định trong khoảng $79.4	ext{ms} - 97.8	ext{ms}$. Hệ thống cũng vượt qua thử nghiệm đảo ngược thứ tự test (<code>VT075_ORDER=reverse</code>) và xáo trộn ngẫu nhiên (<code>shuffle:&lt;seed&gt;</code>).</p>
+<p>Chạy script <code>flaky_runs.py</code> 30 lần liên tục (mỗi lần kích hoạt 120 luồng đồng thời): <strong>30/30 lần đạt ALL-GREEN (0 ca lỗi, 0 lần timeout)</strong>. Độ trễ p95 dao động ổn định trong khoảng 79.4ms – 97.8ms. Hệ thống cũng vượt qua thử nghiệm đảo ngược thứ tự test (<code>VT075_ORDER=reverse</code>) và xáo trộn ngẫu nhiên (<code>shuffle:&lt;seed&gt;</code>).</p>
 
-<h2>6. Thí Nghiệm Kiểm Chứng Tải: 120 Tác Vụ Đồng Thời & Mục Tiêu p95 $\le$ 3.5s</h2>
-<p>Harness kiểm chứng tải <code>tests/vt075/load_p95.gd</code> giải phóng đồng loạt 120 Thread vật lý qua Semaphore. Đo đạc thực nghiệm ghi file JSON 500 bản ghi thực tế trên đĩa (median = $0.42	ext{ms}$):</p>
+<h2>6. Thí Nghiệm Kiểm Chứng Tải: 120 Tác Vụ Đồng Thời & Mục Tiêu p95 ≤ 3.5s</h2>
+<p>Harness kiểm chứng tải <code>tests/vt075/load_p95.gd</code> giải phóng đồng loạt 120 Thread vật lý qua Semaphore. Đo đạc thực nghiệm ghi file JSON 500 bản ghi thực tế trên đĩa (median = 0.42ms):</p>
 <table>
   <tr>
     <th style="width:25%">Kịch bản kiểm nghiệm</th>
     <th style="width:15%">Độ trễ mô phỏng</th>
     <th style="width:12%">Số mẫu đo</th>
-    <th style="width:12%">$p50$ (ms)</th>
-    <th style="width:12%">$p95$ (ms)</th>
+    <th style="width:12%">p50 (ms)</th>
+    <th style="width:12%">p95 (ms)</th>
     <th style="width:12%">Max (ms)</th>
-    <th style="width:12%">Đánh giá ($p95 \le 3.5	ext{s}$)</th>
+    <th style="width:12%">Đánh giá (p95 ≤ 3.5s)</th>
   </tr>
   <tr><td><strong>1. No-delay</strong></td><td>0 ms</td><td>2400</td><td>4.8</td><td><strong>9.2</strong></td><td>12.4</td><td><span class="badge-pass">ĐẠT (VƯỢT TRỘI)</span></td></tr>
   <tr><td><strong>2. Calibrated real write</strong></td><td>1.77 ms</td><td>2400</td><td>67.7</td><td><strong>192.6</strong></td><td>715.0</td><td><span class="badge-pass">ĐẠT (192.6ms &lt;&lt; 3.5s)</span></td></tr>
@@ -392,10 +392,10 @@
 
 <h2>8. Đoạn Văn Suy Ngẫm Kỹ Thuật (Engineering Reflection — 298 Từ)</h2>
 <p>
-Quá trình áp dụng nghiêm ngặt chu trình kỹ nghệ phần mềm <strong>Spec $	o$ Test $	o$ AI-assisted Change $	o$ Verify $	o$ Review</strong> trên biến thể VT-075 đã mang lại những bài học sâu sắc về kiểm thử tự động và kiểm soát chất lượng.
+Quá trình áp dụng nghiêm ngặt chu trình kỹ nghệ phần mềm <strong>Spec → Test → AI-assisted Change → Verify → Review</strong> trên biến thể VT-075 đã mang lại những bài học sâu sắc về kiểm thử tự động và kiểm soát chất lượng.
 </p>
 <p>
-Yếu tố quan trọng nhất giúp gia tăng mức độ tự tin (<strong>confidence</strong>) vào hệ thống là việc áp dụng phương pháp <strong>Test-First song hành cùng Mutation Testing</strong>. Thay vì chỉ nhìn vào chỉ số độ phủ dòng (Line Coverage đạt 96.3%), việc cố tình tiêm lỗi bắt buộc $M1$ (bỏ kiểm tra quyền của Reviewer) lên nhánh tạm thời và quan sát thấy bộ test lập tức đánh chặn thành công đã chứng minh test suite có "răng nanh" thực sự. Hơn thế nữa, bài học từ hai mutant sống sót $M9$ (bỏ lọc mã độc) và $M10$ (bỏ chặn trần bộ nhớ) ở Vòng 1 đã cảnh tỉnh tư duy: nếu không có mutation testing, lập trình viên rất dễ rơi vào ảo tưởng an toàn của con số coverage cao. Cùng với đó, việc thiết kế cổng xuất phát Semaphore cho 120 luồng đồng thời đã loại bỏ hoàn toàn tính chất hên xui của scheduler, giúp bộ test chạy ổn định qua hàng chục vòng lặp mà không gặp bất kỳ flaky test nào.
+Yếu tố quan trọng nhất giúp gia tăng mức độ tự tin (<strong>confidence</strong>) vào hệ thống là việc áp dụng phương pháp <strong>Test-First song hành cùng Mutation Testing</strong>. Thay vì chỉ nhìn vào chỉ số độ phủ dòng (Line Coverage đạt 96.3%), việc cố tình tiêm lỗi bắt buộc M1 (bỏ kiểm tra quyền của Reviewer) lên nhánh tạm thời và quan sát thấy bộ test lập tức đánh chặn thành công đã chứng minh test suite có "răng nanh" thực sự. Hơn thế nữa, bài học từ hai mutant sống sót M9 (bỏ lọc mã độc) và M10 (bỏ chặn trần bộ nhớ) ở Vòng 1 đã cảnh tỉnh tư duy: nếu không có mutation testing, lập trình viên rất dễ rơi vào ảo tưởng an toàn của con số coverage cao. Cùng với đó, việc thiết kế cổng xuất phát Semaphore cho 120 luồng đồng thời đã loại bỏ hoàn toàn tính chất hên xui của scheduler, giúp bộ test chạy ổn định qua hàng chục vòng lặp mà không gặp bất kỳ flaky test nào.
 </p>
 <p>
 Tuy nhiên, rủi ro tồn dư (<strong>residual risk</strong>) vẫn chưa được chứng minh nằm ở chỗ: toàn bộ 120 tác vụ đồng thời hiện mới được kiểm chứng trên các luồng hệ điều hành nội bộ (In-Process OS Threads) chia sẻ chung một Mutex đệ quy trên một tiến trình duy nhất. Hệ thống chưa hề trải qua thử nghiệm rớt gói tin mạng (Packet Loss), phân mảnh mạng (Network Partitioning) hoặc tắc nghẽn I/O khi nhiều tiến trình độc lập cùng tranh chấp một file vật lý trên hệ điều hành.

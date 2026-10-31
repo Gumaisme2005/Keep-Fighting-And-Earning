@@ -62,7 +62,7 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 echo.
-echo [5/5] Chay VT-075 Reviewer Role & Concurrency Tests (24/24 PASS)...
+echo [5/5] Chay VT-075 Reviewer Role va Concurrency Tests (24/24 PASS)...
 "!GODOT_BIN!" --headless --path . "res://tests/test_reviewer_concurrency.tscn"
 if !ERRORLEVEL! NEQ 0 (
     echo [THAT BAI] VT-075 Concurrency Tests gap loi!
