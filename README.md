@@ -81,7 +81,7 @@ Keep-Fighting-And-Earning/
 - **Cổng không gian (`portal.gd`):** Xuất hiện tại phòng Boss sau khi hạ gục Trùm, cho phép dịch chuyển sang màn kế tiếp với độ thử thách tăng dần.
 
 ### Cơ chế Máu, Giáp & Khung hình bất tử (I-Frames)
-- **Hấp thụ sát thương:** Sát thương nhận vào sẽ trừ vào Giáp trước. Chỉ khi Giap = 0, sát thương mới trừ trực tiếp vào Máu.
+- **Hấp thụ sát thương:** Sát thương nhận vào sẽ trừ vào Giáp trước. Chỉ khi Giáp = 0, sát thương mới trừ trực tiếp vào Máu.
 - **Hồi phục Giáp:** Sau **4.0 giây** không nhận sát thương, giáp tự động hồi phục dần với tốc độ **1 điểm/giây**.
 - **Khung hình bất tử (I-Frames):** Khi bị trúng đòn hoặc khi kích hoạt tuyệt kỹ lướt/nhảy, nhân vật được bất tử trong **0.75 giây** (nhấp nháy hiển thị), loại bỏ nguy cơ bị dồn sát thương liên tục.
 
@@ -109,7 +109,7 @@ Keep-Fighting-And-Earning/
 ### Túi đồ, Trang bị & Rơi vật phẩm
 - **Giao diện:** 16 ô túi đồ chính cùng Hotbar 9 ô thao tác nhanh (phím `1` đến `9`).
 - **Phân loại trang bị:**
-  - **Mũ (Helmet) & Áo giap (Armor):** Gia tăng chỉ số phòng thủ và mở rộng máu tối đa.
+  - **Mũ (Helmet) & Áo giáp (Armor):** Gia tăng chỉ số phòng thủ và mở rộng máu tối đa.
   - **Vũ khí (Weapon):** Gia tăng sát thương cho từng đòn tấn công.
   - **Dược phẩm (Potion):** Hồi máu tức thì hoặc tăng vĩnh viễn giới hạn sinh mệnh.
 - **Rơi đồ (Loot Drop):** Quái thường có tỷ lệ 30% rơi trang bị; rương báu mở khóa khi người chơi tiếp cận. Nhấn phím `E` để nhặt đồ rơi trên sàn.
@@ -138,7 +138,7 @@ Keep-Fighting-And-Earning/
 ## 6. Cài đặt & Khởi chạy dự án
 
 ### Yêu cầu tiên quyết
-- Cài đặt **Godot Engine 4** (phiên bản khuyên nghị từ `4.3` đến `4.7.2`).
+- Cài đặt **Godot Engine 4** (phiên bản khuyến nghị từ `4.3` đến `4.7.2`).
 
 ### Các bước thực hiện
 1. **Clone repository:**
