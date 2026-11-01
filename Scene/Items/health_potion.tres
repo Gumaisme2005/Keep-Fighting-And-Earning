@@ -9,8 +9,8 @@ region = Rect2(48, 272, 16, 16)
 
 [resource]
 script = ExtResource("1_ecocj")
-item_name = "Bình máu nhỏ"
+item_name = "Flask of Athelas"
 icon = SubResource("AtlasTexture_28578")
-description = "Hồi 2 máu cho bản thân"
+description = "Extract of Kingsfoil that restores vitality and soothes battle wounds."
 heal_amount = 2
 metadata/_custom_type_script = "uid://cfc0cqlwptxu6"

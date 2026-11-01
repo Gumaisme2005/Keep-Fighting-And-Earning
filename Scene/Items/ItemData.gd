@@ -3,10 +3,10 @@ extends Resource
 
 enum ItemType { HELMET, ARMOR, WEAPON, POTION }
 
-@export var item_name: String = "Vật phẩm mới"
+@export var item_name: String = "Ancient Relic"
 @export var type: ItemType = ItemType.POTION
 @export var icon: Texture2D
-@export_multiline var description: String = "Mô tả vật phẩm"
+@export_multiline var description: String = "A mysterious artifact from the Elder Days."
 
 @export_group("Chỉ số cộng thêm (Stats)")
 @export var damage: int = 0       # Sát thương cộng thêm (Vũ khí)

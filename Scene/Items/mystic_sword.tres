@@ -9,11 +9,10 @@ region = Rect2(48, 128, 16, 16)
 
 [resource]
 script = ExtResource("1_prmxy")
-item_name = "Kiếm tai ương"
+item_name = "Bane of Morgul"
 type = 2
 icon = SubResource("AtlasTexture_6ad7n")
-description = "+1 DMG
-+1 Giáp"
+description = "Enchanted elven blade glowing with cold wrath against the shadow, augmenting both strike and ward."
 damage = 8
 armor = 1
 metadata/_custom_type_script = "uid://cfc0cqlwptxu6"

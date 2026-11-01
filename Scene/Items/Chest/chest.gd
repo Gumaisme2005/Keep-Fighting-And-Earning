@@ -1,39 +1,37 @@
 extends Area2D
 
-# 3 biến này dùng để thiết lập rớt đồ trong bảng Inspector
-@export var world_item_scene: PackedScene 
+@export var world_item_scene: PackedScene
 @export var loot_table: Array[ItemData] = []
-@export var drop_chance: float = 1.0 # 1.0 = 100% ra đồ, 0.5 = 50% ra đồ
+@export var drop_chance: float = 1.0
+var loot_seed: int = 0
 
 @onready var anim = $AnimatedSprite2D
 var is_open = false
 
 func _ready():
-	# Vừa sinh ra, rương tự động chạy hiệu ứng đóng (idle)
 	anim.play("idle")
 
 func _on_body_entered(body):
-	# Kiểm tra nếu người chạm vào là Player và rương chưa mở
-	if body.name == "Player" and not is_open:
+	if body.is_in_group("player") and not is_open:
 		is_open = true
-		anim.play("open") # Chuyển sang 4 frame ảnh rương mở
-		
-		# Tắt vùng va chạm để rương không vô tình bị kích hoạt lại
+		if get_node_or_null("/root/AudioManager") != null:
+			AudioManager.play_sfx("pickup", 0.90, 1.00)
+		anim.play("open")
 		$CollisionShape2D.set_deferred("disabled", true)
-		
-		# Gọi hàm văng đồ ra ngoài
 		spawn_loot()
 
 func spawn_loot():
-	# Kiểm tra xem có đủ dữ liệu để rớt đồ không
 	if world_item_scene != null and loot_table.size() > 0:
-		# Lăn xúc xắc xem có trúng tỷ lệ drop_chance không
-		if randf() <= drop_chance:
-			var random_item = loot_table.pick_random() # Bốc bừa 1 món trong rương
+		var rng := RandomNumberGenerator.new()
+		if loot_seed != 0:
+			rng.seed = loot_seed
+		else:
+			rng.seed = int(global_position.x * 73856093) ^ int(global_position.y * 19349663)
+
+		if rng.randf() <= drop_chance:
+			var random_item = loot_table[rng.randi() % loot_table.size()]
 			var item_drop = world_item_scene.instantiate()
 			item_drop.item_data = random_item
-			
-			# Cho món đồ văng lệch xuống dưới rương một khoảng (20 pixel) để không bị đè hình
-			item_drop.global_position = global_position + Vector2(0, 20) 
-			
-			get_tree().current_scene.call_deferred("add_child", item_drop)
+			item_drop.global_position = global_position + Vector2(0, 20)
+			var parent_node = get_parent() if get_parent() != null else get_tree().current_scene
+			parent_node.call_deferred("add_child", item_drop)

@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://tests/test_reviewer_concurrency.gd" id="1_vt075"]
+
+[node name="TestReviewerConcurrency" type="Node"]
+script = ExtResource("1_vt075")
+

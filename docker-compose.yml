@@ -1,0 +1,17 @@
+services:
+  # Chơi game trực tiếp trên trình duyệt qua WebAssembly
+  game:
+    build:
+      context: .
+      target: web
+    container_name: keep-fighting-and-earning-web
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+  # Chạy bộ kiểm thử tự động Headless (Unit Tests & Invariants)
+  test:
+    build:
+      context: .
+      target: test
+    container_name: keep-fighting-and-earning-test

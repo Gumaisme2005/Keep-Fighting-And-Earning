@@ -9,9 +9,9 @@ region = Rect2(64, 96, 16, 16)
 
 [resource]
 script = ExtResource("2_sfnut")
-item_name = "Mũ sắt"
+item_name = "Iron Helm of Gondor"
 type = 0
 icon = SubResource("AtlasTexture_oq06l")
-description = "Tăng 1 giáp tối đa cho bản thân"
+description = "Tempered vanguard helmet granting stalwart head protection in battle."
 armor = 1
 metadata/_custom_type_script = "uid://cfc0cqlwptxu6"

@@ -1,0 +1,60 @@
+name: Godot 4 CI — Tests, Property Checks, Benchmark & Build
+
+on:
+  push:
+    branches: [ main, master, develop, "feature/**", "fix/**", "qa/**" ]
+  pull_request:
+    branches: [ main, master, develop ]
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: "4.3.0"
+
+jobs:
+  automated-tests-and-benchmark:
+    name: 🧪 Unit Tests, Property Tests & Benchmark
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Godot 4 Headless
+        uses: chickensoft-games/setup-godot@v2
+        with:
+          version: ${{ env.GODOT_VERSION }}
+          use-dotnet: false
+
+      - name: Verify Godot Version & Import Project Cache
+        run: |
+          godot --version
+          godot --headless --import
+
+      - name: 1. Run Dungeon Generator Unit Tests (UT-01 .. UT-07)
+        run: |
+          godot --headless "res://tests/test_dungeon_generator_unit.tscn"
+
+      - name: 2. Run Property-Based Tests (100 Seeds x 5 Invariants)
+        run: |
+          godot --headless "res://tests/test_dungeon_properties.tscn"
+
+      - name: 3. Run Combat Hitbox Regression Tests (TC-EN-01 .. TC-EN-05)
+        run: |
+          godot --headless "res://test_orc_battle.tscn"
+
+      - name: 4. Run Dungeon Generator Performance Benchmark
+        run: |
+          godot --headless "res://tests/benchmark_dungeon_generator.tscn" | tee benchmark_output.log
+
+      - name: 5. Run VT-075 Reviewer Role & Concurrency Tests (TC-01 .. TC-21)
+        run: |
+          godot --headless "res://tests/test_reviewer_concurrency.tscn"
+
+      - name: Upload Benchmark Evidence Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dungeon-benchmark-report
+          path: |
+            benchmark_output.log
+            docs/BENCHMARK_REPORT.md
+            docs/SEED_BUG_ISSUES.md
+

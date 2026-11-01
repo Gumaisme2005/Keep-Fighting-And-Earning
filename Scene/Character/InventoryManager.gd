@@ -14,23 +14,22 @@ var equipped_weapon: ItemData = null
 # 1. NHẶT ĐỒ VÀO TÚI
 func add_item(item: ItemData) -> bool:
 	if bag.size() >= max_slots:
-		print("Túi đồ đã đầy!")
+		print("Backpack is full!")
 		return false
 	bag.append(item)
 	inventory_changed.emit()
 	return true
 
-# 2. BẤM PHÍM SỐ (HOẶC CLICK CHUỘT) ĐỂ MẶC HOẶC DÙNG ĐỒ
+# 2. Hotkey or mouse click to equip or consume item
 func use_or_equip_item(index: int, player: Node2D) -> void:
 	if index < 0 or index >= bag.size():
-		print("⚠️ Ô phím số [", index + 1, "] đang trống!")
+		print("[INVENTORY] Hotkey slot ", index + 1, " is empty.")
 		return
 		
 	var item = bag[index]
 	
 	match item.type:
 		ItemData.ItemType.POTION:
-			# Gọi sang hàm consume_potion mới và truyền vào cả 2 chỉ số
 			if player.has_method("consume_potion"):
 				player.consume_potion(item.heal_amount, item.max_hp_bonus)
 			bag.remove_at(index)
@@ -41,8 +40,7 @@ func use_or_equip_item(index: int, player: Node2D) -> void:
 			else:
 				bag.remove_at(index)
 			equipped_helmet = item
-			# SỬA DÒNG PRINT NÀY:
-			print("🪖 Đã đội [", item.item_name, "] (+", item.armor, " Giáp, +", item.max_hp_bonus, " Máu). Tổng giáp: ", get_total_defense())
+			print("[EQUIP] Equipped ", item.item_name, " (+", item.armor, " Armor, +", item.max_hp_bonus, " HP). Total armor: ", get_total_defense())
 			equipment_changed.emit()
 			
 		ItemData.ItemType.ARMOR:
@@ -51,8 +49,7 @@ func use_or_equip_item(index: int, player: Node2D) -> void:
 			else:
 				bag.remove_at(index)
 			equipped_armor = item
-			# SỬA DÒNG PRINT NÀY:
-			print("🛡️ Đã mặc [", item.item_name, "] (+", item.armor, " Giáp, +", item.max_hp_bonus, " Máu). Tổng giáp: ", get_total_defense())
+			print("[EQUIP] Equipped ", item.item_name, " (+", item.armor, " Armor, +", item.max_hp_bonus, " HP). Total armor: ", get_total_defense())
 			equipment_changed.emit()
 			
 		ItemData.ItemType.WEAPON:
@@ -61,16 +58,14 @@ func use_or_equip_item(index: int, player: Node2D) -> void:
 			else:
 				bag.remove_at(index)
 			equipped_weapon = item
-			# SỬA DÒNG PRINT NÀY:
-			print("⚔️ Đã cầm [", item.item_name, "] (+", item.damage, " ST, +", item.max_hp_bonus, " Máu)")
+			print("[EQUIP] Equipped ", item.item_name, " (+", item.damage, " DMG, +", item.max_hp_bonus, " HP)")
 			equipment_changed.emit()
 			
 	inventory_changed.emit()
 
-# BẤM VÀO ĐỒ ĐANG MẶC ĐỂ THÁO RA CẤT VÀO TÚI
 func unequip_item(type: ItemData.ItemType) -> void:
 	if bag.size() >= max_slots:
-		print("Túi đầy, không thể tháo trang bị!")
+		print("Backpack full, cannot unequip!")
 		return
 		
 	match type:

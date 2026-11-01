@@ -1,0 +1,37 @@
+﻿# commit: a6164209cb10ef191c6663470df2e450d794ab32 (clean) branch: feat/vt-075-reviewer-concurrency
+# date: 2026-10-29 17:51:15 +07:00
+# godot: 4.7.2.stable.official.ed1daf0bf
+# cmd: godot --headless res://tests/test_reviewer_concurrency.tscn   env: 
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+==================================================================
+[VT-075 TESTS] REVIEWER ROLE + CONCURRENCY (service=res://Scene/Review/review_service.gd, persist_us=300)
+==================================================================
+  [PASS] TC-01 AC1: reviewer doc duoc list/get - records=2
+  [PASS] TC-02 AC1/INV-2: sua snapshot khong lam doi du lieu goc 
+  [PASS] TC-03 AC2 (negative): reviewer update_note -> FORBIDDEN, du lieu goc bat bien - code=FORBIDDEN
+  [PASS] TC-04 AC2 (negative): reviewer add/remove/import -> FORBIDDEN, khong co thay doi 
+  [PASS] TC-05 (negative): role la/sai hoa-thuong bi tu choi mac dinh o moi API 
+  [PASS] TC-06 AC3: approve dung revision -> OK, approval tach rieng, record khong doi 
+  [PASS] TC-07 AC3 (negative): player khong duoc approve - code=FORBIDDEN
+  [PASS] TC-08 (negative): input sai/tan cong -> INVALID_INPUT/NOT_FOUND, khong doi trang thai - [true, true, true, true, true, true, true, true, true, true]
+  [PASS] TC-09 AC3/INV-1: approve tren revision cu -> STALE_REVISION, revision moi -> OK 
+  [PASS] TC-10 INV-1: player sua sau khi duyet -> approval bi thu hoi; duyet lai o revision moi - audit=[1, 2]
+  [PASS] TC-11 AC4 (tuan tu): approve lan 2 -> ALREADY_APPROVED, nguoi duyet dau tien khong bi ghi de 
+  [PASS] TC-12 INV-2 (integration): import tu cau truc run_history, seed qua GameManager.sanitize_seed, mang goc khong doi - seed_run1=bxbseed
+  [FAIL] TC-13 AC4 (concurrency): 120 reviewer cung approve -> dung 1 OK, 119 ALREADY_APPROVED - { "OK": 120 }
+  [FAIL] TC-13b AC4 (concurrency, cap toi thieu): 100 vong x 2 luong -> moi vong dung 1 OK - bad_rounds=100 round 0: { "OK": 2 }
+  [FAIL] TC-14 AC5/INV-1 (concurrency): 80 approve + 40 update dong thoi -> approval khop revision, khong lost update, khong duyet trung revision - final_rev=2 ok_updates=40 approval={  } inv1=true distinct=false
+  [PERF] tasks=120 p50=3.0ms p95=3.9ms p99=4.0ms max=4.0ms wall=5.5ms (target p95<=3500ms)
+  [FAIL] TC-15 NFR1/INV-1/INV-2 (load 120): reviewer sua bi chan, invariant dung, p95 <= 3.5s - forbidden_ok=true updates_ok=true inv_ok=false p95=3.9ms
+  [PASS] TC-16a failure-path: luu that bai -> PERSIST_FAILED, khong luu approval, khong deadlock, thu lai duoc - first=PERSIST_FAILED retry=OK
+  [FAIL] TC-16b failure-path (concurrency): 5 lan luu dau that bai giua 120 luong -> dung 5 PERSIST_FAILED, 1 OK, 1 approval - { "PERSIST_FAILED": 5, "OK": 115 }
+  [FAIL] TC-17 (concurrency): 120 add_record cung id -> dung 1 OK, 119 DUPLICATE - { "OK": 120 }
+  [FAIL] TC-18 (concurrency): 120 update dong thoi -> revision cuoi = 121, 120 revision tra ve khac nhau (khong lost update) - final_rev=2 distinct_revs=1
+  [PASS] GUARD: GameManager.saved_seeds/run_history cua repo khong bi thay doi boi test 
+------------------------------------------------------------------
+[SUMMARY] VT-075 TESTS: 14 PASSED | 7 FAILED
+==================================================================
+
+# exit code: 1

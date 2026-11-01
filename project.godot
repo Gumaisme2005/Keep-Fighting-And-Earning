@@ -17,11 +17,20 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 [autoload]
 
 GameManager="*uid://qw6g4q4dop7n"
+AudioManager="*res://Scene/AudioManager.gd"
 
 [display]
 
+window/size/viewport_width=1152
+window/size/viewport_height=648
+window/size/window_width_override=1280
+window/size/window_height_override=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[gui]
+
+theme/custom_font="res://Assets/Fonts/Grenze-Medium.ttf"
 
 [input]
 
@@ -72,6 +81,10 @@ esc={
 
 [rendering]
 
+environment/defaults/default_clear_color=Color(0.012, 0.012, 0.018, 1)
+2d/snap/snap_2d_transforms_to_pixel=true
+2d/snap/snap_2d_vertices_to_pixel=true
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
