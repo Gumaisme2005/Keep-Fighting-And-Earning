@@ -20,7 +20,7 @@ func _ready() -> void:
 	prompt_label.add_theme_color_override("font_color", Color(1.0, 0.95, 0.4))
 	prompt_label.add_theme_color_override("font_outline_color", Color.BLACK)
 	prompt_label.add_theme_constant_override("outline_size", 3)
-	prompt_label.text = "[E] " + (item_data.item_name if item_data != null else "Nhặt đồ")
+	prompt_label.text = "Press E — " + (item_data.item_name if item_data != null else "Claim Item")
 	prompt_label.visible = false
 	add_child(prompt_label)
 
@@ -33,7 +33,7 @@ func _on_body_entered(body: Node2D) -> void:
 		player_node = body
 		sprite.modulate = Color(1.5, 1.5, 1.5)
 		if prompt_label != null:
-			prompt_label.text = "[E] " + (item_data.item_name if item_data != null else "Nhặt đồ")
+			prompt_label.text = "Press E — " + (item_data.item_name if item_data != null else "Claim Item")
 			prompt_label.visible = true
 
 func _on_body_exited(body: Node2D) -> void:
@@ -56,8 +56,8 @@ func _pickup_item() -> void:
 			if get_node_or_null("/root/AudioManager") != null:
 				AudioManager.play_sfx("pickup")
 			if get_tree():
-				get_tree().call_group("game_ui", "show_toast", "[TÚI ĐỒ] Đã nhặt: " + item_data.item_name)
+				get_tree().call_group("game_ui", "show_toast", "Acquired: " + item_data.item_name)
 			queue_free()
 		else:
 			if get_tree():
-				get_tree().call_group("game_ui", "show_toast", "[CẢNH BÁO] Túi đồ đã đầy (16/16)!")
+				get_tree().call_group("game_ui", "show_toast", "Backpack full: 16 / 16 items!")

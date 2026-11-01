@@ -47,6 +47,7 @@ var replay_banner: PanelContainer = null
 var inventory_modal: PanelContainer = null
 var equip_stats_label: Label = null
 var minimap_control: Control = null
+var minimap_panel: PanelContainer = null
 var minimap_expanded: bool = false
 var mute_btn: Button = null
 
@@ -99,8 +100,23 @@ class MinimapCanvas extends Control:
 
 		if edges != null:
 			for edge in edges:
-				if pos_to_screen.has(edge[0]) and pos_to_screen.has(edge[1]):
-					draw_line(pos_to_screen[edge[0]], pos_to_screen[edge[1]], Color(0.45, 0.52, 0.65, 0.85), 2.5)
+				var u: Vector2i = edge[0]
+				var v: Vector2i = edge[1]
+				var idx_u: int = positions.find(u)
+				var idx_v: int = positions.find(v)
+				var u_vis: bool = visited != null and visited.has(idx_u)
+				var v_vis: bool = visited != null and visited.has(idx_v)
+				if u_vis and v_vis:
+					if pos_to_screen.has(u) and pos_to_screen.has(v):
+						draw_line(pos_to_screen[u], pos_to_screen[v], Color(0.45, 0.52, 0.65, 0.85), 2.5)
+				elif u_vis and not v_vis:
+					if pos_to_screen.has(u) and pos_to_screen.has(v):
+						var mid: Vector2 = pos_to_screen[u].lerp(pos_to_screen[v], 0.42)
+						draw_line(pos_to_screen[u], mid, Color(0.35, 0.42, 0.52, 0.45), 2.0)
+				elif v_vis and not u_vis:
+					if pos_to_screen.has(u) and pos_to_screen.has(v):
+						var mid: Vector2 = pos_to_screen[v].lerp(pos_to_screen[u], 0.42)
+						draw_line(pos_to_screen[v], mid, Color(0.35, 0.42, 0.52, 0.45), 2.0)
 
 		var current_room_idx: int = -1
 		if tilemap.has_method("get_player_room_index"):
@@ -109,6 +125,10 @@ class MinimapCanvas extends Control:
 		var pulse: float = (sin(Time.get_ticks_msec() * 0.008) + 1.0) * 0.5
 		var room_box := Vector2(step * 0.66, step * 0.66)
 		for i in range(positions.size()):
+			# Sương mù Đế Chế (Fog of War): Phòng chưa đặt chân tới thì hoàn toàn là màn đêm đen
+			if visited == null or not visited.has(i):
+				continue
+
 			var gp: Vector2i = positions[i]
 			var center: Vector2 = pos_to_screen[gp]
 			var rect := Rect2(center - room_box * 0.5, room_box)
@@ -127,7 +147,7 @@ class MinimapCanvas extends Control:
 						col = Color(1.0, 0.55, 0.15)
 					elif managers[i].is_cleared:
 						col = Color(0.25, 0.68, 0.95)
-					elif visited != null and visited.has(i):
+					elif visited.has(i):
 						col = Color(0.55, 0.62, 0.72)
 
 			draw_rect(rect, col, true)
@@ -178,54 +198,51 @@ func _build_enhanced_ui() -> void:
 	# 1. Khung trạng thái Soul Knight ở góc trên bên trái
 	var stats_row := HBoxContainer.new()
 	stats_row.add_theme_constant_override("separation", 4)
-	stats_row.add_child(UITheme.create_icon_rect("sword", 10))
 	stats_summary_label = Label.new()
-	stats_summary_label.add_theme_font_size_override("font_size", 8)
-	stats_summary_label.add_theme_color_override("font_color", Color(0.98, 0.92, 0.72))
-	stats_summary_label.add_theme_color_override("font_outline_color", Color.BLACK)
-	stats_summary_label.add_theme_constant_override("outline_size", 3)
-	stats_summary_label.text = "ST: 1  |  Giáp: 4/4  |  Máu: 4/4"
+	stats_summary_label.add_theme_font_size_override("font_size", 9)
+	stats_summary_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_GOLD)
+	stats_summary_label.add_theme_color_override("font_outline_color", Color(0.08, 0.08, 0.12, 0.95))
+	stats_summary_label.add_theme_constant_override("outline_size", 2)
+	stats_summary_label.text = "DMG: 1  •  Armor: 4/4  •  HP: 4/4"
 	stats_row.add_child(stats_summary_label)
 	$HUD/VBoxContainer.add_child(stats_row)
 
-	# 2. Panel Góc Trên Phải: Tầng, Hạ gục, Seed & Minimap
+	# 2. Panel Góc Trên Phải: Tầng, Hạ gục, Seed & Phím điều khiển nhanh
 	var top_right := VBoxContainer.new()
 	top_right.anchor_left = 1.0
 	top_right.anchor_right = 1.0
 	top_right.anchor_top = 0.0
 	top_right.anchor_bottom = 0.0
-	top_right.offset_left = -225.0
-	top_right.offset_right = -10.0
+	top_right.offset_left = -285.0
+	top_right.offset_right = -12.0
 	top_right.offset_top = 10.0
-	top_right.offset_bottom = 250.0
+	top_right.offset_bottom = 115.0
 	top_right.add_theme_constant_override("separation", 6)
 	add_child(top_right)
 
 	var run_info_panel := PanelContainer.new()
-	run_info_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.06, 0.08, 0.13, 0.92), Color(0.76, 0.60, 0.28, 0.92), 2, 4, 8, 6))
+	run_info_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.06, 0.08, 0.13, 0.94), UITheme.COLOR_GOLD_BORDER, 2, 4, 8, 6))
 	top_right.add_child(run_info_panel)
 
 	var info_vbox := VBoxContainer.new()
-	info_vbox.add_theme_constant_override("separation", 5)
+	info_vbox.add_theme_constant_override("separation", 4)
 	run_info_panel.add_child(info_vbox)
 
 	var flr_row := HBoxContainer.new()
 	flr_row.add_theme_constant_override("separation", 6)
-	flr_row.add_child(UITheme.create_icon_rect("trophy", 16))
 	floor_kills_label = Label.new()
 	floor_kills_label.add_theme_font_size_override("font_size", 12)
-	floor_kills_label.add_theme_color_override("font_color", Color(1.0, 0.86, 0.36))
-	floor_kills_label.text = "Tầng 1   |   Hạ gục: 0"
+	floor_kills_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_GOLD)
+	floor_kills_label.text = "Floor 1   •   Slain: 0"
 	flr_row.add_child(floor_kills_label)
 	info_vbox.add_child(flr_row)
 
 	var seed_row := HBoxContainer.new()
 	seed_row.add_theme_constant_override("separation", 6)
-	seed_row.add_child(UITheme.create_icon_rect("seed", 16))
 	seed_label = Label.new()
 	seed_label.add_theme_font_size_override("font_size", 11)
-	seed_label.add_theme_color_override("font_color", Color(0.68, 0.94, 0.85))
-	seed_label.text = "Seed: ALOALO1234"
+	seed_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
+	seed_label.text = "Seed: MORIA-EXPEDITION"
 	seed_row.add_child(seed_label)
 	info_vbox.add_child(seed_row)
 
@@ -233,34 +250,63 @@ func _build_enhanced_ui() -> void:
 	seed_btn_hbox.add_theme_constant_override("separation", 4)
 	info_vbox.add_child(seed_btn_hbox)
 
-	var copy_btn := UITheme.create_button("Copy", "scroll_blue", Vector2(54, 24), Color(0.48, 0.78, 0.98), Color(0.12, 0.16, 0.24, 0.95), 10)
+	var copy_btn := UITheme.create_button("Copy", "", Vector2(0, 24), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 10, 5, 4)
+	copy_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	copy_btn.focus_mode = Control.FOCUS_NONE
 	copy_btn.pressed.connect(_on_copy_seed_pressed)
 	seed_btn_hbox.add_child(copy_btn)
 
-	var save_seed_btn := UITheme.create_button("Lưu", "chest", Vector2(54, 24), Color(0.92, 0.74, 0.32), Color(0.18, 0.15, 0.12, 0.95), 10)
+	var save_seed_btn := UITheme.create_button("Save", "", Vector2(0, 24), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 10, 5, 4)
+	save_seed_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	save_seed_btn.focus_mode = Control.FOCUS_NONE
 	save_seed_btn.pressed.connect(_on_save_seed_pressed)
 	seed_btn_hbox.add_child(save_seed_btn)
 
-	var map_btn := UITheme.create_button("[M]", "scroll_gold", Vector2(44, 24), Color(0.65, 0.88, 0.65), Color(0.12, 0.18, 0.16, 0.95), 10)
+	var map_btn := UITheme.create_button("Map", "", Vector2(0, 24), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 10, 5, 4)
+	map_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	map_btn.focus_mode = Control.FOCUS_NONE
 	map_btn.pressed.connect(_toggle_minimap_size)
 	seed_btn_hbox.add_child(map_btn)
 
 	var is_muted_now: bool = (get_node_or_null("/root/AudioManager") != null and AudioManager.is_muted)
-	mute_btn = UITheme.create_button("[N]", "speaker_off" if is_muted_now else "speaker_on", Vector2(44, 24), Color(0.88, 0.72, 0.98), Color(0.16, 0.12, 0.22, 0.95), 10)
+	mute_btn = UITheme.create_button("Audio", "", Vector2(0, 24), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 11, 5, 4)
+	mute_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	mute_btn.focus_mode = Control.FOCUS_NONE
-	mute_btn.tooltip_text = "Bật / Tắt Nhạc nền & Âm thanh (Phím N)"
+	mute_btn.tooltip_text = "Toggle Sound & Music"
 	mute_btn.pressed.connect(_on_toggle_mute_pressed)
 	seed_btn_hbox.add_child(mute_btn)
 
-	minimap_control = MinimapCanvas.new()
-	minimap_control.custom_minimum_size = Vector2(205, 132)
-	minimap_control.tooltip_text = "Bản đồ Hầm ngục:\n[Xanh lá] Xuất phát | [Xanh dương] Đã dọn | [Cam] Đang giao tranh | [Vàng] Kho báu | [Đỏ] Phòng Boss\n(Nhấn phím M để phóng to / thu nhỏ)"
-	top_right.add_child(minimap_control)
+	# 3. Minimap Góc Dưới Phía Bên Phải
+	minimap_panel = PanelContainer.new()
+	minimap_panel.name = "MinimapPanel"
+	minimap_panel.anchor_left = 1.0
+	minimap_panel.anchor_right = 1.0
+	minimap_panel.anchor_top = 1.0
+	minimap_panel.anchor_bottom = 1.0
+	minimap_panel.offset_left = -195.0
+	minimap_panel.offset_right = -10.0
+	minimap_panel.offset_top = -158.0
+	minimap_panel.offset_bottom = -10.0
+	minimap_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.06, 0.08, 0.13, 0.94), UITheme.COLOR_GOLD_BORDER, 2, 4, 4, 4))
+	add_child(minimap_panel)
 
-	# 3. Thanh Máu Boss ở Chính Giữa Phía Trên
+	var mm_vbox := VBoxContainer.new()
+	mm_vbox.add_theme_constant_override("separation", 2)
+	minimap_panel.add_child(mm_vbox)
+
+	var mm_title := Label.new()
+	UITheme.style_header_label(mm_title, 11, UITheme.COLOR_TEXT_GOLD)
+	mm_title.text = "DUNGEON MAP"
+	mm_vbox.add_child(mm_title)
+
+	minimap_control = MinimapCanvas.new()
+	minimap_control.custom_minimum_size = Vector2(177, 122)
+	minimap_control.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	minimap_control.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	minimap_control.tooltip_text = "Dungeon Map:\nGreen: Entrance • Blue: Cleared • Orange: Combat • Gold: Treasure • Red: Boss Lair\nPress M to expand or collapse"
+	mm_vbox.add_child(minimap_control)
+
+	# 4. Thanh Máu Boss ở Chính Giữa Phía Trên
 	boss_panel = PanelContainer.new()
 	boss_panel.anchor_left = 0.5
 	boss_panel.anchor_right = 0.5
@@ -281,14 +327,11 @@ func _build_enhanced_ui() -> void:
 	var boss_header := HBoxContainer.new()
 	boss_header.alignment = BoxContainer.ALIGNMENT_CENTER
 	boss_header.add_theme_constant_override("separation", 8)
-	boss_header.add_child(UITheme.create_icon_rect("skull", 18))
 	boss_name_label = Label.new()
 	boss_name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	boss_name_label.add_theme_font_size_override("font_size", 13)
-	boss_name_label.add_theme_color_override("font_color", Color(1.0, 0.38, 0.38))
+	UITheme.style_header_label(boss_name_label, 14, Color(1.0, 0.38, 0.38))
 	boss_name_label.text = "BOSS"
 	boss_header.add_child(boss_name_label)
-	boss_header.add_child(UITheme.create_icon_rect("skull", 18))
 	boss_vbox.add_child(boss_header)
 
 	boss_hp_bar = ProgressBar.new()
@@ -310,8 +353,8 @@ func _build_enhanced_ui() -> void:
 	boss_hp_text.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	boss_hp_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	boss_hp_text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	boss_hp_text.add_theme_font_size_override("font_size", 10)
-	boss_hp_text.text = "30 / 30 (Phase 1)"
+	UITheme.style_body_label(boss_hp_text, 12, Color.WHITE)
+	boss_hp_text.text = "30 / 30 • Phase 1"
 	boss_hp_bar.add_child(boss_hp_text)
 
 	# 4. Thanh Kỹ Năng (Q / Chuột Phải) & Nút Mở Túi Đồ dưới đáy màn hình
@@ -329,33 +372,31 @@ func _build_enhanced_ui() -> void:
 	add_child(bottom_bar)
 
 	var q_panel := PanelContainer.new()
-	q_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.08, 0.10, 0.16, 0.92), Color(0.42, 0.78, 0.96, 0.9), 2, 4, 10, 5))
+	q_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_DARK, UITheme.COLOR_GOLD_BORDER, 2, 4, 10, 5))
 	bottom_bar.add_child(q_panel)
 	var q_hbox := HBoxContainer.new()
 	q_hbox.add_theme_constant_override("separation", 6)
-	q_hbox.add_child(UITheme.create_icon_rect("skill_slash", 16))
 	skill_q_label = Label.new()
 	skill_q_label.add_theme_font_size_override("font_size", 11)
-	skill_q_label.add_theme_color_override("font_color", Color(0.45, 0.95, 1.0))
-	skill_q_label.text = "Kỹ năng [Q]: SẴN SÀNG"
+	skill_q_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_GOLD)
+	skill_q_label.text = "Skill Q: READY"
 	q_hbox.add_child(skill_q_label)
 	q_panel.add_child(q_hbox)
 
 	skill_rmb_panel = PanelContainer.new()
-	skill_rmb_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.10, 0.08, 0.16, 0.92), Color(0.92, 0.68, 0.32, 0.9), 2, 4, 10, 5))
+	skill_rmb_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_DARK, UITheme.COLOR_GOLD_BORDER, 2, 4, 10, 5))
 	skill_rmb_panel.visible = false
 	bottom_bar.add_child(skill_rmb_panel)
 	var rmb_hbox := HBoxContainer.new()
 	rmb_hbox.add_theme_constant_override("separation", 6)
-	rmb_hbox.add_child(UITheme.create_icon_rect("skill_stealth", 16))
 	skill_rmb_label = Label.new()
 	skill_rmb_label.add_theme_font_size_override("font_size", 11)
-	skill_rmb_label.add_theme_color_override("font_color", Color(1.0, 0.78, 0.35))
-	skill_rmb_label.text = "[Chuột Phải]: SẴN SÀNG"
+	skill_rmb_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_GOLD)
+	skill_rmb_label.text = "Right Click: READY"
 	rmb_hbox.add_child(skill_rmb_label)
 	skill_rmb_panel.add_child(rmb_hbox)
 
-	bag_button = UITheme.create_button("Túi đồ & Trang bị [I]", "bag", Vector2(180, 28), Color(0.88, 0.72, 0.32), Color(0.14, 0.15, 0.22, 0.95), 11)
+	bag_button = UITheme.create_button("Inventory — Press I", "", Vector2(180, 28), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 11)
 	bag_button.focus_mode = Control.FOCUS_NONE
 	bag_button.pressed.connect(toggle_inventory_modal)
 	bottom_bar.add_child(bag_button)
@@ -380,9 +421,6 @@ func _build_enhanced_ui() -> void:
 	banner_hbox.add_theme_constant_override("separation", 10)
 	banner_hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	banner_panel.add_child(banner_hbox)
-
-	banner_icon = UITheme.create_icon_rect("sword_royal", 22)
-	banner_hbox.add_child(banner_icon)
 
 	banner_label = Label.new()
 	banner_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -429,23 +467,21 @@ func _build_enhanced_ui() -> void:
 	replay_hbox.add_theme_constant_override("separation", 10)
 	replay_banner.add_child(replay_hbox)
 
-	replay_hbox.add_child(UITheme.create_icon_rect("crystal", 18))
 	var replay_lbl := Label.new()
-	replay_lbl.text = "ĐANG PHÁT REPLAY RUN (60HZ)"
-	replay_lbl.add_theme_font_size_override("font_size", 12)
-	replay_lbl.add_theme_color_override("font_color", Color(0.95, 0.78, 1.0))
+	replay_lbl.text = "REPLAYING COMBAT CHRONICLES"
+	UITheme.style_header_label(replay_lbl, 13, Color(0.95, 0.78, 1.0))
 	replay_hbox.add_child(replay_lbl)
 
-	var stop_replay_btn := UITheme.create_button("Chuyển sang Tự Chơi", "stop", Vector2(150, 26), Color(0.95, 0.75, 0.35), Color(0.22, 0.14, 0.28, 0.95), 10)
+	var stop_replay_btn := UITheme.create_button("Take Control", "", Vector2(160, 28), Color(0.95, 0.75, 0.35), Color(0.22, 0.14, 0.28, 0.95), 11)
 	stop_replay_btn.pressed.connect(func():
 		if get_node_or_null("/root/GameManager") != null:
 			GameManager.is_replaying = false
 		replay_banner.visible = false
-		show_toast("Đã chuyển sang chế độ điều khiển trực tiếp!")
+		show_toast("Switched to direct control")
 	)
 	replay_hbox.add_child(stop_replay_btn)
 
-	# 7. Cửa sổ Túi đồ 16 ô & 3 ô Trang bị (Inventory Modal)
+	# 7. Cửa sổ Hành trang & Trang bị
 	_build_inventory_modal()
 
 func _build_inventory_modal() -> void:
@@ -469,11 +505,13 @@ func _build_inventory_modal() -> void:
 	var header_hbox := HBoxContainer.new()
 	root_vbox.add_child(header_hbox)
 
-	var title_box := UITheme.create_icon_header("bag", "TÚI ĐỒ (16 Ô) & TRANG BỊ NHÂN VẬT", 14, Color(1.0, 0.86, 0.35), 20)
-	title_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	header_hbox.add_child(title_box)
+	var title_lbl := Label.new()
+	title_lbl.text = "EQUIPMENT & INVENTORY"
+	UITheme.style_header_label(title_lbl, 15, Color(1.0, 0.86, 0.35))
+	title_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header_hbox.add_child(title_lbl)
 
-	var close_btn := UITheme.create_button("Đóng [I]", "close", Vector2(86, 28), Color(0.85, 0.4, 0.4), Color(0.20, 0.12, 0.14, 0.96), 11)
+	var close_btn := UITheme.create_button("Close", "", Vector2(86, 28), Color(0.85, 0.4, 0.4), Color(0.20, 0.12, 0.14, 0.96), 12)
 	close_btn.pressed.connect(toggle_inventory_modal)
 	header_hbox.add_child(close_btn)
 
@@ -487,28 +525,33 @@ func _build_inventory_modal() -> void:
 	equip_vbox.add_theme_constant_override("separation", 8)
 	body_hbox.add_child(equip_vbox)
 
-	equip_vbox.add_child(UITheme.create_icon_header("shield", "ĐANG TRANG BỊ (Click tháo):", 11, Color(0.72, 0.90, 1.0), 16))
+	var eq_hdr := Label.new()
+	eq_hdr.text = "EQUIPPED GEAR — CLICK TO UNEQUIP:"
+	UITheme.style_header_label(eq_hdr, 12, Color(0.72, 0.90, 1.0))
+	equip_vbox.add_child(eq_hdr)
 
 	var eq_slots_hbox := HBoxContainer.new()
 	eq_slots_hbox.add_theme_constant_override("separation", 10)
 	equip_vbox.add_child(eq_slots_hbox)
 
-	equip_helmet_slot = _create_equip_slot("Mũ", "helmet", ItemData.ItemType.HELMET, eq_slots_hbox)
-	equip_armor_slot = _create_equip_slot("Giáp", "armor", ItemData.ItemType.ARMOR, eq_slots_hbox)
-	equip_weapon_slot = _create_equip_slot("Vũ khí", "sword", ItemData.ItemType.WEAPON, eq_slots_hbox)
+	equip_helmet_slot = _create_equip_slot("Helmet", "helmet", ItemData.ItemType.HELMET, eq_slots_hbox)
+	equip_armor_slot = _create_equip_slot("Armor", "armor", ItemData.ItemType.ARMOR, eq_slots_hbox)
+	equip_weapon_slot = _create_equip_slot("Weapon", "sword", ItemData.ItemType.WEAPON, eq_slots_hbox)
 
 	equip_stats_label = Label.new()
-	equip_stats_label.add_theme_font_size_override("font_size", 11)
-	equip_stats_label.add_theme_color_override("font_color", Color(0.90, 0.95, 0.85))
-	equip_stats_label.text = "Chỉ số cộng thêm:\n+0 ST | +0 Giáp | +0 Máu"
+	UITheme.style_body_label(equip_stats_label, 12, Color(0.90, 0.95, 0.85))
+	equip_stats_label.text = "Bonus Attributes:\n+0 Damage • +0 Armor • +0 Health"
 	equip_vbox.add_child(equip_stats_label)
 
-	# Cột phải: Lưới 4x4 (16 ô) Túi đồ
+	# Cột phải: Lưới 4x4 Túi đồ
 	var bag_vbox := VBoxContainer.new()
 	bag_vbox.add_theme_constant_override("separation", 6)
 	body_hbox.add_child(bag_vbox)
 
-	bag_vbox.add_child(UITheme.create_icon_header("chest", "TÚI ĐỒ CHÍNH (4x4 = 16 Ô):", 11, Color(0.95, 0.85, 0.55), 16))
+	var bag_hdr := Label.new()
+	bag_hdr.text = "BACKPACK STORAGE:"
+	UITheme.style_header_label(bag_hdr, 12, Color(0.95, 0.85, 0.55))
+	bag_vbox.add_child(bag_hdr)
 
 	var grid := GridContainer.new()
 	grid.columns = 4
@@ -533,7 +576,6 @@ func _create_equip_slot(label_txt: String, icon_name: String, item_type: int, pa
 	var hdr := HBoxContainer.new()
 	hdr.alignment = BoxContainer.ALIGNMENT_CENTER
 	hdr.add_theme_constant_override("separation", 3)
-	hdr.add_child(UITheme.create_icon_rect(icon_name, 12))
 	var lbl := Label.new()
 	lbl.text = label_txt
 	lbl.add_theme_font_size_override("font_size", 10)
@@ -614,8 +656,8 @@ func _on_toggle_mute_pressed() -> void:
 	if get_node_or_null("/root/AudioManager") != null:
 		var muted: bool = AudioManager.toggle_mute()
 		if mute_btn != null:
-			mute_btn.icon = UITheme.get_icon("speaker_off" if muted else "speaker_on")
-		show_toast("Đã TẮT âm thanh" if muted else "Đã BẬT âm thanh")
+			mute_btn.text = "Audio: Off" if muted else "Audio: On"
+		show_toast("Audio Muted" if muted else "Audio Enabled")
 
 func toggle_inventory_modal() -> void:
 	if inventory_modal != null:
@@ -626,21 +668,31 @@ func _toggle_minimap_size() -> void:
 	if minimap_control == null:
 		return
 	minimap_expanded = not minimap_expanded
-	minimap_control.custom_minimum_size = Vector2(265, 200) if minimap_expanded else Vector2(205, 132)
+	if minimap_panel != null:
+		if minimap_expanded:
+			minimap_panel.offset_left = -330.0
+			minimap_panel.offset_top = -250.0
+			minimap_control.custom_minimum_size = Vector2(305, 205)
+		else:
+			minimap_panel.offset_left = -195.0
+			minimap_panel.offset_top = -158.0
+			minimap_control.custom_minimum_size = Vector2(177, 122)
+	else:
+		minimap_control.custom_minimum_size = Vector2(265, 200) if minimap_expanded else Vector2(177, 122)
 
 func _on_copy_seed_pressed() -> void:
-	var s := GameManager.current_seed if get_node_or_null("/root/GameManager") != null else "ALOALO1234"
+	var s := GameManager.current_seed if get_node_or_null("/root/GameManager") != null else "MORIA-EXPEDITION"
 	DisplayServer.clipboard_set(s)
-	show_toast("Đã sao chép Seed: " + s)
+	show_toast("Copied Seed: " + s)
 
 func _on_save_seed_pressed() -> void:
 	if get_node_or_null("/root/GameManager") != null:
 		GameManager.save_seed_entry(GameManager.current_seed)
-		show_toast("Đã lưu Seed [" + GameManager.current_seed + "] vào Kho Lưu Trữ!")
+		show_toast("Seed saved to Chronicles: " + GameManager.current_seed)
 
 func _on_game_stats_updated(level: int, kills: int) -> void:
 	if floor_kills_label != null:
-		floor_kills_label.text = "Tầng %d   |   Hạ gục: %d" % [level, kills]
+		floor_kills_label.text = "Floor %d   •   Slain: %d" % [level, kills]
 	if seed_label != null and get_node_or_null("/root/GameManager") != null:
 		seed_label.text = "Seed: " + GameManager.current_seed
 
@@ -670,7 +722,7 @@ func _update_boss_bar(c_hp: int, m_hp: int, phase: int, b_name: String) -> void:
 	boss_name_label.text = b_name.to_upper()
 	boss_hp_bar.max_value = max(1, m_hp)
 	boss_hp_bar.value = clampi(c_hp, 0, m_hp)
-	boss_hp_text.text = "%d / %d HP  —  PHASE %d" % [c_hp, m_hp, phase]
+	boss_hp_text.text = "%d / %d HP  •  Phase %d" % [c_hp, m_hp, phase]
 
 func _on_boss_died() -> void:
 	if boss_panel != null:
@@ -679,21 +731,21 @@ func _on_boss_died() -> void:
 func _on_skill_cooldown_changed(q_left: float, _q_max: float, rmb_left: float, rmb_max: float) -> void:
 	if skill_q_label != null:
 		if q_left <= 0.05:
-			skill_q_label.text = "Kỹ năng [Q]: SẴN SÀNG"
-			skill_q_label.add_theme_color_override("font_color", Color(0.45, 0.95, 1.0))
+			skill_q_label.text = "Skill Q: READY"
+			skill_q_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_GOLD)
 		else:
-			skill_q_label.text = "Kỹ năng [Q]: %.1fs" % q_left
-			skill_q_label.add_theme_color_override("font_color", Color(0.75, 0.75, 0.75))
+			skill_q_label.text = "Skill Q: %.1fs" % q_left
+			skill_q_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_MUTED)
 
 	if skill_rmb_label != null and rmb_max > 0.0:
 		if skill_rmb_panel != null:
 			skill_rmb_panel.visible = true
 		if rmb_left <= 0.05:
-			skill_rmb_label.text = "[Chuột Phải]: SẴN SÀNG"
-			skill_rmb_label.add_theme_color_override("font_color", Color(1.0, 0.78, 0.35))
+			skill_rmb_label.text = "Right Click: READY"
+			skill_rmb_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_GOLD)
 		else:
-			skill_rmb_label.text = "[Chuột Phải]: %.1fs" % rmb_left
-			skill_rmb_label.add_theme_color_override("font_color", Color(0.75, 0.75, 0.75))
+			skill_rmb_label.text = "Right Click: %.1fs" % rmb_left
+			skill_rmb_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_MUTED)
 
 func update_hud(current_hp: int, max_hp: int, current_shield: int, max_shield: int) -> void:
 	for child in heart_bar.get_children():
@@ -718,7 +770,7 @@ func update_hud(current_hp: int, max_hp: int, current_shield: int, max_shield: i
 
 	if stats_summary_label != null and player != null:
 		var dmg = player.get_total_damage() if player.has_method("get_total_damage") else 1
-		stats_summary_label.text = "Máu: %d/%d  |  Giáp: %d/%d  |  ST: %d" % [
+		stats_summary_label.text = "HP: %d/%d  •  Armor: %d/%d  •  DMG: %d" % [
 			current_hp, max_hp, current_shield, max_shield, dmg
 		]
 
@@ -742,7 +794,7 @@ func refresh_ui() -> void:
 			bag_slots[i].set_item(null)
 
 	if bag_button != null:
-		bag_button.text = "Túi đồ (%d/%d) [I]" % [inventory.bag.size(), inventory.max_slots]
+		bag_button.text = "Backpack: %d / %d" % [inventory.bag.size(), inventory.max_slots]
 
 	if equip_helmet_slot != null:
 		equip_helmet_slot.set_item(inventory.equipped_helmet)
@@ -753,7 +805,7 @@ func refresh_ui() -> void:
 
 	if equip_stats_label != null and player != null:
 		var total_dmg = player.get_total_damage() if player.has_method("get_total_damage") else 1
-		equip_stats_label.text = "TỔNG CHỈ SỐ:\n• Sát thương: %d (+%d Vũ khí)\n• Giáp cộng thêm: +%d\n• Máu cộng thêm: +%d" % [
+		equip_stats_label.text = "TOTAL ATTRIBUTES:\n• Attack Power: %d • Weapon: +%d\n• Total Defense: +%d\n• Bonus Max HP: +%d" % [
 			total_dmg,
 			inventory.get_weapon_damage(),
 			inventory.get_total_defense(),
@@ -768,9 +820,9 @@ func show_banner(text: String, color: Color = Color.WHITE) -> void:
 	if banner_icon != null:
 		if "BOSS" in text.to_upper():
 			banner_icon.texture = UITheme.get_icon("skull")
-		elif "CỔNG" in text.to_upper() or "DỊCH CHUYỂN" in text.to_upper():
+		elif "PORTAL" in text.to_upper() or "GATEWAY" in text.to_upper() or "CỔNG" in text.to_upper() or "DỊCH CHUYỂN" in text.to_upper():
 			banner_icon.texture = UITheme.get_icon("soul_stone")
-		elif "DỌN SẠCH" in text.to_upper() or "HẠ GỤC" in text.to_upper():
+		elif "CLEARED" in text.to_upper() or "SLAIN" in text.to_upper() or "VICTORY" in text.to_upper() or "DỌN SẠCH" in text.to_upper() or "HẠ GỤC" in text.to_upper():
 			banner_icon.texture = UITheme.get_icon("trophy")
 		else:
 			banner_icon.texture = UITheme.get_icon("sword_royal")

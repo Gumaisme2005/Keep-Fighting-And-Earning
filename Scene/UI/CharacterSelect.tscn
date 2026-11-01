@@ -156,7 +156,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_4fsta")
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-text = "SELECT HERO"
+text = "ENTER THE MINES OF MORIA"
 
 [node name="SelectMaker" type="Control" parent="." unique_id=1310351702]
 layout_mode = 1

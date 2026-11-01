@@ -138,10 +138,10 @@ func _physics_process(delta: float) -> void:
 			want_rmb = bool(f.get("rmb", false))
 			hotbar_to_use = int(f.get("slot", -1))
 		else:
-			# Kết thúc bản ghi Replay
+			# Replay recording concluded
 			gm.is_replaying = false
 			if get_tree():
-				get_tree().call_group("game_ui", "show_banner", "ĐÃ PHÁT XONG REPLAY!", Color(0.4, 1.0, 0.6))
+				get_tree().call_group("game_ui", "show_banner", "COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6))
 	else:
 		direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 		current_aim_offset = get_global_mouse_position() - global_position
@@ -255,10 +255,10 @@ func take_damage(amount: int) -> void:
 			regen_tick_timer.stop()
 			animated_sprite.play("death")
 			set_physics_process(false)
-			print("[DEATH] Nhân vật đã gục ngã! GAME OVER!")
+			print("[DEATH] Champion has fallen. Expedition Over.")
 
 			if get_node_or_null("/root/GameManager") != null:
-				GameManager.finish_run("Tử trận tại Tầng " + str(GameManager.current_level))
+				GameManager.finish_run("Fallen upon Floor " + str(GameManager.current_level))
 
 			if has_node("PlayerHurtbox/CollisionShape2D"):
 				$PlayerHurtbox/CollisionShape2D.set_deferred("disabled", true)

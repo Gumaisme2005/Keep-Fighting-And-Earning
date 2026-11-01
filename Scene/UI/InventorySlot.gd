@@ -41,15 +41,15 @@ func set_item(item: ItemData) -> void:
 		item_icon.visible = true
 		var stats_lines: Array[String] = []
 		if item.damage > 0:
-			stats_lines.append("[ST] Sát thương: +%d" % item.damage)
+			stats_lines.append("• Attack Power: +%d" % item.damage)
 		if item.armor > 0:
-			stats_lines.append("[GIÁP] Phòng thủ: +%d" % item.armor)
+			stats_lines.append("• Defense: +%d" % item.armor)
 		if item.max_hp_bonus > 0:
-			stats_lines.append("[MÁU] Máu tối đa: +%d" % item.max_hp_bonus)
+			stats_lines.append("• Max Health: +%d" % item.max_hp_bonus)
 		if item.heal_amount > 0:
-			stats_lines.append("[HỒI PHỤC] Hồi máu: +%d" % item.heal_amount)
+			stats_lines.append("• Restores Health: +%d" % item.heal_amount)
 		var stats_text := "\n".join(stats_lines)
-		tooltip_text = "【%s】\n%s%s\n(Click hoặc nhấn phím để dùng/trang bị)" % [
+		tooltip_text = "%s\n%s%s\nClick or press hotkey to use or equip." % [
 			item.item_name,
 			(stats_text + "\n") if not stats_text.is_empty() else "",
 			item.description
@@ -57,7 +57,7 @@ func set_item(item: ItemData) -> void:
 	else:
 		item_icon.texture = null
 		item_icon.visible = false
-		tooltip_text = "Ô trống"
+		tooltip_text = "Empty Slot"
 
 func _on_mouse_entered() -> void:
 	modulate = Color(1.25, 1.2, 0.95)

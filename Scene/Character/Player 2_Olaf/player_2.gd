@@ -18,7 +18,7 @@ func use_special_skill() -> void:
 	is_casting_skill = true
 	animated_sprite.play("skill")
 	if get_tree():
-		get_tree().call_group("game_ui", "show_toast", "[HUYẾT NỘ] x2 Sát thương trong 5 giây!")
+		get_tree().call_group("game_ui", "show_toast", "BERSERK RAGE — Double damage for 5 seconds!")
 
 	var bonus_damage = base_damage * (damage_multiplier - 1)
 	base_damage += bonus_damage

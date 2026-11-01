@@ -8,11 +8,10 @@ atlas = ExtResource("1_r4t5f")
 
 [resource]
 script = ExtResource("1_aum17")
-item_name = "Giáp cốt"
+item_name = "Mithril Cuirass"
 type = 1
 icon = SubResource("AtlasTexture_r4t5f")
-description = "+2 máu tối đa
-+3 giáp"
+description = "Light as a feather and harder than dragon scales, bestowing stalwart armor and vitality."
 armor = 3
 max_hp_bonus = 2
 metadata/_custom_type_script = "uid://cfc0cqlwptxu6"

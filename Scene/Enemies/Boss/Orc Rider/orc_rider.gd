@@ -3,7 +3,7 @@ extends CharacterBody2D
 signal boss_hp_changed(current_hp: int, max_hp: int, phase: int, boss_name: String)
 
 const BalanceData = preload("res://Scene/BalanceConfig.gd")
-const BOSS_NAME: String = "THỦ LĨNH KỴ BINH WARG — ĐẠI TƯỚNG MORIA"
+const BOSS_NAME: String = "WARG RIDER CHIEFTAIN — WARLORD OF MORIA"
 
 @export var max_hp: int = 30
 var hp: int

@@ -4,6 +4,34 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 
 ---
 
+## [2026-11-01] — Sương Mù Chiến Tranh, Bẫy Kim Cọc Vật Lý, Cân Bằng Độ Khó Leo Thang & Dockerization
+
+### Tính năng Mới & Cơ chế Lối chơi
+- **Sương Mù Chiến Tranh — Minimap Fog of War theo phong cách Đế Chế:**
+  - Che giấu 100% các phòng chưa bước chân tới trong bóng tối dày đặc của hầm mỏ Moria.
+  - Tự động mở sáng phòng tương ứng khi nhân vật đặt chân qua ngưỡng cửa.
+  - Hành lang chỉ vẽ hoàn chỉnh khi đã khám phá cả hai đầu, hoặc vẽ nhánh mờ ngắn chỉ hướng vào màn đêm sâu thẳm.
+- **Bầu Không Khí Ngục Tối U Ám & Đèn Lồng Linh Hồn (`Scene/Map/dungeon_atmosphere.gd`):**
+  - Đẩy ánh sáng môi trường ngục tối toàn cục về mức sâu thẳm `Color(0.06, 0.06, 0.10, 1.0)`.
+  - Nhân vật mang theo đèn lồng linh hồn (`PlayerSoulLight`) với quầng sáng ấm áp soi rọi bán kính xung quanh.
+  - Đuốc treo tường tại các phòng chưa khám phá ở trạng thái tắt lịm, tự động bừng lửa khi nhân vật tiến vào phòng.
+- **Cơ Chế Bẫy Kim Cọc Vật Lý (`Scene/Map/spike_trap.gd`):**
+  - Quái vật và kẻ địch hoàn toàn miễn nhiễm sát thương từ bẫy kim cọc, chỉ người chơi chịu tổn thất.
+  - Khi cọc chông đâm trồi lên, khối rào cản vật lý `StaticBody2D` kích hoạt chặn đứng hoàn toàn người chơi và quái vật.
+  - Thời gian duy trì cọc nhô lên được kéo dài đến 2.8s.
+- **Cân Bằng Chỉ Số & Độ Khó Leo Thang Theo Tầng (`Scene/BalanceConfig.gd` & `Scene/Map/dungeon_generator.gd`):**
+  - Cường hóa quái vật: Moria Orc (Máu 4, ST 2, Tốc độ 75), Armored Uruk-hai (Máu 5, Giáp 6, Cuồng nộ ST 4), Barrow-wight Skeleton (Máu 3, Tốc độ 110), Minas Morgul Bone Archer (Máu 5, Hồi chiêu 1.6s), Angmar Blood Bat (Máu 5, Hồi chiêu 1.4s, Tốc độ 85).
+  - Cường hóa Boss: Tử Linh Pháp Sư Dol Guldur (Máu 45, ST 2, Độc tố 3), Thủ Lĩnh Kỵ Binh Warg (Máu 50, ST 3, Tốc độ 75).
+  - Tăng mật độ quái: Mật độ quái mỗi phòng tăng lên 3 — 7 ở Tầng 1, tự động tăng tiến theo độ sâu các tầng tiếp theo.
+  - Độ khó leo thang: Từ Tầng 2, quái vật nhận thêm máu và sát thương, Boss nhận thêm +20 Máu và +1 Sát thương mỗi tầng.
+- **Dockerization Dự Án:**
+  - Cung cấp `Dockerfile` đa giai đoạn hỗ trợ kiểm thử tự động headless và xuất bản WebAssembly.
+  - Tích hợp `docker-compose.yml`, `export_presets.cfg`, `nginx.conf` với đầy đủ headers `COOP`/`COEP` và `.dockerignore`.
+- **Làm Sạch Giao Diện Trung Cổ:**
+  - Gỡ bỏ toàn bộ các icon logo pixel nhỏ khỏi các nút bấm, tiêu đề và thanh HUD, mang lại phong cách chữ Gothic cổ điển đậm chất sử thi.
+
+---
+
 ## [2026-10-29] — Cân Bằng Chỉ Số (BalanceConfig), Nerf Cung Thủ Miya & Cốt Truyện Chúa Tể Của Những Chiếc Nhẫn (Moria)
 
 ### Tính năng Mới (New Features)

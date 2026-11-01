@@ -46,32 +46,41 @@ Toàn bộ chỉ số nhân vật được đồng bộ tự động từ [`Scen
 
 | Ảnh đại diện | Tên Quái | Phân loại AI | Máu | Sát thương | Cơ chế hành vi đặc trưng |
 | :---: | :--- | :--- | :---: | :---: | :--- |
-| <img src="docs/images/enemy_orc.png" width="52" height="52" alt="Orc" /> | **Orc Moria** | Cận chiến tiên phong | `3` | `1` | Truy đuổi trực diện bằng rìu khi người chơi bước vào phòng và cửa đá sập xuống. |
-| <img src="docs/images/enemy_armored_orc.png" width="52" height="52" alt="Armored Orc" /> | **Uruk-hai Thiết Giáp** | Thiết giáp 2 trạng thái | `5 Giáp + 3 Máu` | `1 -> 3` | Khi vỡ hết `5` điểm Giáp sẽ hóa **Cuồng Nộ (Enraged)**: tăng tốc `x2` và bổ rìu `3` sát thương. |
-| <img src="docs/images/enemy_skeleton.png" width="52" height="52" alt="Skeleton" /> | **Hài Cốt Barrow-wight** | Xương khô tốc kích | `2` | `1` | Tốc độ di chuyển cao (`100`), xuất hiện theo bầy hoặc được Tử Linh Pháp Sư triệu hồi. |
-| <img src="docs/images/enemy_skeleton_archer.png" width="52" height="52" alt="Skeleton Archer" /> | **Cung Thủ Xương Minas Morgul** | Xạ thủ thả diều *(Kiting AI)* | `4` | `1` | Tự lùi khi người chơi áp sát `< 85px`, né ngang khi hồi chiêu và tự vòng qua tường/cột đá để lấy góc bắn (`195px`). |
-| <img src="docs/images/enemy_vampire.png" width="52" height="52" alt="Vampire" /> | **Ác Linh Huyết Quỷ Angmar** | Huyết tộc phục kích | `4` | `1` | Sinh lực bền bỉ, áp sát cắn hút máu trong hành lang và phòng hẹp. |
+| <img src="docs/images/enemy_orc.png" width="52" height="52" alt="Orc" /> | **Orc Moria** | Cận chiến tiên phong | `4` | `2` | Truy đuổi trực diện bằng rìu với tốc độ `75.0` khi cửa đá sập xuống. |
+| <img src="docs/images/enemy_armored_orc.png" width="52" height="52" alt="Armored Orc" /> | **Uruk-hai Thiết Giáp** | Thiết giáp 2 trạng thái | `6 Giáp + 5 Máu` | `2 -> 4` | Khi vỡ hết `6` điểm Giáp sẽ hóa **Cuồng Nộ (Enraged)**: tăng tốc `x2` và bổ rìu `4` sát thương. |
+| <img src="docs/images/enemy_skeleton.png" width="52" height="52" alt="Skeleton" /> | **Hài Cốt Barrow-wight** | Xương khô tốc kích | `3` | `1` | Tốc độ di chuyển cao (`110.0`), áp sát nhanh chóng theo bầy hoặc được Tử Linh Pháp Sư triệu hồi. |
+| <img src="docs/images/enemy_skeleton_archer.png" width="52" height="52" alt="Skeleton Archer" /> | **Cung Thủ Xương Minas Morgul** | Xạ thủ thả diều *(Kiting AI)* | `5` | `2` | Tự lùi khi người chơi áp sát `< 85px`, né ngang khi hồi chiêu và bắn tên nhanh với nhịp `1.6s` (`195px`). |
+| <img src="docs/images/enemy_vampire.png" width="52" height="52" alt="Vampire" /> | **Ác Linh Huyết Quỷ Angmar** | Huyết tộc phục kích | `5` | `2` | Sinh lực bền bỉ, tốc độ bay `85.0`, hồi chiêu cắn `1.4s` và bắn ma thuật bóng đêm tầm xa. |
 
 ### 3.2. Đại Thủ Lĩnh Trung Địa — Bosses (2 Loại, 3 Phases)
 
 | Ảnh đại diện | Tên Boss | Xuất hiện | Máu | Các giai đoạn chiến đấu (3 Phases) |
 | :---: | :--- | :---: | :---: | :--- |
-| <img src="docs/images/boss_necromancer.png" width="64" height="64" alt="Necromancer" /> | **Tử Linh Pháp Sư Dol Guldur**<br>*(Necromancer)* | Tầng lẻ (`1, 3, ...`) | `30` | **Phase 1 (`>20 HP`):** Triệu hồi 3 Hài Cốt Barrow-wight bao vây.<br>**Phase 2 (`11–20 HP`):** Kích nổ 8 cột độc tố bóng đêm xung quanh.<br>**Phase 3 (`<=10 HP`):** Cuồng nộ tốc độ `x1.5`, giảm nửa thời gian hồi chiêu. |
-| <img src="docs/images/boss_orc_rider.png" width="64" height="64" alt="Orc Rider" /> | **Thủ Lĩnh Kỵ Binh Warg**<br>*(Orc Rider)* | Tầng chẵn (`2, 4, ...`) | `30` | **Phase 1 (`>20 HP`):** Bổ giáo cận chiến diện rộng.<br>**Phase 2 (`11–20 HP`):** Cảnh báo vệt đỏ rồi cưỡi sói Warg lao tông tốc độ `x4`.<br>**Phase 3 (`<=10 HP`):** Xoay giáo bão tố liên hoàn kết hợp lao tông. |
+| <img src="docs/images/boss_necromancer.png" width="64" height="64" alt="Necromancer" /> | **Tử Linh Pháp Sư Dol Guldur**<br>*(Necromancer)* | Tầng lẻ (`1, 3, ...`) | `45` | **Phase 1 (`>30 HP`):** Cận chiến `2` ST, triệu hồi 3 Hài Cốt Barrow-wight.<br>**Phase 2 (`16–30 HP`):** Kích nổ 8 cột độc tố bóng đêm gây `3` ST.<br>**Phase 3 (`<=15 HP`):** Cuồng nộ tốc độ `x1.5`, giảm nửa thời gian hồi chiêu. |
+| <img src="docs/images/boss_orc_rider.png" width="64" height="64" alt="Orc Rider" /> | **Thủ Lĩnh Kỵ Binh Warg**<br>*(Orc Rider)* | Tầng chẵn (`2, 4, ...`) | `50` | **Phase 1 (`>35 HP`):** Bổ giáo cận chiến diện rộng gây `3` ST.<br>**Phase 2 (`18–35 HP`):** Cảnh báo vệt đỏ rồi cưỡi sói Warg lao tông tốc độ `x4`.<br>**Phase 3 (`<=17 HP`):** Xoay giáo bão tố liên hoàn kết hợp lao tông. |
+
+*Xem chi tiết cơ chế tăng độ khó leo thang theo tầng tại [`docs/DUNGEON_FOG_AND_BALANCE.md`](docs/DUNGEON_FOG_AND_BALANCE.md).*
 
 ---
 
-## 4. Điểm Nhấn Giao Diện, Bầu Không Khí & Âm Thanh
+## 4. Điểm Nhấn Giao Diện, Sương Mù Chiến Tranh & Âm Thanh
 
-- **Minimap Thời Gian Thực (`Scene/UI/GameUI.gd`):** Hiển thị chính xác vị trí liên tục (real-time) của người chơi cả trong phòng lẫn trên hành lang, kèm màu sắc trạng thái phòng (`Xanh lá`: Xuất phát, `Xanh dương`: Đã dọn, `Cam`: Đang khóa cửa giao tranh, `Vàng`: Kho báu, `Đỏ`: Phòng Boss).
-- **Bầu Không Khí Ngục Tối Heo Hắt (`Scene/Map/dungeon_atmosphere.gd`):**
-  - Ánh sáng ngục tối trầm lạnh (`CanvasModulate`) kết hợp đèn lồng linh hồn ấm áp quanh nhân vật (`PointLight2D`).
-  - Đuốc lửa treo tường bập bùng theo thời gian thực (lửa cam ở phòng thường, lửa vàng ở phòng Kho báu, lửa đỏ huyết ngục ở phòng Boss).
-  - Những **bóng ma xanh lượn lờ (Ghostly Blue Wisps)** bay theo quỹ đạo sin/vô cực phát sáng ma mị trong từng căn phòng.
+- **Sương Mù Chiến Tranh & Bản Đồ Nhỏ — Minimap Fog of War (`Scene/UI/GameUI.gd`):**
+  - Che giấu 100% các phòng chưa bước chân tới trong bóng tối dày đặc theo phong cách Đế Chế.
+  - Tự động mở sáng phòng tương ứng khi nhân vật đặt chân qua cửa ngục (`Xanh lá`: Xuất phát, `Xanh dương`: Đã dọn sạch, `Cam`: Đang giao tranh, `Vàng`: Kho báu, `Đỏ`: Thủ lĩnh Boss).
+  - Đường hành lang chỉ hiển thị hoàn chỉnh khi đã khám phá cả hai đầu.
+- **Bầu Không Khí Ngục Tối U Ám & Đèn Lồng Linh Hồn (`Scene/Map/dungeon_atmosphere.gd`):**
+  - Môi trường ngục tối trầm mặc sâu thẳm (`Color(0.06, 0.06, 0.10)`), nhân vật mang đèn lồng soi rọi bán kính xung quanh.
+  - Đuốc treo tường tại các phòng chưa khám phá ở trạng thái tắt lịm, chỉ bừng sáng khi người chơi tiến vào phòng.
+  - Những bóng ma xanh lượn lờ phát sáng huyền bí trong các gian phòng đã thức giấc.
+- **Cơ Chế Bẫy Kim Cọc Vật Lý — Spike Trap (`Scene/Map/spike_trap.gd`):**
+  - Quái vật và kẻ địch hoàn toàn miễn nhiễm sát thương từ bẫy kim cọc, chỉ người chơi chịu tổn thất khi dẫm phải.
+  - Khi cọc chông đâm trồi lên, khối rào cản vật lý `StaticBody2D` kích hoạt chặn đứng hoàn toàn người chơi và quái vật.
+  - Thời gian duy trì cọc nhô lên được kéo dài đến `2.8s`.
+- **Giao Diện Trung Cổ Trang Nhã:** Toàn bộ các icon logo pixel vụn vặt đã được loại bỏ, mang lại giao diện phong cách chữ Gothic cổ điển đậm chất sử thi.
 - **Hệ Thống Soundtrack & SFX (`Scene/AudioManager.gd`):**
   - Đồng bộ bản nhạc hùng tráng **Glorious Morning (Waterflame — Age of War)** cho toàn bộ **Main Menu (`bgm_menu.wav`)**, **Khám phá Ngục tối (`bgm_dungeon.wav`)** và **Giao tranh Boss (`bgm_boss.wav`)**.
   - Hiệu ứng âm thanh chiến đấu (`sfx_slash`, `sfx_hit`, `sfx_pickup`, `sfx_portal`) kèm nút bật/tắt âm thanh nhanh (`Phím N`).
-- **Tùy Biến Asset Dễ Dàng:** Toàn bộ Sprite của Tướng và Quái đặt tại `Assets/Character/`, hiển thị sắc nét với chế độ `Nearest-Neighbor Pixel Filtering` (`default_texture_filter=0`).
 
 ---
 
@@ -126,3 +135,21 @@ Chạy toàn bộ bộ kiểm thử tự động (Unit Tests, Security Tests, Pr
 ## 7. Khởi Chạy Trò Chơi
 
 - Chạy trực tiếp file [`run_game.bat`](run_game.bat) (hoặc mở `project.godot` bằng **Godot Engine 4.3+** và nhấn `F5`).
+
+---
+
+## 8. Hướng Dẫn Vận Hành Qua Docker (Dockerization)
+
+Dự án đã được Dockerize hoàn chỉnh với cấu hình Multi-stage Dockerfile và Nginx WebAssembly server:
+
+### 8.1. Khởi chạy Web Game chơi trực tiếp trên trình duyệt
+```bash
+docker compose up game --build
+```
+Mở trình duyệt truy cập: `http://localhost:8080`
+
+### 8.2. Chạy toàn bộ bộ kiểm thử tự động Headless
+```bash
+docker compose run --rm test
+```
+*Xem hướng dẫn chi tiết tại [`docs/DUNGEON_FOG_AND_BALANCE.md`](docs/DUNGEON_FOG_AND_BALANCE.md).*

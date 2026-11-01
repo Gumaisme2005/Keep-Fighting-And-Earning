@@ -56,7 +56,7 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 12
 theme_override_fonts/font = SubResource("SystemFont_u2xv2")
 theme_override_font_sizes/font_size = 64
-text = "GAME OVER"
+text = "CHAMPION FALLEN"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -77,14 +77,14 @@ custom_minimum_size = Vector2(120, 32)
 layout_mode = 2
 theme_override_fonts/font = SubResource("SystemFont_icuge")
 theme_override_font_sizes/font_size = 24
-text = "Retry"
+text = "SELECT NEW CHAMPION"
 
 [node name="Exit_button" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=281275448]
 custom_minimum_size = Vector2(120, 32)
 layout_mode = 2
 theme_override_fonts/font = SubResource("SystemFont_icuge")
 theme_override_font_sizes/font_size = 24
-text = "Quit"
+text = "ABANDON EXPEDITION & QUIT"
 
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Retry_button" to="." method="_on_retry_button_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Exit_button" to="." method="_on_exit_button_pressed"]

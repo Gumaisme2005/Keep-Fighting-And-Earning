@@ -9,3 +9,19 @@ tests/vt075/_cov/
 __pycache__/
 *.pyc
 
+# Asset packs & temporary archives (Do not commit source asset packs)
+*Tiny RPG Character*
+*tiny RPG Character*
+*.zip
+*.tar.gz
+*.rar
+
+# Backup & temporary files
+*_backup.*
+*.tmp
+*.bak
+*.swp
+*~
+.DS_Store
+Thumbs.db
+

@@ -96,8 +96,9 @@ func take_damage(damage_amount: int) -> void:
 		axe_collision.set_deferred("disabled", true)
 	else:
 		is_dead = true
-		if get_node_or_null("/root/GameManager") != null:
-			GameManager.register_enemy_kill()
+		var gm = get_node_or_null("/root/GameManager")
+		if gm != null and gm.has_method("register_enemy_kill"):
+			gm.register_enemy_kill()
 		animated_sprite.play("death")
 		$Hurtbox/CollisionShape2D.set_deferred("disabled", true)
 		$CollisionShape2D.set_deferred("disabled", true)

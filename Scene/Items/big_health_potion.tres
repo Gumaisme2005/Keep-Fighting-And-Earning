@@ -9,9 +9,9 @@ region = Rect2(80, 272, 16, 16)
 
 [resource]
 script = ExtResource("1_mktl5")
+item_name = "Elixir of Rivendell"
 icon = SubResource("AtlasTexture_530bj")
-description = "Hồi 3 máu cho bản thân
-Tăng 1 máu tối đa"
+description = "Sacred cordial of the Eldar that restores vitality and permanently fortifies maximum health."
 max_hp_bonus = 1
 heal_amount = 3
 metadata/_custom_type_script = "uid://cfc0cqlwptxu6"

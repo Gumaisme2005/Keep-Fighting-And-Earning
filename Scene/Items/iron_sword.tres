@@ -9,9 +9,9 @@ region = Rect2(0, 128, 16, 16)
 
 [resource]
 script = ExtResource("2_lsdu8")
-item_name = "Kiếm sắt"
+item_name = "Westernesse Broadsword"
 type = 2
 icon = SubResource("AtlasTexture_fawme")
-description = "Tăng 1 sát thương cận chiến"
+description = "Finely balanced steel blade forged by ancient smiths to pierce shadow armor."
 damage = 1
 metadata/_custom_type_script = "uid://cfc0cqlwptxu6"

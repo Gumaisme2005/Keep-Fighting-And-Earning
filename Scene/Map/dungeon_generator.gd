@@ -33,8 +33,8 @@ var enemy_scenes: Array[PackedScene] = [
 const PORTAL_SCENE = preload("res://Scene/Map/portal.tscn")
 var the_player: Node2D = null
 
-@export var min_enemies: int = 2
-@export var max_enemies: int = 6
+@export var min_enemies: int = 3
+@export var max_enemies: int = 7
 
 const ROOM_MANAGER = preload("res://Scene/Map/RoomManager.tscn")
 const DUNGEON_ATMOSPHERE = preload("res://Scene/Map/dungeon_atmosphere.gd")
@@ -95,6 +95,8 @@ func get_effective_seed_string() -> String:
 
 func generate_dungeon():
 	clear()
+	min_enemies = clampi(3 + (current_level - 1), 3, 8)
+	max_enemies = clampi(7 + (current_level - 1) * 2, 7, 14)
 	rng.seed = get_effective_seed_string().hash()
 	reserved_trap_positions.clear()
 	forbidden_decor_cells.clear()
@@ -503,6 +505,14 @@ func spawn_entities():
 				var enemy = enemy_scenes[spawn_info["enemy_idx"]].instantiate()
 				if "loot_seed" in enemy:
 					enemy.loot_seed = spawn_info["loot_seed"]
+				if current_level > 1:
+					var bonus_hp: int = (current_level - 1) * 2
+					if "hp" in enemy:
+						enemy.hp += bonus_hp
+						if "max_hp" in enemy:
+							enemy.max_hp = enemy.hp
+					if "damage" in enemy and current_level >= 3:
+						enemy.damage += 1
 				enemy.z_index = 2
 				enemy.add_to_group("enemies")
 				add_child(enemy)
@@ -543,6 +553,16 @@ func spawn_entities():
 			boss_instance.z_index = 2
 			boss_instance.add_to_group("enemies")
 			boss_instance.add_to_group("boss")
+			if current_level > 1:
+				var boss_bonus_hp: int = (current_level - 1) * 20
+				if "hp" in boss_instance:
+					boss_instance.hp += boss_bonus_hp
+					if "max_hp" in boss_instance:
+						boss_instance.max_hp = boss_instance.hp
+				if "melee_damage" in boss_instance:
+					boss_instance.melee_damage += current_level - 1
+				if "damage" in boss_instance:
+					boss_instance.damage += current_level - 1
 			add_child(boss_instance)
 
 			boss_instance.global_position = to_global(map_to_local(room.get_center()))
@@ -564,18 +584,21 @@ func spawn_entities():
 
 func notify_room_entered(room_idx: int, is_boss: bool = false) -> void:
 	visited_rooms[room_idx] = true
-	if is_boss:
-		if get_node_or_null("/root/AudioManager") != null:
+	var r_type: int = room_types[room_idx] if room_idx >= 0 and room_idx < room_types.size() else -1
+	if r_type == RoomType.COMBAT or is_boss:
+		if is_inside_tree() and get_node_or_null("/root/AudioManager") != null:
+			# Nhạc giao tranh Combat kịch tính khi cửa phòng đóng sập
 			AudioManager.play_bgm("boss")
+	if is_boss:
 		if is_instance_valid(active_boss):
 			boss_spawned.emit(active_boss)
 	room_state_changed.emit()
 
 func notify_room_cleared(room_idx: int) -> void:
 	visited_rooms[room_idx] = true
-	if room_idx >= 0 and room_idx < room_types.size() and room_types[room_idx] == RoomType.BOSS:
-		if get_node_or_null("/root/AudioManager") != null:
-			AudioManager.play_bgm("dungeon")
+	if is_inside_tree() and get_node_or_null("/root/AudioManager") != null:
+		# Khi dọn sạch quái trong phòng hoặc diệt Boss, trả về nhạc nền Dungeon u tối huyền bí
+		AudioManager.play_bgm("dungeon")
 	room_state_changed.emit()
 
 func _resolve_player_node() -> Node2D:

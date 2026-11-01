@@ -102,9 +102,9 @@ func lock_room() -> void:
 
 	if get_tree():
 		if is_boss_room:
-			get_tree().call_group("game_ui", "show_banner", "CẢNH BÁO ĐẠI THỦ LĨNH BOSS XUẤT HIỆN!", Color(1.0, 0.3, 0.3))
+			get_tree().call_group("game_ui", "show_banner", "BEHOLD — BOSS CHIEFTAIN EMERGES!", Color(1.0, 0.3, 0.3))
 		else:
-			get_tree().call_group("game_ui", "show_banner", "CỬA ĐÃ KHÓA — TIÊU DIỆT QUÁI VẬT!", Color(1.0, 0.75, 0.2))
+			get_tree().call_group("game_ui", "show_banner", "GATES SEALED — VANQUISH THE HORDE!", Color(1.0, 0.75, 0.2))
 
 func _on_enemy_died() -> void:
 	var all_dead := true
@@ -130,9 +130,9 @@ func unlock_room() -> void:
 
 	if get_tree():
 		if is_boss_room:
-			get_tree().call_group("game_ui", "show_banner", "ĐÃ HẠ GỤC BOSS! CỔNG DỊCH CHUYỂN MỞ!", Color(0.3, 1.0, 0.5))
+			get_tree().call_group("game_ui", "show_banner", "BOSS VANQUISHED! DESCENT PORTAL AWAKENS!", Color(0.3, 1.0, 0.5))
 		else:
-			get_tree().call_group("game_ui", "show_banner", "PHÒNG ĐÃ DỌN SẠCH — CỬA MỞ!", Color(0.4, 0.95, 0.5))
+			get_tree().call_group("game_ui", "show_banner", "CHAMBER CLEARED — GATES UNLOCKED!", Color(0.4, 0.95, 0.5))
 
 	if is_boss_room and tilemap and tilemap.has_method("spawn_portal"):
 		tilemap.spawn_portal(global_position)

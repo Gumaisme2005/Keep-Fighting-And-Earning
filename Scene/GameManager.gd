@@ -53,9 +53,9 @@ var last_recorded_run: Dictionary = {}
 func _ready() -> void:
 	load_save_data()
 	if saved_seeds.is_empty():
-		save_seed_entry("ALOALO1234", "Seed chuẩn kiểm thử (Test/Debug)", 2)
-		save_seed_entry("SOUL_KNIGHT_2026", "Hầm ngục nhiều nhánh giao tranh", 0)
-		save_seed_entry("BOSS_HUNT_777", "Lộ trình săn Boss tốc độ cao", 3)
+		save_seed_entry("ALOALO1234", "Khazad-dum Vanguard Expedition", 2)
+		save_seed_entry("SOUL_KNIGHT_2026", "Labyrinthine Caverns of Moria", 0)
+		save_seed_entry("BOSS_HUNT_777", "Chieftain Hunt Route", 3)
 
 # --- HÀM BẢO MẬT & LÀM SẠCH DỮ LIỆU ĐẦU VÀO (INPUT SANITIZATION) ---
 static func sanitize_seed(raw_seed: String) -> String:
@@ -208,7 +208,7 @@ func save_seed_entry(seed_str: String, note: String = "", hero_idx: int = -1) ->
 	var safe_note := sanitize_note(note)
 	var entry := {
 		"seed": clean_seed,
-		"note": safe_note if not safe_note.is_empty() else ("Tầng %d - %s" % [current_level, get_selected_character_info().get("name", "Hero")]),
+		"note": safe_note if not safe_note.is_empty() else ("Floor %d — %s" % [current_level, get_selected_character_info().get("name", "Hero")]),
 		"hero_idx": hero_idx,
 		"date": Time.get_datetime_string_from_system(false, true)
 	}

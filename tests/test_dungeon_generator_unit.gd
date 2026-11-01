@@ -400,7 +400,7 @@ func _test_ut13_balance_config_archer_nerf_and_lotr_lore() -> void:
 
 	# 3. Kiểm tra cốt truyện Chúa Tể Của Những Chiếc Nhẫn (Moria / Khazad-dûm) đồng bộ trong GameManager
 	var lore_ok: bool = (
-		str(GameManager.WORLD_LORE.get("title", "")).contains("TRUNG ĐỊA")
+		(str(GameManager.WORLD_LORE.get("title", "")).contains("MIDDLE-EARTH") or str(GameManager.WORLD_LORE.get("title", "")).contains("TRUNG ĐỊA"))
 		and str(GameManager.WORLD_LORE.get("story", "")).contains("Moria")
 		and GameManager.CHARACTER_INFO.size() == 4
 	)
