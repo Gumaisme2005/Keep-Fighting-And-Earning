@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>[#SPK-1] [ORC] Cannot attack Player when Player is below Orc within 35px</title>
+    <meta http-equiv="Content-Type" Content="application/vnd.ms-word; charset=UTF-8">
+        <style type="text/css">
+
+.tableBorder, .grid
+{
+    background-color: #fff;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tableBorder td, .grid td
+{
+    vertical-align: top;
+    padding: 2px;
+    border: 1px solid #ccc;
+}
+
+.noPadding
+{
+    padding: 0 !important;
+}
+
+h3 .subText
+{
+    font-size: 60%;
+    font-weight: normal;
+}
+
+.tabLabel
+{
+    font-weight: bold;
+    border: 1px solid #ccc;
+    border-bottom:none;
+    padding: 2px;
+    display: inline;
+}
+
+td.blank
+{
+    padding: 0;
+    margin: 0;
+}
+
+.blank td
+{
+    border: none;
+}
+
+#descriptionArea
+{
+    margin: 0;
+    padding: 2px;
+    border: 1px solid #ccc;
+}
+
+hr
+{
+    border-top:1px solid #aaa;
+}
+
+hr.fullcontent
+{
+  height: 15px;
+  padding: 10px 0;
+  background: #fff url('https://lengocbaonguyen622.atlassian.net/images/icons/hr.gif') no-repeat scroll center;
+}
+
+</style>
+
+</head>
+<body>
+
+<table class="tableBorder" cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td bgcolor="#f0f0f0" width="100%" colspan="2" valign="top">
+                            <h3 class="formtitle">
+                        [SPK-1]&nbsp;<a href="https://lengocbaonguyen622.atlassian.net/browse/SPK-1">[ORC] Cannot attack Player when Player is below Orc within 35px</a>
+            <span class="subText">
+               Created: 20/Oct/26                   &nbsp;Updated: 27/Oct/26
+
+                                            </span>
+            </h3>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%"><b>Status:</b></td>
+        <td width="80%">To Do</td>
+    </tr>
+    <tr>
+        <td width="20%"><b>Project:</b></td>
+        <td width="80%"><a href="https://lengocbaonguyen622.atlassian.net/secure/BrowseProject.jspa?id=10072">SE_Project_K2026</a></td>
+    </tr>
+
+        <tr>
+            <td><b>Components:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+
+        <tr>
+            <td><b>Affects versions:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+
+        <tr>
+            <td><b>Fix versions:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+    
+    </table>
+
+<br />
+<table class="grid" cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td bgcolor="#f0f0f0" valign="top" width="20%">
+            <b>Type:</b>
+        </td>
+        <td bgcolor="#ffffff" valign="top"  width="30%" >
+            Bug
+        </td>
+
+                    <td bgcolor="#f0f0f0">
+                <b>Priority:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" nowrap>
+                High
+            </td>
+            </tr>
+    <tr>
+                        <td bgcolor="#f0f0f0" valign="top" width="20%">
+                <b>Reporter:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top"  width="30%" >
+                                        
+                
+        
+            <a class="user-hover" rel="712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                id="word_reporter_712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                href="https://lengocbaonguyen622.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3Aeb99c4f8-79be-40c7-b727-b6f526e38ae2">
+                    Lê Ngọc Bảo Nguyễn
+                </a>
+
+                            </td>
+        
+                    <td bgcolor="#f0f0f0" width="20%">
+                <b>Assignee:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" nowrap  width="30%" >
+                                        
+                
+        
+            <a class="user-hover" rel="712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                id="word_assignee_712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                href="https://lengocbaonguyen622.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3Aeb99c4f8-79be-40c7-b727-b6f526e38ae2">
+                    Lê Ngọc Bảo Nguyễn
+                </a>
+
+                            </td>
+            </tr>
+    	<tr>
+		<td bgcolor="#f0f0f0" width="20%">
+			<b>Resolution:</b>
+		</td>
+		<td bgcolor="#ffffff" valign="top" width="30%" nowrap>
+            				Unresolved
+                    </td>
+                    <td bgcolor="#f0f0f0" width="20%">
+                <b>Votes:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" width="30%" nowrap>
+                0
+            </td>
+        
+    </tr>
+    
+        <tr>
+        <td bgcolor="#f0f0f0" width="20%">
+            <b>Labels:</b>
+        </td>
+        <td id="labels-10124-value" class="value" bgcolor="#ffffff" valign="top" colspan="3" nowrap>
+                            None
+                    </td>
+    </tr>
+    
+    	<tr>
+        		<td bgcolor="#f0f0f0" width="20%"><b>Remaining Estimate:</b></td>
+        <td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+    </tr>
+    <tr>
+                <td bgcolor="#f0f0f0" width="20%"><b>Time Spent:</b></td>
+		<td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+	</tr>
+    <tr>
+                <td bgcolor="#f0f0f0" width="20%"><b>Original estimate:</b></td>
+		<td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+    </tr>
+    
+    </table>
+
+
+
+    <br />
+
+    	<table class="grid" cellpadding="0" cellspacing="0" border="0" width="100%">
+            
+
+                <tr>
+            <td bgcolor="#f0f0f0" width=20% valign=top>
+                <b>Attachments:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top">
+                                    <img src="https://lengocbaonguyen622.atlassian.net/images/icons/attach/file.gif" height="16" width="16" border="0" alt="File">
+                    Screen Recording 2026-10-20 231643.mp4 &nbsp;&nbsp;&nbsp;
+                            </td>
+        </tr>
+        
+    
+
+
+    
+                        <tr>
+                <td bgcolor="#f0f0f0" width="20%" valign="top"><b>Start date:</b></td>
+                <td id="customfield_10015-10124-value" class="value" bgcolor="#ffffff" width="80%">          <span title="21/Oct/26"><time datetime="2026-10-21">21/Oct/26</time></span>
+    </td>
+            </tr>
+                                <tr>
+                <td bgcolor="#f0f0f0" width="20%" valign="top"><b>Rank:</b></td>
+                <td id="customfield_10019-10124-value" class="value" bgcolor="#ffffff" width="80%">      0|i000bd:
+  </td>
+            </tr>
+            </table>
+
+    <br/>
+
+    <table cellpadding="2" cellspacing="0" border="0" width="100%" align="center">
+    <tr>
+        <td bgcolor="#bbbbbb" width="1%" nowrap align="center">
+            &nbsp;<font color="#ffffff"><b>Description</b></font>&nbsp;
+        </td>
+        <td>&nbsp;</td>
+    </tr>
+    </table>
+
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td id="descriptionArea">
+            <div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>Bug Description:
+Orc cannot perform a melee attack when the Player is positioned
+below the Orc, even though the Player is within the specified
+35px attack range.
+
+Precondition:
+- Combat Room is active.
+- Orc is alive and able to attack.
+- Player is within 35px of the Orc.
+
+Steps to Reproduce:
+1. Enter a Combat Room containing an Orc.
+2. Move the Player to a position below the Orc.
+3. Keep the distance between Player and Orc &lt;= 35px.
+4. Wait for the Orc to attack.
+
+Expected Result:
+Orc performs a melee attack against the Player when the Player
+is within 35px, regardless of whether the Player is positioned
+above or below the Orc.
+
+Actual Result:
+Orc does not perform the melee attack when the Player is below
+the Orc.
+
+Test Case:
+TC-EN-XX</pre>
+</div></div>
+            <br/>
+        </td>
+    </tr>
+    </table>
+
+Generated at Sun Nov 01 15:13:50 UTC 2026 by Lê Ngọc Bảo Nguyễn using Jira 1001.0.0-SNAPSHOT#100295-rev:d794cfb4c7554a89092e2f32783da3a72153f3f0.
+
+</body>
+</html>
