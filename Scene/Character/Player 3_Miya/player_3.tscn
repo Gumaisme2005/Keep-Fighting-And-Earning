@@ -189,7 +189,7 @@ animations = [{
 "frames": [{"duration": 1.0, "texture": SubResource("AtlasTexture_a1")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_a2")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_a3")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_a4")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_a5")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_a6")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_a7")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_a8")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_a9")}],
 "loop": false,
 "name": &"attack_1",
-"speed": 14.0
+"speed": 20.0
 }, {
 "frames": [{"duration": 1.0, "texture": SubResource("AtlasTexture_a22")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_a23")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_a24")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_a25")}],
 "loop": false,
