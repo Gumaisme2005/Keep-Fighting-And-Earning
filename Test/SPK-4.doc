@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>[#SPK-4] [Gameplay] Orc Rider boss stops chasing and attacking when Miya stands in a specific corner, allowing a risk-free kill</title>
+    <meta http-equiv="Content-Type" Content="application/vnd.ms-word; charset=UTF-8">
+        <style type="text/css">
+
+.tableBorder, .grid
+{
+    background-color: #fff;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tableBorder td, .grid td
+{
+    vertical-align: top;
+    padding: 2px;
+    border: 1px solid #ccc;
+}
+
+.noPadding
+{
+    padding: 0 !important;
+}
+
+h3 .subText
+{
+    font-size: 60%;
+    font-weight: normal;
+}
+
+.tabLabel
+{
+    font-weight: bold;
+    border: 1px solid #ccc;
+    border-bottom:none;
+    padding: 2px;
+    display: inline;
+}
+
+td.blank
+{
+    padding: 0;
+    margin: 0;
+}
+
+.blank td
+{
+    border: none;
+}
+
+#descriptionArea
+{
+    margin: 0;
+    padding: 2px;
+    border: 1px solid #ccc;
+}
+
+hr
+{
+    border-top:1px solid #aaa;
+}
+
+hr.fullcontent
+{
+  height: 15px;
+  padding: 10px 0;
+  background: #fff url('https://lengocbaonguyen622.atlassian.net/images/icons/hr.gif') no-repeat scroll center;
+}
+
+</style>
+
+</head>
+<body>
+
+<table class="tableBorder" cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td bgcolor="#f0f0f0" width="100%" colspan="2" valign="top">
+                            <h3 class="formtitle">
+                        [SPK-4]&nbsp;<a href="https://lengocbaonguyen622.atlassian.net/browse/SPK-4">[Gameplay] Orc Rider boss stops chasing and attacking when Miya stands in a specific corner, allowing a risk-free kill</a>
+            <span class="subText">
+               Created: 01/Nov/26                   &nbsp;Updated: 01/Nov/26
+
+                                            </span>
+            </h3>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%"><b>Status:</b></td>
+        <td width="80%">To Do</td>
+    </tr>
+    <tr>
+        <td width="20%"><b>Project:</b></td>
+        <td width="80%"><a href="https://lengocbaonguyen622.atlassian.net/secure/BrowseProject.jspa?id=10072">SE_Project_K2026</a></td>
+    </tr>
+
+        <tr>
+            <td><b>Components:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+
+        <tr>
+            <td><b>Affects versions:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+
+        <tr>
+            <td><b>Fix versions:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+    
+    </table>
+
+<br />
+<table class="grid" cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td bgcolor="#f0f0f0" valign="top" width="20%">
+            <b>Type:</b>
+        </td>
+        <td bgcolor="#ffffff" valign="top"  width="30%" >
+            Bug
+        </td>
+
+                    <td bgcolor="#f0f0f0">
+                <b>Priority:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" nowrap>
+                Medium
+            </td>
+            </tr>
+    <tr>
+                        <td bgcolor="#f0f0f0" valign="top" width="20%">
+                <b>Reporter:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top"  width="30%" >
+                                        
+                
+        
+            <a class="user-hover" rel="712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                id="word_reporter_712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                href="https://lengocbaonguyen622.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3Aeb99c4f8-79be-40c7-b727-b6f526e38ae2">
+                    Lê Ngọc Bảo Nguyễn
+                </a>
+
+                            </td>
+        
+                    <td bgcolor="#f0f0f0" width="20%">
+                <b>Assignee:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" nowrap  width="30%" >
+                                        
+                
+        
+            <a class="user-hover" rel="712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                id="word_assignee_712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                href="https://lengocbaonguyen622.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3Aeb99c4f8-79be-40c7-b727-b6f526e38ae2">
+                    Lê Ngọc Bảo Nguyễn
+                </a>
+
+                            </td>
+            </tr>
+    	<tr>
+		<td bgcolor="#f0f0f0" width="20%">
+			<b>Resolution:</b>
+		</td>
+		<td bgcolor="#ffffff" valign="top" width="30%" nowrap>
+            				Unresolved
+                    </td>
+                    <td bgcolor="#f0f0f0" width="20%">
+                <b>Votes:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" width="30%" nowrap>
+                0
+            </td>
+        
+    </tr>
+    
+        <tr>
+        <td bgcolor="#f0f0f0" width="20%">
+            <b>Labels:</b>
+        </td>
+        <td id="labels-10127-value" class="value" bgcolor="#ffffff" valign="top" colspan="3" nowrap>
+                            None
+                    </td>
+    </tr>
+    
+    	<tr>
+        		<td bgcolor="#f0f0f0" width="20%"><b>Remaining Estimate:</b></td>
+        <td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+    </tr>
+    <tr>
+                <td bgcolor="#f0f0f0" width="20%"><b>Time Spent:</b></td>
+		<td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+	</tr>
+    <tr>
+                <td bgcolor="#f0f0f0" width="20%"><b>Original estimate:</b></td>
+		<td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+    </tr>
+    
+    </table>
+
+
+
+    <br />
+
+    	<table class="grid" cellpadding="0" cellspacing="0" border="0" width="100%">
+            
+
+                <tr>
+            <td bgcolor="#f0f0f0" width=20% valign=top>
+                <b>Attachments:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top">
+                                    <img src="https://lengocbaonguyen622.atlassian.net/images/icons/attach/file.gif" height="16" width="16" border="0" alt="File">
+                    Screen Recording 2026-11-01 220133.mp4 &nbsp;&nbsp;&nbsp;
+                            </td>
+        </tr>
+        
+    
+
+
+    
+                        <tr>
+                <td bgcolor="#f0f0f0" width="20%" valign="top"><b>Start date:</b></td>
+                <td id="customfield_10015-10127-value" class="value" bgcolor="#ffffff" width="80%">          <span title="01/Nov/26"><time datetime="2026-11-01">01/Nov/26</time></span>
+    </td>
+            </tr>
+                                <tr>
+                <td bgcolor="#f0f0f0" width="20%" valign="top"><b>Rank:</b></td>
+                <td id="customfield_10019-10127-value" class="value" bgcolor="#ffffff" width="80%">      0|i000bs:
+  </td>
+            </tr>
+            </table>
+
+    <br/>
+
+    <table cellpadding="2" cellspacing="0" border="0" width="100%" align="center">
+    <tr>
+        <td bgcolor="#bbbbbb" width="1%" nowrap align="center">
+            &nbsp;<font color="#ffffff"><b>Description</b></font>&nbsp;
+        </td>
+        <td>&nbsp;</td>
+    </tr>
+    </table>
+
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td id="descriptionArea">
+            <p>Bug Type: Functional / AI Behavior (Exploit)<br/>
+Priority: High</p>
+
+<p>Preconditions:</p>
+
+<ul>
+	<li>Game is running, Miya is selected.</li>
+	<li>Player is on an even floor (Floor 2, 4…) and has entered the Orc Rider Boss room.</li>
+</ul>
+
+
+<p>Steps to Reproduce:</p>
+
+<ol>
+	<li>Select Miya and start the game.</li>
+	<li>Reach the Boss room (Orc Rider) and enter it.</li>
+	<li>Move Miya to the affected corner of the room <span class="error">&#91;bổ sung vị trí cụ thể, ví dụ góc trên-trái&#93;</span>.</li>
+	<li>Stay in that corner and shoot arrows at the boss with the left mouse button.</li>
+	<li>Observe the boss’s behavior until it dies.</li>
+</ol>
+
+
+<p>Expected Result:</p>
+
+<ul>
+	<li>The boss chases Miya and uses its dash and hammer-spin attacks (TC-BS-07, 08, 09).</li>
+	<li>The player cannot kill the boss without taking part in the fight.</li>
+</ul>
+
+
+<p>Actual Result:</p>
+
+<ul>
+	<li>The boss stays in place and does not chase Miya.</li>
+	<li>It only plays idle animations and a red circle effect around itself, and never reaches Miya.</li>
+	<li>Miya kills the boss with arrows without taking any damage.</li>
+	<li>The boss then disappears (dies) normally.</li>
+</ul>
+
+
+<p>Test Case Result:</p>
+
+<ul>
+	<li>FAIL</li>
+	<li>Related Test Cases: TC-BS-07 (Orc Rider stats and behavior), TC-BS-08 (dash attack), TC-BS-09 (hammer spin)</li>
+</ul>
+
+
+<p>Notes:</p>
+
+<ul>
+	<li>Likely a pathfinding or collision issue at that corner. Please check whether the boss gets stuck on a wall or obstacle, or whether the target position is unreachable.</li>
+	<li>Verify whether the same exploit works with other characters and in the Necromancer boss room.</li>
+	<li>Side observation: each arrow shows -1 damage on the boss, while TC-MI-01 and TC-MI-03 expect Miya’s damage to be 2. Please confirm whether the boss has damage reduction or this is a separate bug.</li>
+	<li>Attach the screen recording <tt>Screen_Recording_2026-11-01_220133.mp4</tt>.</li>
+</ul>
+
+            <br/>
+        </td>
+    </tr>
+    </table>
+
+Generated at Sun Nov 01 15:12:00 UTC 2026 by Lê Ngọc Bảo Nguyễn using Jira 1001.0.0-SNAPSHOT#100295-rev:d794cfb4c7554a89092e2f32783da3a72153f3f0.
+
+</body>
+</html>
