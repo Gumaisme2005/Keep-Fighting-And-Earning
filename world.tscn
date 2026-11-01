@@ -587,6 +587,16 @@ sources/1 = SubResource("TileSetAtlasSource_aqk2v")
 [node name="Node2D" type="Node2D" unique_id=569670354]
 y_sort_enabled = true
 
+[node name="BedrockBackground" type="ColorRect" parent="." unique_id=987654321]
+z_index = -100
+z_as_relative = false
+offset_left = -30000.0
+offset_top = -30000.0
+offset_right = 30000.0
+offset_bottom = 30000.0
+mouse_filter = 2
+color = Color(0.012, 0.012, 0.018, 1)
+
 [node name="TileMap" type="TileMap" parent="." unique_id=874230329]
 y_sort_enabled = true
 tile_set = SubResource("TileSet_1vivr")

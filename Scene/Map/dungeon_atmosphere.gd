@@ -306,6 +306,22 @@ static func setup_dungeon_atmosphere(tilemap: TileMap, player: Node2D, rng_seed:
 	root.name = "DungeonAtmosphere"
 	tilemap.add_child(root)
 
+	# 0. Nền đá sâu thẳm Moria (Deep Obsidian Bedrock Backdrop)
+	# Khắc phục triệt để lỗi viền xám và khoảng trống xám vô tận ngoài rìa bản đồ
+	var existing_bg: Node = null
+	if tilemap.get_parent() != null:
+		existing_bg = tilemap.get_parent().get_node_or_null("BedrockBackground")
+	if existing_bg == null:
+		var bg := ColorRect.new()
+		bg.name = "BedrockVoidBackdrop"
+		bg.z_index = -100
+		bg.z_as_relative = false
+		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		bg.color = Color(0.012, 0.012, 0.018, 1.0)
+		bg.position = Vector2(-30000, -30000)
+		bg.size = Vector2(60000, 60000)
+		root.add_child(bg)
+
 	# 1. Ánh sáng ngục tối heo hắt (Màn đêm Moria tối sâu thẳm như Đế Chế)
 	if DisplayServer.get_name() != "headless":
 		var modulate_node := CanvasModulate.new()
