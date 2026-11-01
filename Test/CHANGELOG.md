@@ -41,3 +41,17 @@
 - Identified and documented 2 failed test cases.
 - 1 issue has been fixed; regression testing and status updates should be performed where applicable.
 - Continued tracking the discrepancy between the README documentation and the in-game character statistics.
+
+## 2026-11-01
+
+### QA
+- **22:10** - Executed **TC-BS-07** to verify Orc Rider boss behavior.
+- Identified an issue where the Orc Rider boss stops chasing and attacking when Miya stands in a specific corner of the Boss room. Miya can kill the boss with arrows without taking any damage.
+
+### Bug
+- Logged Jira bug: **[BOSS] Orc Rider stops chasing and attacking when Miya stands in a specific corner**
+- **Bug Type:** Functional / AI Behavior (Exploit).
+- **Priority:** High.
+- **Related Test Cases:** TC-BS-07 (also affects TC-BS-08, TC-BS-09).
+- **Status:** To Do.
+- Side note: arrows deal 1 damage to the boss while Miya's expected damage is 2 (TC-MI-01, TC-MI-03). Needs confirmation whether this is a separate bug.
