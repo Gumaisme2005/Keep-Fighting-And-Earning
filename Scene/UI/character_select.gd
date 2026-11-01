@@ -2,6 +2,10 @@ extends Control
 
 const UITheme = preload("res://Scene/UI/UITheme.gd")
 const DUNGEON_BG_TEX: Texture2D = preload("res://Assets/UI/Background/Dungeon.png")
+const ARCHER_PORTRAIT: Texture2D = preload("res://Assets/UI/Button&Character/Human_Archer.png")
+const KNIGHT_PORTRAIT: Texture2D = preload("res://Assets/UI/Button&Character/Human_Knight.png")
+const SOLDIER_PORTRAIT: Texture2D = preload("res://Assets/UI/Button&Character/Soldier.png")
+const SWORDSMAN_PORTRAIT: Texture2D = preload("res://Assets/UI/Button&Character/Swordsman.png")
 
 @export var character_scenes: Array[PackedScene] = [
 	preload("res://Scene/Character/Player 3_Miya/player_3.tscn"),
@@ -67,6 +71,16 @@ func _ready() -> void:
 			)
 			portraits.append(p)
 			idx_counter += 1
+
+	var hero_textures: Array[Texture2D] = [
+		ARCHER_PORTRAIT,
+		KNIGHT_PORTRAIT,
+		SOLDIER_PORTRAIT,
+		SWORDSMAN_PORTRAIT
+	]
+	for i in range(mini(portraits.size(), hero_textures.size())):
+		if hero_textures[i] != null:
+			portraits[i].texture = hero_textures[i]
 
 	previous_button.pressed.connect(_on_previous_button_pressed)
 	next_button.pressed.connect(_on_next_button_pressed)
