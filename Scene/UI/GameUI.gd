@@ -506,7 +506,11 @@ func _build_inventory_modal() -> void:
 	root_vbox.add_child(header_hbox)
 
 	var title_lbl := Label.new()
-	title_lbl.text = "EQUIPMENT & INVENTORY"
+	var hero_name := "HERO"
+	if get_node_or_null("/root/GameManager") != null:
+		var info: Dictionary = GameManager.get_selected_character_info()
+		hero_name = String(info.get("name", "HERO")).to_upper()
+	title_lbl.text = "%s — EQUIPMENT & INVENTORY" % hero_name
 	UITheme.style_header_label(title_lbl, 15, Color(1.0, 0.86, 0.35))
 	title_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header_hbox.add_child(title_lbl)
@@ -615,9 +619,11 @@ func _connect_to_player_and_map() -> void:
 			if not inventory.equipment_changed.is_connected(refresh_ui):
 				inventory.equipment_changed.connect(refresh_ui)
 
-		if player.get("rmb_cd_max") != null and player.rmb_cd_max > 0.0 and skill_rmb_panel != null:
+		var rmb_cd: float = float(player.get("rmb_cd_max")) if player.get("rmb_cd_max") != null else 0.0
+		if rmb_cd > 0.0 and skill_rmb_panel != null:
 			skill_rmb_panel.visible = true
 
+		_on_skill_cooldown_changed(0.0, 1.0, 0.0, rmb_cd)
 		update_hud(player.hp, player.max_hp, player.current_armor, player.max_armor)
 		refresh_ui()
 
@@ -728,23 +734,44 @@ func _on_boss_died() -> void:
 	if boss_panel != null:
 		boss_panel.visible = false
 
+func _get_current_hero_skill_names() -> Dictionary:
+	var q_name := "Skill Q"
+	var rmb_name := "Right Click"
+	if get_node_or_null("/root/GameManager") != null:
+		var info: Dictionary = GameManager.get_selected_character_info()
+		var full_q: String = String(info.get("skill_q", ""))
+		if "—" in full_q:
+			q_name = full_q.split("—")[0].strip_edges()
+		elif ":" in full_q:
+			q_name = full_q.split(":")[0].strip_edges()
+		var full_rmb: String = String(info.get("skill_rmb", ""))
+		if "—" in full_rmb:
+			rmb_name = full_rmb.split("—")[0].strip_edges()
+		elif ":" in full_rmb:
+			rmb_name = full_rmb.split(":")[0].strip_edges()
+	return {"q": q_name, "rmb": rmb_name}
+
 func _on_skill_cooldown_changed(q_left: float, _q_max: float, rmb_left: float, rmb_max: float) -> void:
+	var skill_names := _get_current_hero_skill_names()
+	var q_title: String = skill_names.get("q", "Skill Q")
+	var rmb_title: String = skill_names.get("rmb", "Right Click")
+
 	if skill_q_label != null:
 		if q_left <= 0.05:
-			skill_q_label.text = "Skill Q: READY"
+			skill_q_label.text = "%s [Q]: READY" % q_title
 			skill_q_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_GOLD)
 		else:
-			skill_q_label.text = "Skill Q: %.1fs" % q_left
+			skill_q_label.text = "%s [Q]: %.1fs" % [q_title, q_left]
 			skill_q_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_MUTED)
 
 	if skill_rmb_label != null and rmb_max > 0.0:
 		if skill_rmb_panel != null:
 			skill_rmb_panel.visible = true
 		if rmb_left <= 0.05:
-			skill_rmb_label.text = "Right Click: READY"
+			skill_rmb_label.text = "%s [RMB]: READY" % rmb_title
 			skill_rmb_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_GOLD)
 		else:
-			skill_rmb_label.text = "Right Click: %.1fs" % rmb_left
+			skill_rmb_label.text = "%s [RMB]: %.1fs" % [rmb_title, rmb_left]
 			skill_rmb_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_MUTED)
 
 func update_hud(current_hp: int, max_hp: int, current_shield: int, max_shield: int) -> void:
@@ -770,8 +797,13 @@ func update_hud(current_hp: int, max_hp: int, current_shield: int, max_shield: i
 
 	if stats_summary_label != null and player != null:
 		var dmg = player.get_total_damage() if player.has_method("get_total_damage") else 1
-		stats_summary_label.text = "HP: %d/%d  •  Armor: %d/%d  •  DMG: %d" % [
-			current_hp, max_hp, current_shield, max_shield, dmg
+		var hero_prefix := ""
+		if get_node_or_null("/root/GameManager") != null:
+			var h_info: Dictionary = GameManager.get_selected_character_info()
+			if h_info.has("name"):
+				hero_prefix = "%s  •  " % String(h_info["name"]).to_upper()
+		stats_summary_label.text = "%sHP: %d/%d  •  Armor: %d/%d  •  DMG: %d" % [
+			hero_prefix, current_hp, max_hp, current_shield, max_shield, dmg
 		]
 
 func _on_slot_clicked(index: int) -> void:
