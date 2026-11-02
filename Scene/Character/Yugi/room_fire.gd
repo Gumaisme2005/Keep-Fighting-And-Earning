@@ -12,6 +12,7 @@ var fire_active := false
 var tick_left := 0.0
 var attack_start := 0
 var beams: Dictionary = {}
+var face_left := false
 
 func _ready() -> void:
 	var world := get_parent()
@@ -33,6 +34,9 @@ func _ready() -> void:
 	monster.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	monster.position.y = -40
 	monster.scale = Vector2(0.5, 0.5)
+	# The sheet faces right; turn toward the side holding the most enemies.
+	face_left = _faces_left()
+	monster.flip_h = face_left
 	add_child(monster)
 	z_index = 3
 
@@ -54,7 +58,7 @@ func _physics_process(delta: float) -> void:
 				var beam := FireBeam.new()
 				add_child(beam)
 				beams[id] = beam
-			beams[id].aim(global_position + Vector2(24, -15), target.global_position + Vector2(0, -8), phase)
+			beams[id].aim(global_position + Vector2(-24 if face_left else 24, -15), target.global_position + Vector2(0, -8), phase)
 		for id in beams.keys():
 			if not live_ids.has(id):
 				beams[id].queue_free()

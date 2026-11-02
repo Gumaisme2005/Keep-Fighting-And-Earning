@@ -30,6 +30,8 @@ func _ready() -> void:
 	monster.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	monster.scale = Vector2(0.5, 0.5)
 	monster.position.y = -40
+	# The sheet faces right; turn toward the side holding the most enemies.
+	monster.flip_h = _faces_left()
 	add_child(monster)
 	z_index = 3
 

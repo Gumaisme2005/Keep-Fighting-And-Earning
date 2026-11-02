@@ -29,6 +29,12 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
   - Cốt truyện đổi thành "FIVE CHAMPIONS OF THE FELLOWSHIP VANGUARD" và thêm dòng giới thiệu Yugi / Atem.
   - Bảng hướng dẫn điều khiển bổ sung phím riêng của Yugi.
 
+### Sửa lỗi
+- **Special Summon kết quả 1 (`Scene/Character/Yugi/room_blast.gd`):** Quái thú triệu hồi không còn cố định quay sang phải — sprite quái thú và quả cầu năng lượng tự lật (`flip_h`) để luôn hướng về tâm phòng.
+- **Special Summon kết quả 5 (`Scene/Character/Yugi/room_fire.gd`):** Quái thú lửa không còn cố định quay sang phải — khi triệu hồi sẽ đếm kẻ địch trong phòng ở hai bên và quay về phía đông hơn (hòa hoặc không có địch thì quay về tâm phòng); điểm phát tia lửa cũng lật theo hướng quay.
+- **Special Summon kết quả 3 (`Scene/Character/Yugi/room_lightning.gd`):** Rồng sấm không còn cố định quay sang phải — dùng chung logic `_faces_left()` (chuyển lên lớp cha `room_blast.gd`) để quay về phía có nhiều kẻ địch hơn, hòa thì quay về tâm phòng.
+- **Special Summon kết quả 2 (`Scene/Character/Yugi/room_laser.gd`):** Phù thủy bóng tối không còn quay sang phải lúc triệu hồi — ngay khi xuất hiện đã quay về phía có nhiều kẻ địch hơn (`_faces_left()`), khi tia laser bắt đầu bắn thì vẫn khóa kẻ địch máu cao nhất trong phòng bất kể vị trí và quay người về phía mục tiêu đó.
+
 ### Kiểm Thử
 - Thêm bộ test `tests/test_yugi.gd` / `tests/test_yugi.tscn` (chọn tướng index 4, Guard, Replay, Special Summon, sanitize replay frames) — **PASS**.
 - Cập nhật `UT-13` trong `tests/test_dungeon_generator_unit.gd`: số lượng `CHARACTER_INFO` kỳ vọng từ `4` lên `5`.

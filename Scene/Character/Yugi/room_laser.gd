@@ -11,6 +11,7 @@ var monster: AnimatedSprite2D
 var beam_active := false
 var tick_remaining := 0.0
 var beam_origin := Vector2.ZERO
+var face_left := false
 
 func _ready() -> void:
 	var world := get_parent()
@@ -24,6 +25,9 @@ func _ready() -> void:
 	monster.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	monster.scale = Vector2(0.5, 0.5)
 	monster.position.y = -35
+	# The sheet faces right; turn toward the side holding the most enemies.
+	face_left = _faces_left()
+	monster.flip_h = face_left
 	add_child(monster)
 	# Physics-driven frames keep the held peak and damage ticks in replay sync.
 	monster.frame = 0
@@ -56,13 +60,15 @@ func _physics_process(delta: float) -> void:
 			return
 		monster.frame = recovery_frame
 	if is_instance_valid(current_target):
-		monster.flip_h = current_target.global_position.x < global_position.x
+		face_left = current_target.global_position.x < global_position.x
+	monster.flip_h = face_left
 	queue_redraw()
 
 func _refresh_target() -> void:
 	var targets := _room_targets()
 	if is_instance_valid(current_target) and targets.has(current_target): return
 	current_target = null
+	# Always lock onto the strongest enemy in the room, wherever it stands.
 	for target in targets:
 		if current_target == null or float(target.get("hp")) > float(current_target.get("hp")):
 			current_target = target

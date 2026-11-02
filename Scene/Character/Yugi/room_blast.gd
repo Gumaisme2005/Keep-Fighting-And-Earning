@@ -30,6 +30,9 @@ func _ready() -> void:
 	monster.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	monster.scale = Vector2(0.5, 0.5)
 	monster.position.y = -40
+	# The sheet faces right; mirror it so the summon always faces the room center.
+	var face_left := impact_position.x < global_position.x
+	monster.flip_h = face_left
 	add_child(monster)
 	monster.play("default")
 	orb = Sprite2D.new()
@@ -38,6 +41,7 @@ func _ready() -> void:
 	orb.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	orb.scale = Vector2(0.65, 0.65)
 	orb.position = Vector2(0, -55)
+	orb.flip_h = face_left
 	orb.hide()
 	add_child(orb)
 	release_position = orb.global_position
@@ -54,6 +58,22 @@ func _physics_process(delta: float) -> void:
 			orb.hide()
 			_detonate()
 	if elapsed >= 2.0: queue_free()
+
+func _faces_left() -> bool:
+	# Shared by room summons: face the side with the most enemies in the room.
+	var left := 0
+	var right := 0
+	for target in _room_targets():
+		var dx := target.global_position.x - global_position.x
+		if dx < 0: left += 1
+		elif dx > 0: right += 1
+	if left != right: return left > right
+	# Tie (or no enemies): face the room center instead of a fixed side.
+	var world := get_parent()
+	if room_rect.size != Vector2i.ZERO and world is Node2D:
+		var center := (world as Node2D).to_global((Vector2(room_rect.position) + Vector2(room_rect.size) * 0.5) * 16.0)
+		return center.x < global_position.x
+	return false
 
 func _room_targets() -> Array[Node2D]:
 	var targets: Array[Node2D] = []
