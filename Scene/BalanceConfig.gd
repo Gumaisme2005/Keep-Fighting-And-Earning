@@ -18,9 +18,9 @@ The White Council has summoned four champions to form the Fellowship Vanguard, g
 
 # ------------------------------------------------------------------------------
 # 1. CHAMPION ROSTER & COMBAT BALANCE TABLE
-# Order in CharacterSelect: 0 = Miya, 1 = Olaf, 2 = Pyrois, 3 = Charlotte
+# Order in CharacterSelect: 0 = Miya, 1 = Olaf, 2 = Pyrois, 3 = Charlotte, 4 = Yugi
 # ------------------------------------------------------------------------------
-const HERO_ORDER: Array[String] = ["miya", "olaf", "pyrois", "charlotte"]
+const HERO_ORDER: Array[String] = ["miya", "olaf", "pyrois", "charlotte", "yugi"]
 
 static var HERO_STATS: Dictionary = {
 	"miya": {
@@ -97,6 +97,22 @@ static var HERO_STATS: Dictionary = {
 		"lore": "A northern ranger hunting the minions of darkness across the wilderness. Forsaking armor for supreme mobility, she strikes with blinding twin-blade flourishes.",
 		"skill_q": "Triple Flurry — Key Q: Unleash three lightning-fast slashes in place. Cooldown: 3s.",
 		"skill_rmb": "Shadow Step — Right Click: Dash through the shadows with invulnerability then strike four times. Cooldown: 5s."
+	},
+	"yugi": {
+		"index": 4,
+		"id": "yugi",
+		"name": "Yugi / Atem",
+		"role": "Pharaoh Summoner",
+		"weapon": "Millennium Puzzle & Duel Deck",
+		"skill_icon": "crystal",
+		"hp": 5,
+		"armor": 1,
+		"damage": 1,
+		"speed": 150.0,
+		"skill_cooldown": 12.0,
+		"lore": "Atem calls forth monsters from his deck to fight at his side. Hold Shift to guard instantly; release Shift to end it; clicking while guarding cancels the guard to cast a combo summon.",
+		"skill_q": "Special Summon — Key Q: Randomly unleash 1 of 5 room-wide summons (20% each). Cooldown: 12s.",
+		"skill_rmb": "Summon — Left/Right Click: Call a monster; hold 0.65s then release to charge it. Shift + Click: combo summon."
 	}
 }
 

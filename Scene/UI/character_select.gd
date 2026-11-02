@@ -12,6 +12,7 @@ const SWORDSMAN_PORTRAIT: Texture2D = preload("res://Assets/UI/Button&Character/
 	preload("res://Scene/Character/Player 2_Olaf/player_2.tscn"),
 	preload("res://Scene/Character/Player 1_Pyrois/player.tscn"),
 	preload("res://Scene/Character/Player 4_Charlotte/player_4.tscn"),
+	preload("res://Scene/Character/Yugi/yugi.tscn"),
 ]
 @export_file("*.tscn") var game_world_path: String = "res://world.tscn"
 
@@ -55,6 +56,8 @@ func _ready() -> void:
 	var root_panel := $PanelContainer as PanelContainer
 	if root_panel != null:
 		root_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.05, 0.06, 0.11, 0.72), Color(0.75, 0.60, 0.28, 0.85), 2, 0, 0, 0))
+
+	_add_yugi_portrait()
 
 	var idx_counter: int = 0
 	for child in object_container.get_children():
@@ -105,6 +108,31 @@ func _ready() -> void:
 	_select_deselect_highlight()
 	_update_buttons()
 	_update_hero_info_display()
+
+func _add_yugi_portrait() -> void:
+	var yugi_portrait := TextureRect.new()
+	yugi_portrait.name = "TextureRect5"
+	# The supplied icon has a 1px pale-green border on its left and bottom edges.
+	# Exclude that border without broadening the chroma key over character colors.
+	var yugi_icon_source: Texture2D = preload("res://Assets/Character/Yugi/icon.png")
+	var yugi_icon := AtlasTexture.new()
+	yugi_icon.atlas = yugi_icon_source
+	yugi_icon.region = Rect2(1, 0, yugi_icon_source.get_width() - 1, yugi_icon_source.get_height() - 1)
+	# Pad the portrait to the selection cell instead of enlarging the tightly
+	# cropped image to fill it. Keeps Yugi comparable to the other hero icons.
+	var icon_padding := Vector2(104, 104) - yugi_icon.region.size
+	# Other portraits place their feet near y=103 on a 128px canvas.
+	# Match that baseline on our 104px canvas, accounting for Yugi's last row.
+	var yugi_top_padding := roundf(103.0 * 104.0 / 128.0) - (yugi_icon.region.size.y - 1.0)
+	yugi_icon.margin = Rect2(Vector2(icon_padding.x * 0.5, yugi_top_padding), icon_padding)
+	yugi_icon.filter_clip = true
+	yugi_portrait.texture = yugi_icon
+	yugi_portrait.material = preload("res://Scene/Character/Yugi/YugiSprites.gd").material()
+	yugi_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	yugi_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	object_container.add_child(yugi_portrait)
+	# Keep the trailing MarginContainer spacer as the last child.
+	object_container.move_child(yugi_portrait, object_container.get_child_count() - 2)
 
 func _build_hero_details_and_seed_bar() -> void:
 	var main_vbox := $PanelContainer/MarginContainer/VBoxContainer as VBoxContainer

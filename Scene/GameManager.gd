@@ -23,6 +23,7 @@ const CHARACTER_SCENES: Array[PackedScene] = [
 	preload("res://Scene/Character/Player 2_Olaf/player_2.tscn"),
 	preload("res://Scene/Character/Player 1_Pyrois/player.tscn"),
 	preload("res://Scene/Character/Player 4_Charlotte/player_4.tscn"),
+	preload("res://Scene/Character/Yugi/yugi.tscn"),
 ]
 
 var WORLD_LORE: Dictionary = BalanceData.WORLD_LORE
@@ -107,7 +108,14 @@ static func _sanitize_replay_frames(raw_frames: Variant, max_count: int) -> Arra
 			"atk": bool(item.get("atk", false)) if item.get("atk") is bool else false,
 			"q": bool(item.get("q", false)) if item.get("q") is bool else false,
 			"rmb": bool(item.get("rmb", false)) if item.get("rmb") is bool else false,
-			"slot": clampi(slot_idx, -1, 15)
+			"slot": clampi(slot_idx, -1, 15),
+			# Yugi-specific inputs (Shift guard, mouse press/release, Q special result)
+			"shift": item.get("shift", false) == true,
+			"lp": item.get("lp", false) == true,
+			"lr": item.get("lr", false) == true,
+			"rp": item.get("rp", false) == true,
+			"rr": item.get("rr", false) == true,
+			"result": clampi(int(item.get("result", 0)), 0, 5) if item.get("result", 0) is int else 0
 		})
 	return safe_frames
 

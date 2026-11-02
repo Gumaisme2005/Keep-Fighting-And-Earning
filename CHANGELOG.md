@@ -4,6 +4,37 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 
 ---
 
+## [2026-11-02] — Tướng Thứ 5: Yugi / Atem (Pharaoh Summoner)
+
+### Tính năng Mới & Cơ chế Lối chơi
+- **Bổ sung Anh hùng thứ 5 — Yugi / Atem (`Scene/Character/Yugi/`):**
+  - Port toàn bộ nhân vật từ nhánh `development`: `yugi.gd`, `yugi.tscn`, `YugiSprites.gd`, shader tách nền `key_green.gdshader` và các hiệu ứng triệu hồi (`summon.gd`, `energy_ball.gd`, `fire_beam.gd`, `lightning_hit.gd`, `explosion_flash.gd`, `target_ring.gd`, `room_blast.gd`, `room_laser.gd`, `room_lightning.gd`, `room_pull.gd`, `room_fire.gd`).
+  - Bổ sung bộ sprite & file `.import` tại `Assets/Character/Yugi/` (intro, stance, run, guard, death, special, các đòn click và 5 kết quả Special Summon).
+  - Cơ chế điều khiển:
+    - **Chuột Trái / Chuột Phải:** Triệu hồi quái thú; giữ 0.65s rồi thả để tung đòn tích lực (x2 / x3 sát thương).
+    - **Giữ Shift:** Vào thế Guard ngay lập tức (miễn sát thương, giảm tốc di chuyển); nhả Shift để kết thúc.
+    - **Shift + Chuột:** Chiêu kết hợp — Shift + Chuột Phải đánh dấu tối đa 2 mục tiêu gần nhất trong tầm nhìn.
+    - **Phím Q — Special Summon:** Ngẫu nhiên 1 trong 5 chiêu triệu hồi diện rộng (20% mỗi loại), hồi chiêu 12s. Kết quả ngẫu nhiên được seed theo `current_seed` + tầng để đảm bảo tính tất định.
+    - Hoạt cảnh Intro khi xuất hiện: khóa mọi thao tác (trừ ESC) và miễn sát thương cho đến khi kết thúc.
+
+### Tích hợp Hệ thống
+- **`Scene/BalanceConfig.gd`:** Thêm `"yugi"` vào `HERO_ORDER` (index 4) và bổ sung bảng chỉ số: Máu 5, Giáp 1, Sát thương 1, Tốc độ 150, Hồi chiêu Q 12s, icon kỹ năng `crystal`; lore & mô tả kỹ năng viết bằng tiếng Anh đồng bộ phong cách Fellowship Vanguard.
+- **`Scene/GameManager.gd`:**
+  - Thêm `res://Scene/Character/Yugi/yugi.tscn` vào `CHARACTER_SCENES`.
+  - `_sanitize_replay_frames()` giữ lại các trường input riêng của Yugi (`shift`, `lp`, `lr`, `rp`, `rr`, `result`) để Replay tái hiện chính xác thao tác Guard / nhấn-thả chuột / kết quả Special Summon.
+- **`Scene/UI/character_select.gd`:**
+  - Thêm Yugi vào `character_scenes`.
+  - Hàm mới `_add_yugi_portrait()` dựng portrait thứ 5 từ `Assets/Character/Yugi/icon.png` (cắt viền 1px, căn baseline chân giống 4 tướng còn lại, áp shader tách nền) và chèn trước spacer cuối danh sách.
+- **`Menu/main menu/main_menu.gd`:**
+  - Cốt truyện đổi thành "FIVE CHAMPIONS OF THE FELLOWSHIP VANGUARD" và thêm dòng giới thiệu Yugi / Atem.
+  - Bảng hướng dẫn điều khiển bổ sung phím riêng của Yugi.
+
+### Kiểm Thử
+- Thêm bộ test `tests/test_yugi.gd` / `tests/test_yugi.tscn` (chọn tướng index 4, Guard, Replay, Special Summon, sanitize replay frames) — **PASS**.
+- Cập nhật `UT-13` trong `tests/test_dungeon_generator_unit.gd`: số lượng `CHARACTER_INFO` kỳ vọng từ `4` lên `5`.
+
+---
+
 ## [2026-11-01] — Sương Mù Chiến Tranh, Bẫy Kim Cọc Vật Lý, Cân Bằng Độ Khó Leo Thang & Dockerization
 
 ### Tính năng Mới & Cơ chế Lối chơi
