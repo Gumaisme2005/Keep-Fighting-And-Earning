@@ -4,6 +4,38 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 
 ---
 
+## [2026-11-02] — Boss Mới: Skeleton King & Đấu Trường Laser
+
+### Tính năng Mới & Cơ chế Lối chơi
+- **Phòng Boss cố định mỗi 3 tầng (`Scene/Map/dungeon_generator.gd`):**
+  - Sau mỗi 2 tầng hoàn thành, phòng Boss của tầng kế tiếp (tầng 3, 6, 9, ...) được thay bằng **đấu trường Skeleton King** kích thước cố định 32×18 ô, sàn trống hoàn toàn (không cột đá, không cụm vật cản, không bẫy) theo bố cục `example_room_layout`.
+  - Vẫn rút đủ số ngẫu nhiên khi tạo kích thước phòng nên các phòng khác của tầng giữ nguyên bố cục theo Seed. Tầng 1, 2, 4, 5... vẫn dùng Necromancer / Orc Rider như cũ.
+  - Hàm mới `is_skeleton_king_floor()` và biến `skeleton_king_room_index`.
+- **Skeleton King (`Scene/Enemies/Boss/Skeleton King/skeleton_king.gd`):**
+  - Sprite khổng lồ đứng sau bức tường trên cùng, hai tay tì lên tường, căn giữa phòng; không chịu ánh sáng tối của hầm ngục nên luôn nổi bật. Dùng đủ 7 hoạt ảnh: `idle`, `idle_enraged`, `hit`, `slam` (sự kiện impact khung 8), `cast` (sự kiện release khung 9), `enrage`, `death`.
+  - Ngủ (tối màu) cho tới khi người chơi bước vào và cửa khóa; khi thức tỉnh camera tự lùi ra để thấy toàn bộ đấu trường lẫn Boss (chừa chỗ cho thanh máu Boss và hotbar), sau khi Boss chết camera trả về nhân vật.
+  - **Bất khả xâm phạm** — chỉ mất máu khi người chơi đập vỡ Pha Lê Linh Hồn.
+  - **Đòn Slam → Sóng xung kích laser:** các tia laser song song cách đều 3 ô bắn nối tiếp nhau, hoặc quét từ trên xuống (ngang), hoặc lan từ giữa ra hai bên (dọc).
+  - **Đòn Cast → Loạt laser:** các tia dọc *hoặc* ngang song song cách đều 4 ô. Khi nổi giận có thêm lưới laser (dọc + ngang cách 5 ô) và 2 loạt dọc lệch nhau.
+  - Mỗi tia có giai đoạn cảnh báo (vạch đỏ tím + vệt nạp năng lượng) trước khi bắn; khoảng giữa các tia luôn an toàn.
+  - **Đòn Cast → Triệu hồi:** gọi 2–3 quái hiện có của hầm ngục (Orc, Skeleton, Vampire, Armored Orc, Skeleton Archer) vào đấu trường, giới hạn 4 con (6 khi nổi giận). Quái triệu hồi được cộng chỉ số theo tầng và biến mất khi Boss chết.
+  - **Nổi giận ở 50% máu:** chuyển Phase 2, hành động nhanh hơn, duy trì 3 pha lê, mẫu laser khó hơn.
+  - Toàn bộ AI chạy theo nhịp vật lý và RNG theo Seed + tầng nên Replay tái hiện chính xác.
+- **Pha Lê Linh Hồn (`skeleton_king_crystal.gd`, sprite `Assets/Character/Skeleton King/skeleton_king_crystal.png`):**
+  - Mọc lên ở vị trí ngẫu nhiên trong phòng (tránh người chơi), có `Hurtbox` nên mọi đòn đánh của 5 tướng đều phá được; có thanh máu nhỏ, tia liên kết mờ nối về Boss.
+  - Mỗi pha lê vỡ gây một phần máu cố định cho Boss (tầng 3: 5 pha lê để hạ Boss); pha lê mới mọc lại sau 2.5s (nhanh hơn khi nổi giận).
+  - **Bám rễ — không thể bị di chuyển:** pha lê luôn đứng yên tại chỗ mọc; chiêu kéo (Yugi Special Summon 4) chỉ gây sát thương tại chỗ, sét choáng (Yugi Special Summon 3) chỉ hiện hiệu ứng mà không đóng băng pha lê (`is_immovable` trong `room_pull.gd` / `lightning_hit.gd`), và pha lê tự neo lại nếu bị dịch chuyển.
+  - **Thời gian tồn tại:** mỗi pha lê sống 9s (7.5s khi Boss nổi giận), có vòng đếm ngược quanh chân và nhấp nháy đỏ trong 3s cuối. Hết giờ mà chưa bị phá, pha lê tan thành luồng năng lượng xanh chảy về Boss và **hồi cho Boss 50% lượng máu mà một pha lê vỡ gây ra** (tầng 3: +6 máu, không vượt quá máu tối đa).
+- **Tia laser (`skeleton_king_laser.gd`):** quản lý cảnh báo, bắn, mờ dần và gây sát thương cho người chơi đứng trên tia (mỗi người chơi tối đa 1 lần / 0.45s).
+- **Cân bằng (`Scene/BalanceConfig.gd`):** thêm mục `skeleton_king` (Máu 60 +15 mỗi bậc, 5 pha lê +1 mỗi bậc, máu pha lê 6 +2 mỗi bậc, pha lê tồn tại 9s / 7.5s và hồi 50% khi hết giờ, laser 1 sát thương +1 mỗi bậc, hồi chiêu 2.6s / 1.7s khi nổi giận). Bậc = tầng / 3.
+- **Tài nguyên:** thêm bộ sprite Skeleton King vào `Assets/Character/Skeleton King/`.
+
+### Kiểm Thử
+- Thêm `tests/test_skeleton_king.gd` / `.tscn` (SK-01 .. SK-17): luân phiên tầng, bố cục phòng cố định, vị trí Boss trên tường, bất tử, thức tỉnh + pha lê + camera, khoảng cách đều của tia laser, sát thương tia / khoảng an toàn, các mẫu sóng xung kích & lưới, triệu hồi, pha lê gây sát thương, pha lê không thể bị di chuyển / kéo / đóng băng, pha lê hết giờ hồi máu Boss, nổi giận, cái chết mở cổng — **21/21 PASS**.
+- `run_tests.bat` chạy thêm bước [6/6] Skeleton King Tests. Toàn bộ test cũ (Unit 19/19, Property 5/5, Orc Battle 5/5, VT-075 24/24, Yugi) vẫn PASS.
+
+---
+
 ## [2026-11-02] — Tướng Thứ 5: Yugi / Atem (Pharaoh Summoner)
 
 ### Tính năng Mới & Cơ chế Lối chơi

@@ -20,6 +20,9 @@ const SPIKE_TRAP = preload("res://Scene/Map/SpikeTrap.tscn")
 
 const RIDER_ORC_SCENE = preload("res://Scene/Enemies/Boss/Orc Rider/orc_rider.tscn")
 const NECROMANCER_SCENE = preload("res://Scene/Enemies/Boss/Necromancer/necromancer.tscn")
+const SKELETON_KING_SCRIPT = preload("res://Scene/Enemies/Boss/Skeleton King/skeleton_king.gd")
+# Fixed arena replacing the random boss room on every 3rd floor (after 2 cleared floors).
+const SKELETON_KING_ROOM_SIZE := Vector2i(32, 18)
 
 var enemy_scenes: Array[PackedScene] = [
 	preload("res://Scene/Enemies/Orc/orc.tscn"),
@@ -70,6 +73,7 @@ var planned_enemy_spawns: Array = [] # Lưu vị trí quái đã quy hoạch đ�
 var room_managers: Dictionary = {}   # room_index -> RoomManager
 var visited_rooms: Dictionary = {0: true}
 var active_boss: Node2D = null
+var skeleton_king_room_index: int = -1
 
 func _ready():
 	set_layer_z_index(0, -1)
@@ -88,6 +92,11 @@ func _ready():
 	generate_dungeon()
 	call_deferred("spawn_entities")
 
+# After every 2 cleared floors, the next floor's boss room is the Skeleton King arena.
+func is_skeleton_king_floor(level: int = -1) -> bool:
+	var lv := current_level if level < 0 else level
+	return lv > 0 and lv % 3 == 0
+
 func get_effective_seed_string() -> String:
 	if current_level <= 1:
 		return map_seed
@@ -104,6 +113,7 @@ func generate_dungeon():
 	room_managers.clear()
 	visited_rooms = {0: true}
 	active_boss = null
+	skeleton_king_room_index = -1
 
 	build_dungeon_layout()
 	_reserve_room_centers_and_entrances()
@@ -112,6 +122,8 @@ func generate_dungeon():
 	# Bước 2: Xây gạch và trang trí (Né các vị trí bẫy, tâm phòng và lối vào)
 	for i in range(generated_rooms.size()):
 		var type = room_types[i]
+		if i == skeleton_king_room_index:
+			continue # The Skeleton King arena stays a clean, open floor.
 		if type == RoomType.COMBAT or type == RoomType.BOSS:
 			decorate_pillars(generated_rooms[i])
 	scatter_decorations()
@@ -185,6 +197,11 @@ func build_dungeon_layout():
 	for grid_pos in room_positions:
 		var rw = rng.randi_range(room_min_size, room_max_size)
 		var rh = rng.randi_range(room_min_size, room_max_size)
+		if grid_pos == boss_grid_pos and is_skeleton_king_floor():
+			# Random sizes are still drawn above so other rooms keep their layout.
+			rw = SKELETON_KING_ROOM_SIZE.x
+			rh = SKELETON_KING_ROOM_SIZE.y
+			skeleton_king_room_index = generated_rooms.size()
 		var rx = grid_pos.x * cell_size + int((cell_size - rw) / 2.0)
 		var ry = grid_pos.y * cell_size + int((cell_size - rh) / 2.0)
 		var main_rect = Rect2i(rx, ry, rw, rh)
@@ -413,6 +430,8 @@ func scatter_decorations():
 		var room = generated_rooms[i]
 		if room_types[i] == RoomType.START or room_types[i] == RoomType.TREASURE:
 			continue
+		if i == skeleton_king_room_index:
+			continue
 
 		var center = room.get_center()
 		var num_clusters = rng.randi_range(1, 3)
@@ -541,6 +560,24 @@ func spawn_entities():
 			manager.entrances = entrances
 			add_child(manager)
 			room_managers[i] = manager
+
+			if i == skeleton_king_room_index:
+				var king: Node2D = SKELETON_KING_SCRIPT.new()
+				king.name = "SkeletonKing"
+				king.tilemap = self
+				king.room_rect = room
+				king.room_manager = manager
+				king.level = current_level
+				king.z_index = 1
+				king.add_to_group("enemies")
+				king.add_to_group("boss")
+				# Anchored to the top wall: the King towers over the arena from behind it.
+				king.position = Vector2(room.position.x + room.size.x * 0.5, room.position.y + 1) * 16.0
+				add_child(king)
+				manager.enemies.append(king)
+				active_boss = king
+				print("[BOSS] Tầng ", current_level, " - Boss: Skeleton King xuất hiện!")
+				continue
 
 			var boss_instance: Node2D
 			if current_level % 2 != 0:

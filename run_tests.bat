@@ -71,7 +71,16 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 echo.
+echo [6/6] Chay Skeleton King Boss Arena Tests (SK-01 .. SK-17)...
+"!GODOT_BIN!" --headless --path . "res://tests/test_skeleton_king.tscn"
+if !ERRORLEVEL! NEQ 0 (
+    echo [THAT BAI] Skeleton King Tests gap loi!
+    pause
+    exit /b 1
+)
+
+echo.
 echo ==================================================================
-echo   [THANH CONG] TAT CA UNIT, PROPERTY, COMBAT, BENCHMARK VA VT-075 PASS 100%%!
+echo   [THANH CONG] TAT CA UNIT, PROPERTY, COMBAT, BENCHMARK, VT-075 VA SKELETON KING PASS 100%%!
 echo ==================================================================
 pause

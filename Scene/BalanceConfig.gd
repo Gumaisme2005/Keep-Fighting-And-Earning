@@ -187,6 +187,28 @@ static var BOSS_STATS: Dictionary = {
 		"hp": 50,
 		"speed": 75.0,
 		"damage": 3
+	},
+	# Appears on every 3rd floor (3, 6, 9...). Invulnerable: only shattering
+	# his Soul Crystals hurts him. Values below are for floor 3 and scale per tier.
+	"skeleton_king": {
+		"title": "SKELETON KING OF THE BARROW-DOWNS",
+		"hp": 60,
+		"hp_per_tier": 15,
+		"crystals_to_defeat": 5,
+		"crystal_hp": 6,
+		"crystal_hp_per_tier": 2,
+		"max_crystals": 2,
+		"max_crystals_enraged": 3,
+		"crystal_respawn": 2.5,
+		"crystal_lifetime": 9.0,
+		"crystal_lifetime_enraged": 7.5,
+		"crystal_expire_heal_ratio": 0.5,
+		"laser_damage": 1,
+		"summon_cap": 4,
+		"summon_cap_enraged": 6,
+		"action_cooldown": 2.6,
+		"action_cooldown_enraged": 1.7,
+		"enrage_ratio": 0.5
 	}
 }
 
