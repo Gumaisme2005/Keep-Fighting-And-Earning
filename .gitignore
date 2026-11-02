@@ -3,9 +3,12 @@
 /android/
 .codegraph/
 
-# VT-075 generated artifacts
-tests/vt075/_mutant/
-tests/vt075/_cov/
+# Documents & Assignment artifacts
+*.pdf
+*VT-075*
+*vt075*
+docs/vt075/
+tests/vt075/
 __pycache__/
 *.pyc
 
