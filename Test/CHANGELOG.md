@@ -55,3 +55,16 @@
 - **Related Test Cases:** TC-BS-07 (also affects TC-BS-08, TC-BS-09).
 - **Status:** To Do.
 - Side note: arrows deal 1 damage to the boss while Miya's expected damage is 2 (TC-MI-01, TC-MI-03). Needs confirmation whether this is a separate bug.
+
+## 2026-11-03
+
+### QA
+- **23:14** - Executed **TC-MI-02** to verify Miya's arrow shooting behavior.
+- Identified an issue where the arrow animation spawns from Miya's feet instead of from the bow when shooting.
+
+### Bug
+- Logged Jira bug: **[Miya] Arrow animation spawns from the character's feet instead of from the bow**
+- **Bug Type:** Visual / Animation.
+- **Priority:** Low.
+- **Related Test Case:** TC-MI-02 (also related to TC-MI-01).
+- **Status:** To Do.
