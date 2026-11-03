@@ -117,18 +117,18 @@ Chạy toàn bộ bộ kiểm thử tự động (Unit Tests, Security Tests, Pr
    - **Mã sinh viên:** 23001837 — Bùi Quang Chiến (Nhóm SE2026-T19).
    - **Change Request:** Thêm vai trò Reviewer có quyền đọc và phê duyệt run nhưng không được sửa dữ liệu gốc ([`Scene/Review/review_service.gd`](Scene/Review/review_service.gd)).
    - **Lệnh chạy kiểm thử VT-075 (24/24 PASS):**
-     ```powershell
-     & "B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe" --headless "res://tests/test_reviewer_concurrency.tscn"
-     ```
+	 ```powershell
+	 & "B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe" --headless "res://tests/test_reviewer_concurrency.tscn"
+	 ```
    - **Lệnh chạy kiểm chứng tải 120 tác vụ đồng thời (p95 <= 3.5s):**
-     ```powershell
-     & "B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe" --headless "res://tests/vt075/load_p95.tscn"
-     ```
+	 ```powershell
+	 & "B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe" --headless "res://tests/vt075/load_p95.tscn"
+	 ```
    - **Báo cáo kỹ thuật chi tiết:**
-     - Đặc tả & AI Plan Review: [`docs/vt075/01_spec_and_plan.md`](docs/vt075/01_spec_and_plan.md)
-     - Chiến lược kiểm thử & Concurrency: [`docs/vt075/02_test_strategy.md`](docs/vt075/02_test_strategy.md)
-     - Đánh giá Mutation & Đo tải: [`docs/vt075/03_test_evaluation.md`](docs/vt075/03_test_evaluation.md)
-     - Ma trận truy vết, AI Usage Log & Reflection: [`docs/vt075/04_engineering_evidence_and_reflection.md`](docs/vt075/04_engineering_evidence_and_reflection.md)
+	 - Đặc tả & AI Plan Review: [`docs/vt075/01_spec_and_plan.md`](docs/vt075/01_spec_and_plan.md)
+	 - Chiến lược kiểm thử & Concurrency: [`docs/vt075/02_test_strategy.md`](docs/vt075/02_test_strategy.md)
+	 - Đánh giá Mutation & Đo tải: [`docs/vt075/03_test_evaluation.md`](docs/vt075/03_test_evaluation.md)
+	 - Ma trận truy vết, AI Usage Log & Reflection: [`docs/vt075/04_engineering_evidence_and_reflection.md`](docs/vt075/04_engineering_evidence_and_reflection.md)
 
 ---
 

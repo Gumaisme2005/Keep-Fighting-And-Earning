@@ -4,6 +4,36 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 
 ---
 
+## [2026-11-03] — Quái Mới: Werewolf (Warg-breed Werewolf) & Dọn Dẹp Mã Nguồn (Refactor)
+
+> Bổ sung quái vật mới **Người Sói (Werewolf)** với cơ chế săn mồi tụ lực vồ mồi (Telegraphing Pounce Strike), hoàn thiện hệ sinh thái kẻ thù trong hầm ngục Moria, đồng thời tinh gọn toàn bộ mã nguồn dự án bằng việc loại bỏ các file kiểm thử và tài liệu phụ trợ.
+
+### 🐺 Quái Mới: Werewolf (Warg-breed Werewolf)
+- **Tài nguyên & Sprite:** Tích hợp bộ sprite $100 \times 100$ từ asset pack vào `Assets/Character/Werewolf/Werewolf with shadows/` gồm 6 hoạt ảnh: `idle` (6 frames), `walk` (8 frames), `attack_1` (9 frames), `attack_2` (13 frames), `hurt` (4 frames), `death` (4 frames).
+- **Chỉ số & Cân bằng (`Scene/BalanceConfig.gd`):**
+  - **Máu 5 · Sát thương cào 2 · Sát thương vồ 3 · Tốc độ chạy 95.0 · Tốc độ vồ 175.0 · Tầm vồ 95.0px · Tỉ lệ rớt đồ 35%**.
+  - Bảng rớt đồ (`loot_table`): Bình máu nhỏ (`health_potion.tres`), bình máu lớn (`big_health_potion.tres`), kiếm sắt (`iron_sword.tres`).
+- **Cơ chế Lối chơi & AI (`Scene/Enemies/Werewolf/werewolf.gd`):**
+  - **Cận chiến cơ bản (`attack_1` - Claw Slash):** Kích hoạt ở cự ly gần $\le 24.0$px, vung móng cào nhanh với sát thương 2.
+  - **Tụ lực vồ mồi thông minh (`attack_2` - Pounce Strike):**
+    - Khi người chơi ở cự ly săn mồi ($50 - 135$px) và có tầm nhìn (Line-of-Sight), Werewolf dừng lại khựng 1 nhịp $0.65$s để tụ lực, toàn thân nhấp nháy đỏ cảnh báo.
+    - **Telegraphing trực quan qua `_draw()`**: Hiển thị dải đỏ rộng 22px báo trước toàn bộ vệt lao, tia laser tâm chỉ hướng và vòng tròn đích đánh dấu chính xác điểm dừng cú vồ.
+    - Người chơi có thể ngắt chiêu nếu đánh trúng hoặc choáng Werewolf trong thời gian tụ lực.
+    - **Lao có cự ly cố định & hãm tốc**: Chỉ lao đúng một đoạn $95.0$px với vận tốc đầm $175.0$px/s (khi đi được 70% quãng đường sẽ giảm tốc để tiếp đất tự nhiên cào xé).
+  - Tự động dừng lao nếu va chạm tường đá.
+- **Tích hợp Dungeon (`Scene/Map/dungeon_generator.gd`):** Đăng ký `werewolf.tscn` vào danh sách `enemy_scenes`, xuất hiện ngẫu nhiên trong các phòng Combat của hầm ngục.
+- **Cốt truyện (`Menu/main menu/main_menu.gd`):** Bổ sung `"Warg-breed Werewolves"` vào danh sách quái vật bóng tối Moria trong Lore modal.
+
+### 🧹 Dọn Dẹp Mã Nguồn (Codebase Clean-up)
+- Loại bỏ toàn bộ các file, thư mục chỉ dùng cho mục đích kiểm thử/báo cáo học phần để tinh gọn dự án cho bản phát hành:
+  - **Thư mục `tests/`**: Xóa toàn bộ Unit tests, Concurrency harness, thư mục `vt075/` và các script Python/PowerShell đo đạc.
+  - **Thư mục `Test/`**: Xóa file `TestCase.xlsx`, `TestCase.csv`, các file `TestCase.*.translation`, Jira links.
+  - **Thư mục gốc**: Xóa `run_tests.bat`, `test_orc_battle.gd`, `test_orc_battle.tscn`, `test_orc_battle.gd.uid`.
+  - **Logic kiểm thử phụ**: Xóa `Scene/Review/review_service.gd` (module kiểm thử vai trò Reviewer).
+  - **Tài liệu kiểm thử**: Xóa `docs/vt075/` và `docs/BENCHMARK_REPORT.md`.
+
+---
+
 ## [2026-11-03] — Tướng Thứ 6: Doraemon (Gadget Cat of the 22nd Century)
 
 > Doraemon — chú mèo máy đến từ thế kỷ 22 — chiến đấu bằng **toàn bộ Túi Thần Kỳ**: 20 bảo bối, 6 người bạn và 10 siêu chiêu. Nhân vật, sprite và bộ chiêu được chuyển thể từ nhân vật M.U.G.E.N **"DORAemon"** (tác giả gốc SUGIO, bản chỉnh sửa của カイリ / KAIemon).
