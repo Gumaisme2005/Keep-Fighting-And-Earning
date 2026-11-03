@@ -23,6 +23,7 @@ const ANIMS: Dictionary = {
 	"bubble": {"file": "doraemon_bubble.png", "cell": Vector2(50, 32), "anchor": Vector2(25, 31), "ticks": [6, 16], "loop": false},
 	"shockgun": {"file": "doraemon_shockgun.png", "cell": Vector2(50, 32), "anchor": Vector2(25, 31), "ticks": [6, 20], "loop": false},
 	"magichand": {"file": "doraemon_magichand.png", "cell": Vector2(50, 32), "anchor": Vector2(25, 31), "ticks": [22], "loop": false},
+	"magichand_grip": {"file": "doraemon_magichand_grip.png", "cell": Vector2(50, 32), "anchor": Vector2(25, 31), "ticks": [22], "loop": false},
 	"mantle": {"file": "doraemon_mantle.png", "cell": Vector2(26, 32), "anchor": Vector2(13, 31), "ticks": [4, 44], "loop": false},
 	"door_in": {"file": "doraemon_door_in.png", "cell": Vector2(50, 40), "anchor": Vector2(25, 39), "ticks": [8, 10], "loop": false},
 	"door_out": {"file": "doraemon_door_out.png", "cell": Vector2(50, 40), "anchor": Vector2(25, 39), "ticks": [6, 8, 10], "loop": false},
@@ -86,7 +87,7 @@ const ANIMS: Dictionary = {
 	"junk_chair": {"file": "doraemon_junk_chair.png", "cell": Vector2(16, 31), "anchor": Vector2(8, 16), "ticks": [1], "loop": false},
 	"junk_fridge": {"file": "doraemon_junk_fridge.png", "cell": Vector2(32, 64), "anchor": Vector2(16, 30), "ticks": [1], "loop": false},
 	"door": {"file": "doraemon_door.png", "cell": Vector2(28, 40), "anchor": Vector2(8, 14), "ticks": [1], "loop": false},
-	"glove_head": {"file": "doraemon_glove_head.png", "cell": Vector2(15, 12), "anchor": Vector2(7, 6), "ticks": [1], "loop": false}
+	"magichand_head": {"file": "doraemon_magichand_head.png", "cell": Vector2(13, 13), "anchor": Vector2(0, 6), "ticks": [1], "loop": false}
 }
 
 static var _cache: Dictionary = {}

@@ -80,7 +80,7 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 echo.
-echo [7/7] Chay Doraemon Hero Tests (45 checks: 20 gadgets, 6 friends, 10 supers)...
+echo [7/7] Chay Doraemon Hero Tests (47 checks: 20 gadgets, 6 friends, 10 supers)...
 "!GODOT_BIN!" --headless --path . "res://tests/test_doraemon.tscn"
 if !ERRORLEVEL! NEQ 0 (
     echo [THAT BAI] Doraemon Tests gap loi!

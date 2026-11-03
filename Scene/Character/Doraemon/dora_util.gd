@@ -105,6 +105,41 @@ static func stun(target: Node, seconds: float) -> void:
 	s.remaining = seconds
 	target.add_child(s)
 
+## Bosses are heavy: shoves barely move them and they never topple over.
+static func is_heavy(target: Node) -> bool:
+	var s = target.get_script()
+	return s != null and String(s.resource_path).contains("/Boss/")
+
+## Champion Glove knockback: shoves an enemy `distance` px along `dir` over `seconds`
+## (stops at walls / doors), then keeps it dazed for `extra_stun` seconds.
+static func knockback(world: Node, target: Node, dir: Vector2, distance: float, seconds: float = 0.15, extra_stun: float = 0.0) -> void:
+	if not is_instance_valid(target) or target.is_queued_for_deletion() or dir == Vector2.ZERO:
+		return
+	if target.get("is_immovable") == true or target.get("is_dead") == true:
+		return
+	if is_heavy(target):
+		distance *= 0.25
+		extra_stun = 0.0
+	stun(target, seconds + extra_stun)
+	var s = target.get_node_or_null("DoraStun")
+	if s != null:
+		s.push(dir.normalized() * distance, seconds, world)
+
+## Magic Hand trip: the enemy falls over and lies on the floor for `seconds`
+## (bosses only stagger for a moment).
+static func trip(target: Node, seconds: float, from_x: float) -> void:
+	if not is_instance_valid(target) or target.is_queued_for_deletion():
+		return
+	if target.get("is_immovable") == true or target.get("is_dead") == true:
+		return
+	if is_heavy(target):
+		stun(target, 0.2)
+		return
+	stun(target, seconds)
+	var s = target.get_node_or_null("DoraStun")
+	if s != null and target is Node2D:
+		s.trip(1.0 if (target as Node2D).global_position.x >= from_x else -1.0)
+
 ## Farthest open floor point from `from` along `dir` (<= max_dist) reachable in a straight line.
 static func safe_point(world: Node, from: Vector2, dir: Vector2, max_dist: float, min_dist: float = 12.0) -> Vector2:
 	if dir == Vector2.ZERO:

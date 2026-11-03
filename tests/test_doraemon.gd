@@ -216,6 +216,29 @@ func _ready() -> void:
 	p.take_damage(1)
 	_check(after_hit > 0.0 and p.power > after_hit, "DR-09: Power gauge fills when landing hits and when hurt", "%.0f -> %.0f" % [after_hit, p.power])
 
+	# --- Champion Glove: 3 beats, each shoving the enemy back (the last one sends it flying)
+	_reset_field([Vector2(28, 0)])
+	p.page = 1
+	var glove_target: Dummy = dummies[0]
+	var glove_from := glove_target.global_position.x
+	await _press("rmb", 60)
+	var shoved := glove_target.global_position.x - glove_from
+	_check(glove_target.hits == 3 and shoved >= 25.0, "DR-10: Champion Glove hits 3 times and knocks the enemy back",
+		"hits=%d shoved=%.0fpx" % [glove_target.hits, shoved])
+
+	# --- Magic Hand: long lattice arm, one weak slap that trips the enemy (no shove)
+	_reset_field([Vector2(110, 0)])
+	p.page = 6
+	var hand_target: Dummy = dummies[0]
+	var hand_from := hand_target.global_position
+	await _press("atk", 16, Vector2(110, -10))
+	var tripped := hand_target.get_node_or_null("DoraStun") != null
+	var grip_pose := String(p.animated_sprite.animation) == "magichand_grip"
+	await _frames(40)
+	_check(hand_target.hits == 1 and tripped and grip_pose and hand_target.global_position == hand_from,
+		"DR-11: Magic Hand reaches 110px with its own hand sprite, slaps once and trips the enemy",
+		"hits=%d tripped=%s grip_pose=%s" % [hand_target.hits, str(tripped), str(grip_pose)])
+
 	GameManager.is_replaying = false
 	print("[SUMMARY] DORAEMON: %d PASSED | %d FAILED" % [passed, failed])
 	get_tree().quit(1 if failed > 0 else 0)

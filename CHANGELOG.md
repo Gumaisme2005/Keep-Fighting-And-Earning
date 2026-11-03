@@ -29,12 +29,12 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 | Trang | Chuột Trái | Chuột Phải |
 |---|---|---|
 | 1 | **Súng Không Khí** — luồng khí thẳng tầm 190px, ×1, hồi 0.5s | **Cánh Cửa Thần Kỳ** — dịch chuyển tới 96px về phía con trỏ, bất tử khi đi qua cửa, không xuyên tường / cửa khóa, hồi 6s |
-| 2 | **Đá** — cận chiến ×1, hồi 0.32s | **Găng Vô Địch** — găng lò xo vươn 56px, 2 đòn ×1, hồi 1.1s |
+| 2 | **Đá** — cận chiến ×1, hồi 0.32s | **Găng Vô Địch** — găng lò xo đấm 3 nhịp ×1 (tầm 24 → 38 → 54px), mỗi nhịp **đẩy lùi** quái, nhịp cuối hất văng ~34px + choáng 0.35s (boss chỉ bị đẩy nhẹ), hồi 1.3s |
 | 3 | **Súng Lục Hơi** — 6 viên liên tiếp ×1, hồi 1.4s | **Súng Sốc** — tia hồng tự nhắm, xuyên qua quái, đánh tối đa 5 lần mỗi mục tiêu, hồi 3s |
 | 4 | **Súng Ataru** — 4 đạn đuổi 4 mục tiêu gần nhất, nổ nhỏ ×1, hồi 2.5s | **Tên Lửa Bút Chì** — tên lửa đuổi mục tiêu gần con trỏ, nổ bán kính 30 ×3, hồi 3s |
 | 5 | **Súng Sóng Xung Kích** — 4 đạn xòe, nảy tường 3 lần ×1, hồi 2s | **Súng Bong Bóng** — 3 bong bóng trôi chậm, nhốt quái 1.4s ×1, hồi 3s |
 | 6 | **Mây Sấm Mini** — đám mây trên đầu mục tiêu đánh 3 tia sét ×1, hồi 3.5s | **Gậy Sốc** — lao lên đâm ×3 và gây choáng, hồi 2.5s |
-| 7 | **Tay Thần Kỳ** — cánh tay lò xo vươn tới 150px, ×1 cho mọi quái trên đường, hồi 1s | **Vặn Dây Cót Hối Hả** — lướt 90px rồi quay về, bất tử, ×2, hồi 4s |
+| 7 | **Tay Thần Kỳ** — bàn tay đỏ trên cán xanh vươn ra bằng cần xếp mắt lưới tới 170px, tự bám quái gần con trỏ; ×1 cho mọi quái dọc cần và làm quái **vấp ngã** nằm 0.6s (boss chỉ khựng lại), hồi 1s | **Vặn Dây Cót Hối Hả** — lướt 90px rồi quay về, bất tử, ×2, hồi 4s |
 | 8 | **Lựu Đạn** — ném 3 quả, nổ khi chạm quái hoặc sau 0.9s, bán kính 26 ×2, hồi 4s | **Ao Câu Cá** — đặt ao, câu 4 con cá nóc bay ra ×2, hồi 5s |
 | 9 | **Bánh Dango → T-Rex** — khủng long lao theo hướng ngắm, giẫm mỗi quái 1 lần ×3, hồi 8s | **Đội Mini-Dora** — 3 Mini-Dora chạy từ sau mục tiêu về phía Doraemon, mỗi quái tối đa 3 đòn ×1 (50% có đội thứ 2), hồi 7s |
 | 10 | **Búp Bê Ngáng Chân** *(tốn 10 năng lượng)* — tự tìm quái, ngáng ngã 3 lần ×1 + choáng 1.2s, hồi 9s | **Áo Choàng Hirari** — 0.8s phản lại đạn của quái và đòn đánh trúng Doraemon với sát thương ×2, hồi 4s |
@@ -58,12 +58,12 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 | 10 | **Dorayakin** *(hết vạch)* — bánh rán khổng lồ rơi từ trời: 1 vạch bán kính 34 ×6 · 2 vạch bán kính 48 ×12 · 3 vạch bán kính 72 ×25. Bản gốc là đòn giết ngay bằng lỗi engine M.U.G.E.N, nay đổi thành đòn sát thương diện rộng cực mạnh |
 
 ### Kỹ Thuật
-- **Sprite (`Assets/Character/Doraemon/`, 81 hoạt ảnh / hình + chân dung):** giải mã `doraemon.sff` (SFF v1, bảng màu `doraemon.ACT`) và ghép khung theo `doraemon.air` thành các dải sprite cùng điểm neo (chân / điểm va chạm), thời lượng từng khung theo tick 60 Hz của file AIR. Chiêu và thông số tham khảo từ `doraemon.cns`, `chou*.cns`, `rand.cns`, `DORAYAKIN.cns` và file hướng dẫn tiếng Nhật đi kèm.
+- **Sprite (`Assets/Character/Doraemon/`, 82 hoạt ảnh / hình + chân dung):** giải mã `doraemon.sff` (SFF v1, bảng màu `doraemon.ACT`) và ghép khung theo `doraemon.air` thành các dải sprite cùng điểm neo (chân / điểm va chạm), thời lượng từng khung theo tick 60 Hz của file AIR. Chiêu và thông số tham khảo từ `doraemon.cns`, `chou*.cns`, `rand.cns`, `DORAYAKIN.cns` và file hướng dẫn tiếng Nhật đi kèm.
 - **Script (`Scene/Character/Doraemon/`):**
   - `doraemon.gd` — nhân vật, Túi Thần Kỳ, thanh năng lượng, bạn bè, siêu chiêu và các trạng thái đặc biệt (cửa, lướt, áo choàng, SL, Uradoraman, đấm liên hoàn).
   - `dora_projectile.gd` — đạn dùng chung: thẳng, đuổi mục tiêu, nảy tường, trôi, ném vòng, rơi từ trời, nổ diện rộng.
   - `dora_walker.gd` — vật triệu hồi di chuyển (Mini-Dora, búp bê, mèo, bạn bè, Jaian, Nobita).
-  - `dora_fx.gd` (hiệu ứng có thể gây sát thương theo thời điểm), `dora_stun.gd` (choáng), `dora_util.gd` (tìm quái qua `Hurtbox`, sát thương + nạp năng lượng, tìm điểm sàn an toàn), `dora_hud.gd` (HUD), `DoraemonSprites.gd` (dữ liệu khung hình), cùng `air_cannon_shot.gd`, `trex_summon.gd`, `door_ghost.gd`.
+  - `dora_fx.gd` (hiệu ứng có thể gây sát thương theo thời điểm), `dora_stun.gd` (choáng, đẩy lùi có chặn tường, làm ngã), `dora_util.gd` (tìm quái qua `Hurtbox`, sát thương + nạp năng lượng, tìm điểm sàn an toàn), `dora_hud.gd` (HUD), `DoraemonSprites.gd` (dữ liệu khung hình), cùng `air_cannon_shot.gd`, `trex_summon.gd`, `door_ghost.gd`.
 - Va chạm tính theo khoảng cách mỗi khung vật lý, mọi thời gian chạy theo nhịp vật lý và RNG theo Seed nên **Replay tái hiện chính xác**; `GameManager._sanitize_replay_frames()` giữ thêm `pg` (đổi trang) và `eat` (Dorayaki).
 - Pha Lê Linh Hồn của Skeleton King vẫn bị bảo bối phá được nhưng không bị choáng hay di chuyển.
 
@@ -71,7 +71,7 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 - Sửa lỗi *"Failed to load script doraemon.gd — Parse error"* khi mở project lần đầu: ảnh của Doraemon nay được nạp lúc chạy thay vì `preload`, nên script không phụ thuộc việc Godot đã import ảnh xong; nếu chưa import, ảnh được đọc trực tiếp từ file PNG.
 
 ### Kiểm Thử
-- `tests/test_doraemon.gd` / `.tscn` — **45/45 PASS**: vị trí trong roster, hoạt ảnh & HUD, đổi trang, **từng bảo bối trong 20 bảo bối** (gây sát thương / dịch chuyển / phản đòn), Búp Bê cần 10 năng lượng, **từng người bạn trong 6 người** (kể cả Mèo Come-come ném quái ra sau lưng), **từng siêu chiêu trong 10 siêu chiêu** (tốn đúng năng lượng, gây sát thương, kết thúc trạng thái), Dorayakin mạnh dần theo số vạch, Dorayaki, nạp năng lượng.
+- `tests/test_doraemon.gd` / `.tscn` — **47/47 PASS**: vị trí trong roster, hoạt ảnh & HUD, đổi trang, **từng bảo bối trong 20 bảo bối** (gây sát thương / dịch chuyển / phản đòn), Búp Bê cần 10 năng lượng, **từng người bạn trong 6 người** (kể cả Mèo Come-come ném quái ra sau lưng), **từng siêu chiêu trong 10 siêu chiêu** (tốn đúng năng lượng, gây sát thương, kết thúc trạng thái), Dorayakin mạnh dần theo số vạch, Dorayaki, nạp năng lượng, Găng Vô Địch đánh 3 đòn + đẩy lùi, Tay Thần Kỳ vươn xa + làm ngã mà không đẩy quái.
 - `UT-13` cập nhật số tướng 5 → 6; `run_tests.bat` thêm bước [7/7]. Toàn bộ test cũ (Unit 19/19, Property 5/5, Orc Battle 5/5, VT-075 24/24, Yugi, Skeleton King 21/21) vẫn PASS.
 
 ---

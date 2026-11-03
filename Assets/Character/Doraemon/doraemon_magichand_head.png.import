@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://iud1txfchnu0"
-path="res://.godot/imported/doraemon_glove_head.png-886872cabb0ecec5eeb390be6e56637c.ctex"
+uid="uid://vs2niv0e328i"
+path="res://.godot/imported/doraemon_magichand_head.png-8ea712329314119328bedd4490edd5bd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Character/Doraemon/doraemon_glove_head.png"
-dest_files=["res://.godot/imported/doraemon_glove_head.png-886872cabb0ecec5eeb390be6e56637c.ctex"]
+source_file="res://Assets/Character/Doraemon/doraemon_magichand_head.png"
+dest_files=["res://.godot/imported/doraemon_magichand_head.png-8ea712329314119328bedd4490edd5bd.ctex"]
 
 [params]
 

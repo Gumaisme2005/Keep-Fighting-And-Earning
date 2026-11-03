@@ -48,7 +48,7 @@ const MOVES: Dictionary = {
 	"air_cannon": ["Air Cannon", 0.5, "attack_1", 0.1, 0.25, 0],
 	"door": ["Anywhere Door", 6.0, "door_in", 0.0, 0.0, 0],
 	"kick": ["Kick", 0.32, "kick", 0.05, 0.2, 0],
-	"glove": ["Champion Glove", 1.1, "glove", 0.08, 0.4, 0],
+	"glove": ["Champion Glove", 1.3, "glove", 0.03, 0.4, 0],
 	"air_pistol": ["Air Pistol", 1.4, "pistol", 0.05, 0.45, 0],
 	"shock_gun": ["Shock Gun", 3.0, "shockgun", 0.15, 0.45, 0],
 	"ataru_gun": ["Ataru Gun", 2.5, "ataru", 0.12, 0.35, 0],
@@ -57,7 +57,7 @@ const MOVES: Dictionary = {
 	"bubble_pistol": ["Bubble Pistol", 3.0, "bubble", 0.12, 0.35, 0],
 	"thundercloud": ["Mini Thundercloud", 3.5, "summon", 0.1, 0.35, 0],
 	"shock_stick": ["Shock Stick", 2.5, "stick", 0.12, 0.5, 0],
-	"magic_hand": ["Magic Hand", 1.0, "magichand", 0.05, 0.32, 0],
+	"magic_hand": ["Magic Hand", 1.0, "magichand", 0.05, 0.4, 0],
 	"hustle_screw": ["Hustle Screw", 4.0, "screw", 0.0, 0.0, 0],
 	"grenades": ["Grenades", 4.0, "throw", 0.1, 0.3, 0],
 	"fishing_pond": ["Fishing Pond", 5.0, "pocket", 0.15, 0.45, 0],
@@ -125,7 +125,7 @@ func _ready() -> void:
 		seed_str = GameManager.current_seed + ":" + str(GameManager.current_level)
 	rng.seed = hash(seed_str + ":doraemon")
 	var anims: Array = ["idle", "walk", "hurt", "death", "attack_1", "kick", "glove", "pistol", "ataru", "shockwave", "pocket",
-		"throw", "skill", "summon", "bubble", "shockgun", "magichand", "mantle", "door_in", "door_out", "screw", "stick",
+		"throw", "skill", "summon", "bubble", "shockgun", "magichand", "magichand_grip", "mantle", "door_in", "door_out", "screw", "stick",
 		"eat", "panic", "sl_run", "uradora_tf", "uradora_kick", "punch_fly"]
 	animated_sprite.sprite_frames = Sprites.build(anims)
 	animated_sprite.centered = false
@@ -446,11 +446,29 @@ func _do_kick() -> void:
 	var c := global_position + Vector2(0, -10)
 	_hit_list(Util.on_segment(_world(), c, c + _aim_dir() * 20.0, 9.0), _dmg(), 0.0, "puff")
 
+## Champion Glove (MUGEN: 3 hits whose reach grows with the spring, each one knocking the
+## opponent away). Every beat shoves the enemy back; the last one sends it flying and dazes it.
+## [delay after release, reach px, shove px, daze s] - synced with the glove sprite (ticks 2 / 4 / 7).
+const GLOVE_BEATS: Array = [[0.0, 24.0, 8.0, 0.0], [0.04, 38.0, 8.0, 0.0], [0.08, 54.0, 34.0, 0.35]]
+
 func _do_glove() -> void:
+	var dir := _aim_dir()
+	for beat in GLOVE_BEATS:
+		var b: Array = beat
+		if float(b[0]) <= 0.0:
+			_glove_beat(dir, float(b[1]), float(b[2]), float(b[3]))
+		else:
+			_schedule(float(b[0]), func(): _glove_beat(dir, float(b[1]), float(b[2]), float(b[3])))
+
+func _glove_beat(dir: Vector2, reach: float, shove: float, daze: float) -> void:
+	var world := _world()
 	var c := global_position + Vector2(0, -10)
-	var reach := c + _aim_dir() * 56.0
-	_hit_list(Util.on_segment(_world(), c, reach, 8.0), _dmg())
-	_schedule(0.14, func(): _hit_list(Util.on_segment(_world(), global_position + Vector2(0, -10), global_position + Vector2(0, -10) + _aim_dir() * 56.0, 8.0), _dmg()))
+	for t in Util.on_segment(world, c, c + dir * reach, 9.0):
+		if not is_instance_valid(t) or not Util.sees(world, global_position + Vector2(0, -8), Util.hit_point(t)):
+			continue
+		_fx("spark", Util.hit_point(t), 0.45, false, 0.2)
+		Util.hit(self, t, _dmg())
+		Util.knockback(world, t, dir, shove, 0.1 if shove < 20.0 else 0.18, daze)
 
 # --- Page 3 -------------------------------------------------------------
 func _do_air_pistol() -> void:
@@ -507,17 +525,59 @@ func _do_shock_stick() -> void:
 	_hit_list(Util.on_segment(_world(), c, c + _aim_dir() * 46.0, 7.0), _dmg() * 3, 0.5)
 
 # --- Page 7 -------------------------------------------------------------
+## Magic Hand (MUGEN: weak but with a huge reach, trips the opponent). The red hand on
+## Doraemon's green handle shoots out on a folding lattice arm, slaps everything along the
+## arm and trips it: the enemy topples over and lies on the floor for a moment.
+const MAGIC_HAND_RANGE := 170.0
+const MAGIC_HAND_TRIP := 0.6
+const MAGIC_HAND_REACH := 0.12      # seconds until the hand arrives (HandFx timing)
+const MAGIC_HAND_RETURN := 0.32     # seconds until it is back on the handle
+
+## Tip of the green handle in the "magichand_grip" pose.
+func _magic_hand_origin() -> Vector2:
+	return global_position + Vector2(-9.0 if animated_sprite.flip_h else 9.0, -4.0)
+
 func _do_magic_hand() -> void:
-	var t := _target_near_cursor(40.0, 150.0)
-	var start := _muzzle()
-	var end := start + _aim_dir() * minf(maxf(_cast_aim.length(), 40.0), 150.0)
+	var world := _world()
+	var start := _magic_hand_origin()
+	var dir := _aim_dir()
+	var length := clampf(_cast_aim.length(), 40.0, MAGIC_HAND_RANGE)
+	var t := _target_near_cursor(48.0, MAGIC_HAND_RANGE)
 	if t != null:
-		end = Util.hit_point(t)
+		var to := Util.hit_point(t) - start
+		if to.length() > 1.0:
+			dir = to.normalized()
+			length = minf(to.length(), MAGIC_HAND_RANGE)
+	# The arm stops at walls and closed doors.
+	while length > 12.0 and (Util.is_wall(world, start + dir * length) or not Util.sees(world, start, start + dir * length)):
+		length -= 6.0
+	var end := start + dir * length
+	_play("magichand_grip")
 	var hand := HandFx.new()
 	hand.from_node = self
+	hand.origin_offset = start - global_position
 	hand.end_point = end
 	_spawn(hand, start)
-	_hit_list(Util.on_segment(_world(), start, end, 8.0), _dmg())
+	_schedule(MAGIC_HAND_REACH, func(): _magic_hand_strike(start, end))
+	_schedule(MAGIC_HAND_RETURN, _magic_hand_back)
+
+## The hand is back on the handle.
+func _magic_hand_back() -> void:
+	if _cast_move == "magic_hand":
+		_play("magichand")
+
+func _magic_hand_strike(start: Vector2, end: Vector2) -> void:
+	var world := _world()
+	var targets: Array = Util.on_segment(world, start, end, 10.0)
+	for t in Util.in_circle(world, end, 12.0):
+		if not targets.has(t):
+			targets.append(t)
+	for t in targets:
+		if not is_instance_valid(t) or not Util.sees(world, start, Util.hit_point(t)):
+			continue
+		_fx("spark", Util.hit_point(t), 0.4, false, 0.2)
+		Util.hit(self, t, _dmg())
+		Util.trip(t, MAGIC_HAND_TRIP, global_position.x)
 
 func _start_screw() -> void:
 	var dest := Util.safe_point(_world(), global_position, _aim_dir(), 90.0, 8.0)
@@ -884,35 +944,58 @@ func take_damage(amount: int) -> void:
 		if hp > 0 and _cast_move == "" and _mode == "":
 			_sync_anchor()
 
-## Magic Hand: a spring arm that shoots out to a point and snaps back.
+## Magic Hand: the red hand leaves the green handle on a folding lattice (lazy-tongs) arm,
+## reaches the point, then folds back. The lattice narrows as it stretches.
 class HandFx extends Node2D:
 	const Sprites = preload("res://Scene/Character/Doraemon/DoraemonSprites.gd")
+	const CELLS := 7
+	const OUTLINE := Color(0.1, 0.1, 0.14)
+	const METAL := Color(0.86, 0.87, 0.92)
+	const PIVOT := Color(0.19, 0.69, 0.56)      # same green as the handle
 	var from_node: Node2D
+	var origin_offset: Vector2 = Vector2.ZERO
 	var end_point: Vector2
 	var age: float = 0.0
 	var head: Sprite2D
 	func _ready() -> void:
 		z_index = 3
+		var mat := CanvasItemMaterial.new()
+		mat.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
+		material = mat
 		head = Sprite2D.new()
-		head.texture = Sprites.texture("doraemon_glove_head.png")
+		head.texture = Sprites.texture("doraemon_magichand_head.png")
 		head.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		head.offset = Vector2(6, 0)              # wrist on the arm tip, fingers forward
+		head.use_parent_material = true
+		head.visible = false
 		add_child(head)
 	func _physics_process(delta: float) -> void:
 		age += delta
 		if is_instance_valid(from_node):
-			global_position = from_node.global_position + Vector2(0, -12)
+			global_position = from_node.global_position + origin_offset
 		queue_redraw()
 		if age >= 0.32:
 			queue_free()
 	func _draw() -> void:
 		var k := clampf(age / 0.12, 0.0, 1.0) if age < 0.2 else clampf(1.0 - (age - 0.2) / 0.12, 0.0, 1.0)
 		var tip := to_local(end_point) * k
+		var length := tip.length()
+		head.visible = length > 2.0
+		if length <= 2.0:
+			return
+		var dir := tip / length
 		head.position = tip
-		head.flip_h = tip.x < 0.0
-		var n := int(tip.length() / 4.0)
-		var side := tip.orthogonal().normalized() * 2.5
-		var prev := Vector2.ZERO
-		for i in range(1, n + 1):
-			var p := tip * (float(i) / float(maxi(n, 1))) + (side if i % 2 == 0 else -side)
-			draw_line(prev, p, Color(0.75, 0.75, 0.8), 1.0)
-			prev = p
+		head.rotation = dir.angle()
+		head.flip_v = dir.x < 0.0
+		var side := dir.orthogonal() * lerpf(5.0, 2.0, k)
+		for layer in range(2):
+			var col := OUTLINE if layer == 0 else METAL
+			var w := 3.0 if layer == 0 else 1.0
+			for i in range(CELLS):
+				var a := tip * (float(i) / CELLS)
+				var b := tip * (float(i + 1) / CELLS)
+				draw_line(a + side, b - side, col, w)
+				draw_line(a - side, b + side, col, w)
+		for i in range(CELLS + 1):
+			var p := tip * (float(i) / CELLS)
+			draw_rect(Rect2(p - Vector2(1, 1), Vector2(2, 2)), PIVOT)
