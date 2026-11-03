@@ -13,6 +13,7 @@ const SWORDSMAN_PORTRAIT: Texture2D = preload("res://Assets/UI/Button&Character/
 	preload("res://Scene/Character/Player 1_Pyrois/player.tscn"),
 	preload("res://Scene/Character/Player 4_Charlotte/player_4.tscn"),
 	preload("res://Scene/Character/Yugi/yugi.tscn"),
+	preload("res://Scene/Character/Doraemon/doraemon.tscn"),
 ]
 @export_file("*.tscn") var game_world_path: String = "res://world.tscn"
 
@@ -58,6 +59,7 @@ func _ready() -> void:
 		root_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.05, 0.06, 0.11, 0.72), Color(0.75, 0.60, 0.28, 0.85), 2, 0, 0, 0))
 
 	_add_yugi_portrait()
+	_add_doraemon_portrait()
 
 	var idx_counter: int = 0
 	for child in object_container.get_children():
@@ -108,6 +110,17 @@ func _ready() -> void:
 	_select_deselect_highlight()
 	_update_buttons()
 	_update_hero_info_display()
+
+func _add_doraemon_portrait() -> void:
+	var portrait := TextureRect.new()
+	portrait.name = "TextureRect6"
+	# 52x52 canvas with the feet at ~80% height, matching the other hero portraits.
+	portrait.texture = preload("res://Scene/Character/Doraemon/DoraemonSprites.gd").texture("doraemon_portrait.png")
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	object_container.add_child(portrait)
+	# Keep the trailing MarginContainer spacer as the last child.
+	object_container.move_child(portrait, object_container.get_child_count() - 2)
 
 func _add_yugi_portrait() -> void:
 	var yugi_portrait := TextureRect.new()

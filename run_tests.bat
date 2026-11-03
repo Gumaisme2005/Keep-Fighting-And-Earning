@@ -80,7 +80,16 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 echo.
+echo [7/7] Chay Doraemon Hero Tests (45 checks: 20 gadgets, 6 friends, 10 supers)...
+"!GODOT_BIN!" --headless --path . "res://tests/test_doraemon.tscn"
+if !ERRORLEVEL! NEQ 0 (
+    echo [THAT BAI] Doraemon Tests gap loi!
+    pause
+    exit /b 1
+)
+
+echo.
 echo ==================================================================
-echo   [THANH CONG] TAT CA UNIT, PROPERTY, COMBAT, BENCHMARK, VT-075 VA SKELETON KING PASS 100%%!
+echo   [THANH CONG] TAT CA UNIT, PROPERTY, COMBAT, BENCHMARK, VT-075, SKELETON KING VA DORAEMON PASS 100%%!
 echo ==================================================================
 pause

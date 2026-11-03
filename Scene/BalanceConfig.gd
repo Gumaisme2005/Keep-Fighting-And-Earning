@@ -18,9 +18,9 @@ The White Council has summoned four champions to form the Fellowship Vanguard, g
 
 # ------------------------------------------------------------------------------
 # 1. CHAMPION ROSTER & COMBAT BALANCE TABLE
-# Order in CharacterSelect: 0 = Miya, 1 = Olaf, 2 = Pyrois, 3 = Charlotte, 4 = Yugi
+# Order in CharacterSelect: 0 = Miya, 1 = Olaf, 2 = Pyrois, 3 = Charlotte, 4 = Yugi, 5 = Doraemon
 # ------------------------------------------------------------------------------
-const HERO_ORDER: Array[String] = ["miya", "olaf", "pyrois", "charlotte", "yugi"]
+const HERO_ORDER: Array[String] = ["miya", "olaf", "pyrois", "charlotte", "yugi", "doraemon"]
 
 static var HERO_STATS: Dictionary = {
 	"miya": {
@@ -113,6 +113,26 @@ static var HERO_STATS: Dictionary = {
 		"lore": "Atem calls forth monsters from his deck to fight at his side. Hold Shift to guard instantly; release Shift to end it; clicking while guarding cancels the guard to cast a combo summon.",
 		"skill_q": "Special Summon — Key Q: Randomly unleash 1 of 5 room-wide summons (20% each). Cooldown: 12s.",
 		"skill_rmb": "Summon — Left/Right Click: Call a monster; hold 0.65s then release to charge it. Shift + Click: combo summon."
+	},
+	"doraemon": {
+		"index": 5,
+		"id": "doraemon",
+		"name": "Doraemon",
+		"role": "Gadget Cat of the 22nd Century",
+		"weapon": "4D Pocket — 20 Gadgets, 6 Friends, 10 Supers",
+		"skill_icon": "coin",
+		"hp": 5,
+		"armor": 2,
+		"damage": 1,
+		"speed": 150.0,
+		"air_shot_speed": 300.0,
+		"air_shot_range": 190.0,
+		"skill_cooldown": 8.0,
+		"trex_damage_mult": 3,
+		"door_range": 96.0,
+		"lore": "A robot cat from the future fighting with the whole 4D Pocket: Air Cannon, Anywhere Door, Shock Gun, Pencil Missiles, a dango-tamed T-Rex, Mini-Doras, his friends on Take-copters and ten super moves fuelled by a 3-bar power gauge.",
+		"skill_q": "Friends / Super — Key Q: summon the next friend (Nobita, Gian, Shizuka, Dorami, Suneo, Come-come Cat). With a full power bar: the current page's SUPER. F: eat a Dorayaki.",
+		"skill_rmb": "4D Pocket — Mouse Wheel or Z / X: switch gadget page (10 pages). Left / Right Click: use the page's two gadgets."
 	}
 }
 
