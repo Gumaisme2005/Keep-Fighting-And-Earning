@@ -123,9 +123,9 @@ func generate_dungeon():
 	# Bước 2: Xây gạch và trang trí (Né các vị trí bẫy, tâm phòng và lối vào)
 	for i in range(generated_rooms.size()):
 		var type = room_types[i]
-		if i == skeleton_king_room_index:
-			continue # The Skeleton King arena stays a clean, open floor.
-		if type == RoomType.COMBAT or type == RoomType.BOSS:
+		if i == skeleton_king_room_index or type == RoomType.BOSS:
+			continue # Boss arenas stay clean, open floors without obstructive pillars.
+		if type == RoomType.COMBAT:
 			decorate_pillars(generated_rooms[i])
 	scatter_decorations()
 	plan_enemy_spawns()
@@ -429,7 +429,7 @@ func scatter_decorations():
 
 	for i in range(generated_rooms.size()):
 		var room = generated_rooms[i]
-		if room_types[i] == RoomType.START or room_types[i] == RoomType.TREASURE:
+		if room_types[i] == RoomType.START or room_types[i] == RoomType.TREASURE or room_types[i] == RoomType.BOSS:
 			continue
 		if i == skeleton_king_room_index:
 			continue
@@ -678,6 +678,8 @@ func is_global_pos_wall_or_door(world_pos: Vector2) -> bool:
 	var cell: Vector2i = local_to_map(to_local(world_pos))
 	if get_cell_atlas_coords(LAYER_FLOOR, cell) != FLOOR_COORD:
 		return true
+	if get_layers_count() > LAYER_DECOR and get_cell_source_id(LAYER_DECOR, cell) != -1:
+		return true
 	if get_layers_count() > 2 and get_cell_source_id(2, cell) != -1:
 		return true
 	return false
@@ -694,6 +696,8 @@ func has_line_of_sight(from_global: Vector2, to_global: Vector2) -> bool:
 		var sample_local: Vector2 = p0.lerp(p1, t)
 		var cell: Vector2i = local_to_map(sample_local)
 		if get_cell_atlas_coords(LAYER_FLOOR, cell) != FLOOR_COORD:
+			return false
+		if get_layers_count() > LAYER_DECOR and get_cell_source_id(LAYER_DECOR, cell) != -1:
 			return false
 		if get_layers_count() > 2 and get_cell_source_id(2, cell) != -1:
 			return false

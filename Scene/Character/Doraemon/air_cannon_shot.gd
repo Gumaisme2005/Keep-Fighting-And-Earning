@@ -27,14 +27,18 @@ func _ready() -> void:
 	sprite.rotation = direction.angle()
 	add_child(sprite)
 	area_entered.connect(_on_area_entered)
+	body_entered.connect(_on_body_entered)
 
 func _physics_process(delta: float) -> void:
 	if spent:
 		return
 	var step := direction * speed * delta
 	var tmap = get_parent()
-	if tmap != null and tmap.has_method("is_global_pos_wall_or_door"):
-		if tmap.is_global_pos_wall_or_door(global_position + step):
+	if tmap != null:
+		if tmap.has_method("is_global_pos_wall_or_door") and tmap.is_global_pos_wall_or_door(global_position + step):
+			_burst()
+			return
+		if tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, global_position + step):
 			_burst()
 			return
 	global_position += step
@@ -43,6 +47,12 @@ func _physics_process(delta: float) -> void:
 	sprite.modulate.a = clampf(1.6 - travelled / max_distance, 0.0, 1.0)
 	if travelled >= max_distance:
 		queue_free()
+
+func _on_body_entered(body: Node2D) -> void:
+	if spent:
+		return
+	if body is TileMap or body is StaticBody2D:
+		_burst()
 
 func _on_area_entered(area: Area2D) -> void:
 	if spent or area.name != "Hurtbox":
