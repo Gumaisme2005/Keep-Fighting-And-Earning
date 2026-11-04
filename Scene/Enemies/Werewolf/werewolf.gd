@@ -73,7 +73,8 @@ func _ready() -> void:
 func _draw() -> void:
 	if show_pounce_warning:
 		var origin: Vector2 = Vector2(0, -8)
-		var end_pt: Vector2 = origin + pounce_direction * pounce_distance
+		var norm_dir: Vector2 = pounce_direction.normalized() if pounce_direction != Vector2.ZERO else Vector2.RIGHT
+		var end_pt: Vector2 = origin + norm_dir * pounce_distance
 
 		# 1. Dải màu đỏ mờ biểu thị toàn bộ vệt lao đến
 		draw_line(origin, end_pt, Color(1.0, 0.15, 0.15, 0.30), 22.0)
@@ -109,18 +110,24 @@ func _physics_process(delta: float) -> void:
 	if is_pouncing:
 		var remain_dist: float = pounce_distance - pounce_traveled
 		if remain_dist <= 0.0 or is_on_wall():
-			# Đã đến đích của cú lao hoặc va chạm tường -> Dừng đà lao
 			is_pouncing = false
 			velocity = Vector2.ZERO
 		else:
-			# Khi đi được trên 70% quãng đường thì giảm nhẹ vận tốc tạo đà dừng
 			var current_spd: float = pounce_speed
 			if pounce_traveled > pounce_distance * 0.7:
 				current_spd = pounce_speed * 0.65
 
-			velocity = pounce_direction * current_spd
+			var step_dist: float = current_spd * delta
+			if step_dist >= remain_dist:
+				step_dist = remain_dist
+				pounce_traveled = pounce_distance
+				is_pouncing = false
+				velocity = Vector2.ZERO
+			else:
+				pounce_traveled += step_dist
+				velocity = pounce_direction * current_spd
+
 			move_and_slide()
-			pounce_traveled += current_spd * delta
 		return
 
 	if is_attacking:
@@ -169,7 +176,7 @@ func start_pounce_windup(dir: Vector2) -> void:
 	is_preparing_pounce = true
 	is_pouncing = false
 	velocity = Vector2.ZERO
-	pounce_direction = dir if dir != Vector2.ZERO else Vector2.RIGHT
+	pounce_direction = dir.normalized() if dir != Vector2.ZERO else Vector2.RIGHT
 	pounce_timer = pounce_cooldown
 
 	# Xoay hitbox theo hướng đã nhắm
@@ -184,7 +191,11 @@ func start_pounce_windup(dir: Vector2) -> void:
 	_start_windup_flash()
 
 	# Đợi một nhịp tụ lực
-	await get_tree().create_timer(pounce_windup_time).timeout
+	if get_tree() != null:
+		await get_tree().create_timer(pounce_windup_time).timeout
+
+	if not is_inside_tree() or is_queued_for_deletion():
+		return
 
 	# Tắt cảnh báo đỏ
 	show_pounce_warning = false
@@ -205,6 +216,8 @@ func start_pounce_windup(dir: Vector2) -> void:
 	pounce_collision.disabled = false
 
 func _start_windup_flash() -> void:
+	if not is_inside_tree():
+		return
 	if windup_flash_tween != null:
 		windup_flash_tween.kill()
 	windup_flash_tween = create_tween().set_loops()
@@ -215,7 +228,8 @@ func _stop_windup_flash() -> void:
 	if windup_flash_tween != null:
 		windup_flash_tween.kill()
 		windup_flash_tween = null
-	animated_sprite.modulate = Color.WHITE
+	if animated_sprite != null:
+		animated_sprite.modulate = Color.WHITE
 
 func take_damage(damage_amount: int) -> void:
 	if not is_active or is_dead:
