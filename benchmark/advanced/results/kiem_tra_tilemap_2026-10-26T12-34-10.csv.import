@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://c13h2p4qvlxh0"
+
+[deps]
+
+files=["res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.trial.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.seed.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.room.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.edge.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.graph.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.overlap.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.floor.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.floor.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.floor.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.physics.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.floor.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.collision.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.collision.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.trap.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.trap.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.layer.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.layer.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.layer.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.hard.translation"]
+
+source_file="res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.csv"
+dest_files=["res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.trial.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.seed.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.room.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.edge.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.graph.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.overlap.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.floor.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.floor.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.floor.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.physics.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.floor.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.collision.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.collision.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.trap.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.trap.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.layer.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.layer.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.layer.translation", "res://benchmark/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.hard.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true
