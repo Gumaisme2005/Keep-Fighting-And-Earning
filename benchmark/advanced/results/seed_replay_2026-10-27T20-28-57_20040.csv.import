@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://rmfwpumkwwhh"
+
+[deps]
+
+files=["res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.run.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.godot.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.generator.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.rooms.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.trial.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.seed.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.room.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.layer.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.geometry.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.tilemap.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.full.translation"]
+
+source_file="res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.csv"
+dest_files=["res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.run.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.godot.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.generator.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.rooms.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.trial.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.seed.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.room.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.layer.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.geometry.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.tilemap.translation", "res://benchmark/advanced/results/seed_replay_2026-10-27T20-28-57_20040.full.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true
