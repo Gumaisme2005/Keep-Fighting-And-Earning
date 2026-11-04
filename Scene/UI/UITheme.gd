@@ -5,12 +5,12 @@ const PORTAL_TEXTURE: Texture2D = preload("res://Assets/Map/Dimensional_Portal.p
 const HEART_FULL_TEX: Texture2D = preload("res://Assets/UI/HP & Shield bar/HeartFull.png")
 const SHIELD_FULL_TEX: Texture2D = preload("res://Assets/UI/HP & Shield bar/ShieldFull.png")
 
-# === PHÔNG CHỮ TRUNG CỔ & PHIÊU LƯU (GRENZE GOTISCH & GRENZE) ===
-const FONT_TITLE: Font = preload("res://Assets/Fonts/GrenzeGotisch-Bold.ttf")
-const FONT_HEADER: Font = preload("res://Assets/Fonts/GrenzeGotisch-SemiBold.ttf")
-const FONT_BUTTON: Font = preload("res://Assets/Fonts/GrenzeGotisch-SemiBold.ttf")
-const FONT_BODY: Font = preload("res://Assets/Fonts/Grenze-Medium.ttf")
-const FONT_BODY_BOLD: Font = preload("res://Assets/Fonts/Grenze-SemiBold.ttf")
+# === TYPOGRAPHY HIERARCHY (CLEAR, MODERN & HIGH READABILITY) ===
+const FONT_TITLE: Font = preload("res://Assets/Fonts/Alegreya-Variable.ttf")
+const FONT_HEADER: Font = preload("res://Assets/Fonts/BeVietnamPro-Bold.ttf")
+const FONT_BUTTON: Font = preload("res://Assets/Fonts/BeVietnamPro-Bold.ttf")
+const FONT_BODY: Font = preload("res://Assets/Fonts/BeVietnamPro-Medium.ttf")
+const FONT_BODY_BOLD: Font = preload("res://Assets/Fonts/BeVietnamPro-SemiBold.ttf")
 
 const ICON_REGIONS: Dictionary = {
 	"skull": Rect2(0, 0, 16, 16),
