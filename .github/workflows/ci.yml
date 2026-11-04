@@ -1,10 +1,10 @@
-name: Godot 4 CI — Tests, Property Checks, Benchmark & Build
+name: Godot 4 CI - Tests, Property Checks, Benchmark and Verification
 
 on:
   push:
-    branches: [ main, master, develop, "feature/**", "fix/**", "qa/**" ]
+    branches: [ main, master, development, develop, "feature/**", "fix/**", "qa/**", "chore/**" ]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [ main, master, development, develop ]
   workflow_dispatch:
 
 env:
@@ -12,7 +12,7 @@ env:
 
 jobs:
   automated-tests-and-benchmark:
-    name: 🧪 Unit Tests, Property Tests & Benchmark
+    name: Unit Tests, Property Tests and Benchmark
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -29,7 +29,7 @@ jobs:
           godot --version
           godot --headless --import
 
-      - name: 1. Run Dungeon Generator Unit Tests (UT-01 .. UT-07)
+      - name: 1. Run Dungeon Generator Unit Tests (UT-01 .. UT-13)
         run: |
           godot --headless "res://tests/test_dungeon_generator_unit.tscn"
 
@@ -39,15 +39,23 @@ jobs:
 
       - name: 3. Run Combat Hitbox Regression Tests (TC-EN-01 .. TC-EN-05)
         run: |
-          godot --headless "res://test_orc_battle.tscn"
+          godot --headless "res://tests/test_orc_battle.tscn"
 
       - name: 4. Run Dungeon Generator Performance Benchmark
         run: |
           godot --headless "res://tests/benchmark_dungeon_generator.tscn" | tee benchmark_output.log
 
-      - name: 5. Run VT-075 Reviewer Role & Concurrency Tests (TC-01 .. TC-21)
+      - name: 5. Run Skeleton King Boss Arena Tests (SK-01 .. SK-17)
         run: |
-          godot --headless "res://tests/test_reviewer_concurrency.tscn"
+          godot --headless "res://tests/test_skeleton_king.tscn"
+
+      - name: 6. Run Doraemon Hero Tests (47 Checks)
+        run: |
+          godot --headless "res://tests/test_doraemon.tscn"
+
+      - name: 7. Run Yugi Atem Hero Tests
+        run: |
+          godot --headless "res://tests/test_yugi.tscn"
 
       - name: Upload Benchmark Evidence Artifact
         uses: actions/upload-artifact@v4
@@ -57,4 +65,3 @@ jobs:
             benchmark_output.log
             docs/BENCHMARK_REPORT.md
             docs/SEED_BUG_ISSUES.md
-

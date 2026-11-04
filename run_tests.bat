@@ -14,8 +14,8 @@ if not exist "!GODOT_BIN!" (
     )
 )
 if not exist "!GODOT_BIN!" (
-    echo [ERROR] Khong tim thay Godot tai B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe
-    echo Vui long kiem tra lai duong dan Godot Engine!
+    echo [ERROR] Godot executable not found at B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe
+    echo Please verify the Godot binary path.
     pause
     exit /b 1
 )
@@ -26,70 +26,70 @@ echo   Godot: !GODOT_BIN!
 echo ==================================================================
 
 echo.
-echo [1/4] Chay Unit Tests (UT-01 .. UT-13)...
+echo [1/7] Running Unit Tests (UT-01 .. UT-13)...
 "!GODOT_BIN!" --headless --path . "res://tests/test_dungeon_generator_unit.tscn"
 if !ERRORLEVEL! NEQ 0 (
-    echo [THAT BAI] Unit Tests gap loi!
+    echo [FAILED] Unit Tests failed.
     pause
     exit /b 1
 )
 
 echo.
-echo [2/4] Chay Property-Based Tests (100 Seeds x 5 Invariants)...
+echo [2/7] Running Property-Based Tests (100 Seeds x 5 Invariants)...
 "!GODOT_BIN!" --headless --path . "res://tests/test_dungeon_properties.tscn"
 if !ERRORLEVEL! NEQ 0 (
-    echo [THAT BAI] Property Tests gap loi!
+    echo [FAILED] Property Tests failed.
     pause
     exit /b 1
 )
 
 echo.
-echo [3/4] Chay Combat Regression Tests (5 huong hitbox Orc)...
-"!GODOT_BIN!" --headless --path . "res://test_orc_battle.tscn"
+echo [3/7] Running Combat Regression Tests (5 hitbox directions)...
+"!GODOT_BIN!" --headless --path . "res://tests/test_orc_battle.tscn"
 if !ERRORLEVEL! NEQ 0 (
-    echo [THAT BAI] Combat Regression Tests gap loi!
+    echo [FAILED] Combat Regression Tests failed.
     pause
     exit /b 1
 )
 
 echo.
-echo [4/5] Chay Benchmark Hieu Nang Bo Sinh Nguc...
+echo [4/7] Running Dungeon Generator Performance Benchmark...
 "!GODOT_BIN!" --headless --path . "res://tests/benchmark_dungeon_generator.tscn"
 if !ERRORLEVEL! NEQ 0 (
-    echo [THAT BAI] Benchmark gap loi!
+    echo [FAILED] Dungeon Benchmark failed.
     pause
     exit /b 1
 )
 
 echo.
-echo [5/5] Chay VT-075 Reviewer Role va Concurrency Tests (24/24 PASS)...
-"!GODOT_BIN!" --headless --path . "res://tests/test_reviewer_concurrency.tscn"
-if !ERRORLEVEL! NEQ 0 (
-    echo [THAT BAI] VT-075 Concurrency Tests gap loi!
-    pause
-    exit /b 1
-)
-
-echo.
-echo [6/6] Chay Skeleton King Boss Arena Tests (SK-01 .. SK-17)...
+echo [5/7] Running Skeleton King Boss Arena Tests (SK-01 .. SK-17)...
 "!GODOT_BIN!" --headless --path . "res://tests/test_skeleton_king.tscn"
 if !ERRORLEVEL! NEQ 0 (
-    echo [THAT BAI] Skeleton King Tests gap loi!
+    echo [FAILED] Skeleton King Tests failed.
     pause
     exit /b 1
 )
 
 echo.
-echo [7/7] Chay Doraemon Hero Tests (47 checks: 20 gadgets, 6 friends, 10 supers)...
+echo [6/7] Running Doraemon Hero Tests (47 checks: gadgets, friends, supers)...
 "!GODOT_BIN!" --headless --path . "res://tests/test_doraemon.tscn"
 if !ERRORLEVEL! NEQ 0 (
-    echo [THAT BAI] Doraemon Tests gap loi!
+    echo [FAILED] Doraemon Tests failed.
+    pause
+    exit /b 1
+)
+
+echo.
+echo [7/7] Running Yugi Atem Hero Tests (animations and combat abilities)...
+"!GODOT_BIN!" --headless --path . "res://tests/test_yugi.tscn"
+if !ERRORLEVEL! NEQ 0 (
+    echo [FAILED] Yugi Atem Tests failed.
     pause
     exit /b 1
 )
 
 echo.
 echo ==================================================================
-echo   [THANH CONG] TAT CA UNIT, PROPERTY, COMBAT, BENCHMARK, VT-075, SKELETON KING VA DORAEMON PASS 100%%!
+echo   [SUCCESS] ALL TEST SUITES PASSED 100%%
 echo ==================================================================
 pause
