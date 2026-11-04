@@ -45,6 +45,7 @@ The game includes 6 playable characters, selectable via the character selection 
 - **Skeleton**: Fast light melee enemy.
 - **Skeleton Archer**: Ranged skirmisher utilizing wall navigation and evasive tactics.
 - **Vampire**: High-speed melee unit with life-steal mechanics.
+- **Werewolf**: Fast predator with claw slashes and telegraphing pounce strikes.
 
 ### 3.2 Boss Encounters
 - **Necromancer (Floor 1)**: Triple-phase summoner that casts homing skulls and raises undead minions.
@@ -95,6 +96,8 @@ The codebase includes automated test suites executable headlessly in Godot Engin
    - Exercises all 20 gadgets, 6 friend assists, 10 super abilities, and pocket HUD pagination (47/47 passing).
 7. **Yugi Atem Hero Tests (`tests/test_yugi.tscn`)**:
    - Validates character sprite animations, attack sequences, and card summoning routines.
+8. **Werewolf Functional Tests (`tests/test_werewolf.tscn`)**:
+   - Tests claw attacks, pounce telegraphing, interruption, and distance bounding (50/50 passing).
 
 ---
 
@@ -122,6 +125,7 @@ godot --headless --path . "res://tests/test_orc_battle.tscn"
 godot --headless --path . "res://tests/test_skeleton_king.tscn"
 godot --headless --path . "res://tests/test_doraemon.tscn"
 godot --headless --path . "res://tests/test_yugi.tscn"
+godot --headless --path . "res://tests/test_werewolf.tscn"
 ```
 
 ---

@@ -57,6 +57,10 @@ jobs:
         run: |
           godot --headless "res://tests/test_yugi.tscn"
 
+      - name: 8. Run Werewolf Functional and Integration Tests (50 Checks)
+        run: |
+          godot --headless "res://tests/test_werewolf.tscn"
+
       - name: Upload Benchmark Evidence Artifact
         uses: actions/upload-artifact@v4
         with:
