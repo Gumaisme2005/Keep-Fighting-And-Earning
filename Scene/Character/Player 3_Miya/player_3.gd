@@ -83,18 +83,24 @@ func _fire_arrow() -> void:
 		var arrow = arrow_scene.instantiate()
 
 		var aim_pos = get_aim_world_position()
-		var shoot_direction = global_position.direction_to(aim_pos).normalized()
+		var bow_pos: Vector2 = global_position + Vector2(0, -10)
+		var tmap = get_parent()
+		if tmap != null and tmap.has_method("is_global_pos_wall_or_door"):
+			if tmap.is_global_pos_wall_or_door(bow_pos):
+				bow_pos = global_position
+
+		var shoot_direction = bow_pos.direction_to(aim_pos).normalized()
 		if shoot_direction == Vector2.ZERO:
 			shoot_direction = Vector2.LEFT if animated_sprite.flip_h else Vector2.RIGHT
 
-		var spawn_pos: Vector2 = global_position + (shoot_direction * 6.0)
-		var tmap = get_parent()
+		# Vị trí sinh mũi tên xuất phát từ cây cung (cách nhân vật 16 px theo TC-MI-02)
+		var spawn_pos: Vector2 = bow_pos + (shoot_direction * 16.0)
 		if tmap != null and tmap.has_method("is_global_pos_wall_or_door"):
 			if tmap.is_global_pos_wall_or_door(spawn_pos):
-				spawn_pos = global_position
+				spawn_pos = bow_pos
 
 		if "shooter_origin" in arrow:
-			arrow.shooter_origin = global_position
+			arrow.shooter_origin = bow_pos
 		if "speed" in arrow:
 			arrow.speed = arrow_fly_speed
 		if tmap is Node2D:
