@@ -68,3 +68,16 @@
 - **Priority:** Low.
 - **Related Test Case:** TC-MI-02 (also related to TC-MI-01).
 - **Status:** To Do.
+
+## 2026-11-04
+
+### QA
+- **08:06** - Performed exploratory testing on the new character **Doraemon** (no dedicated test case yet).
+- Identified an issue where Doraemon's basic attack (left mouse button) passes through wooden crates.
+
+### Bug
+- Logged Jira bug: **[Doraemon] Basic attack (left mouse button) passes through wooden crates**
+- **Bug Type:** Functional / Collision.
+- **Priority:** Medium.
+- **Related Test Cases:** TC-MI-05, TC-MP-08, TC-MV-05 (no dedicated Doraemon test case).
+- **Status:** To Do.
