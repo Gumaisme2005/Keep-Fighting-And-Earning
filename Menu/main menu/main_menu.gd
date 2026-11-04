@@ -414,7 +414,7 @@ func _build_lore_modal() -> void:
 		"  7. Hoshimi Miyabi — Frost Swordswoman: Vitality 4, Armor 2, Damage 1. A 3-hit frost combo, an icy dash slash, a charged Frost Wave and the Frost Bloom ice spikes, with an ice spirit firing bolts at her side.\n" + \
 		"  8. Lương Thơ — Twin Gunblade Duelist: Vitality 5, Armor 2, Damage 1. Stabs, swings and smashes with twin tonfa-gunblades, fires both barrels, and transforms into her invulnerable white-haired White Moon form.\n\n" + \
 		"• THE SHADOW LEGION OF MORIA:\n" + \
-		"  - Hostile Ranks: Moria Orcs, Armored Uruk-hai, Barrow-wight Remains, Minas Morgul Bone Archers, and Angmar Blood Bats.\n" + \
+		"  - Hostile Ranks: Moria Orcs, Armored Uruk-hai, Barrow-wight Remains, Minas Morgul Bone Archers, Angmar Blood Bats, and Warg-breed Werewolves.\n" + \
 		"  - Dungeon Overlords: The Necromancer of Dol Guldur summoning toxic shades, and the ruthless Warg Rider Chieftain."
 	content_vbox.add_child(story_lbl)
 

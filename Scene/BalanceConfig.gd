@@ -228,6 +228,21 @@ static var ENEMY_STATS: Dictionary = {
 		"retreat_range": 65.0,
 		"attack_cooldown": 1.4,
 		"drop_chance": 0.35
+	},
+	"werewolf": {
+		"name": "Warg-breed Werewolf",
+		"hp": 5,
+		"damage": 2,
+		"pounce_damage": 3,
+		"speed": 95.0,
+		"pounce_speed": 175.0,
+		"pounce_distance": 95.0,
+		"pounce_windup_time": 0.65,
+		"attack_range": 24.0,
+		"pounce_min_range": 50.0,
+		"pounce_max_range": 135.0,
+		"pounce_cooldown": 3.5,
+		"drop_chance": 0.35
 	}
 }
 

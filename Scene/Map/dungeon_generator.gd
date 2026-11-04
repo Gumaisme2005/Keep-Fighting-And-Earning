@@ -29,7 +29,8 @@ var enemy_scenes: Array[PackedScene] = [
 	preload("res://Scene/Enemies/Skeleton/skeleton.tscn"),
 	preload("res://Scene/Enemies/Vampire/vampire.tscn"),
 	preload("res://Scene/Enemies/Armored_orc/armored_orc.tscn"),
-	preload("res://Scene/Enemies/Skeleton Archer/skeleton_archer.tscn")
+	preload("res://Scene/Enemies/Skeleton Archer/skeleton_archer.tscn"),
+	preload("res://Scene/Enemies/Werewolf/werewolf.tscn")
 ]
 
 @export var current_level: int = 1
