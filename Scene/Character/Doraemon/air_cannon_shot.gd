@@ -34,7 +34,7 @@ func _physics_process(delta: float) -> void:
 	var step := direction * speed * delta
 	var tmap = get_parent()
 	if tmap != null and tmap.has_method("is_global_pos_wall_or_door"):
-		if tmap.is_global_pos_wall_or_door(global_position + step):
+		if tmap.is_global_pos_wall_or_door(global_position + step) or not tmap.has_line_of_sight(global_position, global_position + step):
 			_burst()
 			return
 	global_position += step

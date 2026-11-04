@@ -118,7 +118,7 @@ func _physics_process(delta: float) -> void:
 		sprite.modulate.a = clampf((life - age) / fade_tail, 0.0, 1.0)
 
 func _move(world: Node, step: Vector2) -> void:
-	if Util.is_wall(world, global_position + step):
+	if Util.is_wall(world, global_position + step) or not Util.sees(world, global_position, global_position + step):
 		if explode_radius > 0.0:
 			_explode(world)
 		else:
@@ -129,14 +129,16 @@ func _move(world: Node, step: Vector2) -> void:
 
 func _move_bounce(world: Node, step: Vector2) -> void:
 	var next := global_position + step
-	if Util.is_wall(world, next):
+	if Util.is_wall(world, next) or not Util.sees(world, global_position, next):
 		if bounces <= 0:
 			_finish(world, hit_anim)
 			return
 		bounces -= 1
-		if Util.is_wall(world, global_position + Vector2(step.x, 0)):
+		var blocked_x := Util.is_wall(world, global_position + Vector2(step.x, 0)) or not Util.sees(world, global_position, global_position + Vector2(step.x, 0))
+		var blocked_y := Util.is_wall(world, global_position + Vector2(0, step.y)) or not Util.sees(world, global_position, global_position + Vector2(0, step.y))
+		if blocked_x or not blocked_y:
 			velocity.x = -velocity.x
-		if Util.is_wall(world, global_position + Vector2(0, step.y)):
+		if blocked_y or not blocked_x:
 			velocity.y = -velocity.y
 		Fx.spawn(world, "puff", global_position, 0.35)
 		return

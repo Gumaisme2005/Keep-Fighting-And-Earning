@@ -4,6 +4,133 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 
 ---
 
+## [2026-11-04] — Cân Bằng: Giảm Sát Thương Cầu Năng Lượng Của Yugi
+
+- Chiêu Q `result-1` (`room_blast.gd`): giảm sát thương mỗi mục tiêu từ 100% xuống **50% máu hiện tại trung bình** của các quái còn sống trong phòng, làm tròn xuống và tối thiểu 1 sát thương khi có mục tiêu. Phòng không có mục tiêu gây 0 sát thương.
+- Khi chỉ còn một boss, chiêu gây khoảng nửa lượng máu hiện tại thay vì hạ boss ngay. Giữ nguyên phạm vi, hoạt ảnh và thời điểm nổ.
+- Cập nhật `tests/test_yugi.gd` cho mức sát thương mới; bổ sung trường hợp boss 101 máu nhận 50 sát thương và mục tiêu 1 máu nhận 1 sát thương.
+
+---
+
+## [2026-11-04] — Sửa Lỗi: Đạn Doraemon Xuyên Thùng Gỗ
+
+### Sửa Lỗi
+- Nguyên nhân: kiểm tra vật cản chỉ xét sàn, tường và cửa đóng, bỏ qua thùng gỗ trên lớp trang trí (`LAYER_DECOR`).
+- `Scene/Map/dungeon_generator.gd`: bổ sung các ô trang trí có polygon va chạm vào kiểm tra vật cản chung; kiểm tra tầm nhìn dùng cùng quy tắc, bao gồm cả điểm đầu và điểm cuối. Trang trí không có va chạm vẫn cho đạn đi qua. Các hệ thống khác dùng chung hai hàm này cũng nhận biết vật cản trên lớp trang trí.
+- `Scene/Character/Doraemon/dora_projectile.gd`: đạn bay thẳng, đuổi mục tiêu và trôi kiểm tra toàn bộ đoạn di chuyển trong mỗi khung vật lý để không lọt qua thùng khi bay nhanh; đạn nảy đổi hướng khi gặp vật cản, kể cả va chạm chéo góc.
+- `Scene/Character/Doraemon/air_cannon_shot.gd`: Súng Không Khí kiểm tra cả đoạn đường di chuyển và tan khi bị vật cản chặn.
+
+### Kiểm Thử
+- Thêm `tests/test_projectile_obstacles.gd` / `.tscn` — **11/11 PASS**: sàn trống, thùng gỗ, điểm đầu/cuối trong thùng, đạn vượt qua cả ô trong một khung, đạn nảy, Súng Không Khí và trang trí không có va chạm.
+- Kiểm thử hồi quy: Doraemon **48/48 PASS**, Dungeon Generator Unit **19/19 PASS**.
+
+---
+
+## [2026-11-04] — Tướng Thứ 8: Lương Thơ (Twin Gunblade Duelist)
+
+> Nữ đấu sĩ dùng cặp **tonfa-súng** (đầu búa, hộp bánh răng, thân dài vừa là thương vừa là nòng súng), có hai dạng: tóc đen (thường) và tóc trắng **White Moon** sau khi biến hình. Sprite lấy từ bộ `sprite_nhan_vat` (khung 64×64, pivot (24, 55), thời điểm ra đòn theo `sheet_full.json`).
+
+### Chỉ số & Vị trí trong Roster
+- Anh hùng thứ 8 (index 7) sau Miyabi: thêm `"luong_tho"` vào `HERO_ORDER` và `HERO_STATS` (`Scene/BalanceConfig.gd`), `luong_tho.tscn` vào `CHARACTER_SCENES` (`Scene/GameManager.gd`) và màn chọn tướng (`Scene/UI/character_select.gd`, hàm `_add_luong_tho_portrait()`).
+- **Máu 5 · Giáp 2 · Sát thương 1 · Tốc độ 155** — đánh gần là chính, có súng bắn xa.
+- Menu chính: đổi thành "EIGHT CHAMPIONS", thêm lời giới thiệu và dòng phím điều khiển; bảng hướng dẫn được nới cao thêm cho vừa dòng mới.
+
+### Bộ Chiêu
+*(sát thương tính theo chỉ số Sát thương, ký hiệu ×)*
+| Phím | Chiêu | Hoạt ảnh | Tác dụng |
+|---|---|---|---|
+| Chuột Trái ×1 | **Đâm** | `stab` (8 khung, 12 fps) | Đâm thân dài về phía trước ở khung 4, tầm ~34px, ×1 |
+| Chuột Trái ×2 | **Chém Đôi** | `swing` (8, 12) | Hai nhát vòng cung ở khung 2 và khung 4, mỗi nhát ×1 |
+| Chuột Trái ×3 | **Bổ Đất** | `smash` (8, 12) | Vung cả hai cây qua đầu bổ xuống đất trước mặt ở khung 4: trúng mọi quái quanh điểm bổ, ×2 và **choáng** 0.6s (boss 35%). Đứng yên khi bổ |
+| Chuột Phải | **Song Nòng** | `shoot` (8, 12) | Khung 3 hai nòng cùng bắn, mỗi viên ×1, bay theo hướng chuột (320px/s, tầm 220px), nổ khi trúng quái đầu tiên hoặc tường. Giữ chuột để bắn liên tục. Hồi 0.8s |
+| Q | **White Moon** | `transform` (10, 10) | Biến hình 1s (đứng yên) sang dạng tóc trắng trong **12s**: **không nhận bất kỳ sát thương nào** từ lúc bắt đầu biến hình tới khi biến về xong (đòn trúng chỉ làm nhân vật lóe xanh), mỗi đòn +1 sát thương, ra đòn nhanh hơn 25% (cả hoạt ảnh lẫn hồi chiêu bắn), chạy nhanh hơn 20%, đạn màu xanh **xuyên quái** (mỗi quái trúng một lần). Hết giờ thì phát ngược hoạt ảnh biến hình (0.5s) để về dạng thường. Hồi 20s tính từ lúc bấm |
+
+- Combo: bấm trong lúc đang ra đòn để nối (đòn kế tiếp bắt đầu từ khung 6, cắt bớt phần thu đòn), hoặc bấm trong 0.35s sau khi đòn 1–2 kết thúc; giữ chuột trái để tự đánh liên tục. Đòn cận chiến chỉ trúng phía trước mặt.
+- **Thế đứng theo README của bộ sprite:** đứng yên thì vũ khí đeo sau lưng (`idle`); khi bắt đầu chạy thì rút vũ khí ra trước (`draw` → `run`, vẫn chạy được trong lúc rút); dừng lại thì giữ thế thủ (khung cuối của `draw`), đứng yên 2s thì cất vũ khí (phát ngược `draw`) rồi về `idle`. Ra đòn thì vào thế chiến đấu ngay, không phải chờ rút vũ khí.
+- Bị đánh dùng `hurt`, gục ngã dùng `death` của dạng đang mang.
+
+### Kỹ Thuật
+- **Sprite (`Assets/Character/LuongTho/`):** `lt_sheet.png` (= `sheet_full.png`, 10×19 ô 64×64: hàng 0–8 dạng thường, hàng 9 biến hình, hàng 10–18 dạng tóc trắng), `lt_bullets.png` (= `bullets.png`, ô 32×32, pivot tâm viên đạn (21, 16)) và chân dung `lt_portrait.png`. Hiển thị ở tỉ lệ 0.75 (cao khoảng 29px như các tướng khác), lật quanh pivot (24, 55) khi quay trái; điểm ra đạn (55, 38) và (61, 33) cũng được lật theo.
+- **Script (`Scene/Character/LuongTho/`):**
+  - `luong_tho.gd` — nhân vật, thế đứng, combo, bắn, biến hình.
+  - `LTSprites.gd` — bảng hoạt ảnh của hai dạng và các mốc ra đòn lấy từ JSON, nạp ảnh lúc chạy (không `preload`) để mở project lần đầu không bị lỗi Parse.
+  - `lt_bullet.gd` (đạn và hiệu ứng nổ), `lt_util.gd` (tìm quái qua `Hurtbox`, tầm nhìn, choáng), `lt_stun.gd` (choáng của Bổ Đất).
+- Đổi dạng bằng cách đổi bộ `SpriteFrames` có cùng tên hoạt ảnh, nên các xử lý chung của nhân vật gốc (bị đánh, gục ngã) chạy đúng ở cả hai dạng.
+- `SwordHitbox` thừa hưởng được lật theo hướng nhân vật ngay từ đầu.
+- Mọi bộ đếm thời gian chạy theo nhịp vật lý, mọi phím đi qua luồng Replay (dùng lại các khóa `atk`, `rmb`, `q` sẵn có), nên **Replay tái hiện chính xác**. HUD dùng ô hồi chiêu Q / Chuột Phải sẵn có (White Moon / Twin Barrels).
+
+### Kiểm Thử
+- `tests/test_luong_tho.gd` / `.tscn` — **15/15 PASS**:
+  - Vị trí trong roster; hai dạng và đạn có đủ hoạt ảnh với đúng số khung theo JSON; quay trái thì lật quanh pivot, lật điểm ra đạn và hitbox.
+  - Thế đứng `idle` → `draw` → `run` → thế thủ → cất vũ khí sau 2s.
+  - Đâm trúng ở khung 4, chỉ phía trước và trong tầm; đủ 3 đòn combo (1 + 1 + 1 + 2) và choáng; giữ chuột tự nối combo; Bổ Đất trúng nhiều quái quanh điểm bổ.
+  - Song Nòng bắn 2 viên ở khung 3, viên thường dừng ở quái đầu tiên; bắn sang trái.
+  - Biến hình không bị trúng đòn và đổi sang dạng trắng; dạng trắng ra đòn sớm hơn, +1 sát thương, đạn xuyên, **không nhận sát thương**; hết giờ thì biến ngược về dạng thường và lại nhận sát thương bình thường.
+  - Replay chạy lại cho cùng kết quả.
+- `UT-13` cập nhật số tướng 7 → 8; `MY-01` không còn cố định 7 tướng; `run_tests.bat` thêm bước [9/9]. Toàn bộ test cũ (Unit 19/19, Property 5/5, Orc Battle 5/5, VT-075 24/24, Yugi, Skeleton King 21/21, Doraemon 48/48, Miyabi 18/18, New Mechanics) vẫn PASS.
+
+---
+
+## [2026-11-03] — Sửa Lỗi: Hitbox Không Quay Theo Hướng Nhân Vật (Yugi, Doraemon, Hoshimi Miyabi)
+
+### Sửa Lỗi
+- Yugi, Doraemon và Hoshimi Miyabi tự xử lý di chuyển và hướng nhìn, nhưng quên lật `SwordHitbox` thừa hưởng từ `player.tscn`. Vì vậy khi quay sang trái, hitbox (38×27, lệch +10px) vẫn nằm bên phải, sau lưng nhân vật (thấy rõ khi bật *Debug → Visible Collision Shapes*).
+- Nay hitbox lật theo hướng sprite giống các tướng gốc (`sword_hitbox.scale.x = -1` khi quay trái):
+  - `Scene/Character/Yugi/yugi.gd` — mỗi khung, ngay sau khi lật sprite theo hướng chuột.
+  - `Scene/Character/Doraemon/doraemon.gd` — trong `_set_flip()`.
+  - `Scene/Character/Miyabi/miyabi.gd` — trong `_set_facing()`.
+- Hitbox nhận đòn (`PlayerHurtbox`) và thân va chạm vốn nằm giữa nhân vật nên không cần lật.
+
+### Kiểm Thử
+- `tests/test_yugi.gd`: thêm kiểm tra hitbox ở bên trái khi Yugi quay trái và ở bên phải khi quay phải — vẫn PASS.
+- `DR-12` (Doraemon, **48/48 PASS**) và `MY-18` (Miyabi, **18/18 PASS**): hitbox quay theo nhân vật cả hai phía. `run_tests.bat` cập nhật số kiểm tra.
+
+---
+
+## [2026-11-03] — Tướng Thứ 7: Hoshimi Miyabi (Frost Swordswoman)
+
+> Nữ kiếm sĩ tai mèo dùng kiếm băng, luôn có một linh hồn băng bay bên vai. Sprite và bộ chiêu Frost lấy từ bộ asset `cat_girl_sprites` (khung 40×40, thời điểm gây sát thương theo `cat_girl_animations.json`).
+
+### Chỉ số & Vị trí trong Roster
+- Anh hùng thứ 7 (index 6) sau Doraemon: thêm `"miyabi"` vào `HERO_ORDER` và `HERO_STATS` (`Scene/BalanceConfig.gd`), `miyabi.tscn` vào `CHARACTER_SCENES` (`Scene/GameManager.gd`) và màn chọn tướng (`Scene/UI/character_select.gd`, hàm `_add_miyabi_portrait()`, chân dung có cả linh hồn băng).
+- **Máu 4 · Giáp 2 · Sát thương 1 · Tốc độ 160** — tướng cận chiến nhanh, có chiêu đánh xa bằng sóng băng.
+- Menu chính: đổi thành "SEVEN CHAMPIONS", thêm lời giới thiệu Miyabi và dòng phím điều khiển trong bảng hướng dẫn.
+
+### Bộ Chiêu Frost
+*(sát thương tính theo chỉ số Sát thương, ký hiệu ×)*
+| Phím | Chiêu | Hoạt ảnh | Tác dụng |
+|---|---|---|---|
+| Chuột Trái ×1 / ×2 / ×3 | **Combo Băng 3 đòn** | `frost_combo_1` (5 khung, 16 fps) → `frost_combo_2` (5, 16) → `frost_combo_3` (8, 14) | Đòn 1 và 2 chém ×1 (trúng ở khung 2); đòn 3 lao tới 14px, trúng ở khung 3, gây ×2 và **đóng băng** 0.5s. Bấm trong lúc đang chém để nối đòn, hoặc bấm trong 0.3s sau khi đòn 1–2 kết thúc; giữ chuột để tự đánh liên tục. Chỉ trúng quái phía trước mặt |
+| Shift | **Lướt Chém** | `frost_dash` (7, 16) | Lướt ~72px theo hướng di chuyển (đứng yên thì theo hướng chuột), chém ×2 mọi quái trên đường lướt, **không bị trúng đòn** khi đang lướt. Hồi 1.2s |
+| Giữ / Nhả Chuột Phải | **Sóng Băng** | `frost_charge_start` (3) → `frost_charge` (lặp khi giữ) → `frost_release` (8, 14) | Nhả chuột: sóng băng bay theo hướng chuột ở khung 2, xuyên qua mọi quái. Mức tụ lực: nhấp nhanh ×1 · giữ 0.45s ×2 (sóng to 1.25 lần) · giữ 1s ×3, sóng to 1.5 lần và **đóng băng** 0.8s (kiếm lóe sáng khi tụ đầy). Sóng tan (`frost_wave_end`) khi chạm tường hoặc bay hết 180px. Hồi 2s |
+| Q | **Frost Bloom** | `frost_special` (13, 12) | Cắm kiếm xuống đất, không bị trúng đòn cho tới khung 5; khung 5 hàng gai băng 96×40 trồi lên phía trước (đặt ở +56px tính từ tâm nhân vật). Gai mọc dần ra xa và đâm quái ngay khi chạm tới (×3 + **đóng băng** 1.2s), tới khung 8 gai vỡ vụn gây thêm ×1. Gai không xuyên qua tường. Hồi 8s |
+| (tự động) | **Linh Hồn Băng** | `spirit_idle` / `spirit_attack` / `spirit_hurt` / `spirit_vanish` | Bay bên vai Miyabi (+10, −4 tính từ tâm), vẫn chạy `spirit_idle` trong lúc cô dùng chiêu Frost. Cứ 2s bắn một viên `spirit_bolt` ×1 vào quái gần nhất trong tầm 150px mà nó nhìn thấy. Giật mình khi Miyabi bị đánh, tan biến khi cô gục ngã |
+
+- Mọi quái trúng chiêu đều nổ hiệu ứng `frost_hit`. Đóng băng làm quái đứng yên và chuyển màu xanh băng; boss chỉ bị đóng băng 35% thời gian, Pha Lê Linh Hồn của Skeleton King vẫn bị phá nhưng không bị đóng băng.
+- Khi quay sang trái, mọi sprite được lật và các độ lệch x (sóng băng, gai băng, linh hồn, đạn) bị đảo dấu đúng như `cat_girl_animations.json`.
+
+### Kỹ Thuật
+- **Sprite (`Assets/Character/Miyabi/`):** 12 hoạt ảnh của Miyabi (idle, walk, hurt, death và 8 hoạt ảnh Frost), 4 hiệu ứng băng, 4 hoạt ảnh linh hồn, đạn linh hồn và chân dung `miyabi_portrait.png`. Hiển thị ở tỉ lệ 0.85 (cao khoảng 28px, ngang các tướng khác), chân đặt trên hàng dưới cùng của khung.
+- **Script (`Scene/Character/Miyabi/`):**
+  - `miyabi.gd` — nhân vật, combo, lướt, tụ lực, Frost Bloom.
+  - `MiyabiSprites.gd` — bảng hoạt ảnh lấy từ JSON và các độ lệch, nạp ảnh lúc chạy (không `preload`) để mở project lần đầu không bị lỗi Parse.
+  - `frost_wave.gd`, `ice_spikes.gd`, `miyabi_spirit.gd`, `spirit_bolt.gd`, `miyabi_fx.gd` (hiệu ứng một lần), `miyabi_freeze.gd` (đóng băng), `miyabi_util.gd` (tìm quái qua `Hurtbox`, tầm nhìn, sát thương).
+- Mọi bộ đếm thời gian chạy theo nhịp vật lý và mọi phím (chuột trái/phải đang giữ, Shift, Q) đi qua luồng Replay, nên **Replay tái hiện chính xác**. `GameManager._sanitize_replay_frames()` dùng lại khóa `shift` sẵn có.
+- HUD dùng lại ô hồi chiêu Q / Chuột Phải sẵn có (Frost Bloom / Frost Wave).
+- Bộ chiêu cũ trong thư mục asset (`slash`, `cast`, `special`, Spirit Blade) không dùng, nên không chép vào game. Khung hình được dựng bằng code từ `cat_girl_animations.json` thay cho `cat_girl_frames.tres` / `frost_fx_frames.tres` (hai file này trỏ tới `res://cat_girl_sprites/`, không khớp thư mục của project).
+
+### Kiểm Thử
+- `tests/test_miyabi.gd` / `.tscn` — **17/17 PASS**:
+  - Vị trí trong roster; đủ hoạt ảnh với đúng số khung theo JSON; quay trái thì đảo độ lệch.
+  - Một click chỉ chém một đòn ở khung 2, không trúng phía sau; 3 click ra đủ 3 đòn (1 + 1 + 2), đòn 3 lao tới và đóng băng; giữ chuột tự nối combo; click trễ thì quay lại đòn 1.
+  - Lướt chém đi ~72px, trúng mọi quái trên đường, không bị trúng đòn, đi theo phím di chuyển.
+  - Sóng băng nhấp nhanh và tụ đầy (xuyên quái, ×3, đóng băng), ném sang trái.
+  - Frost Bloom phải và trái (×3 + đóng băng, vỡ ×1, không trúng phía sau / lệch hàng).
+  - Linh hồn tự bắn; Replay chạy lại cho cùng kết quả; linh hồn phản ứng khi Miyabi bị đánh.
+- `UT-13` cập nhật số tướng 6 → 7; `DR-01` không còn cố định 6 tướng; `run_tests.bat` thêm bước [8/8]. Toàn bộ test cũ (Unit 19/19, Property 5/5, Orc Battle 5/5, VT-075 24/24, Yugi, Skeleton King 21/21, Doraemon 47/47, New Mechanics) vẫn PASS.
+
+---
+
 ## [2026-11-03] — Tướng Thứ 6: Doraemon (Gadget Cat of the 22nd Century)
 
 > Doraemon — chú mèo máy đến từ thế kỷ 22 — chiến đấu bằng **toàn bộ Túi Thần Kỳ**: 20 bảo bối, 6 người bạn và 10 siêu chiêu. Nhân vật, sprite và bộ chiêu được chuyển thể từ nhân vật M.U.G.E.N **"DORAemon"** (tác giả gốc SUGIO, bản chỉnh sửa của カイリ / KAIemon).

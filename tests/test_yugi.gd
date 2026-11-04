@@ -40,6 +40,15 @@ func _ready() -> void:
 	await get_tree().create_timer(intro_duration + 0.15).timeout
 	assert(not player.intro_active and player.animated_sprite.animation == "idle")
 	assert(not player.pending_q_skill and not player.pressed_left)
+	# The sword hitbox turns with Yugi (it used to stay on the right when he faced left).
+	GameManager.replay_frames = [{"ax": -40.0, "ay": 0.0}, {"ax": 40.0, "ay": 0.0}]
+	player.replay_frame_idx = 0
+	player._physics_process(1.0 / 60)
+	assert(player.animated_sprite.flip_h and player.sword_hitbox.scale.x == -1.0)
+	assert(player.sword_collision.global_position.x < player.global_position.x)
+	player._physics_process(1.0 / 60)
+	assert(not player.animated_sprite.flip_h and player.sword_hitbox.scale.x == 1.0)
+	assert(player.sword_collision.global_position.x > player.global_position.x)
 	player.replay_frame_idx = 0
 	GameManager.is_replaying = false
 	for move in ["left-click", "right-click", "hold&release-left-click", "hold&release-right-click", "shift+left+click", "result-5"]:
@@ -207,16 +216,25 @@ func _ready() -> void:
 	assert(blast.position == Vector2(36, 30))
 	for enemy in room_enemies: assert(enemy.received == 0)
 	blast._physics_process(0.41)
-	assert(blast.last_damage == 8)
-	for index in range(3): assert(room_enemies[index].received == 8)
+	assert(blast.last_damage == 4)
+	for index in range(3): assert(room_enemies[index].received == 4)
 	assert(room_enemies[3].received == 0)
 	blast._physics_process(0.1)
-	assert(room_enemies[0].received == 8)
+	assert(room_enemies[0].received == 4)
 	assert(not blast.orb.visible)
 	assert(blast.orb.global_position == blast.impact_position)
 	for enemy in room_enemies: enemy.is_dead = true
 	blast._detonate()
 	assert(blast.last_damage == 0)
+	# A lone boss loses half its current HP instead of being killed outright.
+	room_enemies[0].is_dead = false
+	room_enemies[0].hp = 101
+	blast._detonate()
+	assert(blast.last_damage == 50)
+	room_enemies[0].hp = 1
+	blast._detonate()
+	assert(blast.last_damage == 1)
+	room_enemies[0].hp = 4
 	for index in range(4):
 		room_enemies[index].is_dead = false
 		room_enemies[index].received = 0

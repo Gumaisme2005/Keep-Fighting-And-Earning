@@ -80,7 +80,7 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 echo.
-echo [7/7] Chay Doraemon Hero Tests (47 checks: 20 gadgets, 6 friends, 10 supers)...
+echo [7/7] Chay Doraemon Hero Tests (48 checks: 20 gadgets, 6 friends, 10 supers)...
 "!GODOT_BIN!" --headless --path . "res://tests/test_doraemon.tscn"
 if !ERRORLEVEL! NEQ 0 (
     echo [THAT BAI] Doraemon Tests gap loi!
@@ -89,7 +89,25 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 echo.
+echo [8/8] Chay Hoshimi Miyabi Hero Tests (18 checks: combo, dash, Frost Wave, Frost Bloom, spirit)...
+"!GODOT_BIN!" --headless --path . "res://tests/test_miyabi.tscn"
+if !ERRORLEVEL! NEQ 0 (
+    echo [THAT BAI] Miyabi Tests gap loi!
+    pause
+    exit /b 1
+)
+
+echo.
+echo [9/9] Chay Luong Tho Hero Tests (15 checks: stance, combo, Twin Barrels, White Moon)...
+"!GODOT_BIN!" --headless --path . "res://tests/test_luong_tho.tscn"
+if !ERRORLEVEL! NEQ 0 (
+    echo [THAT BAI] Luong Tho Tests gap loi!
+    pause
+    exit /b 1
+)
+
+echo.
 echo ==================================================================
-echo   [THANH CONG] TAT CA UNIT, PROPERTY, COMBAT, BENCHMARK, VT-075, SKELETON KING VA DORAEMON PASS 100%%!
+echo   [THANH CONG] TAT CA UNIT, PROPERTY, COMBAT, BENCHMARK, VT-075, SKELETON KING, DORAEMON, MIYABI VA LUONG THO PASS 100%%!
 echo ==================================================================
 pause

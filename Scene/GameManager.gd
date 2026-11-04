@@ -25,6 +25,8 @@ const CHARACTER_SCENES: Array[PackedScene] = [
 	preload("res://Scene/Character/Player 4_Charlotte/player_4.tscn"),
 	preload("res://Scene/Character/Yugi/yugi.tscn"),
 	preload("res://Scene/Character/Doraemon/doraemon.tscn"),
+	preload("res://Scene/Character/Miyabi/miyabi.tscn"),
+	preload("res://Scene/Character/LuongTho/luong_tho.tscn"),
 ]
 
 var WORLD_LORE: Dictionary = BalanceData.WORLD_LORE
@@ -110,7 +112,7 @@ static func _sanitize_replay_frames(raw_frames: Variant, max_count: int) -> Arra
 			"q": bool(item.get("q", false)) if item.get("q") is bool else false,
 			"rmb": bool(item.get("rmb", false)) if item.get("rmb") is bool else false,
 			"slot": clampi(slot_idx, -1, 15),
-			# Yugi-specific inputs (Shift guard, mouse press/release, Q special result)
+			# Shift (Yugi guard / Miyabi dash), mouse press/release, Q special result
 			"shift": item.get("shift", false) == true,
 			"lp": item.get("lp", false) == true,
 			"lr": item.get("lr", false) == true,
