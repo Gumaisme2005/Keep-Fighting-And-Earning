@@ -89,7 +89,7 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 echo.
-echo [8/8] Running Werewolf Functional & Integration Tests (50 checks)...
+echo [8/8] Running Werewolf Functional and Integration Tests (50 checks)...
 "!GODOT_BIN!" --headless --path . "res://tests/test_werewolf.tscn"
 if !ERRORLEVEL! NEQ 0 (
     echo [FAILED] Werewolf Tests failed.
