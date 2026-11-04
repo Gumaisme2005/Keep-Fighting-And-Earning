@@ -404,12 +404,13 @@ func _build_lore_modal() -> void:
 	story_lbl.add_theme_font_size_override("font_size", 13)
 	story_lbl.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
 	story_lbl.text = GameManager.WORLD_LORE["story"] + "\n\n" + \
-		"• FIVE CHAMPIONS OF THE FELLOWSHIP VANGUARD:\n" + \
+		"• SIX CHAMPIONS OF THE FELLOWSHIP VANGUARD:\n" + \
 		"  1. Pyrois — Knight of the White Tower: Vitality 4, Armor 4, Damage 1. Wields the Blade of Andúril and Gondor Aegis, initiating Sovereign Rush.\n" + \
 		"  2. Olaf — Dwarven Berserker of Erebor: Vitality 6, Armor 1, Damage 2. Swings the Greataxe of Khazad-dûm, unleashing Durin's Wrath to double strike damage.\n" + \
 		"  3. Miya — Mirkwood Elven Archer: Vitality 3, Armor 1, Damage 1. Draws the Galadhrim Bow from afar, bombarding hordes with Orthanc Fire.\n" + \
 		"  4. Charlotte — Dúnedain Shadow Ranger: Vitality 5, Armor 0, Damage 2. Brandishes the Twin Blades of Narsil with Triple Flurry and evasive Shadow Step.\n" + \
-		"  5. Yugi / Atem — Pharaoh Summoner: Vitality 5, Armor 1, Damage 1. Summons monsters from his Duel Deck, guards with Shift, and unleashes a random Special Summon with Q.\n\n" + \
+		"  5. Yugi / Atem — Pharaoh Summoner: Vitality 5, Armor 1, Damage 1. Summons monsters from his Duel Deck, guards with Shift, and unleashes a random Special Summon with Q.\n" + \
+		"  6. Doraemon — Gadget Cat of the 22nd Century: Vitality 5, Armor 2, Damage 1. Fights with his whole 4D Pocket: 20 gadgets on 10 pages, 6 friends on Take-copters and 10 super moves powered by a 3-bar gauge.\n\n" + \
 		"• THE SHADOW LEGION OF MORIA:\n" + \
 		"  - Hostile Ranks: Moria Orcs, Armored Uruk-hai, Barrow-wight Remains, Minas Morgul Bone Archers, and Angmar Blood Bats.\n" + \
 		"  - Dungeon Overlords: The Necromancer of Dol Guldur summoning toxic shades, and the ruthless Warg Rider Chieftain."
@@ -453,6 +454,7 @@ func _build_help_modal() -> void:
 • Key Q: Unleash champion active ability
 • Right Click: Shadow Step dash exclusive to Charlotte
 • Yugi: Left/Right Click to summon (hold 0.65s to charge), hold Shift to guard, Shift + Click for combo summons
+• Doraemon: Mouse Wheel / Z / X switch gadget page, Left / Right Click use the page gadgets, Q friend (or SUPER with a full power bar), F Dorayaki
 • Key E: Interact and pick up dropped loot or chests
 • Keys 1 to 9: Quick-use potions or equip hotbar items
 • Key I or Tab: Toggle Backpack & Equipment screen

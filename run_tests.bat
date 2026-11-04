@@ -71,7 +71,25 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 echo.
+echo [6/6] Chay Skeleton King Boss Arena Tests (SK-01 .. SK-17)...
+"!GODOT_BIN!" --headless --path . "res://tests/test_skeleton_king.tscn"
+if !ERRORLEVEL! NEQ 0 (
+    echo [THAT BAI] Skeleton King Tests gap loi!
+    pause
+    exit /b 1
+)
+
+echo.
+echo [7/7] Chay Doraemon Hero Tests (47 checks: 20 gadgets, 6 friends, 10 supers)...
+"!GODOT_BIN!" --headless --path . "res://tests/test_doraemon.tscn"
+if !ERRORLEVEL! NEQ 0 (
+    echo [THAT BAI] Doraemon Tests gap loi!
+    pause
+    exit /b 1
+)
+
+echo.
 echo ==================================================================
-echo   [THANH CONG] TAT CA UNIT, PROPERTY, COMBAT, BENCHMARK VA VT-075 PASS 100%%!
+echo   [THANH CONG] TAT CA UNIT, PROPERTY, COMBAT, BENCHMARK, VT-075, SKELETON KING VA DORAEMON PASS 100%%!
 echo ==================================================================
 pause

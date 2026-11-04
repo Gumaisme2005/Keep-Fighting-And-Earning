@@ -1,0 +1,80 @@
+{
+  "frame_size": [
+    444,
+    348
+  ],
+  "source_frame_size": [
+    889,
+    697
+  ],
+  "scale": 0.5,
+  "animations": {
+    "idle": {
+      "file": "skeleton_king_idle.png",
+      "frames": 26,
+      "columns": 8,
+      "rows": 4,
+      "fps": 10,
+      "loop": true,
+      "events": {}
+    },
+    "idle_enraged": {
+      "file": "skeleton_king_idle_enraged.png",
+      "frames": 26,
+      "columns": 8,
+      "rows": 4,
+      "fps": 12,
+      "loop": true,
+      "events": {}
+    },
+    "hit": {
+      "file": "skeleton_king_hit.png",
+      "frames": 6,
+      "columns": 6,
+      "rows": 1,
+      "fps": 15,
+      "loop": false,
+      "events": {}
+    },
+    "slam": {
+      "file": "skeleton_king_slam.png",
+      "frames": 16,
+      "columns": 8,
+      "rows": 2,
+      "fps": 12,
+      "loop": false,
+      "events": {
+        "impact": 8
+      }
+    },
+    "cast": {
+      "file": "skeleton_king_cast.png",
+      "frames": 14,
+      "columns": 8,
+      "rows": 2,
+      "fps": 12,
+      "loop": false,
+      "events": {
+        "release": 9
+      }
+    },
+    "enrage": {
+      "file": "skeleton_king_enrage.png",
+      "frames": 18,
+      "columns": 8,
+      "rows": 3,
+      "fps": 12,
+      "loop": false,
+      "events": {}
+    },
+    "death": {
+      "file": "skeleton_king_death.png",
+      "frames": 28,
+      "columns": 8,
+      "rows": 4,
+      "fps": 12,
+      "loop": false,
+      "events": {}
+    }
+  }
+}

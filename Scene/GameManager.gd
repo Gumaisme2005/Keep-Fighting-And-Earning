@@ -24,6 +24,7 @@ const CHARACTER_SCENES: Array[PackedScene] = [
 	preload("res://Scene/Character/Player 1_Pyrois/player.tscn"),
 	preload("res://Scene/Character/Player 4_Charlotte/player_4.tscn"),
 	preload("res://Scene/Character/Yugi/yugi.tscn"),
+	preload("res://Scene/Character/Doraemon/doraemon.tscn"),
 ]
 
 var WORLD_LORE: Dictionary = BalanceData.WORLD_LORE
@@ -115,7 +116,10 @@ static func _sanitize_replay_frames(raw_frames: Variant, max_count: int) -> Arra
 			"lr": item.get("lr", false) == true,
 			"rp": item.get("rp", false) == true,
 			"rr": item.get("rr", false) == true,
-			"result": clampi(int(item.get("result", 0)), 0, 5) if item.get("result", 0) is int else 0
+			"result": clampi(int(item.get("result", 0)), 0, 5) if item.get("result", 0) is int else 0,
+			# Doraemon's 4D pocket: gadget page switch (-n..n) and Dorayaki key
+			"pg": clampi(int(item.get("pg", 0)), -10, 10) if (item.get("pg", 0) is int or item.get("pg", 0) is float) else 0,
+			"eat": item.get("eat", false) == true
 		})
 	return safe_frames
 

@@ -48,7 +48,7 @@ func _physics_process(delta: float) -> void:
 		_pull_targets()
 	for entry in locked:
 		var enemy = entry.target
-		if not is_instance_valid(enemy) or enemy.get("is_dead") == true: continue
+		if not is_instance_valid(enemy) or enemy.get("is_dead") == true or entry.get("rooted", false): continue
 		enemy.global_position = entry.position
 		if enemy is CharacterBody2D: enemy.velocity = Vector2.ZERO
 	if not hit_once and elapsed >= hit_time:
@@ -64,6 +64,10 @@ func _pull_targets() -> void:
 	var targets := _room_targets()
 	for i in range(targets.size()):
 		var enemy := targets[i]
+		if enemy.get("is_immovable") == true:
+			# Rooted targets (Skeleton King crystals) are hit in place, never dragged or frozen.
+			locked.append({"target": enemy, "position": enemy.global_position, "restore": true, "rooted": true})
+			continue
 		var desired := global_position + Vector2(facing * 55, (i - (targets.size() - 1) * 0.5) * 14)
 		var destination := _safe_front_position(desired)
 		# If there is no valid ground in front, lock in place instead of teleporting into a wall.
@@ -95,7 +99,7 @@ func _safe_front_position(desired: Vector2) -> Vector2:
 func _release_targets() -> void:
 	for entry in locked:
 		var enemy = entry.target
-		if not is_instance_valid(enemy) or enemy.is_queued_for_deletion() or enemy.get("is_dead") == true: continue
+		if not is_instance_valid(enemy) or enemy.is_queued_for_deletion() or enemy.get("is_dead") == true or entry.get("rooted", false): continue
 		if enemy.get_node_or_null("YugiLightningStun") == null:
 			enemy.set_physics_process(entry.restore)
 	locked.clear()

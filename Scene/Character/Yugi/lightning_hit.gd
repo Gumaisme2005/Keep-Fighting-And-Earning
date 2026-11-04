@@ -18,7 +18,9 @@ static func apply(enemy: Node2D) -> void:
 func _ready() -> void:
 	target = get_parent() as Node2D
 	restore_physics = target.is_physics_processing()
-	target.set_physics_process(false)
+	# Rooted targets (Skeleton King crystals) still show the strike but are never frozen.
+	if target.get("is_immovable") != true:
+		target.set_physics_process(false)
 	if target is CharacterBody2D: target.velocity = Vector2.ZERO
 	var sprite := AnimatedSprite2D.new()
 	var frames := SpriteFrames.new()
