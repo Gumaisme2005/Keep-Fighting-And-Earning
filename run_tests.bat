@@ -89,10 +89,19 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 echo.
-echo [8/8] Running Werewolf Functional and Integration Tests (50 checks)...
+echo [8/9] Running Werewolf Functional and Integration Tests (50 checks)...
 "!GODOT_BIN!" --headless --path . "res://tests/test_werewolf.tscn"
 if !ERRORLEVEL! NEQ 0 (
     echo [FAILED] Werewolf Tests failed.
+    pause
+    exit /b 1
+)
+
+echo.
+echo [9/9] Running MOBA HUD, Stacking and Equipment Tests (34 checks)...
+"!GODOT_BIN!" --headless --path . "res://tests/test_moba_hud_and_inventory.tscn"
+if !ERRORLEVEL! NEQ 0 (
+    echo [FAILED] MOBA HUD and Inventory Tests failed.
     pause
     exit /b 1
 )
