@@ -3,8 +3,8 @@
 .godot
 .codegraph
 build/
-tests/vt075/_cov/
-tests/vt075/_mutant/
+docs/vt075/
+tests/vt075/
 *.md
 *.pdf
 *Tiny RPG Character*
