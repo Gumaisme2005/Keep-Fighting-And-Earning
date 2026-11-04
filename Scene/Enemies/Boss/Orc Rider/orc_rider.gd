@@ -97,7 +97,14 @@ func _physics_process(_delta: float) -> void:
 	if distance > 150.0 and can_charge:
 		prep_charge()
 	elif distance > 45.0:
-		velocity = direction * current_speed
+		var move_dir = direction
+		if is_on_wall():
+			var normal = get_wall_normal()
+			var tangent = Vector2(-normal.y, normal.x)
+			if tangent.dot(direction) < 0.0:
+				tangent = -tangent
+			move_dir = (direction + tangent * 1.5).normalized()
+		velocity = move_dir * current_speed
 		anim.play("walk")
 		move_and_slide()
 	else:
@@ -238,12 +245,10 @@ func take_damage(amount: int) -> void:
 		prep_spin_attack()
 		return
 
-	if is_preparing_charge or is_charging or is_attacking:
-		return
-
-	_cancel_all_actions()
-	is_hurt = true
-	anim.play("hurt")
+	# Boss Super Armor (Poise): Light ranged attacks do not stun-lock boss movement
+	var flash_hit = create_tween()
+	flash_hit.tween_property(anim, "modulate", Color(1.5, 0.4, 0.4), 0.08)
+	flash_hit.tween_property(anim, "modulate", Color.WHITE, 0.08)
 
 func check_phase() -> bool:
 	if current_phase == 1 and hp <= max_hp * 0.66:
