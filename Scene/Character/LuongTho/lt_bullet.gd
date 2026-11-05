@@ -52,7 +52,11 @@ func _physics_process(delta: float) -> void:
 			continue
 		if Util.hit_point(t).distance_to(global_position) <= 4.0 + Util.ENEMY_RADIUS:
 			hits[id] = true
-			t.take_damage(damage)
+			var bullet_dmg = damage
+			var players = get_tree().get_nodes_in_group("player")
+			if not players.is_empty() and players[0].has_method("apply_on_hit_effects"):
+				bullet_dmg = players[0].apply_on_hit_effects(t, damage)
+			t.take_damage(bullet_dmg)
 			if not pierce:
 				_burst(world)
 				return

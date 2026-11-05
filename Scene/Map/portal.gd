@@ -38,6 +38,17 @@ func _trigger_teleport() -> void:
 	if get_node_or_null("/root/AudioManager") != null:
 		AudioManager.play_sfx("portal")
 	print("[PORTAL] Descent Gateway activated!")
+
+	# Mở giao diện Chọn Perk trước khi bước xuống tầng sâu hơn
+	var uis = get_tree().get_nodes_in_group("game_ui")
+	if not uis.is_empty() and uis[0].has_method("open_perk_selection"):
+		uis[0].open_perk_selection(func():
+			_proceed_to_next_floor()
+		)
+	else:
+		_proceed_to_next_floor()
+
+func _proceed_to_next_floor() -> void:
 	if get_tree():
 		get_tree().call_group("game_ui", "show_banner", "DESCENDING TO DEEPER VAULTS OF MORIA...", Color(0.4, 0.85, 1.0))
 	if get_parent().has_method("next_level"):

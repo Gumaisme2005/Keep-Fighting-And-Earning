@@ -56,6 +56,8 @@ func activate_trap() -> void:
 	var targets = get_overlapping_bodies()
 	for target in targets:
 		if target.is_in_group("player") and target.has_method("take_damage"):
+			if target.has_method("is_spike_immune") and target.is_spike_immune():
+				continue
 			target.take_damage(damage)
 			
 	# 3. Giữ cọc đâm trồi lên lâu hơn (2.8s) chắn ngang đường đi

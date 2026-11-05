@@ -206,6 +206,9 @@ func record_frame_input(frame_data: Dictionary) -> void:
 func register_enemy_kill() -> void:
 	enemies_killed += 1
 	stats_updated.emit(current_level, enemies_killed)
+	var pm = get_node_or_null("/root/PerkManager")
+	if pm != null and pm.has_method("on_enemy_killed"):
+		pm.on_enemy_killed()
 
 func register_level_advance(new_level: int) -> void:
 	current_level = maxi(1, new_level)

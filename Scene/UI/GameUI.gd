@@ -59,6 +59,11 @@ var minimap_panel: PanelContainer = null
 var minimap_expanded: bool = false
 var mute_btn: Button = null
 
+const PERK_MODAL_SCENE = preload("res://Scene/UI/PerkSelectionModal.tscn")
+const PerkData = preload("res://Scene/Perks/PerkData.gd")
+var perk_modal: CanvasLayer = null
+var active_perks_bar: HBoxContainer = null
+
 class MinimapCanvas extends Control:
 	var tilemap: TileMap = null
 
@@ -315,6 +320,11 @@ func _build_enhanced_ui() -> void:
 	moba_box.add_child(armor_overlay)
 
 	$HUD/VBoxContainer.add_child(moba_box)
+
+	# Hàng Icon hiển thị các Cổ Vật / Perk đang kích hoạt trên HUD
+	active_perks_bar = HBoxContainer.new()
+	active_perks_bar.add_theme_constant_override("separation", 4)
+	$HUD/VBoxContainer.add_child(active_perks_bar)
 
 	# 2. Panel Góc Trên Phải: Tầng, Hạ gục, Seed & Phím điều khiển nhanh
 	var top_right := VBoxContainer.new()
@@ -592,6 +602,57 @@ func _build_enhanced_ui() -> void:
 
 	# 7. Cửa sổ Hành trang & Trang bị
 	_build_inventory_modal()
+
+	# 8. Cửa sổ Chọn Perk Chúc Phúc
+	perk_modal = PERK_MODAL_SCENE.instantiate()
+	add_child(perk_modal)
+
+	if get_node_or_null("/root/PerkManager") != null:
+		PerkManager.perk_acquired.connect(_on_perk_acquired)
+		PerkManager.perks_cleared.connect(_on_perks_cleared)
+	_update_active_perks_bar()
+
+func open_perk_selection(on_complete: Callable = Callable()) -> void:
+	if perk_modal != null and is_instance_valid(perk_modal):
+		perk_modal.show_selection(player, on_complete)
+	elif on_complete.is_valid():
+		on_complete.call()
+
+func _on_perk_acquired(_perk: PerkData) -> void:
+	_update_active_perks_bar()
+
+func _on_perks_cleared() -> void:
+	_update_active_perks_bar()
+
+func _update_active_perks_bar() -> void:
+	if active_perks_bar == null:
+		return
+	for c in active_perks_bar.get_children():
+		c.queue_free()
+
+	if get_node_or_null("/root/PerkManager") == null:
+		return
+
+	var perks: Array[PerkData] = PerkManager.get_active_perks()
+	for p in perks:
+		var p_icon := TextureRect.new()
+		p_icon.texture = p.get_pixel_texture()
+		p_icon.custom_minimum_size = Vector2(16, 16)
+		p_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		p_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		p_icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		p_icon.tooltip_text = p.name + " (" + p.get_rarity_name() + ")\n" + p.description
+
+		var p_box := PanelContainer.new()
+		var p_style := StyleBoxFlat.new()
+		p_style.bg_color = Color(0.06, 0.08, 0.12, 0.85)
+		p_style.border_color = p.get_rarity_color()
+		p_style.set_border_width_all(1)
+		p_style.set_corner_radius_all(2)
+		p_style.set_content_margin_all(2)
+		p_box.add_theme_stylebox_override("panel", p_style)
+		p_box.add_child(p_icon)
+		active_perks_bar.add_child(p_box)
 
 func _build_inventory_modal() -> void:
 	inventory_modal = PanelContainer.new()
