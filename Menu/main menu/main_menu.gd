@@ -110,7 +110,7 @@ func _enhance_main_menu_ui() -> void:
 	UITheme.style_line_edit(seed_input, 13)
 	seed_input.text_changed.connect(func(new_txt: String):
 		if get_node_or_null("/root/GameManager") != null:
-			var clean := GameManager.sanitize_seed(new_txt)
+			var clean: String = GameManager.sanitize_seed(new_txt)
 			if not clean.is_empty():
 				GameManager.set_seed(clean)
 	)
@@ -119,7 +119,7 @@ func _enhance_main_menu_ui() -> void:
 	var rand_btn := UITheme.create_button("Random", "", Vector2(115, 34), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
 	rand_btn.pressed.connect(func():
 		if get_node_or_null("/root/GameManager") != null:
-			var s := GameManager.generate_random_seed()
+			var s: String = GameManager.generate_random_seed()
 			GameManager.set_seed(s)
 			seed_input.text = s
 			_set_seed_status("New seed coordinates set: " + s)

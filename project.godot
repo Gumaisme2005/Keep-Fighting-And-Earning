@@ -11,12 +11,12 @@ config_version=5
 [application]
 
 config/name="Keep Fighting And Earning"
-run/main_scene="uid://xvemgenba6x2"
-config/features=PackedStringArray("4.7", "GL Compatibility")
+run/main_scene="res://Menu/main menu/main_menu.tscn"
+config/features=PackedStringArray("4.3", "GL Compatibility")
 
 [autoload]
 
-GameManager="*uid://qw6g4q4dop7n"
+GameManager="*res://Scene/GameManager.gd"
 AudioManager="*res://Scene/AudioManager.gd"
 
 [display]

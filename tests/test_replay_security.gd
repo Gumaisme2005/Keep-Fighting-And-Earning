@@ -51,7 +51,7 @@ func test_replay_limit_10_fifo_eviction() -> void:
 		GameManager.is_replaying = false
 		GameManager.finish_run("Defeat %d" % i)
 
-	var saved_count := GameManager.get_saved_replays_count()
+	var saved_count: int = GameManager.get_saved_replays_count()
 	assert_test(saved_count == 10, "Exact 10 replays retained after 13 consecutive runs with replays (count=%d)" % saved_count)
 
 	# Verify the newest 10 runs retain replay frames
@@ -103,7 +103,7 @@ func test_idle_frame_recording_deduplication() -> void:
 		GameManager.record_frame_input(idle_frame)
 
 	# Should not record 100 frames; duplicate consecutive idle frames must be skipped
-	var recorded_cnt := GameManager.current_recording_frames.size()
+	var recorded_cnt: int = GameManager.current_recording_frames.size()
 	assert_test(recorded_cnt == 1, "100 consecutive identical idle frames compressed into 1 frame (count=%d)" % recorded_cnt)
 
 	# Active input frame must still be recorded immediately

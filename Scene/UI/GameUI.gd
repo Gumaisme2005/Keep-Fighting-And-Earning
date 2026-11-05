@@ -809,7 +809,7 @@ func _toggle_minimap_size() -> void:
 		minimap_control.custom_minimum_size = Vector2(265, 200) if minimap_expanded else Vector2(177, 122)
 
 func _on_copy_seed_pressed() -> void:
-	var s := GameManager.current_seed if get_node_or_null("/root/GameManager") != null else "MORIA-EXPEDITION"
+	var s: String = GameManager.current_seed if get_node_or_null("/root/GameManager") != null else "MORIA-EXPEDITION"
 	DisplayServer.clipboard_set(s)
 	show_toast("Copied Seed: " + s)
 
