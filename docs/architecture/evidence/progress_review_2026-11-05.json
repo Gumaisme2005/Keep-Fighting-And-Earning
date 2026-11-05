@@ -1,0 +1,388 @@
+{
+  "checked_date": "2026-11-05",
+  "repository": "Gumaisme2005/Keep-Fighting-And-Earning",
+  "method": "Read-only GitHub connector; no remote writes. Branch names are observations at this date; links and code checks use pinned commits.",
+  "local": {
+    "git_metadata": false,
+    "source_basis": "docs/architecture/evidence/master_audit.json; 610 previously inventoried file hashes matched the audit final values before this documentation update.",
+    "gameplay_runtime_unchanged_this_task": true,
+    "heroes": 4,
+    "enemies": 5,
+    "bosses": 2,
+    "manual_csv": {
+      "cases": 183,
+      "statuses": {
+        "Chưa chạy": 183
+      }
+    },
+    "asset_files": 327,
+    "asset_sources": 164,
+    "asset_import_sidecars": 163,
+    "documentation_images": 14,
+    "trap_protection": "range(-2, 3) in both axes; already 5x5",
+    "test_evidence": "Prior local audit 2026-11-05; Godot suites not rerun for this documentation-only task",
+    "source_inventory": {
+      "scenes": {
+        "scripts": 32,
+        "scenes": 28,
+        "item_resources": 7,
+        "uid_sidecars": 32
+      },
+      "scripts": {
+        "scripts": 4,
+        "uid_sidecars": 4
+      },
+      "tests": {
+        "scripts": 11,
+        "scenes": 7,
+        "python_tools": 4,
+        "powershell_tools": 2
+      },
+      "benchmarks": {
+        "runners": 7,
+        "scenes": 2,
+        "analyzers_or_instrumenters": 5
+      },
+      "tools": {
+        "python": 2,
+        "powershell": 2
+      },
+      "assets": {
+        "png": 145,
+        "wav": 8,
+        "ttf": 10,
+        "aseprite": 1,
+        "import_sidecars": 163
+      }
+    }
+  },
+  "main": {
+    "sha": "777d9d9fbcfffe61ea421071d3d891a3dd7bd788",
+    "hero_preloads": "const CHARACTER_SCENES: Array[PackedScene] = [\n\tpreload(\"res://Scene/Character/Player 3_Miya/player_3.tscn\"),\n\tpreload(\"res://Scene/Character/Player 2_Olaf/player_2.tscn\"),\n\tpreload(\"res://Scene/Character/Player 1_Pyrois/player.tscn\"),\n\tpreload(\"res://Scene/Character/Player 4_Charlotte/player_4.tscn\"),\n\tpreload(\"res://Scene/Character/Yugi/yugi.tscn\"),\n\tpreload(\"res://Scene/Character/Doraemon/doraemon.tscn\"),\n]",
+    "test_paths": [],
+    "ci_pin": "4.7.2",
+    "workflow_url": "https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/777d9d9fbcfffe61ea421071d3d891a3dd7bd788/.github/workflows/ci.yml",
+    "run_url": "https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/42001784825",
+    "jobs": [
+      {
+        "name": "Unit Tests, Property Tests and Benchmark",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout Repository",
+            "conclusion": "success"
+          },
+          {
+            "name": "Setup Godot 4 Headless",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Godot Version & Import Project Cache",
+            "conclusion": "success"
+          },
+          {
+            "name": "1. Run Dungeon Generator Unit Tests (UT-01 .. UT-13)",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "2. Run Property-Based Tests (100 Seeds x 5 Invariants)",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "3. Run Combat Hitbox Regression Tests (TC-EN-01 .. TC-EN-05)",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "4. Run Dungeon Generator Performance Benchmark",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "5. Run Skeleton King Boss Arena Tests (SK-01 .. SK-17)",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "6. Run Doraemon Hero Tests (47 Checks)",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "7. Run Yugi Atem Hero Tests",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "8. Run Werewolf Functional and Integration Tests (50 Checks)",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "9. Run MOBA HUD & Minecraft Inventory Stacking Tests (26 Checks)",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "10. Run Replay Capacity & Memory Protection Tests (39 Checks)",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Upload Benchmark Evidence Artifact",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Post Checkout Repository",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ],
+    "conclusion": "Run success; 10 numbered test/benchmark steps skipped. Not evidence that those tests passed."
+  },
+  "development": {
+    "sha": "4508d8ee2f6d89861aadbc679804c7314a023458",
+    "hero_preloads": "const CHARACTER_SCENES: Array[PackedScene] = [\n\tpreload(\"res://Scene/Character/Player 3_Miya/player_3.tscn\"),\n\tpreload(\"res://Scene/Character/Player 2_Olaf/player_2.tscn\"),\n\tpreload(\"res://Scene/Character/Player 1_Pyrois/player.tscn\"),\n\tpreload(\"res://Scene/Character/Player 4_Charlotte/player_4.tscn\"),\n\tpreload(\"res://Scene/Character/Yugi/yugi.tscn\"),\n\tpreload(\"res://Scene/Character/Doraemon/doraemon.tscn\"),\n\tpreload(\"res://Scene/Character/Miyabi/miyabi.tscn\"),\n\tpreload(\"res://Scene/Character/LuongTho/luong_tho.tscn\"),\n]",
+    "test_scenes": [
+      "tests/benchmark_dungeon_generator.tscn",
+      "tests/test_doraemon.tscn",
+      "tests/test_dungeon_generator_unit.tscn",
+      "tests/test_dungeon_properties.tscn",
+      "tests/test_luong_tho.tscn",
+      "tests/test_miyabi.tscn",
+      "tests/test_moba_hud_and_inventory.tscn",
+      "tests/test_new_mechanics.tscn",
+      "tests/test_orc_battle.tscn",
+      "tests/test_projectile_obstacles.tscn",
+      "tests/test_replay_security.tscn",
+      "tests/test_skeleton_king.tscn",
+      "tests/test_visual_backdrop.tscn",
+      "tests/test_werewolf.tscn",
+      "tests/test_yugi.tscn"
+    ],
+    "ci_pin": "4.7.2",
+    "run_url": "https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/42018297749",
+    "jobs": [
+      {
+        "name": "Unit Tests, Property Tests and Benchmark",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout Repository",
+            "conclusion": "success"
+          },
+          {
+            "name": "Setup Godot 4 Headless",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Godot Version & Import Project Cache",
+            "conclusion": "success"
+          },
+          {
+            "name": "1. Run Dungeon Generator Unit Tests (UT-01 .. UT-13)",
+            "conclusion": "success"
+          },
+          {
+            "name": "2. Run Property-Based Tests (100 Seeds x 5 Invariants)",
+            "conclusion": "success"
+          },
+          {
+            "name": "3. Run Combat Hitbox Regression Tests (TC-EN-01 .. TC-EN-05)",
+            "conclusion": "success"
+          },
+          {
+            "name": "4. Run Dungeon Generator Performance Benchmark",
+            "conclusion": "success"
+          },
+          {
+            "name": "5. Run Skeleton King Boss Arena Tests (SK-01 .. SK-17)",
+            "conclusion": "success"
+          },
+          {
+            "name": "6. Run Doraemon Hero Tests (49 Checks)",
+            "conclusion": "success"
+          },
+          {
+            "name": "7. Run Yugi Atem Hero Tests",
+            "conclusion": "success"
+          },
+          {
+            "name": "8. Run Werewolf Functional and Integration Tests (50 Checks)",
+            "conclusion": "success"
+          },
+          {
+            "name": "9. Run MOBA HUD and Inventory Tests",
+            "conclusion": "success"
+          },
+          {
+            "name": "10. Run Hoshimi Miyabi Hero Tests",
+            "conclusion": "success"
+          },
+          {
+            "name": "11. Run Luong Tho Hero Tests",
+            "conclusion": "success"
+          },
+          {
+            "name": "12. Run Projectile Obstacles Tests",
+            "conclusion": "success"
+          },
+          {
+            "name": "Upload Benchmark Evidence Artifact",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout Repository",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ],
+    "conclusion": "12 numbered steps including benchmark succeeded in GitHub Actions; no assertion totals inferred from step names, no local execution or manual QA inferred."
+  },
+  "issue_collection": {
+    "url": "https://api.github.com/repos/Gumaisme2005/Keep-Fighting-And-Earning/issues?state=all&per_page=100",
+    "items": 35,
+    "non_pr_issues": [],
+    "pr_count": 35,
+    "note": "35 entries numbered 1..35, all PRs. Local SEED_BUG_ISSUES.md numbers are local document numbering, not GitHub issue IDs."
+  },
+  "recent_default_branch_commits": [
+    {
+      "sha": "777d9d9fbcfffe61ea421071d3d891a3dd7bd788",
+      "message": "chore(release): remove test suites and update CI for production main",
+      "date": "2026-11-05T09:21:14Z"
+    },
+    {
+      "sha": "f3c980c660d36f942b22527c0a8bfc955e5967a6",
+      "message": "Merge branch 'development' into main",
+      "date": "2026-11-05T09:18:28Z"
+    },
+    {
+      "sha": "ccc377b516e40c3a9215212d0fc1cfe7575e8c6b",
+      "message": "Merge branch 'feat/replay-limit-and-memory-protection' into development",
+      "date": "2026-11-05T09:13:07Z"
+    },
+    {
+      "sha": "c02e7864845e40a8a5d6b29bda67955d476fc254",
+      "message": "chore(engine): upgrade project configuration and CI pipeline to Godot 4.7",
+      "date": "2026-11-05T09:07:42Z"
+    },
+    {
+      "sha": "02dfbf5d7da7a88853c665caab0afeeb70913488",
+      "message": "fix(compat): resolve Godot 4.3 autoload UID path and GDScript static type inference",
+      "date": "2026-11-05T05:36:33Z"
+    }
+  ],
+  "pull_requests": [
+    {
+      "number": 34,
+      "title": "feat(gameplay): overhaul MOBA HUD, inventory stacking, bug fixes & replay memory protection",
+      "state": "closed",
+      "merged": false,
+      "merged_at": null,
+      "base": "main",
+      "merge_commit_sha": "1f5a4b170f9891c64cb2285041542186d66a0f06",
+      "url": "https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/pull/34"
+    },
+    {
+      "number": 35,
+      "title": "Update game 05/11/2026 - Fix Yugi and Doraemon [Phạm Dương Hoàng]",
+      "state": "closed",
+      "merged": true,
+      "merged_at": "2026-11-05T11:21:19Z",
+      "base": "development",
+      "merge_commit_sha": "4508d8ee2f6d89861aadbc679804c7314a023458",
+      "url": "https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/pull/35"
+    }
+  ],
+  "published_releases": [],
+  "limitations": [
+    "No local Git commit can be established from ZIP.",
+    "Remote branch code was read selectively; no full remote gameplay review, checkout, build or manual QA.",
+    "GitHub job statuses were read; full logs/artifacts not audited; a successful step is not release acceptance.",
+    "Remote state can change after the pinned observations."
+  ],
+  "remote_code_observations": {
+    "main_inventory": {
+      "path": "Scene/Character/InventoryManager.gd",
+      "sha": "777d9d9fbcfffe61ea421071d3d891a3dd7bd788",
+      "stack_count_present": true,
+      "drop_item_function_present": true
+    },
+    "main_ui": {
+      "path": "Scene/UI/GameUI.gd",
+      "sha": "777d9d9fbcfffe61ea421071d3d891a3dd7bd788",
+      "numeric_hp_and_armor_bars_present": true
+    }
+  },
+  "api_sources": [
+    "https://api.github.com/repos/Gumaisme2005/Keep-Fighting-And-Earning/commits?per_page=5",
+    "https://api.github.com/repos/Gumaisme2005/Keep-Fighting-And-Earning/issues?state=all&per_page=100",
+    "https://api.github.com/repos/Gumaisme2005/Keep-Fighting-And-Earning/releases?per_page=10",
+    "https://api.github.com/repos/Gumaisme2005/Keep-Fighting-And-Earning/git/trees/777d9d9fbcfffe61ea421071d3d891a3dd7bd788?recursive=1",
+    "https://api.github.com/repos/Gumaisme2005/Keep-Fighting-And-Earning/git/trees/4508d8ee2f6d89861aadbc679804c7314a023458?recursive=1",
+    "https://api.github.com/repos/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/42001784825/jobs?per_page=100",
+    "https://api.github.com/repos/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/42018297749/jobs?per_page=100"
+  ],
+  "documentation_change_validation": {
+    "changed_existing_markdown_files": [
+      ".github/PULL_REQUEST_TEMPLATE.md",
+      "CHANGELOG.md",
+      "CONTRIBUTING.md",
+      "README.md",
+      "benchmarks/README.md",
+      "docs/DEVELOPMENT_ROADMAP.md",
+      "docs/FEATURE_CHECKLIST.md",
+      "docs/README.md",
+      "docs/architecture/PROJECT_STRUCTURE.md",
+      "docs/gameplay/GAME_DESIGN_DOCUMENT.md",
+      "docs/qa/README.md",
+      "docs/qa/TEST_PLAN.md"
+    ],
+    "new_files": [
+      "docs/DEVELOPMENT_BACKLOG.md",
+      "docs/PROJECT_STATUS.md",
+      "docs/architecture/evidence/progress_review_2026-11-05.json"
+    ],
+    "baseline_file_count": 653,
+    "current_file_count": 656,
+    "files_missing": [],
+    "runtime_config_assets_and_prior_evidence_unchanged": true,
+    "qa_csv_unchanged": true,
+    "original_documentation_images_unchanged": 14,
+    "static_checks": [
+      {
+        "command": "python tools/check_documentation.py",
+        "exit_code": 0,
+        "markdown_files": 30,
+        "local_image_references": 14,
+        "images": 14,
+        "local_document_links": 243,
+        "errors": 0,
+        "warnings": 0,
+        "external_badge_images_not_fetched": 4
+      },
+      {
+        "command": "python tools/check_project_structure.py",
+        "exit_code": 0,
+        "resources": 100,
+        "references": 503,
+        "uids": 255,
+        "errors": 0,
+        "warnings": 0
+      }
+    ],
+    "traceability": "Verified F01..F13, PB-01..PB-11, R01..R10 and MA-01..MA-07 table rows exist.",
+    "godot_tests_this_task": "NOT RERUN: documentation-only change; prior audit log results retained with explicit date and scope."
+  }
+}

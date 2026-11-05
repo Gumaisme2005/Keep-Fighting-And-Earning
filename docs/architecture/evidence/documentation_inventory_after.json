@@ -1,0 +1,2581 @@
+{
+  "date": "2026-11-05",
+  "phase": "after documentation organization",
+  "docs_file_count": 77,
+  "docs_directories": [
+    "docs/architecture",
+    "docs/architecture/evidence",
+    "docs/architecture/evidence/cold_suite",
+    "docs/architecture/evidence/runner_negative",
+    "docs/architecture/evidence/suite",
+    "docs/architecture/evidence/tooling",
+    "docs/images",
+    "docs/qa"
+  ],
+  "docs_extension_counts": {
+    "": 2,
+    ".md": 13,
+    ".log": 37,
+    ".diff": 1,
+    ".json": 7,
+    ".txt": 4,
+    ".png": 11,
+    ".csv": 1,
+    ".xlsx": 1
+  },
+  "files": [
+    {
+      "path": "docs/.gdignore",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "bytes": 1
+    },
+    {
+      "path": "docs/architecture/DOCUMENTATION_AUDIT.md",
+      "sha256": "d1594736dfef6929927d17dd566c81a9037c950df115721fae2709cee3516bed",
+      "bytes": 10440
+    },
+    {
+      "path": "docs/architecture/evidence/before_import.log",
+      "sha256": "469240f0e0ce214b13e9d1a16d6bfb79df774394114d27897664a8b6472d87f6",
+      "bytes": 42831
+    },
+    {
+      "path": "docs/architecture/evidence/before_main.log",
+      "sha256": "a381b95846a9e91f0f9fcf748bde1862d3d4f24850d464306bd26767d632521b",
+      "bytes": 518
+    },
+    {
+      "path": "docs/architecture/evidence/before_unit.log",
+      "sha256": "da904e2580921b81cdd8b129f316788f5271d1886f6a174099f3425b1dfdf7b6",
+      "bytes": 3154
+    },
+    {
+      "path": "docs/architecture/evidence/cold_import_failed.log",
+      "sha256": "7a95125763a83a0ef7e056a24b8423ff9b67f0a83866f94af0ad7a595364df96",
+      "bytes": 36209
+    },
+    {
+      "path": "docs/architecture/evidence/cold_import_retry.log",
+      "sha256": "d0a997ff25a66ecfb79247a9ea76e5cae25441dddbee9733835c988024cc98c2",
+      "bytes": 36320
+    },
+    {
+      "path": "docs/architecture/evidence/cold_runner.log",
+      "sha256": "2e29832d1d9a519f6390feaaeff87df413759cdc3fd312d358c0d32730a0f925",
+      "bytes": 46904
+    },
+    {
+      "path": "docs/architecture/evidence/cold_suite/backdrop.log",
+      "sha256": "22170505f95c8884eeb73d719642dbd3cec1f3edcff7cc0c9738dbbd1d294f97",
+      "bytes": 913
+    },
+    {
+      "path": "docs/architecture/evidence/cold_suite/combat.log",
+      "sha256": "f230b4ac14de3e4a6a5ea5bb069a19e750fca77903fa350bc71ba7310c40c7a9",
+      "bytes": 908
+    },
+    {
+      "path": "docs/architecture/evidence/cold_suite/import.log",
+      "sha256": "de4f2c81c092b85a76ae68f0d16bf4091ac89cc23ae0659cbfd39c27ff8e5e4b",
+      "bytes": 35495
+    },
+    {
+      "path": "docs/architecture/evidence/cold_suite/import_retry.log",
+      "sha256": "c0e4273d310a9c890f888e378c1b6c9bbae4b94098bc9d2c275987cbffcc4e43",
+      "bytes": 1161
+    },
+    {
+      "path": "docs/architecture/evidence/cold_suite/mechanics.log",
+      "sha256": "127ba8059025bd16880fa88c96b8fca0bfbdba645b4aa73bf804aa2731029f61",
+      "bytes": 599
+    },
+    {
+      "path": "docs/architecture/evidence/cold_suite/properties.log",
+      "sha256": "1740d53490f36c165420d74499c4ebac041dbb760c8107d97053273cfe4e0823",
+      "bytes": 1186
+    },
+    {
+      "path": "docs/architecture/evidence/cold_suite/reviewer.log",
+      "sha256": "3c3e32a9f5179ad3b6bce7f1985280d931fef7cb20ab10202546fb0a95d28417",
+      "bytes": 3603
+    },
+    {
+      "path": "docs/architecture/evidence/cold_suite/unit.log",
+      "sha256": "ba6468d17814268803b5dfdbc5f2bc78961678547904f5b41bbb432afa363cf3",
+      "bytes": 2781
+    },
+    {
+      "path": "docs/architecture/evidence/content_changes.diff",
+      "sha256": "7a08b07afb0dbecbf122ccc2b94633d1ee9ecb04c51af6f3f50a6835e67dd9b8",
+      "bytes": 134331
+    },
+    {
+      "path": "docs/architecture/evidence/documentation_image_check.json",
+      "sha256": "a78c7f2c77aaff20cef0a35a682b22f92dd183148bda5549a7f29cac34a4c752",
+      "bytes": 11414
+    },
+    {
+      "path": "docs/architecture/evidence/documentation_inventory_after.json",
+      "sha256": null,
+      "note": "Self inventory; no recursive size/checksum"
+    },
+    {
+      "path": "docs/architecture/evidence/documentation_inventory_before.json",
+      "sha256": "174c2d1e18bafee178c8f71c881ebb01cb1e422fedd0a5858b90b0b40c6ae83b",
+      "bytes": 82130
+    },
+    {
+      "path": "docs/architecture/evidence/environment.json",
+      "sha256": "0dbaefe42a3abe4084f86e4b1b3ffe052237c23cb1167529a48e9549490dbfc3",
+      "bytes": 608
+    },
+    {
+      "path": "docs/architecture/evidence/inventory_after.txt",
+      "sha256": "9790ff977020610205c2eff423aad061052e3326d6f6843ffbdf8bdf9deb24e5",
+      "bytes": 26418
+    },
+    {
+      "path": "docs/architecture/evidence/inventory_before.txt",
+      "sha256": "9443f8d277dd44b9e7a1afe7d8d8429ad9d781ba97f4f026e5bfc4348bedb570",
+      "bytes": 23105
+    },
+    {
+      "path": "docs/architecture/evidence/main.log",
+      "sha256": "36ad270eb7264ceb0bc4ae4ccf5bdd275518d96e56c68707365d9092c96fac4c",
+      "bytes": 518
+    },
+    {
+      "path": "docs/architecture/evidence/preservation_check.json",
+      "sha256": "f39879e24ff005160c3e02ff6fd796c1142754fc39dbe115afc7e4953a7dd96c",
+      "bytes": 634
+    },
+    {
+      "path": "docs/architecture/evidence/resource_smoke.gd.txt",
+      "sha256": "a7ccd626ca18bcf819c0b8a2c659b69ce907b5d20e43a84d77f498bca099a2ed",
+      "bytes": 1132
+    },
+    {
+      "path": "docs/architecture/evidence/resource_smoke.log",
+      "sha256": "e686138aa4232eb4d4485e783feec96c9abcd7ca686bcd791f48be82e1224869",
+      "bytes": 658
+    },
+    {
+      "path": "docs/architecture/evidence/runner.log",
+      "sha256": "e6533ee5752119eab0d4170371b32db947fd9b4ac9a5924e40f2bc61ee6811f4",
+      "bytes": 12471
+    },
+    {
+      "path": "docs/architecture/evidence/runner_negative/import.log",
+      "sha256": "b5c84c194b9e5bb61cb135a0a4c8d30f77d99036b39564c7d359a248172b1813",
+      "bytes": 64
+    },
+    {
+      "path": "docs/architecture/evidence/runner_negative/import_retry.log",
+      "sha256": "b5c84c194b9e5bb61cb135a0a4c8d30f77d99036b39564c7d359a248172b1813",
+      "bytes": 64
+    },
+    {
+      "path": "docs/architecture/evidence/runner_negative_attempt.log",
+      "sha256": "a40258f8ca33652123c28b5624afec6aead160d67c51846b6da74d2a820ee034",
+      "bytes": 1948
+    },
+    {
+      "path": "docs/architecture/evidence/seed_after.log",
+      "sha256": "8d868b8078a448f2870276bd4945637dbca2418be7cab71cea735bfa15635df4",
+      "bytes": 1099
+    },
+    {
+      "path": "docs/architecture/evidence/seed_before.log",
+      "sha256": "eaa2f9cef4d26b2a74f36c9c70366eb014cd2504908bb93f9df3037f9d55c770",
+      "bytes": 1097
+    },
+    {
+      "path": "docs/architecture/evidence/stale_cache_import.log",
+      "sha256": "5eedc0ea25ab7562433db86dd704e27586ef90a46123f370f84346bc58cb0eb0",
+      "bytes": 5587
+    },
+    {
+      "path": "docs/architecture/evidence/static_check.json",
+      "sha256": "288149c81f0ce9085889051d980bd6dabca5dff97948a6fd33fd3686e95bde7b",
+      "bytes": 116
+    },
+    {
+      "path": "docs/architecture/evidence/suite/backdrop.log",
+      "sha256": "df0c89963afe845a2d53f8f7efd3dbc929b3b04a4a5dac15aad9e66557abb3ac",
+      "bytes": 915
+    },
+    {
+      "path": "docs/architecture/evidence/suite/benchmark.log",
+      "sha256": "555175a7ca5359bb2bc113a8a930d9cd9df152653f3114385b11826557cc7f50",
+      "bytes": 1151
+    },
+    {
+      "path": "docs/architecture/evidence/suite/combat.log",
+      "sha256": "cfb01d329a555429c3bcc97ecf740f8d60ad40953a9c6565d272f53a966b1028",
+      "bytes": 910
+    },
+    {
+      "path": "docs/architecture/evidence/suite/import.log",
+      "sha256": "65236bc3ec7fc8e17a01766bc0e57869de2c870704c819343dba7e73b8e4d54f",
+      "bytes": 1163
+    },
+    {
+      "path": "docs/architecture/evidence/suite/mechanics.log",
+      "sha256": "6f8a8f4575ac2c6dc930ed2145412b95796f12ec3d1dd1f29dfe1173e2e3f0b3",
+      "bytes": 601
+    },
+    {
+      "path": "docs/architecture/evidence/suite/properties.log",
+      "sha256": "56de752fe5a6ce962d51acf589ea82a86603a5be6a5d231a790c4a4371e2a280",
+      "bytes": 1188
+    },
+    {
+      "path": "docs/architecture/evidence/suite/reviewer.log",
+      "sha256": "a868c6308a666d66c54ecbf218d5868125dd51c32da9d5caa0733d1e37eac02e",
+      "bytes": 3569
+    },
+    {
+      "path": "docs/architecture/evidence/suite/unit.log",
+      "sha256": "41e116eb65587e8c798ebab94213b854443f2800b1c0d328928c8fc21524bb55",
+      "bytes": 2783
+    },
+    {
+      "path": "docs/architecture/evidence/tooling/coverage_smoke.log",
+      "sha256": "fb4b5c1ccc4bcb4dca047ba77483c21aceb0d972e78805651b5efa034cea2054",
+      "bytes": 9043
+    },
+    {
+      "path": "docs/architecture/evidence/tooling/mutation_smoke.log",
+      "sha256": "59c73ae246ef847a5ca980e07af5ed75f8722aa308c9d377051ec806ef671fe3",
+      "bytes": 160
+    },
+    {
+      "path": "docs/architecture/evidence/tooling/plan_checks.log",
+      "sha256": "3c446cc77b4a1b91e783eb98c3ba5268a5c5743039cf178c0a94cb49654a65a9",
+      "bytes": 1543
+    },
+    {
+      "path": "docs/architecture/evidence/tooling/scalability_analysis.log",
+      "sha256": "418958af6bee3930a46e751f3d7f0301bb34c37f0e37f29216f5b4fa9d1db797",
+      "bytes": 159
+    },
+    {
+      "path": "docs/architecture/evidence/tooling/vt075_evidence_invocation.log",
+      "sha256": "7c8986e82f495e6d245d799bd14f0c318b6835cc00655623bc33b3414fec52eb",
+      "bytes": 737
+    },
+    {
+      "path": "docs/architecture/evidence/world.log",
+      "sha256": "b7b9d645f6750f74b1577a3cd9a576cd192031983870336d4a6da767c365984d",
+      "bytes": 600
+    },
+    {
+      "path": "docs/architecture/FILES_CHANGED.md",
+      "sha256": "caa627b82c01f3b65b76d24263748650197f9d8179d071cb3c493dfc730785af",
+      "bytes": 22741
+    },
+    {
+      "path": "docs/architecture/PROJECT_STRUCTURE.md",
+      "sha256": "d9f38675db39a84720e6dfe3c02fa2ee55be7024940e4f76f44af492ca79da9a",
+      "bytes": 5638
+    },
+    {
+      "path": "docs/architecture/refactor_manifest.json",
+      "sha256": "1c5cbd4030e53388b4f79bd22455eab673ce5adf3871dc62c5f29c95ae42831e",
+      "bytes": 303576
+    },
+    {
+      "path": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "sha256": "fd99a83c7a3e7e9ee9bfe00e2e455164040a742c210fabfc0c84cabcd3339e38",
+      "bytes": 14938
+    },
+    {
+      "path": "docs/BALANCE_WORKFLOW.md",
+      "sha256": "838be8b08bd72544f22771633996c6146d9e68f430f632a04c63d76cc0261ec5",
+      "bytes": 3622
+    },
+    {
+      "path": "docs/BENCHMARK_REPORT.md",
+      "sha256": "b5c37b7365acfa43b8ae0315525e70b5ba00030ff2a49e8a19fdcfd6cef0a7d5",
+      "bytes": 3293
+    },
+    {
+      "path": "docs/DUNGEON_FOG_AND_BALANCE.md",
+      "sha256": "e9f981f03a411048e2f6bbe5044fc6d1a8333a26f11cca772cd65ea0ff13e5c4",
+      "bytes": 6604
+    },
+    {
+      "path": "docs/GAME_DESIGN_DOCUMENT.md",
+      "sha256": "236581ef6f8b4cb652c0d0e7bd539f45f65fe6ebe7d94d9a1a60c4dd588b248a",
+      "bytes": 7514
+    },
+    {
+      "path": "docs/images/.gdignore",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/images/boss_necromancer.png",
+      "sha256": "09b205fbf2ce76e2debf74192f903a69f738d15c96daa2432540cdb84db61e63",
+      "bytes": 1091
+    },
+    {
+      "path": "docs/images/boss_orc_rider.png",
+      "sha256": "e15d449e5343853e37a3332d7d0d4f7db50c85c0d488d0dabd6f83f4fe10139d",
+      "bytes": 1541
+    },
+    {
+      "path": "docs/images/enemy_armored_orc.png",
+      "sha256": "503710ec80cd7b85543347fd6986098dbb03b0c4915c42cc45b3a82455d3ae2a",
+      "bytes": 899
+    },
+    {
+      "path": "docs/images/enemy_orc.png",
+      "sha256": "dab3aeb6853b4f2a8b45ee2f2996a7b8d5fa5789b4c9896bf43b70cfc4b1a2b0",
+      "bytes": 807
+    },
+    {
+      "path": "docs/images/enemy_skeleton.png",
+      "sha256": "0c623357948b5aba7a8ac8ab8c3f88653509a649f7babd7dcb621f7db31fce50",
+      "bytes": 560
+    },
+    {
+      "path": "docs/images/enemy_skeleton_archer.png",
+      "sha256": "74ea90ce6ef30118b8e5b53c7a4366040e524876f9aa487f2785f6e21ca94316",
+      "bytes": 977
+    },
+    {
+      "path": "docs/images/enemy_vampire.png",
+      "sha256": "f9f3869f9f3ef95939c438334108dfdab82d9cce0a6b80a5cfc48b9ec3ec0c02",
+      "bytes": 571
+    },
+    {
+      "path": "docs/images/hero_charlotte.png",
+      "sha256": "381105fe37728fb5a5bf30710f1c493aaa7482f9bb54d384ffd55579c0b4868e",
+      "bytes": 954
+    },
+    {
+      "path": "docs/images/hero_miya.png",
+      "sha256": "2ec3b0a64616be3fde9fb0e2b5eb3c1f8dafb443ffb3bf610a938450d459c068",
+      "bytes": 891
+    },
+    {
+      "path": "docs/images/hero_olaf.png",
+      "sha256": "f46c492f68115749fb0a516346b37b40e756846085cba04e58893a6a5a26eb5c",
+      "bytes": 834
+    },
+    {
+      "path": "docs/images/hero_pyrois.png",
+      "sha256": "d67eb72840502425908b5734ada239d2e72eafbf1b88decee9784d6f63b3be8a",
+      "bytes": 837
+    },
+    {
+      "path": "docs/qa/CHANGELOG.md",
+      "sha256": "afaf2019982116f49fb4e4a9ea949b07a0c8a659e56256947633d3615c48a6a1",
+      "bytes": 690
+    },
+    {
+      "path": "docs/qa/jira_url.txt",
+      "sha256": "9b2011893de2ecd10f0e3a52b4b51bcc7f7980c0dd6bd7643b90e9a2e1dd5889",
+      "bytes": 174
+    },
+    {
+      "path": "docs/qa/README.md",
+      "sha256": "f16faeeba1422f95adfb8811dd87a2ae404ab5d5434c02b060b6e693b368096e",
+      "bytes": 665
+    },
+    {
+      "path": "docs/qa/test_cases.csv",
+      "sha256": "03acf083082b27e70f438fcd2ad04a7a80afd3d804162bd897304558f1fa706b",
+      "bytes": 44810
+    },
+    {
+      "path": "docs/qa/test_cases.xlsx",
+      "sha256": "d446abb28e24b49df465b2e35471ac2aaa78407ac4e20bc8da9a36d8701122b5",
+      "bytes": 37357
+    },
+    {
+      "path": "docs/README.md",
+      "sha256": "1c69451c0e161eb09af0befe88e45e51d140d2d4c394160d1ae33c8a570289a3",
+      "bytes": 7419
+    },
+    {
+      "path": "docs/SECURITY.md",
+      "sha256": "ca7b567c0d84c5c136b69e3f0e383d1459aed8438216bc29cd388f52615768a5",
+      "bytes": 2934
+    },
+    {
+      "path": "docs/SEED_BUG_ISSUES.md",
+      "sha256": "1d861ebdd79a05ea3005a2662c6cb08ef7045f7658d8f94f4e7eb6737147215e",
+      "bytes": 9287
+    },
+    {
+      "path": "benchmarks/advanced/analyze_stress.py",
+      "sha256": "224d1b57cf90f2e4b4af80823c044cc4bcab03ed032e04bd209859ddfd07ead4",
+      "bytes": 11406
+    },
+    {
+      "path": "benchmarks/advanced/gan_diem_do_tuong.py",
+      "sha256": "5c5718134daa97cda8b431330bcab3be7b7e0a9b0cb734919fb44608b8ce9428",
+      "bytes": 5245
+    },
+    {
+      "path": "benchmarks/advanced/kiem_tra_cau_truc_tilemap.gd",
+      "sha256": "4f8d1a315871201acc67bbacd190771216c4bc1a32a75d3b3f731095770efe1d",
+      "bytes": 9531
+    },
+    {
+      "path": "benchmarks/advanced/kiem_tra_cau_truc_tilemap.gd.uid",
+      "sha256": "832226147f46b34f48eb728faea4243350ea6c756ddf3547dc9d9cced700b6b0",
+      "bytes": 20
+    },
+    {
+      "path": "benchmarks/advanced/kiem_tra_seed_doc_lap.gd",
+      "sha256": "6c53feffc2dcb052228a17c9f91879fa10cd00eaa7740c5a9227bb5b81fd5704",
+      "bytes": 5013
+    },
+    {
+      "path": "benchmarks/advanced/kiem_tra_seed_doc_lap.gd.uid",
+      "sha256": "c6d1ce7ddc08349c579de89db183b212d13b16abb206a5d5eac296036ca9cc32",
+      "bytes": 20
+    },
+    {
+      "path": "benchmarks/advanced/phan_tich_giai_doan.py",
+      "sha256": "d643a823a97f149bdce15168773f58c5de950bd80f68a797900ba7bb7606b62e",
+      "bytes": 6470
+    },
+    {
+      "path": "benchmarks/advanced/profile_giai_doan.gd",
+      "sha256": "a21fb5a550866ac7d3fa5523ee9f55576357addad935aa26b3983e945b481f46",
+      "bytes": 15725
+    },
+    {
+      "path": "benchmarks/advanced/profile_giai_doan.gd.uid",
+      "sha256": "a52a879d2b344a17c8f6bf334cd8f991433f9cd26a01aeeea50a208fe22865db",
+      "bytes": 20
+    },
+    {
+      "path": "benchmarks/advanced/results/.gdignore",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "bytes": 1
+    },
+    {
+      "path": "benchmarks/advanced/results/du_lieu_chua_day_du/profile_truoc_toi_uu_KHONG_DAY_DU.csv",
+      "sha256": "6787e3bab5e8397a7ba3e0871799920030db469a25bbad23e110a626a82f2fb2",
+      "bytes": 16384
+    },
+    {
+      "path": "benchmarks/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.csv",
+      "sha256": "203b857eb59ae621a934d40de3e0c0d0fba9058547932a761b519a4cd4329686",
+      "bytes": 15801
+    },
+    {
+      "path": "benchmarks/advanced/results/profile_giai_doan_2026-10-27T20-35-22.csv",
+      "sha256": "af8241dc00805d12d95038cbebbd439c8809c16718f88ad22961e70cf773bcf8",
+      "bytes": 27448
+    },
+    {
+      "path": "benchmarks/advanced/results/seed_replay_2026-10-27T20-28-57_20040.csv",
+      "sha256": "9bd5a9f9deada49658853777a37b4424a5b8d70113b2df1d51b7e3062f5d810d",
+      "bytes": 70912
+    },
+    {
+      "path": "benchmarks/advanced/results/seed_replay_2026-11-05T15-04-54_11684.csv",
+      "sha256": "cd642420346e49060c64af3a1fea6c4d0de3744198794d7c93954de5b9233c89",
+      "bytes": 70912
+    },
+    {
+      "path": "benchmarks/advanced/results/seed_replay_2026-11-05T15-16-30_18068.csv",
+      "sha256": "bf709f4fcdb51b7d6d1b07b2744c0982eec0caf45382422bb7d171af454ca012",
+      "bytes": 70912
+    },
+    {
+      "path": "benchmarks/advanced/results/stress_2026-10-25T20-23-39.csv",
+      "sha256": "7fbe6efab5e18d617ee38a9a7d7fa9f2401609e9419830c734ae08504343e253",
+      "bytes": 261351
+    },
+    {
+      "path": "benchmarks/advanced/so_sanh_seed_doc_lap.py",
+      "sha256": "e62ea1cb28cd3fea2df6a68c00cd405f54c44bfee6c9402206a5e02b51faa690",
+      "bytes": 3456
+    },
+    {
+      "path": "benchmarks/advanced/stress_benchmark.gd",
+      "sha256": "afc9629a78ca95f7207211c2a5167f28184d2003d18a7f8c7c7acc6589331306",
+      "bytes": 15248
+    },
+    {
+      "path": "benchmarks/advanced/stress_benchmark.gd.uid",
+      "sha256": "22c57e2b1c228b89f5d2ada18ea87d910a140c5917433ea8f87720fa833ab047",
+      "bytes": 20
+    },
+    {
+      "path": "benchmarks/benchmark.tscn",
+      "sha256": "b82e73086ecee23ca3d6c5e115bd445a0f658b8df18f439787a05e374ccfb134",
+      "bytes": 264
+    },
+    {
+      "path": "benchmarks/benchmark_dungeon_generator.gd",
+      "sha256": "e98aeaa62d642eec279bb1cbf17f2d62ffc882c1f009f1bbf6253ae9ee56e262",
+      "bytes": 1975
+    },
+    {
+      "path": "benchmarks/benchmark_dungeon_generator.gd.uid",
+      "sha256": "9bd34f9ea9be2cd7772286de791a40959a37a1e90d20c41c3e25c7bd1bd8ff7d",
+      "bytes": 20
+    },
+    {
+      "path": "benchmarks/benchmark_dungeon_generator.tscn",
+      "sha256": "481e67295840d75ba6c4a175045d9093a7a1d5bb8233041d5f78414592d3d65c",
+      "bytes": 206
+    },
+    {
+      "path": "benchmarks/CHANGELOG.md",
+      "sha256": "7d6a7eed3fb200f32789c2588536ed8fe68536b15b7a470a212d384c3cf1e388",
+      "bytes": 4171
+    },
+    {
+      "path": "benchmarks/dungeon_benchmark.gd",
+      "sha256": "5d2fc745841dbfb3007ad5ee055c2338305e21bbb40940984f1199f8c60f45e5",
+      "bytes": 6507
+    },
+    {
+      "path": "benchmarks/dungeon_benchmark.gd.uid",
+      "sha256": "45ffccd5803a919a082f252b0ca91480cc9ec0df9a37cb6d18afd23ab5bfc77f",
+      "bytes": 20
+    },
+    {
+      "path": "benchmarks/README.md",
+      "sha256": "cfa4f205a678bcfce3c769f8d525ec4e00352bbeed4b72a7da6aa1469ea3f158",
+      "bytes": 8296
+    },
+    {
+      "path": "benchmarks/reports/.gdignore",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "bytes": 1
+    },
+    {
+      "path": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+      "sha256": "8a5e2f37015d443a047007f31aa13cf09664940342aa5e2c4fd377390f3433fb",
+      "bytes": 7402
+    },
+    {
+      "path": "benchmarks/reports/benchmark_report.txt",
+      "sha256": "bd9dc185434ef1eae5d1633d95e85b2799516cbee64ed1ad0e48086e4ffb5d4a",
+      "bytes": 3474
+    },
+    {
+      "path": "benchmarks/reports/images/01_benchmark_theo_so_phong.png",
+      "sha256": "5820b4a5b3d2803c8572faf9d403563f42d50a06ae372bab430e26f089097cb5",
+      "bytes": 52795
+    },
+    {
+      "path": "benchmarks/reports/images/02_stress_1000_seed.png",
+      "sha256": "ae7a712433099cc967b9180e76eeb8694f6e88bd54e495031d27e2e0e83ef06f",
+      "bytes": 39518
+    },
+    {
+      "path": "benchmarks/reports/images/03_truoc_sau_toi_uu.png",
+      "sha256": "a08706e059498b5f171dd2fdd521432f615619762b0c77229f1e17cbc540d877",
+      "bytes": 67633
+    },
+    {
+      "path": "benchmarks/reports/TONG_HOP_KET_QUA.csv",
+      "sha256": "80ba21fb2821c856b5d84662d54186d42e467b9aa24c1cb3c2763b84ff9124e2",
+      "bytes": 1191
+    },
+    {
+      "path": "benchmarks/results/.gdignore",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "bytes": 1
+    },
+    {
+      "path": "benchmarks/results/benchmark_2026-10-25T18-01-50.csv",
+      "sha256": "e9d2ed51ed9b6c973864d27d37bf800f27ee5844661623bf7e4d8681f229592b",
+      "bytes": 40107
+    },
+    {
+      "path": "benchmarks/results/benchmark_log.txt",
+      "sha256": "6d54b97c00f7de440280d274a3b7acbaca6df51ba2e2348cb8364574caeb3387",
+      "bytes": 554
+    },
+    {
+      "path": "benchmarks/results/results.csv",
+      "sha256": "2a18b1e719dce1473ab00fe76ee769f193379cec3588fe3960804b046c656db5",
+      "bytes": 3617
+    },
+    {
+      "path": "benchmarks/scalability/analyze_benchmark.py",
+      "sha256": "1745c10228612516ca2048586da1031799efffc2957f9b7b4ceb0650af7ec734",
+      "bytes": 9446
+    },
+    {
+      "path": "benchmarks/scalability/dungeon_benchmark.gd",
+      "sha256": "346bbb29ba1fb9ec62b5e8d4a15cb43edc2d2d88e2d4e43166d7661daa0dbd02",
+      "bytes": 10429
+    },
+    {
+      "path": "benchmarks/scalability/dungeon_benchmark.gd.uid",
+      "sha256": "8535e8d5a7f801e79eb5ae50b499e55381bc64804b6f9fa1acd8e20cea399f82",
+      "bytes": 20
+    },
+    {
+      "path": "Assets/Audio/bgm_boss.wav",
+      "sha256": "d80cfe45cbb71d87f370962267e489a6e122f89743cd350ca7f76b9b9da4764d",
+      "bytes": 5292044
+    },
+    {
+      "path": "Assets/Audio/bgm_boss.wav.import",
+      "sha256": "0e7c3c5c2b5a7bcc149f5a1ba106a7fbb3c370a277cd1de54fed1df9f06e9d04",
+      "bytes": 494
+    },
+    {
+      "path": "Assets/Audio/bgm_dungeon.wav",
+      "sha256": "3fcfb1fef0bab60e3d70f8c07d44a5ff49c801d36327619cf6abe8699cee5d24",
+      "bytes": 5292044
+    },
+    {
+      "path": "Assets/Audio/bgm_dungeon.wav.import",
+      "sha256": "6e14874194e4676cf69a0e6294bfb8943e5aa211a8fcb80f5613c90d9606bdbf",
+      "bytes": 504
+    },
+    {
+      "path": "Assets/Audio/bgm_glorious_morning.wav",
+      "sha256": "01ef74445e3edb20e64fac63cb7d0e725408d4652ad7584d2cf93230df3b48f3",
+      "bytes": 4890668
+    },
+    {
+      "path": "Assets/Audio/bgm_glorious_morning.wav.import",
+      "sha256": "91cbe82e7044c9369beb5c3f033afc9fffc188e594a1cff9ea455d1202fffbfc",
+      "bytes": 529
+    },
+    {
+      "path": "Assets/Audio/bgm_menu.wav",
+      "sha256": "01ef74445e3edb20e64fac63cb7d0e725408d4652ad7584d2cf93230df3b48f3",
+      "bytes": 4890668
+    },
+    {
+      "path": "Assets/Audio/bgm_menu.wav.import",
+      "sha256": "0957d223cf84ff9e58132787bf0c4894e6b644b70c5fd689fa46c03df7f88169",
+      "bytes": 495
+    },
+    {
+      "path": "Assets/Audio/sfx_hit.wav",
+      "sha256": "a1457a2c0146558449e1181bb2455df5ffd16e72a926532ccbcc7ae3e6f192cd",
+      "bytes": 6658
+    },
+    {
+      "path": "Assets/Audio/sfx_hit.wav.import",
+      "sha256": "86a06614e37788411bf0b24444ca6cad304996857282034c4cb615011e0385d8",
+      "bytes": 492
+    },
+    {
+      "path": "Assets/Audio/sfx_pickup.wav",
+      "sha256": "e311cf77e8704c9939952ace244b4f86222a711833a4f83e4916245340a1ed08",
+      "bytes": 10628
+    },
+    {
+      "path": "Assets/Audio/sfx_pickup.wav.import",
+      "sha256": "23d6e15616ccd313397e3742710138d8289e1c66ea364a0f441b8f7e76e3adaf",
+      "bytes": 501
+    },
+    {
+      "path": "Assets/Audio/sfx_portal.wav",
+      "sha256": "06c6a4c5460a02fcbfdb2c22b4aba96587e4ac6aa4daec7a5f84b03751d6f31d",
+      "bytes": 19888
+    },
+    {
+      "path": "Assets/Audio/sfx_portal.wav.import",
+      "sha256": "a8ffab1b6aca5ac5a977379894855641c10c818c6e1ed700163c1c7d8ee13269",
+      "bytes": 501
+    },
+    {
+      "path": "Assets/Audio/sfx_slash.wav",
+      "sha256": "a7d8e72d0735b7368d55e3d2301d0aab62183a740f112244443b6afcb3d42dd3",
+      "bytes": 7100
+    },
+    {
+      "path": "Assets/Audio/sfx_slash.wav.import",
+      "sha256": "a2de2acf2234f9a281706c6532123083c302bdc6980c269e0b7d6e6461385fe9",
+      "bytes": 497
+    },
+    {
+      "path": "Assets/Character/Archer/Archer.png",
+      "sha256": "97956e02bc5a875bba4eed9a74188ba6bc10dea81d4e1817297772a30f4719cb",
+      "bytes": 14350
+    },
+    {
+      "path": "Assets/Character/Archer/Archer.png.import",
+      "sha256": "27005076fbddcd7a18afdcfbf482060d41c3c057f15b3fe3899e2befe2e0b5f3",
+      "bytes": 945
+    },
+    {
+      "path": "Assets/Character/Archer/Archer_Attack01.png",
+      "sha256": "b89b4cae1be85202d9da2bbdfa90a16d2f2a09e6600292153d023bb33d12e958",
+      "bytes": 2466
+    },
+    {
+      "path": "Assets/Character/Archer/Archer_Attack01.png.import",
+      "sha256": "04968447ebf74b90275d2608d92abf6423a07894ebe27aeef46d9abda26f36da",
+      "bytes": 973
+    },
+    {
+      "path": "Assets/Character/Archer/Archer_Attack02.png",
+      "sha256": "80b2775ce99749970633e04b1f25ac6c991aed2d50d7c9d590e56d91bab2f735",
+      "bytes": 3695
+    },
+    {
+      "path": "Assets/Character/Archer/Archer_Attack02.png.import",
+      "sha256": "0f3e39e3e263f7c77c1ba24c9e32878741014d019c9aaba28caa9eea4835996a",
+      "bytes": 973
+    },
+    {
+      "path": "Assets/Character/Archer/Archer_Death.png",
+      "sha256": "3fccd2f260f1ca10fdd88ebdc24f52bf97e6faff554b9d74e1b1e8528320e9b6",
+      "bytes": 1808
+    },
+    {
+      "path": "Assets/Character/Archer/Archer_Death.png.import",
+      "sha256": "d1131ce4791f6a4416e4629112dc3dceed5f7b62c83b9ff115f728010b2b106f",
+      "bytes": 963
+    },
+    {
+      "path": "Assets/Character/Archer/Archer_Hurt.png",
+      "sha256": "bf42c7fc4e1ad9c8f22de10c13d0b0141ffe13958a0ef6fbe7f742a963d2afe6",
+      "bytes": 2187
+    },
+    {
+      "path": "Assets/Character/Archer/Archer_Hurt.png.import",
+      "sha256": "0ae33aabffb68a2095162e045872c0216521e6d4ce9159e8bc8cff9fa220c156",
+      "bytes": 961
+    },
+    {
+      "path": "Assets/Character/Archer/Archer_Idle.png",
+      "sha256": "bd95227ee39bd8d00c7e542767d757cc1149828f9c40c8e344c81e5673c1fb49",
+      "bytes": 1525
+    },
+    {
+      "path": "Assets/Character/Archer/Archer_Idle.png.import",
+      "sha256": "98b2307ce4cbda6791477da3f37c5a179d81f0fd500cca8a306e444625eb8051",
+      "bytes": 961
+    },
+    {
+      "path": "Assets/Character/Archer/Archer_Walk.png",
+      "sha256": "ef0cae5790ec3af2a0097f823d7f460c2ccd2bd61daade1611d203867dc6bf0a",
+      "bytes": 2037
+    },
+    {
+      "path": "Assets/Character/Archer/Archer_Walk.png.import",
+      "sha256": "acc45971a9bc8a010b713c3dfd066c75926514b604c560efc3e1d7edf04df9bc",
+      "bytes": 961
+    },
+    {
+      "path": "Assets/Character/Archer/Arrow02(100x100).png",
+      "sha256": "89c26be7dcf1b36ce30e52845d96343fbf9d9ee2d957e8c87725440bb0759e48",
+      "bytes": 349
+    },
+    {
+      "path": "Assets/Character/Archer/Arrow02(100x100).png.import",
+      "sha256": "a167effb2a77a5417380d80c4fcf464a9b6e914f298f9830e090d08746dca021",
+      "bytes": 976
+    },
+    {
+      "path": "Assets/Character/Archer/Arrow02(32x32).png",
+      "sha256": "281f63788c0f69c3c8014688c146f6c1ff0ba7deb147fcadbb65ae3c30bbc503",
+      "bytes": 293
+    },
+    {
+      "path": "Assets/Character/Archer/Arrow02(32x32).png.import",
+      "sha256": "49669cb2913678314bf74c4b4c580b359f72534c637af4b385143903d2608dfd",
+      "bytes": 970
+    },
+    {
+      "path": "Assets/Character/Armored Orc/Armored Orc_Attack01.png",
+      "sha256": "bf18eb80a4d18ce9706cccb321aaebe6b8d7b13b506eabc0de306e07a3260048",
+      "bytes": 2655
+    },
+    {
+      "path": "Assets/Character/Armored Orc/Armored Orc_Attack01.png.import",
+      "sha256": "c3c2738f3350d0d6128eaef472130ae94d0a167b50495e3cee8c2b80ee1d8c32",
+      "bytes": 992
+    },
+    {
+      "path": "Assets/Character/Armored Orc/Armored Orc_Attack02.png",
+      "sha256": "def393c943efb2a32430d8fa2662bf95ce23b9dc3779981a8df23f3bb64804b6",
+      "bytes": 2297
+    },
+    {
+      "path": "Assets/Character/Armored Orc/Armored Orc_Attack02.png.import",
+      "sha256": "fdb935c3db110f6ab5dbff11db54d97a1bff50f168108b0c58e1aca5342f4863",
+      "bytes": 992
+    },
+    {
+      "path": "Assets/Character/Armored Orc/Armored Orc_Attack03.png",
+      "sha256": "6c372069ae2d684df7c879efd1299df7347aa70f8bbae11c0109d06e8d5b0f38",
+      "bytes": 2868
+    },
+    {
+      "path": "Assets/Character/Armored Orc/Armored Orc_Attack03.png.import",
+      "sha256": "710274d3f38b13601d29d224db40d05dd295cbd802408d81c560e2b3538a4d3f",
+      "bytes": 993
+    },
+    {
+      "path": "Assets/Character/Armored Orc/Armored Orc_Block.png",
+      "sha256": "ebfd5c5ec32d745ca2e62f5c34a687fe4fba58fc6ebe4697748ac44aa7efa428",
+      "bytes": 1398
+    },
+    {
+      "path": "Assets/Character/Armored Orc/Armored Orc_Block.png.import",
+      "sha256": "6cd23ea8878f73562b391bb486e5fefe03e3542380c5b6a59438556d03d2e748",
+      "bytes": 984
+    },
+    {
+      "path": "Assets/Character/Armored Orc/Armored Orc_Death.png",
+      "sha256": "136f7453d53a1fadf2618d24d80bf1ad64051e2b464f51a2fc45affead8e3a7e",
+      "bytes": 2420
+    },
+    {
+      "path": "Assets/Character/Armored Orc/Armored Orc_Death.png.import",
+      "sha256": "97f4141bf7e43c924d48b7d42bc6dbc5920e7c586cc59d6cdc980657fa4c609e",
+      "bytes": 984
+    },
+    {
+      "path": "Assets/Character/Armored Orc/Armored Orc_Hurt.png",
+      "sha256": "f9f4494b0215fd589fb0fa331156fecd7f635f639f212fb9d2e3a7919b504646",
+      "bytes": 2391
+    },
+    {
+      "path": "Assets/Character/Armored Orc/Armored Orc_Hurt.png.import",
+      "sha256": "8a8daebdad5ec4ea073eb983e5bca920be30054282c8b8ec93ed38cce971524b",
+      "bytes": 980
+    },
+    {
+      "path": "Assets/Character/Armored Orc/Armored Orc_Idle.png",
+      "sha256": "4ff5f471bf58bedee5c58cab985e835130d8589494a3b75399e52dc3eb37f911",
+      "bytes": 1659
+    },
+    {
+      "path": "Assets/Character/Armored Orc/Armored Orc_Idle.png.import",
+      "sha256": "c030e1ea3c93c7dbddbac09c41165dbb1950b5633cf6f7b61a3e272a082bd21e",
+      "bytes": 981
+    },
+    {
+      "path": "Assets/Character/Armored Orc/Armored Orc_Walk.png",
+      "sha256": "bbfa455b820f1a19b7ee4c978ecff44a09928f1f5e6ec50fae4b98490c196915",
+      "bytes": 2282
+    },
+    {
+      "path": "Assets/Character/Armored Orc/Armored Orc_Walk.png.import",
+      "sha256": "119619153849e14287f571064598f43927274a742065cde7227fccd474427959",
+      "bytes": 980
+    },
+    {
+      "path": "Assets/Character/Bat/Bat.png",
+      "sha256": "a1a12a4d2abec9671f5ad7f81e4a672c03edab8c2619844a87d56d12fa791c3c",
+      "bytes": 6542
+    },
+    {
+      "path": "Assets/Character/Bat/Bat.png.import",
+      "sha256": "dbfa98a8673206aaa03e953f0b56a3f7d7e31d16510154005347cdf7375d84e6",
+      "bytes": 934
+    },
+    {
+      "path": "Assets/Character/Bat/Bat_Attack01.png",
+      "sha256": "ee84977ef2a5fb23df215ce28c0de6aaec4bd842e119ec0b972079c5d998bcb9",
+      "bytes": 1385
+    },
+    {
+      "path": "Assets/Character/Bat/Bat_Attack01.png.import",
+      "sha256": "ca7a9b2135896b4b92ade0a6d9d0217f4faa74e0e3dc548b2ed00e1fde4f6d9b",
+      "bytes": 961
+    },
+    {
+      "path": "Assets/Character/Bat/Bat_Attack02.png",
+      "sha256": "b3ab2c9da5d493f8f3f90990d97ed717ad571432d7ca6be794f8abe4f34e80b5",
+      "bytes": 1576
+    },
+    {
+      "path": "Assets/Character/Bat/Bat_Attack02.png.import",
+      "sha256": "c53b732cc65c27b88a5aecf2696029043fc5e5159ee53bfa3b92ae911e0542bf",
+      "bytes": 961
+    },
+    {
+      "path": "Assets/Character/Bat/Bat_Death.png",
+      "sha256": "b52a967bf19a80292de230bd6aab4417978b68c1e14761f089a30411e7178c2d",
+      "bytes": 1222
+    },
+    {
+      "path": "Assets/Character/Bat/Bat_Death.png.import",
+      "sha256": "dd3004294260f744f162081f35297fc2bf351f7e34e690cfd43eebafe1e1decf",
+      "bytes": 952
+    },
+    {
+      "path": "Assets/Character/Bat/Bat_Flying.png",
+      "sha256": "0663f2ce9da0aaf58356da47b2ebd128788309c8b1c189a76923b9a08a598c37",
+      "bytes": 1398
+    },
+    {
+      "path": "Assets/Character/Bat/Bat_Flying.png.import",
+      "sha256": "ed65524bf6ebed53ddb36e736fd85d3d5264e1a8c84715fcbf06a04fb386c79d",
+      "bytes": 954
+    },
+    {
+      "path": "Assets/Character/Bat/Bat_Hurt.png",
+      "sha256": "d825839a5d7797e77af5669accba8271f801e811b13cc40b075f52579236f0ee",
+      "bytes": 1177
+    },
+    {
+      "path": "Assets/Character/Bat/Bat_Hurt.png.import",
+      "sha256": "b8349f961e7ad622e499a41fe7d6b145dc9929f91a9d81c90322999036e9e0e8",
+      "bytes": 949
+    },
+    {
+      "path": "Assets/Character/Human_Archer/Human_Archer.png",
+      "sha256": "7ed881c25a4b67353c0afbbd6119449d27078cc951b67809008be57e2bd88e2f",
+      "bytes": 5472
+    },
+    {
+      "path": "Assets/Character/Human_Archer/Human_Archer.png.import",
+      "sha256": "ec3d43b819351724aecd52156999d4aac51c38d2dab2dbfe365422d04a085ca5",
+      "bytes": 970
+    },
+    {
+      "path": "Assets/Character/Human_knight/Human_Knight.png",
+      "sha256": "bc247d68bd36954f62e0a0913a72768e1d42f786b382ef2d081496aaaa145c84",
+      "bytes": 7287
+    },
+    {
+      "path": "Assets/Character/Human_knight/Human_Knight.png.import",
+      "sha256": "0cbda2060fd670c6ad0a4b10ec2947a9f4cdbb76be9314efb36cf55bd71ecd90",
+      "bytes": 969
+    },
+    {
+      "path": "Assets/Character/Knight/Knight.png",
+      "sha256": "296f5c806afec3abd21ec92d41f8145e3ff7899869bbda7c1a28ed798ae9a770",
+      "bytes": 19768
+    },
+    {
+      "path": "Assets/Character/Knight/Knight.png.import",
+      "sha256": "7fe192f519f06a4e4a3a17c4c1a572e15bb70a343a09c3aa60117fb5b1b3b77e",
+      "bytes": 945
+    },
+    {
+      "path": "Assets/Character/Knight/Knight_Attack01.png",
+      "sha256": "25c7dd0e36cd4eb43c24075f2234103042516c652cb1b8865ff8a1a442c1dbe4",
+      "bytes": 2404
+    },
+    {
+      "path": "Assets/Character/Knight/Knight_Attack01.png.import",
+      "sha256": "d6ac40bdb41793e46f3d0ecc5b307bb928f9fe5ff64b1d9c4c031fd2c86852ac",
+      "bytes": 973
+    },
+    {
+      "path": "Assets/Character/Knight/Knight_Attack02.png",
+      "sha256": "857fbd8f270b2d97f3f3d56ac1c69b66a8351c8678588680f45c2ddf215959ff",
+      "bytes": 3435
+    },
+    {
+      "path": "Assets/Character/Knight/Knight_Attack02.png.import",
+      "sha256": "fa1a3c52fafd10f386dc2363b70f4c90b8e8ddbfcac4dfbb127b3260094ebcdf",
+      "bytes": 972
+    },
+    {
+      "path": "Assets/Character/Knight/Knight_Attack03.png",
+      "sha256": "ab77d7c0f247cd09833dad573b16c62c22f591be2d89a56066112d0850c7303c",
+      "bytes": 4753
+    },
+    {
+      "path": "Assets/Character/Knight/Knight_Attack03.png.import",
+      "sha256": "0cde12b3f9ed16d4e8d1600981ed1dc87e26aefcdf9a84b85595f198227a9ec7",
+      "bytes": 973
+    },
+    {
+      "path": "Assets/Character/Knight/Knight_Block.png",
+      "sha256": "5ecdd31cb2a41d3a602f7452487b5c2bd5f742050ef839eef3304c7c27b24687",
+      "bytes": 1349
+    },
+    {
+      "path": "Assets/Character/Knight/Knight_Block.png.import",
+      "sha256": "47302edfe6e60ba5e9b2da25d034209d88e8bb5e396094d8db1ec889bfe0a227",
+      "bytes": 964
+    },
+    {
+      "path": "Assets/Character/Knight/Knight_Death.png",
+      "sha256": "f104fdf271c69c934cdb765ed2506d25b457fb986287d6947853f209bfd3377c",
+      "bytes": 1794
+    },
+    {
+      "path": "Assets/Character/Knight/Knight_Death.png.import",
+      "sha256": "9aaa38951285c0a95daccb25c16d17d2218dd09fb789185df39e9cb552854753",
+      "bytes": 964
+    },
+    {
+      "path": "Assets/Character/Knight/Knight_Hurt.png",
+      "sha256": "8c46c7b5906ec6c1150f05eb350677c394f2e1e1c54bf1dcfde2e0cc9e43e3da",
+      "bytes": 2121
+    },
+    {
+      "path": "Assets/Character/Knight/Knight_Hurt.png.import",
+      "sha256": "8bdbd56b5cf694cabc246bd2a61d0b973032a82e5dbcff0c4bdac961d0e9a700",
+      "bytes": 961
+    },
+    {
+      "path": "Assets/Character/Knight/Knight_Idle.png",
+      "sha256": "bce5389afe32d77660b0809cc19a3545829fe42e17cd48525fb8c96626b16628",
+      "bytes": 1509
+    },
+    {
+      "path": "Assets/Character/Knight/Knight_Idle.png.import",
+      "sha256": "ff8958a3ebedbffd4c5770057b03d23ac0a2d095c862d109443342397e6011d7",
+      "bytes": 961
+    },
+    {
+      "path": "Assets/Character/Knight/Knight_Walk.png",
+      "sha256": "5c7ac0b5bee516720d35e2227e619ee5cdd04f2767b682b1a89039d851d7f037",
+      "bytes": 1890
+    },
+    {
+      "path": "Assets/Character/Knight/Knight_Walk.png.import",
+      "sha256": "27afeea1cdbdbc98aee2eed1e0fadaccfd84e642c892756b2010f2d1cc4e7a60",
+      "bytes": 960
+    },
+    {
+      "path": "Assets/Character/Necromancer/Necromancer_Attack01.png",
+      "sha256": "c12428f1e552451bdadef69ba773407053ef59ba6100ea51b461a9f5aaa843fd",
+      "bytes": 5451
+    },
+    {
+      "path": "Assets/Character/Necromancer/Necromancer_Attack01.png.import",
+      "sha256": "30b599df6d0bb291537a3094c1886b61057786140d515d6b569c6b18962e6cb5",
+      "bytes": 993
+    },
+    {
+      "path": "Assets/Character/Necromancer/Necromancer_Attack02.png",
+      "sha256": "106e8e95640f7edf769a06579fea4055651a83cf8fe11c0323a6d6d90d018ad2",
+      "bytes": 3796
+    },
+    {
+      "path": "Assets/Character/Necromancer/Necromancer_Attack02.png.import",
+      "sha256": "9887142811dd66bb895561eb7b4ba768196e8c106e0fa53a641ac4a9c3fa05a5",
+      "bytes": 993
+    },
+    {
+      "path": "Assets/Character/Necromancer/Necromancer_DEATH.png",
+      "sha256": "99339a34c39d11db24f80f0dbd85149a2c84a0f26c18a5b024a1371c9fbfbc2a",
+      "bytes": 3770
+    },
+    {
+      "path": "Assets/Character/Necromancer/Necromancer_DEATH.png.import",
+      "sha256": "29ba00241049cd6fe1f637fe38b99c1418a060e71855d15dfafdd967cae952a8",
+      "bytes": 984
+    },
+    {
+      "path": "Assets/Character/Necromancer/Necromancer_Hurt.png",
+      "sha256": "f27230e7c87f17768a9276783dcf46e75f5a028951b76d21a4cdd1743fd9fc8c",
+      "bytes": 3119
+    },
+    {
+      "path": "Assets/Character/Necromancer/Necromancer_Hurt.png.import",
+      "sha256": "c5c89edb4279d1fd610ddcad136bc02ba82b91e46cd98130752a144de011688c",
+      "bytes": 981
+    },
+    {
+      "path": "Assets/Character/Necromancer/Necromancer_Idle.png",
+      "sha256": "a1ad95da9a3ec9c1600976d8bcae51360ceb204e50f547e3b5bf3aca84a001aa",
+      "bytes": 2285
+    },
+    {
+      "path": "Assets/Character/Necromancer/Necromancer_Idle.png.import",
+      "sha256": "279ca4f284089140d78ca76060633e776efa53dc782e1c1501df86bb3202211c",
+      "bytes": 981
+    },
+    {
+      "path": "Assets/Character/Necromancer/Necromancer_Summon(With magic effects).png",
+      "sha256": "3b273540914b9fee0e08397c33f267bf49fe8d95a68539e96e2d14e7cfc10440",
+      "bytes": 4865
+    },
+    {
+      "path": "Assets/Character/Necromancer/Necromancer_Summon(With magic effects).png.import",
+      "sha256": "e29b8d61d4274c71cda7b849b99ead588a9671b600ab986e8654715bdcf7d37a",
+      "bytes": 1046
+    },
+    {
+      "path": "Assets/Character/Necromancer/Necromancer_Summon.png",
+      "sha256": "42ba3df586844a74330f72ce609b76d46b856274722d184b51cc4b0ca33f4362",
+      "bytes": 3461
+    },
+    {
+      "path": "Assets/Character/Necromancer/Necromancer_Summon.png.import",
+      "sha256": "c22c328bf3a75a0cc46e4cf84c90117a13d7534ee099ae9f0685ba407a7ba447",
+      "bytes": 987
+    },
+    {
+      "path": "Assets/Character/Necromancer/Necromancer_Walk.png",
+      "sha256": "21bd456af2cf156f451a3e396b91356c574ccd5b7c3e383610f97085fe347e09",
+      "bytes": 2483
+    },
+    {
+      "path": "Assets/Character/Necromancer/Necromancer_Walk.png.import",
+      "sha256": "e76a20b65d39c5db04031d25569defda217314ff54b03d4989b195c7204966ef",
+      "bytes": 981
+    },
+    {
+      "path": "Assets/Character/Orc/Orc with shadows/Orc.png",
+      "sha256": "0481144f6a536df7592d81059c13e71ce7faccd04e07f48bf44465f19ca761c5",
+      "bytes": 12256
+    },
+    {
+      "path": "Assets/Character/Orc/Orc with shadows/Orc.png.import",
+      "sha256": "b317837dfe4ef4e395fd272a3cb35368e31c61c6022fb73709c85514396f5a5f",
+      "bytes": 951
+    },
+    {
+      "path": "Assets/Character/Orc/Orc with shadows/Orc_Attack01.png",
+      "sha256": "642bd0df611abf91dda5adf2f6061a2d8decc7997f8277d681af6693b6a0f9a7",
+      "bytes": 2379
+    },
+    {
+      "path": "Assets/Character/Orc/Orc with shadows/Orc_Attack01.png.import",
+      "sha256": "6a60c56a036e7910a23e7b42129ba6ec10a9ed70401b9231912d04f1cb61e9bf",
+      "bytes": 977
+    },
+    {
+      "path": "Assets/Character/Orc/Orc with shadows/Orc_Attack02.png",
+      "sha256": "01ffe346a493820a604d92bfc5cd41f94971be6e8b35b354b4c7db013a55309a",
+      "bytes": 2391
+    },
+    {
+      "path": "Assets/Character/Orc/Orc with shadows/Orc_Attack02.png.import",
+      "sha256": "d8b598043d9df79c2ca7e76ce974a999dd49b705f8c1dce940f8887419c9d327",
+      "bytes": 978
+    },
+    {
+      "path": "Assets/Character/Orc/Orc with shadows/Orc_Death.png",
+      "sha256": "cf376c07465cd284a838ed0abc977823faa92e0aa4f9db0461e33b11143cc13f",
+      "bytes": 1952
+    },
+    {
+      "path": "Assets/Character/Orc/Orc with shadows/Orc_Death.png.import",
+      "sha256": "e31748119b534d09990d2b28fcc747ed40fce63fdff2699a354fe832a87a86db",
+      "bytes": 969
+    },
+    {
+      "path": "Assets/Character/Orc/Orc with shadows/Orc_Hurt.png",
+      "sha256": "9870c61b29eb6594b20b184b3332a6be8c3fdceb002fe5fd2b158b9b054d7eef",
+      "bytes": 2103
+    },
+    {
+      "path": "Assets/Character/Orc/Orc with shadows/Orc_Hurt.png.import",
+      "sha256": "29b18aa97541f5c6dbf7f86a4024ec01083534abab417eb98479a208b3ecca64",
+      "bytes": 966
+    },
+    {
+      "path": "Assets/Character/Orc/Orc with shadows/Orc_Idle.png",
+      "sha256": "430b6a97ca4cfa80998d53422f3e942cd50ca906335c350e5615651f35c7aef4",
+      "bytes": 1522
+    },
+    {
+      "path": "Assets/Character/Orc/Orc with shadows/Orc_Idle.png.import",
+      "sha256": "b4d87f31be66028078bf8c3df636f7cafe3dd44c7713d9f85603ef4eb4a88222",
+      "bytes": 966
+    },
+    {
+      "path": "Assets/Character/Orc/Orc with shadows/Orc_Walk.png",
+      "sha256": "6d892ffd6e8fccea65480f89e29ef145faaa05cc742534717023237093f500d7",
+      "bytes": 2007
+    },
+    {
+      "path": "Assets/Character/Orc/Orc with shadows/Orc_Walk.png.import",
+      "sha256": "dfdbcb333fecfd51a24d5251c31469bd0d16c345303d30bf050d6405edfc3fe1",
+      "bytes": 965
+    },
+    {
+      "path": "Assets/Character/Orc/Orc.aseprite",
+      "sha256": "fb83ce89e19523ca05d52b5c3afcf33507d5d54fbf525b6e05e1b45c5b825896",
+      "bytes": 13331
+    },
+    {
+      "path": "Assets/Character/Orc Rider/Orc rider_Attack01.png",
+      "sha256": "c73007b92c32d4b796f76c7f07d01b550fc17ac0baa5f49f92a4376ebc60c941",
+      "bytes": 4151
+    },
+    {
+      "path": "Assets/Character/Orc Rider/Orc rider_Attack01.png.import",
+      "sha256": "122b0ea64d71f5691c6278f014a5c2b7ba9313e9096c90f50588c2f476069310",
+      "bytes": 985
+    },
+    {
+      "path": "Assets/Character/Orc Rider/Orc rider_Attack02.png",
+      "sha256": "5d7df49c6b6daa64211739b0831b0e1801afab59c9590508cdcaa877ca2ddc07",
+      "bytes": 5185
+    },
+    {
+      "path": "Assets/Character/Orc Rider/Orc rider_Attack02.png.import",
+      "sha256": "79d5a9476c551a3317904438db57ea9f3dd7ba78ef909b79c2fe80afcf6fdddb",
+      "bytes": 985
+    },
+    {
+      "path": "Assets/Character/Orc Rider/Orc rider_Attack03.png",
+      "sha256": "c7ec22be8a3b129767fa45660b71d068dea8daf7173d169dbab8ccd8f800651c",
+      "bytes": 5604
+    },
+    {
+      "path": "Assets/Character/Orc Rider/Orc rider_Attack03.png.import",
+      "sha256": "5d78e627c818c129fc5220620df001195f1a545807b481cfc9947674cc0cb4db",
+      "bytes": 984
+    },
+    {
+      "path": "Assets/Character/Orc Rider/Orc rider_Block.png",
+      "sha256": "280dcb8b953d667721081f493e01105b6dc0d88973bf443882634ee3355dd351",
+      "bytes": 2494
+    },
+    {
+      "path": "Assets/Character/Orc Rider/Orc rider_Block.png.import",
+      "sha256": "070dd3d1bb56f6b96bb3eae7ca781e412027b57db0eb2a7a99e51a484cdd6cd4",
+      "bytes": 976
+    },
+    {
+      "path": "Assets/Character/Orc Rider/Orc rider_Death.png",
+      "sha256": "a5d7403be635730c9f5d54dcf379e357d84bfaef6f6b2347ef430e5b4a18b98a",
+      "bytes": 3291
+    },
+    {
+      "path": "Assets/Character/Orc Rider/Orc rider_Death.png.import",
+      "sha256": "ec7dddf4620cd63ab76ed57f31a7acc10caf24710d517e16fcf80a16a7fb1b60",
+      "bytes": 975
+    },
+    {
+      "path": "Assets/Character/Orc Rider/Orc rider_Hurt.png",
+      "sha256": "0916787a0cf89f75a416645f9db2983e86ad50e6fa940d9b1073474398cffeef",
+      "bytes": 4101
+    },
+    {
+      "path": "Assets/Character/Orc Rider/Orc rider_Hurt.png.import",
+      "sha256": "e07f3fadb34fe8caab36e178b9fb564fe47c6dcd0524b390d2eaf244d9946432",
+      "bytes": 971
+    },
+    {
+      "path": "Assets/Character/Orc Rider/Orc rider_Idle.png",
+      "sha256": "c42dd59d74ad43b7b4b8cedb5010f346bc12134a5069e005c7c12aa8c0062634",
+      "bytes": 2615
+    },
+    {
+      "path": "Assets/Character/Orc Rider/Orc rider_Idle.png.import",
+      "sha256": "f0199b441b17209fab077acbd06f3618f0369bf3afb3dfa8d84a878007a57fc3",
+      "bytes": 971
+    },
+    {
+      "path": "Assets/Character/Orc Rider/Orc rider_Walk.png",
+      "sha256": "e2770279a9ae135713e7a641dac6f522027a820c9ca982346fe963f78bf39394",
+      "bytes": 3415
+    },
+    {
+      "path": "Assets/Character/Orc Rider/Orc rider_Walk.png.import",
+      "sha256": "b9707845f5bf2142f7e33ff1e758c1aa5f04c474a3150088d43074844fbef0a2",
+      "bytes": 973
+    },
+    {
+      "path": "Assets/Character/Skeleton/enemies-skeleton1_attack.png",
+      "sha256": "fa4ce93c93b3d1f2ce67e67596a2f261fd380676ef7756069355805518b379b3",
+      "bytes": 1822
+    },
+    {
+      "path": "Assets/Character/Skeleton/enemies-skeleton1_attack.png.import",
+      "sha256": "d9c12420b7a8cf388640bfa6f77968411a8c432c470ff00b8fe1b698175d6a3b",
+      "bytes": 1002
+    },
+    {
+      "path": "Assets/Character/Skeleton/enemies-skeleton1_death.png",
+      "sha256": "4f5a8ff931afe412a9e015de48225b86a2a4ae22c7ab7dfbeca2ac47d1da8984",
+      "bytes": 2463
+    },
+    {
+      "path": "Assets/Character/Skeleton/enemies-skeleton1_death.png.import",
+      "sha256": "625209eb19c4fcf9bf1d1628f36e02f977a781c509462ab91c350e762fdfaa36",
+      "bytes": 998
+    },
+    {
+      "path": "Assets/Character/Skeleton/enemies-skeleton1_idle.png",
+      "sha256": "86b69df707986695d581f037e712668e700713b16ef2f51db10a06a7466035cb",
+      "bytes": 776
+    },
+    {
+      "path": "Assets/Character/Skeleton/enemies-skeleton1_idle.png.import",
+      "sha256": "017d31365e0b1a7640f8ffcdeba3000eeeec875f29211e6c0a9cc30ab8e346bd",
+      "bytes": 996
+    },
+    {
+      "path": "Assets/Character/Skeleton/enemies-skeleton1_movement.png",
+      "sha256": "11ad26aaeda377fdad64aa6127e575900fd01198a36dbda6fdb19020d4d85469",
+      "bytes": 1356
+    },
+    {
+      "path": "Assets/Character/Skeleton/enemies-skeleton1_movement.png.import",
+      "sha256": "d6e5b25cfdc54f78fe3db827d5265bb1a36355b36d21f75b18aa2d2d924a1b76",
+      "bytes": 1007
+    },
+    {
+      "path": "Assets/Character/Skeleton/enemies-skeleton1_take_damage.png",
+      "sha256": "5c2003bc20eca1197c57ccc51ca9933e0df95655f7a48892b19a636281c95f46",
+      "bytes": 878
+    },
+    {
+      "path": "Assets/Character/Skeleton/enemies-skeleton1_take_damage.png.import",
+      "sha256": "c604c62a7cd37796669217a43bbf03b12f093fa53f1d7d2f4dc3d4fd7d4e4bf0",
+      "bytes": 1017
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton.png",
+      "sha256": "ff5d9fb435252ce8957254692419d23c329750a25d96e4872f34683bf94a9214",
+      "bytes": 12709
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton.png.import",
+      "sha256": "7386566b96edf79120641944be4a216d9e8311badf7b16b8fd56e7d84c1d64a9",
+      "bytes": 954
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton_Attack01.png",
+      "sha256": "2bba48026e0705c30da4f0d31fc1af19694806f16c5354a6532db1941baa4bf7",
+      "bytes": 2035
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton_Attack01.png.import",
+      "sha256": "3fbafab5270f9f437fdbb1837942c954f9efe82322b4badfca934ea75c28c346",
+      "bytes": 981
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton_Attack02.png",
+      "sha256": "60689e2cd2417d21407d01f39a161ff7b25db6f56628cb32ff10ff64b1ac9597",
+      "bytes": 1934
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton_Attack02.png.import",
+      "sha256": "5a97fc6e430e56c1d7669703025b00ec790f7874331327ed457eca68cefa21ac",
+      "bytes": 981
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton_Block.png",
+      "sha256": "80f5105f24c61aeb36b3ef851814da0ca5ae08567b8d966ddf7e468b048a7898",
+      "bytes": 1024
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton_Block.png.import",
+      "sha256": "acacfb0ed8ad08948d46be8252f4174c55f92e8d3900559142116d1b30524ddd",
+      "bytes": 972
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton_Death.png",
+      "sha256": "4ec14840e4a07b077047bc32cc1d1b563b55a6a3988020616d3d150fc629496e",
+      "bytes": 1412
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton_Death.png.import",
+      "sha256": "8565b942d1f63c24f7697e8fcbc6d5ad846827afa9d5645c6978661cf0ab150d",
+      "bytes": 971
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton_Hurt.png",
+      "sha256": "23283ff41197074d1437710470b32c4ffee92c93e60672a9daea15d576100f08",
+      "bytes": 1851
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton_Hurt.png.import",
+      "sha256": "9f16f4baaae44496189804e6b91d6590e70267e06a6f0d08212c1e8ffa455598",
+      "bytes": 968
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton_Idle.png",
+      "sha256": "19eec37008ae98f30615fa6b7abf76f0210e1d3790a384faad0c4bf88218f5e2",
+      "bytes": 1311
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton_Idle.png.import",
+      "sha256": "5b75ddded70945e59da0b00e810879802ee915dda39dfe554d761ef665e67cc3",
+      "bytes": 968
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton_Summon.png",
+      "sha256": "e801975a1aaa30cd8df5d0e257c1be1eb5a8c9eb73b4ff87e2953cb7a32071d0",
+      "bytes": 1665
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton_Summon.png.import",
+      "sha256": "21d2f3d52a194fa8c06bcc5af0bfc972f0ae68951717530abc7769dbdfd37292",
+      "bytes": 974
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton_Walk.png",
+      "sha256": "dec4b6bbc7af8e8653039056d8d4016999a1befa1bb5abaf8cb6bbcc93925986",
+      "bytes": 1652
+    },
+    {
+      "path": "Assets/Character/Skeleton/Skeleton_Walk.png.import",
+      "sha256": "80d283a9bf124702da792cd00ccaeb4fca04513e5c3340af51201dc01fd8663f",
+      "bytes": 969
+    },
+    {
+      "path": "Assets/Character/Skeleton Archer/Arrow03(100x100).png",
+      "sha256": "fe7c99a9c9371db0eff75240a634173c889632b8f6d32dd5f701e849739e9177",
+      "bytes": 329
+    },
+    {
+      "path": "Assets/Character/Skeleton Archer/Arrow03(100x100).png.import",
+      "sha256": "1664578de87d170509d4d57db0511b591343546961b3374fc5e595fc956d26ab",
+      "bytes": 985
+    },
+    {
+      "path": "Assets/Character/Skeleton Archer/Skeleton Archer.png",
+      "sha256": "437a6e0e18a2a01cdc92b85f986de61a3dcdbe08917e1a1eea5f6c451d6a952e",
+      "bytes": 11888
+    },
+    {
+      "path": "Assets/Character/Skeleton Archer/Skeleton Archer.png.import",
+      "sha256": "71de533198e76f56ee63851d66076daa05b9ede7984484e656543bd420e27a5a",
+      "bytes": 982
+    },
+    {
+      "path": "Assets/Character/Skeleton Archer/Skeleton Archer_Attack.png",
+      "sha256": "6298d3f343b09efa11ad574a525f46c2693d8166ad4cf1ab693a088ec949a6db",
+      "bytes": 2518
+    },
+    {
+      "path": "Assets/Character/Skeleton Archer/Skeleton Archer_Attack.png.import",
+      "sha256": "13fbbcf238562c0411c59f019e6de7881adcc333a85a12145da099123c65d688",
+      "bytes": 1003
+    },
+    {
+      "path": "Assets/Character/Skeleton Archer/Skeleton Archer_Death.png",
+      "sha256": "4bce8382ce3f832fec617536ec5d1d7e46c83e6a313b4a390481e8662c449ce0",
+      "bytes": 1551
+    },
+    {
+      "path": "Assets/Character/Skeleton Archer/Skeleton Archer_Death.png.import",
+      "sha256": "ceb56f5182e13e407de7f49d585fc463d8cb965ce44beffcbd7b46ac6ed66f0e",
+      "bytes": 1000
+    },
+    {
+      "path": "Assets/Character/Skeleton Archer/Skeleton Archer_Hurt.png",
+      "sha256": "24eb26b9939b0a33100601658fe4b5013f509f31c5ce769b263fc99daa012cef",
+      "bytes": 2177
+    },
+    {
+      "path": "Assets/Character/Skeleton Archer/Skeleton Archer_Hurt.png.import",
+      "sha256": "a9c26f2255bd673ff2aa823446bb47b221f4428032c7a38c544b56d9f9282ace",
+      "bytes": 997
+    },
+    {
+      "path": "Assets/Character/Skeleton Archer/Skeleton Archer_Idle.png",
+      "sha256": "c7b705ec01fd7744ed79f64bf609a00b293b2369eaf0f3e68a38213e76cf7685",
+      "bytes": 1538
+    },
+    {
+      "path": "Assets/Character/Skeleton Archer/Skeleton Archer_Idle.png.import",
+      "sha256": "9df68b1583535e761640547b0868f6bc8dbaa9eb5ba5ccbd66a64845b0e51083",
+      "bytes": 997
+    },
+    {
+      "path": "Assets/Character/Skeleton Archer/Skeleton Archer_Summon.png",
+      "sha256": "dd4e71649d7b6d25a5431831fa3fffe84f88293270963643dd41377f20d10b7e",
+      "bytes": 2170
+    },
+    {
+      "path": "Assets/Character/Skeleton Archer/Skeleton Archer_Summon.png.import",
+      "sha256": "5914d88eb8cdc442d6d5d6f2fb97ffa107487fe19d149af3526ec2f96794aae3",
+      "bytes": 1003
+    },
+    {
+      "path": "Assets/Character/Skeleton Archer/Skeleton Archer_Walk.png",
+      "sha256": "57349527662078902de9bddf9a3f5c473b60b9c9ab7bdfc390c1a51d639d48ec",
+      "bytes": 1792
+    },
+    {
+      "path": "Assets/Character/Skeleton Archer/Skeleton Archer_Walk.png.import",
+      "sha256": "17ec0d634b612245866fb249af7a9128faac2a6005faf2ed4375ec5399cbbe13",
+      "bytes": 997
+    },
+    {
+      "path": "Assets/Character/Soldier/Soldier/Soldier.png",
+      "sha256": "3223806c12462bbe7a352aa12dc25791f11394afe2d44c17a4520dff753e1691",
+      "bytes": 12936
+    },
+    {
+      "path": "Assets/Character/Soldier/Soldier/Soldier.png.import",
+      "sha256": "8f110488439fcb2ce02fac86c156981ada8c8c4525149d4c201de32ce3d5c318",
+      "bytes": 958
+    },
+    {
+      "path": "Assets/Character/Soldier/Soldier/Soldier_Attack01.png",
+      "sha256": "907f5bd89b18492e7051ff3b1014a687fb8ffa501ac4486a24a1f58d198b4b20",
+      "bytes": 1978
+    },
+    {
+      "path": "Assets/Character/Soldier/Soldier/Soldier_Attack01.png.import",
+      "sha256": "f339d7b17ff21768c7d39d87548f5b9e6d3a56fff76eeaa8fba1d444f7a28b93",
+      "bytes": 985
+    },
+    {
+      "path": "Assets/Character/Soldier/Soldier/Soldier_Attack02.png",
+      "sha256": "f978eb5ffba4d3446a9ffd6a6ac1ac6586c594c74d58ccab95ebd4d24e92ceaa",
+      "bytes": 2358
+    },
+    {
+      "path": "Assets/Character/Soldier/Soldier/Soldier_Attack02.png.import",
+      "sha256": "41a0e016d64a4b4279da18ebfb4314e02ec51a9a7f3dc3aaf825d88333881f9d",
+      "bytes": 985
+    },
+    {
+      "path": "Assets/Character/Soldier/Soldier/Soldier_Attack03.png",
+      "sha256": "bc6dbffbc74809c6cf1d86184d84485f64a4f9835d5fae307500ec22c3312280",
+      "bytes": 2555
+    },
+    {
+      "path": "Assets/Character/Soldier/Soldier/Soldier_Attack03.png.import",
+      "sha256": "a9b7c9a0a90a8ed03db7d2bd2549f070b2a474f8695f57fecce999b359ede914",
+      "bytes": 985
+    },
+    {
+      "path": "Assets/Character/Soldier/Soldier/Soldier_Death.png",
+      "sha256": "2968064e9692c43f7e4941a0106e5b370471f0e9beaedc5c40631d9daeb4c84e",
+      "bytes": 1673
+    },
+    {
+      "path": "Assets/Character/Soldier/Soldier/Soldier_Death.png.import",
+      "sha256": "362e0063a5934a18ce92240527e70d8b8e5b8e1b206c0128e8fd3bcdf9a14208",
+      "bytes": 975
+    },
+    {
+      "path": "Assets/Character/Soldier/Soldier/Soldier_Hurt.png",
+      "sha256": "aaa0768cc7da2ce1fed3afd02ef7d8c9b2efeb4bdf797723f51c088bf729f1a6",
+      "bytes": 1840
+    },
+    {
+      "path": "Assets/Character/Soldier/Soldier/Soldier_Hurt.png.import",
+      "sha256": "ea405cc46f9b73e5a5f6224797f7c47441c21966cc115ed991785f0628fffd08",
+      "bytes": 973
+    },
+    {
+      "path": "Assets/Character/Soldier/Soldier/Soldier_Idle.png",
+      "sha256": "572776014e1b348e8386ce587855c53e3ebd84b8fbe9041f680a917a9d3b955a",
+      "bytes": 1452
+    },
+    {
+      "path": "Assets/Character/Soldier/Soldier/Soldier_Idle.png.import",
+      "sha256": "4d95df826cb914739d094ae493ff68ba3001b91a2a1c98f74ed6c0e9dbdaf2ee",
+      "bytes": 972
+    },
+    {
+      "path": "Assets/Character/Soldier/Soldier/Soldier_Walk.png",
+      "sha256": "47ad61833e22238123b591b11d985e08858bfb5098348adee496fecb41e54954",
+      "bytes": 1860
+    },
+    {
+      "path": "Assets/Character/Soldier/Soldier/Soldier_Walk.png.import",
+      "sha256": "f43177d3f83b613804f43766b144ad6316c1ef57cd936254519543bf81bb1ebe",
+      "bytes": 973
+    },
+    {
+      "path": "Assets/Character/Swordsman/Swordsman_Attack01.png",
+      "sha256": "c12427f8da868423dc5fe5915d20f142b25814ae6329b668becd0ab8e4e7ecea",
+      "bytes": 2439
+    },
+    {
+      "path": "Assets/Character/Swordsman/Swordsman_Attack01.png.import",
+      "sha256": "6d9ca12d06fceaaae66711d0a46421816c6a52b852bf1f7aba0a5a247b79d934",
+      "bytes": 985
+    },
+    {
+      "path": "Assets/Character/Swordsman/Swordsman_Attack02.png",
+      "sha256": "3ac6f10c07d0b602a41d4e1c48a87d967f37ea8a4bfa33fa86a44f0d9a36554d",
+      "bytes": 4695
+    },
+    {
+      "path": "Assets/Character/Swordsman/Swordsman_Attack02.png.import",
+      "sha256": "3607a8bc5877ca2badbaeea95e45fe568c05797145d445b3a01d4ea37bc800ea",
+      "bytes": 984
+    },
+    {
+      "path": "Assets/Character/Swordsman/Swordsman_Attack3.png",
+      "sha256": "56bf391eae1dbb6ae825098c464886bf297f734b8e42cdb5483553c6e878371d",
+      "bytes": 3350
+    },
+    {
+      "path": "Assets/Character/Swordsman/Swordsman_Attack3.png.import",
+      "sha256": "7b6ad0e7c01bae17435f72b5172e433223e85e7ddd58ce2d68ed3842c38be424",
+      "bytes": 982
+    },
+    {
+      "path": "Assets/Character/Swordsman/Swordsman_Death.png",
+      "sha256": "68a624633f2fe38313a3831ef3c7a00459db98cbf4a23cf6ceb0a9b31cb2dd28",
+      "bytes": 1895
+    },
+    {
+      "path": "Assets/Character/Swordsman/Swordsman_Death.png.import",
+      "sha256": "ca3f8c4aac310499ded2fd43bf974ec97f68225a1b2daf124065d6c9ab9bbd23",
+      "bytes": 975
+    },
+    {
+      "path": "Assets/Character/Swordsman/Swordsman_Hurt.png",
+      "sha256": "47fd8c19e06d7aa61dbe6e12737b5e73643970e72f51f22410c053dd5b7b1cbc",
+      "bytes": 2305
+    },
+    {
+      "path": "Assets/Character/Swordsman/Swordsman_Hurt.png.import",
+      "sha256": "533304d70b73ae392f0cddc08a1f039838850538a7431c0fc46b712c34fbf3ec",
+      "bytes": 973
+    },
+    {
+      "path": "Assets/Character/Swordsman/Swordsman_Idle.png",
+      "sha256": "9fea982c565e98de2c3c4e278a444a30d79907729f9eeff6a56771edafe2cb13",
+      "bytes": 1736
+    },
+    {
+      "path": "Assets/Character/Swordsman/Swordsman_Idle.png.import",
+      "sha256": "a1de8b7b577438f504696ceab0104bd753b0f866e67ccb0af56cfabe52e45b23",
+      "bytes": 973
+    },
+    {
+      "path": "Assets/Character/Swordsman/Swordsman_Walk.png",
+      "sha256": "ea1588316721e340ada31b1585d4c882fdf2c6c1af4670f1fae8c839f1b7d1b2",
+      "bytes": 2501
+    },
+    {
+      "path": "Assets/Character/Swordsman/Swordsman_Walk.png.import",
+      "sha256": "be2544dcba38fe05b0eb343e45e267874ac308a06c41f39720c8f58bf6bef932",
+      "bytes": 973
+    },
+    {
+      "path": "Assets/Character/Vampire/enemies-vampire_attack.png",
+      "sha256": "35ae1a86a146309466b8c97cf4e3d359ebc106ddb4b6d942c71495893571508c",
+      "bytes": 4079
+    },
+    {
+      "path": "Assets/Character/Vampire/enemies-vampire_attack.png.import",
+      "sha256": "227f917664d6de525c083e4e98e50c12e7cfaecf6c428eb852b882309555d09c",
+      "bytes": 995
+    },
+    {
+      "path": "Assets/Character/Vampire/enemies-vampire_death.png",
+      "sha256": "f5e4659049b4889002f606f6b2bb900e3820390f4080501d2cc809ab975c9d9a",
+      "bytes": 2103
+    },
+    {
+      "path": "Assets/Character/Vampire/enemies-vampire_death.png.import",
+      "sha256": "fed59c4fd3542146bec7742d3b85acd597623a12ce71e5961e70198548ed551b",
+      "bytes": 992
+    },
+    {
+      "path": "Assets/Character/Vampire/enemies-vampire_idle.png",
+      "sha256": "937d7d811d6a264e3a073fe06da1b2e459a534170e0bb915eb163c592388be3b",
+      "bytes": 782
+    },
+    {
+      "path": "Assets/Character/Vampire/enemies-vampire_idle.png.import",
+      "sha256": "1e98e62a899a23683c56e0e291d60bccd1ae6258073a74043aa0b8f36582eaea",
+      "bytes": 989
+    },
+    {
+      "path": "Assets/Character/Vampire/enemies-vampire_movement.png",
+      "sha256": "d84afcd7da250d7f890a325970e145967168703bcb3bb6e45b2f5a7e75fc903d",
+      "bytes": 1337
+    },
+    {
+      "path": "Assets/Character/Vampire/enemies-vampire_movement.png.import",
+      "sha256": "7dc7f542f4fcc4ba647eacde372ce187955606840eb4a79220b06c8ecc46f3f4",
+      "bytes": 1001
+    },
+    {
+      "path": "Assets/Character/Vampire/enemies-vampire_take_damage.png",
+      "sha256": "19f3407a264396bd4c99071324bf0d07cae1775bbed967e30e908efa668de07d",
+      "bytes": 1015
+    },
+    {
+      "path": "Assets/Character/Vampire/enemies-vampire_take_damage.png.import",
+      "sha256": "15fdbd0131acfb602f695f328d3f178b58ad5afbf9e5a33d477296d46f97917d",
+      "bytes": 1010
+    },
+    {
+      "path": "Assets/Fonts/Grenze-Bold.ttf",
+      "sha256": "3f837e9694a97bd9a6fe45af1523a165f13f3b8c736dab08f696cd034fb807d6",
+      "bytes": 69260
+    },
+    {
+      "path": "Assets/Fonts/Grenze-Bold.ttf.import",
+      "sha256": "7f90a7732f574dc4c7413910a64c3d6d1b5d2455fabb5102dfaa7eefc75077be",
+      "bytes": 770
+    },
+    {
+      "path": "Assets/Fonts/Grenze-Medium.ttf",
+      "sha256": "f87051d70c31fe8a53a98a0a879c7ba1fbba309aa0d0251ba7d1a70101595e9f",
+      "bytes": 69244
+    },
+    {
+      "path": "Assets/Fonts/Grenze-Medium.ttf.import",
+      "sha256": "e316972770637b90a94b1aaee703e9baa49ae0bac64bdfc2885e56a1accf7905",
+      "bytes": 777
+    },
+    {
+      "path": "Assets/Fonts/Grenze-Regular.ttf",
+      "sha256": "1ccd4242cfa833736e564ea7f1245fd983178611ceaa65cc961ba9959deddc76",
+      "bytes": 69132
+    },
+    {
+      "path": "Assets/Fonts/Grenze-Regular.ttf.import",
+      "sha256": "cef3158be4bc6e77b244c9e7ad77d80d7a3b1dcba9e9831b9f84c25569053ec0",
+      "bytes": 779
+    },
+    {
+      "path": "Assets/Fonts/Grenze-SemiBold.ttf",
+      "sha256": "a8e012d470519f7b4dc79fd61bc5dac7992691b267d3a082fa2a8fdea328d97e",
+      "bytes": 69204
+    },
+    {
+      "path": "Assets/Fonts/Grenze-SemiBold.ttf.import",
+      "sha256": "de528b9b2998531af2ca5e43635e89c379177fee9dc99a2c5e5bdb24f0fecc4c",
+      "bytes": 782
+    },
+    {
+      "path": "Assets/Fonts/Grenze-Variable.ttf",
+      "sha256": "04afa4836bcd41e1ff9867a0dc27d628d31ddec618ec67715c526ebc3cae92f4",
+      "bytes": 139860
+    },
+    {
+      "path": "Assets/Fonts/Grenze-Variable.ttf.import",
+      "sha256": "f2b86caf23742eb813c6362fe6a25cecf2be317876ed84adaad641c911d35be7",
+      "bytes": 783
+    },
+    {
+      "path": "Assets/Fonts/GrenzeGotisch-Bold.ttf",
+      "sha256": "0d8c665a8cbeb3257c707071e5d1d4207db65f7a4ec64302d3b208737adb1d8b",
+      "bytes": 96264
+    },
+    {
+      "path": "Assets/Fonts/GrenzeGotisch-Bold.ttf.import",
+      "sha256": "7a86134acf1d5c2429cb5973df5453501bb305c8b1e8b4f379094f776092de81",
+      "bytes": 792
+    },
+    {
+      "path": "Assets/Fonts/GrenzeGotisch-ExtraBold.ttf",
+      "sha256": "9cf7893e09974518a18528f3898c0c18f0014c68d0680b1c74c4eae323a9f089",
+      "bytes": 96272
+    },
+    {
+      "path": "Assets/Fonts/GrenzeGotisch-ExtraBold.ttf.import",
+      "sha256": "9d44267c597f4926a7f579cb7480f1ccaa788c13f8cd33d89c514bbddb5b2250",
+      "bytes": 807
+    },
+    {
+      "path": "Assets/Fonts/GrenzeGotisch-Regular.ttf",
+      "sha256": "03cdc19ace26c1675ac4ad47602fe875ba1db260a73002fb2ebf8f805714b8c8",
+      "bytes": 95944
+    },
+    {
+      "path": "Assets/Fonts/GrenzeGotisch-Regular.ttf.import",
+      "sha256": "6b6fee82a42b9f06ff6b743fc15831c64f594ebb2b988abd4a0042cdc2f3d0fb",
+      "bytes": 801
+    },
+    {
+      "path": "Assets/Fonts/GrenzeGotisch-SemiBold.ttf",
+      "sha256": "67e2edc30097313cec1be530eaf425764a477280889de037d7184591e3d08eb4",
+      "bytes": 96208
+    },
+    {
+      "path": "Assets/Fonts/GrenzeGotisch-SemiBold.ttf.import",
+      "sha256": "8206a439d0d9d9eb1cd6cb8816a7ad379192cc426c232c7139b523688ed1c443",
+      "bytes": 803
+    },
+    {
+      "path": "Assets/Fonts/GrenzeGotisch-Variable.ttf",
+      "sha256": "701b299d8dc002a2b4bea2ff0f1272c0e4081a2835914354804565c410d0c637",
+      "bytes": 193492
+    },
+    {
+      "path": "Assets/Fonts/GrenzeGotisch-Variable.ttf.import",
+      "sha256": "2f26c0a83d0ec04f3cc9e6d3ade53589d466593d157a27979b7fdde7a6d27061",
+      "bytes": 804
+    },
+    {
+      "path": "Assets/Items/Chest/doors_lever_chest_animation.png",
+      "sha256": "1d72b52010cbf186f0eee4bdf61e47d2ea3153f12eaaaf39250a99e30b65697f",
+      "bytes": 8014
+    },
+    {
+      "path": "Assets/Items/Chest/doors_lever_chest_animation.png.import",
+      "sha256": "2cd4994a6573bdf1ba12150b473526856c53a5e9a5df60f5c5d55965f3d0ba13",
+      "bytes": 1004
+    },
+    {
+      "path": "Assets/Items/Items/Icon187.png",
+      "sha256": "89e6dbc1a467357623104f654d3d108319aa9be2fd642fccbe08ee9995bce259",
+      "bytes": 1317
+    },
+    {
+      "path": "Assets/Items/Items/Icon187.png.import",
+      "sha256": "0647d19b4eebe12c8b2ffa37e916c8dd2dfee49bd6edf3bc2a03129d3ff39a5c",
+      "bytes": 944
+    },
+    {
+      "path": "Assets/Items/Items/Icons.png",
+      "sha256": "76343656d7705fbd844f19cc58b48ca96070a22eac9009ac2827d41d582ebffa",
+      "bytes": 13890
+    },
+    {
+      "path": "Assets/Items/Items/Icons.png.import",
+      "sha256": "8d40db758e769bf204ed801b4b62a345412b2c5e247f90d371aeeac975178c43",
+      "bytes": 937
+    },
+    {
+      "path": "Assets/Map/Atmosphere/broken_pillar.png",
+      "sha256": "274411fa3d00a084e620b28932915aa26e46a65096d9232653459365e193d9ec",
+      "bytes": 411
+    },
+    {
+      "path": "Assets/Map/Atmosphere/broken_pillar.png.import",
+      "sha256": "736af17226bded93a3fe0575629fab30d23346c8b7bd5b4fb5d9c2850640c13a",
+      "bytes": 965
+    },
+    {
+      "path": "Assets/Map/Atmosphere/cobweb_corner_large.png",
+      "sha256": "211c380260511307625ad415c10e694e07ef0891d267b565c9d7a87eb7b41eb7",
+      "bytes": 469
+    },
+    {
+      "path": "Assets/Map/Atmosphere/cobweb_corner_large.png.import",
+      "sha256": "6727133d460b9da9346c88f03fb98c2341a1f24a574810b6e676f4c833f1391b",
+      "bytes": 982
+    },
+    {
+      "path": "Assets/Map/Atmosphere/cobweb_corner_small.png",
+      "sha256": "161e62c709ed70e42c0558230f0fb166cbdcd68f5c7172b2375f601470cf1734",
+      "bytes": 334
+    },
+    {
+      "path": "Assets/Map/Atmosphere/cobweb_corner_small.png.import",
+      "sha256": "78ebb8974cd3b91b74ac7820bbc143cbeff8e78b6f4106c7efb712bf34daee36",
+      "bytes": 982
+    },
+    {
+      "path": "Assets/Map/Atmosphere/cobweb_wall_hanging.png",
+      "sha256": "d8661c22a20f53623e9c7338d41faa0802f09345218ebd827a85aae420ca4abe",
+      "bytes": 282
+    },
+    {
+      "path": "Assets/Map/Atmosphere/cobweb_wall_hanging.png.import",
+      "sha256": "1fe4da495c240e1070798579b20d2e6202ab5d392082275217b7e9260ac19489",
+      "bytes": 983
+    },
+    {
+      "path": "Assets/Map/Atmosphere/debris_iron_scrap.png",
+      "sha256": "d1fe4dcab562a75ea16b2e6a59fdf796b89dce355b8b1c5470a7d3669001af8a",
+      "bytes": 348
+    },
+    {
+      "path": "Assets/Map/Atmosphere/debris_iron_scrap.png.import",
+      "sha256": "319987459e23b6f6ba61de5f58f28f9c94d170002aa89367f9c0e13ed7de436e",
+      "bytes": 977
+    },
+    {
+      "path": "Assets/Map/Atmosphere/debris_stone_rubble.png",
+      "sha256": "684b924985a138e885886ea42041372eb67aef31e98ea57c9ef608f4cf152e8c",
+      "bytes": 352
+    },
+    {
+      "path": "Assets/Map/Atmosphere/debris_stone_rubble.png.import",
+      "sha256": "79aa2edb85a3231b0f7c05fc01f63811b1b511c0e6e8f9c11f2a3ab91bab2478",
+      "bytes": 982
+    },
+    {
+      "path": "Assets/Map/Atmosphere/iron_chains_wall.png",
+      "sha256": "a8d288dd59e7236a21d83ac66cad755edb1a2e73ee2b971067c855c7de033fbe",
+      "bytes": 256
+    },
+    {
+      "path": "Assets/Map/Atmosphere/iron_chains_wall.png.import",
+      "sha256": "5fbd55a1df8c24a95c212b8545f5d932ef8966c6d04d53d7cc1cff8f2d30db65",
+      "bytes": 974
+    },
+    {
+      "path": "Assets/Map/Atmosphere/skeleton_bone_pile.png",
+      "sha256": "138db03a7b345414ffb700d4e05bc248a48b17d9de34dc2b30f3f74483dbb7c3",
+      "bytes": 297
+    },
+    {
+      "path": "Assets/Map/Atmosphere/skeleton_bone_pile.png.import",
+      "sha256": "27fc5859814904de90f2a7a60590ba660cd4d9ac1fed024f1d45710340a55bd5",
+      "bytes": 980
+    },
+    {
+      "path": "Assets/Map/Atmosphere/skeleton_fallen_adventurer.png",
+      "sha256": "1c32f16566a98fc87d3ef1d89d3fb2bd1244fc665e389ce28b9223a33febb8de",
+      "bytes": 366
+    },
+    {
+      "path": "Assets/Map/Atmosphere/skeleton_fallen_adventurer.png.import",
+      "sha256": "7feeed2a54c3c3321907708488f735ad5ed7ce300bdca0fd061084018c359328",
+      "bytes": 1003
+    },
+    {
+      "path": "Assets/Map/Atmosphere/skeleton_ribcage_skull.png",
+      "sha256": "6c44ba90c7ff1821009bbda4b19b24a426b49ab3f991eeaf2b6af9f47761921d",
+      "bytes": 325
+    },
+    {
+      "path": "Assets/Map/Atmosphere/skeleton_ribcage_skull.png.import",
+      "sha256": "e8503481708dcf188bb8c809d59fcdaf0a11d5af6499b2d2970b0675d9db6c43",
+      "bytes": 992
+    },
+    {
+      "path": "Assets/Map/Atmosphere/skeleton_shattered.png",
+      "sha256": "07285e19e9c24668c8713a24546da247e618cc959763ea259275dc738395ed90",
+      "bytes": 231
+    },
+    {
+      "path": "Assets/Map/Atmosphere/skeleton_shattered.png.import",
+      "sha256": "63b9f66cb5451de8fac7aa56b24d3496a0f517c984a979d8c86413fe22ab7e75",
+      "bytes": 979
+    },
+    {
+      "path": "Assets/Map/Atmosphere/wall_crack_major.png",
+      "sha256": "c83604edd249d875e880ea2c0097efcb6647533d0b30fc1b3084ab8365d9cf06",
+      "bytes": 243
+    },
+    {
+      "path": "Assets/Map/Atmosphere/wall_crack_major.png.import",
+      "sha256": "0d7de3486fbc7a1d95ad6e2365ecb2a13319c095798585ca1d6cefae3d217d9b",
+      "bytes": 973
+    },
+    {
+      "path": "Assets/Map/Atmosphere/wall_crack_minor.png",
+      "sha256": "c72e8647f2c84088d41d0f71847840e3f6aa4bf8d95525ba215c101a63bd4fbc",
+      "bytes": 128
+    },
+    {
+      "path": "Assets/Map/Atmosphere/wall_crack_minor.png.import",
+      "sha256": "37efd590bcc3d8d0d896513f25ccb79d53d4b52ab4e5edfc1dc295b6c010c966",
+      "bytes": 974
+    },
+    {
+      "path": "Assets/Map/Dimensional_Portal.png",
+      "sha256": "2d5bbf207cfe5be57caec8bed43de1da12e14e1b9e172993f54e2b33d37f2be3",
+      "bytes": 2473
+    },
+    {
+      "path": "Assets/Map/Dimensional_Portal.png.import",
+      "sha256": "c3ea25462b19b6e99dd0d3ece76286701cb3534cb2fdd47c06d32044a1cd0796",
+      "bytes": 969
+    },
+    {
+      "path": "Assets/Map/Objects.png",
+      "sha256": "a14dbd6a1f3105224d1ed12ba70757cc824f870eb2431ed69b88b9617188066a",
+      "bytes": 13985
+    },
+    {
+      "path": "Assets/Map/Objects.png.import",
+      "sha256": "5ebd2509ee6ee7dffc2f7dcef7aedbc3f2614f9de6e0e531ae511d22bf2ee258",
+      "bytes": 935
+    },
+    {
+      "path": "Assets/Map/trap_animation.png",
+      "sha256": "21cb466892add385ec56f8a09e9718b2186af1e0a0e25eb74ce576b4d3210c06",
+      "bytes": 5251
+    },
+    {
+      "path": "Assets/Map/trap_animation.png.import",
+      "sha256": "fe313e2642b9bc70b146cfbc8e510ad56eafafc7b5c3fbc62189893c2a85c270",
+      "bytes": 957
+    },
+    {
+      "path": "Assets/Map/walls_floor.png",
+      "sha256": "1bbe25b0268030153dedc2023870b96e47e317cddf0c8788e4c114df7a4e045c",
+      "bytes": 19679
+    },
+    {
+      "path": "Assets/Map/walls_floor.png.import",
+      "sha256": "c534ac52f6dc72208cff9de32ef67ee335b9f50d0e2a178d276d603e97a1a460",
+      "bytes": 948
+    },
+    {
+      "path": "Assets/Projectiles/Arrow01(100x100).png",
+      "sha256": "d0f15fd24492f04413012a627633c835001e78a49e939e23a67799d520e326bc",
+      "bytes": 325
+    },
+    {
+      "path": "Assets/Projectiles/Arrow01(100x100).png.import",
+      "sha256": "9416a52196f1d7ea0b813a796a812f4e4bafae539341ff99dac32d3f0e4071a1",
+      "bytes": 971
+    },
+    {
+      "path": "Assets/Projectiles/Arrow01(32x32).png",
+      "sha256": "e87d9c62230b082dda32e9aca4e822f60816900f45318da297a9f5dc04d78b9a",
+      "bytes": 260
+    },
+    {
+      "path": "Assets/Projectiles/Arrow01(32x32).png.import",
+      "sha256": "d21dc4f77719184bc7a84a6fba935cb355bb81c5d5e3a3760a638a94956d476a",
+      "bytes": 965
+    },
+    {
+      "path": "Assets/Projectiles/Arrow02(100x100).png",
+      "sha256": "89c26be7dcf1b36ce30e52845d96343fbf9d9ee2d957e8c87725440bb0759e48",
+      "bytes": 349
+    },
+    {
+      "path": "Assets/Projectiles/Arrow02(100x100).png.import",
+      "sha256": "412012e8d2ca9b92172ed9ec5bf29c73ca0bbb11466df7b560052caa4aa00bb4",
+      "bytes": 971
+    },
+    {
+      "path": "Assets/Projectiles/Arrow02(32x32).png",
+      "sha256": "281f63788c0f69c3c8014688c146f6c1ff0ba7deb147fcadbb65ae3c30bbc503",
+      "bytes": 293
+    },
+    {
+      "path": "Assets/Projectiles/Arrow02(32x32).png.import",
+      "sha256": "ba11f393a04b7cea5d22f52a9fe6e90521299fa0430f39acc625368072532186",
+      "bytes": 964
+    },
+    {
+      "path": "Assets/Projectiles/Arrow03(100x100).png",
+      "sha256": "fe7c99a9c9371db0eff75240a634173c889632b8f6d32dd5f701e849739e9177",
+      "bytes": 329
+    },
+    {
+      "path": "Assets/Projectiles/Arrow03(100x100).png.import",
+      "sha256": "ddff0fec58c6e5ac46e012f3179aa5d1728d8201dff3dda74a3be9989099366d",
+      "bytes": 971
+    },
+    {
+      "path": "Assets/Projectiles/Arrow03(32x32).png",
+      "sha256": "03c89a53206676dcf886435440d79774974a42c081b82a7f054e2e9f04a9d2c4",
+      "bytes": 253
+    },
+    {
+      "path": "Assets/Projectiles/Arrow03(32x32).png.import",
+      "sha256": "4ecbfed264242063e241855f4b873608435da1adde956fd2187e8fabac145e03",
+      "bytes": 965
+    },
+    {
+      "path": "Assets/Projectiles/Human_Archer_Extras.png",
+      "sha256": "454dcc999792fb69f509b3bda2fd4689e925829eff25fa8fa94162bb95427251",
+      "bytes": 3120
+    },
+    {
+      "path": "Assets/Projectiles/Human_Archer_Extras.png.import",
+      "sha256": "bd519548b7ccfd7e2d4acadab5a4695d6cbdc76ecf832545fd913d257f058407",
+      "bytes": 980
+    },
+    {
+      "path": "Assets/Projectiles/Necromancer_Attack02_Effect.png",
+      "sha256": "d18f59c2143f98c52fd171aa0d416f4a3e256ac723ad6d99790dacde7adbaa13",
+      "bytes": 3553
+    },
+    {
+      "path": "Assets/Projectiles/Necromancer_Attack02_Effect.png.import",
+      "sha256": "82ae713e2deddc9cdf5b7fd0da11897ebc4d24a36d4ecc8593e168c66184ff84",
+      "bytes": 1003
+    },
+    {
+      "path": "Assets/Projectiles/Necromancer_Sumon_Effect.png",
+      "sha256": "f0ac58dc55685cdec25874e1f8efbcf2949c39dca541cb093f59ce863eb33706",
+      "bytes": 1511
+    },
+    {
+      "path": "Assets/Projectiles/Necromancer_Sumon_Effect.png.import",
+      "sha256": "dbc1742af6d9a86a5d6821a2be32a10bdc74b297987560c053b1a0a1395af974",
+      "bytes": 995
+    },
+    {
+      "path": "Assets/Projectiles/Priest_Attack_effect.png",
+      "sha256": "cddb10ad571c8f9b3c1c9b3dcd67da5f4332bd2f8dd1da00074a7408f4b74929",
+      "bytes": 892
+    },
+    {
+      "path": "Assets/Projectiles/Priest_Attack_effect.png.import",
+      "sha256": "41cdd896b7b8771664f879566111828ec6a3f65ac84ebedf452bf29bfa86f728",
+      "bytes": 983
+    },
+    {
+      "path": "Assets/Projectiles/Priest_Heal_effect.png",
+      "sha256": "b76d9602041e5f0ad2643726ab63e214b23152084040c4c92a83ced98fe21664",
+      "bytes": 931
+    },
+    {
+      "path": "Assets/Projectiles/Priest_Heal_effect.png.import",
+      "sha256": "7145ac586d6e7395241aeccb9277559fd65b06eec84b0aa509d6c7fd876cece2",
+      "bytes": 977
+    },
+    {
+      "path": "Assets/Projectiles/Wizard_Attack01_Effect.png",
+      "sha256": "9026694198ce6c4aaba2bba50d430848200fbf3db9e81e63368fdf2ce6a4eee2",
+      "bytes": 4271
+    },
+    {
+      "path": "Assets/Projectiles/Wizard_Attack01_Effect.png.import",
+      "sha256": "4683f05994251e79a22a66761581da999029da255b4452e74333053dc662e6f4",
+      "bytes": 989
+    },
+    {
+      "path": "Assets/Projectiles/Wizard_Attack02_Effect.png",
+      "sha256": "51ac2636a43cf38ebe13d44bbdd51db967eba06214e9b0e5669e69c554dd264e",
+      "bytes": 1694
+    },
+    {
+      "path": "Assets/Projectiles/Wizard_Attack02_Effect.png.import",
+      "sha256": "a2499e4135ff1e9ecb24926de7e6ce23fa108949e6492cd7cae2471847ae7c81",
+      "bytes": 988
+    },
+    {
+      "path": "Assets/UI/Action_panel.png",
+      "sha256": "0816398d8dabbbf0a3b8b196142258c9add14f25721d141fa78a2cba925c0d0c",
+      "bytes": 2549
+    },
+    {
+      "path": "Assets/UI/Action_panel.png.import",
+      "sha256": "91bc008f7b8348e39928d5c86c26c702f5ea4fcd7ad3886cabe6b22d600471b1",
+      "bytes": 950
+    },
+    {
+      "path": "Assets/UI/Background/Dungeon.png",
+      "sha256": "5663e753712c33f208f6e09f9a926c3b83136c7e95440ab99dac94c51eeb43c6",
+      "bytes": 72707
+    },
+    {
+      "path": "Assets/UI/Background/Dungeon.png.import",
+      "sha256": "45103699ce2ca3ff25f7b1f69d895fa85a6f28999f6c8b0eb76c9cc8b34574a1",
+      "bytes": 946
+    },
+    {
+      "path": "Assets/UI/Button&Character/arrow.png",
+      "sha256": "fdad9f59d7e10e94f0c22593b6aa670c95661ee68f55d191bd9afbaf4bdd9bb2",
+      "bytes": 19988
+    },
+    {
+      "path": "Assets/UI/Button&Character/arrow.png.import",
+      "sha256": "c86ebd79b238b1a8c035c73bacb3f08bcdd32d490f65d784a5d71098b042ee6a",
+      "bytes": 945
+    },
+    {
+      "path": "Assets/UI/Button&Character/Human_Archer.png",
+      "sha256": "a513b7f8454755897e7a20febfe36dee8f44b0d3d3981abedee5c6ebb831b0c7",
+      "bytes": 1048
+    },
+    {
+      "path": "Assets/UI/Button&Character/Human_Archer.png.import",
+      "sha256": "da281b23f72b5914ae18afcebcb9c72253b482860781017e59918ea005d457a2",
+      "bytes": 966
+    },
+    {
+      "path": "Assets/UI/Button&Character/Human_Knight.png",
+      "sha256": "4e9e0619819f5f78f74188fb44f58f76dcb5185905d7bd439da9cea3ac785d4e",
+      "bytes": 988
+    },
+    {
+      "path": "Assets/UI/Button&Character/Human_Knight.png.import",
+      "sha256": "fb06f0098c2e1a6676d4b992d7ca6565b7f1af20fc16ce46b90fa0a35369c967",
+      "bytes": 966
+    },
+    {
+      "path": "Assets/UI/Button&Character/Soldier.png",
+      "sha256": "4b0f53fedae8edd9c9bf3f416ac08bc850df5c7c131028a960915fd43c85813f",
+      "bytes": 1013
+    },
+    {
+      "path": "Assets/UI/Button&Character/Soldier.png.import",
+      "sha256": "60f1925aa382f702dceeaf1ec9de77f00c84ba89d5a89f3982ca2df2e992e384",
+      "bytes": 952
+    },
+    {
+      "path": "Assets/UI/Button&Character/Swordsman.png",
+      "sha256": "28ea200615095ddd6a5868acdd8c5886a76f20407bf3f7add529b030c31139b9",
+      "bytes": 1126
+    },
+    {
+      "path": "Assets/UI/Button&Character/Swordsman.png.import",
+      "sha256": "9ebce14e156a7a085c5ca0ea28f41a2f8522ad0eaf3779b216458418c6ac45ab",
+      "bytes": 958
+    },
+    {
+      "path": "Assets/UI/HP & Shield bar/HeartEmpty.png",
+      "sha256": "5f914daed7e5505c83e06c1b01a525fada2a2fa05ab3c3d5eec14f07c75d3280",
+      "bytes": 206
+    },
+    {
+      "path": "Assets/UI/HP & Shield bar/HeartEmpty.png.import",
+      "sha256": "cf3efa3e9dabc11183f3ffb42404989824081fd50b8864fbe110f6ec7c3f85a4",
+      "bytes": 960
+    },
+    {
+      "path": "Assets/UI/HP & Shield bar/HeartFull.png",
+      "sha256": "4e8b8324c3634a425d8d5331b884cc96d259e7b95a84ef7c1fd682711d8ba02b",
+      "bytes": 267
+    },
+    {
+      "path": "Assets/UI/HP & Shield bar/HeartFull.png.import",
+      "sha256": "bb7d395b0c84369ca50284908bee28fcba914226f49ba21f04381dc9986711fa",
+      "bytes": 957
+    },
+    {
+      "path": "Assets/UI/HP & Shield bar/HP label.png",
+      "sha256": "45853a71c88178eb357db382c63f5abd755095c31e5ae4d8d9cb042244fc357a",
+      "bytes": 229
+    },
+    {
+      "path": "Assets/UI/HP & Shield bar/HP label.png.import",
+      "sha256": "ec2862f1628d93a6701e8da778bca633eccc7b387ddad17318aaa17919b73604",
+      "bytes": 954
+    },
+    {
+      "path": "Assets/UI/HP & Shield bar/ShieldEmpty.png",
+      "sha256": "4fc89192ad642ae4a8fc926fdcc4dfa47f9b130eb9562057822e53686760685f",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/UI/HP & Shield bar/ShieldEmpty.png.import",
+      "sha256": "1a55bb600fda7f115715a3b9c236814f9cfeb7d05cb30ddf170433d1493ad461",
+      "bytes": 962
+    },
+    {
+      "path": "Assets/UI/HP & Shield bar/ShieldFull.png",
+      "sha256": "afafafef024cce89c5660df5c195b865cd2132a959799d243fdeb2587340902b",
+      "bytes": 271
+    },
+    {
+      "path": "Assets/UI/HP & Shield bar/ShieldFull.png.import",
+      "sha256": "d093fed88270eb42d47072947daaef09f25283bf9ab66d53f0c40c13ddbff1d2",
+      "bytes": 960
+    },
+    {
+      "path": "Assets/UI/Inventory.png",
+      "sha256": "fba22498887f45cbac3ff8a2cfea4849bbd3687cd773886d4f40c915e6693869",
+      "bytes": 8175
+    },
+    {
+      "path": "Assets/UI/Inventory.png.import",
+      "sha256": "fc3d8d1bf80aa67acc617ef9ad2d702cb416f32be90daaac1e7e1372b9ede667",
+      "bytes": 941
+    }
+  ],
+  "documentation_images": [
+    {
+      "zip_path": "benchmark/reports/images/01_benchmark_theo_so_phong.png",
+      "before_this_task": "benchmarks/reports/images/01_benchmark_theo_so_phong.png",
+      "after_this_task": "benchmarks/reports/images/01_benchmark_theo_so_phong.png",
+      "action_this_task": "kept",
+      "category": "benchmark_chart",
+      "matches_original_zip": true,
+      "bytes": 52795,
+      "sha256": "5820b4a5b3d2803c8572faf9d403563f42d50a06ae372bab430e26f089097cb5",
+      "references": [
+        {
+          "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+          "line": 26,
+          "target": "images/01_benchmark_theo_so_phong.png",
+          "alt": "Thời gian sinh theo số phòng",
+          "resolved": "benchmarks/reports/images/01_benchmark_theo_so_phong.png"
+        }
+      ],
+      "width": 1464,
+      "height": 750,
+      "validation": "PNG CRC and decompression OK"
+    },
+    {
+      "zip_path": "benchmark/reports/images/02_stress_1000_seed.png",
+      "before_this_task": "benchmarks/reports/images/02_stress_1000_seed.png",
+      "after_this_task": "benchmarks/reports/images/02_stress_1000_seed.png",
+      "action_this_task": "kept",
+      "category": "benchmark_chart",
+      "matches_original_zip": true,
+      "bytes": 39518,
+      "sha256": "ae7a712433099cc967b9180e76eeb8694f6e88bd54e495031d27e2e0e83ef06f",
+      "references": [
+        {
+          "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+          "line": 37,
+          "target": "images/02_stress_1000_seed.png",
+          "alt": "Stress benchmark",
+          "resolved": "benchmarks/reports/images/02_stress_1000_seed.png"
+        }
+      ],
+      "width": 1464,
+      "height": 750,
+      "validation": "PNG CRC and decompression OK"
+    },
+    {
+      "zip_path": "benchmark/reports/images/03_truoc_sau_toi_uu.png",
+      "before_this_task": "benchmarks/reports/images/03_truoc_sau_toi_uu.png",
+      "after_this_task": "benchmarks/reports/images/03_truoc_sau_toi_uu.png",
+      "action_this_task": "kept",
+      "category": "benchmark_chart",
+      "matches_original_zip": true,
+      "bytes": 67633,
+      "sha256": "a08706e059498b5f171dd2fdd521432f615619762b0c77229f1e17cbc540d877",
+      "references": [
+        {
+          "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+          "line": 55,
+          "target": "images/03_truoc_sau_toi_uu.png",
+          "alt": "Trước–sau tối ưu",
+          "resolved": "benchmarks/reports/images/03_truoc_sau_toi_uu.png"
+        }
+      ],
+      "width": 1464,
+      "height": 767,
+      "validation": "PNG CRC and decompression OK"
+    },
+    {
+      "zip_path": "docs/images/boss_necromancer.png",
+      "before_this_task": "docs/images/boss_necromancer.png",
+      "after_this_task": "docs/images/boss_necromancer.png",
+      "action_this_task": "kept",
+      "category": "character_illustration",
+      "matches_original_zip": true,
+      "bytes": 1091,
+      "sha256": "09b205fbf2ce76e2debf74192f903a69f738d15c96daa2432540cdb84db61e63",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 70,
+          "target": "docs/images/boss_necromancer.png",
+          "alt": "Necromancer",
+          "resolved": "docs/images/boss_necromancer.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    {
+      "zip_path": "docs/images/boss_orc_rider.png",
+      "before_this_task": "docs/images/boss_orc_rider.png",
+      "after_this_task": "docs/images/boss_orc_rider.png",
+      "action_this_task": "kept",
+      "category": "character_illustration",
+      "matches_original_zip": true,
+      "bytes": 1541,
+      "sha256": "e15d449e5343853e37a3332d7d0d4f7db50c85c0d488d0dabd6f83f4fe10139d",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 71,
+          "target": "docs/images/boss_orc_rider.png",
+          "alt": "Orc Rider",
+          "resolved": "docs/images/boss_orc_rider.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    {
+      "zip_path": "docs/images/enemy_armored_orc.png",
+      "before_this_task": "docs/images/enemy_armored_orc.png",
+      "after_this_task": "docs/images/enemy_armored_orc.png",
+      "action_this_task": "kept",
+      "category": "character_illustration",
+      "matches_original_zip": true,
+      "bytes": 899,
+      "sha256": "503710ec80cd7b85543347fd6986098dbb03b0c4915c42cc45b3a82455d3ae2a",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 61,
+          "target": "docs/images/enemy_armored_orc.png",
+          "alt": "Armored Orc",
+          "resolved": "docs/images/enemy_armored_orc.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    {
+      "zip_path": "docs/images/enemy_orc.png",
+      "before_this_task": "docs/images/enemy_orc.png",
+      "after_this_task": "docs/images/enemy_orc.png",
+      "action_this_task": "kept",
+      "category": "character_illustration",
+      "matches_original_zip": true,
+      "bytes": 807,
+      "sha256": "dab3aeb6853b4f2a8b45ee2f2996a7b8d5fa5789b4c9896bf43b70cfc4b1a2b0",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 60,
+          "target": "docs/images/enemy_orc.png",
+          "alt": "Orc",
+          "resolved": "docs/images/enemy_orc.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    {
+      "zip_path": "docs/images/enemy_skeleton.png",
+      "before_this_task": "docs/images/enemy_skeleton.png",
+      "after_this_task": "docs/images/enemy_skeleton.png",
+      "action_this_task": "kept",
+      "category": "character_illustration",
+      "matches_original_zip": true,
+      "bytes": 560,
+      "sha256": "0c623357948b5aba7a8ac8ab8c3f88653509a649f7babd7dcb621f7db31fce50",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 62,
+          "target": "docs/images/enemy_skeleton.png",
+          "alt": "Skeleton",
+          "resolved": "docs/images/enemy_skeleton.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    {
+      "zip_path": "docs/images/enemy_skeleton_archer.png",
+      "before_this_task": "docs/images/enemy_skeleton_archer.png",
+      "after_this_task": "docs/images/enemy_skeleton_archer.png",
+      "action_this_task": "kept",
+      "category": "character_illustration",
+      "matches_original_zip": true,
+      "bytes": 977,
+      "sha256": "74ea90ce6ef30118b8e5b53c7a4366040e524876f9aa487f2785f6e21ca94316",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 63,
+          "target": "docs/images/enemy_skeleton_archer.png",
+          "alt": "Skeleton Archer",
+          "resolved": "docs/images/enemy_skeleton_archer.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    {
+      "zip_path": "docs/images/enemy_vampire.png",
+      "before_this_task": "docs/images/enemy_vampire.png",
+      "after_this_task": "docs/images/enemy_vampire.png",
+      "action_this_task": "kept",
+      "category": "character_illustration",
+      "matches_original_zip": true,
+      "bytes": 571,
+      "sha256": "f9f3869f9f3ef95939c438334108dfdab82d9cce0a6b80a5cfc48b9ec3ec0c02",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 64,
+          "target": "docs/images/enemy_vampire.png",
+          "alt": "Vampire",
+          "resolved": "docs/images/enemy_vampire.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    {
+      "zip_path": "docs/images/hero_charlotte.png",
+      "before_this_task": "docs/images/hero_charlotte.png",
+      "after_this_task": "docs/images/hero_charlotte.png",
+      "action_this_task": "kept",
+      "category": "character_illustration",
+      "matches_original_zip": true,
+      "bytes": 954,
+      "sha256": "381105fe37728fb5a5bf30710f1c493aaa7482f9bb54d384ffd55579c0b4868e",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 50,
+          "target": "docs/images/hero_charlotte.png",
+          "alt": "Charlotte",
+          "resolved": "docs/images/hero_charlotte.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    {
+      "zip_path": "docs/images/hero_miya.png",
+      "before_this_task": "docs/images/hero_miya.png",
+      "after_this_task": "docs/images/hero_miya.png",
+      "action_this_task": "kept",
+      "category": "character_illustration",
+      "matches_original_zip": true,
+      "bytes": 891,
+      "sha256": "2ec3b0a64616be3fde9fb0e2b5eb3c1f8dafb443ffb3bf610a938450d459c068",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 49,
+          "target": "docs/images/hero_miya.png",
+          "alt": "Miya",
+          "resolved": "docs/images/hero_miya.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    {
+      "zip_path": "docs/images/hero_olaf.png",
+      "before_this_task": "docs/images/hero_olaf.png",
+      "after_this_task": "docs/images/hero_olaf.png",
+      "action_this_task": "kept",
+      "category": "character_illustration",
+      "matches_original_zip": true,
+      "bytes": 834,
+      "sha256": "f46c492f68115749fb0a516346b37b40e756846085cba04e58893a6a5a26eb5c",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 48,
+          "target": "docs/images/hero_olaf.png",
+          "alt": "Olaf",
+          "resolved": "docs/images/hero_olaf.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    {
+      "zip_path": "docs/images/hero_pyrois.png",
+      "before_this_task": "docs/images/hero_pyrois.png",
+      "after_this_task": "docs/images/hero_pyrois.png",
+      "action_this_task": "kept",
+      "category": "character_illustration",
+      "matches_original_zip": true,
+      "bytes": 837,
+      "sha256": "d67eb72840502425908b5734ada239d2e72eafbf1b88decee9784d6f63b3be8a",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 47,
+          "target": "docs/images/hero_pyrois.png",
+          "alt": "Pyrois",
+          "resolved": "docs/images/hero_pyrois.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    }
+  ],
+  "preservation": {
+    "baseline_file_count": 441,
+    "missing": [],
+    "changed": [],
+    "original_assets_unchanged": 327,
+    "benchmark_files_unchanged": 42
+  },
+  "changes_outside_snapshot": [
+    "README.md",
+    "CONTRIBUTING.md",
+    "tools/check_documentation.py"
+  ],
+  "historical_inventory_note": "Prior refactor inventories are retained as historical snapshots, not overwritten."
+}

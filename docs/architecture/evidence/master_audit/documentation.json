@@ -1,0 +1,1475 @@
+{
+  "markdown_files_checked": 28,
+  "local_image_references": [
+    {
+      "source": "README.md",
+      "line": 49,
+      "target": "docs/images/hero_pyrois.png",
+      "alt": "Pyrois",
+      "resolved": "docs/images/hero_pyrois.png"
+    },
+    {
+      "source": "README.md",
+      "line": 50,
+      "target": "docs/images/hero_olaf.png",
+      "alt": "Olaf",
+      "resolved": "docs/images/hero_olaf.png"
+    },
+    {
+      "source": "README.md",
+      "line": 51,
+      "target": "docs/images/hero_miya.png",
+      "alt": "Miya",
+      "resolved": "docs/images/hero_miya.png"
+    },
+    {
+      "source": "README.md",
+      "line": 52,
+      "target": "docs/images/hero_charlotte.png",
+      "alt": "Charlotte",
+      "resolved": "docs/images/hero_charlotte.png"
+    },
+    {
+      "source": "README.md",
+      "line": 62,
+      "target": "docs/images/enemy_orc.png",
+      "alt": "Orc",
+      "resolved": "docs/images/enemy_orc.png"
+    },
+    {
+      "source": "README.md",
+      "line": 63,
+      "target": "docs/images/enemy_armored_orc.png",
+      "alt": "Armored Orc",
+      "resolved": "docs/images/enemy_armored_orc.png"
+    },
+    {
+      "source": "README.md",
+      "line": 64,
+      "target": "docs/images/enemy_skeleton.png",
+      "alt": "Skeleton",
+      "resolved": "docs/images/enemy_skeleton.png"
+    },
+    {
+      "source": "README.md",
+      "line": 65,
+      "target": "docs/images/enemy_skeleton_archer.png",
+      "alt": "Skeleton Archer",
+      "resolved": "docs/images/enemy_skeleton_archer.png"
+    },
+    {
+      "source": "README.md",
+      "line": 66,
+      "target": "docs/images/enemy_vampire.png",
+      "alt": "Vampire",
+      "resolved": "docs/images/enemy_vampire.png"
+    },
+    {
+      "source": "README.md",
+      "line": 72,
+      "target": "docs/images/boss_necromancer.png",
+      "alt": "Necromancer",
+      "resolved": "docs/images/boss_necromancer.png"
+    },
+    {
+      "source": "README.md",
+      "line": 73,
+      "target": "docs/images/boss_orc_rider.png",
+      "alt": "Orc Rider",
+      "resolved": "docs/images/boss_orc_rider.png"
+    },
+    {
+      "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+      "line": 26,
+      "target": "images/01_benchmark_theo_so_phong.png",
+      "alt": "Thời gian sinh theo số phòng",
+      "resolved": "benchmarks/reports/images/01_benchmark_theo_so_phong.png"
+    },
+    {
+      "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+      "line": 37,
+      "target": "images/02_stress_1000_seed.png",
+      "alt": "Stress benchmark",
+      "resolved": "benchmarks/reports/images/02_stress_1000_seed.png"
+    },
+    {
+      "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+      "line": 55,
+      "target": "images/03_truoc_sau_toi_uu.png",
+      "alt": "Trước–sau tối ưu",
+      "resolved": "benchmarks/reports/images/03_truoc_sau_toi_uu.png"
+    }
+  ],
+  "local_document_links": [
+    {
+      "source": ".agent/workflows/balance-unit.md",
+      "line": 7,
+      "target": "../../scripts/core/balance_config.gd",
+      "resolved": "scripts/core/balance_config.gd"
+    },
+    {
+      "source": "CHANGELOG.md",
+      "line": 13,
+      "target": "docs/architecture/MASTER_AUDIT.md",
+      "resolved": "docs/architecture/MASTER_AUDIT.md"
+    },
+    {
+      "source": "CHANGELOG.md",
+      "line": 27,
+      "target": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "resolved": "docs/architecture/RESTRUCTURE_REPORT.md"
+    },
+    {
+      "source": "CHANGELOG.md",
+      "line": 67,
+      "target": ".agent/workflows/balance-unit.md",
+      "resolved": ".agent/workflows/balance-unit.md"
+    },
+    {
+      "source": "CHANGELOG.md",
+      "line": 67,
+      "target": "docs/gameplay/BALANCE_WORKFLOW.md",
+      "resolved": "docs/gameplay/BALANCE_WORKFLOW.md"
+    },
+    {
+      "source": "CHANGELOG.md",
+      "line": 74,
+      "target": "tests/test_dungeon_generator_unit.gd",
+      "resolved": "tests/test_dungeon_generator_unit.gd"
+    },
+    {
+      "source": "CHANGELOG.md",
+      "line": 104,
+      "target": "tests/test_dungeon_generator_unit.gd",
+      "resolved": "tests/test_dungeon_generator_unit.gd"
+    },
+    {
+      "source": "CHANGELOG.md",
+      "line": 105,
+      "target": "tests/test_dungeon_properties.gd",
+      "resolved": "tests/test_dungeon_properties.gd"
+    },
+    {
+      "source": "CHANGELOG.md",
+      "line": 106,
+      "target": "benchmarks/benchmark_dungeon_generator.gd",
+      "resolved": "benchmarks/benchmark_dungeon_generator.gd"
+    },
+    {
+      "source": "CHANGELOG.md",
+      "line": 106,
+      "target": "benchmarks/reports/GENERATOR_PERFORMANCE_REPORT.md",
+      "resolved": "benchmarks/reports/GENERATOR_PERFORMANCE_REPORT.md"
+    },
+    {
+      "source": "CHANGELOG.md",
+      "line": 107,
+      "target": "docs/qa/SEED_BUG_ISSUES.md",
+      "resolved": "docs/qa/SEED_BUG_ISSUES.md"
+    },
+    {
+      "source": "CHANGELOG.md",
+      "line": 107,
+      "target": ".github/ISSUE_TEMPLATE/seed_bug_report.md",
+      "resolved": ".github/ISSUE_TEMPLATE/seed_bug_report.md"
+    },
+    {
+      "source": "CHANGELOG.md",
+      "line": 108,
+      "target": ".github/workflows/ci.yml",
+      "resolved": ".github/workflows/ci.yml"
+    },
+    {
+      "source": "CHANGELOG.md",
+      "line": 108,
+      "target": "run_tests.bat",
+      "resolved": "run_tests.bat"
+    },
+    {
+      "source": "CONTRIBUTING.md",
+      "line": 3,
+      "target": "README.md",
+      "resolved": "README.md"
+    },
+    {
+      "source": "CONTRIBUTING.md",
+      "line": 3,
+      "target": "docs/architecture/PROJECT_STRUCTURE.md",
+      "resolved": "docs/architecture/PROJECT_STRUCTURE.md"
+    },
+    {
+      "source": "CONTRIBUTING.md",
+      "line": 4,
+      "target": "docs/gameplay/BALANCE_WORKFLOW.md",
+      "resolved": "docs/gameplay/BALANCE_WORKFLOW.md"
+    },
+    {
+      "source": "CONTRIBUTING.md",
+      "line": 16,
+      "target": ".github/PULL_REQUEST_TEMPLATE.md",
+      "resolved": ".github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "source": "CONTRIBUTING.md",
+      "line": 39,
+      "target": "README.md",
+      "resolved": "README.md"
+    },
+    {
+      "source": "CONTRIBUTING.md",
+      "line": 42,
+      "target": "docs/README.md",
+      "resolved": "docs/README.md"
+    },
+    {
+      "source": "README.md",
+      "line": 5,
+      "target": "docs/architecture/SECURITY.md",
+      "resolved": "docs/architecture/SECURITY.md"
+    },
+    {
+      "source": "README.md",
+      "line": 6,
+      "target": "docs/gameplay/BALANCE_WORKFLOW.md",
+      "resolved": "docs/gameplay/BALANCE_WORKFLOW.md"
+    },
+    {
+      "source": "README.md",
+      "line": 13,
+      "target": "docs/architecture/PROJECT_STRUCTURE.md",
+      "resolved": "docs/architecture/PROJECT_STRUCTURE.md"
+    },
+    {
+      "source": "README.md",
+      "line": 14,
+      "target": "CONTRIBUTING.md",
+      "resolved": "CONTRIBUTING.md"
+    },
+    {
+      "source": "README.md",
+      "line": 14,
+      "target": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "resolved": "docs/architecture/RESTRUCTURE_REPORT.md"
+    },
+    {
+      "source": "README.md",
+      "line": 16,
+      "target": "docs/README.md",
+      "resolved": "docs/README.md"
+    },
+    {
+      "source": "README.md",
+      "line": 17,
+      "target": "docs/FEATURE_CHECKLIST.md",
+      "resolved": "docs/FEATURE_CHECKLIST.md"
+    },
+    {
+      "source": "README.md",
+      "line": 18,
+      "target": "docs/DEVELOPMENT_ROADMAP.md",
+      "resolved": "docs/DEVELOPMENT_ROADMAP.md"
+    },
+    {
+      "source": "README.md",
+      "line": 32,
+      "target": ".agent/workflows/balance-unit.md",
+      "resolved": ".agent/workflows/balance-unit.md"
+    },
+    {
+      "source": "README.md",
+      "line": 45,
+      "target": "scripts/core/balance_config.gd",
+      "resolved": "scripts/core/balance_config.gd"
+    },
+    {
+      "source": "README.md",
+      "line": 45,
+      "target": "docs/gameplay/BALANCE_WORKFLOW.md",
+      "resolved": "docs/gameplay/BALANCE_WORKFLOW.md"
+    },
+    {
+      "source": "README.md",
+      "line": 75,
+      "target": "docs/gameplay/DUNGEON_FOG_AND_BALANCE.md",
+      "resolved": "docs/gameplay/DUNGEON_FOG_AND_BALANCE.md"
+    },
+    {
+      "source": "README.md",
+      "line": 152,
+      "target": "scripts/review/review_service.gd",
+      "resolved": "scripts/review/review_service.gd"
+    },
+    {
+      "source": "README.md",
+      "line": 153,
+      "target": "tests/vt075/",
+      "resolved": "tests/vt075"
+    },
+    {
+      "source": "README.md",
+      "line": 163,
+      "target": "benchmarks/README.md",
+      "resolved": "benchmarks/README.md"
+    },
+    {
+      "source": "README.md",
+      "line": 164,
+      "target": "docs/qa/",
+      "resolved": "docs/qa"
+    },
+    {
+      "source": "README.md",
+      "line": 166,
+      "target": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "resolved": "docs/architecture/RESTRUCTURE_REPORT.md"
+    },
+    {
+      "source": "README.md",
+      "line": 202,
+      "target": "docs/architecture/MASTER_AUDIT.md",
+      "resolved": "docs/architecture/MASTER_AUDIT.md"
+    },
+    {
+      "source": "README.md",
+      "line": 204,
+      "target": "docs/gameplay/DUNGEON_FOG_AND_BALANCE.md",
+      "resolved": "docs/gameplay/DUNGEON_FOG_AND_BALANCE.md"
+    },
+    {
+      "source": "benchmarks/README.md",
+      "line": 17,
+      "target": "reports/GENERATOR_PERFORMANCE_REPORT.md",
+      "resolved": "benchmarks/reports/GENERATOR_PERFORMANCE_REPORT.md"
+    },
+    {
+      "source": "benchmarks/README.md",
+      "line": 18,
+      "target": "../docs/qa/TEST_PLAN.md",
+      "resolved": "docs/qa/TEST_PLAN.md"
+    },
+    {
+      "source": "benchmarks/README.md",
+      "line": 18,
+      "target": "../docs/architecture/MASTER_AUDIT.md",
+      "resolved": "docs/architecture/MASTER_AUDIT.md"
+    },
+    {
+      "source": "benchmarks/reports/GENERATOR_PERFORMANCE_REPORT.md",
+      "line": 8,
+      "target": "../benchmark_dungeon_generator.gd",
+      "resolved": "benchmarks/benchmark_dungeon_generator.gd"
+    },
+    {
+      "source": "docs/DEVELOPMENT_ROADMAP.md",
+      "line": 5,
+      "target": "FEATURE_CHECKLIST.md",
+      "resolved": "docs/FEATURE_CHECKLIST.md"
+    },
+    {
+      "source": "docs/DEVELOPMENT_ROADMAP.md",
+      "line": 21,
+      "target": "architecture/MASTER_AUDIT.md",
+      "resolved": "docs/architecture/MASTER_AUDIT.md"
+    },
+    {
+      "source": "docs/DEVELOPMENT_ROADMAP.md",
+      "line": 32,
+      "target": "qa/TEST_PLAN.md",
+      "resolved": "docs/qa/TEST_PLAN.md"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 6,
+      "target": "architecture/MASTER_AUDIT.md",
+      "resolved": "docs/architecture/MASTER_AUDIT.md"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 10,
+      "target": "../scenes/dungeon/dungeon_generator.gd",
+      "resolved": "scenes/dungeon/dungeon_generator.gd"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 11,
+      "target": "../scenes/characters/",
+      "resolved": "scenes/characters"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 12,
+      "target": "../scenes/enemies/",
+      "resolved": "scenes/enemies"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 13,
+      "target": "../scenes/characters/pyrois/player.gd",
+      "resolved": "scenes/characters/pyrois/player.gd"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 13,
+      "target": "../scenes/projectiles/",
+      "resolved": "scenes/projectiles"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 14,
+      "target": "../scenes/characters/inventory_manager.gd",
+      "resolved": "scenes/characters/inventory_manager.gd"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 14,
+      "target": "../scenes/items/",
+      "resolved": "scenes/items"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 15,
+      "target": "../scenes/dungeon/",
+      "resolved": "scenes/dungeon"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 16,
+      "target": "../scenes/menus/",
+      "resolved": "scenes/menus"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 16,
+      "target": "../scenes/ui/",
+      "resolved": "scenes/ui"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 17,
+      "target": "../scenes/ui/game_ui.gd",
+      "resolved": "scenes/ui/game_ui.gd"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 17,
+      "target": "../scenes/dungeon/dungeon_atmosphere.gd",
+      "resolved": "scenes/dungeon/dungeon_atmosphere.gd"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 17,
+      "target": "../scripts/core/audio_manager.gd",
+      "resolved": "scripts/core/audio_manager.gd"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 18,
+      "target": "../scripts/core/game_manager.gd",
+      "resolved": "scripts/core/game_manager.gd"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 19,
+      "target": "../scripts/core/balance_config.gd",
+      "resolved": "scripts/core/balance_config.gd"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 20,
+      "target": "../scripts/review/review_service.gd",
+      "resolved": "scripts/review/review_service.gd"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 21,
+      "target": "../benchmarks/README.md",
+      "resolved": "benchmarks/README.md"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 22,
+      "target": "../Dockerfile",
+      "resolved": "Dockerfile"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 22,
+      "target": "../.github/workflows/ci.yml",
+      "resolved": ".github/workflows/ci.yml"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 37,
+      "target": "architecture/MASTER_AUDIT.md",
+      "resolved": "docs/architecture/MASTER_AUDIT.md"
+    },
+    {
+      "source": "docs/FEATURE_CHECKLIST.md",
+      "line": 43,
+      "target": "qa/TEST_PLAN.md",
+      "resolved": "docs/qa/TEST_PLAN.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 5,
+      "target": "architecture/MASTER_AUDIT.md",
+      "resolved": "docs/architecture/MASTER_AUDIT.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 11,
+      "target": "../README.md",
+      "resolved": "README.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 11,
+      "target": "../tests/README.md",
+      "resolved": "tests/README.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 12,
+      "target": "FEATURE_CHECKLIST.md",
+      "resolved": "docs/FEATURE_CHECKLIST.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 12,
+      "target": "DEVELOPMENT_ROADMAP.md",
+      "resolved": "docs/DEVELOPMENT_ROADMAP.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 13,
+      "target": "qa/TEST_PLAN.md",
+      "resolved": "docs/qa/TEST_PLAN.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 13,
+      "target": "../tools/README.md",
+      "resolved": "tools/README.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 14,
+      "target": "gameplay/GAME_DESIGN_DOCUMENT.md",
+      "resolved": "docs/gameplay/GAME_DESIGN_DOCUMENT.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 15,
+      "target": "gameplay/BALANCE_WORKFLOW.md",
+      "resolved": "docs/gameplay/BALANCE_WORKFLOW.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 15,
+      "target": "../scripts/core/balance_config.gd",
+      "resolved": "scripts/core/balance_config.gd"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 16,
+      "target": "gameplay/DUNGEON_FOG_AND_BALANCE.md",
+      "resolved": "docs/gameplay/DUNGEON_FOG_AND_BALANCE.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 17,
+      "target": "architecture/SECURITY.md",
+      "resolved": "docs/architecture/SECURITY.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 17,
+      "target": "qa/SEED_BUG_ISSUES.md",
+      "resolved": "docs/qa/SEED_BUG_ISSUES.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 18,
+      "target": "architecture/PROJECT_STRUCTURE.md",
+      "resolved": "docs/architecture/PROJECT_STRUCTURE.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 18,
+      "target": "../CONTRIBUTING.md",
+      "resolved": "CONTRIBUTING.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 19,
+      "target": "qa/README.md",
+      "resolved": "docs/qa/README.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 19,
+      "target": "qa/test_cases.csv",
+      "resolved": "docs/qa/test_cases.csv"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 19,
+      "target": "qa/test_cases.xlsx",
+      "resolved": "docs/qa/test_cases.xlsx"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 19,
+      "target": "qa/jira_url.txt",
+      "resolved": "docs/qa/jira_url.txt"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 19,
+      "target": "qa/CHANGELOG.md",
+      "resolved": "docs/qa/CHANGELOG.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 20,
+      "target": "../benchmarks/reports/GENERATOR_PERFORMANCE_REPORT.md",
+      "resolved": "benchmarks/reports/GENERATOR_PERFORMANCE_REPORT.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 21,
+      "target": "../benchmarks/README.md",
+      "resolved": "benchmarks/README.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 21,
+      "target": "../benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+      "resolved": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 21,
+      "target": "../benchmarks/reports/TONG_HOP_KET_QUA.csv",
+      "resolved": "benchmarks/reports/TONG_HOP_KET_QUA.csv"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 22,
+      "target": "architecture/RESTRUCTURE_REPORT.md",
+      "resolved": "docs/architecture/RESTRUCTURE_REPORT.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 22,
+      "target": "architecture/FILES_CHANGED.md",
+      "resolved": "docs/architecture/FILES_CHANGED.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 22,
+      "target": "architecture/refactor_manifest.json",
+      "resolved": "docs/architecture/refactor_manifest.json"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 23,
+      "target": "architecture/MASTER_AUDIT.md",
+      "resolved": "docs/architecture/MASTER_AUDIT.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 23,
+      "target": "architecture/evidence/master_audit.json",
+      "resolved": "docs/architecture/evidence/master_audit.json"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 24,
+      "target": "architecture/DOCUMENTATION_AUDIT.md",
+      "resolved": "docs/architecture/DOCUMENTATION_AUDIT.md"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 24,
+      "target": "architecture/evidence/documentation_inventory_after.json",
+      "resolved": "docs/architecture/evidence/documentation_inventory_after.json"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 24,
+      "target": "architecture/evidence/documentation_image_check.json",
+      "resolved": "docs/architecture/evidence/documentation_image_check.json"
+    },
+    {
+      "source": "docs/README.md",
+      "line": 61,
+      "target": "architecture/PROJECT_STRUCTURE.md",
+      "resolved": "docs/architecture/PROJECT_STRUCTURE.md"
+    },
+    {
+      "source": "docs/architecture/DOCUMENTATION_AUDIT.md",
+      "line": 18,
+      "target": "evidence/documentation_inventory_before.json",
+      "resolved": "docs/architecture/evidence/documentation_inventory_before.json"
+    },
+    {
+      "source": "docs/architecture/DOCUMENTATION_AUDIT.md",
+      "line": 20,
+      "target": "evidence/documentation_inventory_after.json",
+      "resolved": "docs/architecture/evidence/documentation_inventory_after.json"
+    },
+    {
+      "source": "docs/architecture/DOCUMENTATION_AUDIT.md",
+      "line": 22,
+      "target": "evidence/documentation_image_check.json",
+      "resolved": "docs/architecture/evidence/documentation_image_check.json"
+    },
+    {
+      "source": "docs/architecture/FILES_CHANGED.md",
+      "line": 260,
+      "target": "refactor_manifest.json",
+      "resolved": "docs/architecture/refactor_manifest.json"
+    },
+    {
+      "source": "docs/architecture/FILES_CHANGED.md",
+      "line": 261,
+      "target": "evidence/content_changes.diff",
+      "resolved": "docs/architecture/evidence/content_changes.diff"
+    },
+    {
+      "source": "docs/architecture/FILES_CHANGED.md",
+      "line": 262,
+      "target": "evidence/inventory_before.txt",
+      "resolved": "docs/architecture/evidence/inventory_before.txt"
+    },
+    {
+      "source": "docs/architecture/FILES_CHANGED.md",
+      "line": 262,
+      "target": "evidence/inventory_after.txt",
+      "resolved": "docs/architecture/evidence/inventory_after.txt"
+    },
+    {
+      "source": "docs/architecture/FILES_CHANGED.md",
+      "line": 263,
+      "target": "evidence/preservation_check.json",
+      "resolved": "docs/architecture/evidence/preservation_check.json"
+    },
+    {
+      "source": "docs/architecture/MASTER_AUDIT.md",
+      "line": 15,
+      "target": "evidence/master_audit.json",
+      "resolved": "docs/architecture/evidence/master_audit.json"
+    },
+    {
+      "source": "docs/architecture/MASTER_AUDIT.md",
+      "line": 98,
+      "target": "evidence/master_audit.json",
+      "resolved": "docs/architecture/evidence/master_audit.json"
+    },
+    {
+      "source": "docs/architecture/MASTER_AUDIT.md",
+      "line": 145,
+      "target": "evidence/master_audit/",
+      "resolved": "docs/architecture/evidence/master_audit"
+    },
+    {
+      "source": "docs/architecture/MASTER_AUDIT.md",
+      "line": 146,
+      "target": "evidence/master_audit/resources.json",
+      "resolved": "docs/architecture/evidence/master_audit/resources.json"
+    },
+    {
+      "source": "docs/architecture/MASTER_AUDIT.md",
+      "line": 147,
+      "target": "evidence/master_audit/documentation.json",
+      "resolved": "docs/architecture/evidence/master_audit/documentation.json"
+    },
+    {
+      "source": "docs/architecture/MASTER_AUDIT.md",
+      "line": 158,
+      "target": "../qa/TEST_PLAN.md",
+      "resolved": "docs/qa/TEST_PLAN.md"
+    },
+    {
+      "source": "docs/architecture/MASTER_AUDIT.md",
+      "line": 177,
+      "target": "../DEVELOPMENT_ROADMAP.md",
+      "resolved": "docs/DEVELOPMENT_ROADMAP.md"
+    },
+    {
+      "source": "docs/architecture/MASTER_AUDIT.md",
+      "line": 178,
+      "target": "../FEATURE_CHECKLIST.md",
+      "resolved": "docs/FEATURE_CHECKLIST.md"
+    },
+    {
+      "source": "docs/architecture/PROJECT_STRUCTURE.md",
+      "line": 103,
+      "target": "RESTRUCTURE_REPORT.md",
+      "resolved": "docs/architecture/RESTRUCTURE_REPORT.md"
+    },
+    {
+      "source": "docs/architecture/PROJECT_STRUCTURE.md",
+      "line": 103,
+      "target": "FILES_CHANGED.md",
+      "resolved": "docs/architecture/FILES_CHANGED.md"
+    },
+    {
+      "source": "docs/architecture/PROJECT_STRUCTURE.md",
+      "line": 104,
+      "target": "refactor_manifest.json",
+      "resolved": "docs/architecture/refactor_manifest.json"
+    },
+    {
+      "source": "docs/architecture/PROJECT_STRUCTURE.md",
+      "line": 106,
+      "target": "MASTER_AUDIT.md",
+      "resolved": "docs/architecture/MASTER_AUDIT.md"
+    },
+    {
+      "source": "docs/architecture/PROJECT_STRUCTURE.md",
+      "line": 106,
+      "target": "../README.md",
+      "resolved": "docs/README.md"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 34,
+      "target": "evidence/inventory_before.txt",
+      "resolved": "docs/architecture/evidence/inventory_before.txt"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 74,
+      "target": "PROJECT_STRUCTURE.md",
+      "resolved": "docs/architecture/PROJECT_STRUCTURE.md"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 81,
+      "target": "FILES_CHANGED.md",
+      "resolved": "docs/architecture/FILES_CHANGED.md"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 82,
+      "target": "refactor_manifest.json",
+      "resolved": "docs/architecture/refactor_manifest.json"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 109,
+      "target": "evidence/environment.json",
+      "resolved": "docs/architecture/evidence/environment.json"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 114,
+      "target": "evidence/static_check.json",
+      "resolved": "docs/architecture/evidence/static_check.json"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 115,
+      "target": "evidence/preservation_check.json",
+      "resolved": "docs/architecture/evidence/preservation_check.json"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 116,
+      "target": "refactor_manifest.json",
+      "resolved": "docs/architecture/refactor_manifest.json"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 117,
+      "target": "evidence/runner.log",
+      "resolved": "docs/architecture/evidence/runner.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 117,
+      "target": "evidence/suite/import.log",
+      "resolved": "docs/architecture/evidence/suite/import.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 118,
+      "target": "evidence/suite/unit.log",
+      "resolved": "docs/architecture/evidence/suite/unit.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 119,
+      "target": "evidence/suite/properties.log",
+      "resolved": "docs/architecture/evidence/suite/properties.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 120,
+      "target": "evidence/suite/combat.log",
+      "resolved": "docs/architecture/evidence/suite/combat.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 121,
+      "target": "evidence/suite/reviewer.log",
+      "resolved": "docs/architecture/evidence/suite/reviewer.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 122,
+      "target": "evidence/suite/mechanics.log",
+      "resolved": "docs/architecture/evidence/suite/mechanics.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 122,
+      "target": "evidence/suite/backdrop.log",
+      "resolved": "docs/architecture/evidence/suite/backdrop.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 123,
+      "target": "evidence/main.log",
+      "resolved": "docs/architecture/evidence/main.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 123,
+      "target": "evidence/world.log",
+      "resolved": "docs/architecture/evidence/world.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 124,
+      "target": "evidence/resource_smoke.log",
+      "resolved": "docs/architecture/evidence/resource_smoke.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 125,
+      "target": "evidence/preservation_check.json",
+      "resolved": "docs/architecture/evidence/preservation_check.json"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 126,
+      "target": "evidence/suite/benchmark.log",
+      "resolved": "docs/architecture/evidence/suite/benchmark.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 127,
+      "target": "evidence/tooling/scalability_analysis.log",
+      "resolved": "docs/architecture/evidence/tooling/scalability_analysis.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 128,
+      "target": "evidence/tooling/coverage_smoke.log",
+      "resolved": "docs/architecture/evidence/tooling/coverage_smoke.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 129,
+      "target": "evidence/tooling/mutation_smoke.log",
+      "resolved": "docs/architecture/evidence/tooling/mutation_smoke.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 130,
+      "target": "evidence/tooling/plan_checks.log",
+      "resolved": "docs/architecture/evidence/tooling/plan_checks.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 131,
+      "target": "evidence/runner_negative/import.log",
+      "resolved": "docs/architecture/evidence/runner_negative/import.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 131,
+      "target": "evidence/runner_negative/import_retry.log",
+      "resolved": "docs/architecture/evidence/runner_negative/import_retry.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 157,
+      "target": "evidence/stale_cache_import.log",
+      "resolved": "docs/architecture/evidence/stale_cache_import.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 160,
+      "target": "evidence/cold_runner.log",
+      "resolved": "docs/architecture/evidence/cold_runner.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 161,
+      "target": "evidence/cold_suite/import.log",
+      "resolved": "docs/architecture/evidence/cold_suite/import.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 161,
+      "target": "evidence/cold_suite/import_retry.log",
+      "resolved": "docs/architecture/evidence/cold_suite/import_retry.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 162,
+      "target": "evidence/cold_import_failed.log",
+      "resolved": "docs/architecture/evidence/cold_import_failed.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 162,
+      "target": "evidence/cold_import_retry.log",
+      "resolved": "docs/architecture/evidence/cold_import_retry.log"
+    },
+    {
+      "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+      "line": 184,
+      "target": "evidence/tooling/vt075_evidence_invocation.log",
+      "resolved": "docs/architecture/evidence/tooling/vt075_evidence_invocation.log"
+    },
+    {
+      "source": "docs/gameplay/BALANCE_WORKFLOW.md",
+      "line": 3,
+      "target": "../../scripts/core/balance_config.gd",
+      "resolved": "scripts/core/balance_config.gd"
+    },
+    {
+      "source": "docs/gameplay/BALANCE_WORKFLOW.md",
+      "line": 41,
+      "target": "../../scripts/core/balance_config.gd",
+      "resolved": "scripts/core/balance_config.gd"
+    },
+    {
+      "source": "docs/gameplay/BALANCE_WORKFLOW.md",
+      "line": 43,
+      "target": "../../README.md",
+      "resolved": "README.md"
+    },
+    {
+      "source": "docs/gameplay/BALANCE_WORKFLOW.md",
+      "line": 43,
+      "target": "../../CHANGELOG.md",
+      "resolved": "CHANGELOG.md"
+    },
+    {
+      "source": "docs/gameplay/DUNGEON_FOG_AND_BALANCE.md",
+      "line": 63,
+      "target": "../architecture/RESTRUCTURE_REPORT.md",
+      "resolved": "docs/architecture/RESTRUCTURE_REPORT.md"
+    },
+    {
+      "source": "docs/qa/README.md",
+      "line": 8,
+      "target": "../../tests/",
+      "resolved": "tests"
+    },
+    {
+      "source": "docs/qa/README.md",
+      "line": 9,
+      "target": "../../benchmarks/",
+      "resolved": "benchmarks"
+    },
+    {
+      "source": "docs/qa/SEED_BUG_ISSUES.md",
+      "line": 25,
+      "target": "../../scenes/dungeon/dungeon_generator.gd",
+      "resolved": "scenes/dungeon/dungeon_generator.gd"
+    },
+    {
+      "source": "docs/qa/SEED_BUG_ISSUES.md",
+      "line": 61,
+      "target": "../../scenes/items/chest/chest.gd",
+      "resolved": "scenes/items/chest/chest.gd"
+    },
+    {
+      "source": "docs/qa/SEED_BUG_ISSUES.md",
+      "line": 61,
+      "target": "../../scenes/enemies/orc/orc.gd",
+      "resolved": "scenes/enemies/orc/orc.gd"
+    },
+    {
+      "source": "docs/qa/SEED_BUG_ISSUES.md",
+      "line": 61,
+      "target": "../../scenes/enemies/armored_orc/armored_orc.gd",
+      "resolved": "scenes/enemies/armored_orc/armored_orc.gd"
+    },
+    {
+      "source": "docs/qa/SEED_BUG_ISSUES.md",
+      "line": 99,
+      "target": "../../scenes/dungeon/room_manager.gd",
+      "resolved": "scenes/dungeon/room_manager.gd"
+    },
+    {
+      "source": "docs/qa/SEED_BUG_ISSUES.md",
+      "line": 99,
+      "target": "../../scenes/dungeon/dungeon_generator.gd",
+      "resolved": "scenes/dungeon/dungeon_generator.gd"
+    },
+    {
+      "source": "docs/qa/SEED_BUG_ISSUES.md",
+      "line": 101,
+      "target": "../../scenes/dungeon/dungeon_generator.gd",
+      "resolved": "scenes/dungeon/dungeon_generator.gd"
+    },
+    {
+      "source": "docs/qa/SEED_BUG_ISSUES.md",
+      "line": 101,
+      "target": "../../scenes/characters/pyrois/player.gd",
+      "resolved": "scenes/characters/pyrois/player.gd"
+    },
+    {
+      "source": "docs/qa/SEED_BUG_ISSUES.md",
+      "line": 101,
+      "target": "../../scenes/projectiles/arrow.gd",
+      "resolved": "scenes/projectiles/arrow.gd"
+    },
+    {
+      "source": "docs/qa/SEED_BUG_ISSUES.md",
+      "line": 101,
+      "target": "../../scenes/projectiles/bomb.gd",
+      "resolved": "scenes/projectiles/bomb.gd"
+    },
+    {
+      "source": "docs/qa/SEED_BUG_ISSUES.md",
+      "line": 103,
+      "target": "../../scenes/enemies/skeleton_archer/skeleton_archer.gd",
+      "resolved": "scenes/enemies/skeleton_archer/skeleton_archer.gd"
+    },
+    {
+      "source": "docs/qa/TEST_PLAN.md",
+      "line": 4,
+      "target": "../FEATURE_CHECKLIST.md",
+      "resolved": "docs/FEATURE_CHECKLIST.md"
+    },
+    {
+      "source": "docs/qa/TEST_PLAN.md",
+      "line": 5,
+      "target": "../DEVELOPMENT_ROADMAP.md",
+      "resolved": "docs/DEVELOPMENT_ROADMAP.md"
+    },
+    {
+      "source": "docs/qa/TEST_PLAN.md",
+      "line": 48,
+      "target": "../../benchmarks/README.md",
+      "resolved": "benchmarks/README.md"
+    },
+    {
+      "source": "tests/README.md",
+      "line": 6,
+      "target": "../tools/run_tests.ps1",
+      "resolved": "tools/run_tests.ps1"
+    },
+    {
+      "source": "tests/README.md",
+      "line": 7,
+      "target": "../README.md",
+      "resolved": "README.md"
+    },
+    {
+      "source": "tests/README.md",
+      "line": 22,
+      "target": "../benchmarks/benchmark_dungeon_generator.tscn",
+      "resolved": "benchmarks/benchmark_dungeon_generator.tscn"
+    },
+    {
+      "source": "tests/README.md",
+      "line": 28,
+      "target": "../docs/qa/TEST_PLAN.md",
+      "resolved": "docs/qa/TEST_PLAN.md"
+    },
+    {
+      "source": "tools/README.md",
+      "line": 25,
+      "target": "../tests/README.md",
+      "resolved": "tests/README.md"
+    },
+    {
+      "source": "tools/README.md",
+      "line": 36,
+      "target": "../benchmarks/README.md",
+      "resolved": "benchmarks/README.md"
+    },
+    {
+      "source": "tools/README.md",
+      "line": 38,
+      "target": "../tests/test_resource_loading.gd",
+      "resolved": "tests/test_resource_loading.gd"
+    },
+    {
+      "source": "tools/README.md",
+      "line": 43,
+      "target": "../docs/qa/TEST_PLAN.md",
+      "resolved": "docs/qa/TEST_PLAN.md"
+    }
+  ],
+  "external_image_references_not_fetched": [
+    {
+      "source": "README.md",
+      "line": 3,
+      "target": "https://img.shields.io/badge/Godot_Engine-4.7-478cbf?logo=godotengine&logoColor=white",
+      "alt": "Godot Engine",
+      "verified": false
+    },
+    {
+      "source": "README.md",
+      "line": 4,
+      "target": "https://img.shields.io/badge/Tests-headless_suite-478cbf",
+      "alt": "Tests",
+      "verified": false
+    },
+    {
+      "source": "README.md",
+      "line": 5,
+      "target": "https://img.shields.io/badge/Security-Hardened_Input_%26_JSON_Schema-blue",
+      "alt": "Security",
+      "verified": false
+    },
+    {
+      "source": "README.md",
+      "line": 6,
+      "target": "https://img.shields.io/badge/Balance_Workflow-Single_Source_of_Truth-purple",
+      "alt": "Balance",
+      "verified": false
+    }
+  ],
+  "images": {
+    "benchmarks/reports/images/01_benchmark_theo_so_phong.png": {
+      "bytes": 52795,
+      "sha256": "5820b4a5b3d2803c8572faf9d403563f42d50a06ae372bab430e26f089097cb5",
+      "references": [
+        {
+          "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+          "line": 26,
+          "target": "images/01_benchmark_theo_so_phong.png",
+          "alt": "Thời gian sinh theo số phòng",
+          "resolved": "benchmarks/reports/images/01_benchmark_theo_so_phong.png"
+        }
+      ],
+      "width": 1464,
+      "height": 750,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "benchmarks/reports/images/02_stress_1000_seed.png": {
+      "bytes": 39518,
+      "sha256": "ae7a712433099cc967b9180e76eeb8694f6e88bd54e495031d27e2e0e83ef06f",
+      "references": [
+        {
+          "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+          "line": 37,
+          "target": "images/02_stress_1000_seed.png",
+          "alt": "Stress benchmark",
+          "resolved": "benchmarks/reports/images/02_stress_1000_seed.png"
+        }
+      ],
+      "width": 1464,
+      "height": 750,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "benchmarks/reports/images/03_truoc_sau_toi_uu.png": {
+      "bytes": 67633,
+      "sha256": "a08706e059498b5f171dd2fdd521432f615619762b0c77229f1e17cbc540d877",
+      "references": [
+        {
+          "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+          "line": 55,
+          "target": "images/03_truoc_sau_toi_uu.png",
+          "alt": "Trước–sau tối ưu",
+          "resolved": "benchmarks/reports/images/03_truoc_sau_toi_uu.png"
+        }
+      ],
+      "width": 1464,
+      "height": 767,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/boss_necromancer.png": {
+      "bytes": 1091,
+      "sha256": "09b205fbf2ce76e2debf74192f903a69f738d15c96daa2432540cdb84db61e63",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 72,
+          "target": "docs/images/boss_necromancer.png",
+          "alt": "Necromancer",
+          "resolved": "docs/images/boss_necromancer.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/boss_orc_rider.png": {
+      "bytes": 1541,
+      "sha256": "e15d449e5343853e37a3332d7d0d4f7db50c85c0d488d0dabd6f83f4fe10139d",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 73,
+          "target": "docs/images/boss_orc_rider.png",
+          "alt": "Orc Rider",
+          "resolved": "docs/images/boss_orc_rider.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/enemy_armored_orc.png": {
+      "bytes": 899,
+      "sha256": "503710ec80cd7b85543347fd6986098dbb03b0c4915c42cc45b3a82455d3ae2a",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 63,
+          "target": "docs/images/enemy_armored_orc.png",
+          "alt": "Armored Orc",
+          "resolved": "docs/images/enemy_armored_orc.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/enemy_orc.png": {
+      "bytes": 807,
+      "sha256": "dab3aeb6853b4f2a8b45ee2f2996a7b8d5fa5789b4c9896bf43b70cfc4b1a2b0",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 62,
+          "target": "docs/images/enemy_orc.png",
+          "alt": "Orc",
+          "resolved": "docs/images/enemy_orc.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/enemy_skeleton.png": {
+      "bytes": 560,
+      "sha256": "0c623357948b5aba7a8ac8ab8c3f88653509a649f7babd7dcb621f7db31fce50",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 64,
+          "target": "docs/images/enemy_skeleton.png",
+          "alt": "Skeleton",
+          "resolved": "docs/images/enemy_skeleton.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/enemy_skeleton_archer.png": {
+      "bytes": 977,
+      "sha256": "74ea90ce6ef30118b8e5b53c7a4366040e524876f9aa487f2785f6e21ca94316",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 65,
+          "target": "docs/images/enemy_skeleton_archer.png",
+          "alt": "Skeleton Archer",
+          "resolved": "docs/images/enemy_skeleton_archer.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/enemy_vampire.png": {
+      "bytes": 571,
+      "sha256": "f9f3869f9f3ef95939c438334108dfdab82d9cce0a6b80a5cfc48b9ec3ec0c02",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 66,
+          "target": "docs/images/enemy_vampire.png",
+          "alt": "Vampire",
+          "resolved": "docs/images/enemy_vampire.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/hero_charlotte.png": {
+      "bytes": 954,
+      "sha256": "381105fe37728fb5a5bf30710f1c493aaa7482f9bb54d384ffd55579c0b4868e",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 52,
+          "target": "docs/images/hero_charlotte.png",
+          "alt": "Charlotte",
+          "resolved": "docs/images/hero_charlotte.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/hero_miya.png": {
+      "bytes": 891,
+      "sha256": "2ec3b0a64616be3fde9fb0e2b5eb3c1f8dafb443ffb3bf610a938450d459c068",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 51,
+          "target": "docs/images/hero_miya.png",
+          "alt": "Miya",
+          "resolved": "docs/images/hero_miya.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/hero_olaf.png": {
+      "bytes": 834,
+      "sha256": "f46c492f68115749fb0a516346b37b40e756846085cba04e58893a6a5a26eb5c",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 50,
+          "target": "docs/images/hero_olaf.png",
+          "alt": "Olaf",
+          "resolved": "docs/images/hero_olaf.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/hero_pyrois.png": {
+      "bytes": 837,
+      "sha256": "d67eb72840502425908b5734ada239d2e72eafbf1b88decee9784d6f63b3be8a",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 49,
+          "target": "docs/images/hero_pyrois.png",
+          "alt": "Pyrois",
+          "resolved": "docs/images/hero_pyrois.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    }
+  },
+  "unreferenced_documentation_images": [],
+  "errors": [],
+  "warnings": [],
+  "scope": "Static local file/directory link and image/case checks and PNG integrity; heading fragments, GitHub rendering and external URL availability are not checked."
+}

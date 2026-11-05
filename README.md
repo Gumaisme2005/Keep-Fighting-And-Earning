@@ -14,7 +14,7 @@ Keep Fighting And Earning is a 2D top-down action roguelike developed using Godo
 ### 1.2 Combat and Physics System
 - **Real-Time Combat Mechanics**: Combines discrete Health and regenerating Armor pools, invulnerability frames (I-Frames), and 360-degree rotational hitboxes.
 - **Line-of-Sight (LoS) Validation**: Employs spatial grid raycasting to verify unobstructed line-of-sight between combatants, preventing attacks or projectile trajectories from clipping through walls or closed doors.
-- **Centralized Balance Configuration**: Combat statistics across all heroes, monsters, and bosses are maintained within `Scene/BalanceConfig.gd` as the single source of truth.
+- **Centralized Balance Configuration**: Combat statistics across all heroes, monsters, and bosses are maintained within `scripts/core/balance_config.gd` as the single source of truth.
 
 ### 1.3 Inventory, Equipment and Interface
 - **16-Slot Inventory**: Includes a 4x4 grid backpack storage, a 9-slot action hotbar, and expandable equipment slots (Helmet, Armor, Weapon, Magic Resist, Boots).
@@ -32,7 +32,7 @@ Keep Fighting And Earning is a 2D top-down action roguelike developed using Godo
 
 ## 2. Playable Character Roster
 
-The roster features 6 distinct heroes, selectable from the character selection screen. All parameters reflect the centralized balance configuration in `Scene/BalanceConfig.gd`.
+The roster features 6 distinct heroes, selectable from the character selection screen. All parameters reflect the centralized balance configuration in `scripts/core/balance_config.gd`.
 
 ### 2.1 Roster Overview Table
 
@@ -106,17 +106,21 @@ The roster features 6 distinct heroes, selectable from the character selection s
 ```
 Keep-Fighting-And-Earning/
 |-- Assets/                   # Audio tracks, sound effects, character and environment sprites
-|-- docs/                     # Technical specifications, benchmarks, design documents
-|-- Menu/                     # Main menu and interface scenes
-|-- Scene/                    # Gameplay scenes and core scripts
-|   |-- BalanceConfig.gd      # Single source of truth for all unit statistics
-|   |-- GameManager.gd        # State management, seed pipeline, and replay controller
-|   |-- Character/            # Playable hero scenes, controllers, and gadget modules
-|   |-- Enemies/              # Standard enemy and boss entity implementations
-|   |-- Map/                  # Procedural dungeon generator, tilesets, and room management
-|   `-- UI/                   # In-game HUD, minimap, inventory, and character select screens
-|-- Test/                     # QA test case matrices and tracking sheets
+|-- docs/                     # Gameplay, architecture, QA and integration reports
+|-- scenes/                   # Scenes and scripts grouped by feature
+|   |-- main/                 # World entry point
+|   |-- menus/                # Main, pause and game-over menus
+|   |-- characters/           # All 6 heroes, controllers and gadget modules
+|   |-- enemies/              # Standard enemies and bosses (including Skeleton King)
+|   |-- dungeon/              # Generator, atmosphere, rooms, portals and traps
+|   |-- items/                # ItemData, resources, chest and world pickups
+|   |-- projectiles/          # Arrows, bombs and magic
+|   `-- ui/                   # HUD, minimap, inventory and character select
+|-- scripts/core/             # GameManager, AudioManager and BalanceConfig
+|-- scripts/review/           # Offline reviewer service
 |-- tests/                    # Automated headless test suites and regression scripts
+|-- benchmarks/               # Runners, analyzers, historical results and reports
+|-- tools/                    # Static checks and PowerShell test runner
 |-- .github/workflows/ci.yml  # GitHub Actions continuous integration pipeline
 |-- project.godot             # Godot Engine project configuration
 |-- run_game.bat              # Script to launch the game client
@@ -135,7 +139,7 @@ The test suite is executable headlessly in Godot Engine:
    - Tests 100 random seeds across 5 structural invariants: determinism, connectivity, flood-fill walkability, boss optimality, and safe entity spawns (500/500 passing).
 3. **Combat Regression Tests (`tests/test_orc_battle.tscn`)**:
    - Verifies 360-degree rotational hitbox accuracy across 5 primary directions (5/5 passing).
-4. **Dungeon Generator Performance Benchmark (`tests/benchmark_dungeon_generator.tscn`)**:
+4. **Dungeon Generator Performance Benchmark (`benchmarks/benchmark_dungeon_generator.tscn`)**:
    - Evaluates dungeon generation execution times across scales from 10 to 50 rooms.
 5. **Skeleton King Arena Tests (`tests/test_skeleton_king.tscn`)**:
    - Tests specialized arena layout, crystal destruction, laser grid volleys, enrage states, and defeat transitions (21/21 passing).
@@ -198,3 +202,20 @@ godot --headless --path . "res://tests/test_replay_security.tscn"
 - **Minimap Toggle**: M
 - **Audio Mute Toggle**: N
 - **Pause Menu**: Escape
+
+
+## Cấu trúc dự án sau tích hợp refactor
+
+Branch `chore/project-structure-v2` giữ roster 6 hero, Werewolf, Skeleton King,
+HUD, inventory stacking và replay protection của repository tại `777d9d9`.
+Scene/script được tổ chức theo feature trong `scenes/`; autoload ở
+`scripts/core/`, tests ở `tests/`, benchmark ở `benchmarks/`.
+Assets, UID và tên singleton được giữ nguyên.
+
+- [Cấu trúc dự án](docs/architecture/PROJECT_STRUCTURE.md)
+- [Hướng dẫn công cụ](tools/README.md) và [kiểm thử](tests/README.md)
+- [Báo cáo tích hợp vào GitHub](docs/architecture/INTEGRATION_REPORT.md)
+- [Mục lục tài liệu](docs/README.md)
+
+Các báo cáo audit của ZIP là bằng chứng lịch sử trên bản 4 hero; không phải kết
+quả kiểm thử của branch tích hợp này. Kết quả mới nằm trong báo cáo tích hợp.

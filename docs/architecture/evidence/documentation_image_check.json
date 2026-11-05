@@ -1,0 +1,363 @@
+{
+  "markdown_files_checked": 23,
+  "local_image_references": [
+    {
+      "source": "README.md",
+      "line": 47,
+      "target": "docs/images/hero_pyrois.png",
+      "alt": "Pyrois",
+      "resolved": "docs/images/hero_pyrois.png"
+    },
+    {
+      "source": "README.md",
+      "line": 48,
+      "target": "docs/images/hero_olaf.png",
+      "alt": "Olaf",
+      "resolved": "docs/images/hero_olaf.png"
+    },
+    {
+      "source": "README.md",
+      "line": 49,
+      "target": "docs/images/hero_miya.png",
+      "alt": "Miya",
+      "resolved": "docs/images/hero_miya.png"
+    },
+    {
+      "source": "README.md",
+      "line": 50,
+      "target": "docs/images/hero_charlotte.png",
+      "alt": "Charlotte",
+      "resolved": "docs/images/hero_charlotte.png"
+    },
+    {
+      "source": "README.md",
+      "line": 60,
+      "target": "docs/images/enemy_orc.png",
+      "alt": "Orc",
+      "resolved": "docs/images/enemy_orc.png"
+    },
+    {
+      "source": "README.md",
+      "line": 61,
+      "target": "docs/images/enemy_armored_orc.png",
+      "alt": "Armored Orc",
+      "resolved": "docs/images/enemy_armored_orc.png"
+    },
+    {
+      "source": "README.md",
+      "line": 62,
+      "target": "docs/images/enemy_skeleton.png",
+      "alt": "Skeleton",
+      "resolved": "docs/images/enemy_skeleton.png"
+    },
+    {
+      "source": "README.md",
+      "line": 63,
+      "target": "docs/images/enemy_skeleton_archer.png",
+      "alt": "Skeleton Archer",
+      "resolved": "docs/images/enemy_skeleton_archer.png"
+    },
+    {
+      "source": "README.md",
+      "line": 64,
+      "target": "docs/images/enemy_vampire.png",
+      "alt": "Vampire",
+      "resolved": "docs/images/enemy_vampire.png"
+    },
+    {
+      "source": "README.md",
+      "line": 70,
+      "target": "docs/images/boss_necromancer.png",
+      "alt": "Necromancer",
+      "resolved": "docs/images/boss_necromancer.png"
+    },
+    {
+      "source": "README.md",
+      "line": 71,
+      "target": "docs/images/boss_orc_rider.png",
+      "alt": "Orc Rider",
+      "resolved": "docs/images/boss_orc_rider.png"
+    },
+    {
+      "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+      "line": 26,
+      "target": "images/01_benchmark_theo_so_phong.png",
+      "alt": "Thời gian sinh theo số phòng",
+      "resolved": "benchmarks/reports/images/01_benchmark_theo_so_phong.png"
+    },
+    {
+      "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+      "line": 37,
+      "target": "images/02_stress_1000_seed.png",
+      "alt": "Stress benchmark",
+      "resolved": "benchmarks/reports/images/02_stress_1000_seed.png"
+    },
+    {
+      "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+      "line": 55,
+      "target": "images/03_truoc_sau_toi_uu.png",
+      "alt": "Trước–sau tối ưu",
+      "resolved": "benchmarks/reports/images/03_truoc_sau_toi_uu.png"
+    }
+  ],
+  "external_image_references_not_fetched": [
+    {
+      "source": "README.md",
+      "line": 3,
+      "target": "https://img.shields.io/badge/Godot_Engine-4.7-478cbf?logo=godotengine&logoColor=white",
+      "alt": "Godot Engine",
+      "verified": false
+    },
+    {
+      "source": "README.md",
+      "line": 4,
+      "target": "https://img.shields.io/badge/Tests-headless_suite-478cbf",
+      "alt": "Tests",
+      "verified": false
+    },
+    {
+      "source": "README.md",
+      "line": 5,
+      "target": "https://img.shields.io/badge/Security-Hardened_Input_%26_JSON_Schema-blue",
+      "alt": "Security",
+      "verified": false
+    },
+    {
+      "source": "README.md",
+      "line": 6,
+      "target": "https://img.shields.io/badge/Balance_Workflow-Single_Source_of_Truth-purple",
+      "alt": "Balance",
+      "verified": false
+    }
+  ],
+  "images": {
+    "benchmarks/reports/images/01_benchmark_theo_so_phong.png": {
+      "bytes": 52795,
+      "sha256": "5820b4a5b3d2803c8572faf9d403563f42d50a06ae372bab430e26f089097cb5",
+      "references": [
+        {
+          "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+          "line": 26,
+          "target": "images/01_benchmark_theo_so_phong.png",
+          "alt": "Thời gian sinh theo số phòng",
+          "resolved": "benchmarks/reports/images/01_benchmark_theo_so_phong.png"
+        }
+      ],
+      "width": 1464,
+      "height": 750,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "benchmarks/reports/images/02_stress_1000_seed.png": {
+      "bytes": 39518,
+      "sha256": "ae7a712433099cc967b9180e76eeb8694f6e88bd54e495031d27e2e0e83ef06f",
+      "references": [
+        {
+          "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+          "line": 37,
+          "target": "images/02_stress_1000_seed.png",
+          "alt": "Stress benchmark",
+          "resolved": "benchmarks/reports/images/02_stress_1000_seed.png"
+        }
+      ],
+      "width": 1464,
+      "height": 750,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "benchmarks/reports/images/03_truoc_sau_toi_uu.png": {
+      "bytes": 67633,
+      "sha256": "a08706e059498b5f171dd2fdd521432f615619762b0c77229f1e17cbc540d877",
+      "references": [
+        {
+          "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+          "line": 55,
+          "target": "images/03_truoc_sau_toi_uu.png",
+          "alt": "Trước–sau tối ưu",
+          "resolved": "benchmarks/reports/images/03_truoc_sau_toi_uu.png"
+        }
+      ],
+      "width": 1464,
+      "height": 767,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/boss_necromancer.png": {
+      "bytes": 1091,
+      "sha256": "09b205fbf2ce76e2debf74192f903a69f738d15c96daa2432540cdb84db61e63",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 70,
+          "target": "docs/images/boss_necromancer.png",
+          "alt": "Necromancer",
+          "resolved": "docs/images/boss_necromancer.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/boss_orc_rider.png": {
+      "bytes": 1541,
+      "sha256": "e15d449e5343853e37a3332d7d0d4f7db50c85c0d488d0dabd6f83f4fe10139d",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 71,
+          "target": "docs/images/boss_orc_rider.png",
+          "alt": "Orc Rider",
+          "resolved": "docs/images/boss_orc_rider.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/enemy_armored_orc.png": {
+      "bytes": 899,
+      "sha256": "503710ec80cd7b85543347fd6986098dbb03b0c4915c42cc45b3a82455d3ae2a",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 61,
+          "target": "docs/images/enemy_armored_orc.png",
+          "alt": "Armored Orc",
+          "resolved": "docs/images/enemy_armored_orc.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/enemy_orc.png": {
+      "bytes": 807,
+      "sha256": "dab3aeb6853b4f2a8b45ee2f2996a7b8d5fa5789b4c9896bf43b70cfc4b1a2b0",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 60,
+          "target": "docs/images/enemy_orc.png",
+          "alt": "Orc",
+          "resolved": "docs/images/enemy_orc.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/enemy_skeleton.png": {
+      "bytes": 560,
+      "sha256": "0c623357948b5aba7a8ac8ab8c3f88653509a649f7babd7dcb621f7db31fce50",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 62,
+          "target": "docs/images/enemy_skeleton.png",
+          "alt": "Skeleton",
+          "resolved": "docs/images/enemy_skeleton.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/enemy_skeleton_archer.png": {
+      "bytes": 977,
+      "sha256": "74ea90ce6ef30118b8e5b53c7a4366040e524876f9aa487f2785f6e21ca94316",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 63,
+          "target": "docs/images/enemy_skeleton_archer.png",
+          "alt": "Skeleton Archer",
+          "resolved": "docs/images/enemy_skeleton_archer.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/enemy_vampire.png": {
+      "bytes": 571,
+      "sha256": "f9f3869f9f3ef95939c438334108dfdab82d9cce0a6b80a5cfc48b9ec3ec0c02",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 64,
+          "target": "docs/images/enemy_vampire.png",
+          "alt": "Vampire",
+          "resolved": "docs/images/enemy_vampire.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/hero_charlotte.png": {
+      "bytes": 954,
+      "sha256": "381105fe37728fb5a5bf30710f1c493aaa7482f9bb54d384ffd55579c0b4868e",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 50,
+          "target": "docs/images/hero_charlotte.png",
+          "alt": "Charlotte",
+          "resolved": "docs/images/hero_charlotte.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/hero_miya.png": {
+      "bytes": 891,
+      "sha256": "2ec3b0a64616be3fde9fb0e2b5eb3c1f8dafb443ffb3bf610a938450d459c068",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 49,
+          "target": "docs/images/hero_miya.png",
+          "alt": "Miya",
+          "resolved": "docs/images/hero_miya.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/hero_olaf.png": {
+      "bytes": 834,
+      "sha256": "f46c492f68115749fb0a516346b37b40e756846085cba04e58893a6a5a26eb5c",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 48,
+          "target": "docs/images/hero_olaf.png",
+          "alt": "Olaf",
+          "resolved": "docs/images/hero_olaf.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    },
+    "docs/images/hero_pyrois.png": {
+      "bytes": 837,
+      "sha256": "d67eb72840502425908b5734ada239d2e72eafbf1b88decee9784d6f63b3be8a",
+      "references": [
+        {
+          "source": "README.md",
+          "line": 47,
+          "target": "docs/images/hero_pyrois.png",
+          "alt": "Pyrois",
+          "resolved": "docs/images/hero_pyrois.png"
+        }
+      ],
+      "width": 72,
+      "height": 72,
+      "validation": "PNG CRC and decompression OK"
+    }
+  },
+  "unreferenced_documentation_images": [],
+  "errors": [],
+  "warnings": [],
+  "scope": "Static local link/case checks and PNG integrity; no GitHub rendering or external URL availability check."
+}

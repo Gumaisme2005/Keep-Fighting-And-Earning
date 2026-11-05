@@ -1,0 +1,2219 @@
+--- a/.agent/workflows/balance-unit.md
++++ b/.agent/workflows/balance-unit.md
+@@ -4,10 +4,10 @@
+ 
+ # Workflow Cân Bằng Chỉ Số (Buff / Nerf Nhân Vật & Quái Vật)
+ 
+-Toàn bộ chỉ số chiến đấu của 4 Anh hùng Đoàn Hộ Nhẫn, 5 loại Quái vật Moria và 2 Đại Thủ Lĩnh được quản lý tập trung tại một nguồn duy nhất (**Single Source of Truth**): [`Scene/BalanceConfig.gd`](../../Scene/BalanceConfig.gd).
++Toàn bộ chỉ số chiến đấu của 4 Anh hùng Đoàn Hộ Nhẫn, 5 loại Quái vật Moria và 2 Đại Thủ Lĩnh được quản lý tập trung tại một nguồn duy nhất (**Single Source of Truth**): [`scripts/core/balance_config.gd`](../../scripts/core/balance_config.gd).
+ 
+-## Bước 1: Chỉnh sửa chỉ số tại `Scene/BalanceConfig.gd`
+-Mở file `Scene/BalanceConfig.gd` và điều chỉnh trực tiếp trong các bảng:
++## Bước 1: Chỉnh sửa chỉ số tại `scripts/core/balance_config.gd`
++Mở file `scripts/core/balance_config.gd` và điều chỉnh trực tiếp trong các bảng:
+ 1. **`HERO_STATS`** (`"miya"`, `"olaf"`, `"pyrois"`, `"charlotte"`):
+    - `hp`: Máu tối đa cơ bản
+    - `armor`: Giáp khởi đầu (tự hồi phục sau giao tranh)
+@@ -27,7 +27,7 @@
+ // turbo
+ Chạy lệnh kiểm thử Headless để kiểm tra `UT-13` (đảm bảo chỉ số trong `BalanceConfig.gd` đã tự động áp dụng lên thực thể trong game và UI):
+ ```powershell
+-& "B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe" --headless tests/test_dungeon_generator_unit.tscn
++& $env:GODOT_BIN --headless --path . res://tests/test_dungeon_generator_unit.tscn
+ ```
+ 
+ ## Bước 3: Cập nhật bảng chỉ số trong `README.md` và `CHANGELOG.md`
+@@ -35,6 +35,6 @@
+ 
+ ## Bước 4: Commit theo chuẩn Conventional Commits
+ ```powershell
+-git add Scene/BalanceConfig.gd README.md CHANGELOG.md
++git add scripts/core/balance_config.gd README.md CHANGELOG.md
+ git commit -m "balance(<ten_don_vi>): <buff/nerf> <chi_so> tu X -> Y"
+ ```
+--- a/.dockerignore
++++ b/.dockerignore
+@@ -3,6 +3,9 @@
+ .godot
+ .codegraph
+ build/
++__pycache__/
++*.pyc
++.godot-test-results/
+ tests/vt075/_cov/
+ tests/vt075/_mutant/
+ *.md
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -39,11 +39,11 @@
+ 
+       - name: 3. Run Combat Hitbox Regression Tests (TC-EN-01 .. TC-EN-05)
+         run: |
+-          godot --headless "res://test_orc_battle.tscn"
++          godot --headless "res://tests/test_orc_battle.tscn"
+ 
+       - name: 4. Run Dungeon Generator Performance Benchmark
+         run: |
+-          godot --headless "res://tests/benchmark_dungeon_generator.tscn" | tee benchmark_output.log
++          godot --headless "res://benchmarks/benchmark_dungeon_generator.tscn" | tee benchmark_output.log
+ 
+       - name: 5. Run VT-075 Reviewer Role & Concurrency Tests (TC-01 .. TC-21)
+         run: |
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,6 +1,8 @@
+ # Godot 4+ specific ignores
+ .godot/
+ /android/
++/build/
++.godot-test-results/
+ .codegraph/
+ 
+ # VT-075 generated artifacts
+--- a/benchmark/advanced/analyze_stress.py
++++ b/benchmarks/advanced/analyze_stress.py
+@@ -209,7 +209,7 @@
+ 
+ if __name__ == "__main__":
+     if len(sys.argv) != 2:
+-        raise SystemExit("Cách chạy: python benchmark/advanced/analyze_stress.py <duong_dan_csv>")
++        raise SystemExit("Cách chạy: python benchmarks/advanced/analyze_stress.py <duong_dan_csv>")
+     try:
+         analyze(Path(sys.argv[1]))
+     except (FileNotFoundError, ValueError) as exc:
+--- a/benchmark/advanced/gan_diem_do_tuong.py
++++ b/benchmarks/advanced/gan_diem_do_tuong.py
+@@ -1,7 +1,7 @@
+ #!/usr/bin/env python3
+ # -*- coding: utf-8 -*-
+ """Thêm điểm đo build_walls() một lần, có sao lưu file gốc.
+-Chạy tại thư mục gốc dự án: py -3 benchmark/advanced/gan_diem_do_tuong.py
++Chạy tại thư mục gốc dự án: py -3 benchmarks/advanced/gan_diem_do_tuong.py
+ Chỉ sửa đúng 1 script chứa build_dungeon_layout và build_walls.
+ """
+ from __future__ import annotations
+@@ -27,7 +27,7 @@
+ def target_file(project: Path) -> Path:
+     found: list[Path] = []
+     for f in project.rglob("*.gd"):
+-        if ".godot" in f.parts or "benchmark" in f.parts:
++        if ".godot" in f.parts or "benchmarks" in f.parts:
+             continue
+         try:
+             source = f.read_text(encoding="utf-8-sig")
+@@ -97,7 +97,7 @@
+     out = content.replace("\n", newline).encode("utf-8")
+     if out == raw:
+         fail("File khong thay doi")
+-    backup_dir = project / "benchmark" / "advanced" / "backups"
++    backup_dir = project / "benchmarks" / "advanced" / "backups"
+     backup_dir.mkdir(parents=True, exist_ok=True)
+     stamp = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+     backup = backup_dir / (path.stem + "_goc_" + stamp + ".gd.txt")
+--- a/benchmark/advanced/kiem_tra_cau_truc_tilemap.gd
++++ b/benchmarks/advanced/kiem_tra_cau_truc_tilemap.gd
+@@ -3,8 +3,8 @@
+ ## Godot 4.7.2, chay tu thu muc chua project.godot.
+ ## Luu y: va cham TileSet chi la kiem tra tinh, khong phai gameplay pathfinding.
+ 
+-const WORLD_SCENE: String = "res://world.tscn"
+-const OUTPUT_DIR: String = "res://benchmark/advanced/results"
++const WORLD_SCENE: String = "res://scenes/main/world.tscn"
++const OUTPUT_DIR: String = "res://benchmarks/advanced/results"
+ const ROOM_COUNTS: Array[int] = [16, 32]
+ const TESTS_PER_CONFIG: int = 100
+ const SEED_PREFIX: String = "STRESS_SEED_"
+@@ -18,7 +18,7 @@
+ func _run() -> void:
+ 	var packed: PackedScene = load(WORLD_SCENE) as PackedScene
+ 	if packed == null:
+-		printerr("LOI: Khong nap duoc world.tscn")
++		printerr("LOI: Khong nap duoc scenes/main/world.tscn")
+ 		quit(1)
+ 		return
+ 	var absolute_dir: String = ProjectSettings.globalize_path(OUTPUT_DIR)
+@@ -47,7 +47,7 @@
+ 		var world: Node = packed.instantiate()
+ 		var tilemap: TileMap = world.get_node_or_null("TileMap") as TileMap
+ 		if tilemap == null:
+-			printerr("LOI: Khong tim thay TileMap cua world.tscn")
++			printerr("LOI: Khong tim thay TileMap cua scenes/main/world.tscn")
+ 			f.close()
+ 			world.free()
+ 			quit(4)
+--- a/benchmark/advanced/kiem_tra_seed_doc_lap.gd
++++ b/benchmarks/advanced/kiem_tra_seed_doc_lap.gd
+@@ -3,8 +3,8 @@
+ ## Chay 3 lan rieng biet. Moi lan ghi 200 ban ghi (16/32 phong x 100 seed).
+ ## Khong thay doi code game va khong tao bao cao hay changelog.
+ 
+-const WORLD_SCENE: String = "res://world.tscn"
+-const OUT_DIR: String = "res://benchmark/advanced/results"
++const WORLD_SCENE: String = "res://scenes/main/world.tscn"
++const OUT_DIR: String = "res://benchmarks/advanced/results"
+ const ROOM_COUNTS: Array[int] = [16, 32]
+ const SEED_COUNT: int = 100
+ const PREFIX: String = "STRESS_SEED_"
+@@ -16,7 +16,7 @@
+ func _run() -> void:
+ 	var packed: PackedScene = load(WORLD_SCENE) as PackedScene
+ 	if packed == null:
+-		printerr("LOI: khong tai duoc world.tscn")
++		printerr("LOI: khong tai duoc scenes/main/world.tscn")
+ 		quit(1)
+ 		return
+ 	var dir_path: String = ProjectSettings.globalize_path(OUT_DIR)
+@@ -31,7 +31,7 @@
+ 		printerr("LOI: khong mo duoc CSV de ghi")
+ 		quit(3)
+ 		return
+-	var generator_sha: String = FileAccess.get_sha256("res://Scene/Map/dungeon_generator.gd")
++	var generator_sha: String = FileAccess.get_sha256("res://scenes/dungeon/dungeon_generator.gd")
+ 	f.store_csv_line(PackedStringArray([
+ 		"schema", "run_id", "godot_version", "generator_sha256", "rooms", "trial", "seed",
+ 		"room_count", "layer_count", "geometry_sha256", "tilemap_sha256", "full_sha256"
+@@ -41,7 +41,7 @@
+ 		var world: Node = packed.instantiate()
+ 		var tilemap: TileMap = world.get_node_or_null("TileMap") as TileMap
+ 		if tilemap == null:
+-			printerr("LOI: node TileMap khong tim thay trong world.tscn")
++			printerr("LOI: node TileMap khong tim thay trong scenes/main/world.tscn")
+ 			f.close()
+ 			world.free()
+ 			quit(4)
+--- a/benchmark/advanced/profile_giai_doan.gd
++++ b/benchmarks/advanced/profile_giai_doan.gd
+@@ -4,8 +4,8 @@
+ ## Chạy headless từ thư mục gốc project. Không thêm world vào cây SceneTree.
+ ## Định dạng dữ liệu: CSV có thể dùng với analyze_stress.py.
+ 
+-const WORLD_SCENE: String = "res://world.tscn"
+-const RESULTS_DIR: String = "res://benchmark/advanced/results"
++const WORLD_SCENE: String = "res://scenes/main/world.tscn"
++const RESULTS_DIR: String = "res://benchmarks/advanced/results"
+ const ROOM_COUNTS: Array[int] = [16, 32]
+ const SEED_COUNT: int = 100
+ const WARMUP_COUNT: int = 5
+@@ -79,7 +79,7 @@
+ 		var world: Node = scene.instantiate()
+ 		var dungeon: Node = world.get_node_or_null("TileMap")
+ 		if dungeon == null:
+-			printerr("LOI: world.tscn khong co node TileMap")
++			printerr("LOI: scenes/main/world.tscn khong co node TileMap")
+ 			csv_file.close()
+ 			world.free()
+ 			quit(4)
+--- a/benchmark/advanced/so_sanh_seed_doc_lap.py
++++ b/benchmarks/advanced/so_sanh_seed_doc_lap.py
+@@ -1,12 +1,12 @@
+ # Chay trong thu muc goc du an sau khi da mo Godot 3 lan doc lap.
+-# Py -3 .\benchmark\advanced\so_sanh_seed_doc_lap.py
++# Py -3 .\benchmarks\advanced\so_sanh_seed_doc_lap.py
+ import csv
+ import glob
+ import os
+ import sys
+ from collections import Counter
+ 
+-DIRECTORY = os.path.join("benchmark", "advanced", "results")
++DIRECTORY = os.path.join("benchmarks", "advanced", "results")
+ files = sorted(glob.glob(os.path.join(DIRECTORY, "seed_replay_*.csv")), key=os.path.getmtime)
+ if len(files) < 3:
+     print(f"CHUA DU: tim thay {len(files)} file; can it nhat 3 lan chay doc lap.")
+--- a/benchmark/advanced/stress_benchmark.gd
++++ b/benchmarks/advanced/stress_benchmark.gd
+@@ -3,8 +3,8 @@
+ ## Chạy headless từ thư mục gốc project. Không thêm world vào cây SceneTree.
+ ## Định dạng dữ liệu: CSV có thể dùng với analyze_stress.py.
+ 
+-const WORLD_SCENE: String = "res://world.tscn"
+-const RESULTS_DIR: String = "res://benchmark/advanced/results"
++const WORLD_SCENE: String = "res://scenes/main/world.tscn"
++const RESULTS_DIR: String = "res://benchmarks/advanced/results"
+ const ROOM_COUNTS: Array[int] = [16, 32]
+ const SEED_COUNT: int = 1000
+ const WARMUP_COUNT: int = 3
+@@ -78,7 +78,7 @@
+ 		var world: Node = scene.instantiate()
+ 		var dungeon: Node = world.get_node_or_null("TileMap")
+ 		if dungeon == null:
+-			printerr("LOI: world.tscn khong co node TileMap")
++			printerr("LOI: scenes/main/world.tscn khong co node TileMap")
+ 			csv_file.close()
+ 			world.free()
+ 			quit(4)
+--- a/benchmark/benchmark.tscn
++++ b/benchmarks/benchmark.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3 uid="uid://m2lg0r5fdlxa"]
+ 
+-[ext_resource type="Script" uid="uid://dwu3aqk4opxtd" path="res://benchmark/dungeon_benchmark.gd" id="1_benchmark"]
++[ext_resource type="Script" uid="uid://dwu3aqk4opxtd" path="res://benchmarks/dungeon_benchmark.gd" id="1_benchmark"]
+ 
+ [node name="DungeonBenchmark" type="Node" unique_id=1440818017]
+ script = ExtResource("1_benchmark")
+--- a/benchmark/dungeon_benchmark.gd
++++ b/benchmarks/dungeon_benchmark.gd
+@@ -1,12 +1,12 @@
+ extends Node
+ ## Independent benchmark runner for Keep-Fighting-And-Earning (Godot 4.x).
+-## Run the companion scene benchmark/benchmark.tscn (F6).
++## Run the companion scene benchmarks/benchmark.tscn (F6).
+ ## Does not modify the gameplay scene or the dungeon generator script.
+ 
+-const WORLD_SCENE: PackedScene = preload("res://world.tscn")
++const WORLD_SCENE: PackedScene = preload("res://scenes/main/world.tscn")
+ const NUMBER_OF_SEEDS: int = 100  # Set to 100 after the first successful run.
+-const CSV_PATH: String = "res://benchmark/results.csv"
+-const LOG_PATH: String = "res://benchmark/benchmark_log.txt"
++const CSV_PATH: String = "res://benchmarks/results/results.csv"
++const LOG_PATH: String = "res://benchmarks/results/benchmark_log.txt"
+ 
+ 
+ func _ready() -> void:
+@@ -19,7 +19,7 @@
+ 	var world: Node = WORLD_SCENE.instantiate()
+ 	var dungeon: TileMap = world.get_node_or_null("TileMap") as TileMap
+ 	if dungeon == null:
+-		push_error("Benchmark: Node TileMap was not found in world.tscn")
++		push_error("Benchmark: Node TileMap was not found in scenes/main/world.tscn")
+ 		world.free()
+ 		get_tree().quit(1)
+ 		return
+@@ -101,7 +101,7 @@
+ 	else:
+ 		push_error("Cannot write %s (error %d)" % [LOG_PATH, FileAccess.get_open_error()])
+ 
+-	print("BENCHMARK COMPLETE. See res://benchmark/results.csv and benchmark_log.txt")
++	print("BENCHMARK COMPLETE. See res://benchmarks/results/results.csv and benchmark_log.txt")
+ 	world.free()
+ 	get_tree().quit()
+ 
+--- a/benchmark/README.md
++++ b/benchmarks/README.md
+@@ -49,7 +49,7 @@
+ 
+ **Vấn đề đã xác định và đề xuất xử lý**
+ 
+-| Ưu tiên | Phát hiện từ benchmark/code | Đề xuất cho nhóm |
++| Ưu tiên | Phát hiện từ benchmarks/code | Đề xuất cho nhóm |
+ |---|---|---|
+ | **Cao** | `build_walls()` tiêu tốn khoảng **97% thời gian của bước bố cục + dựng tường** trước tối ưu. Nguyên nhân đáng chú ý là `wall_cells.has(neighbor)` tìm trên Array dài. | Xem xét áp dụng `Dictionary` để tra cứu ô đã xét nhưng vẫn giữ Array theo thứ tự cũ; chạy lại benchmark và kiểm tra mã băm TileMap trên code đã tích hợp. |
+ | **Trung bình** | Thời gian sinh dungeon tăng rõ khi tăng số phòng: từ 8 lên 32 phòng, trung bình tăng khoảng **5,86 lần**. | Theo dõi độ trễ chuyển tầng/sinh bản đồ ở cấu hình dungeon lớn; đặt ngưỡng hiệu năng phù hợp trải nghiệm game và kiểm tra lại sau mỗi thay đổi thuật toán. |
+@@ -60,7 +60,7 @@
+ 
+ ## 4. Những việc nhóm nên làm tiếp
+ 
+-1. **Đối chiếu nhánh `feature/dungeon-benchmark` với `main` mới nhất**, đặc biệt file `Scene/Map/dungeon_generator.gd`; không ghi đè toàn bộ file của nhóm bằng bản thử nghiệm cũ.
++1. **Đối chiếu nhánh `feature/dungeon-benchmark` với `main` mới nhất**, đặc biệt file `scenes/dungeon/dungeon_generator.gd`; không ghi đè toàn bộ file của nhóm bằng bản thử nghiệm cũ.
+ 2. **Tích hợp có kiểm soát thay đổi `build_walls()`**, chạy lại trên cùng seed, đối chiếu cấu trúc và TileMap, sau đó đo hiệu năng lại trên đúng commit sẽ đưa vào `main`.
+ 3. **Xác minh lỗi vùng cấm bẫy 5×5** và trạng thái lớp TileMap thứ ba; tạo issue/sửa nếu thực sự không khớp thiết kế.
+ 4. **Bổ sung bằng chứng tái chạy**: thông tin CPU/RAM, commit hash, các CSV seed replay còn thiếu, số liệu trước tối ưu đủ 200 lượt, và tự động chạy benchmark hồi quy khi thay đổi dungeon generator.
+@@ -74,4 +74,4 @@
+ - `reports/BAO_CAO_TONG_KET_2026-10-27.md`: giải thích phương pháp, số liệu, giới hạn và các biểu đồ. `reports/TONG_HOP_KET_QUA.csv`: bảng thống kê để đối chiếu.
+ - `CHANGELOG.md`: ghi lại những công việc benchmark thực tế đã thực hiện và những vấn đề còn mở.
+ 
+-**Cách chạy lại:** Mở dự án với Godot 4.7.2, vào PowerShell tại thư mục chứa `project.godot`, dùng `--headless --path "." --script "res://benchmark/advanced/stress_benchmark.gd"` (hoặc thay bằng script phù hợp ở `advanced/` và `scalability/`). Cần trỏ tới file thực thi Godot đang cài trên máy. Khi đo thời gian dựng tường, generator phải có điểm đo `benchmark_walls_us` như trong bản benchmark đã thử nghiệm.
++**Cách chạy lại:** Mở dự án với Godot 4.7.2, vào PowerShell tại thư mục chứa `project.godot`, dùng `--headless --path "." --script "res://benchmarks/advanced/stress_benchmark.gd"` (hoặc thay bằng script phù hợp ở `advanced/` và `scalability/`). Cần trỏ tới file thực thi Godot đang cài trên máy. Khi đo thời gian dựng tường, generator phải có điểm đo `benchmark_walls_us` như trong bản benchmark đã thử nghiệm.
+--- a/benchmark/reports/BAO_CAO_TONG_KET_2026-10-27.md
++++ b/benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md
+@@ -75,4 +75,4 @@
+ 3. Lưu cả CSV của **3 phiên seed replay trên một mã nguồn thống nhất**, kiểm tra lại SHA-256 trong từng phiên; bổ sung thông tin CPU/RAM và commit được đo.
+ 4. Rà soát Pull Request, không tự merge khi chưa xác nhận những nội dung trên.
+ 
+-**Nguồn dữ liệu:** CSV gốc lưu ở `benchmark/results/` và `benchmark/advanced/results/`; xem `benchmark/README.md` để biết vị trí chính xác và lệnh chạy.
++**Nguồn dữ liệu:** CSV gốc lưu ở `benchmarks/results/` và `benchmarks/advanced/results/`; xem `benchmarks/README.md` để biết vị trí chính xác và lệnh chạy.
+--- a/benchmark/scalability/dungeon_benchmark.gd
++++ b/benchmarks/scalability/dungeon_benchmark.gd
+@@ -1,10 +1,10 @@
+ extends SceneTree
+ ## Benchmark sinh dungeon cho du an Keep-Fighting-And-Earning.
+-## Khong them world.tscn vao SceneTree, vi vay khong spawn quai/nhan vat.
++## Khong them scenes/main/world.tscn vao SceneTree, vi vay khong spawn quai/nhan vat.
+ ## Pham vi: phong, hanh lang, tile, dat bay va trang tri.
+ 
+-const WORLD_SCENE = "res://world.tscn"
+-const OUTPUT_DIR = "res://benchmark/results"
++const WORLD_SCENE = "res://scenes/main/world.tscn"
++const OUTPUT_DIR = "res://benchmarks/results"
+ const ROOM_COUNTS = [8, 16, 24, 32]
+ const SEED_COUNT = 100
+ const WARMUP_COUNT = 3
+@@ -71,7 +71,7 @@
+ 		var world: Node = packed.instantiate()
+ 		var dungeon: Variant = world.get_node_or_null("TileMap")
+ 		if dungeon == null:
+-			printerr("ERROR: world.tscn is missing TileMap node")
++			printerr("ERROR: scenes/main/world.tscn is missing TileMap node")
+ 			csv.close()
+ 			world.free()
+ 			quit(4)
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -1,4 +1,18 @@
+ # Changelog
++
++## [Unreleased] — Chuẩn hóa cấu trúc dự án (2026-11-05)
++
++- Gom scene/script theo tính năng trong `scenes/`; đưa autoload/cấu hình dùng chung
++  vào `scripts/core/` và service reviewer vào `scripts/review/`.
++- Chuyển QA thủ công từ `Test/` sang `docs/qa/`, Orc regression vào `tests/`, toàn bộ
++  công cụ/đầu ra benchmark vào `benchmarks/`; giữ nguyên dữ liệu và thông số đo.
++- Cập nhật đường dẫn scene/resource, kế thừa hero, preload và CI; giữ các UID gốc.
++- Thay liên kết ảnh mũi tên trực tiếp vào cache bằng ảnh nguồn; thêm `.gdignore`
++  cho tài liệu/kết quả để tránh import CSV thành bản dịch.
++- Thêm kiểm tra tĩnh, runner test dùng `GODOT_BIN`/PATH, hướng dẫn cấu trúc, đóng góp,
++  mẫu PR và bằng chứng tái chạy. Không đổi gameplay, RNG, engine hoặc dependency.
++- Kết quả/giới hạn kiểm chứng và danh sách tệp nằm trong
++  [`docs/architecture/RESTRUCTURE_REPORT.md`](docs/architecture/RESTRUCTURE_REPORT.md).
+ 
+ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep Fighting And Earning** được ghi chép chi tiết tại đây.
+ 
+@@ -11,15 +25,15 @@
+   - Che giấu 100% các phòng chưa bước chân tới trong bóng tối dày đặc của hầm mỏ Moria.
+   - Tự động mở sáng phòng tương ứng khi nhân vật đặt chân qua ngưỡng cửa.
+   - Hành lang chỉ vẽ hoàn chỉnh khi đã khám phá cả hai đầu, hoặc vẽ nhánh mờ ngắn chỉ hướng vào màn đêm sâu thẳm.
+-- **Bầu Không Khí Ngục Tối U Ám & Đèn Lồng Linh Hồn (`Scene/Map/dungeon_atmosphere.gd`):**
++- **Bầu Không Khí Ngục Tối U Ám & Đèn Lồng Linh Hồn (`scenes/dungeon/dungeon_atmosphere.gd`):**
+   - Đẩy ánh sáng môi trường ngục tối toàn cục về mức sâu thẳm `Color(0.06, 0.06, 0.10, 1.0)`.
+   - Nhân vật mang theo đèn lồng linh hồn (`PlayerSoulLight`) với quầng sáng ấm áp soi rọi bán kính xung quanh.
+   - Đuốc treo tường tại các phòng chưa khám phá ở trạng thái tắt lịm, tự động bừng lửa khi nhân vật tiến vào phòng.
+-- **Cơ Chế Bẫy Kim Cọc Vật Lý (`Scene/Map/spike_trap.gd`):**
++- **Cơ Chế Bẫy Kim Cọc Vật Lý (`scenes/dungeon/spike_trap.gd`):**
+   - Quái vật và kẻ địch hoàn toàn miễn nhiễm sát thương từ bẫy kim cọc, chỉ người chơi chịu tổn thất.
+   - Khi cọc chông đâm trồi lên, khối rào cản vật lý `StaticBody2D` kích hoạt chặn đứng hoàn toàn người chơi và quái vật.
+   - Thời gian duy trì cọc nhô lên được kéo dài đến 2.8s.
+-- **Cân Bằng Chỉ Số & Độ Khó Leo Thang Theo Tầng (`Scene/BalanceConfig.gd` & `Scene/Map/dungeon_generator.gd`):**
++- **Cân Bằng Chỉ Số & Độ Khó Leo Thang Theo Tầng (`scripts/core/balance_config.gd` & `scenes/dungeon/dungeon_generator.gd`):**
+   - Cường hóa quái vật: Moria Orc (Máu 4, ST 2, Tốc độ 75), Armored Uruk-hai (Máu 5, Giáp 6, Cuồng nộ ST 4), Barrow-wight Skeleton (Máu 3, Tốc độ 110), Minas Morgul Bone Archer (Máu 5, Hồi chiêu 1.6s), Angmar Blood Bat (Máu 5, Hồi chiêu 1.4s, Tốc độ 85).
+   - Cường hóa Boss: Tử Linh Pháp Sư Dol Guldur (Máu 45, ST 2, Độc tố 3), Thủ Lĩnh Kỵ Binh Warg (Máu 50, ST 3, Tốc độ 75).
+   - Tăng mật độ quái: Mật độ quái mỗi phòng tăng lên 3 — 7 ở Tầng 1, tự động tăng tiến theo độ sâu các tầng tiếp theo.
+@@ -35,7 +49,7 @@
+ ## [2026-10-29] — Cân Bằng Chỉ Số (BalanceConfig), Nerf Cung Thủ Miya & Cốt Truyện Chúa Tể Của Những Chiếc Nhẫn (Moria)
+ 
+ ### Tính năng Mới (New Features)
+-- **Hệ thống Cân Bằng Tập Trung (`Scene/BalanceConfig.gd`):**
++- **Hệ thống Cân Bằng Tập Trung (`scripts/core/balance_config.gd`):**
+   - Đóng vai trò Single Source of Truth (SSOT) cho toàn bộ chỉ số của 4 Anh hùng, 5 Quái vật và 2 Boss.
+   - Hỗ trợ hàm cập nhật chỉ số động `BalanceConfig.set_unit_stat(category, unit_id, stat_name, value)` phục vụ quy trình cân bằng và kiểm thử tự động.
+   - Tích hợp tài liệu quy trình chuẩn hóa: [`.agent/workflows/balance-unit.md`](.agent/workflows/balance-unit.md) và [`docs/BALANCE_WORKFLOW.md`](docs/BALANCE_WORKFLOW.md).
+@@ -48,7 +62,7 @@
+   - Bổ sung `UT-13` trong [`tests/test_dungeon_generator_unit.gd`](tests/test_dungeon_generator_unit.gd), nâng tổng số bài kiểm tra lên 19/19 Unit Tests PASS 100%.
+ 
+ ### Cân Bằng Chỉ Số (Balance Changes)
+-- **Nerf Cung Thủ Miya (`Scene/Character/Player 3_Miya/player_3.gd`):**
++- **Nerf Cung Thủ Miya (`scenes/characters/miya/player.gd`):**
+   - Máu (HP): Giảm từ `4` xuống `3` (bù lại ưu thế tấn công tầm xa tuyệt đối).
+   - Sát thương đòn đánh: Giảm từ `2` xuống `1`.
+   - Tốc độ di chuyển: Giảm từ `180` xuống `165`.
+@@ -77,7 +91,7 @@
+ - **GitHub Evidence & Kiểm thử Tự động:**
+   - **Unit Tests:** [`tests/test_dungeon_generator_unit.gd`](tests/test_dungeon_generator_unit.gd) (`10/10 PASS`).
+   - **Property Tests:** [`tests/test_dungeon_properties.gd`](tests/test_dungeon_properties.gd) (`5/5 bất biến x 100 Seeds = 500/500 PASS`).
+-  - **Benchmark:** [`tests/benchmark_dungeon_generator.gd`](tests/benchmark_dungeon_generator.gd) & [`docs/BENCHMARK_REPORT.md`](docs/BENCHMARK_REPORT.md).
++  - **Benchmark:** [`benchmarks/benchmark_dungeon_generator.gd`](benchmarks/benchmark_dungeon_generator.gd) & [`docs/BENCHMARK_REPORT.md`](docs/BENCHMARK_REPORT.md).
+   - **Seed Bug Issues:** [`docs/SEED_BUG_ISSUES.md`](docs/SEED_BUG_ISSUES.md) & [`.github/ISSUE_TEMPLATE/seed_bug_report.md`](.github/ISSUE_TEMPLATE/seed_bug_report.md).
+   - **CI Workflow:** [`.github/workflows/ci.yml`](.github/workflows/ci.yml) & [`run_tests.bat`](run_tests.bat).
+ 
+@@ -99,4 +113,4 @@
+ ### Sửa lỗi (Bug Fixes)
+ - **[ORC] Cannot attack Player when Player is below Orc within 35px:**
+   - Cập nhật `orc.gd` & `orc.tscn` xoay `axe_hitbox.rotation = direction.angle()` và mở rộng `CollisionShape2D` lên `32x26`.
+-  - Xác minh bằng `test_orc_battle.tscn` (5/5 test cases PASS).
++  - Xác minh bằng `tests/test_orc_battle.tscn` (5/5 test cases PASS).
+--- a/docs/BALANCE_WORKFLOW.md
++++ b/docs/BALANCE_WORKFLOW.md
+@@ -1,13 +1,13 @@
+ # QUY TRÌNH CÂN BẰNG CHỈ SỐ (BUFF / NERF WORKFLOW)
+ 
+-Dự án áp dụng kiến trúc **Single Source of Truth ( Nguồn Dữ Liệu Tập Trung Duy Nhất )** tại [`Scene/BalanceConfig.gd`](../Scene/BalanceConfig.gd) để quản lý toàn bộ thông số của **4 Anh hùng Đoàn Hộ Nhẫn**, **5 Quái vật Quân đoàn Moria** và **2 Đại Thủ Lĩnh**.
++Dự án áp dụng kiến trúc **Single Source of Truth ( Nguồn Dữ Liệu Tập Trung Duy Nhất )** tại [`scripts/core/balance_config.gd`](../scripts/core/balance_config.gd) để quản lý toàn bộ thông số của **4 Anh hùng Đoàn Hộ Nhẫn**, **5 Quái vật Quân đoàn Moria** và **2 Đại Thủ Lĩnh**.
+ 
+ ---
+ 
+-## 1. Kiến trúc đồng bộ tự động (`Scene/BalanceConfig.gd`)
++## 1. Kiến trúc đồng bộ tự động (`scripts/core/balance_config.gd`)
+ 
+ ```
+-[ Scene/BalanceConfig.gd ]
++[ scripts/core/balance_config.gd ]
+        │
+        ├──► GameManager.CHARACTER_INFO ──► Màn hình Chọn Tướng (CharacterSelect)
+        ├──► Player 1..4 (_ready)       ──► Máu, Giáp, Sát thương, Tốc chạy, Hồi chiêu
+@@ -15,7 +15,7 @@
+        └──► 2 Đại Thủ Lĩnh (_ready)    ──► HP Boss, Tốc độ, Sát thương theo Phase
+ ```
+ 
+-Khi cần **Buff** (tăng sức mạnh) hoặc **Nerf** (giảm sức mạnh) bất kỳ nhân vật hay quái vật nào, nhà phát triển **chỉ cần sửa duy nhất tại `Scene/BalanceConfig.gd`** (hoặc gọi `BalanceConfig.set_unit_stat(category, unit_id, stat_key, new_value)`).
++Khi cần **Buff** (tăng sức mạnh) hoặc **Nerf** (giảm sức mạnh) bất kỳ nhân vật hay quái vật nào, nhà phát triển **chỉ cần sửa duy nhất tại `scripts/core/balance_config.gd`** (hoặc gọi `BalanceConfig.set_unit_stat(category, unit_id, stat_key, new_value)`).
+ 
+ ---
+ 
+@@ -38,7 +38,7 @@
+ 
+ ## 3. Các bước thực hiện Buff / Nerf chuẩn (4 Bước)
+ 
+-1. **Chỉnh sửa thông số:** Mở [`Scene/BalanceConfig.gd`](../Scene/BalanceConfig.gd), thay đổi giá trị trong `HERO_STATS`, `ENEMY_STATS` hoặc `BOSS_STATS`.
++1. **Chỉnh sửa thông số:** Mở [`scripts/core/balance_config.gd`](../scripts/core/balance_config.gd), thay đổi giá trị trong `HERO_STATS`, `ENEMY_STATS` hoặc `BOSS_STATS`.
+ 2. **Kiểm tra tự động:** Chạy `run_tests.bat` để bài kiểm thử `UT-13` xác minh các thực thể trong game đã nhận đúng thông số mới từ `BalanceConfig`.
+ 3. **Cập nhật tài liệu:** Cập nhật bảng thông số tương ứng trong [`README.md`](../README.md) và [`CHANGELOG.md`](../CHANGELOG.md).
+ 4. **Commit chuẩn hóa:** Sử dụng tiền tố `balance(unit): ...` để lưu vết lịch sử cân bằng rõ ràng trên Git.
+--- a/docs/BENCHMARK_REPORT.md
++++ b/docs/BENCHMARK_REPORT.md
+@@ -5,10 +5,10 @@
+ ---
+ 
+ ## 1. Phương pháp đo (Methodology)
+-- **Script kiểm thử:** [`res://tests/benchmark_dungeon_generator.gd`](../tests/benchmark_dungeon_generator.gd) (`res://tests/benchmark_dungeon_generator.tscn`)
++- **Script kiểm thử:** [`res://benchmarks/benchmark_dungeon_generator.gd`](../benchmarks/benchmark_dungeon_generator.gd) (`res://benchmarks/benchmark_dungeon_generator.tscn`)
+ - **Lệnh chạy thực tế:**
+   ```powershell
+-  Godot_v4.7.2-stable_win64_console.exe --headless --path . "res://tests/benchmark_dungeon_generator.tscn"
++  Godot_v4.7.2-stable_win64_console.exe --headless --path . "res://benchmarks/benchmark_dungeon_generator.tscn"
+   ```
+ - **Quy mô kiểm thử (`num_rooms`):** `10`, `16` (mặc định của game), `25`, `36`, `50` phòng.
+ - **Số lần chạy mỗi cấu hình:** `25 iterations` với các seed độc lập (`BENCH_<rooms>_RUN_<iter>`).
+--- a/docs/DUNGEON_FOG_AND_BALANCE.md
++++ b/docs/DUNGEON_FOG_AND_BALANCE.md
+@@ -58,6 +58,11 @@
+ 
+ ## 5. Hướng Dẫn Vận Hành Qua Docker — Dockerization Guide
+ 
++Lưu ý kiểm chứng 2026-11-05: Docker pin Godot 4.3, trong khi `project.godot` khai
++báo 4.7 và kiểm thử cục bộ dùng 4.7.2. Các lệnh dưới đây mô tả cấu hình có sẵn;
++Docker/Web export chưa được chạy lại. Xem [báo cáo tái cấu trúc](architecture/RESTRUCTURE_REPORT.md)
++về đề xuất đồng bộ phiên bản và bỏ cơ chế che lỗi export.
++
+ Dự án cung cấp bộ công cụ Docker hóa hoàn chỉnh gồm `Dockerfile`, `docker-compose.yml` và cấu hình máy chủ Nginx với đầy đủ tiêu chuẩn WebAssembly:
+ 
+ ### 5.1. Chơi game trực tiếp trên trình duyệt qua Docker
+@@ -68,7 +73,8 @@
+ Mở trình duyệt và truy cập: `http://localhost:8080`
+ 
+ ### 5.2. Chạy bộ kiểm thử tự động Headless qua Docker
+-Chạy lệnh sau để thực thi toàn bộ 19 Unit Tests và 500 phép kiểm chứng thuộc tính trong môi trường Linux Container:
++Target `test` hiện chỉ chạy scene unit (19 phép kiểm tra); property tests và các bộ
++khác được chạy bằng `run_tests.bat` hoặc các lệnh riêng trong README:
+ ```bash
+ docker compose run --rm test
+ ```
+--- a/docs/GAME_DESIGN_DOCUMENT.md
++++ b/docs/GAME_DESIGN_DOCUMENT.md
+@@ -20,7 +20,7 @@
+ 
+ ## 2. Hồ Sơ 4 Anh Hùng Trung Địa (Playable Heroes) & Hệ Thống Cân Bằng (BalanceConfig)
+ 
+-Toàn bộ chỉ số anh hùng được quản lý tập trung tại `Scene/BalanceConfig.gd` (Single Source of Truth), cho phép tinh chỉnh buff/nerf mà không cần sửa rải rác từng file nhân vật.
++Toàn bộ chỉ số anh hùng được quản lý tập trung tại `scripts/core/balance_config.gd` (Single Source of Truth), cho phép tinh chỉnh buff/nerf mà không cần sửa rải rác từng file nhân vật.
+ 
+ | Anh Hùng | Danh Hiệu / Bối Cảnh | Máu (HP) | Giáp (Armor) | Sát Thương | Tốc Độ | Vũ Khí & Tuyệt Kỹ Chủ Động |
+ | :--- | :--- | :---: | :---: | :---: | :---: | :--- |
+@@ -34,19 +34,19 @@
+ ## 3. Hệ Sinh Thái Quái Vật & Đại Thủ Lĩnh Trung Địa (Bestiary)
+ 
+ ### 3.1. Năm Chủng Loại Quái Thường (5 Regular Enemy Types)
+-1. **Orc Moria (`Scene/Enemies/Orc/`):** Cận chiến tiên phong, tuần tra và truy đuổi người chơi bằng rìu khi cửa phòng sập xuống (`HP: 3`, `ST: 1`).
+-2. **Uruk-hai Thiết Giáp (`Scene/Enemies/Armored_orc/`):** Quái hạng nặng mang giáp sắt, khi vỡ 5 điểm giáp sẽ kích hoạt trạng thái Cuồng Nộ x2 tốc độ và gây 3 sát thương (`5 Giáp + 3 Máu`, `ST: 1 -> 3`).
+-3. **Hài Cốt Barrow-wight (`Scene/Enemies/Skeleton/`):** Xương khô tốc kích di chuyển nhanh (`Tốc độ: 100`), thường ùa ra theo bầy hoặc do Boss triệu hồi (`HP: 2`, `ST: 1`).
+-4. **Cung Thủ Xương Minas Morgul (`Scene/Enemies/Skeleton Archer/`):** Xạ thủ thông minh có AI thả diều (Kiting AI), lùi khi bị áp sát dưới 85px, né ngang và tự vòng tránh chướng ngại vật/cột đá để lấy tầm nhìn bắn tên (`HP: 4`, `ST: 1`).
+-5. **Ác Linh Huyết Quỷ Angmar (`Scene/Enemies/Vampire/`):** Quái tinh nhuệ áp sát nhanh trong góc hẹp hầm ngục (`HP: 4`, `ST: 1`).
++1. **Orc Moria (`scenes/enemies/Orc/`):** Cận chiến tiên phong, tuần tra và truy đuổi người chơi bằng rìu khi cửa phòng sập xuống (`HP: 3`, `ST: 1`).
++2. **Uruk-hai Thiết Giáp (`scenes/enemies/Armored_orc/`):** Quái hạng nặng mang giáp sắt, khi vỡ 5 điểm giáp sẽ kích hoạt trạng thái Cuồng Nộ x2 tốc độ và gây 3 sát thương (`5 Giáp + 3 Máu`, `ST: 1 -> 3`).
++3. **Hài Cốt Barrow-wight (`scenes/enemies/Skeleton/`):** Xương khô tốc kích di chuyển nhanh (`Tốc độ: 100`), thường ùa ra theo bầy hoặc do Boss triệu hồi (`HP: 2`, `ST: 1`).
++4. **Cung Thủ Xương Minas Morgul (`scenes/enemies/Skeleton Archer/`):** Xạ thủ thông minh có AI thả diều (Kiting AI), lùi khi bị áp sát dưới 85px, né ngang và tự vòng tránh chướng ngại vật/cột đá để lấy tầm nhìn bắn tên (`HP: 4`, `ST: 1`).
++5. **Ác Linh Huyết Quỷ Angmar (`scenes/enemies/Vampire/`):** Quái tinh nhuệ áp sát nhanh trong góc hẹp hầm ngục (`HP: 4`, `ST: 1`).
+ 
+ ### 3.2. Hai Đại Thủ Lĩnh Đa Giai Đoạn (2 Multi-Phase Bosses)
+-1. **Tử Linh Pháp Sư Dol Guldur — Necromancer (`Scene/Enemies/Boss/Necromancer/`):**
++1. **Tử Linh Pháp Sư Dol Guldur — Necromancer (`scenes/enemies/bosses/Necromancer/`):**
+    - Xuất hiện tại phòng Boss các tầng lẻ (Tầng 1, 3, 5...).
+    - **Phase 1 (> 20 HP):** Bắn cầu năng lượng Hắc Ám và triệu hồi 3 Hài Cốt Barrow-wight.
+    - **Phase 2 (11–20 HP):** Kích nổ chuỗi 8 cột độc tố bóng đêm xung quanh.
+    - **Phase 3 (<= 10 HP):** Cuồng nộ tốc độ x1.5, giảm nửa thời gian hồi chiêu.
+-2. **Thủ Lĩnh Kỵ Binh Warg — Orc Rider (`Scene/Enemies/Boss/Orc Rider/`):**
++2. **Thủ Lĩnh Kỵ Binh Warg — Orc Rider (`scenes/enemies/bosses/Orc Rider/`):**
+    - Xuất hiện tại phòng Boss các tầng chẵn (Tầng 2, 4, 6...).
+    - **Phase 1 (> 20 HP):** Bổ giáo cận chiến diện rộng.
+    - **Phase 2 (11–20 HP):** Cảnh báo vệt đỏ rồi cưỡi sói Warg lao tông tốc độ x4.
+@@ -59,10 +59,10 @@
+ - **Chuẩn Hiển Thị Pixel-Art Sắc Nét (`project.godot`):**
+   - Thiết lập `textures/canvas_textures/default_texture_filter=0` (**Nearest-Neighbor**), loại bỏ hoàn toàn hiện tượng mờ nhòe (bilinear blur) khi phóng đại sprite 16x16 và 32x32.
+   - Độ phân giải chuẩn `1152x648` mở rộng lên cửa sổ `1280x720` (`canvas_items` + `expand`).
+-- **Hệ Thống Biểu Tượng Pixel-Art Đồng Bộ (`Scene/UI/UITheme.gd`):**
++- **Hệ Thống Biểu Tượng Pixel-Art Đồng Bộ (`scenes/ui/ui_theme.gd`):**
+   - **Không sử dụng bất kỳ ký tự Unicode Emoji nào.**
+   - Toàn bộ biểu tượng trên nút bấm, thanh trạng thái, túi đồ và thông báo đều được trích xuất bằng `AtlasTexture` từ bộ sprite chuẩn `Assets/Items/Items/Icons.png` (16x16 & 32x32) và `Assets/Map/Dimensional_Portal.png`.
+-- **Bố Cục HUD Trong Trận (`Scene/UI/GameUI.gd`):**
++- **Bố Cục HUD Trong Trận (`scenes/ui/game_ui.gd`):**
+   - **Góc Trên Trái:** Khung trạng thái kiểu *Soul Knight* hiển thị Tim (Máu), Khiên (Giáp tự hồi phục sau 5 giây không nhận sát thương) và tổng Sát thương.
+   - **Góc Trên Phải:** Bảng thông tin Tầng, Số hạ gục, Mã Seed (kèm nút Copy & Lưu nhanh) và Bản đồ chiến thuật **Minimap** thời gian thực.
+   - **Chính Giữa Phía Trên:** Thanh máu Đại Thủ Lĩnh (Boss Health Bar) hiển thị tên Boss, máu hiện tại và Phase chiến đấu.
+--- a/docs/SEED_BUG_ISSUES.md
++++ b/docs/SEED_BUG_ISSUES.md
+@@ -22,7 +22,7 @@
+ 5. Kết quả tại Seed `ALOALO1234`: Quái sinh trùng vào ô cột đá (`WALL_COORD` có `physics_layer_0` va chạm cứng) hoặc trùng vào ô `reserved_trap_positions`.
+ 
+ ### 2. Giải pháp khắc phục
+-- Bổ sung hàm kiểm tra toàn diện `is_valid_entity_spawn_cell(cell: Vector2i)` trong [`dungeon_generator.gd`](../Scene/Map/dungeon_generator.gd):
++- Bổ sung hàm kiểm tra toàn diện `is_valid_entity_spawn_cell(cell: Vector2i)` trong [`dungeon_generator.gd`](../scenes/dungeon/dungeon_generator.gd):
+   - Xác nhận ô đặt quái phải là gạch sàn `get_cell_atlas_coords(LAYER_FLOOR, cell) == FLOOR_COORD` (loại trừ hoàn toàn cột đá `WALL_COORD`).
+   - Xác nhận không nằm trong danh sách bẫy `reserved_trap_positions`.
+   - Quét vùng lân cận `3x3` quanh ô sinh quái không chứa vật cản trang trí `LAYER_DECOR`.
+@@ -58,7 +58,7 @@
+ ### 1. Bước tái hiện bằng Seed
+ 1. Chơi 2 lần liên tiếp cùng mã Seed `BOSS_RUSH_2026`.
+ 2. Mở cùng 1 Rương kho báu ở phòng `TREASURE` thứ nhất.
+-3. Ở code cũ, [`chest.gd`](../Scene/Items/Chest/chest.gd), [`orc.gd`](../Scene/Enemies/Orc/orc.gd), [`armored_orc.gd`](../Scene/Enemies/Armored_orc/armored_orc.gd) sử dụng hàm toàn cục `randf()` và `loot_table.pick_random()` (không gắn với `map_seed`), dẫn đến mỗi lần mở rương ra một món đồ khác nhau.
++3. Ở code cũ, [`chest.gd`](../scenes/items/chest/chest.gd), [`orc.gd`](../scenes/enemies/orc/orc.gd), [`armored_orc.gd`](../scenes/enemies/armored_orc/armored_orc.gd) sử dụng hàm toàn cục `randf()` và `loot_table.pick_random()` (không gắn với `map_seed`), dẫn đến mỗi lần mở rương ra một món đồ khác nhau.
+ 
+ ### 2. Giải pháp khắc phục
+ - Truyền `loot_seed` tất định (được băm từ `map_seed + current_level + room_index`) từ `dungeon_generator.gd` vào từng `Chest` và từng `Enemy`.
+@@ -69,7 +69,7 @@
+ ## Issue #4: `[COMBAT-BUG] Quái cận chiến (Orc, Armored Orc, Skeleton, Vampire) không chém trúng Player khi Player đứng thẳng phía dưới/trên (Seed: ALOALO1234)`
+ 
+ - **Trạng thái:** `Closed / Fixed`
+-- **Mã Seed tái hiện:** `ALOALO1234` (Hoặc chạy trực tiếp scene kiểm thử `res://test_orc_battle.tscn`)
++- **Mã Seed tái hiện:** `ALOALO1234` (Hoặc chạy trực tiếp scene kiểm thử `res://tests/test_orc_battle.tscn`)
+ - **Mức độ nghiêm trọng:** `High` — Lỗi hitbox cận chiến 2D.
+ 
+ ### 1. Bước tái hiện
+@@ -78,7 +78,7 @@
+ 
+ ### 2. Giải pháp khắc phục
+ - Đồng bộ xoay `hitbox.rotation = direction.angle()` cho toàn bộ quái cận chiến (`orc.gd`, `armored_orc.gd`, `skeleton.gd`, `vampire.gd`) và căn chỉnh `CollisionShape2D` đối xứng quanh tâm.
+-- Đã kiểm chứng tự động qua `test_orc_battle.tscn` (5/5 góc độ PASS 100%).
++- Đã kiểm chứng tự động qua `tests/test_orc_battle.tscn` (5/5 góc độ PASS 100%).
+ 
+ ---
+ 
+@@ -96,11 +96,11 @@
+    - `Skeleton Archer` ở góc trên phòng có khoảng cách tới Player trong đoạn `[85, 195]` nhưng bị tường chắn; do không kiểm tra tầm nhìn (`Line of Sight`), nó đứng yên một chỗ bắn tên liên tục vào tường.
+ 
+ ### 2. Giải pháp khắc phục
+-- **Chống khóa cửa nhầm & giữ Player trong phòng ([`room_manager.gd`](../Scene/Map/room_manager.gd), [`dungeon_generator.gd`](../Scene/Map/dungeon_generator.gd)):**
++- **Chống khóa cửa nhầm & giữ Player trong phòng ([`room_manager.gd`](../scenes/dungeon/room_manager.gd), [`dungeon_generator.gd`](../scenes/dungeon/dungeon_generator.gd)):**
+   - Chỉ kích hoạt `lock_room()` khi tọa độ ô gạch của Player thực sự nằm sâu bên trong `room_rect.grow(-2)` (ít nhất 2 ô gạch sau cánh cửa), kèm `spawn_grace_frames` khi chuyển tầng và hàm `_keep_combatants_inside_locked_room()` kéo Player vào lòng phòng.
+-- **Chặn tuyệt đối sát thương xuyên tường/cửa đóng ([`dungeon_generator.gd`](../Scene/Map/dungeon_generator.gd), [`player.gd`](../Scene/Character/Player%201_Pyrois/player.gd), [`arrow.gd`](../Scene/Projectiles/arrow.gd), [`bomb.gd`](../Scene/Projectiles/bomb.gd)):**
++- **Chặn tuyệt đối sát thương xuyên tường/cửa đóng ([`dungeon_generator.gd`](../scenes/dungeon/dungeon_generator.gd), [`player.gd`](../scenes/characters/pyrois/player.gd), [`arrow.gd`](../scenes/projectiles/arrow.gd), [`bomb.gd`](../scenes/projectiles/bomb.gd)):**
+   - Bổ sung hàm `has_line_of_sight(from_global, to_global)` quét tia trên lưới `TileMap` (kiểm tra cả tường/cột `LAYER_FLOOR` và cửa đóng `LAYER_DOOR = 2`). Mọi đòn chém, mũi tên, bom nổ đều bị chặn nếu có tường hoặc cửa đóng chắn giữa.
+-- **Nâng cấp AI `Skeleton Archer` ([`skeleton_archer.gd`](../Scene/Enemies/Skeleton%20Archer/skeleton_archer.gd)):**
++- **Nâng cấp AI `Skeleton Archer` ([`skeleton_archer.gd`](../scenes/enemies/skeleton_archer/skeleton_archer.gd)):**
+   - Kiểm tra `has_line_of_sight()` trước khi bắn: nếu bị tường/cột đá che khuất, `Skeleton Archer` tự động tìm đường đi vòng (`get_smart_steer_direction()`) thay vì đứng yên bắn vào tường; khi đang hồi chiêu giữa 2 phát bắn sẽ di chuyển đảo ngang (Strafe) linh hoạt.
+ - Đã xác minh tự động bằng **Unit Test `UT-11`**.
+ 
+--- a/Menu/game over menu/game_over_menu.gd
++++ b/scenes/menus/game_over_menu/game_over_menu.gd
+@@ -1,6 +1,6 @@
+ extends Control
+ 
+-const UITheme = preload("res://Scene/UI/UITheme.gd")
++const UITheme = preload("res://scenes/ui/ui_theme.gd")
+ 
+ var summary_label: Label = null
+ 
+@@ -79,7 +79,7 @@
+ 	var menu_btn := UITheme.create_button("RETURN TO MAIN MENU", "", Vector2(260, 36), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
+ 	menu_btn.pressed.connect(func():
+ 		get_tree().paused = false
+-		get_tree().change_scene_to_file("res://Menu/main menu/main_menu.tscn")
++		get_tree().change_scene_to_file("res://scenes/menus/main_menu/main_menu.tscn")
+ 	)
+ 	vbox.add_child(menu_btn)
+ 
+@@ -104,7 +104,7 @@
+ 
+ func _on_retry_button_pressed() -> void:
+ 	get_tree().paused = false
+-	get_tree().change_scene_to_file("res://Scene/UI/CharacterSelect.tscn")
++	get_tree().change_scene_to_file("res://scenes/ui/character_select.tscn")
+ 
+ func _on_exit_button_pressed() -> void:
+ 	get_tree().paused = false
+--- a/Menu/game over menu/game_over_menu.tscn
++++ b/scenes/menus/game_over_menu/game_over_menu.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3 uid="uid://ck6udcm1nm3os"]
+ 
+-[ext_resource type="Script" uid="uid://cjut7d07c1p4p" path="res://Menu/game over menu/game_over_menu.gd" id="1_64ni6"]
++[ext_resource type="Script" uid="uid://cjut7d07c1p4p" path="res://scenes/menus/game_over_menu/game_over_menu.gd" id="1_64ni6"]
+ 
+ [sub_resource type="SystemFont" id="SystemFont_u2xv2"]
+ font_names = PackedStringArray("Impact")
+--- a/Menu/main menu/main_menu.gd
++++ b/scenes/menus/main_menu/main_menu.gd
+@@ -1,11 +1,11 @@
+ class_name MainMenu
+ extends Control
+ 
+-const UITheme = preload("res://Scene/UI/UITheme.gd")
++const UITheme = preload("res://scenes/ui/ui_theme.gd")
+ 
+ @onready var start_button: Button = $MarginContainer/HBoxContainer/VBoxContainer/Start_button as Button
+ @onready var exit_button: Button = $MarginContainer/HBoxContainer/VBoxContainer/Exit_button as Button
+-@onready var start_level = preload("res://Scene/UI/CharacterSelect.tscn") as PackedScene
++@onready var start_level = preload("res://scenes/ui/character_select.tscn") as PackedScene
+ 
+ var seed_input: LineEdit = null
+ var seed_status_lbl: Label = null
+--- a/Menu/main menu/main_menu.tscn
++++ b/scenes/menus/main_menu/main_menu.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3 uid="uid://xvemgenba6x2"]
+ 
+-[ext_resource type="Script" uid="uid://bwp8oxkw0i6tm" path="res://Menu/main menu/main_menu.gd" id="1_8f8xy"]
++[ext_resource type="Script" uid="uid://bwp8oxkw0i6tm" path="res://scenes/menus/main_menu/main_menu.gd" id="1_8f8xy"]
+ [ext_resource type="Texture2D" uid="uid://dahpbk2urojhs" path="res://Assets/UI/Background/Dungeon.png" id="1_cok42"]
+ 
+ [sub_resource type="SystemFont" id="SystemFont_8f8xy"]
+--- a/Menu/pause menu/pause_menu.gd
++++ b/scenes/menus/pause_menu/pause_menu.gd
+@@ -1,6 +1,6 @@
+ extends Control
+ 
+-const UITheme = preload("res://Scene/UI/UITheme.gd")
++const UITheme = preload("res://scenes/ui/ui_theme.gd")
+ 
+ var info_label: Label = null
+ 
+@@ -77,7 +77,7 @@
+ 	var menu_btn := UITheme.create_button("RETURN TO MAIN MENU", "", Vector2(260, 36), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
+ 	menu_btn.pressed.connect(func():
+ 		get_tree().paused = false
+-		get_tree().change_scene_to_file("res://Menu/main menu/main_menu.tscn")
++		get_tree().change_scene_to_file("res://scenes/menus/main_menu/main_menu.tscn")
+ 	)
+ 	vbox.add_child(menu_btn)
+ 
+--- a/Menu/pause menu/pause_menu.tscn
++++ b/scenes/menus/pause_menu/pause_menu.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3 uid="uid://cxuf6kvn5wh7r"]
+ 
+-[ext_resource type="Script" uid="uid://c316i2wh2ph5v" path="res://Menu/pause menu/pause_menu.gd" id="1_icuge"]
++[ext_resource type="Script" uid="uid://c316i2wh2ph5v" path="res://scenes/menus/pause_menu/pause_menu.gd" id="1_icuge"]
+ 
+ [sub_resource type="SystemFont" id="SystemFont_u2xv2"]
+ font_names = PackedStringArray("Impact")
+--- a/project.godot
++++ b/project.godot
+@@ -11,13 +11,13 @@
+ [application]
+ 
+ config/name="Keep Fighting And Earning"
+-run/main_scene="uid://xvemgenba6x2"
++run/main_scene="res://scenes/menus/main_menu/main_menu.tscn"
+ config/features=PackedStringArray("4.7", "GL Compatibility")
+ 
+ [autoload]
+ 
+-GameManager="*uid://qw6g4q4dop7n"
+-AudioManager="*res://Scene/AudioManager.gd"
++GameManager="*res://scripts/core/game_manager.gd"
++AudioManager="*res://scripts/core/audio_manager.gd"
+ 
+ [display]
+ 
+--- a/README.md
++++ b/README.md
+@@ -1,11 +1,20 @@
+ # Keep Fighting And Earning — Procedural Dungeon (Roguelike có Seed Tái Lập)
+ 
+ [![Godot Engine](https://img.shields.io/badge/Godot_Engine-4.7-478cbf?logo=godotengine&logoColor=white)](https://godotengine.org)
+-[![Tests](https://img.shields.io/badge/Tests-19_Unit_%7C_500_Property_%7C_5_Combat_PASS-2ea44f)](#6-github-evidence--bộ-kiểm-thử-tự-động)
++[![Tests](https://img.shields.io/badge/Tests-headless_suite-478cbf)](#6-kiểm-thử-và-bằng-chứng)
+ [![Security](https://img.shields.io/badge/Security-Hardened_Input_%26_JSON_Schema-blue)](docs/SECURITY.md)
+ [![Balance](https://img.shields.io/badge/Balance_Workflow-Single_Source_of_Truth-purple)](docs/BALANCE_WORKFLOW.md)
+ 
+ **Keep Fighting And Earning** (*Biên Niên Sử Trung Địa: Hầm Mỏ Moria*) là tựa game **2D Top-Down Action Roguelike / Procedural Dungeon** lấy bối cảnh sử thi **Chúa Tể Của Những Chiếc Nhẫn (The Lord of the Rings)** kết hợp lối chơi hành động nhịp độ cao của *Soul Knight*, phát triển trên **Godot Engine 4**. Trò chơi ứng dụng thuật toán **Đồ thị Cây Khung & Tìm kiếm Chiều rộng (Graph Spanning Tree + BFS)** kết hợp **Thủy Tinh Cầu Palantír — Seed tái lập 100% (Deterministic Seed)**, đảm bảo cùng một Seed luôn kiến tạo chính xác cùng một cấu trúc hầm mỏ Moria, vị trí bẫy, quái vật, đuốc lửa gắn tường và vật phẩm rơi để phục vụ chơi lại (Replay), kiểm thử tự động và gỡ lỗi (Debug).
++
++
++Mở thư mục chứa `project.godot` bằng **Godot 4.7.2** (phiên bản đã dùng trong kiểm
++chứng hiện tại). Windows: đặt `GODOT_BIN` rồi chạy `run_game.bat`; hướng dẫn đầy đủ
++ở mục 7. Xem [cấu trúc dự án](docs/architecture/PROJECT_STRUCTURE.md),
++[hướng dẫn đóng góp](CONTRIBUTING.md) và [báo cáo tái cấu trúc](docs/architecture/RESTRUCTURE_REPORT.md).
++
++Các nhãn PASS trong bảng chức năng bên dưới là ghi nhận lịch sử của dự án. Kết quả
++tái chạy, giới hạn môi trường và log của bản hiện tại nằm trong báo cáo tái cấu trúc.
+ 
+ ---
+ 
+@@ -13,14 +22,14 @@
+ 
+ | Hạng mục bắt buộc | Trạng thái | Hiện thực kỹ thuật & Bằng chứng trong mã nguồn |
+ | :--- | :---: | :--- |
+-| **Sinh Dungeon hợp lệ (Graph/Grid)** | `[PASS]` | Thuật toán tạo cây khung 16 phòng/tầng (`E = V - 1 = 15`), hành lang rộng 5 ô, BFS đặt Boss xa nhất (`Scene/Map/dungeon_generator.gd`). |
++| **Sinh Dungeon hợp lệ (Graph/Grid)** | `[PASS]` | Thuật toán tạo cây khung 16 phòng/tầng (`E = V - 1 = 15`), hành lang rộng 5 ô, BFS đặt Boss xa nhất (`scenes/dungeon/dungeon_generator.gd`). |
+ | **Cùng Seed tạo cùng Dungeon** | `[PASS]` | Băm `map_seed` khởi tạo `RandomNumberGenerator` độc lập cho sơ đồ phòng, bẫy, quái và rương (`loot_seed`). Kiểm chứng trên 100 Seeds (`PROP-01`). |
+ | **Combat thời gian thực** | `[PASS]` | Cơ chế Máu + Giáp tự hồi, I-Frames tăng tốc thoát vây, kiểm tra tầm nhìn (`has_line_of_sight`) chặn đánh xuyên tường/cửa đóng (`player.gd`, `arrow.gd`, `bomb.gd`). |
+-| **Hệ thống Buff / Nerf tập trung** | `[PASS]` | Quản lý toàn bộ chỉ số 4 Tướng, 5 Quái, 2 Boss tại một nguồn duy nhất (`Scene/BalanceConfig.gd`) kèm quy trình [`.agent/workflows/balance-unit.md`](.agent/workflows/balance-unit.md). |
+-| **Inventory & Trang bị** | `[PASS]` | Túi đồ 16 ô (`4x4`), 3 ô Trang bị (`Mũ`, `Giáp`, `Vũ khí`), Hotbar 9 phím (`1`–`9`), mở bằng phím `I` / `Tab` (`Scene/Character/InventoryManager.gd`). |
+-| **Tối thiểu 3 loại Enemy** | `[PASS]` (5 loại) | `Orc Moria`, `Uruk-hai Thiết Giáp`, `Hài Cốt Barrow-wight`, `Cung Thủ Xương Minas Morgul` (AI thả diều + né tường), `Ác Linh Huyết Quỷ Angmar` (`Scene/Enemies/`). |
+-| **Tối thiểu 1 Boss** | `[PASS]` (2 Boss) | `Tử Linh Pháp Sư Dol Guldur` (Tầng lẻ, 3 Phase) & `Thủ Lĩnh Kỵ Binh Warg` (Tầng chẵn, 3 Phase) kèm Thanh Máu Boss động (`Scene/Enemies/Boss/`). |
+-| **Lưu Seed & Replay một Run** | `[PASS]` (Kép) | Lưu/Copy Seed Palantír + Phát lại thao tác 60Hz (`Action Replay`) hoặc Chơi lại cùng Seed (`Seed Replay`) (`Scene/GameManager.gd`). |
++| **Hệ thống Buff / Nerf tập trung** | `[PASS]` | Quản lý toàn bộ chỉ số 4 Tướng, 5 Quái, 2 Boss tại một nguồn duy nhất (`scripts/core/balance_config.gd`) kèm quy trình [`.agent/workflows/balance-unit.md`](.agent/workflows/balance-unit.md). |
++| **Inventory & Trang bị** | `[PASS]` | Túi đồ 16 ô (`4x4`), 3 ô Trang bị (`Mũ`, `Giáp`, `Vũ khí`), Hotbar 9 phím (`1`–`9`), mở bằng phím `I` / `Tab` (`scenes/characters/inventory_manager.gd`). |
++| **Tối thiểu 3 loại Enemy** | `[PASS]` (5 loại) | `Orc Moria`, `Uruk-hai Thiết Giáp`, `Hài Cốt Barrow-wight`, `Cung Thủ Xương Minas Morgul` (AI thả diều + né tường), `Ác Linh Huyết Quỷ Angmar` (`scenes/enemies/`). |
++| **Tối thiểu 1 Boss** | `[PASS]` (2 Boss) | `Tử Linh Pháp Sư Dol Guldur` (Tầng lẻ, 3 Phase) & `Thủ Lĩnh Kỵ Binh Warg` (Tầng chẵn, 3 Phase) kèm Thanh Máu Boss động (`scenes/enemies/bosses/`). |
++| **Lưu Seed & Replay một Run** | `[PASS]` (Kép) | Lưu/Copy Seed Palantír + Phát lại thao tác 60Hz (`Action Replay`) hoặc Chơi lại cùng Seed (`Seed Replay`) (`scripts/core/game_manager.gd`). |
+ | **Bầu không khí Ngục tối & Âm thanh** | `[PASS]` | Ánh sáng heo hắt (`CanvasModulate` + `PointLight2D`), đuốc sắt đính trực tiếp lên gạch tường, bóng ma xanh (`dungeon_atmosphere.gd`) & Soundtrack/SFX (`AudioManager.gd`). |
+ | **Bảo mật (Security Hardening)** | `[PASS]` | Whitelist `sanitize_seed`, kiểm tra tràn số `NaN`/`INF` trong Replay JSON, giới hạn file lưu `2 MB` (`docs/SECURITY.md`). |
+ | **GitHub Evidence (5/5)** | `[PASS]` | Unit Tests (`19/19`), Property Tests (`500/500`), Benchmark (`10..50` phòng), 5 Seed Bug Issues (`docs/SEED_BUG_ISSUES.md`), GitHub Actions CI (`.github/workflows/ci.yml`). |
+@@ -29,7 +38,7 @@
+ 
+ ## 2. Đoàn Hộ Nhẫn Tiền Thưởng (4 Playable Heroes — Bối Cảnh Trung Địa)
+ 
+-Toàn bộ chỉ số nhân vật được đồng bộ tự động từ [`Scene/BalanceConfig.gd`](Scene/BalanceConfig.gd) (xem chi tiết quy trình Buff/Nerf tại [`docs/BALANCE_WORKFLOW.md`](docs/BALANCE_WORKFLOW.md)):
++Toàn bộ chỉ số nhân vật được đồng bộ tự động từ [`scripts/core/balance_config.gd`](scripts/core/balance_config.gd) (xem chi tiết quy trình Buff/Nerf tại [`docs/BALANCE_WORKFLOW.md`](docs/BALANCE_WORKFLOW.md)):
+ 
+ | Ảnh đại diện | Tên Tướng | Danh xưng Trung Địa | Tốc độ | Máu | Giáp | ST Cơ bản | Kỹ năng đặc biệt (`Phím Q` / `Chuột phải`) |
+ | :---: | :--- | :--- | :---: | :---: | :---: | :---: | :--- |
+@@ -65,20 +74,20 @@
+ 
+ ## 4. Điểm Nhấn Giao Diện, Sương Mù Chiến Tranh & Âm Thanh
+ 
+-- **Sương Mù Chiến Tranh & Bản Đồ Nhỏ — Minimap Fog of War (`Scene/UI/GameUI.gd`):**
++- **Sương Mù Chiến Tranh & Bản Đồ Nhỏ — Minimap Fog of War (`scenes/ui/game_ui.gd`):**
+   - Che giấu 100% các phòng chưa bước chân tới trong bóng tối dày đặc theo phong cách Đế Chế.
+   - Tự động mở sáng phòng tương ứng khi nhân vật đặt chân qua cửa ngục (`Xanh lá`: Xuất phát, `Xanh dương`: Đã dọn sạch, `Cam`: Đang giao tranh, `Vàng`: Kho báu, `Đỏ`: Thủ lĩnh Boss).
+   - Đường hành lang chỉ hiển thị hoàn chỉnh khi đã khám phá cả hai đầu.
+-- **Bầu Không Khí Ngục Tối U Ám & Đèn Lồng Linh Hồn (`Scene/Map/dungeon_atmosphere.gd`):**
++- **Bầu Không Khí Ngục Tối U Ám & Đèn Lồng Linh Hồn (`scenes/dungeon/dungeon_atmosphere.gd`):**
+   - Môi trường ngục tối trầm mặc sâu thẳm (`Color(0.06, 0.06, 0.10)`), nhân vật mang đèn lồng soi rọi bán kính xung quanh.
+   - Đuốc treo tường tại các phòng chưa khám phá ở trạng thái tắt lịm, chỉ bừng sáng khi người chơi tiến vào phòng.
+   - Những bóng ma xanh lượn lờ phát sáng huyền bí trong các gian phòng đã thức giấc.
+-- **Cơ Chế Bẫy Kim Cọc Vật Lý — Spike Trap (`Scene/Map/spike_trap.gd`):**
++- **Cơ Chế Bẫy Kim Cọc Vật Lý — Spike Trap (`scenes/dungeon/spike_trap.gd`):**
+   - Quái vật và kẻ địch hoàn toàn miễn nhiễm sát thương từ bẫy kim cọc, chỉ người chơi chịu tổn thất khi dẫm phải.
+   - Khi cọc chông đâm trồi lên, khối rào cản vật lý `StaticBody2D` kích hoạt chặn đứng hoàn toàn người chơi và quái vật.
+   - Thời gian duy trì cọc nhô lên được kéo dài đến `2.8s`.
+ - **Giao Diện Trung Cổ Trang Nhã:** Toàn bộ các icon logo pixel vụn vặt đã được loại bỏ, mang lại giao diện phong cách chữ Gothic cổ điển đậm chất sử thi.
+-- **Hệ Thống Soundtrack & SFX (`Scene/AudioManager.gd`):**
++- **Hệ Thống Soundtrack & SFX (`scripts/core/audio_manager.gd`):**
+   - Đồng bộ bản nhạc hùng tráng **Glorious Morning (Waterflame — Age of War)** cho toàn bộ **Main Menu (`bgm_menu.wav`)**, **Khám phá Ngục tối (`bgm_dungeon.wav`)** và **Giao tranh Boss (`bgm_boss.wav`)**.
+   - Hiệu ứng âm thanh chiến đấu (`sfx_slash`, `sfx_hit`, `sfx_pickup`, `sfx_portal`) kèm nút bật/tắt âm thanh nhanh (`Phím N`).
+ 
+@@ -100,56 +109,87 @@
+ 
+ ---
+ 
+-## 6. GitHub Evidence & Bộ Kiểm Thử Tự Động
++## 6. Kiểm thử và bằng chứng
+ 
+-Chạy toàn bộ bộ kiểm thử tự động (Unit Tests, Security Tests, Property-Based Tests 100 Seeds, Combat Tests & Benchmark) bằng lệnh:
++Kiểm tra tĩnh không cần Godot, dùng Python 3 tiêu chuẩn:
++
++```sh
++python tools/check_project_structure.py
++```
++
++Trên Windows, sau khi đặt `GODOT_BIN` như mục 7:
+ 
+ ```bat
+-.\run_tests.bat
++run_tests.bat
+ ```
+ 
+-1. **Unit, Security, UI & Audio Tests ([`tests/test_dungeon_generator_unit.gd`](tests/test_dungeon_generator_unit.gd)):** `19/19 PASS` (`UT-01` đến `UT-13` kiểm tra cấu trúc đồ thị, BFS Boss, vùng cấm bẫy, chống XSS/SQLi/Path Traversal, Z-Index cửa đóng, vị trí thực tế trên Minimap, Đuốc/Bóng ma xanh, `AudioManager` nạp nhạc Glorious Morning, chặn đánh xuyên tường/khóa phòng nhầm tại Seed `SEED-Q244GL`, bắn cung Miya không bị stunlock và cấu hình cân bằng tập trung `BalanceConfig`).
+-2. **Property-Based Tests ([`tests/test_dungeon_properties.gd`](tests/test_dungeon_properties.gd)):** `5/5 PASS` (`500/500` phép kiểm chứng trên 100 Seeds ngẫu nhiên cho tính tái lập, liên thông đồ thị, Flood-Fill lưới gạch, tối ưu BFS Boss và an toàn tọa độ sinh thực thể).
+-3. **Combat & Inventory Tests ([`Scene/Test/test_combat.gd`](Scene/Test/test_combat.gd)):** `5/5 PASS` (Kiểm chứng trừ Giáp trước Máu, hồi Giáp, cộng dồn chỉ số Trang bị và bất tử I-Frames).
+-4. **Benchmark ([`docs/BENCHMARK_REPORT.md`](docs/BENCHMARK_REPORT.md)):** Đo thời gian sinh ngục từ `10` đến `50` phòng.
+-5. **Tài liệu Thiết kế, Bảo mật & Seed Bug Issues:** Xem tại [`docs/GAME_DESIGN_DOCUMENT.md`](docs/GAME_DESIGN_DOCUMENT.md), [`docs/SECURITY.md`](docs/SECURITY.md) và [`docs/SEED_BUG_ISSUES.md`](docs/SEED_BUG_ISSUES.md).
+-6. **BT Cá Nhân 3 — Biến Thể VT-075 (Reviewer Role & Concurrency Testing):**
+-   - **Mã sinh viên:** 23001837 — Bùi Quang Chiến (Nhóm SE2026-T19).
+-   - **Change Request:** Thêm vai trò Reviewer có quyền đọc và phê duyệt run nhưng không được sửa dữ liệu gốc ([`Scene/Review/review_service.gd`](Scene/Review/review_service.gd)).
+-   - **Lệnh chạy kiểm thử VT-075 (24/24 PASS):**
+-     ```powershell
+-     & "B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe" --headless "res://tests/test_reviewer_concurrency.tscn"
+-     ```
+-   - **Lệnh chạy kiểm chứng tải 120 tác vụ đồng thời (p95 <= 3.5s):**
+-     ```powershell
+-     & "B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe" --headless "res://tests/vt075/load_p95.tscn"
+-     ```
+-   - **Báo cáo kỹ thuật chi tiết:**
+-     - Đặc tả & AI Plan Review: [`docs/vt075/01_spec_and_plan.md`](docs/vt075/01_spec_and_plan.md)
+-     - Chiến lược kiểm thử & Concurrency: [`docs/vt075/02_test_strategy.md`](docs/vt075/02_test_strategy.md)
+-     - Đánh giá Mutation & Đo tải: [`docs/vt075/03_test_evaluation.md`](docs/vt075/03_test_evaluation.md)
+-     - Ma trận truy vết, AI Usage Log & Reflection: [`docs/vt075/04_engineering_evidence_and_reflection.md`](docs/vt075/04_engineering_evidence_and_reflection.md)
++Runner import dự án rồi chạy unit/security/UI/audio, property (100 seed × 5 bất
++biến), Orc hitbox (5 hướng), reviewer/concurrency, mechanics, backdrop và benchmark
++(10/16/25/36/50 phòng × 25 lượt). Log lưu ở `.godot-test-results/` (không commit).
++Dùng `run_tests.bat -SkipBenchmark` khi chỉ cần kiểm thử chức năng. Runner dừng nếu
++exit code khác 0 hoặc log có lỗi script/resource; không coi riêng exit 0 là đủ.
+ 
+----
++Trên Linux/macOS hoặc để chạy riêng từng bộ, dùng Godot trên PATH:
+ 
+-## 7. Khởi Chạy Trò Chơi
++```sh
++godot --headless --path . --editor --import --quit
++godot --headless --path . res://tests/test_dungeon_generator_unit.tscn
++godot --headless --path . res://tests/test_dungeon_properties.tscn
++godot --headless --path . res://tests/test_orc_battle.tscn
++godot --headless --path . res://tests/test_reviewer_concurrency.tscn
++godot --headless --path . res://tests/test_new_mechanics.tscn
++godot --headless --path . res://tests/test_visual_backdrop.tscn
++godot --headless --path . res://benchmarks/benchmark_dungeon_generator.tscn
++```
+ 
+-- Chạy trực tiếp file [`run_game.bat`](run_game.bat) (hoặc mở `project.godot` bằng **Godot Engine 4.3+** và nhấn `F5`).
++VT-075 (23001837 — Bùi Quang Chiến, nhóm SE2026-T19) giữ service tại
++[`scripts/review/review_service.gd`](scripts/review/review_service.gd), harness và công
++cụ tại [`tests/vt075/`](tests/vt075/). Chạy kiểm chứng tải bằng:
+ 
+----
++```sh
++godot --headless --path . res://tests/vt075/load_p95.tscn
++```
+ 
+-## 8. Hướng Dẫn Vận Hành Qua Docker (Dockerization)
++Các tài liệu VT-075 `01_spec_and_plan.md` đến `04_engineering_evidence_and_reflection.md`
++được README cũ nhắc tới nhưng không có trong bản ZIP này. Cần xin lại bản gốc từ nhóm;
++không xem chúng là bằng chứng đã có. Công cụ tạo PDF vẫn được giữ nguyên chức năng.
+ 
+-Dự án đã được Dockerize hoàn chỉnh với cấu hình Multi-stage Dockerfile và Nginx WebAssembly server:
++Benchmark đầy đủ, phương pháp và giới hạn: [`benchmarks/README.md`](benchmarks/README.md).
++QA thủ công: [`docs/qa/`](docs/qa/). Báo cáo cũ ở `docs/BENCHMARK_REPORT.md` và
++`benchmarks/reports/` giữ số liệu lịch sử; số liệu tái chạy có nhãn riêng trong
++[`docs/architecture/RESTRUCTURE_REPORT.md`](docs/architecture/RESTRUCTURE_REPORT.md).
+ 
+-### 8.1. Khởi chạy Web Game chơi trực tiếp trên trình duyệt
+-```bash
++## 7. Khởi chạy trò chơi
++
++Dự án khai báo Godot **4.7**, bản kiểm chứng hiện tại dùng **4.7.2-stable**. Không
++đổi engine hoặc dependency trong lần tái cấu trúc này.
++
++Mở `project.godot` trong Godot và nhấn F5, hoặc:
++
++```powershell
++$env:GODOT_BIN = 'C:\duong-dan\Godot_v4.7.2-stable_win64_console.exe'
++.\run_game.bat
++```
++
++`run_game.bat`, `run_tests.bat` và công cụ VT-075 ưu tiên `GODOT_BIN`, sau đó tìm
++`godot`/`godot4` trên PATH. Chạy lệnh trong thư mục chứa `project.godot`; các wrapper
++Windows tự xác định gốc dự án. Trên Linux/macOS: `godot --path .`.
++
++## 8. Docker và CI
++
++Các lệnh cấu hình hiện có:
++
++```sh
+ docker compose up game --build
+-```
+-Mở trình duyệt truy cập: `http://localhost:8080`
+-
+-### 8.2. Chạy toàn bộ bộ kiểm thử tự động Headless
+-```bash
+ docker compose run --rm test
+ ```
+-*Xem hướng dẫn chi tiết tại [`docs/DUNGEON_FOG_AND_BALANCE.md`](docs/DUNGEON_FOG_AND_BALANCE.md).*
++
++Web dự kiến tại `http://localhost:8080`; target `test` hiện chỉ chạy bộ unit, không
++phải toàn bộ test suite. **Chưa kiểm chứng Docker/Web export** trong môi trường này.
++Docker đang dùng `barichello/godot-ci:4.3`, CI pin `4.3.0`, khác engine 4.7 của dự án;
++chưa thể coi các cấu hình này là tương thích. `Dockerfile` còn dùng `|| true` ở bước
++export nên có thể che lỗi. Giữ nguyên phiên bản và kiến trúc pipeline theo phạm vi
++yêu cầu; chỉ cập nhật đường dẫn test/benchmark đã di chuyển trong CI. Đề xuất xử lý
++riêng và các giới hạn nằm trong báo cáo tái cấu trúc.
++
++Xem thêm [`docs/DUNGEON_FOG_AND_BALANCE.md`](docs/DUNGEON_FOG_AND_BALANCE.md).
+--- a/run_game.bat
++++ b/run_game.bat
+@@ -1,24 +1,13 @@
+ @echo off
+-setlocal EnableDelayedExpansion
++setlocal
+ cd /d "%~dp0"
+-
+-title Keep Fighting And Earning
+-
+-set "GODOT_BIN=B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64.exe"
+-if not exist "!GODOT_BIN!" (
+-    set "GODOT_BIN=B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe"
++if defined GODOT_BIN goto launch
++for %%I in (godot.exe godot4.exe) do (
++    if not "%%~$PATH:I"=="" set "GODOT_BIN=%%~$PATH:I"
+ )
+-if not exist "!GODOT_BIN!" (
+-    for %%I in (godot.exe godot4.exe) do (
+-        if not "%%~$PATH:I"=="" set "GODOT_BIN=%%~$PATH:I"
+-    )
+-)
+-if not exist "!GODOT_BIN!" (
+-    echo [ERROR] Khong tim thay Godot tai B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64.exe
+-    echo Vui long kiem tra lai duong dan Godot Engine!
+-    pause
+-    exit /b 1
+-)
+-
+-start "" "!GODOT_BIN!" --path .
+-exit /b 0
++if defined GODOT_BIN goto launch
++echo [ERROR] Godot not found. Set GODOT_BIN to your Godot 4.7.2 executable or add it to PATH.
++exit /b 1
++:launch
++start "" "%GODOT_BIN%" --path "%~dp0."
++exit /b %ERRORLEVEL%
+--- a/run_tests.bat
++++ b/run_tests.bat
+@@ -1,77 +1,5 @@
+ @echo off
+-setlocal EnableDelayedExpansion
++setlocal
+ cd /d "%~dp0"
+-
+-title Keep Fighting And Earning - Automated Test Suite
+-
+-set "GODOT_BIN=B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe"
+-if not exist "!GODOT_BIN!" (
+-    set "GODOT_BIN=B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64.exe"
+-)
+-if not exist "!GODOT_BIN!" (
+-    for %%I in (godot.exe godot4.exe) do (
+-        if not "!GODOT_BIN!"=="" set "GODOT_BIN=%%~$PATH:I"
+-    )
+-)
+-if not exist "!GODOT_BIN!" (
+-    echo [ERROR] Khong tim thay Godot tai B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe
+-    echo Vui long kiem tra lai duong dan Godot Engine!
+-    pause
+-    exit /b 1
+-)
+-
+-echo ==================================================================
+-echo   KEEP FIGHTING AND EARNING - AUTOMATED TEST SUITE
+-echo   Godot: !GODOT_BIN!
+-echo ==================================================================
+-
+-echo.
+-echo [1/4] Chay Unit Tests (UT-01 .. UT-13)...
+-"!GODOT_BIN!" --headless --path . "res://tests/test_dungeon_generator_unit.tscn"
+-if !ERRORLEVEL! NEQ 0 (
+-    echo [THAT BAI] Unit Tests gap loi!
+-    pause
+-    exit /b 1
+-)
+-
+-echo.
+-echo [2/4] Chay Property-Based Tests (100 Seeds x 5 Invariants)...
+-"!GODOT_BIN!" --headless --path . "res://tests/test_dungeon_properties.tscn"
+-if !ERRORLEVEL! NEQ 0 (
+-    echo [THAT BAI] Property Tests gap loi!
+-    pause
+-    exit /b 1
+-)
+-
+-echo.
+-echo [3/4] Chay Combat Regression Tests (5 huong hitbox Orc)...
+-"!GODOT_BIN!" --headless --path . "res://test_orc_battle.tscn"
+-if !ERRORLEVEL! NEQ 0 (
+-    echo [THAT BAI] Combat Regression Tests gap loi!
+-    pause
+-    exit /b 1
+-)
+-
+-echo.
+-echo [4/5] Chay Benchmark Hieu Nang Bo Sinh Nguc...
+-"!GODOT_BIN!" --headless --path . "res://tests/benchmark_dungeon_generator.tscn"
+-if !ERRORLEVEL! NEQ 0 (
+-    echo [THAT BAI] Benchmark gap loi!
+-    pause
+-    exit /b 1
+-)
+-
+-echo.
+-echo [5/5] Chay VT-075 Reviewer Role va Concurrency Tests (24/24 PASS)...
+-"!GODOT_BIN!" --headless --path . "res://tests/test_reviewer_concurrency.tscn"
+-if !ERRORLEVEL! NEQ 0 (
+-    echo [THAT BAI] VT-075 Concurrency Tests gap loi!
+-    pause
+-    exit /b 1
+-)
+-
+-echo.
+-echo ==================================================================
+-echo   [THANH CONG] TAT CA UNIT, PROPERTY, COMBAT, BENCHMARK VA VT-075 PASS 100%%!
+-echo ==================================================================
+-pause
++powershell -NoProfile -File "%~dp0tools\run_tests.ps1" %*
++exit /b %ERRORLEVEL%
+--- a/Scene/Character/Player 1_Pyrois/player.gd
++++ b/scenes/characters/pyrois/player.gd
+@@ -42,7 +42,7 @@
+ var pending_rmb_skill: bool = false
+ var current_aim_offset: Vector2 = Vector2.RIGHT * 32.0
+ 
+-const BalanceData = preload("res://Scene/BalanceConfig.gd")
++const BalanceData = preload("res://scripts/core/balance_config.gd")
+ @export var hero_balance_id: String = "pyrois"
+ 
+ @onready var animated_sprite = $AnimatedSprite2D
+@@ -84,7 +84,7 @@
+ 	inventory.equipment_changed.connect(_on_equipment_changed)
+ 
+ 	# Trang bị khởi đầu cân bằng: 1 Bình máu nhỏ
+-	var starter_potion = preload("res://Scene/Items/health_potion.tres")
++	var starter_potion = preload("res://scenes/items/health_potion.tres")
+ 	inventory.add_item(starter_potion)
+ 
+ func get_aim_world_position() -> Vector2:
+--- a/Scene/Character/Player 1_Pyrois/player.tscn
++++ b/scenes/characters/pyrois/player.tscn
+@@ -1,14 +1,14 @@
+ [gd_scene format=3 uid="uid://68p8v41b5p2u"]
+ 
+-[ext_resource type="Script" uid="uid://k6tqs5ecod6l" path="res://Scene/Character/Player 1_Pyrois/player.gd" id="1_kne1u"]
++[ext_resource type="Script" uid="uid://k6tqs5ecod6l" path="res://scenes/characters/pyrois/player.gd" id="1_kne1u"]
+ [ext_resource type="Texture2D" uid="uid://dahxvyxkbbyfw" path="res://Assets/Character/Soldier/Soldier/Soldier_Attack01.png" id="2_cxr5p"]
+ [ext_resource type="Texture2D" uid="uid://47ovclbqbopo" path="res://Assets/Character/Soldier/Soldier/Soldier_Idle.png" id="2_e80uo"]
+ [ext_resource type="Texture2D" uid="uid://bik5506flef6b" path="res://Assets/Character/Soldier/Soldier/Soldier_Walk.png" id="3_cxr5p"]
+ [ext_resource type="Texture2D" uid="uid://k146yosqp16l" path="res://Assets/Character/Soldier/Soldier/Soldier_Death.png" id="3_tdg3f"]
+ [ext_resource type="Texture2D" uid="uid://cr85v4x3dbfhj" path="res://Assets/Character/Soldier/Soldier/Soldier_Attack02.png" id="3_y5mr3"]
+ [ext_resource type="Texture2D" uid="uid://bc4itlskv021l" path="res://Assets/Character/Soldier/Soldier/Soldier_Hurt.png" id="4_dtqjt"]
+-[ext_resource type="Script" uid="uid://cqm4110dqn65t" path="res://Scene/Character/InventoryManager.gd" id="7_rlyac"]
+-[ext_resource type="PackedScene" uid="uid://c88b4e2b3wqrw" path="res://Scene/UI/GameUI.tscn" id="8_ec6a5"]
++[ext_resource type="Script" uid="uid://cqm4110dqn65t" path="res://scenes/characters/inventory_manager.gd" id="7_rlyac"]
++[ext_resource type="PackedScene" uid="uid://c88b4e2b3wqrw" path="res://scenes/ui/game_ui.tscn" id="8_ec6a5"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_cgsek"]
+ atlas = ExtResource("2_cxr5p")
+--- a/Scene/Character/Player 2_Olaf/player_2.gd
++++ b/scenes/characters/olaf/player.gd
+@@ -1,4 +1,4 @@
+-extends "res://Scene/Character/Player 1_Pyrois/player.gd"
++extends "res://scenes/characters/pyrois/player.gd"
+ 
+ @export var buff_duration: float = 5.0
+ @export var damage_multiplier: int = 2
+--- a/Scene/Character/Player 2_Olaf/player_2.tscn
++++ b/scenes/characters/olaf/player.tscn
+@@ -1,14 +1,14 @@
+ [gd_scene format=3 uid="uid://00mmpidcewu2"]
+ 
+-[ext_resource type="Script" uid="uid://dmkm7eehss4qb" path="res://Scene/Character/Player 2_Olaf/player_2.gd" id="1_wmu1l"]
++[ext_resource type="Script" uid="uid://dmkm7eehss4qb" path="res://scenes/characters/olaf/player.gd" id="1_wmu1l"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Knight/Knight_Attack01.png" id="2_atk1"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Knight/Knight_Attack02.png" id="3_atk2"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Knight/Knight_Death.png" id="4_death"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Knight/Knight_Hurt.png" id="5_hurt"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Knight/Knight_Idle.png" id="6_idle"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Knight/Knight_Walk.png" id="7_walk"]
+-[ext_resource type="Script" uid="uid://cqm4110dqn65t" path="res://Scene/Character/InventoryManager.gd" id="8_inv"]
+-[ext_resource type="PackedScene" uid="uid://c88b4e2b3wqrw" path="res://Scene/UI/GameUI.tscn" id="9_gui"]
++[ext_resource type="Script" uid="uid://cqm4110dqn65t" path="res://scenes/characters/inventory_manager.gd" id="8_inv"]
++[ext_resource type="PackedScene" uid="uid://c88b4e2b3wqrw" path="res://scenes/ui/game_ui.tscn" id="9_gui"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_k1"]
+ atlas = ExtResource("2_atk1")
+--- a/Scene/Character/Player 3_Miya/player_3.gd
++++ b/scenes/characters/miya/player.gd
+@@ -1,4 +1,4 @@
+-extends "res://Scene/Character/Player 1_Pyrois/player.gd"
++extends "res://scenes/characters/pyrois/player.gd"
+ 
+ @export var arrow_scene: PackedScene
+ @export var bomb_scene: PackedScene
+--- a/Scene/Character/Player 3_Miya/player_3.tscn
++++ b/scenes/characters/miya/player.tscn
+@@ -1,16 +1,16 @@
+ [gd_scene format=3 uid="uid://c23vpswb8oj27"]
+ 
+-[ext_resource type="Script" uid="uid://bw7ufr4all07" path="res://Scene/Character/Player 3_Miya/player_3.gd" id="1_gwykh"]
++[ext_resource type="Script" uid="uid://bw7ufr4all07" path="res://scenes/characters/miya/player.gd" id="1_gwykh"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Archer/Archer_Attack01.png" id="2_atk1"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Archer/Archer_Attack02.png" id="3_atk2"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Archer/Archer_Death.png" id="4_death"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Archer/Archer_Hurt.png" id="5_hurt"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Archer/Archer_Idle.png" id="6_idle"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Archer/Archer_Walk.png" id="7_walk"]
+-[ext_resource type="PackedScene" uid="uid://2ghkboxexty4" path="res://Scene/Projectiles/arrow.tscn" id="8_arr"]
+-[ext_resource type="PackedScene" uid="uid://clfnfi34cpclr" path="res://Scene/Projectiles/bomb.tscn" id="9_bmb"]
+-[ext_resource type="Script" uid="uid://cqm4110dqn65t" path="res://Scene/Character/InventoryManager.gd" id="10_inv"]
+-[ext_resource type="PackedScene" uid="uid://c88b4e2b3wqrw" path="res://Scene/UI/GameUI.tscn" id="11_gui"]
++[ext_resource type="PackedScene" uid="uid://2ghkboxexty4" path="res://scenes/projectiles/arrow.tscn" id="8_arr"]
++[ext_resource type="PackedScene" uid="uid://clfnfi34cpclr" path="res://scenes/projectiles/bomb.tscn" id="9_bmb"]
++[ext_resource type="Script" uid="uid://cqm4110dqn65t" path="res://scenes/characters/inventory_manager.gd" id="10_inv"]
++[ext_resource type="PackedScene" uid="uid://c88b4e2b3wqrw" path="res://scenes/ui/game_ui.tscn" id="11_gui"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_a1"]
+ atlas = ExtResource("2_atk1")
+--- a/Scene/Character/Player 4_Charlotte/player_4.gd
++++ b/scenes/characters/charlotte/player.gd
+@@ -1,4 +1,4 @@
+-extends "res://Scene/Character/Player 1_Pyrois/player.gd"
++extends "res://scenes/characters/pyrois/player.gd"
+ 
+ @export var q_skill_cooldown: float = 3.0
+ @export var right_click_cooldown: float = 5.0
+--- a/Scene/Character/Player 4_Charlotte/player_4.tscn
++++ b/scenes/characters/charlotte/player.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3 uid="uid://drc7u6be164xi"]
+ 
+-[ext_resource type="Script" uid="uid://bmmmclo52sh8k" path="res://Scene/Character/Player 4_Charlotte/player_4.gd" id="1_8fftu"]
++[ext_resource type="Script" uid="uid://bmmmclo52sh8k" path="res://scenes/characters/charlotte/player.gd" id="1_8fftu"]
+ [ext_resource type="Texture2D" uid="uid://df75v6uk202b0" path="res://Assets/Character/Swordsman/Swordsman_Attack01.png" id="2_76qck"]
+ [ext_resource type="Texture2D" uid="uid://j0s8tp1c7py3" path="res://Assets/Character/Swordsman/Swordsman_Attack02.png" id="3_olkts"]
+ [ext_resource type="Texture2D" uid="uid://bjk4en68f0huc" path="res://Assets/Character/Swordsman/Swordsman_Attack3.png" id="4_jaks2"]
+@@ -8,8 +8,8 @@
+ [ext_resource type="Texture2D" uid="uid://be7jx22isxic8" path="res://Assets/Character/Swordsman/Swordsman_Hurt.png" id="6_gcj5r"]
+ [ext_resource type="Texture2D" uid="uid://dvj0rq24mg1kd" path="res://Assets/Character/Swordsman/Swordsman_Idle.png" id="7_oh7ts"]
+ [ext_resource type="Texture2D" uid="uid://cwrl6ivka6lsl" path="res://Assets/Character/Swordsman/Swordsman_Walk.png" id="8_w8nqj"]
+-[ext_resource type="Script" uid="uid://cqm4110dqn65t" path="res://Scene/Character/InventoryManager.gd" id="9_slcic"]
+-[ext_resource type="PackedScene" uid="uid://c88b4e2b3wqrw" path="res://Scene/UI/GameUI.tscn" id="10_q406s"]
++[ext_resource type="Script" uid="uid://cqm4110dqn65t" path="res://scenes/characters/inventory_manager.gd" id="9_slcic"]
++[ext_resource type="PackedScene" uid="uid://c88b4e2b3wqrw" path="res://scenes/ui/game_ui.tscn" id="10_q406s"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_swyqi"]
+ atlas = ExtResource("2_76qck")
+--- a/Scene/Enemies/Armored_orc/armored_orc.gd
++++ b/scenes/enemies/armored_orc/armored_orc.gd
+@@ -1,6 +1,6 @@
+ extends CharacterBody2D
+ 
+-const BalanceData = preload("res://Scene/BalanceConfig.gd")
++const BalanceData = preload("res://scripts/core/balance_config.gd")
+ @export var speed: float = 70.0
+ @export var attack_range: float = 20.0
+ @export var world_item_scene: PackedScene
+--- a/Scene/Enemies/Armored_orc/armored_orc.tscn
++++ b/scenes/enemies/armored_orc/armored_orc.tscn
+@@ -1,10 +1,10 @@
+ [gd_scene format=3 uid="uid://ck4s448yor4yv"]
+ 
+-[ext_resource type="Script" uid="uid://cxlgjrh7j17v2" path="res://Scene/Enemies/Armored_orc/armored_orc.gd" id="1_g2c4u"]
+-[ext_resource type="PackedScene" uid="uid://b170752tjpa64" path="res://Scene/Items/WorldItem/WorldItem.tscn" id="2_fvvsv"]
+-[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="3_n5nvd"]
+-[ext_resource type="Resource" uid="uid://dokmb6uincmku" path="res://Scene/Items/health_potion.tres" id="4_abr3b"]
+-[ext_resource type="Resource" uid="uid://di26ldps1a11o" path="res://Scene/Items/big_health_potion.tres" id="5_wnfnw"]
++[ext_resource type="Script" uid="uid://cxlgjrh7j17v2" path="res://scenes/enemies/armored_orc/armored_orc.gd" id="1_g2c4u"]
++[ext_resource type="PackedScene" uid="uid://b170752tjpa64" path="res://scenes/items/world_item/world_item.tscn" id="2_fvvsv"]
++[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://scenes/items/item_data.gd" id="3_n5nvd"]
++[ext_resource type="Resource" uid="uid://dokmb6uincmku" path="res://scenes/items/health_potion.tres" id="4_abr3b"]
++[ext_resource type="Resource" uid="uid://di26ldps1a11o" path="res://scenes/items/big_health_potion.tres" id="5_wnfnw"]
+ [ext_resource type="Texture2D" uid="uid://g1h1pbaly326" path="res://Assets/Character/Armored Orc/Armored Orc_Attack01.png" id="6_1ixlm"]
+ [ext_resource type="Texture2D" uid="uid://co2jc6u76b8t5" path="res://Assets/Character/Armored Orc/Armored Orc_Attack03.png" id="7_cvbyo"]
+ [ext_resource type="Texture2D" uid="uid://ctfbhw0ctfxcj" path="res://Assets/Character/Armored Orc/Armored Orc_Block.png" id="8_msoal"]
+--- a/Scene/Enemies/Boss/Necromancer/necromancer.gd
++++ b/scenes/enemies/bosses/necromancer/necromancer.gd
+@@ -2,7 +2,7 @@
+ 
+ signal boss_hp_changed(current_hp: int, max_hp: int, phase: int, boss_name: String)
+ 
+-const BalanceData = preload("res://Scene/BalanceConfig.gd")
++const BalanceData = preload("res://scripts/core/balance_config.gd")
+ const BOSS_NAME: String = "NECROMANCER OF DOL GULDUR — AVATAR OF SAURON"
+ 
+ @export var speed: float = 50.0
+--- a/Scene/Enemies/Boss/Necromancer/necromancer.tscn
++++ b/scenes/enemies/bosses/necromancer/necromancer.tscn
+@@ -1,8 +1,8 @@
+ [gd_scene format=3 uid="uid://dm6cfnju00yjs"]
+ 
+-[ext_resource type="Script" uid="uid://78p1adxiwwg8" path="res://Scene/Enemies/Boss/Necromancer/necromancer.gd" id="1_kykvt"]
+-[ext_resource type="PackedScene" uid="uid://hd36nx58eb5c" path="res://Scene/Enemies/Skeleton/skeleton.tscn" id="2_jhpd1"]
+-[ext_resource type="PackedScene" uid="uid://3vk6cejb0q7r" path="res://Scene/Projectiles/poison_explosion.tscn" id="3_jhpd1"]
++[ext_resource type="Script" uid="uid://78p1adxiwwg8" path="res://scenes/enemies/bosses/necromancer/necromancer.gd" id="1_kykvt"]
++[ext_resource type="PackedScene" uid="uid://hd36nx58eb5c" path="res://scenes/enemies/skeleton/skeleton.tscn" id="2_jhpd1"]
++[ext_resource type="PackedScene" uid="uid://3vk6cejb0q7r" path="res://scenes/projectiles/poison_explosion.tscn" id="3_jhpd1"]
+ [ext_resource type="Texture2D" uid="uid://b4lfuog8efi7f" path="res://Assets/Character/Necromancer/Necromancer_Attack02.png" id="4_kykvt"]
+ [ext_resource type="Texture2D" uid="uid://cd271opn50ehp" path="res://Assets/Character/Necromancer/Necromancer_Attack01.png" id="6_asa8e"]
+ [ext_resource type="Texture2D" uid="uid://c22esu5pubknw" path="res://Assets/Character/Necromancer/Necromancer_DEATH.png" id="8_xut7a"]
+--- a/Scene/Enemies/Boss/Orc Rider/orc_rider.gd
++++ b/scenes/enemies/bosses/orc_rider/orc_rider.gd
+@@ -2,7 +2,7 @@
+ 
+ signal boss_hp_changed(current_hp: int, max_hp: int, phase: int, boss_name: String)
+ 
+-const BalanceData = preload("res://Scene/BalanceConfig.gd")
++const BalanceData = preload("res://scripts/core/balance_config.gd")
+ const BOSS_NAME: String = "WARG RIDER CHIEFTAIN — WARLORD OF MORIA"
+ 
+ @export var max_hp: int = 30
+--- a/Scene/Enemies/Boss/Orc Rider/orc_rider.tscn
++++ b/scenes/enemies/bosses/orc_rider/orc_rider.tscn
+@@ -1,7 +1,7 @@
+ [gd_scene format=3 uid="uid://061k5bwvwxyj"]
+ 
+ [ext_resource type="Texture2D" uid="uid://ckikxluvjyhcn" path="res://Assets/Character/Orc Rider/Orc rider_Attack01.png" id="1_bpyji"]
+-[ext_resource type="Script" uid="uid://diwfv5mqnrfy0" path="res://Scene/Enemies/Boss/Orc Rider/orc_rider.gd" id="1_n6h30"]
++[ext_resource type="Script" uid="uid://diwfv5mqnrfy0" path="res://scenes/enemies/bosses/orc_rider/orc_rider.gd" id="1_n6h30"]
+ [ext_resource type="Texture2D" uid="uid://dves4qheeqqmj" path="res://Assets/Character/Orc Rider/Orc rider_Attack02.png" id="2_n6h30"]
+ [ext_resource type="Texture2D" uid="uid://m4ymwo4ydbkc" path="res://Assets/Character/Orc Rider/Orc rider_Attack03.png" id="3_okkuf"]
+ [ext_resource type="Texture2D" uid="uid://vimtgogltjdg" path="res://Assets/Character/Orc Rider/Orc rider_Death.png" id="4_jsyky"]
+--- a/Scene/Enemies/Orc/orc.gd
++++ b/scenes/enemies/orc/orc.gd
+@@ -1,6 +1,6 @@
+ extends CharacterBody2D
+ 
+-const BalanceData = preload("res://Scene/BalanceConfig.gd")
++const BalanceData = preload("res://scripts/core/balance_config.gd")
+ @export var damage: int = 1
+ @export var speed: float = 70.0
+ @export var attack_range: float = 20.0 # Chạy lại gần khoảng 20 pixel mới vung rìu
+--- a/Scene/Enemies/Orc/orc.tscn
++++ b/scenes/enemies/orc/orc.tscn
+@@ -1,12 +1,12 @@
+ [gd_scene format=3 uid="uid://deliuqrrt32f2"]
+ 
+-[ext_resource type="Script" uid="uid://c6j3hm5aov3rg" path="res://Scene/Enemies/Orc/orc.gd" id="1_iqx3e"]
++[ext_resource type="Script" uid="uid://c6j3hm5aov3rg" path="res://scenes/enemies/orc/orc.gd" id="1_iqx3e"]
+ [ext_resource type="Texture2D" uid="uid://v3wc05pabyok" path="res://Assets/Character/Orc/Orc with shadows/Orc_Attack01.png" id="2_s67cy"]
+-[ext_resource type="PackedScene" uid="uid://b170752tjpa64" path="res://Scene/Items/WorldItem/WorldItem.tscn" id="2_xft4t"]
+-[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="3_0sdxh"]
++[ext_resource type="PackedScene" uid="uid://b170752tjpa64" path="res://scenes/items/world_item/world_item.tscn" id="2_xft4t"]
++[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://scenes/items/item_data.gd" id="3_0sdxh"]
+ [ext_resource type="Texture2D" uid="uid://cykntk4mxdh0q" path="res://Assets/Character/Orc/Orc with shadows/Orc_Death.png" id="3_20v7j"]
+ [ext_resource type="Texture2D" uid="uid://cxh4bv7wabk3a" path="res://Assets/Character/Orc/Orc with shadows/Orc_Hurt.png" id="4_4281o"]
+-[ext_resource type="Resource" uid="uid://dokmb6uincmku" path="res://Scene/Items/health_potion.tres" id="4_qhhuc"]
++[ext_resource type="Resource" uid="uid://dokmb6uincmku" path="res://scenes/items/health_potion.tres" id="4_qhhuc"]
+ [ext_resource type="Texture2D" uid="uid://bfmucspow1v3w" path="res://Assets/Character/Orc/Orc with shadows/Orc_Idle.png" id="5_n5rr8"]
+ [ext_resource type="Texture2D" uid="uid://65p6vn2vn287" path="res://Assets/Character/Orc/Orc with shadows/Orc_Walk.png" id="6_xdbtq"]
+ 
+--- a/Scene/Enemies/Skeleton/skeleton.gd
++++ b/scenes/enemies/skeleton/skeleton.gd
+@@ -1,13 +1,13 @@
+ extends CharacterBody2D
+ 
+-const BalanceData = preload("res://Scene/BalanceConfig.gd")
++const BalanceData = preload("res://scripts/core/balance_config.gd")
+ @export var damage: int = 1
+ @export var speed: float = 100.0
+ @export var attack_range: float = 18.0
+-@export var world_item_scene: PackedScene = preload("res://Scene/Items/WorldItem/WorldItem.tscn")
++@export var world_item_scene: PackedScene = preload("res://scenes/items/world_item/world_item.tscn")
+ @export var loot_table: Array[ItemData] = [
+-	preload("res://Scene/Items/health_potion.tres"),
+-	preload("res://Scene/Items/iron_sword.tres")
++	preload("res://scenes/items/health_potion.tres"),
++	preload("res://scenes/items/iron_sword.tres")
+ ]
+ @export var drop_chance: float = 0.25
+ var loot_seed: int = 0
+--- a/Scene/Enemies/Skeleton/skeleton.tscn
++++ b/scenes/enemies/skeleton/skeleton.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3 uid="uid://hd36nx58eb5c"]
+ 
+-[ext_resource type="Script" uid="uid://cpq3smhq2076g" path="res://Scene/Enemies/Skeleton/skeleton.gd" id="1_ymvsc"]
++[ext_resource type="Script" uid="uid://cpq3smhq2076g" path="res://scenes/enemies/skeleton/skeleton.gd" id="1_ymvsc"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Skeleton/Skeleton_Attack01.png" id="2_atk"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Skeleton/Skeleton_Death.png" id="3_death"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Skeleton/Skeleton_Hurt.png" id="4_hurt"]
+--- a/Scene/Enemies/Skeleton Archer/skeleton_archer.gd
++++ b/scenes/enemies/skeleton_archer/skeleton_archer.gd
+@@ -1,6 +1,6 @@
+ extends CharacterBody2D
+ 
+-const BalanceData = preload("res://Scene/BalanceConfig.gd")
++const BalanceData = preload("res://scripts/core/balance_config.gd")
+ @export var speed: float = 65.0
+ @export var attack_range: float = 195.0
+ @export var retreat_range: float = 85.0
+@@ -9,10 +9,10 @@
+ @export var max_hp: int = 4
+ 
+ @export var arrow_scene: PackedScene
+-@export var world_item_scene: PackedScene = preload("res://Scene/Items/WorldItem/WorldItem.tscn")
++@export var world_item_scene: PackedScene = preload("res://scenes/items/world_item/world_item.tscn")
+ @export var loot_table: Array[ItemData] = [
+-	preload("res://Scene/Items/health_potion.tres"),
+-	preload("res://Scene/Items/iron_helmet.tres")
++	preload("res://scenes/items/health_potion.tres"),
++	preload("res://scenes/items/iron_helmet.tres")
+ ]
+ @export var drop_chance: float = 0.3
+ var loot_seed: int = 0
+--- a/Scene/Enemies/Skeleton Archer/skeleton_archer.tscn
++++ b/scenes/enemies/skeleton_archer/skeleton_archer.tscn
+@@ -1,8 +1,8 @@
+ [gd_scene format=3 uid="uid://bepkqdsrd4np2"]
+ 
+ [ext_resource type="Texture2D" uid="uid://drdq5c06frptp" path="res://Assets/Character/Skeleton Archer/Skeleton Archer_Attack.png" id="1_w5m12"]
+-[ext_resource type="Script" uid="uid://ckd5y6hftoy8e" path="res://Scene/Enemies/Skeleton Archer/skeleton_archer.gd" id="1_y3pfh"]
+-[ext_resource type="PackedScene" uid="uid://2bwci3lox6w1" path="res://Scene/Projectiles/enemy_arrow.tscn" id="2_5g6rk"]
++[ext_resource type="Script" uid="uid://ckd5y6hftoy8e" path="res://scenes/enemies/skeleton_archer/skeleton_archer.gd" id="1_y3pfh"]
++[ext_resource type="PackedScene" uid="uid://2bwci3lox6w1" path="res://scenes/projectiles/enemy_arrow.tscn" id="2_5g6rk"]
+ [ext_resource type="Texture2D" uid="uid://b0802qfghxff2" path="res://Assets/Character/Skeleton Archer/Skeleton Archer_Death.png" id="2_y3pfh"]
+ [ext_resource type="Texture2D" uid="uid://b4ghqfjmqysc3" path="res://Assets/Character/Skeleton Archer/Skeleton Archer_Hurt.png" id="3_5g6rk"]
+ [ext_resource type="Texture2D" uid="uid://cwdc260d8nwx7" path="res://Assets/Character/Skeleton Archer/Skeleton Archer_Idle.png" id="4_jg0ry"]
+--- a/Scene/Enemies/Vampire/vampire.gd
++++ b/scenes/enemies/vampire/vampire.gd
+@@ -1,17 +1,17 @@
+ extends CharacterBody2D
+ 
+-const BalanceData = preload("res://Scene/BalanceConfig.gd")
++const BalanceData = preload("res://scripts/core/balance_config.gd")
+ @export var damage: int = 1
+ @export var speed: float = 75.0
+ @export var attack_range: float = 165.0
+ @export var retreat_range: float = 65.0
+ @export var attack_cooldown: float = 1.75
+-@export var magic_spell_scene: PackedScene = preload("res://Scene/Projectiles/magic_spell.tscn")
+-@export var world_item_scene: PackedScene = preload("res://Scene/Items/WorldItem/WorldItem.tscn")
++@export var magic_spell_scene: PackedScene = preload("res://scenes/projectiles/magic_spell.tscn")
++@export var world_item_scene: PackedScene = preload("res://scenes/items/world_item/world_item.tscn")
+ @export var loot_table: Array[ItemData] = [
+-	preload("res://Scene/Items/health_potion.tres"),
+-	preload("res://Scene/Items/big_health_potion.tres"),
+-	preload("res://Scene/Items/iron_armor.tres")
++	preload("res://scenes/items/health_potion.tres"),
++	preload("res://scenes/items/big_health_potion.tres"),
++	preload("res://scenes/items/iron_armor.tres")
+ ]
+ @export var drop_chance: float = 0.35
+ var loot_seed: int = 0
+--- a/Scene/Enemies/Vampire/vampire.tscn
++++ b/scenes/enemies/vampire/vampire.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3 uid="uid://cx6i8j8l2p0k8"]
+ 
+-[ext_resource type="Script" uid="uid://irl6aub5uvd2" path="res://Scene/Enemies/Vampire/vampire.gd" id="1_mx0yj"]
++[ext_resource type="Script" uid="uid://irl6aub5uvd2" path="res://scenes/enemies/vampire/vampire.gd" id="1_mx0yj"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Bat/Bat_Attack01.png" id="2_bat_atk"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Bat/Bat_Death.png" id="3_bat_death"]
+ [ext_resource type="Texture2D" path="res://Assets/Character/Bat/Bat_Hurt.png" id="4_bat_hurt"]
+--- a/Scene/GameManager.gd
++++ b/scripts/core/game_manager.gd
+@@ -16,13 +16,13 @@
+ const MAX_SAVE_FILE_BYTES: int = 2097152 # 2 MB chống DoS / Memory Exhaustion
+ const ALLOWED_SEED_CHARS: String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
+ 
+-const BalanceData = preload("res://Scene/BalanceConfig.gd")
++const BalanceData = preload("res://scripts/core/balance_config.gd")
+ 
+ const CHARACTER_SCENES: Array[PackedScene] = [
+-	preload("res://Scene/Character/Player 3_Miya/player_3.tscn"),
+-	preload("res://Scene/Character/Player 2_Olaf/player_2.tscn"),
+-	preload("res://Scene/Character/Player 1_Pyrois/player.tscn"),
+-	preload("res://Scene/Character/Player 4_Charlotte/player_4.tscn"),
++	preload("res://scenes/characters/miya/player.tscn"),
++	preload("res://scenes/characters/olaf/player.tscn"),
++	preload("res://scenes/characters/pyrois/player.tscn"),
++	preload("res://scenes/characters/charlotte/player.tscn"),
+ ]
+ 
+ var WORLD_LORE: Dictionary = BalanceData.WORLD_LORE
+@@ -232,7 +232,7 @@
+ 		set_character_by_index(hero_idx)
+ 	start_new_run(seed_str, false, [])
+ 	get_tree().paused = false
+-	get_tree().change_scene_to_file("res://world.tscn")
++	get_tree().change_scene_to_file("res://scenes/main/world.tscn")
+ 
+ func start_action_replay(run_entry: Dictionary = {}) -> bool:
+ 	var target := run_entry if not run_entry.is_empty() else last_recorded_run
+@@ -247,7 +247,7 @@
+ 	set_character_by_index(hero_idx)
+ 	start_new_run(seed_str, true, frames)
+ 	get_tree().paused = false
+-	get_tree().change_scene_to_file("res://world.tscn")
++	get_tree().change_scene_to_file("res://scenes/main/world.tscn")
+ 	return true
+ 
+ func save_data_to_disk() -> void:
+--- a/Scene/Items/big_health_potion.tres
++++ b/scenes/items/big_health_potion.tres
+@@ -1,7 +1,7 @@
+ [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://di26ldps1a11o"]
+ 
+ [ext_resource type="Texture2D" uid="uid://hy3rhe5kwp0e" path="res://Assets/Items/Items/Icons.png" id="1_530bj"]
+-[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="1_mktl5"]
++[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://scenes/items/item_data.gd" id="1_mktl5"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_530bj"]
+ atlas = ExtResource("1_530bj")
+--- a/Scene/Items/Chest/chest.tscn
++++ b/scenes/items/chest/chest.tscn
+@@ -1,16 +1,16 @@
+ [gd_scene format=3 uid="uid://dsclbsl8xd1c2"]
+ 
+-[ext_resource type="Script" uid="uid://bklhulna1cl61" path="res://Scene/Items/Chest/chest.gd" id="1_n7fmx"]
++[ext_resource type="Script" uid="uid://bklhulna1cl61" path="res://scenes/items/chest/chest.gd" id="1_n7fmx"]
+ [ext_resource type="Texture2D" uid="uid://bfxbdvopwqyq2" path="res://Assets/Items/Chest/doors_lever_chest_animation.png" id="2_bjafq"]
+-[ext_resource type="PackedScene" uid="uid://b170752tjpa64" path="res://Scene/Items/WorldItem/WorldItem.tscn" id="2_df87b"]
+-[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="3_kmyyh"]
+-[ext_resource type="Resource" uid="uid://yp42x3sbm4nr" path="res://Scene/Items/iron_armor.tres" id="4_w8u5x"]
+-[ext_resource type="Resource" uid="uid://dqu1so6s77ep3" path="res://Scene/Items/iron_helmet.tres" id="5_ykt7f"]
+-[ext_resource type="Resource" uid="uid://dokmb6uincmku" path="res://Scene/Items/health_potion.tres" id="6_wymtn"]
+-[ext_resource type="Resource" uid="uid://di26ldps1a11o" path="res://Scene/Items/big_health_potion.tres" id="7_kmyyh"]
+-[ext_resource type="Resource" uid="uid://g54v8kyodme1" path="res://Scene/Items/mystic_sword.tres" id="8_w8u5x"]
+-[ext_resource type="Resource" uid="uid://cc2r5ettnw5vr" path="res://Scene/Items/iron_sword.tres" id="9_wymtn"]
+-[ext_resource type="Resource" uid="uid://bynxblh3dnmiy" path="res://Scene/Items/mystic_armor.tres" id="10_mdh4i"]
++[ext_resource type="PackedScene" uid="uid://b170752tjpa64" path="res://scenes/items/world_item/world_item.tscn" id="2_df87b"]
++[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://scenes/items/item_data.gd" id="3_kmyyh"]
++[ext_resource type="Resource" uid="uid://yp42x3sbm4nr" path="res://scenes/items/iron_armor.tres" id="4_w8u5x"]
++[ext_resource type="Resource" uid="uid://dqu1so6s77ep3" path="res://scenes/items/iron_helmet.tres" id="5_ykt7f"]
++[ext_resource type="Resource" uid="uid://dokmb6uincmku" path="res://scenes/items/health_potion.tres" id="6_wymtn"]
++[ext_resource type="Resource" uid="uid://di26ldps1a11o" path="res://scenes/items/big_health_potion.tres" id="7_kmyyh"]
++[ext_resource type="Resource" uid="uid://g54v8kyodme1" path="res://scenes/items/mystic_sword.tres" id="8_w8u5x"]
++[ext_resource type="Resource" uid="uid://cc2r5ettnw5vr" path="res://scenes/items/iron_sword.tres" id="9_wymtn"]
++[ext_resource type="Resource" uid="uid://bynxblh3dnmiy" path="res://scenes/items/mystic_armor.tres" id="10_mdh4i"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_ufm20"]
+ atlas = ExtResource("2_bjafq")
+--- a/Scene/Items/health_potion.tres
++++ b/scenes/items/health_potion.tres
+@@ -1,7 +1,7 @@
+ [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://dokmb6uincmku"]
+ 
+ [ext_resource type="Texture2D" uid="uid://hy3rhe5kwp0e" path="res://Assets/Items/Items/Icons.png" id="1_28578"]
+-[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="1_ecocj"]
++[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://scenes/items/item_data.gd" id="1_ecocj"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_28578"]
+ atlas = ExtResource("1_28578")
+--- a/Scene/Items/iron_armor.tres
++++ b/scenes/items/iron_armor.tres
+@@ -1,7 +1,7 @@
+ [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://yp42x3sbm4nr"]
+ 
+ [ext_resource type="Texture2D" uid="uid://hy3rhe5kwp0e" path="res://Assets/Items/Items/Icons.png" id="1_vuok1"]
+-[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="2_03u08"]
++[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://scenes/items/item_data.gd" id="2_03u08"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_ip484"]
+ atlas = ExtResource("1_vuok1")
+--- a/Scene/Items/iron_helmet.tres
++++ b/scenes/items/iron_helmet.tres
+@@ -1,7 +1,7 @@
+ [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://dqu1so6s77ep3"]
+ 
+ [ext_resource type="Texture2D" uid="uid://hy3rhe5kwp0e" path="res://Assets/Items/Items/Icons.png" id="1_qfhm0"]
+-[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="2_sfnut"]
++[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://scenes/items/item_data.gd" id="2_sfnut"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_oq06l"]
+ atlas = ExtResource("1_qfhm0")
+--- a/Scene/Items/iron_sword.tres
++++ b/scenes/items/iron_sword.tres
+@@ -1,7 +1,7 @@
+ [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cc2r5ettnw5vr"]
+ 
+ [ext_resource type="Texture2D" uid="uid://hy3rhe5kwp0e" path="res://Assets/Items/Items/Icons.png" id="1_tvcto"]
+-[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="2_lsdu8"]
++[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://scenes/items/item_data.gd" id="2_lsdu8"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_fawme"]
+ atlas = ExtResource("1_tvcto")
+--- a/Scene/Items/mystic_armor.tres
++++ b/scenes/items/mystic_armor.tres
+@@ -1,6 +1,6 @@
+ [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://bynxblh3dnmiy"]
+ 
+-[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="1_aum17"]
++[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://scenes/items/item_data.gd" id="1_aum17"]
+ [ext_resource type="Texture2D" uid="uid://d0i04ly8rljlq" path="res://Assets/Items/Items/Icon187.png" id="1_r4t5f"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_r4t5f"]
+--- a/Scene/Items/mystic_sword.tres
++++ b/scenes/items/mystic_sword.tres
+@@ -1,7 +1,7 @@
+ [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://g54v8kyodme1"]
+ 
+ [ext_resource type="Texture2D" uid="uid://hy3rhe5kwp0e" path="res://Assets/Items/Items/Icons.png" id="1_6ad7n"]
+-[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="1_prmxy"]
++[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://scenes/items/item_data.gd" id="1_prmxy"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_6ad7n"]
+ atlas = ExtResource("1_6ad7n")
+--- a/Scene/Items/WorldItem/WorldItem.tscn
++++ b/scenes/items/world_item/world_item.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3 uid="uid://b170752tjpa64"]
+ 
+-[ext_resource type="Script" uid="uid://dkrujr2vk0hf6" path="res://Scene/Items/WorldItem/WorldItem.gd" id="1_rra6w"]
++[ext_resource type="Script" uid="uid://dkrujr2vk0hf6" path="res://scenes/items/world_item/world_item.gd" id="1_rra6w"]
+ 
+ [sub_resource type="CircleShape2D" id="CircleShape2D_1vivr"]
+ 
+--- a/Scene/Map/dungeon_atmosphere.gd
++++ b/scenes/dungeon/dungeon_atmosphere.gd
+@@ -61,7 +61,7 @@
+ 			return
+ 
+ 		point_light = PointLight2D.new()
+-		point_light.texture = load("res://Scene/Map/dungeon_atmosphere.gd").get_radial_light_texture()
++		point_light.texture = load("res://scenes/dungeon/dungeon_atmosphere.gd").get_radial_light_texture()
+ 		point_light.color = flame_color
+ 		point_light.energy = 0.0
+ 		point_light.texture_scale = 1.65
+@@ -170,7 +170,7 @@
+ 			return
+ 
+ 		wisp_light = PointLight2D.new()
+-		wisp_light.texture = load("res://Scene/Map/dungeon_atmosphere.gd").get_radial_light_texture()
++		wisp_light.texture = load("res://scenes/dungeon/dungeon_atmosphere.gd").get_radial_light_texture()
+ 		wisp_light.color = Color(0.20, 0.85, 1.0, 1.0)
+ 		wisp_light.energy = 0.0
+ 		wisp_light.texture_scale = 1.15
+--- a/Scene/Map/dungeon_generator.gd
++++ b/scenes/dungeon/dungeon_generator.gd
+@@ -14,30 +14,30 @@
+ @export var room_max_size: int = 25
+ 
+ # --- ĐƯỜNG DẪN SCENE ---
+-const PLAYER_SCENE = preload("res://Scene/Character/Player 1_Pyrois/player.tscn")
+-const CHEST_SCENE = preload("res://Scene/Items/Chest/chest.tscn")
+-const SPIKE_TRAP = preload("res://Scene/Map/SpikeTrap.tscn")
+-
+-const RIDER_ORC_SCENE = preload("res://Scene/Enemies/Boss/Orc Rider/orc_rider.tscn")
+-const NECROMANCER_SCENE = preload("res://Scene/Enemies/Boss/Necromancer/necromancer.tscn")
++const PLAYER_SCENE = preload("res://scenes/characters/pyrois/player.tscn")
++const CHEST_SCENE = preload("res://scenes/items/chest/chest.tscn")
++const SPIKE_TRAP = preload("res://scenes/dungeon/spike_trap.tscn")
++
++const RIDER_ORC_SCENE = preload("res://scenes/enemies/bosses/orc_rider/orc_rider.tscn")
++const NECROMANCER_SCENE = preload("res://scenes/enemies/bosses/necromancer/necromancer.tscn")
+ 
+ var enemy_scenes: Array[PackedScene] = [
+-	preload("res://Scene/Enemies/Orc/orc.tscn"),
+-	preload("res://Scene/Enemies/Skeleton/skeleton.tscn"),
+-	preload("res://Scene/Enemies/Vampire/vampire.tscn"),
+-	preload("res://Scene/Enemies/Armored_orc/armored_orc.tscn"),
+-	preload("res://Scene/Enemies/Skeleton Archer/skeleton_archer.tscn")
++	preload("res://scenes/enemies/orc/orc.tscn"),
++	preload("res://scenes/enemies/skeleton/skeleton.tscn"),
++	preload("res://scenes/enemies/vampire/vampire.tscn"),
++	preload("res://scenes/enemies/armored_orc/armored_orc.tscn"),
++	preload("res://scenes/enemies/skeleton_archer/skeleton_archer.tscn")
+ ]
+ 
+ @export var current_level: int = 1
+-const PORTAL_SCENE = preload("res://Scene/Map/portal.tscn")
++const PORTAL_SCENE = preload("res://scenes/dungeon/portal.tscn")
+ var the_player: Node2D = null
+ 
+ @export var min_enemies: int = 3
+ @export var max_enemies: int = 7
+ 
+-const ROOM_MANAGER = preload("res://Scene/Map/RoomManager.tscn")
+-const DUNGEON_ATMOSPHERE = preload("res://Scene/Map/dungeon_atmosphere.gd")
++const ROOM_MANAGER = preload("res://scenes/dungeon/room_manager.tscn")
++const DUNGEON_ATMOSPHERE = preload("res://scenes/dungeon/dungeon_atmosphere.gd")
+ 
+ # --- CÀI ĐẶT GẠCH ---
+ const LAYER_FLOOR = 0
+--- a/Scene/Map/portal.tscn
++++ b/scenes/dungeon/portal.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3 uid="uid://bcprc01t32rc"]
+ 
+-[ext_resource type="Script" uid="uid://cl6c00lys12kf" path="res://Scene/Map/portal.gd" id="1_ks0pv"]
++[ext_resource type="Script" uid="uid://cl6c00lys12kf" path="res://scenes/dungeon/portal.gd" id="1_ks0pv"]
+ [ext_resource type="Texture2D" uid="uid://cox1sntsd0c4k" path="res://Assets/Map/Dimensional_Portal.png" id="2_n70v4"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_hxyjx"]
+--- a/Scene/Map/RoomManager.tscn
++++ b/scenes/dungeon/room_manager.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3 uid="uid://c2bah363vyqbb"]
+ 
+-[ext_resource type="Script" uid="uid://bydx7efdnp7wy" path="res://Scene/Map/room_manager.gd" id="1_2qaro"]
++[ext_resource type="Script" uid="uid://bydx7efdnp7wy" path="res://scenes/dungeon/room_manager.gd" id="1_2qaro"]
+ 
+ [sub_resource type="RectangleShape2D" id="RectangleShape2D_1vivr"]
+ 
+--- a/Scene/Map/SpikeTrap.tscn
++++ b/scenes/dungeon/spike_trap.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3 uid="uid://ctclj5bjc4h80"]
+ 
+-[ext_resource type="Script" uid="uid://dir05q17an473" path="res://Scene/Map/spike_trap.gd" id="1_t0ox6"]
++[ext_resource type="Script" uid="uid://dir05q17an473" path="res://scenes/dungeon/spike_trap.gd" id="1_t0ox6"]
+ [ext_resource type="Texture2D" uid="uid://b8hkgbcx2tb8v" path="res://Assets/Map/trap_animation.png" id="2_v4ma1"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_rqlfv"]
+--- a/Scene/Projectiles/arrow.tscn
++++ b/scenes/projectiles/arrow.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3 uid="uid://2ghkboxexty4"]
+ 
+-[ext_resource type="Script" uid="uid://cleqlx1hhh37e" path="res://Scene/Projectiles/arrow.gd" id="1_y44jd"]
++[ext_resource type="Script" uid="uid://cleqlx1hhh37e" path="res://scenes/projectiles/arrow.gd" id="1_y44jd"]
+ [ext_resource type="Texture2D" path="res://Assets/Projectiles/Arrow02(32x32).png" id="2_arr"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_arr"]
+--- a/Scene/Projectiles/bomb.tscn
++++ b/scenes/projectiles/bomb.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3 uid="uid://clfnfi34cpclr"]
+ 
+-[ext_resource type="Script" uid="uid://d0lyhiq8lda1b" path="res://Scene/Projectiles/bomb.gd" id="1_erq1x"]
++[ext_resource type="Script" uid="uid://d0lyhiq8lda1b" path="res://scenes/projectiles/bomb.gd" id="1_erq1x"]
+ [ext_resource type="Texture2D" uid="uid://bhckdqmet03ya" path="res://Assets/Projectiles/Human_Archer_Extras.png" id="1_ro214"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_erq1x"]
+--- a/Scene/Projectiles/enemy_arrow.tscn
++++ b/scenes/projectiles/enemy_arrow.tscn
+@@ -1,7 +1,7 @@
+ [gd_scene format=3 uid="uid://2bwci3lox6w1"]
+ 
+ [ext_resource type="Texture2D" uid="uid://dkpd2s48fm3au" path="res://Assets/Character/Skeleton Archer/Arrow03(100x100).png" id="1_6ljsg"]
+-[ext_resource type="Script" uid="uid://d2v5nmhq5qel3" path="res://Scene/Projectiles/enemy_arrow.gd" id="1_toeju"]
++[ext_resource type="Script" uid="uid://d2v5nmhq5qel3" path="res://scenes/projectiles/enemy_arrow.gd" id="1_toeju"]
+ 
+ [sub_resource type="RectangleShape2D" id="RectangleShape2D_1vivr"]
+ size = Vector2(20, 7)
+--- a/Scene/Projectiles/magic_spell.tscn
++++ b/scenes/projectiles/magic_spell.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3 uid="uid://dm4g8k1sp3ll9"]
+ 
+-[ext_resource type="Script" path="res://Scene/Projectiles/magic_spell.gd" id="1_script"]
++[ext_resource type="Script" path="res://scenes/projectiles/magic_spell.gd" id="1_script"]
+ [ext_resource type="Texture2D" path="res://Assets/Projectiles/Wizard_Attack02_Effect.png" id="2_fly_tex"]
+ [ext_resource type="Texture2D" path="res://Assets/Projectiles/Wizard_Attack01_Effect.png" id="3_hit_tex"]
+ 
+--- a/Scene/Projectiles/poison_explosion.tscn
++++ b/scenes/projectiles/poison_explosion.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3 uid="uid://3vk6cejb0q7r"]
+ 
+-[ext_resource type="Script" uid="uid://drll3yie53qtk" path="res://Scene/Projectiles/poison_explosion.gd" id="1_fkjgb"]
++[ext_resource type="Script" uid="uid://drll3yie53qtk" path="res://scenes/projectiles/poison_explosion.gd" id="1_fkjgb"]
+ [ext_resource type="Texture2D" uid="uid://4r32tgu7m3ra" path="res://Assets/Projectiles/Necromancer_Attack02_Effect.png" id="2_pubgf"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_h3kxs"]
+--- a/Scene/Review/review_service.gd
++++ b/scripts/review/review_service.gd
+@@ -7,7 +7,7 @@
+ ## Hop dong: INV-1 approval ton tai => approval.revision == record.revision (toi da 1 approval/record);
+ ##           INV-2 reviewer khong bao gio thay doi record goc.
+ 
+-const GameManagerScript = preload("res://Scene/GameManager.gd")
++const GameManagerScript = preload("res://scripts/core/game_manager.gd")
+ 
+ const ROLE_PLAYER: String = "player"
+ const ROLE_REVIEWER: String = "reviewer"
+--- a/Scene/UI/character_select.gd
++++ b/scenes/ui/character_select.gd
+@@ -1,6 +1,6 @@
+ extends Control
+ 
+-const UITheme = preload("res://Scene/UI/UITheme.gd")
++const UITheme = preload("res://scenes/ui/ui_theme.gd")
+ const DUNGEON_BG_TEX: Texture2D = preload("res://Assets/UI/Background/Dungeon.png")
+ const ARCHER_PORTRAIT: Texture2D = preload("res://Assets/UI/Button&Character/Human_Archer.png")
+ const KNIGHT_PORTRAIT: Texture2D = preload("res://Assets/UI/Button&Character/Human_Knight.png")
+@@ -8,12 +8,12 @@
+ const SWORDSMAN_PORTRAIT: Texture2D = preload("res://Assets/UI/Button&Character/Swordsman.png")
+ 
+ @export var character_scenes: Array[PackedScene] = [
+-	preload("res://Scene/Character/Player 3_Miya/player_3.tscn"),
+-	preload("res://Scene/Character/Player 2_Olaf/player_2.tscn"),
+-	preload("res://Scene/Character/Player 1_Pyrois/player.tscn"),
+-	preload("res://Scene/Character/Player 4_Charlotte/player_4.tscn"),
++	preload("res://scenes/characters/miya/player.tscn"),
++	preload("res://scenes/characters/olaf/player.tscn"),
++	preload("res://scenes/characters/pyrois/player.tscn"),
++	preload("res://scenes/characters/charlotte/player.tscn"),
+ ]
+-@export_file("*.tscn") var game_world_path: String = "res://world.tscn"
++@export_file("*.tscn") var game_world_path: String = "res://scenes/main/world.tscn"
+ 
+ @onready var navigation: HBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/HBoxContainer
+ @onready var scroll_container: ScrollContainer = navigation.get_node("ScrollContainer")
+@@ -118,7 +118,7 @@
+ 
+ 	var back_btn := UITheme.create_button("MAIN MENU", "", Vector2(150, 34), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 12)
+ 	back_btn.pressed.connect(func():
+-		get_tree().change_scene_to_file("res://Menu/main menu/main_menu.tscn")
++		get_tree().change_scene_to_file("res://scenes/menus/main_menu/main_menu.tscn")
+ 	)
+ 	header_hbox.add_child(back_btn)
+ 
+@@ -252,7 +252,7 @@
+ 		elif event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:
+ 			_on_hero_selection_button_pressed()
+ 		elif event.keycode == KEY_ESCAPE:
+-			get_tree().change_scene_to_file("res://Menu/main menu/main_menu.tscn")
++			get_tree().change_scene_to_file("res://scenes/menus/main_menu/main_menu.tscn")
+ 
+ func _on_previous_button_pressed() -> void:
+ 	_select_index(selected_index - 1)
+--- a/Scene/UI/CharacterSelect.tscn
++++ b/scenes/ui/character_select.tscn
+@@ -2,12 +2,10 @@
+ 
+ [ext_resource type="Texture2D" uid="uid://vnj30okp88w8" path="res://Assets/UI/Button&Character/Human_Knight.png" id="1_1d8pj"]
+ [ext_resource type="Texture2D" uid="uid://5kv7y2rlpcun" path="res://Assets/UI/Button&Character/Human_Archer.png" id="1_7k870"]
+-[ext_resource type="Script" uid="uid://4jl50o1gj3fc" path="res://Scene/UI/character_select.gd" id="1_v3tgs"]
++[ext_resource type="Script" uid="uid://4jl50o1gj3fc" path="res://scenes/ui/character_select.gd" id="1_v3tgs"]
+ [ext_resource type="Texture2D" uid="uid://d0dx15kb72hlh" path="res://Assets/UI/Button&Character/Soldier.png" id="2_ri6ba"]
+ [ext_resource type="Texture2D" uid="uid://dqlpo82dcxm55" path="res://Assets/UI/Button&Character/Swordsman.png" id="3_ri6ba"]
+-
+-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_4fsta"]
+-load_path = "res://.godot/imported/arrow.png-2dc01c71bb545ecb8bf3f1f2edd2281f.ctex"
++[ext_resource type="Texture2D" uid="uid://87s00l3qoyhd" path="res://Assets/UI/Button&Character/arrow.png" id="6_arrow"]
+ 
+ [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4fsta"]
+ 
+@@ -49,7 +47,7 @@
+ custom_maximum_size = Vector2(30, 30)
+ layout_mode = 2
+ size_flags_vertical = 4
+-texture = SubResource("CompressedTexture2D_4fsta")
++texture = ExtResource("6_arrow")
+ expand_mode = 1
+ 
+ [node name="PreviousButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/TextureRect" unique_id=379666242]
+@@ -129,7 +127,7 @@
+ custom_maximum_size = Vector2(30, 30)
+ layout_mode = 2
+ size_flags_vertical = 4
+-texture = SubResource("CompressedTexture2D_4fsta")
++texture = ExtResource("6_arrow")
+ expand_mode = 1
+ flip_h = true
+ 
+--- a/Scene/UI/GameUI.gd
++++ b/scenes/ui/game_ui.gd
+@@ -1,7 +1,7 @@
+ extends CanvasLayer
+ 
+-const UITheme = preload("res://Scene/UI/UITheme.gd")
+-const SLOT_SCENE = preload("res://Scene/UI/InventorySlot.tscn")
++const UITheme = preload("res://scenes/ui/ui_theme.gd")
++const SLOT_SCENE = preload("res://scenes/ui/inventory_slot.tscn")
+ const HOTBAR_SIZE = 9
+ const BAG_SIZE = 16
+ 
+--- a/Scene/UI/GameUI.tscn
++++ b/scenes/ui/game_ui.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3 uid="uid://c88b4e2b3wqrw"]
+ 
+-[ext_resource type="Script" uid="uid://bxwxs7xekgp45" path="res://Scene/UI/GameUI.gd" id="1_1e3es"]
++[ext_resource type="Script" uid="uid://bxwxs7xekgp45" path="res://scenes/ui/game_ui.gd" id="1_1e3es"]
+ [ext_resource type="Texture2D" uid="uid://c8bjxc3bai1gk" path="res://Assets/UI/Action_panel.png" id="1_khx2i"]
+ [ext_resource type="Texture2D" uid="uid://cb7os2cciw75c" path="res://Assets/UI/HP & Shield bar/HeartFull.png" id="2_viyut"]
+ [ext_resource type="Texture2D" uid="uid://bokdq6ywo2xiu" path="res://Assets/UI/HP & Shield bar/HeartEmpty.png" id="3_lkxwh"]
+--- a/Scene/UI/InventorySlot.tscn
++++ b/scenes/ui/inventory_slot.tscn
+@@ -1,7 +1,7 @@
+ [gd_scene format=3 uid="uid://gs1rnexk7qdb"]
+ 
+ [ext_resource type="Texture2D" uid="uid://bth3re8ic6txw" path="res://Assets/UI/Inventory.png" id="1_d8qlf"]
+-[ext_resource type="Script" uid="uid://7pyqj0gtmq5j" path="res://Scene/UI/InventorySlot.gd" id="2_7fdcd"]
++[ext_resource type="Script" uid="uid://7pyqj0gtmq5j" path="res://scenes/ui/inventory_slot.gd" id="2_7fdcd"]
+ 
+ [sub_resource type="AtlasTexture" id="AtlasTexture_an8xt"]
+ atlas = ExtResource("1_d8qlf")
+--- a/test_orc_battle.gd
++++ b/tests/test_orc_battle.gd
+@@ -32,8 +32,8 @@
+ 	await get_tree().process_frame
+ 
+ 	var tc = test_cases[current_idx]
+-	var orc_scene = load("res://Scene/Enemies/Orc/orc.tscn")
+-	var player_scene = load("res://Scene/Character/Player 1_Pyrois/player.tscn")
++	var orc_scene = load("res://scenes/enemies/orc/orc.tscn")
++	var player_scene = load("res://scenes/characters/pyrois/player.tscn")
+ 
+ 	player = player_scene.instantiate()
+ 	player.position = tc["pos"]
+--- a/test_orc_battle.tscn
++++ b/tests/test_orc_battle.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3]
+ 
+-[ext_resource type="Script" path="res://test_orc_battle.gd" id="1_test"]
++[ext_resource type="Script" path="res://tests/test_orc_battle.gd" id="1_test"]
+ 
+ [node name="TestOrcBattle" type="Node2D"]
+ script = ExtResource("1_test")
+--- a/tests/benchmark_dungeon_generator.gd
++++ b/benchmarks/benchmark_dungeon_generator.gd
+@@ -1,6 +1,6 @@
+ extends Node2D
+ 
+-const WORLD_SCENE = preload("res://world.tscn")
++const WORLD_SCENE = preload("res://scenes/main/world.tscn")
+ const ROOM_SCALES: Array[int] = [10, 16, 25, 36, 50]
+ const ITERATIONS_PER_SCALE: int = 25
+ 
+@@ -19,7 +19,7 @@
+ 			var seed_str := "BENCH_%d_RUN_%d" % [num_r, iter]
+ 			var world = WORLD_SCENE.instantiate()
+ 			var gen: TileMap = world.get_node("TileMap")
+-			gen.set_script(load("res://Scene/Map/dungeon_generator.gd"))
++			gen.set_script(load("res://scenes/dungeon/dungeon_generator.gd"))
+ 			gen.map_seed = seed_str
+ 			gen.num_rooms = num_r
+ 
+--- a/tests/benchmark_dungeon_generator.tscn
++++ b/benchmarks/benchmark_dungeon_generator.tscn
+@@ -1,6 +1,6 @@
+ [gd_scene format=3]
+ 
+-[ext_resource type="Script" path="res://tests/benchmark_dungeon_generator.gd" id="1_bench"]
++[ext_resource type="Script" path="res://benchmarks/benchmark_dungeon_generator.gd" id="1_bench"]
+ 
+ [node name="BenchmarkDungeonGenerator" type="Node2D"]
+ script = ExtResource("1_bench")
+--- a/tests/test_dungeon_generator_unit.gd
++++ b/tests/test_dungeon_generator_unit.gd
+@@ -1,8 +1,8 @@
+ extends Node2D
+ 
+-const UITheme = preload("res://Scene/UI/UITheme.gd")
+-const BalanceConfig = preload("res://Scene/BalanceConfig.gd")
+-const WORLD_SCENE = preload("res://world.tscn")
++const UITheme = preload("res://scenes/ui/ui_theme.gd")
++const BalanceConfig = preload("res://scripts/core/balance_config.gd")
++const WORLD_SCENE = preload("res://scenes/main/world.tscn")
+ 
+ var passed_count: int = 0
+ var failed_count: int = 0
+@@ -38,7 +38,7 @@
+ func _create_generator(seed_str: String, rooms: int = 16, level: int = 1) -> TileMap:
+ 	var world = WORLD_SCENE.instantiate()
+ 	var gen: TileMap = world.get_node("TileMap")
+-	gen.set_script(load("res://Scene/Map/dungeon_generator.gd"))
++	gen.set_script(load("res://scenes/dungeon/dungeon_generator.gd"))
+ 	gen.map_seed = seed_str
+ 	gen.num_rooms = rooms
+ 	gen.current_level = level
+@@ -211,11 +211,11 @@
+ 	)
+ 
+ func _test_ut09_ui_scenes_and_theme_integrity() -> void:
+-	var menu_scene := load("res://Menu/main menu/main_menu.tscn") as PackedScene
+-	var char_scene := load("res://Scene/UI/CharacterSelect.tscn") as PackedScene
+-	var hud_scene := load("res://Scene/UI/GameUI.tscn") as PackedScene
+-	var pause_scene := load("res://Menu/pause menu/pause_menu.tscn") as PackedScene
+-	var over_scene := load("res://Menu/game over menu/game_over_menu.tscn") as PackedScene
++	var menu_scene := load("res://scenes/menus/main_menu/main_menu.tscn") as PackedScene
++	var char_scene := load("res://scenes/ui/character_select.tscn") as PackedScene
++	var hud_scene := load("res://scenes/ui/game_ui.tscn") as PackedScene
++	var pause_scene := load("res://scenes/menus/pause_menu/pause_menu.tscn") as PackedScene
++	var over_scene := load("res://scenes/menus/game_over_menu/game_over_menu.tscn") as PackedScene
+ 
+ 	var menu_inst := menu_scene.instantiate()
+ 	add_child(menu_inst)
+@@ -338,7 +338,7 @@
+ 	var gen = _create_generator("SEED-Q244GL", 16, 1)
+ 	add_child(gen.get_parent())
+ 
+-	var archer_scene := load("res://Scene/Character/Player 3_Miya/player_3.tscn") as PackedScene
++	var archer_scene := load("res://scenes/characters/miya/player.tscn") as PackedScene
+ 	var archer = archer_scene.instantiate()
+ 	gen.the_player = archer
+ 	gen.add_child(archer)
+@@ -372,7 +372,7 @@
+ func _test_ut13_balance_config_archer_nerf_and_lotr_lore() -> void:
+ 	# 1. Kiểm tra thông số Nerf của Cung thủ Miya trong BalanceConfig & khi khởi tạo thực tế
+ 	var miya_cfg: Dictionary = BalanceConfig.get_hero_stats("miya")
+-	var archer_scene := load("res://Scene/Character/Player 3_Miya/player_3.tscn") as PackedScene
++	var archer_scene := load("res://scenes/characters/miya/player.tscn") as PackedScene
+ 	var archer = archer_scene.instantiate()
+ 	add_child(archer)
+ 
+@@ -391,7 +391,7 @@
+ 	# 2. Kiểm tra cơ chế Buff/Nerf động qua BalanceConfig.set_unit_stat()
+ 	var old_orc_hp: int = int(BalanceConfig.get_enemy_stats("orc").get("hp", 10))
+ 	BalanceConfig.set_unit_stat("enemy", "orc", "hp", 15)
+-	var orc_scene := load("res://Scene/Enemies/Orc/orc.tscn") as PackedScene
++	var orc_scene := load("res://scenes/enemies/orc/orc.tscn") as PackedScene
+ 	var orc = orc_scene.instantiate()
+ 	add_child(orc)
+ 	var dynamic_buff_ok: bool = (orc.hp == 15)
+--- a/tests/test_dungeon_properties.gd
++++ b/tests/test_dungeon_properties.gd
+@@ -1,6 +1,6 @@
+ extends Node2D
+ 
+-const WORLD_SCENE = preload("res://world.tscn")
++const WORLD_SCENE = preload("res://scenes/main/world.tscn")
+ const NUM_PROPERTY_SEEDS: int = 100
+ 
+ var passed_properties: int = 0
+@@ -21,13 +21,13 @@
+ 
+ 	var world = WORLD_SCENE.instantiate()
+ 	var g: TileMap = world.get_node("TileMap")
+-	g.set_script(load("res://Scene/Map/dungeon_generator.gd"))
++	g.set_script(load("res://scenes/dungeon/dungeon_generator.gd"))
+ 	g.num_rooms = 16
+ 	g.current_level = 1
+ 
+ 	var world2 = WORLD_SCENE.instantiate()
+ 	var g2: TileMap = world2.get_node("TileMap")
+-	g2.set_script(load("res://Scene/Map/dungeon_generator.gd"))
++	g2.set_script(load("res://scenes/dungeon/dungeon_generator.gd"))
+ 	g2.num_rooms = 16
+ 	g2.current_level = 1
+ 
+--- a/tests/test_new_mechanics_node.gd
++++ b/tests/test_new_mechanics_node.gd
+@@ -1,10 +1,10 @@
+ extends Node2D
+ 
+-const BalanceData = preload("res://Scene/BalanceConfig.gd")
++const BalanceData = preload("res://scripts/core/balance_config.gd")
+ 
+ func _ready() -> void:
+ 	print("--- TESTING SPIKE TRAP MECHANICS ---")
+-	var trap_scene = load("res://Scene/Map/SpikeTrap.tscn")
++	var trap_scene = load("res://scenes/dungeon/spike_trap.tscn")
+ 	var trap = trap_scene.instantiate()
+ 	add_child(trap)
+ 	
+@@ -15,12 +15,12 @@
+ 	print("PASS: Spike trap barrier and hold duration (%.1fs) validated" % trap.active_hold_duration)
+ 	
+ 	# 2. Verify damage filter: only player takes damage, enemies take 0
+-	var enemy_scene = load("res://Scene/Enemies/Orc/orc.tscn")
++	var enemy_scene = load("res://scenes/enemies/orc/orc.tscn")
+ 	var enemy = enemy_scene.instantiate()
+ 	add_child(enemy)
+ 	var start_enemy_hp = enemy.hp
+ 	
+-	var player_scene = load("res://Scene/Character/Player 1_Pyrois/player.tscn")
++	var player_scene = load("res://scenes/characters/pyrois/player.tscn")
+ 	var player = player_scene.instantiate()
+ 	add_child(player)
+ 	var start_player_armor = player.current_armor
+--- a/tests/test_reviewer_concurrency.gd
++++ b/tests/test_reviewer_concurrency.gd
+@@ -9,7 +9,7 @@
+ ##   VT075_ONLY          danh sach test id (vd "TC-01,TC-02") - chi chay cac test nay
+ 
+ const HarnessScript = preload("res://tests/vt075/concurrency_harness.gd")
+-const DEFAULT_SERVICE_PATH: String = "res://Scene/Review/review_service.gd"
++const DEFAULT_SERVICE_PATH: String = "res://scripts/review/review_service.gd"
+ const COV_PROBE_PATH: String = "res://tests/vt075/cov_probe.gd"
+ 
+ # Hop dong ma/chuoi duoc ghim trong test (khong doc tu service) de test bat duoc doi hop dong.
+--- a/tests/test_visual_backdrop_node.gd
++++ b/tests/test_visual_backdrop_node.gd
+@@ -14,10 +14,10 @@
+ 		return
+ 	print("   [PASS] Viewport default clear color is dark obsidian abyss (not gray 0.3)")
+ 
+-	# 2. Kiểm tra world.tscn BedrockBackground
+-	var world_scene := load("res://world.tscn") as PackedScene
++	# 2. Kiểm tra scenes/main/world.tscn BedrockBackground
++	var world_scene := load("res://scenes/main/world.tscn") as PackedScene
+ 	if world_scene == null:
+-		printerr("FAIL: Cannot load world.tscn")
++		printerr("FAIL: Cannot load scenes/main/world.tscn")
+ 		get_tree().quit(1)
+ 		return
+ 	var world_node := world_scene.instantiate()
+@@ -25,7 +25,7 @@
+ 	
+ 	var bedrock: ColorRect = world_node.get_node_or_null("BedrockBackground") as ColorRect
+ 	if bedrock == null:
+-		printerr("FAIL: BedrockBackground missing from world.tscn")
++		printerr("FAIL: BedrockBackground missing from scenes/main/world.tscn")
+ 		get_tree().quit(1)
+ 		return
+ 	print("2. BedrockBackground node found: size=", bedrock.size, ", z_index=", bedrock.z_index)
+--- a/tests/vt075/load_p95.gd
++++ b/tests/vt075/load_p95.gd
+@@ -9,7 +9,7 @@
+ ## GIOI HAN: day la 120 thread trong MOT tien trinh, khong phai 120 nguoi dung qua mang; khong co UI.
+ 
+ const HarnessScript = preload("res://tests/vt075/concurrency_harness.gd")
+-const DEFAULT_SERVICE_PATH: String = "res://Scene/Review/review_service.gd"
++const DEFAULT_SERVICE_PATH: String = "res://scripts/review/review_service.gd"
+ const TASKS: int = 120
+ const TARGET_US: int = 3500000
+ const CALIB_DIR: String = "user://vt075_calib"
+--- a/tests/vt075/tools/coverage.py
++++ b/tests/vt075/tools/coverage.py
+@@ -1,6 +1,6 @@
+ #!/usr/bin/env python3
+ """VT-075 coverage: Godot khong co cong cu coverage cho GDScript (godot --help khong co co coverage),
+-nen script nay INSTRUMENT ban sao cua Scene/Review/review_service.gd (chen CovProbe.hit(N) truoc moi
++nen script nay INSTRUMENT ban sao cua scripts/review/review_service.gd (chen CovProbe.hit(N) truoc moi
+ dong lenh), chay test tren ban sao do va tinh:
+   - line coverage: dong lenh duoc thuc thi / tong dong lenh trong than ham
+   - arm (branch) coverage: voi moi if/elif: nhanh dung (than if) va nhanh sai (else/elif tiep theo,
+@@ -9,12 +9,13 @@
+ 
+ Chay: python tests/vt075/tools/coverage.py [--only TC-01,TC-02,...] [--out file.md]
+ """
++import shutil
+ import argparse, json, os, re, subprocess, sys
+ 
+ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+-SERVICE = os.path.join(ROOT, "Scene", "Review", "review_service.gd")
++SERVICE = os.path.join(ROOT, "scripts", "review", "review_service.gd")
+ COV_DIR = os.path.join(ROOT, "tests", "vt075", "_cov")
+-GODOT = os.environ.get("GODOT_BIN", r"B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe")
++GODOT = os.environ.get("GODOT_BIN") or shutil.which("godot") or shutil.which("godot4") or "godot"
+ SCENE = "res://tests/test_reviewer_concurrency.tscn"
+ 
+ 
+--- a/tests/vt075/tools/flaky_runs.py
++++ b/tests/vt075/tools/flaky_runs.py
+@@ -4,10 +4,11 @@
+ 
+ Chay: python tests/vt075/tools/flaky_runs.py --runs 30 [--env VT075_ORDER=reverse] [--timeout 60] [--out file.md]
+ """
++import shutil
+ import argparse, os, re, statistics, subprocess, sys, time
+ 
+ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+-GODOT = os.environ.get("GODOT_BIN", r"B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe")
++GODOT = os.environ.get("GODOT_BIN") or shutil.which("godot") or shutil.which("godot4") or "godot"
+ SCENE = "res://tests/test_reviewer_concurrency.tscn"
+ 
+ 
+--- a/tests/vt075/tools/generate_report_pdf.py
++++ b/tests/vt075/tools/generate_report_pdf.py
+@@ -12,7 +12,7 @@
+ import fitz  # PyMuPDF
+ 
+ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+-PDF_OUTPUT = os.path.join(ROOT, "BT3_23001837_VT-075.pdf")
++PDF_OUTPUT = os.path.join(ROOT, "docs", "vt075", "BT3_23001837_VT-075.pdf")
+ HTML_OUTPUT = os.path.join(ROOT, "docs", "vt075", "report_preview.html")
+ 
+ CHROME_PATHS = [
+@@ -264,7 +264,7 @@
+ <p><strong>2.1. Hai phương án do AI đề xuất:</strong></p>
+ <ul>
+   <li><span class="badge-opt">Phương án A:</span> Thêm thuộc tính <code>current_role</code> trực tiếp vào Autoload <code>GameManager.gd</code>, bổ sung lệnh kiểm tra role vào <code>save_seed_entry</code>, <code>remove_saved_seed</code>, <code>finish_run</code> và lưu trực tiếp approval vào mảng <code>run_history</code>.</li>
+-  <li><span class="badge-opt">Phương án B (Được chọn):</span> Thiết kế module độc lập <code>Scene/Review/review_service.gd</code> (kế thừa <code>RefCounted</code>) quản lý kho lưu trữ bản ghi và approvals riêng biệt; tự bảo vệ bằng <code>Mutex</code> đơn khối; cung cấp hàm import dữ liệu từ <code>GameManager.run_history</code> mà không can thiệp mã nguồn game gốc.</li>
++  <li><span class="badge-opt">Phương án B (Được chọn):</span> Thiết kế module độc lập <code>scripts/review/review_service.gd</code> (kế thừa <code>RefCounted</code>) quản lý kho lưu trữ bản ghi và approvals riêng biệt; tự bảo vệ bằng <code>Mutex</code> đơn khối; cung cấp hàm import dữ liệu từ <code>GameManager.run_history</code> mà không can thiệp mã nguồn game gốc.</li>
+ </ul>
+ 
+ <p><strong>2.2. Review phản biện kế hoạch AI bằng Evidence thực tế từ Repository:</strong></p>
+@@ -273,7 +273,7 @@
+   <tr>
+     <td><strong>A1:</strong> Dự án có lớp mạng/API nên cần viết HTTP/API test.</td>
+     <td><strong>BÁC BỎ</strong></td>
+-    <td>Lệnh <code>Select-String</code> quét toàn bộ <code>Scene/</code> và <code>Menu/</code> với pattern <code>HTTPRequest|WebSocket|ENet</code> trả về 0 kết quả (xem <code>00_plan_review_checks.log</code>). Đây là game 2D offline. Thay thế bằng integration test ở mức Service.</td>
++    <td>Lệnh <code>Select-String</code> quét toàn bộ <code>scenes/</code> và <code>scenes/menus/</code> với pattern <code>HTTPRequest|WebSocket|ENet</code> trả về 0 kết quả (xem <code>00_plan_review_checks.log</code>). Đây là game 2D offline. Thay thế bằng integration test ở mức Service.</td>
+   </tr>
+   <tr>
+     <td><strong>A2:</strong> Dùng framework GUT / gdUnit4 để chạy test và đo coverage.</td>
+@@ -492,6 +492,7 @@
+         sys.exit(1)
+     
+     html_content = build_html()
++    os.makedirs(os.path.dirname(HTML_OUTPUT), exist_ok=True)
+     with open(HTML_OUTPUT, "w", encoding="utf-8") as f:
+         f.write(html_content)
+     print(f"[1/3] Da tao file HTML preview: {HTML_OUTPUT}")
+--- a/tests/vt075/tools/mutation_run.py
++++ b/tests/vt075/tools/mutation_run.py
+@@ -1,18 +1,19 @@
+ #!/usr/bin/env python3
+ """VT-075 mutation experiment: "bo mot validation quan trong" (+ vai mutant doi chung).
+ 
+-Moi mutant la mot ban sao cua Scene/Review/review_service.gd da bi sua dung 1 cho
++Moi mutant la mot ban sao cua scripts/review/review_service.gd da bi sua dung 1 cho
+ (ghi vao tests/vt075/_mutant/, bi gitignore) va duoc test bang bien moi truong
+ VT075_SERVICE_PATH. File that khong bao gio bi sua. Mutant 'killed' neu suite exit != 0.
+ 
+ Chay:  python tests/vt075/tools/mutation_run.py [--only M1,M3] [--out docs/vt075/evidence/03_mutation_results.md]
+ """
++import shutil
+ import argparse, os, re, subprocess, sys, json
+ 
+ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+-SERVICE = os.path.join(ROOT, "Scene", "Review", "review_service.gd")
++SERVICE = os.path.join(ROOT, "scripts", "review", "review_service.gd")
+ MUT_DIR = os.path.join(ROOT, "tests", "vt075", "_mutant")
+-GODOT = os.environ.get("GODOT_BIN", r"B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe")
++GODOT = os.environ.get("GODOT_BIN") or shutil.which("godot") or shutil.which("godot4") or "godot"
+ SCENE = "res://tests/test_reviewer_concurrency.tscn"
+ 
+ # (id, loai, mo ta, old, new)
+--- a/tests/vt075/tools/plan_review_checks.ps1
++++ b/tests/vt075/tools/plan_review_checks.ps1
+@@ -1,9 +1,11 @@
+ # VT-075 - kiem chung cac assumption cua plan AI bang repository that.
+ # Chay tu thu muc goc project:  powershell -File tests/vt075/tools/plan_review_checks.ps1
+-$godot = if ($env:GODOT_BIN) { $env:GODOT_BIN } else { "B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe" }
++. (Join-Path $PSScriptRoot "../../../tools/godot_helpers.ps1")
++$godot = Resolve-GodotBinary
++Set-Location (Join-Path $PSScriptRoot "../../..")
+ 
+ "== A1: co lop mang/API trong code game? (mong doi: 0 ket qua) =="
+-$net = Get-ChildItem -Recurse -Filter *.gd -Path Scene,Menu | Select-String -Pattern "HTTPRequest|HTTPClient|ENet|WebSocket|MultiplayerAPI"
++$net = Get-ChildItem -Recurse -Filter *.gd -Path scenes,scripts | Select-String -Pattern "HTTPRequest|HTTPClient|ENet|WebSocket|MultiplayerAPI"
+ "matches=$(@($net).Count)"
+ 
+ "== A2: co addons/GUT/gdUnit4? (mong doi: khong) =="
+@@ -12,11 +14,11 @@
+ Select-String -Path tests/test_dungeon_generator_unit.gd -Pattern "func _assert_true" | ForEach-Object { $_.Line.Trim() }
+ 
+ "== A3: GameManager co khoa/Mutex? mutator co emit + ghi file co dinh? =="
+-"mutex_in_Scene=$(@(Get-ChildItem -Recurse -Filter *.gd -Path Scene | Select-String -Pattern 'Mutex').Count)"
+-Select-String -Path Scene/GameManager.gd -Pattern "saved_data_changed.emit|SAVE_FILE_PATH|func save_seed_entry|func remove_saved_seed|func finish_run" | ForEach-Object { "GameManager.gd:$($_.LineNumber): $($_.Line.Trim())" }
++"mutex_in_Scene=$(@(Get-ChildItem -Recurse -Filter *.gd -Path scenes,scripts | Select-String -Pattern 'Mutex').Count)"
++Select-String -Path scripts/core/game_manager.gd -Pattern "saved_data_changed.emit|SAVE_FILE_PATH|func save_seed_entry|func remove_saved_seed|func finish_run" | ForEach-Object { "GameManager.gd:$($_.LineNumber): $($_.Line.Trim())" }
+ 
+ "== A4: Thread/Mutex/Semaphore trong --headless =="
+-& $godot --headless --script res://tests/vt075/tools/thread_probe.gd 2>&1 | Select-String -Pattern "threads=|lost_updates"
++& $godot --headless --path . --script res://tests/vt075/tools/thread_probe.gd 2>&1 | Select-String -Pattern "threads=|lost_updates"
+ 
+ "== A5: co co coverage trong godot --help? (mong doi: khong) =="
+ "coverage_flag_matches=$(@(& $godot --help | Select-String -Pattern 'coverage').Count)"
+--- a/tests/vt075/tools/run_suite.ps1
++++ b/tests/vt075/tools/run_suite.ps1
+@@ -9,26 +9,34 @@
+ 	[string]$EnvVars = "",
+ 	[switch]$Quiet
+ )
+-$godot = if ($env:GODOT_BIN) { $env:GODOT_BIN } else { "B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe" }
++. (Join-Path $PSScriptRoot '../../../tools/godot_helpers.ps1')
++$godot = Resolve-GodotBinary
++$projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '../../..')).Path
+ $saved = @{}
+ foreach ($pair in ($EnvVars -split ";" | Where-Object { $_ -ne "" })) {
+ 	$k, $v = $pair -split "=", 2
+ 	$saved[$k] = [Environment]::GetEnvironmentVariable($k)
+ 	[Environment]::SetEnvironmentVariable($k, $v)
+ }
+-$commit = (git rev-parse HEAD).Trim()
+-$dirty = if ((git status --porcelain)) { "dirty" } else { "clean" }
+-$branch = (git branch --show-current).Trim()
++$commit = 'unavailable (no Git metadata or Git CLI)'
++$dirty = 'unknown'
++$branch = 'unknown'
++if ((Test-Path (Join-Path $projectRoot '.git')) -and (Get-Command git -ErrorAction SilentlyContinue)) {
++	$commit = (git -C $projectRoot rev-parse HEAD).Trim()
++	$dirty = if ((git -C $projectRoot status --porcelain)) { 'dirty' } else { 'clean' }
++	$branch = (git -C $projectRoot branch --show-current).Trim()
++}
+ $lines = @()
+ $lines += "# commit: $commit ($dirty) branch: $branch"
+ $lines += "# date: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz')"
+ $lines += "# godot: $((& $godot --version).Trim())"
+-$lines += "# cmd: godot --headless $Scene   env: $EnvVars"
+-$output = & $godot --headless $Scene 2>&1 | ForEach-Object { "$_" }
++$lines += "# cmd: godot --headless --path `"$projectRoot`" $Scene   env: $EnvVars"
++$output = & $godot --headless --path $projectRoot $Scene 2>&1 | ForEach-Object { "$_" }
+ $code = $LASTEXITCODE
+ $lines += $output
+ $lines += "# exit code: $code"
+-New-Item -ItemType Directory -Force (Split-Path $Out) | Out-Null
++$outDir = Split-Path $Out
++if ($outDir) { New-Item -ItemType Directory -Force -Path $outDir | Out-Null }
+ $lines | Set-Content -Path $Out -Encoding UTF8
+ foreach ($k in $saved.Keys) { [Environment]::SetEnvironmentVariable($k, $saved[$k]) }
+ if (-not $Quiet) { $lines }
+--- a/world.tscn
++++ b/scenes/main/world.tscn
+@@ -1,10 +1,10 @@
+ [gd_scene format=3 uid="uid://cpcn5e3epu68a"]
+ 
+ [ext_resource type="Texture2D" uid="uid://ij34crdb1rh4" path="res://Assets/Map/Objects.png" id="2_tlwt5"]
+-[ext_resource type="PackedScene" uid="uid://cxuf6kvn5wh7r" path="res://Menu/pause menu/pause_menu.tscn" id="4_aqk2v"]
++[ext_resource type="PackedScene" uid="uid://cxuf6kvn5wh7r" path="res://scenes/menus/pause_menu/pause_menu.tscn" id="4_aqk2v"]
+ [ext_resource type="Texture2D" uid="uid://chuifes2qyj7j" path="res://Assets/Map/walls_floor.png" id="5_036b0"]
+-[ext_resource type="Script" uid="uid://cmiei2e6vb4e2" path="res://Scene/Map/dungeon_generator.gd" id="6_dwbse"]
+-[ext_resource type="PackedScene" uid="uid://ck6udcm1nm3os" path="res://Menu/game over menu/game_over_menu.tscn" id="7_game_over"]
++[ext_resource type="Script" uid="uid://cmiei2e6vb4e2" path="res://scenes/dungeon/dungeon_generator.gd" id="6_dwbse"]
++[ext_resource type="PackedScene" uid="uid://ck6udcm1nm3os" path="res://scenes/menus/game_over_menu/game_over_menu.tscn" id="7_game_over"]
+ 
+ [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dwbse"]
+ texture = ExtResource("5_036b0")

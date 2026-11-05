@@ -1,0 +1,1777 @@
+{
+  "date": "2026-11-05",
+  "branch": "chore/project-structure-v2",
+  "base_head": "777d9d9fbcfffe61ea421071d3d891a3dd7bd788",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "source_unchanged_files": 1095,
+  "suite": [
+    {
+      "name": "backdrop",
+      "exit_code": 0,
+      "log": ".godot-test-results/migration/suite-fixed/backdrop.log",
+      "sha256": "9630209908f6b9a7f8c6067c0f7432d029228f491e175f7920abf88bf3065146",
+      "summaries": [
+        "[SUMMARY] ALL GRAPHICAL INTEGRITY CHECKS PASSED 100%!"
+      ],
+      "certificate_store_diagnostic": true
+    },
+    {
+      "name": "benchmark",
+      "exit_code": 0,
+      "log": ".godot-test-results/migration/suite-fixed/benchmark.log",
+      "sha256": "56488ceff3c3293e0b4859a47435a5422d7b7cdd4ef7ef0e6d22ebe051438734",
+      "summaries": [],
+      "certificate_store_diagnostic": true
+    },
+    {
+      "name": "combat",
+      "exit_code": 0,
+      "log": ".godot-test-results/migration/suite-fixed/combat.log",
+      "sha256": "083322364e31e657dedf540d9ac68cd52f38e7bb545b583c8f04b576fe96f327",
+      "summaries": [
+        ">>> TAT CA 5/5 TEST CASES DEU PASSED 100%! <<<"
+      ],
+      "certificate_store_diagnostic": true
+    },
+    {
+      "name": "doraemon",
+      "exit_code": 0,
+      "log": ".godot-test-results/migration/suite-fixed/doraemon.log",
+      "sha256": "7cbff934e7e587274cd0576d26bd6d971ec89e480bf947f2320619fc2658b5c1",
+      "summaries": [
+        "[SUMMARY] DORAEMON: 48 PASSED | 0 FAILED"
+      ],
+      "certificate_store_diagnostic": true
+    },
+    {
+      "name": "hud_inventory",
+      "exit_code": 0,
+      "log": ".godot-test-results/migration/suite-fixed/hud_inventory.log",
+      "sha256": "a4d4bb5c9e3d340ef6107f3d01a12801562c1384adf788f72a95a5c972a6be4e",
+      "summaries": [
+        "TEST RESULTS: 34 PASSED, 0 FAILED"
+      ],
+      "certificate_store_diagnostic": true
+    },
+    {
+      "name": "import",
+      "exit_code": 0,
+      "log": ".godot-test-results/migration/suite-fixed/import.log",
+      "sha256": "d81be2062b8f80cc901c9cdc5ed8875aa6f686b43dd061d35d0d6c40de1417d8",
+      "summaries": [],
+      "certificate_store_diagnostic": true
+    },
+    {
+      "name": "mechanics",
+      "exit_code": 0,
+      "log": ".godot-test-results/migration/suite-fixed/mechanics.log",
+      "sha256": "b35437d54b9f3fe71170897bdee3da91c0f82ade463e1600d5b611ea7673dd0e",
+      "summaries": [
+        ">>> ALL NEW MECHANICS VERIFIED 100%! <<<"
+      ],
+      "certificate_store_diagnostic": true
+    },
+    {
+      "name": "properties",
+      "exit_code": 0,
+      "log": ".godot-test-results/migration/suite-fixed/properties.log",
+      "sha256": "4daa6a441927f105bcbc49a94226ceb108574ee9fd69f9bb79d786ece9de2aae",
+      "summaries": [
+        "[SUMMARY] PROPERTY TESTS: 5/5 PROPERTIES PASSED (500 total invariant checks)"
+      ],
+      "certificate_store_diagnostic": true
+    },
+    {
+      "name": "replay_security",
+      "exit_code": 0,
+      "log": ".godot-test-results/migration/suite-fixed/replay_security.log",
+      "sha256": "76d6070883569497f48b3e9ca11bb159ac4eebfb996d08c01c6f7cefb56e07ad",
+      "summaries": [
+        "TEST RESULTS: 39 PASSED, 0 FAILED"
+      ],
+      "certificate_store_diagnostic": true
+    },
+    {
+      "name": "resources",
+      "exit_code": 0,
+      "log": ".godot-test-results/migration/suite-fixed/resources.log",
+      "sha256": "46bd5861d7d4cfdcde51071a156b85a1859b7696a55a512c666044386b670e16",
+      "summaries": [
+        "[SUMMARY] RESOURCE LOADING: 142 checked | 0 failed"
+      ],
+      "certificate_store_diagnostic": true
+    },
+    {
+      "name": "reviewer",
+      "exit_code": 0,
+      "log": ".godot-test-results/migration/suite-fixed/reviewer.log",
+      "sha256": "e29e22eb4cf4634525c7ce5c53a023b1aa6934122ed05c317b4d6ddced256db8",
+      "summaries": [
+        "[SUMMARY] VT-075 TESTS: 24 PASSED | 0 FAILED"
+      ],
+      "certificate_store_diagnostic": true
+    },
+    {
+      "name": "skeleton_king",
+      "exit_code": 0,
+      "log": ".godot-test-results/migration/suite-fixed/skeleton_king.log",
+      "sha256": "d5130174b6c33af089cd83e8adb8e59cf7cba2910816b2cf9902057194331508",
+      "summaries": [
+        "[SUMMARY] SKELETON KING: 21 PASSED | 0 FAILED"
+      ],
+      "certificate_store_diagnostic": true
+    },
+    {
+      "name": "unit",
+      "exit_code": 0,
+      "log": ".godot-test-results/migration/suite-fixed/unit.log",
+      "sha256": "e9eb71e9d9486f0c18ad35bc408852e6b6d515a347d425f1590ea87e20a54b06",
+      "summaries": [
+        "[SUMMARY] UNIT TESTS: 19 PASSED | 0 FAILED"
+      ],
+      "certificate_store_diagnostic": true
+    },
+    {
+      "name": "werewolf",
+      "exit_code": 0,
+      "log": ".godot-test-results/migration/suite-fixed/werewolf.log",
+      "sha256": "dfa7e7d01665786a864524cccf975a7bfea76d1ef28994cca107f9598d5d3d23",
+      "summaries": [
+        "TEST RESULTS: 50 PASSED, 0 FAILED"
+      ],
+      "certificate_store_diagnostic": true
+    },
+    {
+      "name": "yugi",
+      "exit_code": 0,
+      "log": ".godot-test-results/migration/suite-fixed/yugi.log",
+      "sha256": "983548e00c1eb99fa956aef347166f302037a387e479baff2a0eb9f49b72b314",
+      "summaries": [
+        "YUGI TESTS PASSED"
+      ],
+      "certificate_store_diagnostic": true
+    }
+  ],
+  "additional_checks": {
+    "before-import": {
+      "command": [
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot-test-results\\migration\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+        "--editor",
+        "--import",
+        "--quit"
+      ],
+      "exit": 0,
+      "seconds": 14.84,
+      "errors": [
+        "ERROR: Cannot open file 'res://.godot/imported/BeVietnamPro-Medium.ttf-bd980738c0ea5d418ba3cfba7d194477.fontdata'.",
+        "ERROR: Failed loading resource: res://.godot/imported/BeVietnamPro-Medium.ttf-bd980738c0ea5d418ba3cfba7d194477.fontdata.",
+        "ERROR: Failed loading resource: res://Assets/Fonts/BeVietnamPro-Medium.ttf.",
+        "ERROR: Error loading custom project font 'res://Assets/Fonts/BeVietnamPro-Medium.ttf'"
+      ],
+      "log": ".godot-test-results\\migration\\before-import\\output.log"
+    },
+    "before-main": {
+      "command": [
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot-test-results\\migration\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+        "--quit-after",
+        "60"
+      ],
+      "exit": 0,
+      "seconds": 1.44,
+      "errors": [],
+      "log": ".godot-test-results\\migration\\before-main\\output.log"
+    },
+    "before-world": {
+      "command": [
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot-test-results\\migration\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+        "res://world.tscn",
+        "--quit-after",
+        "60"
+      ],
+      "exit": 0,
+      "seconds": 2.17,
+      "errors": [],
+      "log": ".godot-test-results\\migration\\before-world\\output.log"
+    },
+    "after-import": {
+      "command": [
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot-test-results\\migration\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+        "--editor",
+        "--import",
+        "--quit"
+      ],
+      "exit": 0,
+      "seconds": 4.61,
+      "errors": [
+        "ERROR: Attempt to open script 'res://Scene/GameManager.gd' resulted in error 'File not found'.",
+        "ERROR: Failed loading resource: res://Scene/GameManager.gd.",
+        "ERROR: Failed to create an autoload, can't load from UID or path: res://Scene/GameManager.gd.",
+        "ERROR: Attempt to open script 'res://Scene/AudioManager.gd' resulted in error 'File not found'.",
+        "ERROR: Failed loading resource: res://Scene/AudioManager.gd.",
+        "ERROR: Failed to create an autoload, can't load from UID or path: res://Scene/AudioManager.gd."
+      ],
+      "log": ".godot-test-results\\migration\\after-import\\output.log"
+    },
+    "after-import-retry": {
+      "command": [
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot-test-results\\migration\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+        "--editor",
+        "--import",
+        "--quit"
+      ],
+      "exit": 0,
+      "seconds": 3.86,
+      "errors": [],
+      "log": ".godot-test-results\\migration\\after-import-retry\\output.log"
+    },
+    "after-main": {
+      "command": [
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot-test-results\\migration\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+        "--quit-after",
+        "60"
+      ],
+      "exit": 0,
+      "seconds": 1.44,
+      "errors": [],
+      "log": ".godot-test-results\\migration\\after-main\\output.log"
+    },
+    "after-world": {
+      "command": [
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot-test-results\\migration\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+        "res://scenes/main/world.tscn",
+        "--quit-after",
+        "60"
+      ],
+      "exit": 0,
+      "seconds": 1.78,
+      "errors": [],
+      "log": ".godot-test-results\\migration\\after-world\\output.log"
+    },
+    "after-basic": {
+      "command": [
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot-test-results\\migration\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+        "res://benchmarks/benchmark.tscn"
+      ],
+      "exit": 0,
+      "seconds": 25.3,
+      "errors": [],
+      "log": ".godot-test-results\\migration\\after-basic\\output.log"
+    },
+    "cold-import": {
+      "command": [
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot-test-results\\migration\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+        "--editor",
+        "--import",
+        "--quit"
+      ],
+      "exit": 0,
+      "seconds": 14.33,
+      "errors": [
+        "ERROR: Cannot open file 'res://.godot/imported/BeVietnamPro-Medium.ttf-bd980738c0ea5d418ba3cfba7d194477.fontdata'.",
+        "ERROR: Failed loading resource: res://.godot/imported/BeVietnamPro-Medium.ttf-bd980738c0ea5d418ba3cfba7d194477.fontdata.",
+        "ERROR: Failed loading resource: res://Assets/Fonts/BeVietnamPro-Medium.ttf.",
+        "ERROR: Error loading custom project font 'res://Assets/Fonts/BeVietnamPro-Medium.ttf'"
+      ],
+      "log": ".godot-test-results\\migration\\cold-import\\output.log"
+    },
+    "cold-import-retry": {
+      "command": [
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot-test-results\\migration\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+        "--editor",
+        "--import",
+        "--quit"
+      ],
+      "exit": 0,
+      "seconds": 4.41,
+      "errors": [],
+      "log": ".godot-test-results\\migration\\cold-import-retry\\output.log"
+    },
+    "cold-resources": {
+      "command": [
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot-test-results\\migration\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+        "--script",
+        "res://tests/test_resource_loading.gd"
+      ],
+      "exit": 0,
+      "seconds": 1.73,
+      "errors": [],
+      "log": ".godot-test-results\\migration\\cold-resources\\output.log"
+    },
+    "cold-main": {
+      "command": [
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot-test-results\\migration\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+        "--quit-after",
+        "60"
+      ],
+      "exit": 0,
+      "seconds": 1.31,
+      "errors": [],
+      "log": ".godot-test-results\\migration\\cold-main\\output.log"
+    },
+    "cold-world": {
+      "command": [
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot-test-results\\migration\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+        "res://scenes/main/world.tscn",
+        "--quit-after",
+        "60"
+      ],
+      "exit": 0,
+      "seconds": 1.78,
+      "errors": [],
+      "log": ".godot-test-results\\migration\\cold-world\\output.log"
+    }
+  },
+  "raw_logs": "Local generated files only, Git ignored; no historical source log copied.",
+  "not_tested": [
+    "GUI/manual playthrough",
+    "Web/browser/export templates",
+    "Docker",
+    "GitHub Actions/Linux runner",
+    "full mutation/coverage/advanced benchmark experiments"
+  ],
+  "python_syntax_files": 11,
+  "powershell_parse": "PASS",
+  "git_diff_check": "PASS",
+  "static_resources": {
+    "files": 1076,
+    "resources": 144,
+    "references": 630,
+    "uids": 437,
+    "errors": [],
+    "warnings": []
+  },
+  "static_documentation": {
+    "markdown_files_checked": 33,
+    "local_image_references": [
+      {
+        "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+        "line": 26,
+        "target": "images/01_benchmark_theo_so_phong.png",
+        "alt": "Thời gian sinh theo số phòng",
+        "resolved": "benchmarks/reports/images/01_benchmark_theo_so_phong.png"
+      },
+      {
+        "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+        "line": 37,
+        "target": "images/02_stress_1000_seed.png",
+        "alt": "Stress benchmark",
+        "resolved": "benchmarks/reports/images/02_stress_1000_seed.png"
+      },
+      {
+        "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+        "line": 55,
+        "target": "images/03_truoc_sau_toi_uu.png",
+        "alt": "Trước–sau tối ưu",
+        "resolved": "benchmarks/reports/images/03_truoc_sau_toi_uu.png"
+      }
+    ],
+    "local_document_links": [
+      {
+        "source": ".agent/workflows/balance-unit.md",
+        "line": 7,
+        "target": "../../scripts/core/balance_config.gd",
+        "resolved": "scripts/core/balance_config.gd"
+      },
+      {
+        "source": ".github/PULL_REQUEST_TEMPLATE.md",
+        "line": 24,
+        "target": "../docs/PROJECT_STATUS.md",
+        "resolved": "docs/PROJECT_STATUS.md"
+      },
+      {
+        "source": "CHANGELOG.md",
+        "line": 12,
+        "target": "docs/PROJECT_STATUS.md",
+        "resolved": "docs/PROJECT_STATUS.md"
+      },
+      {
+        "source": "CHANGELOG.md",
+        "line": 24,
+        "target": "docs/architecture/MASTER_AUDIT.md",
+        "resolved": "docs/architecture/MASTER_AUDIT.md"
+      },
+      {
+        "source": "CHANGELOG.md",
+        "line": 38,
+        "target": "docs/architecture/RESTRUCTURE_REPORT.md",
+        "resolved": "docs/architecture/RESTRUCTURE_REPORT.md"
+      },
+      {
+        "source": "CHANGELOG.md",
+        "line": 250,
+        "target": ".agent/workflows/balance-unit.md",
+        "resolved": ".agent/workflows/balance-unit.md"
+      },
+      {
+        "source": "CHANGELOG.md",
+        "line": 250,
+        "target": "docs/gameplay/BALANCE_WORKFLOW.md",
+        "resolved": "docs/gameplay/BALANCE_WORKFLOW.md"
+      },
+      {
+        "source": "CHANGELOG.md",
+        "line": 257,
+        "target": "tests/test_dungeon_generator_unit.gd",
+        "resolved": "tests/test_dungeon_generator_unit.gd"
+      },
+      {
+        "source": "CHANGELOG.md",
+        "line": 287,
+        "target": "tests/test_dungeon_generator_unit.gd",
+        "resolved": "tests/test_dungeon_generator_unit.gd"
+      },
+      {
+        "source": "CHANGELOG.md",
+        "line": 288,
+        "target": "tests/test_dungeon_properties.gd",
+        "resolved": "tests/test_dungeon_properties.gd"
+      },
+      {
+        "source": "CHANGELOG.md",
+        "line": 289,
+        "target": "benchmarks/benchmark_dungeon_generator.gd",
+        "resolved": "benchmarks/benchmark_dungeon_generator.gd"
+      },
+      {
+        "source": "CHANGELOG.md",
+        "line": 289,
+        "target": "benchmarks/reports/GENERATOR_PERFORMANCE_REPORT.md",
+        "resolved": "benchmarks/reports/GENERATOR_PERFORMANCE_REPORT.md"
+      },
+      {
+        "source": "CHANGELOG.md",
+        "line": 290,
+        "target": "docs/qa/SEED_BUG_ISSUES.md",
+        "resolved": "docs/qa/SEED_BUG_ISSUES.md"
+      },
+      {
+        "source": "CHANGELOG.md",
+        "line": 290,
+        "target": ".github/ISSUE_TEMPLATE/seed_bug_report.md",
+        "resolved": ".github/ISSUE_TEMPLATE/seed_bug_report.md"
+      },
+      {
+        "source": "CHANGELOG.md",
+        "line": 291,
+        "target": ".github/workflows/ci.yml",
+        "resolved": ".github/workflows/ci.yml"
+      },
+      {
+        "source": "CHANGELOG.md",
+        "line": 291,
+        "target": "run_tests.bat",
+        "resolved": "run_tests.bat"
+      },
+      {
+        "source": "CONTRIBUTING.md",
+        "line": 3,
+        "target": "README.md",
+        "resolved": "README.md"
+      },
+      {
+        "source": "CONTRIBUTING.md",
+        "line": 3,
+        "target": "docs/architecture/PROJECT_STRUCTURE.md",
+        "resolved": "docs/architecture/PROJECT_STRUCTURE.md"
+      },
+      {
+        "source": "CONTRIBUTING.md",
+        "line": 4,
+        "target": "docs/gameplay/BALANCE_WORKFLOW.md",
+        "resolved": "docs/gameplay/BALANCE_WORKFLOW.md"
+      },
+      {
+        "source": "CONTRIBUTING.md",
+        "line": 16,
+        "target": ".github/PULL_REQUEST_TEMPLATE.md",
+        "resolved": ".github/PULL_REQUEST_TEMPLATE.md"
+      },
+      {
+        "source": "CONTRIBUTING.md",
+        "line": 39,
+        "target": "README.md",
+        "resolved": "README.md"
+      },
+      {
+        "source": "CONTRIBUTING.md",
+        "line": 42,
+        "target": "docs/README.md",
+        "resolved": "docs/README.md"
+      },
+      {
+        "source": "CONTRIBUTING.md",
+        "line": 53,
+        "target": "docs/PROJECT_STATUS.md",
+        "resolved": "docs/PROJECT_STATUS.md"
+      },
+      {
+        "source": "CONTRIBUTING.md",
+        "line": 54,
+        "target": "docs/FEATURE_CHECKLIST.md",
+        "resolved": "docs/FEATURE_CHECKLIST.md"
+      },
+      {
+        "source": "CONTRIBUTING.md",
+        "line": 55,
+        "target": "docs/DEVELOPMENT_BACKLOG.md",
+        "resolved": "docs/DEVELOPMENT_BACKLOG.md"
+      },
+      {
+        "source": "CONTRIBUTING.md",
+        "line": 56,
+        "target": "docs/DEVELOPMENT_ROADMAP.md",
+        "resolved": "docs/DEVELOPMENT_ROADMAP.md"
+      },
+      {
+        "source": "README.md",
+        "line": 215,
+        "target": "docs/architecture/PROJECT_STRUCTURE.md",
+        "resolved": "docs/architecture/PROJECT_STRUCTURE.md"
+      },
+      {
+        "source": "README.md",
+        "line": 216,
+        "target": "tools/README.md",
+        "resolved": "tools/README.md"
+      },
+      {
+        "source": "README.md",
+        "line": 216,
+        "target": "tests/README.md",
+        "resolved": "tests/README.md"
+      },
+      {
+        "source": "README.md",
+        "line": 217,
+        "target": "docs/architecture/INTEGRATION_REPORT.md",
+        "resolved": "docs/architecture/INTEGRATION_REPORT.md"
+      },
+      {
+        "source": "README.md",
+        "line": 218,
+        "target": "docs/README.md",
+        "resolved": "docs/README.md"
+      },
+      {
+        "source": "benchmarks/README.md",
+        "line": 17,
+        "target": "reports/GENERATOR_PERFORMANCE_REPORT.md",
+        "resolved": "benchmarks/reports/GENERATOR_PERFORMANCE_REPORT.md"
+      },
+      {
+        "source": "benchmarks/README.md",
+        "line": 18,
+        "target": "../docs/qa/TEST_PLAN.md",
+        "resolved": "docs/qa/TEST_PLAN.md"
+      },
+      {
+        "source": "benchmarks/README.md",
+        "line": 18,
+        "target": "../docs/architecture/MASTER_AUDIT.md",
+        "resolved": "docs/architecture/MASTER_AUDIT.md"
+      },
+      {
+        "source": "benchmarks/README.md",
+        "line": 25,
+        "target": "../docs/PROJECT_STATUS.md",
+        "resolved": "docs/PROJECT_STATUS.md"
+      },
+      {
+        "source": "benchmarks/README.md",
+        "line": 26,
+        "target": "../docs/DEVELOPMENT_BACKLOG.md",
+        "resolved": "docs/DEVELOPMENT_BACKLOG.md"
+      },
+      {
+        "source": "benchmarks/reports/GENERATOR_PERFORMANCE_REPORT.md",
+        "line": 8,
+        "target": "../benchmark_dungeon_generator.gd",
+        "resolved": "benchmarks/benchmark_dungeon_generator.gd"
+      },
+      {
+        "source": "docs/DEVELOPMENT_BACKLOG.md",
+        "line": 3,
+        "target": "architecture/INTEGRATION_REPORT.md",
+        "resolved": "docs/architecture/INTEGRATION_REPORT.md"
+      },
+      {
+        "source": "docs/DEVELOPMENT_BACKLOG.md",
+        "line": 6,
+        "target": "PROJECT_STATUS.md",
+        "resolved": "docs/PROJECT_STATUS.md"
+      },
+      {
+        "source": "docs/DEVELOPMENT_BACKLOG.md",
+        "line": 7,
+        "target": "DEVELOPMENT_ROADMAP.md",
+        "resolved": "docs/DEVELOPMENT_ROADMAP.md"
+      },
+      {
+        "source": "docs/DEVELOPMENT_BACKLOG.md",
+        "line": 56,
+        "target": "PROJECT_STATUS.md",
+        "resolved": "docs/PROJECT_STATUS.md"
+      },
+      {
+        "source": "docs/DEVELOPMENT_ROADMAP.md",
+        "line": 3,
+        "target": "architecture/INTEGRATION_REPORT.md",
+        "resolved": "docs/architecture/INTEGRATION_REPORT.md"
+      },
+      {
+        "source": "docs/DEVELOPMENT_ROADMAP.md",
+        "line": 9,
+        "target": "PROJECT_STATUS.md",
+        "resolved": "docs/PROJECT_STATUS.md"
+      },
+      {
+        "source": "docs/DEVELOPMENT_ROADMAP.md",
+        "line": 10,
+        "target": "FEATURE_CHECKLIST.md",
+        "resolved": "docs/FEATURE_CHECKLIST.md"
+      },
+      {
+        "source": "docs/DEVELOPMENT_ROADMAP.md",
+        "line": 11,
+        "target": "DEVELOPMENT_BACKLOG.md",
+        "resolved": "docs/DEVELOPMENT_BACKLOG.md"
+      },
+      {
+        "source": "docs/DEVELOPMENT_ROADMAP.md",
+        "line": 49,
+        "target": "PROJECT_STATUS.md",
+        "resolved": "docs/PROJECT_STATUS.md"
+      },
+      {
+        "source": "docs/DEVELOPMENT_ROADMAP.md",
+        "line": 49,
+        "target": "qa/TEST_PLAN.md",
+        "resolved": "docs/qa/TEST_PLAN.md"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 3,
+        "target": "architecture/INTEGRATION_REPORT.md",
+        "resolved": "docs/architecture/INTEGRATION_REPORT.md"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 6,
+        "target": "PROJECT_STATUS.md",
+        "resolved": "docs/PROJECT_STATUS.md"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 7,
+        "target": "DEVELOPMENT_BACKLOG.md",
+        "resolved": "docs/DEVELOPMENT_BACKLOG.md"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 17,
+        "target": "../scenes/dungeon/dungeon_generator.gd",
+        "resolved": "scenes/dungeon/dungeon_generator.gd"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 18,
+        "target": "../scenes/characters/",
+        "resolved": "scenes/characters"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 19,
+        "target": "../scenes/enemies/",
+        "resolved": "scenes/enemies"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 20,
+        "target": "../scenes/characters/pyrois/player.gd",
+        "resolved": "scenes/characters/pyrois/player.gd"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 20,
+        "target": "../scenes/projectiles/",
+        "resolved": "scenes/projectiles"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 21,
+        "target": "../scenes/characters/inventory_manager.gd",
+        "resolved": "scenes/characters/inventory_manager.gd"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 21,
+        "target": "../scenes/items/",
+        "resolved": "scenes/items"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 22,
+        "target": "../scenes/dungeon/",
+        "resolved": "scenes/dungeon"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 23,
+        "target": "../scenes/menus/",
+        "resolved": "scenes/menus"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 23,
+        "target": "../scenes/ui/",
+        "resolved": "scenes/ui"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 24,
+        "target": "../scenes/ui/game_ui.gd",
+        "resolved": "scenes/ui/game_ui.gd"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 24,
+        "target": "../scenes/dungeon/dungeon_atmosphere.gd",
+        "resolved": "scenes/dungeon/dungeon_atmosphere.gd"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 24,
+        "target": "../scripts/core/audio_manager.gd",
+        "resolved": "scripts/core/audio_manager.gd"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 25,
+        "target": "../scripts/core/game_manager.gd",
+        "resolved": "scripts/core/game_manager.gd"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 26,
+        "target": "../scripts/core/balance_config.gd",
+        "resolved": "scripts/core/balance_config.gd"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 27,
+        "target": "../scripts/review/review_service.gd",
+        "resolved": "scripts/review/review_service.gd"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 28,
+        "target": "../benchmarks/README.md",
+        "resolved": "benchmarks/README.md"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 29,
+        "target": "../.github/workflows/ci.yml",
+        "resolved": ".github/workflows/ci.yml"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 57,
+        "target": "architecture/MASTER_AUDIT.md",
+        "resolved": "docs/architecture/MASTER_AUDIT.md"
+      },
+      {
+        "source": "docs/FEATURE_CHECKLIST.md",
+        "line": 63,
+        "target": "qa/TEST_PLAN.md",
+        "resolved": "docs/qa/TEST_PLAN.md"
+      },
+      {
+        "source": "docs/PROJECT_STATUS.md",
+        "line": 3,
+        "target": "architecture/INTEGRATION_REPORT.md",
+        "resolved": "docs/architecture/INTEGRATION_REPORT.md"
+      },
+      {
+        "source": "docs/PROJECT_STATUS.md",
+        "line": 10,
+        "target": "FEATURE_CHECKLIST.md",
+        "resolved": "docs/FEATURE_CHECKLIST.md"
+      },
+      {
+        "source": "docs/PROJECT_STATUS.md",
+        "line": 11,
+        "target": "DEVELOPMENT_BACKLOG.md",
+        "resolved": "docs/DEVELOPMENT_BACKLOG.md"
+      },
+      {
+        "source": "docs/PROJECT_STATUS.md",
+        "line": 11,
+        "target": "DEVELOPMENT_ROADMAP.md",
+        "resolved": "docs/DEVELOPMENT_ROADMAP.md"
+      },
+      {
+        "source": "docs/PROJECT_STATUS.md",
+        "line": 12,
+        "target": "qa/TEST_PLAN.md",
+        "resolved": "docs/qa/TEST_PLAN.md"
+      },
+      {
+        "source": "docs/PROJECT_STATUS.md",
+        "line": 52,
+        "target": "architecture/evidence/progress_review_2026-11-05.json",
+        "resolved": "docs/architecture/evidence/progress_review_2026-11-05.json"
+      },
+      {
+        "source": "docs/PROJECT_STATUS.md",
+        "line": 71,
+        "target": "FEATURE_CHECKLIST.md",
+        "resolved": "docs/FEATURE_CHECKLIST.md"
+      },
+      {
+        "source": "docs/PROJECT_STATUS.md",
+        "line": 84,
+        "target": "qa/test_cases.csv",
+        "resolved": "docs/qa/test_cases.csv"
+      },
+      {
+        "source": "docs/PROJECT_STATUS.md",
+        "line": 128,
+        "target": "architecture/evidence/master_audit.json",
+        "resolved": "docs/architecture/evidence/master_audit.json"
+      },
+      {
+        "source": "docs/PROJECT_STATUS.md",
+        "line": 130,
+        "target": "architecture/evidence/progress_review_2026-11-05.json",
+        "resolved": "docs/architecture/evidence/progress_review_2026-11-05.json"
+      },
+      {
+        "source": "docs/PROJECT_STATUS.md",
+        "line": 131,
+        "target": "qa/CHANGELOG.md",
+        "resolved": "docs/qa/CHANGELOG.md"
+      },
+      {
+        "source": "docs/PROJECT_STATUS.md",
+        "line": 131,
+        "target": "qa/SEED_BUG_ISSUES.md",
+        "resolved": "docs/qa/SEED_BUG_ISSUES.md"
+      },
+      {
+        "source": "docs/PROJECT_STATUS.md",
+        "line": 131,
+        "target": "../benchmarks/README.md",
+        "resolved": "benchmarks/README.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 4,
+        "target": "architecture/INTEGRATION_REPORT.md",
+        "resolved": "docs/architecture/INTEGRATION_REPORT.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 11,
+        "target": "architecture/MASTER_AUDIT.md",
+        "resolved": "docs/architecture/MASTER_AUDIT.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 15,
+        "target": "PROJECT_STATUS.md",
+        "resolved": "docs/PROJECT_STATUS.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 16,
+        "target": "FEATURE_CHECKLIST.md",
+        "resolved": "docs/FEATURE_CHECKLIST.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 17,
+        "target": "DEVELOPMENT_BACKLOG.md",
+        "resolved": "docs/DEVELOPMENT_BACKLOG.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 18,
+        "target": "DEVELOPMENT_ROADMAP.md",
+        "resolved": "docs/DEVELOPMENT_ROADMAP.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 19,
+        "target": "qa/TEST_PLAN.md",
+        "resolved": "docs/qa/TEST_PLAN.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 19,
+        "target": "PROJECT_STATUS.md",
+        "resolved": "docs/PROJECT_STATUS.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 30,
+        "target": "../README.md",
+        "resolved": "README.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 30,
+        "target": "../tests/README.md",
+        "resolved": "tests/README.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 31,
+        "target": "PROJECT_STATUS.md",
+        "resolved": "docs/PROJECT_STATUS.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 32,
+        "target": "DEVELOPMENT_BACKLOG.md",
+        "resolved": "docs/DEVELOPMENT_BACKLOG.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 33,
+        "target": "FEATURE_CHECKLIST.md",
+        "resolved": "docs/FEATURE_CHECKLIST.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 33,
+        "target": "DEVELOPMENT_ROADMAP.md",
+        "resolved": "docs/DEVELOPMENT_ROADMAP.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 34,
+        "target": "qa/TEST_PLAN.md",
+        "resolved": "docs/qa/TEST_PLAN.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 34,
+        "target": "../tools/README.md",
+        "resolved": "tools/README.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 35,
+        "target": "gameplay/GAME_DESIGN_DOCUMENT.md",
+        "resolved": "docs/gameplay/GAME_DESIGN_DOCUMENT.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 36,
+        "target": "gameplay/BALANCE_WORKFLOW.md",
+        "resolved": "docs/gameplay/BALANCE_WORKFLOW.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 36,
+        "target": "../scripts/core/balance_config.gd",
+        "resolved": "scripts/core/balance_config.gd"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 37,
+        "target": "gameplay/DUNGEON_FOG_AND_BALANCE.md",
+        "resolved": "docs/gameplay/DUNGEON_FOG_AND_BALANCE.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 38,
+        "target": "architecture/SECURITY.md",
+        "resolved": "docs/architecture/SECURITY.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 38,
+        "target": "qa/SEED_BUG_ISSUES.md",
+        "resolved": "docs/qa/SEED_BUG_ISSUES.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 39,
+        "target": "architecture/PROJECT_STRUCTURE.md",
+        "resolved": "docs/architecture/PROJECT_STRUCTURE.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 39,
+        "target": "../CONTRIBUTING.md",
+        "resolved": "CONTRIBUTING.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 40,
+        "target": "qa/README.md",
+        "resolved": "docs/qa/README.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 40,
+        "target": "qa/test_cases.csv",
+        "resolved": "docs/qa/test_cases.csv"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 40,
+        "target": "qa/test_cases.xlsx",
+        "resolved": "docs/qa/test_cases.xlsx"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 40,
+        "target": "qa/jira_url.txt",
+        "resolved": "docs/qa/jira_url.txt"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 40,
+        "target": "qa/CHANGELOG.md",
+        "resolved": "docs/qa/CHANGELOG.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 41,
+        "target": "../benchmarks/reports/GENERATOR_PERFORMANCE_REPORT.md",
+        "resolved": "benchmarks/reports/GENERATOR_PERFORMANCE_REPORT.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 42,
+        "target": "../benchmarks/README.md",
+        "resolved": "benchmarks/README.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 42,
+        "target": "../benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+        "resolved": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 42,
+        "target": "../benchmarks/reports/TONG_HOP_KET_QUA.csv",
+        "resolved": "benchmarks/reports/TONG_HOP_KET_QUA.csv"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 43,
+        "target": "architecture/RESTRUCTURE_REPORT.md",
+        "resolved": "docs/architecture/RESTRUCTURE_REPORT.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 43,
+        "target": "architecture/FILES_CHANGED.md",
+        "resolved": "docs/architecture/FILES_CHANGED.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 43,
+        "target": "architecture/refactor_manifest.json",
+        "resolved": "docs/architecture/refactor_manifest.json"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 44,
+        "target": "architecture/MASTER_AUDIT.md",
+        "resolved": "docs/architecture/MASTER_AUDIT.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 44,
+        "target": "architecture/evidence/master_audit.json",
+        "resolved": "docs/architecture/evidence/master_audit.json"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 45,
+        "target": "architecture/DOCUMENTATION_AUDIT.md",
+        "resolved": "docs/architecture/DOCUMENTATION_AUDIT.md"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 45,
+        "target": "architecture/evidence/documentation_inventory_after.json",
+        "resolved": "docs/architecture/evidence/documentation_inventory_after.json"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 45,
+        "target": "architecture/evidence/documentation_image_check.json",
+        "resolved": "docs/architecture/evidence/documentation_image_check.json"
+      },
+      {
+        "source": "docs/README.md",
+        "line": 83,
+        "target": "architecture/PROJECT_STRUCTURE.md",
+        "resolved": "docs/architecture/PROJECT_STRUCTURE.md"
+      },
+      {
+        "source": "docs/architecture/DOCUMENTATION_AUDIT.md",
+        "line": 3,
+        "target": "INTEGRATION_REPORT.md",
+        "resolved": "docs/architecture/INTEGRATION_REPORT.md"
+      },
+      {
+        "source": "docs/architecture/DOCUMENTATION_AUDIT.md",
+        "line": 20,
+        "target": "evidence/documentation_inventory_before.json",
+        "resolved": "docs/architecture/evidence/documentation_inventory_before.json"
+      },
+      {
+        "source": "docs/architecture/DOCUMENTATION_AUDIT.md",
+        "line": 22,
+        "target": "evidence/documentation_inventory_after.json",
+        "resolved": "docs/architecture/evidence/documentation_inventory_after.json"
+      },
+      {
+        "source": "docs/architecture/DOCUMENTATION_AUDIT.md",
+        "line": 24,
+        "target": "evidence/documentation_image_check.json",
+        "resolved": "docs/architecture/evidence/documentation_image_check.json"
+      },
+      {
+        "source": "docs/architecture/FILES_CHANGED.md",
+        "line": 3,
+        "target": "INTEGRATION_REPORT.md",
+        "resolved": "docs/architecture/INTEGRATION_REPORT.md"
+      },
+      {
+        "source": "docs/architecture/FILES_CHANGED.md",
+        "line": 262,
+        "target": "refactor_manifest.json",
+        "resolved": "docs/architecture/refactor_manifest.json"
+      },
+      {
+        "source": "docs/architecture/FILES_CHANGED.md",
+        "line": 263,
+        "target": "evidence/content_changes.diff",
+        "resolved": "docs/architecture/evidence/content_changes.diff"
+      },
+      {
+        "source": "docs/architecture/FILES_CHANGED.md",
+        "line": 264,
+        "target": "evidence/inventory_before.txt",
+        "resolved": "docs/architecture/evidence/inventory_before.txt"
+      },
+      {
+        "source": "docs/architecture/FILES_CHANGED.md",
+        "line": 264,
+        "target": "evidence/inventory_after.txt",
+        "resolved": "docs/architecture/evidence/inventory_after.txt"
+      },
+      {
+        "source": "docs/architecture/FILES_CHANGED.md",
+        "line": 265,
+        "target": "evidence/preservation_check.json",
+        "resolved": "docs/architecture/evidence/preservation_check.json"
+      },
+      {
+        "source": "docs/architecture/INTEGRATION_FILES.md",
+        "line": 7,
+        "target": "integration_manifest.json",
+        "resolved": "docs/architecture/integration_manifest.json"
+      },
+      {
+        "source": "docs/architecture/INTEGRATION_FILES.md",
+        "line": 7,
+        "target": "INTEGRATION_REPORT.md",
+        "resolved": "docs/architecture/INTEGRATION_REPORT.md"
+      },
+      {
+        "source": "docs/architecture/INTEGRATION_REPORT.md",
+        "line": 40,
+        "target": "integration_tests.json",
+        "resolved": "docs/architecture/integration_tests.json"
+      },
+      {
+        "source": "docs/architecture/INTEGRATION_REPORT.md",
+        "line": 78,
+        "target": "INTEGRATION_FILES.md",
+        "resolved": "docs/architecture/INTEGRATION_FILES.md"
+      },
+      {
+        "source": "docs/architecture/INTEGRATION_REPORT.md",
+        "line": 79,
+        "target": "integration_manifest.json",
+        "resolved": "docs/architecture/integration_manifest.json"
+      },
+      {
+        "source": "docs/architecture/MASTER_AUDIT.md",
+        "line": 3,
+        "target": "INTEGRATION_REPORT.md",
+        "resolved": "docs/architecture/INTEGRATION_REPORT.md"
+      },
+      {
+        "source": "docs/architecture/MASTER_AUDIT.md",
+        "line": 17,
+        "target": "evidence/master_audit.json",
+        "resolved": "docs/architecture/evidence/master_audit.json"
+      },
+      {
+        "source": "docs/architecture/MASTER_AUDIT.md",
+        "line": 100,
+        "target": "evidence/master_audit.json",
+        "resolved": "docs/architecture/evidence/master_audit.json"
+      },
+      {
+        "source": "docs/architecture/MASTER_AUDIT.md",
+        "line": 147,
+        "target": "evidence/master_audit/",
+        "resolved": "docs/architecture/evidence/master_audit"
+      },
+      {
+        "source": "docs/architecture/MASTER_AUDIT.md",
+        "line": 148,
+        "target": "evidence/master_audit/resources.json",
+        "resolved": "docs/architecture/evidence/master_audit/resources.json"
+      },
+      {
+        "source": "docs/architecture/MASTER_AUDIT.md",
+        "line": 149,
+        "target": "evidence/master_audit/documentation.json",
+        "resolved": "docs/architecture/evidence/master_audit/documentation.json"
+      },
+      {
+        "source": "docs/architecture/MASTER_AUDIT.md",
+        "line": 160,
+        "target": "../qa/TEST_PLAN.md",
+        "resolved": "docs/qa/TEST_PLAN.md"
+      },
+      {
+        "source": "docs/architecture/MASTER_AUDIT.md",
+        "line": 179,
+        "target": "../DEVELOPMENT_ROADMAP.md",
+        "resolved": "docs/DEVELOPMENT_ROADMAP.md"
+      },
+      {
+        "source": "docs/architecture/MASTER_AUDIT.md",
+        "line": 180,
+        "target": "../FEATURE_CHECKLIST.md",
+        "resolved": "docs/FEATURE_CHECKLIST.md"
+      },
+      {
+        "source": "docs/architecture/PROJECT_STRUCTURE.md",
+        "line": 8,
+        "target": "INTEGRATION_REPORT.md",
+        "resolved": "docs/architecture/INTEGRATION_REPORT.md"
+      },
+      {
+        "source": "docs/architecture/PROJECT_STRUCTURE.md",
+        "line": 109,
+        "target": "RESTRUCTURE_REPORT.md",
+        "resolved": "docs/architecture/RESTRUCTURE_REPORT.md"
+      },
+      {
+        "source": "docs/architecture/PROJECT_STRUCTURE.md",
+        "line": 109,
+        "target": "FILES_CHANGED.md",
+        "resolved": "docs/architecture/FILES_CHANGED.md"
+      },
+      {
+        "source": "docs/architecture/PROJECT_STRUCTURE.md",
+        "line": 110,
+        "target": "refactor_manifest.json",
+        "resolved": "docs/architecture/refactor_manifest.json"
+      },
+      {
+        "source": "docs/architecture/PROJECT_STRUCTURE.md",
+        "line": 112,
+        "target": "MASTER_AUDIT.md",
+        "resolved": "docs/architecture/MASTER_AUDIT.md"
+      },
+      {
+        "source": "docs/architecture/PROJECT_STRUCTURE.md",
+        "line": 112,
+        "target": "../README.md",
+        "resolved": "docs/README.md"
+      },
+      {
+        "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+        "line": 3,
+        "target": "INTEGRATION_REPORT.md",
+        "resolved": "docs/architecture/INTEGRATION_REPORT.md"
+      },
+      {
+        "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+        "line": 36,
+        "target": "evidence/inventory_before.txt",
+        "resolved": "docs/architecture/evidence/inventory_before.txt"
+      },
+      {
+        "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+        "line": 76,
+        "target": "PROJECT_STRUCTURE.md",
+        "resolved": "docs/architecture/PROJECT_STRUCTURE.md"
+      },
+      {
+        "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+        "line": 83,
+        "target": "FILES_CHANGED.md",
+        "resolved": "docs/architecture/FILES_CHANGED.md"
+      },
+      {
+        "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+        "line": 84,
+        "target": "refactor_manifest.json",
+        "resolved": "docs/architecture/refactor_manifest.json"
+      },
+      {
+        "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+        "line": 111,
+        "target": "evidence/environment.json",
+        "resolved": "docs/architecture/evidence/environment.json"
+      },
+      {
+        "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+        "line": 116,
+        "target": "evidence/static_check.json",
+        "resolved": "docs/architecture/evidence/static_check.json"
+      },
+      {
+        "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+        "line": 117,
+        "target": "evidence/preservation_check.json",
+        "resolved": "docs/architecture/evidence/preservation_check.json"
+      },
+      {
+        "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+        "line": 118,
+        "target": "refactor_manifest.json",
+        "resolved": "docs/architecture/refactor_manifest.json"
+      },
+      {
+        "source": "docs/architecture/RESTRUCTURE_REPORT.md",
+        "line": 127,
+        "target": "evidence/preservation_check.json",
+        "resolved": "docs/architecture/evidence/preservation_check.json"
+      },
+      {
+        "source": "docs/gameplay/BALANCE_WORKFLOW.md",
+        "line": 3,
+        "target": "../../scripts/core/balance_config.gd",
+        "resolved": "scripts/core/balance_config.gd"
+      },
+      {
+        "source": "docs/gameplay/BALANCE_WORKFLOW.md",
+        "line": 41,
+        "target": "../../scripts/core/balance_config.gd",
+        "resolved": "scripts/core/balance_config.gd"
+      },
+      {
+        "source": "docs/gameplay/BALANCE_WORKFLOW.md",
+        "line": 43,
+        "target": "../../README.md",
+        "resolved": "README.md"
+      },
+      {
+        "source": "docs/gameplay/BALANCE_WORKFLOW.md",
+        "line": 43,
+        "target": "../../CHANGELOG.md",
+        "resolved": "CHANGELOG.md"
+      },
+      {
+        "source": "docs/gameplay/DUNGEON_FOG_AND_BALANCE.md",
+        "line": 63,
+        "target": "../architecture/RESTRUCTURE_REPORT.md",
+        "resolved": "docs/architecture/RESTRUCTURE_REPORT.md"
+      },
+      {
+        "source": "docs/gameplay/GAME_DESIGN_DOCUMENT.md",
+        "line": 7,
+        "target": "../PROJECT_STATUS.md",
+        "resolved": "docs/PROJECT_STATUS.md"
+      },
+      {
+        "source": "docs/gameplay/GAME_DESIGN_DOCUMENT.md",
+        "line": 7,
+        "target": "../FEATURE_CHECKLIST.md",
+        "resolved": "docs/FEATURE_CHECKLIST.md"
+      },
+      {
+        "source": "docs/qa/README.md",
+        "line": 4,
+        "target": "../PROJECT_STATUS.md",
+        "resolved": "docs/PROJECT_STATUS.md"
+      },
+      {
+        "source": "docs/qa/README.md",
+        "line": 4,
+        "target": "../DEVELOPMENT_BACKLOG.md",
+        "resolved": "docs/DEVELOPMENT_BACKLOG.md"
+      },
+      {
+        "source": "docs/qa/README.md",
+        "line": 5,
+        "target": "TEST_PLAN.md",
+        "resolved": "docs/qa/TEST_PLAN.md"
+      },
+      {
+        "source": "docs/qa/README.md",
+        "line": 14,
+        "target": "../../tests/",
+        "resolved": "tests"
+      },
+      {
+        "source": "docs/qa/README.md",
+        "line": 15,
+        "target": "../../benchmarks/",
+        "resolved": "benchmarks"
+      },
+      {
+        "source": "docs/qa/SEED_BUG_ISSUES.md",
+        "line": 25,
+        "target": "../../scenes/dungeon/dungeon_generator.gd",
+        "resolved": "scenes/dungeon/dungeon_generator.gd"
+      },
+      {
+        "source": "docs/qa/SEED_BUG_ISSUES.md",
+        "line": 61,
+        "target": "../../scenes/items/chest/chest.gd",
+        "resolved": "scenes/items/chest/chest.gd"
+      },
+      {
+        "source": "docs/qa/SEED_BUG_ISSUES.md",
+        "line": 61,
+        "target": "../../scenes/enemies/orc/orc.gd",
+        "resolved": "scenes/enemies/orc/orc.gd"
+      },
+      {
+        "source": "docs/qa/SEED_BUG_ISSUES.md",
+        "line": 61,
+        "target": "../../scenes/enemies/armored_orc/armored_orc.gd",
+        "resolved": "scenes/enemies/armored_orc/armored_orc.gd"
+      },
+      {
+        "source": "docs/qa/SEED_BUG_ISSUES.md",
+        "line": 99,
+        "target": "../../scenes/dungeon/room_manager.gd",
+        "resolved": "scenes/dungeon/room_manager.gd"
+      },
+      {
+        "source": "docs/qa/SEED_BUG_ISSUES.md",
+        "line": 99,
+        "target": "../../scenes/dungeon/dungeon_generator.gd",
+        "resolved": "scenes/dungeon/dungeon_generator.gd"
+      },
+      {
+        "source": "docs/qa/SEED_BUG_ISSUES.md",
+        "line": 101,
+        "target": "../../scenes/dungeon/dungeon_generator.gd",
+        "resolved": "scenes/dungeon/dungeon_generator.gd"
+      },
+      {
+        "source": "docs/qa/SEED_BUG_ISSUES.md",
+        "line": 101,
+        "target": "../../scenes/characters/pyrois/player.gd",
+        "resolved": "scenes/characters/pyrois/player.gd"
+      },
+      {
+        "source": "docs/qa/SEED_BUG_ISSUES.md",
+        "line": 101,
+        "target": "../../scenes/projectiles/arrow.gd",
+        "resolved": "scenes/projectiles/arrow.gd"
+      },
+      {
+        "source": "docs/qa/SEED_BUG_ISSUES.md",
+        "line": 101,
+        "target": "../../scenes/projectiles/bomb.gd",
+        "resolved": "scenes/projectiles/bomb.gd"
+      },
+      {
+        "source": "docs/qa/SEED_BUG_ISSUES.md",
+        "line": 103,
+        "target": "../../scenes/enemies/skeleton_archer/skeleton_archer.gd",
+        "resolved": "scenes/enemies/skeleton_archer/skeleton_archer.gd"
+      },
+      {
+        "source": "docs/qa/TEST_PLAN.md",
+        "line": 3,
+        "target": "../architecture/INTEGRATION_REPORT.md",
+        "resolved": "docs/architecture/INTEGRATION_REPORT.md"
+      },
+      {
+        "source": "docs/qa/TEST_PLAN.md",
+        "line": 6,
+        "target": "../FEATURE_CHECKLIST.md",
+        "resolved": "docs/FEATURE_CHECKLIST.md"
+      },
+      {
+        "source": "docs/qa/TEST_PLAN.md",
+        "line": 7,
+        "target": "../DEVELOPMENT_ROADMAP.md",
+        "resolved": "docs/DEVELOPMENT_ROADMAP.md"
+      },
+      {
+        "source": "docs/qa/TEST_PLAN.md",
+        "line": 50,
+        "target": "../../benchmarks/README.md",
+        "resolved": "benchmarks/README.md"
+      },
+      {
+        "source": "docs/qa/TEST_PLAN.md",
+        "line": 65,
+        "target": "../PROJECT_STATUS.md",
+        "resolved": "docs/PROJECT_STATUS.md"
+      },
+      {
+        "source": "tests/README.md",
+        "line": 6,
+        "target": "../tools/run_tests.ps1",
+        "resolved": "tools/run_tests.ps1"
+      },
+      {
+        "source": "tests/README.md",
+        "line": 7,
+        "target": "../README.md",
+        "resolved": "README.md"
+      },
+      {
+        "source": "tests/README.md",
+        "line": 28,
+        "target": "../benchmarks/benchmark_dungeon_generator.tscn",
+        "resolved": "benchmarks/benchmark_dungeon_generator.tscn"
+      },
+      {
+        "source": "tests/README.md",
+        "line": 35,
+        "target": "../docs/architecture/INTEGRATION_REPORT.md",
+        "resolved": "docs/architecture/INTEGRATION_REPORT.md"
+      },
+      {
+        "source": "tests/README.md",
+        "line": 40,
+        "target": "../docs/qa/TEST_PLAN.md",
+        "resolved": "docs/qa/TEST_PLAN.md"
+      },
+      {
+        "source": "tools/README.md",
+        "line": 25,
+        "target": "../tests/README.md",
+        "resolved": "tests/README.md"
+      },
+      {
+        "source": "tools/README.md",
+        "line": 36,
+        "target": "../benchmarks/README.md",
+        "resolved": "benchmarks/README.md"
+      },
+      {
+        "source": "tools/README.md",
+        "line": 38,
+        "target": "../tests/test_resource_loading.gd",
+        "resolved": "tests/test_resource_loading.gd"
+      },
+      {
+        "source": "tools/README.md",
+        "line": 43,
+        "target": "../docs/qa/TEST_PLAN.md",
+        "resolved": "docs/qa/TEST_PLAN.md"
+      }
+    ],
+    "external_image_references_not_fetched": [],
+    "images": {
+      "benchmarks/reports/images/01_benchmark_theo_so_phong.png": {
+        "bytes": 52795,
+        "sha256": "5820b4a5b3d2803c8572faf9d403563f42d50a06ae372bab430e26f089097cb5",
+        "references": [
+          {
+            "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+            "line": 26,
+            "target": "images/01_benchmark_theo_so_phong.png",
+            "alt": "Thời gian sinh theo số phòng",
+            "resolved": "benchmarks/reports/images/01_benchmark_theo_so_phong.png"
+          }
+        ],
+        "width": 1464,
+        "height": 750,
+        "validation": "PNG CRC and decompression OK"
+      },
+      "benchmarks/reports/images/02_stress_1000_seed.png": {
+        "bytes": 39518,
+        "sha256": "ae7a712433099cc967b9180e76eeb8694f6e88bd54e495031d27e2e0e83ef06f",
+        "references": [
+          {
+            "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+            "line": 37,
+            "target": "images/02_stress_1000_seed.png",
+            "alt": "Stress benchmark",
+            "resolved": "benchmarks/reports/images/02_stress_1000_seed.png"
+          }
+        ],
+        "width": 1464,
+        "height": 750,
+        "validation": "PNG CRC and decompression OK"
+      },
+      "benchmarks/reports/images/03_truoc_sau_toi_uu.png": {
+        "bytes": 67633,
+        "sha256": "a08706e059498b5f171dd2fdd521432f615619762b0c77229f1e17cbc540d877",
+        "references": [
+          {
+            "source": "benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md",
+            "line": 55,
+            "target": "images/03_truoc_sau_toi_uu.png",
+            "alt": "Trước–sau tối ưu",
+            "resolved": "benchmarks/reports/images/03_truoc_sau_toi_uu.png"
+          }
+        ],
+        "width": 1464,
+        "height": 767,
+        "validation": "PNG CRC and decompression OK"
+      },
+      "docs/images/boss_necromancer.png": {
+        "bytes": 1091,
+        "sha256": "09b205fbf2ce76e2debf74192f903a69f738d15c96daa2432540cdb84db61e63",
+        "references": [],
+        "width": 72,
+        "height": 72,
+        "validation": "PNG CRC and decompression OK"
+      },
+      "docs/images/boss_orc_rider.png": {
+        "bytes": 1541,
+        "sha256": "e15d449e5343853e37a3332d7d0d4f7db50c85c0d488d0dabd6f83f4fe10139d",
+        "references": [],
+        "width": 72,
+        "height": 72,
+        "validation": "PNG CRC and decompression OK"
+      },
+      "docs/images/enemy_armored_orc.png": {
+        "bytes": 899,
+        "sha256": "503710ec80cd7b85543347fd6986098dbb03b0c4915c42cc45b3a82455d3ae2a",
+        "references": [],
+        "width": 72,
+        "height": 72,
+        "validation": "PNG CRC and decompression OK"
+      },
+      "docs/images/enemy_orc.png": {
+        "bytes": 807,
+        "sha256": "dab3aeb6853b4f2a8b45ee2f2996a7b8d5fa5789b4c9896bf43b70cfc4b1a2b0",
+        "references": [],
+        "width": 72,
+        "height": 72,
+        "validation": "PNG CRC and decompression OK"
+      },
+      "docs/images/enemy_skeleton.png": {
+        "bytes": 560,
+        "sha256": "0c623357948b5aba7a8ac8ab8c3f88653509a649f7babd7dcb621f7db31fce50",
+        "references": [],
+        "width": 72,
+        "height": 72,
+        "validation": "PNG CRC and decompression OK"
+      },
+      "docs/images/enemy_skeleton_archer.png": {
+        "bytes": 977,
+        "sha256": "74ea90ce6ef30118b8e5b53c7a4366040e524876f9aa487f2785f6e21ca94316",
+        "references": [],
+        "width": 72,
+        "height": 72,
+        "validation": "PNG CRC and decompression OK"
+      },
+      "docs/images/enemy_vampire.png": {
+        "bytes": 571,
+        "sha256": "f9f3869f9f3ef95939c438334108dfdab82d9cce0a6b80a5cfc48b9ec3ec0c02",
+        "references": [],
+        "width": 72,
+        "height": 72,
+        "validation": "PNG CRC and decompression OK"
+      },
+      "docs/images/hero_charlotte.png": {
+        "bytes": 954,
+        "sha256": "381105fe37728fb5a5bf30710f1c493aaa7482f9bb54d384ffd55579c0b4868e",
+        "references": [],
+        "width": 72,
+        "height": 72,
+        "validation": "PNG CRC and decompression OK"
+      },
+      "docs/images/hero_miya.png": {
+        "bytes": 891,
+        "sha256": "2ec3b0a64616be3fde9fb0e2b5eb3c1f8dafb443ffb3bf610a938450d459c068",
+        "references": [],
+        "width": 72,
+        "height": 72,
+        "validation": "PNG CRC and decompression OK"
+      },
+      "docs/images/hero_olaf.png": {
+        "bytes": 834,
+        "sha256": "f46c492f68115749fb0a516346b37b40e756846085cba04e58893a6a5a26eb5c",
+        "references": [],
+        "width": 72,
+        "height": 72,
+        "validation": "PNG CRC and decompression OK"
+      },
+      "docs/images/hero_pyrois.png": {
+        "bytes": 837,
+        "sha256": "d67eb72840502425908b5734ada239d2e72eafbf1b88decee9784d6f63b3be8a",
+        "references": [],
+        "width": 72,
+        "height": 72,
+        "validation": "PNG CRC and decompression OK"
+      }
+    },
+    "unreferenced_documentation_images": [
+      "docs/images/boss_necromancer.png",
+      "docs/images/boss_orc_rider.png",
+      "docs/images/enemy_armored_orc.png",
+      "docs/images/enemy_orc.png",
+      "docs/images/enemy_skeleton.png",
+      "docs/images/enemy_skeleton_archer.png",
+      "docs/images/enemy_vampire.png",
+      "docs/images/hero_charlotte.png",
+      "docs/images/hero_miya.png",
+      "docs/images/hero_olaf.png",
+      "docs/images/hero_pyrois.png"
+    ],
+    "errors": [],
+    "warnings": [],
+    "scope": "Static local file/directory link and image/case checks and PNG integrity; heading fragments, GitHub rendering and external URL availability are not checked."
+  }
+}

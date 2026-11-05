@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://ca8gxvioegu6"
+
+[deps]
+
+files=["res://benchmarks/reports/TONG_HOP_KET_QUA.so.translation", "res://benchmarks/reports/TONG_HOP_KET_QUA.so.translation", "res://benchmarks/reports/TONG_HOP_KET_QUA.trung.translation", "res://benchmarks/reports/TONG_HOP_KET_QUA.trung.translation", "res://benchmarks/reports/TONG_HOP_KET_QUA.p95.translation", "res://benchmarks/reports/TONG_HOP_KET_QUA.nhanh.translation", "res://benchmarks/reports/TONG_HOP_KET_QUA.cham.translation", "res://benchmarks/reports/TONG_HOP_KET_QUA.ghi.translation"]
+
+source_file="res://benchmarks/reports/TONG_HOP_KET_QUA.csv"
+dest_files=["res://benchmarks/reports/TONG_HOP_KET_QUA.so.translation", "res://benchmarks/reports/TONG_HOP_KET_QUA.so.translation", "res://benchmarks/reports/TONG_HOP_KET_QUA.trung.translation", "res://benchmarks/reports/TONG_HOP_KET_QUA.trung.translation", "res://benchmarks/reports/TONG_HOP_KET_QUA.p95.translation", "res://benchmarks/reports/TONG_HOP_KET_QUA.nhanh.translation", "res://benchmarks/reports/TONG_HOP_KET_QUA.cham.translation", "res://benchmarks/reports/TONG_HOP_KET_QUA.ghi.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

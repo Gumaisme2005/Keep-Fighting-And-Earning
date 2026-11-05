@@ -1,0 +1,123 @@
+[gd_scene format=3 uid="uid://dm4g8k1sp3ll9"]
+
+[ext_resource type="Script" path="res://scenes/projectiles/magic_spell.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://Assets/Projectiles/Wizard_Attack02_Effect.png" id="2_fly_tex"]
+[ext_resource type="Texture2D" path="res://Assets/Projectiles/Wizard_Attack01_Effect.png" id="3_hit_tex"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f1"]
+atlas = ExtResource("2_fly_tex")
+region = Rect2(0, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f2"]
+atlas = ExtResource("2_fly_tex")
+region = Rect2(100, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f3"]
+atlas = ExtResource("2_fly_tex")
+region = Rect2(200, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f4"]
+atlas = ExtResource("2_fly_tex")
+region = Rect2(300, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f5"]
+atlas = ExtResource("2_fly_tex")
+region = Rect2(400, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f6"]
+atlas = ExtResource("2_fly_tex")
+region = Rect2(500, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f7"]
+atlas = ExtResource("2_fly_tex")
+region = Rect2(600, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h1"]
+atlas = ExtResource("3_hit_tex")
+region = Rect2(0, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h2"]
+atlas = ExtResource("3_hit_tex")
+region = Rect2(100, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h3"]
+atlas = ExtResource("3_hit_tex")
+region = Rect2(200, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h4"]
+atlas = ExtResource("3_hit_tex")
+region = Rect2(300, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h5"]
+atlas = ExtResource("3_hit_tex")
+region = Rect2(400, 0, 100, 100)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_magic"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f7")
+}],
+"loop": true,
+"name": &"fly",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h5")
+}],
+"loop": false,
+"name": &"hit",
+"speed": 14.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_spell"]
+radius = 10.0
+
+[node name="MagicSpell" type="Area2D"]
+collision_layer = 0
+collision_mask = 7
+script = ExtResource("1_script")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.45, 0.45)
+sprite_frames = SubResource("SpriteFrames_magic")
+animation = &"fly"
+autoplay = "fly"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_spell")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+

@@ -1,0 +1,38 @@
+extends SceneTree
+
+var count := 0
+var failures := 0
+
+func _initialize() -> void:
+	for folder in ["res://scenes", "res://scripts", "res://tests", "res://benchmarks"]:
+		_scan(folder)
+	print("RESOURCE_SMOKE checked=%d failures=%d" % [count, failures])
+	quit(1 if failures > 0 else 0)
+
+func _scan(folder: String) -> void:
+	var dir := DirAccess.open(folder)
+	if dir == null:
+		failures += 1
+		return
+	for child in dir.get_directories():
+		if child not in ["results", "reports", "_cov", "_mutant", "backups"]:
+			_scan(folder.path_join(child))
+	for file in dir.get_files():
+		if file.get_extension() not in ["gd", "tscn", "tres"]:
+			continue
+		count += 1
+		var path := folder.path_join(file)
+		var resource := load(path)
+		if resource == null:
+			printerr("RESOURCE_SMOKE_FAILED ", path)
+			failures += 1
+		elif resource is Script and not resource.can_instantiate():
+			printerr("RESOURCE_SMOKE_SCRIPT_FAILED ", path)
+			failures += 1
+		elif resource is PackedScene:
+			var instance: Node = resource.instantiate()
+			if instance == null:
+				printerr("RESOURCE_SMOKE_SCENE_FAILED ", path)
+				failures += 1
+			else:
+				instance.free()

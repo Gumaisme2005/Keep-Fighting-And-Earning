@@ -1,0 +1,604 @@
+.agent/workflows/balance-unit.md
+.dockerignore
+.editorconfig
+.gitattributes
+.github/ISSUE_TEMPLATE/seed_bug_report.md
+.github/PULL_REQUEST_TEMPLATE.md
+.github/workflows/ci.yml
+.gitignore
+Assets/Audio/bgm_boss.wav
+Assets/Audio/bgm_boss.wav.import
+Assets/Audio/bgm_dungeon.wav
+Assets/Audio/bgm_dungeon.wav.import
+Assets/Audio/bgm_glorious_morning.wav
+Assets/Audio/bgm_glorious_morning.wav.import
+Assets/Audio/bgm_menu.wav
+Assets/Audio/bgm_menu.wav.import
+Assets/Audio/sfx_hit.wav
+Assets/Audio/sfx_hit.wav.import
+Assets/Audio/sfx_pickup.wav
+Assets/Audio/sfx_pickup.wav.import
+Assets/Audio/sfx_portal.wav
+Assets/Audio/sfx_portal.wav.import
+Assets/Audio/sfx_slash.wav
+Assets/Audio/sfx_slash.wav.import
+Assets/Character/Archer/Archer.png
+Assets/Character/Archer/Archer.png.import
+Assets/Character/Archer/Archer_Attack01.png
+Assets/Character/Archer/Archer_Attack01.png.import
+Assets/Character/Archer/Archer_Attack02.png
+Assets/Character/Archer/Archer_Attack02.png.import
+Assets/Character/Archer/Archer_Death.png
+Assets/Character/Archer/Archer_Death.png.import
+Assets/Character/Archer/Archer_Hurt.png
+Assets/Character/Archer/Archer_Hurt.png.import
+Assets/Character/Archer/Archer_Idle.png
+Assets/Character/Archer/Archer_Idle.png.import
+Assets/Character/Archer/Archer_Walk.png
+Assets/Character/Archer/Archer_Walk.png.import
+Assets/Character/Archer/Arrow02(100x100).png
+Assets/Character/Archer/Arrow02(100x100).png.import
+Assets/Character/Archer/Arrow02(32x32).png
+Assets/Character/Archer/Arrow02(32x32).png.import
+Assets/Character/Armored Orc/Armored Orc_Attack01.png
+Assets/Character/Armored Orc/Armored Orc_Attack01.png.import
+Assets/Character/Armored Orc/Armored Orc_Attack02.png
+Assets/Character/Armored Orc/Armored Orc_Attack02.png.import
+Assets/Character/Armored Orc/Armored Orc_Attack03.png
+Assets/Character/Armored Orc/Armored Orc_Attack03.png.import
+Assets/Character/Armored Orc/Armored Orc_Block.png
+Assets/Character/Armored Orc/Armored Orc_Block.png.import
+Assets/Character/Armored Orc/Armored Orc_Death.png
+Assets/Character/Armored Orc/Armored Orc_Death.png.import
+Assets/Character/Armored Orc/Armored Orc_Hurt.png
+Assets/Character/Armored Orc/Armored Orc_Hurt.png.import
+Assets/Character/Armored Orc/Armored Orc_Idle.png
+Assets/Character/Armored Orc/Armored Orc_Idle.png.import
+Assets/Character/Armored Orc/Armored Orc_Walk.png
+Assets/Character/Armored Orc/Armored Orc_Walk.png.import
+Assets/Character/Bat/Bat.png
+Assets/Character/Bat/Bat.png.import
+Assets/Character/Bat/Bat_Attack01.png
+Assets/Character/Bat/Bat_Attack01.png.import
+Assets/Character/Bat/Bat_Attack02.png
+Assets/Character/Bat/Bat_Attack02.png.import
+Assets/Character/Bat/Bat_Death.png
+Assets/Character/Bat/Bat_Death.png.import
+Assets/Character/Bat/Bat_Flying.png
+Assets/Character/Bat/Bat_Flying.png.import
+Assets/Character/Bat/Bat_Hurt.png
+Assets/Character/Bat/Bat_Hurt.png.import
+Assets/Character/Human_Archer/Human_Archer.png
+Assets/Character/Human_Archer/Human_Archer.png.import
+Assets/Character/Human_knight/Human_Knight.png
+Assets/Character/Human_knight/Human_Knight.png.import
+Assets/Character/Knight/Knight.png
+Assets/Character/Knight/Knight.png.import
+Assets/Character/Knight/Knight_Attack01.png
+Assets/Character/Knight/Knight_Attack01.png.import
+Assets/Character/Knight/Knight_Attack02.png
+Assets/Character/Knight/Knight_Attack02.png.import
+Assets/Character/Knight/Knight_Attack03.png
+Assets/Character/Knight/Knight_Attack03.png.import
+Assets/Character/Knight/Knight_Block.png
+Assets/Character/Knight/Knight_Block.png.import
+Assets/Character/Knight/Knight_Death.png
+Assets/Character/Knight/Knight_Death.png.import
+Assets/Character/Knight/Knight_Hurt.png
+Assets/Character/Knight/Knight_Hurt.png.import
+Assets/Character/Knight/Knight_Idle.png
+Assets/Character/Knight/Knight_Idle.png.import
+Assets/Character/Knight/Knight_Walk.png
+Assets/Character/Knight/Knight_Walk.png.import
+Assets/Character/Necromancer/Necromancer_Attack01.png
+Assets/Character/Necromancer/Necromancer_Attack01.png.import
+Assets/Character/Necromancer/Necromancer_Attack02.png
+Assets/Character/Necromancer/Necromancer_Attack02.png.import
+Assets/Character/Necromancer/Necromancer_DEATH.png
+Assets/Character/Necromancer/Necromancer_DEATH.png.import
+Assets/Character/Necromancer/Necromancer_Hurt.png
+Assets/Character/Necromancer/Necromancer_Hurt.png.import
+Assets/Character/Necromancer/Necromancer_Idle.png
+Assets/Character/Necromancer/Necromancer_Idle.png.import
+Assets/Character/Necromancer/Necromancer_Summon(With magic effects).png
+Assets/Character/Necromancer/Necromancer_Summon(With magic effects).png.import
+Assets/Character/Necromancer/Necromancer_Summon.png
+Assets/Character/Necromancer/Necromancer_Summon.png.import
+Assets/Character/Necromancer/Necromancer_Walk.png
+Assets/Character/Necromancer/Necromancer_Walk.png.import
+Assets/Character/Orc/Orc with shadows/Orc.png
+Assets/Character/Orc/Orc with shadows/Orc.png.import
+Assets/Character/Orc/Orc with shadows/Orc_Attack01.png
+Assets/Character/Orc/Orc with shadows/Orc_Attack01.png.import
+Assets/Character/Orc/Orc with shadows/Orc_Attack02.png
+Assets/Character/Orc/Orc with shadows/Orc_Attack02.png.import
+Assets/Character/Orc/Orc with shadows/Orc_Death.png
+Assets/Character/Orc/Orc with shadows/Orc_Death.png.import
+Assets/Character/Orc/Orc with shadows/Orc_Hurt.png
+Assets/Character/Orc/Orc with shadows/Orc_Hurt.png.import
+Assets/Character/Orc/Orc with shadows/Orc_Idle.png
+Assets/Character/Orc/Orc with shadows/Orc_Idle.png.import
+Assets/Character/Orc/Orc with shadows/Orc_Walk.png
+Assets/Character/Orc/Orc with shadows/Orc_Walk.png.import
+Assets/Character/Orc/Orc.aseprite
+Assets/Character/Orc Rider/Orc rider_Attack01.png
+Assets/Character/Orc Rider/Orc rider_Attack01.png.import
+Assets/Character/Orc Rider/Orc rider_Attack02.png
+Assets/Character/Orc Rider/Orc rider_Attack02.png.import
+Assets/Character/Orc Rider/Orc rider_Attack03.png
+Assets/Character/Orc Rider/Orc rider_Attack03.png.import
+Assets/Character/Orc Rider/Orc rider_Block.png
+Assets/Character/Orc Rider/Orc rider_Block.png.import
+Assets/Character/Orc Rider/Orc rider_Death.png
+Assets/Character/Orc Rider/Orc rider_Death.png.import
+Assets/Character/Orc Rider/Orc rider_Hurt.png
+Assets/Character/Orc Rider/Orc rider_Hurt.png.import
+Assets/Character/Orc Rider/Orc rider_Idle.png
+Assets/Character/Orc Rider/Orc rider_Idle.png.import
+Assets/Character/Orc Rider/Orc rider_Walk.png
+Assets/Character/Orc Rider/Orc rider_Walk.png.import
+Assets/Character/Skeleton/enemies-skeleton1_attack.png
+Assets/Character/Skeleton/enemies-skeleton1_attack.png.import
+Assets/Character/Skeleton/enemies-skeleton1_death.png
+Assets/Character/Skeleton/enemies-skeleton1_death.png.import
+Assets/Character/Skeleton/enemies-skeleton1_idle.png
+Assets/Character/Skeleton/enemies-skeleton1_idle.png.import
+Assets/Character/Skeleton/enemies-skeleton1_movement.png
+Assets/Character/Skeleton/enemies-skeleton1_movement.png.import
+Assets/Character/Skeleton/enemies-skeleton1_take_damage.png
+Assets/Character/Skeleton/enemies-skeleton1_take_damage.png.import
+Assets/Character/Skeleton/Skeleton.png
+Assets/Character/Skeleton/Skeleton.png.import
+Assets/Character/Skeleton/Skeleton_Attack01.png
+Assets/Character/Skeleton/Skeleton_Attack01.png.import
+Assets/Character/Skeleton/Skeleton_Attack02.png
+Assets/Character/Skeleton/Skeleton_Attack02.png.import
+Assets/Character/Skeleton/Skeleton_Block.png
+Assets/Character/Skeleton/Skeleton_Block.png.import
+Assets/Character/Skeleton/Skeleton_Death.png
+Assets/Character/Skeleton/Skeleton_Death.png.import
+Assets/Character/Skeleton/Skeleton_Hurt.png
+Assets/Character/Skeleton/Skeleton_Hurt.png.import
+Assets/Character/Skeleton/Skeleton_Idle.png
+Assets/Character/Skeleton/Skeleton_Idle.png.import
+Assets/Character/Skeleton/Skeleton_Summon.png
+Assets/Character/Skeleton/Skeleton_Summon.png.import
+Assets/Character/Skeleton/Skeleton_Walk.png
+Assets/Character/Skeleton/Skeleton_Walk.png.import
+Assets/Character/Skeleton Archer/Arrow03(100x100).png
+Assets/Character/Skeleton Archer/Arrow03(100x100).png.import
+Assets/Character/Skeleton Archer/Skeleton Archer.png
+Assets/Character/Skeleton Archer/Skeleton Archer.png.import
+Assets/Character/Skeleton Archer/Skeleton Archer_Attack.png
+Assets/Character/Skeleton Archer/Skeleton Archer_Attack.png.import
+Assets/Character/Skeleton Archer/Skeleton Archer_Death.png
+Assets/Character/Skeleton Archer/Skeleton Archer_Death.png.import
+Assets/Character/Skeleton Archer/Skeleton Archer_Hurt.png
+Assets/Character/Skeleton Archer/Skeleton Archer_Hurt.png.import
+Assets/Character/Skeleton Archer/Skeleton Archer_Idle.png
+Assets/Character/Skeleton Archer/Skeleton Archer_Idle.png.import
+Assets/Character/Skeleton Archer/Skeleton Archer_Summon.png
+Assets/Character/Skeleton Archer/Skeleton Archer_Summon.png.import
+Assets/Character/Skeleton Archer/Skeleton Archer_Walk.png
+Assets/Character/Skeleton Archer/Skeleton Archer_Walk.png.import
+Assets/Character/Soldier/Soldier/Soldier.png
+Assets/Character/Soldier/Soldier/Soldier.png.import
+Assets/Character/Soldier/Soldier/Soldier_Attack01.png
+Assets/Character/Soldier/Soldier/Soldier_Attack01.png.import
+Assets/Character/Soldier/Soldier/Soldier_Attack02.png
+Assets/Character/Soldier/Soldier/Soldier_Attack02.png.import
+Assets/Character/Soldier/Soldier/Soldier_Attack03.png
+Assets/Character/Soldier/Soldier/Soldier_Attack03.png.import
+Assets/Character/Soldier/Soldier/Soldier_Death.png
+Assets/Character/Soldier/Soldier/Soldier_Death.png.import
+Assets/Character/Soldier/Soldier/Soldier_Hurt.png
+Assets/Character/Soldier/Soldier/Soldier_Hurt.png.import
+Assets/Character/Soldier/Soldier/Soldier_Idle.png
+Assets/Character/Soldier/Soldier/Soldier_Idle.png.import
+Assets/Character/Soldier/Soldier/Soldier_Walk.png
+Assets/Character/Soldier/Soldier/Soldier_Walk.png.import
+Assets/Character/Swordsman/Swordsman_Attack01.png
+Assets/Character/Swordsman/Swordsman_Attack01.png.import
+Assets/Character/Swordsman/Swordsman_Attack02.png
+Assets/Character/Swordsman/Swordsman_Attack02.png.import
+Assets/Character/Swordsman/Swordsman_Attack3.png
+Assets/Character/Swordsman/Swordsman_Attack3.png.import
+Assets/Character/Swordsman/Swordsman_Death.png
+Assets/Character/Swordsman/Swordsman_Death.png.import
+Assets/Character/Swordsman/Swordsman_Hurt.png
+Assets/Character/Swordsman/Swordsman_Hurt.png.import
+Assets/Character/Swordsman/Swordsman_Idle.png
+Assets/Character/Swordsman/Swordsman_Idle.png.import
+Assets/Character/Swordsman/Swordsman_Walk.png
+Assets/Character/Swordsman/Swordsman_Walk.png.import
+Assets/Character/Vampire/enemies-vampire_attack.png
+Assets/Character/Vampire/enemies-vampire_attack.png.import
+Assets/Character/Vampire/enemies-vampire_death.png
+Assets/Character/Vampire/enemies-vampire_death.png.import
+Assets/Character/Vampire/enemies-vampire_idle.png
+Assets/Character/Vampire/enemies-vampire_idle.png.import
+Assets/Character/Vampire/enemies-vampire_movement.png
+Assets/Character/Vampire/enemies-vampire_movement.png.import
+Assets/Character/Vampire/enemies-vampire_take_damage.png
+Assets/Character/Vampire/enemies-vampire_take_damage.png.import
+Assets/Fonts/Grenze-Bold.ttf
+Assets/Fonts/Grenze-Bold.ttf.import
+Assets/Fonts/Grenze-Medium.ttf
+Assets/Fonts/Grenze-Medium.ttf.import
+Assets/Fonts/Grenze-Regular.ttf
+Assets/Fonts/Grenze-Regular.ttf.import
+Assets/Fonts/Grenze-SemiBold.ttf
+Assets/Fonts/Grenze-SemiBold.ttf.import
+Assets/Fonts/Grenze-Variable.ttf
+Assets/Fonts/Grenze-Variable.ttf.import
+Assets/Fonts/GrenzeGotisch-Bold.ttf
+Assets/Fonts/GrenzeGotisch-Bold.ttf.import
+Assets/Fonts/GrenzeGotisch-ExtraBold.ttf
+Assets/Fonts/GrenzeGotisch-ExtraBold.ttf.import
+Assets/Fonts/GrenzeGotisch-Regular.ttf
+Assets/Fonts/GrenzeGotisch-Regular.ttf.import
+Assets/Fonts/GrenzeGotisch-SemiBold.ttf
+Assets/Fonts/GrenzeGotisch-SemiBold.ttf.import
+Assets/Fonts/GrenzeGotisch-Variable.ttf
+Assets/Fonts/GrenzeGotisch-Variable.ttf.import
+Assets/Items/Chest/doors_lever_chest_animation.png
+Assets/Items/Chest/doors_lever_chest_animation.png.import
+Assets/Items/Items/Icon187.png
+Assets/Items/Items/Icon187.png.import
+Assets/Items/Items/Icons.png
+Assets/Items/Items/Icons.png.import
+Assets/Map/Atmosphere/broken_pillar.png
+Assets/Map/Atmosphere/broken_pillar.png.import
+Assets/Map/Atmosphere/cobweb_corner_large.png
+Assets/Map/Atmosphere/cobweb_corner_large.png.import
+Assets/Map/Atmosphere/cobweb_corner_small.png
+Assets/Map/Atmosphere/cobweb_corner_small.png.import
+Assets/Map/Atmosphere/cobweb_wall_hanging.png
+Assets/Map/Atmosphere/cobweb_wall_hanging.png.import
+Assets/Map/Atmosphere/debris_iron_scrap.png
+Assets/Map/Atmosphere/debris_iron_scrap.png.import
+Assets/Map/Atmosphere/debris_stone_rubble.png
+Assets/Map/Atmosphere/debris_stone_rubble.png.import
+Assets/Map/Atmosphere/iron_chains_wall.png
+Assets/Map/Atmosphere/iron_chains_wall.png.import
+Assets/Map/Atmosphere/skeleton_bone_pile.png
+Assets/Map/Atmosphere/skeleton_bone_pile.png.import
+Assets/Map/Atmosphere/skeleton_fallen_adventurer.png
+Assets/Map/Atmosphere/skeleton_fallen_adventurer.png.import
+Assets/Map/Atmosphere/skeleton_ribcage_skull.png
+Assets/Map/Atmosphere/skeleton_ribcage_skull.png.import
+Assets/Map/Atmosphere/skeleton_shattered.png
+Assets/Map/Atmosphere/skeleton_shattered.png.import
+Assets/Map/Atmosphere/wall_crack_major.png
+Assets/Map/Atmosphere/wall_crack_major.png.import
+Assets/Map/Atmosphere/wall_crack_minor.png
+Assets/Map/Atmosphere/wall_crack_minor.png.import
+Assets/Map/Dimensional_Portal.png
+Assets/Map/Dimensional_Portal.png.import
+Assets/Map/Objects.png
+Assets/Map/Objects.png.import
+Assets/Map/trap_animation.png
+Assets/Map/trap_animation.png.import
+Assets/Map/walls_floor.png
+Assets/Map/walls_floor.png.import
+Assets/Projectiles/Arrow01(100x100).png
+Assets/Projectiles/Arrow01(100x100).png.import
+Assets/Projectiles/Arrow01(32x32).png
+Assets/Projectiles/Arrow01(32x32).png.import
+Assets/Projectiles/Arrow02(100x100).png
+Assets/Projectiles/Arrow02(100x100).png.import
+Assets/Projectiles/Arrow02(32x32).png
+Assets/Projectiles/Arrow02(32x32).png.import
+Assets/Projectiles/Arrow03(100x100).png
+Assets/Projectiles/Arrow03(100x100).png.import
+Assets/Projectiles/Arrow03(32x32).png
+Assets/Projectiles/Arrow03(32x32).png.import
+Assets/Projectiles/Human_Archer_Extras.png
+Assets/Projectiles/Human_Archer_Extras.png.import
+Assets/Projectiles/Necromancer_Attack02_Effect.png
+Assets/Projectiles/Necromancer_Attack02_Effect.png.import
+Assets/Projectiles/Necromancer_Sumon_Effect.png
+Assets/Projectiles/Necromancer_Sumon_Effect.png.import
+Assets/Projectiles/Priest_Attack_effect.png
+Assets/Projectiles/Priest_Attack_effect.png.import
+Assets/Projectiles/Priest_Heal_effect.png
+Assets/Projectiles/Priest_Heal_effect.png.import
+Assets/Projectiles/Wizard_Attack01_Effect.png
+Assets/Projectiles/Wizard_Attack01_Effect.png.import
+Assets/Projectiles/Wizard_Attack02_Effect.png
+Assets/Projectiles/Wizard_Attack02_Effect.png.import
+Assets/UI/Action_panel.png
+Assets/UI/Action_panel.png.import
+Assets/UI/Background/Dungeon.png
+Assets/UI/Background/Dungeon.png.import
+Assets/UI/Button&Character/arrow.png
+Assets/UI/Button&Character/arrow.png.import
+Assets/UI/Button&Character/Human_Archer.png
+Assets/UI/Button&Character/Human_Archer.png.import
+Assets/UI/Button&Character/Human_Knight.png
+Assets/UI/Button&Character/Human_Knight.png.import
+Assets/UI/Button&Character/Soldier.png
+Assets/UI/Button&Character/Soldier.png.import
+Assets/UI/Button&Character/Swordsman.png
+Assets/UI/Button&Character/Swordsman.png.import
+Assets/UI/HP & Shield bar/HeartEmpty.png
+Assets/UI/HP & Shield bar/HeartEmpty.png.import
+Assets/UI/HP & Shield bar/HeartFull.png
+Assets/UI/HP & Shield bar/HeartFull.png.import
+Assets/UI/HP & Shield bar/HP label.png
+Assets/UI/HP & Shield bar/HP label.png.import
+Assets/UI/HP & Shield bar/ShieldEmpty.png
+Assets/UI/HP & Shield bar/ShieldEmpty.png.import
+Assets/UI/HP & Shield bar/ShieldFull.png
+Assets/UI/HP & Shield bar/ShieldFull.png.import
+Assets/UI/Inventory.png
+Assets/UI/Inventory.png.import
+benchmarks/advanced/analyze_stress.py
+benchmarks/advanced/gan_diem_do_tuong.py
+benchmarks/advanced/kiem_tra_cau_truc_tilemap.gd
+benchmarks/advanced/kiem_tra_cau_truc_tilemap.gd.uid
+benchmarks/advanced/kiem_tra_seed_doc_lap.gd
+benchmarks/advanced/kiem_tra_seed_doc_lap.gd.uid
+benchmarks/advanced/phan_tich_giai_doan.py
+benchmarks/advanced/profile_giai_doan.gd
+benchmarks/advanced/profile_giai_doan.gd.uid
+benchmarks/advanced/results/.gdignore
+benchmarks/advanced/results/du_lieu_chua_day_du/profile_truoc_toi_uu_KHONG_DAY_DU.csv
+benchmarks/advanced/results/kiem_tra_tilemap_2026-10-26T12-34-10.csv
+benchmarks/advanced/results/profile_giai_doan_2026-10-27T20-35-22.csv
+benchmarks/advanced/results/seed_replay_2026-10-27T20-28-57_20040.csv
+benchmarks/advanced/results/seed_replay_2026-11-05T15-04-54_11684.csv
+benchmarks/advanced/results/seed_replay_2026-11-05T15-16-30_18068.csv
+benchmarks/advanced/results/stress_2026-10-25T20-23-39.csv
+benchmarks/advanced/so_sanh_seed_doc_lap.py
+benchmarks/advanced/stress_benchmark.gd
+benchmarks/advanced/stress_benchmark.gd.uid
+benchmarks/benchmark.tscn
+benchmarks/benchmark_dungeon_generator.gd
+benchmarks/benchmark_dungeon_generator.gd.uid
+benchmarks/benchmark_dungeon_generator.tscn
+benchmarks/CHANGELOG.md
+benchmarks/dungeon_benchmark.gd
+benchmarks/dungeon_benchmark.gd.uid
+benchmarks/README.md
+benchmarks/reports/.gdignore
+benchmarks/reports/BAO_CAO_TONG_KET_2026-10-27.md
+benchmarks/reports/benchmark_report.txt
+benchmarks/reports/images/01_benchmark_theo_so_phong.png
+benchmarks/reports/images/02_stress_1000_seed.png
+benchmarks/reports/images/03_truoc_sau_toi_uu.png
+benchmarks/reports/TONG_HOP_KET_QUA.csv
+benchmarks/results/.gdignore
+benchmarks/results/benchmark_2026-10-25T18-01-50.csv
+benchmarks/results/benchmark_log.txt
+benchmarks/results/results.csv
+benchmarks/scalability/analyze_benchmark.py
+benchmarks/scalability/dungeon_benchmark.gd
+benchmarks/scalability/dungeon_benchmark.gd.uid
+CHANGELOG.md
+CONTRIBUTING.md
+docker-compose.yml
+Dockerfile
+docs/.gdignore
+docs/architecture/evidence/before_import.log
+docs/architecture/evidence/before_main.log
+docs/architecture/evidence/before_unit.log
+docs/architecture/evidence/cold_import_failed.log
+docs/architecture/evidence/cold_import_retry.log
+docs/architecture/evidence/cold_runner.log
+docs/architecture/evidence/cold_suite/backdrop.log
+docs/architecture/evidence/cold_suite/combat.log
+docs/architecture/evidence/cold_suite/import.log
+docs/architecture/evidence/cold_suite/import_retry.log
+docs/architecture/evidence/cold_suite/mechanics.log
+docs/architecture/evidence/cold_suite/properties.log
+docs/architecture/evidence/cold_suite/reviewer.log
+docs/architecture/evidence/cold_suite/unit.log
+docs/architecture/evidence/content_changes.diff
+docs/architecture/evidence/environment.json
+docs/architecture/evidence/inventory_after.txt
+docs/architecture/evidence/inventory_before.txt
+docs/architecture/evidence/main.log
+docs/architecture/evidence/preservation_check.json
+docs/architecture/evidence/resource_smoke.gd.txt
+docs/architecture/evidence/resource_smoke.log
+docs/architecture/evidence/runner.log
+docs/architecture/evidence/runner_negative/import.log
+docs/architecture/evidence/runner_negative/import_retry.log
+docs/architecture/evidence/runner_negative_attempt.log
+docs/architecture/evidence/seed_after.log
+docs/architecture/evidence/seed_before.log
+docs/architecture/evidence/stale_cache_import.log
+docs/architecture/evidence/static_check.json
+docs/architecture/evidence/suite/backdrop.log
+docs/architecture/evidence/suite/benchmark.log
+docs/architecture/evidence/suite/combat.log
+docs/architecture/evidence/suite/import.log
+docs/architecture/evidence/suite/mechanics.log
+docs/architecture/evidence/suite/properties.log
+docs/architecture/evidence/suite/reviewer.log
+docs/architecture/evidence/suite/unit.log
+docs/architecture/evidence/tooling/coverage_smoke.log
+docs/architecture/evidence/tooling/mutation_smoke.log
+docs/architecture/evidence/tooling/plan_checks.log
+docs/architecture/evidence/tooling/scalability_analysis.log
+docs/architecture/evidence/tooling/vt075_evidence_invocation.log
+docs/architecture/evidence/world.log
+docs/architecture/FILES_CHANGED.md
+docs/architecture/PROJECT_STRUCTURE.md
+docs/architecture/refactor_manifest.json
+docs/architecture/RESTRUCTURE_REPORT.md
+docs/BALANCE_WORKFLOW.md
+docs/BENCHMARK_REPORT.md
+docs/DUNGEON_FOG_AND_BALANCE.md
+docs/GAME_DESIGN_DOCUMENT.md
+docs/images/.gdignore
+docs/images/boss_necromancer.png
+docs/images/boss_orc_rider.png
+docs/images/enemy_armored_orc.png
+docs/images/enemy_orc.png
+docs/images/enemy_skeleton.png
+docs/images/enemy_skeleton_archer.png
+docs/images/enemy_vampire.png
+docs/images/hero_charlotte.png
+docs/images/hero_miya.png
+docs/images/hero_olaf.png
+docs/images/hero_pyrois.png
+docs/qa/CHANGELOG.md
+docs/qa/jira_url.txt
+docs/qa/README.md
+docs/qa/test_cases.csv
+docs/qa/test_cases.xlsx
+docs/SECURITY.md
+docs/SEED_BUG_ISSUES.md
+export_presets.cfg
+nginx.conf
+project.godot
+README.md
+run_game.bat
+run_tests.bat
+scenes/characters/charlotte/player.gd
+scenes/characters/charlotte/player.gd.uid
+scenes/characters/charlotte/player.tscn
+scenes/characters/inventory_manager.gd
+scenes/characters/inventory_manager.gd.uid
+scenes/characters/miya/player.gd
+scenes/characters/miya/player.gd.uid
+scenes/characters/miya/player.tscn
+scenes/characters/olaf/player.gd
+scenes/characters/olaf/player.gd.uid
+scenes/characters/olaf/player.tscn
+scenes/characters/pyrois/player.gd
+scenes/characters/pyrois/player.gd.uid
+scenes/characters/pyrois/player.tscn
+scenes/dungeon/dungeon_atmosphere.gd
+scenes/dungeon/dungeon_atmosphere.gd.uid
+scenes/dungeon/dungeon_generator.gd
+scenes/dungeon/dungeon_generator.gd.uid
+scenes/dungeon/portal.gd
+scenes/dungeon/portal.gd.uid
+scenes/dungeon/portal.tscn
+scenes/dungeon/room_manager.gd
+scenes/dungeon/room_manager.gd.uid
+scenes/dungeon/room_manager.tscn
+scenes/dungeon/spike_trap.gd
+scenes/dungeon/spike_trap.gd.uid
+scenes/dungeon/spike_trap.tscn
+scenes/enemies/armored_orc/armored_orc.gd
+scenes/enemies/armored_orc/armored_orc.gd.uid
+scenes/enemies/armored_orc/armored_orc.tscn
+scenes/enemies/bosses/necromancer/necromancer.gd
+scenes/enemies/bosses/necromancer/necromancer.gd.uid
+scenes/enemies/bosses/necromancer/necromancer.tscn
+scenes/enemies/bosses/orc_rider/orc_rider.gd
+scenes/enemies/bosses/orc_rider/orc_rider.gd.uid
+scenes/enemies/bosses/orc_rider/orc_rider.tscn
+scenes/enemies/orc/orc.gd
+scenes/enemies/orc/orc.gd.uid
+scenes/enemies/orc/orc.tscn
+scenes/enemies/skeleton/skeleton.gd
+scenes/enemies/skeleton/skeleton.gd.uid
+scenes/enemies/skeleton/skeleton.tscn
+scenes/enemies/skeleton_archer/skeleton_archer.gd
+scenes/enemies/skeleton_archer/skeleton_archer.gd.uid
+scenes/enemies/skeleton_archer/skeleton_archer.tscn
+scenes/enemies/vampire/vampire.gd
+scenes/enemies/vampire/vampire.gd.uid
+scenes/enemies/vampire/vampire.tscn
+scenes/items/big_health_potion.tres
+scenes/items/chest/chest.gd
+scenes/items/chest/chest.gd.uid
+scenes/items/chest/chest.tscn
+scenes/items/health_potion.tres
+scenes/items/iron_armor.tres
+scenes/items/iron_helmet.tres
+scenes/items/iron_sword.tres
+scenes/items/item_data.gd
+scenes/items/item_data.gd.uid
+scenes/items/mystic_armor.tres
+scenes/items/mystic_sword.tres
+scenes/items/world_item/world_item.gd
+scenes/items/world_item/world_item.gd.uid
+scenes/items/world_item/world_item.tscn
+scenes/main/world.tscn
+scenes/menus/game_over_menu/game_over_menu.gd
+scenes/menus/game_over_menu/game_over_menu.gd.uid
+scenes/menus/game_over_menu/game_over_menu.tscn
+scenes/menus/main_menu/main_menu.gd
+scenes/menus/main_menu/main_menu.gd.uid
+scenes/menus/main_menu/main_menu.tscn
+scenes/menus/pause_menu/pause_menu.gd
+scenes/menus/pause_menu/pause_menu.gd.uid
+scenes/menus/pause_menu/pause_menu.tscn
+scenes/projectiles/arrow.gd
+scenes/projectiles/arrow.gd.uid
+scenes/projectiles/arrow.tscn
+scenes/projectiles/bomb.gd
+scenes/projectiles/bomb.gd.uid
+scenes/projectiles/bomb.tscn
+scenes/projectiles/enemy_arrow.gd
+scenes/projectiles/enemy_arrow.gd.uid
+scenes/projectiles/enemy_arrow.tscn
+scenes/projectiles/magic_spell.gd
+scenes/projectiles/magic_spell.gd.uid
+scenes/projectiles/magic_spell.tscn
+scenes/projectiles/poison_explosion.gd
+scenes/projectiles/poison_explosion.gd.uid
+scenes/projectiles/poison_explosion.tscn
+scenes/ui/character_select.gd
+scenes/ui/character_select.gd.uid
+scenes/ui/character_select.tscn
+scenes/ui/game_ui.gd
+scenes/ui/game_ui.gd.uid
+scenes/ui/game_ui.tscn
+scenes/ui/inventory_slot.gd
+scenes/ui/inventory_slot.gd.uid
+scenes/ui/inventory_slot.tscn
+scenes/ui/ui_theme.gd
+scenes/ui/ui_theme.gd.uid
+scripts/core/audio_manager.gd
+scripts/core/audio_manager.gd.uid
+scripts/core/balance_config.gd
+scripts/core/balance_config.gd.uid
+scripts/core/game_manager.gd
+scripts/core/game_manager.gd.uid
+scripts/review/review_service.gd
+scripts/review/review_service.gd.uid
+tests/README.md
+tests/test_dungeon_generator_unit.gd
+tests/test_dungeon_generator_unit.gd.uid
+tests/test_dungeon_generator_unit.tscn
+tests/test_dungeon_properties.gd
+tests/test_dungeon_properties.gd.uid
+tests/test_dungeon_properties.tscn
+tests/test_new_mechanics.tscn
+tests/test_new_mechanics_node.gd
+tests/test_new_mechanics_node.gd.uid
+tests/test_orc_battle.gd
+tests/test_orc_battle.gd.uid
+tests/test_orc_battle.tscn
+tests/test_reviewer_concurrency.gd
+tests/test_reviewer_concurrency.gd.uid
+tests/test_reviewer_concurrency.tscn
+tests/test_visual_backdrop.tscn
+tests/test_visual_backdrop_node.gd
+tests/test_visual_backdrop_node.gd.uid
+tests/vt075/concurrency_harness.gd
+tests/vt075/concurrency_harness.gd.uid
+tests/vt075/cov_probe.gd
+tests/vt075/cov_probe.gd.uid
+tests/vt075/load_p95.gd
+tests/vt075/load_p95.gd.uid
+tests/vt075/load_p95.tscn
+tests/vt075/tools/coverage.py
+tests/vt075/tools/flaky_runs.py
+tests/vt075/tools/generate_report_pdf.py
+tests/vt075/tools/mutation_run.py
+tests/vt075/tools/plan_review_checks.ps1
+tests/vt075/tools/run_suite.ps1
+tests/vt075/tools/thread_probe.gd
+tests/vt075/tools/thread_probe.gd.uid
+tools/.gdignore
+tools/check_project_structure.py
+tools/godot_helpers.ps1
+tools/run_tests.ps1

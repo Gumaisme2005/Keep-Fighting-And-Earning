@@ -1,0 +1,14 @@
+.git
+.github
+.godot
+.codegraph
+build/
+__pycache__/
+*.pyc
+.godot-test-results/
+tests/vt075/_cov/
+tests/vt075/_mutant/
+*.md
+*.pdf
+*Tiny RPG Character*
+*tiny RPG Character*

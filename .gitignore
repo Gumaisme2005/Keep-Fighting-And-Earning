@@ -1,14 +1,13 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+/build/
+.godot-test-results/
 .codegraph/
 
-# Documents & Assignment artifacts
-*.pdf
-*VT-075*
-*vt075*
-docs/vt075/
-tests/vt075/
+# VT-075 generated artifacts
+tests/vt075/_mutant/
+tests/vt075/_cov/
 __pycache__/
 *.pyc
 
@@ -28,3 +27,6 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
+# Generated logs and benchmark instrumentation backups
+*.log
+benchmarks/advanced/backups/

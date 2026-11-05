@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://d3n7obhadlkqb"
+
+[deps]
+
+files=["res://benchmarks/results.room.translation", "res://benchmarks/results.generation.translation", "res://benchmarks/results.seed.translation", "res://benchmarks/results.layout.translation", "res://benchmarks/results.valid.translation"]
+
+source_file="res://benchmarks/results/results.csv"
+dest_files=["res://benchmarks/results.room.translation", "res://benchmarks/results.generation.translation", "res://benchmarks/results.seed.translation", "res://benchmarks/results.layout.translation", "res://benchmarks/results.valid.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

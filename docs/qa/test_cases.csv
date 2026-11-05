@@ -1,0 +1,230 @@
+﻿ID,Module,Chức năng,Tiêu đề test case,Điều kiện tiên quyết,Các bước thực hiện,Dữ liệu test,Kết quả mong đợi,Loại,Ưu tiên,Kết quả thực tế,Trạng thái,Người test,Ngày test,Ghi chú
+TC-MN-01,Menu chính,Hiển thị,Main Menu hiển thị khi khởi chạy game,Đã import dự án vào Godot,1. Nhấn F5 để chạy game,-,Hiển thị Main Menu có nút Start và Exit; không có lỗi trong Output,Chức năng,Cao,,Chưa chạy,,,README ghi có thêm nút Options nhưng script main_menu.gd chỉ xử lý Start và Exit
+TC-MN-02,Menu chính,Start,Nhấn Start chuyển sang màn Chọn nhân vật,Đang ở Main Menu,1. Nhấn nút Start,-,"Chuyển sang scene CharacterSelect, hiển thị 4 nút nhân vật",Chức năng,Cao,,Chưa chạy,,,
+TC-MN-03,Menu chính,Exit,Nhấn Exit thoát game,Đang ở Main Menu,1. Nhấn nút Exit,-,"Cửa sổ game đóng, tiến trình dừng",Chức năng,Cao,,Chưa chạy,,,
+TC-MN-04,Menu chính,Start,Nhấn Start nhiều lần liên tiếp,Đang ở Main Menu,1. Nhấn nhanh nút Start 5 lần,-,"Chỉ chuyển scene một lần, không lỗi, không tạo scene trùng",Tiêu cực,Trung bình,,Chưa chạy,,,Script dùng button_down nên kích hoạt ngay khi nhấn xuống
+TC-CS-01,Chọn nhân vật,Chọn nhân vật,Chọn Pyrois vào game thành công,Đang ở màn Chọn nhân vật,"1. Nhấn nút nhân vật 1 (Pyrois)
+2. Quan sát màn chơi và HUD",Nhân vật: Pyrois,"Vào world.tscn, nhân vật Pyrois xuất hiện ở phòng xuất phát; HUD hiển thị 4 tim và 4 giáp (chưa trang bị)",Chức năng,Cao,,Chưa chạy,,,README ghi Pyrois 'khởi điểm 5 máu' nhưng code: hp = max_hp = base_max_hp (4)
+TC-CS-02,Chọn nhân vật,Chọn nhân vật,Chọn Olaf vào game thành công,Đang ở màn Chọn nhân vật,"1. Nhấn nút nhân vật 2 (Olaf)
+2. Quan sát màn chơi và HUD",Nhân vật: Olaf,"Vào world.tscn, nhân vật Olaf xuất hiện ở phòng xuất phát; HUD hiển thị 6 tim và 1 giáp (chưa trang bị)",Chức năng,Cao,,Chưa chạy,,,
+TC-CS-03,Chọn nhân vật,Chọn nhân vật,Chọn Miya vào game thành công,Đang ở màn Chọn nhân vật,"1. Nhấn nút nhân vật 3 (Miya)
+2. Quan sát màn chơi và HUD",Nhân vật: Miya,"Vào world.tscn, nhân vật Miya xuất hiện ở phòng xuất phát; HUD hiển thị 4 tim và 1 giáp (chưa trang bị)",Chức năng,Cao,,Chưa chạy,,,
+TC-CS-04,Chọn nhân vật,Chọn nhân vật,Chọn Charlotte vào game thành công,Đang ở màn Chọn nhân vật,"1. Nhấn nút nhân vật 4 (Charlotte)
+2. Quan sát màn chơi và HUD",Nhân vật: Charlotte,"Vào world.tscn, nhân vật Charlotte xuất hiện ở phòng xuất phát; HUD hiển thị 5 tim và 0 giáp (chưa trang bị)",Chức năng,Cao,,Chưa chạy,,,
+TC-CS-05,Chọn nhân vật,Chọn nhân vật,Nhân vật đã chọn được giữ khi Retry,Đã chơi và chết với Olaf,"1. Ở màn Game Over nhấn Retry
+2. Chọn Miya
+3. Quan sát nhân vật trong game",-,"Vào game với Miya, không bị dùng lại Olaf",Chức năng,Trung bình,,Chưa chạy,,,
+TC-CS-06,Chọn nhân vật,Chọn nhân vật,Nhân vật cũ không bị giữ khi chọn lại,Đã chơi 1 ván với Pyrois rồi Retry,"1. Chọn Charlotte
+2. Vào game",-,Nhân vật là Charlotte (GameManager cập nhật đúng),Chức năng,Trung bình,,Chưa chạy,,,
+TC-CS-07,Chọn nhân vật,Chọn nhân vật,Nhấn nhanh 2 nút nhân vật liên tiếp,Đang ở màn Chọn nhân vật,1. Nhấn nút Char_1 rồi Char_4 thật nhanh,-,"Game vào world một lần, không lỗi hoặc crash",Tiêu cực,Thấp,,Chưa chạy,,,
+TC-PA-01,Pause Menu,Pause,ESC mở Pause Menu,Đang trong màn chơi,1. Nhấn ESC,-,"Pause Menu hiện, game dừng (quái, bẫy, đạn đứng yên)",Chức năng,Cao,,Chưa chạy,,,
+TC-PA-02,Pause Menu,Pause,ESC lần 2 tiếp tục game,Pause Menu đang mở,1. Nhấn ESC lần nữa,-,"Menu ẩn, game chạy tiếp",Chức năng,Cao,,Chưa chạy,,,
+TC-PA-03,Pause Menu,Pause,Nút Resume tiếp tục game,Pause Menu đang mở,1. Nhấn Resume,-,"Menu ẩn, game chạy tiếp",Chức năng,Cao,,Chưa chạy,,,
+TC-PA-04,Pause Menu,Pause,Nút Restart tải lại màn chơi,Đang chơi tầng 2 hoặc đã nhặt đồ,"1. Mở Pause, nhấn Restart",-,"Scene world tải lại, tầng về giá trị khởi đầu, túi đồ và chỉ số được khởi tạo lại; vẫn dùng nhân vật đã chọn",Chức năng,Cao,,Chưa chạy,,,Restart dùng reload_current_scene nên không quay về màn Chọn nhân vật
+TC-PA-05,Pause Menu,Pause,Nút Exit thoát game,Pause Menu đang mở,1. Nhấn Exit,-,Game đóng,Chức năng,Trung bình,,Chưa chạy,,,
+TC-PA-06,Pause Menu,Pause,Không bấm được hành động khi game tạm dừng,Pause Menu đang mở,"1. Click chuột, nhấn WASD, Q, 1-9",-,Nhân vật không di chuyển/tấn công/dùng vật phẩm khi đang pause,Tiêu cực,Trung bình,,Chưa chạy,,,
+TC-PA-07,Pause Menu,Pause,ESC không mở Pause khi đang Game Over,"Nhân vật vừa chết, Game Over Menu đang hiện",1. Nhấn ESC,-,Pause Menu không hiện (bị chặn bởi kiểm tra game_over_menu),Tiêu cực,Trung bình,,Chưa chạy,,,
+TC-PA-08,Pause Menu,Pause,Timer tạm dừng cùng game,Cooldown kỹ năng Q đang đếm,"1. Nhấn Q
+2. Ngay lập tức pause 10 giây
+3. Resume
+4. Quan sát cooldown",-,Cooldown không giảm trong lúc pause,Biên,Thấp,,Chưa chạy,,,
+TC-GO-01,Game Over,Game Over,Hiện Game Over khi hết máu,"Nhân vật còn 1 máu, giáp = 0","1. Để quái đánh trúng nhân vật
+2. Chờ 2 giây sau hoạt ảnh chết",-,Phát hoạt ảnh death; sau 2 giây hiện Game Over Menu và game tạm dừng,Chức năng,Cao,,Chưa chạy,,,
+TC-GO-02,Game Over,Game Over,Nút Retry quay về Chọn nhân vật,Game Over Menu đang hiện,1. Nhấn Retry,-,Game bỏ pause và chuyển về màn Chọn nhân vật,Chức năng,Cao,,Chưa chạy,,,
+TC-GO-03,Game Over,Game Over,Nút Exit thoát game,Game Over Menu đang hiện,1. Nhấn Exit,-,Game đóng,Chức năng,Trung bình,,Chưa chạy,,,
+TC-GO-04,Game Over,Game Over,Nhân vật chết không còn nhận thêm sát thương,Nhân vật vừa chết,1. Để quái/bẫy đánh tiếp trong 2 giây chờ,-,Không phát sinh thêm lỗi; Game Over chỉ hiện một lần,Tiêu cực,Trung bình,,Chưa chạy,,,
+TC-GO-05,Game Over,Game Over,Không điều khiển được khi đã chết,Nhân vật vừa chết (trong 2 giây chờ),"1. Nhấn WASD, Q, chuột trái, phím 1-9",-,Nhân vật không phản hồi (is_dead = true),Tiêu cực,Trung bình,,Chưa chạy,,,
+TC-MV-01,Di chuyển & điều khiển,Di chuyển,Di chuyển 4 hướng W/A/S/D,"Đang trong màn chơi, Pyrois","1. Nhấn lần lượt W, A, S, D",-,"Nhân vật di chuyển lên, trái, xuống, phải; phát hoạt ảnh walk; dừng thì phát idle",Chức năng,Cao,,Chưa chạy,,,
+TC-MV-02,Di chuyển & điều khiển,Di chuyển,Di chuyển chéo không nhanh hơn,"Pyrois, tốc độ 150","1. Giữ W+D cùng lúc và đo quãng đường trong 2 giây
+2. So sánh với chỉ giữ D",-,Tốc độ chéo bằng tốc độ thẳng (vector chuẩn hóa),Biên,Trung bình,,Chưa chạy,,,
+TC-MV-03,Di chuyển & điều khiển,Di chuyển,Nhấn hai phím ngược chiều,-,1. Giữ A và D cùng lúc,-,"Nhân vật đứng yên, phát idle",Biên,Thấp,,Chưa chạy,,,
+TC-MV-04,Di chuyển & điều khiển,Di chuyển,Quay mặt theo chuột,-,"1. Di chuột sang bên trái nhân vật
+2. Di chuột sang bên phải",-,Sprite lật trái/phải theo vị trí chuột; hitbox kiếm lật theo,Chức năng,Trung bình,,Chưa chạy,,,
+TC-MV-05,Di chuyển & điều khiển,Di chuyển,Va chạm với tường,-,1. Đi thẳng vào tường,-,"Nhân vật bị chặn, không đi xuyên tường hay cột đá",Chức năng,Cao,,Chưa chạy,,,
+TC-MV-06,Di chuyển & điều khiển,Di chuyển,Không thể di chuyển khi đang tấn công,Pyrois,1. Nhấn chuột trái và giữ W ngay khi vung kiếm,-,"Nhân vật đứng yên trong lúc hoạt ảnh attack_1 chạy, sau đó di chuyển lại bình thường",Chức năng,Trung bình,,Chưa chạy,,,
+TC-MV-07,Di chuyển & điều khiển,Di chuyển,Không thể di chuyển khi bị thương,Pyrois bị đánh,"1. Để quái đánh trúng
+2. Giữ phím di chuyển",-,Nhân vật đứng yên đến khi hoạt ảnh hurt kết thúc,Chức năng,Trung bình,,Chưa chạy,,,
+TC-HP-01,Máu / Giáp / Bất tử,Sát thương,Sát thương trừ vào Giáp trước,"Pyrois: Giáp 4/4, Máu 4/4",1. Nhận 1 sát thương từ Orc,Sát thương = 1,"Giáp 3/4, Máu giữ nguyên 4/4; HUD cập nhật",Chức năng,Cao,,Chưa chạy,,,
+TC-HP-02,Máu / Giáp / Bất tử,Sát thương,Sát thương tràn sang Máu khi vỡ Giáp,"Pyrois: Giáp 1/4, Máu 4/4",1. Nhận 3 sát thương (vd. Armored Orc rage),Sát thương = 3,"Giáp về 0, Máu mất 2 (còn 2/4)",Biên,Cao,,Chưa chạy,,,
+TC-HP-03,Máu / Giáp / Bất tử,Sát thương,Sát thương đúng bằng Giáp hiện có,Pyrois: Giáp 2/4,1. Nhận 2 sát thương,Sát thương = 2,"Giáp về 0, Máu giữ nguyên",Biên,Trung bình,,Chưa chạy,,,
+TC-HP-04,Máu / Giáp / Bất tử,Sát thương,Nhận sát thương khi Giáp = 0,"Giáp 0/4, Máu 4/4",1. Nhận 1 sát thương,Sát thương = 1,Máu còn 3/4,Chức năng,Cao,,Chưa chạy,,,
+TC-HP-05,Máu / Giáp / Bất tử,Sát thương,Sát thương <= 0 bị bỏ qua,-,1. Gọi take_damage(0) hoặc take_damage(-1) (qua debug),"0, -1","Không đổi Giáp/Máu, không phát I-Frames",Tiêu cực,Thấp,,Chưa chạy,,,
+TC-HP-06,Máu / Giáp / Bất tử,Bất tử,I-Frames 0.75 giây sau khi bị đánh,"Pyrois, đứng cạnh 2 quái","1. Bị đánh lần 1
+2. Trong 0.75 giây bị đánh thêm",-,Nhân vật nhấp nháy 5 lần; đòn thứ 2 trong 0.75 giây không gây sát thương,Chức năng,Cao,,Chưa chạy,,,
+TC-HP-07,Máu / Giáp / Bất tử,Bất tử,Hết I-Frames nhận sát thương trở lại,-,"1. Bị đánh
+2. Chờ > 0.75 giây
+3. Bị đánh tiếp",-,Đòn sau 0.75 giây gây sát thương bình thường; alpha sprite về 1.0,Biên,Trung bình,,Chưa chạy,,,
+TC-HP-08,Máu / Giáp / Bất tử,Hồi giáp,Giáp tự hồi sau 4 giây không bị đánh,Giáp 1/4,"1. Tránh mọi sát thương
+2. Quan sát giáp sau 4 giây","Delay 4s, tốc độ 1 giáp/giây",Sau 4 giây giáp bắt đầu hồi +1 mỗi giây đến khi đầy 4/4,Chức năng,Cao,,Chưa chạy,,,
+TC-HP-09,Máu / Giáp / Bất tử,Hồi giáp,Bị đánh khi đang hồi giáp thì reset,Giáp đang hồi (2/4),1. Nhận 1 sát thương khi đang hồi,-,"Dừng hồi giáp, đếm lại 4 giây rồi mới hồi tiếp",Biên,Cao,,Chưa chạy,,,
+TC-HP-10,Máu / Giáp / Bất tử,Hồi giáp,Hồi giáp dừng khi đầy,-,1. Chờ giáp hồi đầy,-,"Giáp dừng ở mức tối đa, không vượt quá",Biên,Trung bình,,Chưa chạy,,,
+TC-HP-11,Máu / Giáp / Bất tử,Chết,Nhân vật chết khi Máu về 0,"Giáp 0, Máu 1",1. Nhận 1 sát thương,-,"Phát hoạt ảnh death, tắt physics, vô hiệu hóa PlayerHurtbox",Chức năng,Cao,,Chưa chạy,,,
+TC-HP-12,Máu / Giáp / Bất tử,Chết,Sát thương quá lớn vượt Máu,"Giáp 0, Máu 1",1. Nhận sát thương 5,-,"Máu = 0 (không âm), nhân vật chết",Biên,Trung bình,,Chưa chạy,,,
+TC-HP-13,Máu / Giáp / Bất tử,Bất tử,Bị thương hủy hành động đang thực hiện,Pyrois đang vung kiếm,1. Bị quái đánh trúng lúc đang attack,-,"Hủy attack, tắt hitbox kiếm, chuyển hurt, không bị đơ nhân vật",Tiêu cực,Cao,,Chưa chạy,,,
+TC-PY-01,Pyrois,Chỉ số,Chỉ số khởi đầu của Pyrois,Chọn Pyrois,"1. Vào game, kiểm tra HUD, tốc độ, sát thương",-,"Tốc độ 150, Máu 4, Giáp 4, Sát thương 1",Chức năng,Cao,,Chưa chạy,,,
+TC-PY-02,Pyrois,Tấn công,Chém kiếm bằng chuột trái,"Pyrois, trước mặt có quái đã kích hoạt","1. Hướng chuột vào quái
+2. Nhấn chuột trái",-,"Phát attack_1, quái mất 1 máu (chưa vũ khí)",Chức năng,Cao,,Chưa chạy,,,
+TC-PY-03,Pyrois,Tấn công,Chém trúng nhiều quái cùng lúc,2 quái đứng trong tầm kiếm,1. Chém 1 lần,-,Cả 2 quái nhận sát thương,Chức năng,Trung bình,,Chưa chạy,,,
+TC-PY-04,Pyrois,Tấn công,Chém khi quái chưa kích hoạt,"Đang ở ngoài phòng chiến đấu, quái chưa active",1. Chém quái,-,Quái không mất máu (miễn nhiễm khi is_active = false),Tiêu cực,Trung bình,,Chưa chạy,,,
+TC-PY-05,Pyrois,Tấn công,Spam chuột trái,-,1. Click liên tục 20 lần trong 3 giây,-,Không đơ/crash; mỗi đòn chờ hoạt ảnh kết thúc mới chém tiếp,Tiêu cực,Trung bình,,Chưa chạy,,,
+TC-PY-06,Pyrois,Kỹ năng Q,Kỹ năng Q: nhảy bổ kiếm,"Pyrois, quái ở phía trước",1. Nhấn Q hướng về quái,Sát thương Q = base + 2,Nhân vật lướt 150 px/s trong 0.3 giây rồi bổ xuống; quái nhận base + 2 = 3 sát thương,Chức năng,Cao,,Chưa chạy,,,
+TC-PY-07,Pyrois,Kỹ năng Q,I-Frames trong lúc dùng Q,Quái đang tấn công gần Pyrois,1. Nhấn Q và để quái đánh trúng trong lúc nhảy,-,Không nhận sát thương; sprite ánh xanh; hết kỹ năng thì tắt bất tử,Chức năng,Cao,,Chưa chạy,,,
+TC-PY-08,Pyrois,Kỹ năng Q,Cooldown Q 5 giây,-,"1. Nhấn Q
+2. Nhấn Q lại sau 2 giây
+3. Nhấn Q lại sau 5 giây",Cooldown 5.0s,Lần 2 không kích hoạt; lần 3 kích hoạt thành công,Biên,Cao,,Chưa chạy,,,
+TC-PY-09,Pyrois,Kỹ năng Q,Không dùng Q khi đang tấn công/bị thương,-,"1. Chém rồi nhấn Q ngay
+2. Bị thương rồi nhấn Q",-,Q không kích hoạt trong 2 trạng thái này,Tiêu cực,Trung bình,,Chưa chạy,,,
+TC-PY-10,Pyrois,Kỹ năng Q,Q hướng theo mặt nhân vật,Chuột bên trái nhân vật,1. Nhấn Q,-,Nhân vật lướt về bên trái,Chức năng,Thấp,,Chưa chạy,,,
+TC-OL-01,Olaf,Chỉ số,Chỉ số khởi đầu của Olaf,Chọn Olaf,"1. Kiểm tra HUD, tốc độ, sát thương",-,"Tốc độ 160, Máu 6, Giáp 1, Sát thương 2",Chức năng,Cao,,Chưa chạy,,,
+TC-OL-02,Olaf,Kỹ năng Q,Cuồng nộ nhân đôi sát thương,"Olaf, base_damage = 2","1. Nhấn Q
+2. Chém quái trong 5 giây",Buff 5s,Sát thương đòn đánh = 4 trong thời gian buff,Chức năng,Cao,,Chưa chạy,,,
+TC-OL-03,Olaf,Kỹ năng Q,Hết buff sát thương trở về bình thường,-,"1. Nhấn Q
+2. Chờ 5 giây
+3. Chém quái",-,Sát thương về 2; không bị cộng dồn hay thấp hơn ban đầu,Biên,Cao,,Chưa chạy,,,
+TC-OL-04,Olaf,Kỹ năng Q,Buff cộng đúng khi có vũ khí,Olaf đã trang bị Kiếm sắt (+1),"1. Nhấn Q
+2. Chém quái","base 2, vũ khí +1",Sát thương trong buff = (2 + 2) + 1 = 5; hết buff về 2 + 1 = 3,Biên,Trung bình,,Chưa chạy,,,Kiểm tra README ghi 'nhân đôi sát thương của đòn đánh'; vũ khí không được nhân đôi
+TC-OL-05,Olaf,Kỹ năng Q,Cooldown Q 5 giây,-,"1. Nhấn Q
+2. Nhấn Q lần nữa sau 3 giây",Cooldown 5.0s,Lần 2 không kích hoạt,Biên,Trung bình,,Chưa chạy,,,
+TC-OL-06,Olaf,Kỹ năng Q,Chết trong lúc buff,Olaf đang buff,1. Để quái đánh chết Olaf trong lúc buff,-,Không phát sinh lỗi script; Game Over hiện bình thường,Tiêu cực,Thấp,,Chưa chạy,,,
+TC-MI-01,Miya,Chỉ số,Chỉ số khởi đầu của Miya,Chọn Miya,"1. Kiểm tra HUD, tốc độ, sát thương",-,"Tốc độ 180, Máu 4, Giáp 1, Sát thương 2",Chức năng,Cao,,Chưa chạy,,,
+TC-MI-02,Miya,Tấn công,Bắn tên theo hướng chuột,Miya,"1. Hướng chuột sang phải
+2. Nhấn chuột trái",-,"Mũi tên xuất hiện cách nhân vật 16 px, bay thẳng về phía chuột, góc quay đúng hướng",Chức năng,Cao,,Chưa chạy,,,
+TC-MI-03,Miya,Tấn công,Sát thương mũi tên bằng tổng sát thương,Miya có Kiếm tai ương (+8),1. Bắn trúng quái,2 + 8,Quái nhận 10 sát thương,Chức năng,Trung bình,,Chưa chạy,,,
+TC-MI-04,Miya,Tấn công,Mũi tên tự hủy sau 2 giây,Bắn vào khoảng trống rộng,1. Bắn tên ra xa,"Tốc độ 300, sống 2s",Mũi tên biến mất sau 2 giây,Biên,Trung bình,,Chưa chạy,,,
+TC-MI-05,Miya,Tấn công,Mũi tên biến mất khi trúng tường,-,1. Bắn vào tường,-,Mũi tên biến mất ngay khi chạm tường,Chức năng,Trung bình,,Chưa chạy,,,
+TC-MI-06,Miya,Tấn công,Mũi tên không gây sát thương cho Miya,-,1. Bắn sát tường để tên bắn lên bản thân,-,Mũi tên bỏ qua người chơi,Tiêu cực,Thấp,,Chưa chạy,,,
+TC-MI-07,Miya,Kỹ năng Q,Ném bom tới vị trí chuột,Miya,"1. Đặt chuột ở vị trí A
+2. Nhấn Q",Sát thương bom = 3 x tổng sát thương,"Bom bay tới A trong 0.4s, chờ 0.5s rồi nổ; quái trong vùng nổ nhận 6 sát thương",Chức năng,Cao,,Chưa chạy,,,
+TC-MI-08,Miya,Kỹ năng Q,Bom không gây sát thương cho người chơi,Miya đứng trong vùng nổ,1. Ném bom dưới chân,-,Miya không mất máu/giáp,Tiêu cực,Cao,,Chưa chạy,,,
+TC-MI-09,Miya,Kỹ năng Q,Bom gây sát thương diện rộng,3 quái đứng cạnh nhau,1. Ném bom vào giữa nhóm,-,Cả 3 quái trong vùng nổ cùng nhận sát thương,Chức năng,Trung bình,,Chưa chạy,,,
+TC-MI-10,Miya,Kỹ năng Q,Cooldown Q 5 giây,-,1. Nhấn Q hai lần cách nhau 2 giây,Cooldown 5.0s,Lần 2 không ném bom,Biên,Trung bình,,Chưa chạy,,,
+TC-CL-01,Charlotte,Chỉ số,Chỉ số khởi đầu của Charlotte,Chọn Charlotte,"1. Kiểm tra HUD, tốc độ, sát thương",-,"Tốc độ 180, Máu 5, Giáp 0 (HUD không có icon giáp), Sát thương 2",Chức năng,Cao,,Chưa chạy,,,
+TC-CL-02,Charlotte,Kỹ năng Q,Chém 3 nhịp tại chỗ,"Charlotte, quái gần",1. Nhấn Q,"3 nhịp, mỗi nhịp 0.1s bật hitbox","Nhân vật đứng yên, chém 3 lần liên tiếp; quái trúng nhận sát thương theo từng nhịp",Chức năng,Cao,,Chưa chạy,,,
+TC-CL-03,Charlotte,Kỹ năng Q,Cooldown Q 3 giây,-,"1. Nhấn Q
+2. Nhấn Q lại sau 1.5 giây
+3. Nhấn Q lại sau 3 giây",Cooldown 3.0s,"Lần 2 bị từ chối, lần 3 thành công",Biên,Cao,,Chưa chạy,,,
+TC-CL-04,Charlotte,Kỹ năng chuột phải,Lướt 400 và đâm 4 nhịp,"Charlotte, quái phía trước","1. Hướng chuột về quái
+2. Nhấn chuột phải",Tốc độ lướt 400,Lướt nhanh về phía trước rồi đâm 4 nhịp,Chức năng,Cao,,Chưa chạy,,,
+TC-CL-05,Charlotte,Kỹ năng chuột phải,I-Frames trong lúc lướt,Quái đang đánh,1. Nhấn chuột phải khi quái sắp đánh trúng,-,Không nhận sát thương trong lúc lướt; I-Frames tắt khi kỹ năng kết thúc,Chức năng,Cao,,Chưa chạy,,,
+TC-CL-06,Charlotte,Kỹ năng chuột phải,Cooldown chuột phải 5 giây độc lập với Q,-,"1. Nhấn chuột phải
+2. Nhấn Q ngay sau đó
+3. Nhấn chuột phải lại sau 3 giây","Q 3s, RMB 5s",Q dùng được (cooldown riêng); chuột phải lần 2 bị từ chối,Biên,Trung bình,,Chưa chạy,,,
+TC-CL-07,Charlotte,Kỹ năng Q,Hủy kỹ năng khi bị đánh,Charlotte đang chém Q,1. Để quái đánh trúng giữa kỹ năng,-,"Kỹ năng bị hủy, không bị đơ trạng thái, hitbox được tắt",Tiêu cực,Cao,,Chưa chạy,,,
+TC-CL-08,Charlotte,Kỹ năng Q,Không kích hoạt khi đang tấn công,-,1. Nhấn chuột trái rồi nhấn Q ngay,-,Q bị chặn khi is_attacking = true,Tiêu cực,Thấp,,Chưa chạy,,,
+TC-IT-01,Vật phẩm,Chỉ số,Bình máu nhỏ hồi 2 máu,Pyrois: Máu 2/4,1. Nhấn phím số của Bình máu nhỏ,heal 2,Máu 4/4; bình biến mất khỏi túi,Chức năng,Cao,,Chưa chạy,,,
+TC-IT-02,Vật phẩm,Chỉ số,Hồi máu không vượt Máu tối đa,Máu 3/4,1. Dùng Bình máu nhỏ,heal 2,Máu 4/4 (không vượt tối đa); bình vẫn bị tiêu hao,Biên,Trung bình,,Chưa chạy,,,
+TC-IT-03,Vật phẩm,Chỉ số,Dùng bình khi đầy máu,Máu 4/4,1. Dùng Bình máu nhỏ,-,Máu không đổi; ghi nhận hành vi bình vẫn mất khỏi túi,Biên,Thấp,,Chưa chạy,,,Cần xác nhận với nhóm đây có phải hành vi mong muốn
+TC-IT-04,Vật phẩm,Chỉ số,Bình máu lớn hồi 3 và tăng 1 máu tối đa,Máu 2/4,1. Dùng Bình máu lớn,"heal 3, max_hp_bonus 1",Máu tối đa 5; máu = 2 + 1 + 3 = 6 bị giới hạn ở 5 → 5/5; HUD hiện 5 tim,Biên,Cao,,Chưa chạy,,,Tính: Máu tối đa 4+1 = 5; hồi 3 từ 3 máu lên tối đa 5
+TC-IT-05,Vật phẩm,Chỉ số,Tăng Máu tối đa từ bình là vĩnh viễn,Đã dùng Bình máu lớn,1. Trang bị rồi tháo Giáp cốt,-,Máu tối đa không bị mất phần cộng từ bình,Biên,Trung bình,,Chưa chạy,,,
+TC-IT-06,Vật phẩm,Chỉ số,Mũ sắt +1 giáp,Pyrois có Mũ sắt,1. Trang bị Mũ sắt,armor 1,Giáp tối đa 5,Chức năng,Cao,,Chưa chạy,,,
+TC-IT-07,Vật phẩm,Chỉ số,Giáp sắt +2 giáp,Pyrois có Giáp sắt,1. Trang bị Giáp sắt,armor 2,Giáp tối đa 6,Chức năng,Cao,,Chưa chạy,,,
+TC-IT-08,Vật phẩm,Chỉ số,"Giáp cốt: +3 giáp, +2 máu tối đa",Pyrois có Giáp cốt,1. Trang bị Giáp cốt,"armor 3, max_hp +2","Giáp tối đa 7, Máu tối đa 6, Máu hiện tại tăng 2",Chức năng,Cao,,Chưa chạy,,,
+TC-IT-09,Vật phẩm,Chỉ số,Kiếm sắt +1 sát thương,Pyrois có Kiếm sắt,"1. Trang bị Kiếm sắt
+2. Chém Orc (3 máu)",damage 1,Sát thương mỗi đòn = 2,Chức năng,Cao,,Chưa chạy,,,
+TC-IT-10,Vật phẩm,Chỉ số,"Kiếm tai ương: +8 sát thương, +1 giáp",Pyrois có Kiếm tai ương,"1. Trang bị
+2. Chém quái","damage 8, armor 1",Sát thương mỗi đòn = 1 + 8 = 9; Giáp tối đa 5 (4 + 1),Chức năng,Cao,,Chưa chạy,,,Mô tả vật phẩm ghi '+1 DMG +1 Giáp' nhưng dữ liệu damage = 8: lệch mô tả
+TC-IT-11,Vật phẩm,Hiển thị,Bình máu lớn hiển thị tên trong tooltip,Có Bình máu lớn trong hotbar,1. Rê chuột vào ô hotbar,-,Tooltip hiển thị tên + mô tả vật phẩm,Giao diện,Thấp,,Chưa chạy,,,big_health_potion.tres không có item_name (giá trị mặc định 'Vật phẩm mới')
+TC-IV-01,Túi đồ & trang bị,Túi đồ,Túi đồ khởi tạo có 3 vật phẩm thử,Vào game bất kỳ nhân vật,1. Quan sát hotbar,-,"Hotbar có Bình máu nhỏ, Giáp cốt, Kiếm tai ương ở ô 1-3 (do code thử trong player.gd)",Chức năng,Trung bình,,Chưa chạy,,,Kiểm tra có chủ ý hay là code debug cần xóa trước khi phát hành
+TC-IV-02,Túi đồ & trang bị,Trang bị,Dùng phím số trang bị Giáp,Giáp cốt ở ô 2,1. Nhấn phím 2,-,"Giáp cốt chuyển vào ô trang bị, rời khỏi túi; HUD cập nhật",Chức năng,Cao,,Chưa chạy,,,
+TC-IV-03,Túi đồ & trang bị,Trang bị,Vị trí vật phẩm dồn lên sau khi trang bị,"Túi: [Bình, Giáp cốt, Kiếm]","1. Nhấn phím 2 (trang bị giáp)
+2. Quan sát ô 2",-,"Túi còn [Bình, Kiếm]; Kiếm nằm ở ô 2",Chức năng,Trung bình,,Chưa chạy,,,
+TC-IV-04,Túi đồ & trang bị,Trang bị,Click ô hotbar để dùng/trang bị,-,1. Click chuột vào ô hotbar có Giáp cốt,-,Giống nhấn phím số tương ứng,Chức năng,Cao,,Chưa chạy,,,
+TC-IV-05,Túi đồ & trang bị,Trang bị,Đổi trang bị cùng loại,"Đang mặc Giáp sắt, trong túi có Giáp cốt",1. Nhấn phím số của Giáp cốt,-,Giáp sắt trở lại túi đúng vị trí ô vừa dùng; Giáp cốt được mặc,Chức năng,Cao,,Chưa chạy,,,
+TC-IV-06,Túi đồ & trang bị,Trang bị,Tổng giáp cộng dồn Mũ + Giáp,Có Mũ sắt và Giáp sắt,1. Trang bị cả hai,1 + 2,Giáp tối đa = 4 + 1 + 2 = 7,Chức năng,Cao,,Chưa chạy,,,
+TC-IV-07,Túi đồ & trang bị,Trang bị,Phím số ô trống,Túi có 2 vật phẩm,1. Nhấn phím 5,-,"Không có gì xảy ra, không lỗi (log ô trống)",Tiêu cực,Trung bình,,Chưa chạy,,,
+TC-IV-08,Túi đồ & trang bị,Trang bị,Tháo trang bị cất vào túi,Đang mặc Giáp cốt,1. Gọi unequip_item(ARMOR),-,Giáp cốt vào túi; Máu/Giáp tối đa giảm về ban đầu; máu hiện tại không vượt tối đa,Chức năng,Cao,,Chưa chạy,,,Hàm unequip_item tồn tại nhưng chưa có UI ô trang bị nào gọi tới trong repo
+TC-IV-09,Túi đồ & trang bị,Trang bị,Tháo trang bị khi túi đầy,"Túi đầy 16 ô, đang mặc Giáp",1. Gọi unequip_item,-,Không tháo; thông báo túi đầy; trang bị giữ nguyên,Tiêu cực,Trung bình,,Chưa chạy,,,
+TC-IV-10,Túi đồ & trang bị,Túi đồ,Nhặt đồ khi túi đầy,Túi có 16 vật phẩm,1. Nhấn E nhặt vật phẩm dưới đất,-,Không nhặt; vật phẩm còn trên đất,Biên,Cao,,Chưa chạy,,,
+TC-IV-11,Túi đồ & trang bị,Túi đồ,Dùng vật phẩm ở ô 10-16,Túi có 12 vật phẩm,1. Thử dùng vật phẩm thứ 10-12,-,"Hotbar chỉ có 9 ô, phím 1-9: kiểm tra có cách dùng vật phẩm 10-16 hay không",Biên,Trung bình,,Chưa chạy,,,Có thể là lỗi thiết kế: vật phẩm ô 10-16 không có đường dùng
+TC-IV-12,Túi đồ & trang bị,Trang bị,Chỉ số chạm đáy khi đổi trang bị thấp hơn,Giáp 7/7 đang đầy,1. Tháo Giáp cốt,-,Giáp hiện tại bị giới hạn xuống mức tối đa mới (4),Biên,Trung bình,,Chưa chạy,,,
+TC-CH-01,Rương & nhặt đồ,Rương,Rương mở khi người chơi lại gần,Phòng kho báu,1. Đi vào vùng rương,drop 0.8,Rương phát hoạt ảnh open; vật phẩm văng ra cách rương 20 px phía dưới,Chức năng,Cao,,Chưa chạy,,,
+TC-CH-02,Rương & nhặt đồ,Rương,Rương chỉ mở một lần,Rương đã mở,1. Rời đi rồi quay lại,-,Không rớt thêm vật phẩm; vùng va chạm đã bị tắt,Biên,Cao,,Chưa chạy,,,
+TC-CH-03,Rương & nhặt đồ,Rương,Tỷ lệ rớt đồ của rương 80%,Nhiều rương (mở ít nhất 20 rương/20 ván),"1. Mở nhiều rương, đếm số lần rớt đồ",drop_chance 0.8,Xấp xỉ 80% rương có vật phẩm,Biên,Thấp,,Chưa chạy,,,Chạy 20+ lần để kiểm tra thống kê
+TC-CH-04,Rương & nhặt đồ,Nhặt đồ,Vật phẩm phát sáng khi lại gần,Có vật phẩm trên đất,1. Đi lại gần vật phẩm,-,Sprite sáng lên; khi đi xa trở về bình thường,Giao diện,Trung bình,,Chưa chạy,,,
+TC-CH-05,Rương & nhặt đồ,Nhặt đồ,Nhấn E nhặt vật phẩm,Đứng gần vật phẩm,1. Nhấn E,-,Vật phẩm vào túi và biến mất khỏi đất,Chức năng,Cao,,Chưa chạy,,,
+TC-CH-06,Rương & nhặt đồ,Nhặt đồ,Nhấn E khi ở xa vật phẩm,Đứng xa vật phẩm,1. Nhấn E,-,Không nhặt được,Tiêu cực,Trung bình,,Chưa chạy,,,
+TC-CH-07,Rương & nhặt đồ,Nhặt đồ,"Hai vật phẩm cạnh nhau, nhấn E một lần",Đứng gần 2 vật phẩm,1. Nhấn E một lần,-,Ghi nhận hành vi: cả hai có thể được nhặt cùng lúc vì cùng nghe phím E,Biên,Thấp,,Chưa chạy,,,
+TC-CH-08,Rương & nhặt đồ,Quái rớt đồ,Quái thường rớt đồ 30%,Giết ≥ 20 Orc,1. Giết nhiều Orc và đếm số lần rớt,drop 0.3,Xấp xỉ 30% có vật phẩm rớt đúng vị trí quái chết,Biên,Trung bình,,Chưa chạy,,,
+TC-UI-01,HUD & Hotbar,HUD,HUD hiển thị tim và giáp đúng chỉ số,-,"1. Vào game, so sánh HUD với chỉ số nhân vật",-,"Số tim = Máu tối đa, tim đầy = Máu hiện tại; số khiên = Giáp tối đa",Giao diện,Cao,,Chưa chạy,,,
+TC-UI-02,HUD & Hotbar,HUD,HUD cập nhật khi bị đánh,-,1. Nhận sát thương,-,Khiên/tim đầy chuyển sang icon rỗng ngay lập tức,Giao diện,Cao,,Chưa chạy,,,
+TC-UI-03,HUD & Hotbar,HUD,HUD cập nhật khi giáp hồi,-,1. Chờ giáp hồi,-,Khiên đầy dần mỗi giây,Giao diện,Trung bình,,Chưa chạy,,,
+TC-UI-04,HUD & Hotbar,HUD,HUD cập nhật khi mặc/tháo đồ,-,1. Trang bị Giáp cốt,-,Số tim/khiên tăng theo chỉ số mới,Giao diện,Cao,,Chưa chạy,,,
+TC-UI-05,HUD & Hotbar,Hotbar,Hotbar có 9 ô và hiển thị icon,Túi có 3 vật phẩm,1. Quan sát hotbar,-,"9 ô, 3 ô đầu có icon, 6 ô còn lại trống",Giao diện,Cao,,Chưa chạy,,,
+TC-UI-06,HUD & Hotbar,Hotbar,Tooltip hiển thị tên và mô tả,-,1. Rê chuột vào ô có vật phẩm,-,Tooltip: tên + xuống dòng + mô tả,Giao diện,Trung bình,,Chưa chạy,,,
+TC-UI-07,HUD & Hotbar,HUD,HUD không lỗi với Máu tối đa lớn,Máu tối đa 15,1. Dùng nhiều Bình máu lớn,-,Các tim không tràn khỏi màn hình hoặc chồng lấp,Biên,Thấp,,Chưa chạy,,,
+TC-MP-01,Sinh hầm ngục,Sinh map,Số phòng được sinh đúng,Vào game,1. Quan sát số phòng (hoặc in ra generated_rooms.size()),num_rooms mặc định 16,Có 16 phòng (README ghi 10),Chức năng,Cao,,Chưa chạy,,,Lệch README: code mặc định 16 phòng
+TC-MP-02,Sinh hầm ngục,Sinh map,Phòng đầu tiên là phòng xuất phát,-,1. Quan sát vị trí người chơi lúc bắt đầu,-,"Nhân vật xuất hiện ở tâm phòng 0, phòng này không có quái/rương/bẫy",Chức năng,Cao,,Chưa chạy,,,
+TC-MP-03,Sinh hầm ngục,Sinh map,Có đúng 1 phòng Boss ở xa nhất,-,1. Đi tới phòng cuối,-,Phòng Boss là phòng xa nhất (BFS) từ phòng xuất phát,Chức năng,Cao,,Chưa chạy,,,
+TC-MP-04,Sinh hầm ngục,Sinh map,Có 2-3 phòng kho báu,-,"1. Khám phá toàn bộ bản đồ, đếm rương",-,Số rương trong khoảng 2 đến 3,Chức năng,Cao,,Chưa chạy,,,
+TC-MP-05,Sinh hầm ngục,Sinh map,Tất cả phòng đều kết nối,-,1. Đi từ phòng xuất phát tới mọi phòng,-,"Không có phòng bị cô lập, hành lang đủ 5 ô",Chức năng,Cao,,Chưa chạy,,,
+TC-MP-06,Sinh hầm ngục,Sinh map,Cùng seed cho cùng bản đồ,map_seed = ALOALO1234,"1. Chạy game 2 lần với tầng 1
+2. So sánh bố cục",-,Bố cục tầng 1 giống nhau ở cả 2 lần,Biên,Trung bình,,Chưa chạy,,,
+TC-MP-07,Sinh hầm ngục,Sinh map,Seed khác cho bản đồ khác,-,"1. Đổi map_seed thành chuỗi khác
+2. Chạy lại",-,Bố cục khác,Chức năng,Thấp,,Chưa chạy,,,
+TC-MP-08,Sinh hầm ngục,Trang trí,Cột đá/thùng gỗ không chặn hành lang,-,1. Đi qua hành lang giữa các phòng,-,Không bị chặn bởi cột/thùng ở hành lang,Chức năng,Cao,,Chưa chạy,,,
+TC-MP-09,Sinh hầm ngục,Trang trí,Trang trí không đè lên bẫy,-,1. Quan sát phòng có bẫy,-,Không có cột hay thùng chồng lên vị trí bẫy,Chức năng,Trung bình,,Chưa chạy,,,
+TC-MP-10,Sinh hầm ngục,Quái,Số quái mỗi phòng từ 2 đến 6,-,"1. Vào từng phòng chiến đấu, đếm quái","min 2, max 6",Mỗi phòng 2-6 quái (có thể ít hơn nếu vị trí trùng trang trí),Biên,Trung bình,,Chưa chạy,,,
+TC-MP-11,Sinh hầm ngục,Quái,Quái không xuất hiện trong tường/vật trang trí,-,1. Quan sát vị trí quái trong các phòng,-,"Quái nằm trên nền sàn, không trong tường",Chức năng,Trung bình,,Chưa chạy,,,
+TC-RM-01,Phòng & khóa cửa,Khóa cửa,Khóa cửa khi vào phòng có quái,Phòng chiến đấu chưa dọn,1. Bước vào giữa phòng,-,Gạch chặn xuất hiện ở mọi lối ra vào; quái được kích hoạt,Chức năng,Cao,,Chưa chạy,,,
+TC-RM-02,Phòng & khóa cửa,Khóa cửa,Mở cửa khi giết hết quái,Phòng đang khóa,1. Tiêu diệt toàn bộ quái,-,Cửa tự biến mất sau khi quái cuối biến mất,Chức năng,Cao,,Chưa chạy,,,
+TC-RM-03,Phòng & khóa cửa,Khóa cửa,Không thể rời phòng khi đang khóa,Phòng đang khóa,1. Cố đi ra ngoài qua lối vào,-,Bị chặn bởi gạch cửa,Tiêu cực,Cao,,Chưa chạy,,,
+TC-RM-04,Phòng & khóa cửa,Khóa cửa,Phòng đã dọn không khóa lại,Đã dọn phòng,1. Rời phòng rồi quay lại,-,"Cửa không khóa lại, không có quái mới",Biên,Cao,,Chưa chạy,,,
+TC-RM-05,Phòng & khóa cửa,Khóa cửa,Quái chỉ hoạt động sau khi phòng khóa,Đứng ngoài phòng,1. Đứng ở cửa phòng và quan sát quái,-,"Quái không di chuyển, không nhận sát thương trước khi người chơi vào",Chức năng,Cao,,Chưa chạy,,,
+TC-RM-06,Phòng & khóa cửa,Khóa cửa,Quái chết trước khi vào phòng,Quái bị bẫy giết hoặc đã chết,1. Bước vào phòng không còn quái,-,"Phòng được đánh dấu cleared, không khóa; nếu là phòng Boss thì mở cổng",Tiêu cực,Trung bình,,Chưa chạy,,,
+TC-RM-07,Phòng & khóa cửa,Khóa cửa,Skeleton biến mất sau 1 giây tính vào số quái,Phòng chỉ còn Skeleton,"1. Giết con Skeleton cuối cùng
+2. Quan sát cửa",-,"Sau khoảng 1 giây Skeleton biến mất, cửa mở",Biên,Trung bình,,Chưa chạy,,,
+TC-SP-01,Bẫy gai,Bẫy,Bẫy báo đỏ 0.5 giây trước khi đâm,Phòng chiến đấu có bẫy,1. Bước lên bẫy,-,Bẫy đổi màu đỏ 0.5 giây rồi gai nhô lên,Chức năng,Cao,,Chưa chạy,,,
+TC-SP-02,Bẫy gai,Bẫy,Bẫy gây 1 sát thương nếu vẫn đứng trên,-,1. Đứng yên trên bẫy 1 giây,damage 1,Mất 1 giáp (hoặc 1 máu nếu hết giáp),Chức năng,Cao,,Chưa chạy,,,
+TC-SP-03,Bẫy gai,Bẫy,Né bẫy trong 0.5 giây thì không bị thương,-,1. Bước lên bẫy rồi chạy ra ngay,-,Không nhận sát thương,Biên,Cao,,Chưa chạy,,,
+TC-SP-04,Bẫy gai,Bẫy,Bẫy reset sau 1 giây,-,"1. Kích hoạt bẫy
+2. Chờ 1.5 giây
+3. Bước lên bẫy lần nữa",-,"Bẫy trở lại trạng thái idle, kích hoạt lại được",Biên,Trung bình,,Chưa chạy,,,
+TC-SP-05,Bẫy gai,Bẫy,Bẫy gây sát thương cho quái,Quái đi qua bẫy,1. Dụ quái đứng trên bẫy,-,Quái nhận 1 sát thương,Chức năng,Trung bình,,Chưa chạy,,,
+TC-SP-06,Bẫy gai,Bẫy,I-Frames chặn sát thương bẫy,Charlotte lướt qua bẫy,1. Dùng chuột phải lướt qua bẫy khi gai nhô lên,-,Không nhận sát thương,Biên,Trung bình,,Chưa chạy,,,
+TC-SP-07,Bẫy gai,Bẫy,Bẫy chỉ xuất hiện trong phòng chiến đấu,-,"1. Kiểm tra các phòng Start, Treasure, Boss",-,"Không có bẫy trong phòng xuất phát, kho báu, Boss",Chức năng,Trung bình,,Chưa chạy,,,
+TC-PT-01,Cổng & qua màn,Cổng,Cổng xuất hiện sau khi hạ Boss,Phòng Boss đang khóa,1. Hạ Boss,-,Cổng dịch chuyển xuất hiện ở tâm phòng Boss,Chức năng,Cao,,Chưa chạy,,,
+TC-PT-02,Cổng & qua màn,Cổng,Cổng không xuất hiện khi Boss còn sống,-,1. Quan sát phòng Boss khi đang đánh,-,Không có cổng,Tiêu cực,Cao,,Chưa chạy,,,
+TC-PT-03,Cổng & qua màn,Cổng,Bước vào cổng qua tầng mới,Cổng đã xuất hiện,1. Bước vào cổng,-,"Tầng +1; bản đồ được tạo mới, nhân vật về phòng xuất phát, cũ bị xóa",Chức năng,Cao,,Chưa chạy,,,
+TC-PT-04,Cổng & qua màn,Cổng,Chỉ số nhân vật giữ nguyên qua tầng,"Đã trang bị đồ, giáp và máu thay đổi",1. Qua tầng,-,"Nhân vật, túi đồ, trang bị giữ nguyên",Chức năng,Cao,,Chưa chạy,,,
+TC-PT-05,Cổng & qua màn,Cổng,Bản đồ tầng mới khác tầng cũ,-,1. Qua tầng 2 và quan sát bố cục,seed = map_seed + _ + level,Bố cục khác tầng 1,Chức năng,Trung bình,,Chưa chạy,,,
+TC-PT-06,Cổng & qua màn,Cổng,Boss luân phiên theo tầng,-,"1. Quan sát Boss tầng 1, 2, 3",-,Tầng lẻ: Necromancer; tầng chẵn: Orc Rider,Chức năng,Trung bình,,Chưa chạy,,,README nhắc Kitsune nhưng repo không có Kitsune
+TC-PT-07,Cổng & qua màn,Cổng,Không còn quái/đạn/bẫy của tầng cũ,-,1. Qua tầng,-,"Các node tầng cũ bị xóa, không còn đạn, vật phẩm cũ",Biên,Trung bình,,Chưa chạy,,,
+TC-PT-08,Cổng & qua màn,Cổng,Qua nhiều tầng liên tiếp,-,1. Qua 5 tầng liên tiếp (có thể giảm máu Boss),-,"Không lỗi, không rò rỉ bộ nhớ, tầng tăng đúng",Biên,Thấp,,Chưa chạy,,,
+TC-EN-01,Quái thường,Orc,Orc: chỉ số cơ bản,"Phòng có Orc, đã khóa","1. Quan sát tốc độ, chém Orc","HP 3, speed 70, range 35",Orc chết sau tổng sát thương 3; đuổi theo và vung rìu khi cách ≤ 35 px,Chức năng,Cao,,Chưa chạy,,,
+TC-EN-02,Quái thường,Orc,Orc gây sát thương cận chiến,-,1. Để Orc đánh trúng,-,Người chơi nhận sát thương (giáp trước),Chức năng,Cao,,Chưa chạy,,,
+TC-EN-03,Quái thường,Armored Orc,Giáp của Armored Orc hấp thụ sát thương,"Armored Orc, giáp 5, máu 3",1. Chém 2 lần (1 sát thương mỗi lần),armor 5,"Giáp còn 3, máu giữ nguyên, phát animation block",Chức năng,Cao,,Chưa chạy,,,
+TC-EN-04,Quái thường,Armored Orc,Sát thương tràn khi vỡ giáp,Giáp còn 1,1. Chém với sát thương 3,-,"Giáp = 0, máu mất 2",Biên,Cao,,Chưa chạy,,,
+TC-EN-05,Quái thường,Armored Orc,Rage damage sau khi vỡ giáp,Giáp = 0,1. Để Armored Orc đánh trúng,"normal 1, rage 3",Sát thương gây ra = 3 (đòn thường chỉ 1 khi còn giáp),Chức năng,Cao,,Chưa chạy,,,
+TC-EN-06,Quái thường,Skeleton,Skeleton nhanh và ít máu,-,"1. Quan sát tốc độ, chém Skeleton","HP 2, speed 100",Chết sau tổng 2 sát thương; biến mất sau 1 giây,Chức năng,Cao,,Chưa chạy,,,
+TC-EN-07,Quái thường,Skeleton Archer,Archer giữ khoảng cách,Archer vs Player,"1. Đến gần < 90 px
+2. Ra xa > 200 px","range 200, retreat 90","Lùi khi < 90, đứng bắn khi 90-200, tiến lại khi > 200",Chức năng,Cao,,Chưa chạy,,,
+TC-EN-08,Quái thường,Skeleton Archer,Archer bắn mỗi 2 giây,-,"1. Đứng trong tầm 100-200 px, đo thời gian giữa các mũi tên","cooldown 2.0, damage 1","Một mũi tên mỗi ~2 giây, 1 sát thương",Chức năng,Trung bình,,Chưa chạy,,,
+TC-EN-09,Quái thường,Vampire,"Vampire chậm, nhiều máu",-,1. Chém Vampire,"HP 4, speed 60, range 40",Chết sau tổng 4 sát thương,Chức năng,Cao,,Chưa chạy,,,
+TC-EN-10,Quái thường,Quái,Quái chết ngừng hành động,Quái vừa chết,1. Đứng cạnh xác quái,-,Không còn gây sát thương; hitbox bị tắt,Tiêu cực,Trung bình,,Chưa chạy,,,
+TC-EN-11,Quái thường,Quái,Nhiều quái cùng tấn công,4 quái trong phòng,1. Đứng giữa phòng,-,"Sát thương được xử lý đúng nhờ I-Frames, không crash",Biên,Trung bình,,Chưa chạy,,,
+TC-EN-12,Quái thường,Blood Monster,Blood Monster theo README,-,1. Tìm Blood Monster trong game,"HP 3, speed 80, tầm 180",Không thấy trong game: file/scene không tồn tại và không có trong danh sách quái của dungeon_generator,Chức năng,Trung bình,,Chưa chạy,,,"README liệt kê nhưng repo thiếu, cần xác nhận với nhóm phát triển"
+TC-BS-01,Boss,Necromancer,Necromancer: chỉ số và tấn công,"Tầng 1, phòng Boss","1. Vào phòng Boss
+2. Quan sát đòn đánh","HP 30, tầm cận chiến 60, tầm độc 200",Boss tấn công cận chiến (1) hoặc ném vùng độc (2) cách nhau 1.5 giây,Chức năng,Cao,,Chưa chạy,,,
+TC-BS-02,Boss,Necromancer,Vùng độc nổ sau 2 giây,-,"1. Quan sát vùng đỏ dưới chân
+2. Chờ 2 giây",damage 2,"Vòng đỏ nhấp nháy 2 giây rồi nổ, gây 2 sát thương nếu người chơi trong vòng bán kính 30",Chức năng,Cao,,Chưa chạy,,,
+TC-BS-03,Boss,Necromancer,Phase 2 tại 2/3 máu triệu hồi quái,Boss còn ≤ 20 máu,1. Gây sát thương đến khi Boss ≤ 20,Phase 2,"Boss triệu hồi 5-7 quái, tăng sát thương +1",Chức năng,Cao,,Chưa chạy,,,
+TC-BS-04,Boss,Necromancer,Phase 3 tại 1/3 máu,Boss còn ≤ 10 máu,1. Gây sát thương đến khi Boss ≤ 10,Phase 3,"Boss triệu hồi thêm quái, giảm hồi chiêu xuống 60%, sát thương +1 nữa",Chức năng,Cao,,Chưa chạy,,,
+TC-BS-05,Boss,Necromancer,Boss miễn nhiễm khi đang triệu hồi,Boss đang cast,1. Chém Boss khi cast,-,Không nhận sát thương trong lúc cast,Tiêu cực,Cao,,Chưa chạy,,,
+TC-BS-06,Boss,Necromancer,Boss chết kích hoạt cổng,-,1. Hạ Boss (hết máu),-,"Phát animation death, cửa mở, cổng xuất hiện",Chức năng,Cao,,Chưa chạy,,,
+TC-BS-07,Boss,Orc Rider,Orc Rider: chỉ số,"Tầng 2, phòng Boss",1. Vào phòng Boss,"HP 30, speed 70","Boss xuất hiện, đuổi theo, có đòn lao và xoay búa",Chức năng,Cao,,Chưa chạy,,,
+TC-BS-08,Boss,Orc Rider,Đòn lao tăng tốc x4,-,1. Đứng cách xa Boss và quan sát đòn lao,speed 70 x 4 = 280,Boss báo hiệu rồi lao với tốc độ cao; đòn tại điểm phanh gây x2 sát thương (4),Chức năng,Cao,,Chưa chạy,,,
+TC-BS-09,Boss,Orc Rider,Đòn xoay búa x3 sát thương,-,1. Để Boss dùng xoay búa trúng người chơi,base damage 2,Gây 6 sát thương,Chức năng,Trung bình,,Chưa chạy,,,
+TC-BS-10,Boss,Orc Rider,Chuyển Phase theo máu,-,"1. Gây sát thương đến ≤ 19 máu, sau đó ≤ 9",66% và 33%,Phase 2: tốc độ 110; Phase 3: tốc độ 140,Chức năng,Cao,,Chưa chạy,,,
+TC-BS-11,Boss,Orc Rider,Boss bị khóa trong lúc đổi Phase,-,1. Đánh Boss ngay lúc đổi Phase,-,"Boss hủy hành động hiện tại, không đơ",Tiêu cực,Trung bình,,Chưa chạy,,,
+TC-BS-12,Boss,Kitsune,Boss Kitsune theo README,-,1. Tìm Boss Kitsune ở các tầng 1-5,-,Không thấy: không có file Kitsune trong repo; tầng chẵn dùng Orc Rider (log in ra 'Kitsune'),Chức năng,Trung bình,,Chưa chạy,,,Lệch README: Kitsune chưa có
+TC-PR-01,Đạn & bom,Đạn quái,Mũi tên quái trúng người chơi,Archer bắn,1. Đứng yên để mũi tên trúng,"damage 1, speed 200","Nhận 1 sát thương, mũi tên biến mất",Chức năng,Cao,,Chưa chạy,,,
+TC-PR-02,Đạn & bom,Đạn quái,Mũi tên quái biến mất khi trúng tường,-,1. Đứng sau tường để Archer bắn,-,Mũi tên biến mất khi chạm tường,Chức năng,Trung bình,,Chưa chạy,,,
+TC-PR-03,Đạn & bom,Đạn quái,Mũi tên quái tự hủy sau 3 giây,-,"1. Né mũi tên, quan sát",3s,Mũi tên biến mất sau 3 giây,Biên,Thấp,,Chưa chạy,,,
+TC-PR-04,Đạn & bom,Đạn quái,I-Frames chặn sát thương đạn,Charlotte lướt,1. Lướt xuyên mũi tên bằng chuột phải,-,Không nhận sát thương,Biên,Trung bình,,Chưa chạy,,,
+TC-SY-01,Hệ thống & môi trường,Cấu hình,Chạy được trên Godot 4.7.2,Cài Godot 4.7.2,"1. Import dự án, nhấn F5",-,Dự án mở không lỗi; game chạy vào Main Menu,Chức năng,Cao,,Chưa chạy,,,
+TC-SY-02,Hệ thống & môi trường,Cấu hình,Không có lỗi/warning khi tải scene,-,1. Mở Output sau khi chạy 1 ván,-,"Không có lỗi đỏ (script, resource, đường dẫn)",Chức năng,Cao,,Chưa chạy,,,
+TC-SY-03,Hệ thống & môi trường,Cấu hình,Thay đổi kích thước cửa sổ,-,1. Phóng to/thu nhỏ cửa sổ khi chơi,"stretch canvas_items, aspect expand","Giao diện co giãn đúng, HUD không bị mất",Giao diện,Trung bình,,Chưa chạy,,,
+TC-SY-04,Hệ thống & môi trường,Cấu hình,Hiệu năng ổn định ở màn đông quái,-,"1. Vào phòng có ≥ 6 quái và Boss triệu hồi 7 quái
+2. Quan sát FPS",-,FPS ổn định (≥ 55 với máy cấu hình trung bình),Biên,Trung bình,,Chưa chạy,,,
+TC-SY-05,Hệ thống & môi trường,Cấu hình,Chơi nhiều lượt liên tiếp,-,"1. Chơi, chết, Retry, chơi lại 5 lần",-,"Không crash, không rò rỉ trạng thái giữa các ván",Tiêu cực,Trung bình,,Chưa chạy,,,
+TC-SY-06,Hệ thống & môi trường,Cấu hình,Không có file phụ thuộc bị thiếu,-,1. Quét thư mục Scene khi mở dự án,-,Không có thông báo thiếu resource,Chức năng,Trung bình,,Chưa chạy,,,

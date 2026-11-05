@@ -1,5 +1,43 @@
 # Changelog
 
+## [Unreleased] — Hệ thống theo dõi tiến độ (2026-11-05)
+
+- Thêm Project status và backlog PB-01…PB-11; liên kết feature, roadmap, test plan
+  và gate phát hành; hướng dẫn cập nhật cùng PR, không phân công thành viên.
+- Đối chiếu GitHub main/development bằng SHA và job/step thực tế; phân biệt test
+  skipped với success, PR closed với merged và code remote với baseline local.
+- Ghi nhận 183 testcase QA cũ chưa chạy; sửa nhận định roadmap về trap vì source
+  local đã bảo vệ 5×5. Không đổi code gameplay, CI, asset hoặc dữ liệu kiểm thử cũ.
+- Kết quả Godot lấy từ audit đã lưu, không chạy lại hoặc ghi thêm PASS giả cho
+  đợt chỉ sửa tài liệu. Điểm bắt đầu: [Project status](docs/PROJECT_STATUS.md).
+
+## [Unreleased] — Master repository audit (2026-11-05)
+
+- Phân loại 6 tài liệu vào gameplay/architecture/QA và reports benchmark; cập nhật
+  relative links và artifact path CI, giữ toàn bộ ảnh và số liệu cũ.
+- Thêm roadmap, feature checklist, test plan và hướng dẫn công cụ dựa trên source.
+- Benchmark 100 seed tạo CSV/log mới mỗi lần, giữ phép đo/tập seed và báo lỗi qua
+  exit code. Docker import trước export và không còn che lỗi bằng `|| true`.
+- Thêm resource-loading smoke test, cô lập profile test và sửa false-success
+  trong flaky/coverage/mutation tooling; không đổi assertion hay gameplay.
+- Kết quả kiểm chứng và các gate engine/build/manual QA nằm trong
+  [master audit](docs/architecture/MASTER_AUDIT.md); chưa đồng bộ engine CI/Docker.
+
+## [Unreleased] — Chuẩn hóa cấu trúc dự án (2026-11-05)
+
+- Gom scene/script theo tính năng trong `scenes/`; đưa autoload/cấu hình dùng chung
+  vào `scripts/core/` và service reviewer vào `scripts/review/`.
+- Chuyển QA thủ công từ `Test/` sang `docs/qa/`, Orc regression vào `tests/`, toàn bộ
+  công cụ/đầu ra benchmark vào `benchmarks/`; giữ nguyên dữ liệu và thông số đo.
+- Cập nhật đường dẫn scene/resource, kế thừa hero, preload và CI; giữ các UID gốc.
+- Thay liên kết ảnh mũi tên trực tiếp vào cache bằng ảnh nguồn; thêm `.gdignore`
+  cho tài liệu/kết quả để tránh import CSV thành bản dịch.
+- Thêm kiểm tra tĩnh, runner test dùng `GODOT_BIN`/PATH, hướng dẫn cấu trúc, đóng góp,
+  mẫu PR và bằng chứng tái chạy. Không đổi gameplay, RNG, engine hoặc dependency.
+- Kết quả/giới hạn kiểm chứng và danh sách tệp nằm trong
+  [`docs/architecture/RESTRUCTURE_REPORT.md`](docs/architecture/RESTRUCTURE_REPORT.md).
+
+
 Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep Fighting And Earning** được ghi chép chi tiết tại đây.
 
 ---
@@ -10,10 +48,10 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 
 ### 🐺 Quái Mới: Werewolf (Warg-breed Werewolf)
 - **Tài nguyên & Sprite:** Tích hợp bộ sprite $100 \times 100$ từ asset pack vào `Assets/Character/Werewolf/Werewolf with shadows/` gồm 6 hoạt ảnh: `idle` (6 frames), `walk` (8 frames), `attack_1` (9 frames), `attack_2` (13 frames), `hurt` (4 frames), `death` (4 frames).
-- **Chỉ số & Cân bằng (`Scene/BalanceConfig.gd`):**
+- **Chỉ số & Cân bằng (`scripts/core/balance_config.gd`):**
   - **Máu 5 · Sát thương cào 2 · Sát thương vồ 3 · Tốc độ chạy 95.0 · Tốc độ vồ 175.0 · Tầm vồ 95.0px · Tỉ lệ rớt đồ 35%**.
   - Bảng rớt đồ (`loot_table`): Bình máu nhỏ (`health_potion.tres`), bình máu lớn (`big_health_potion.tres`), kiếm sắt (`iron_sword.tres`).
-- **Cơ chế Lối chơi & AI (`Scene/Enemies/Werewolf/werewolf.gd`):**
+- **Cơ chế Lối chơi & AI (`scenes/enemies/werewolf/werewolf.gd`):**
   - **Cận chiến cơ bản (`attack_1` - Claw Slash):** Kích hoạt ở cự ly gần $\le 24.0$px, vung móng cào nhanh với sát thương 2.
   - **Tụ lực vồ mồi thông minh (`attack_2` - Pounce Strike):**
     - Khi người chơi ở cự ly săn mồi ($50 - 135$px) và có tầm nhìn (Line-of-Sight), Werewolf dừng lại khựng 1 nhịp $0.65$s để tụ lực, toàn thân nhấp nháy đỏ cảnh báo.
@@ -21,16 +59,16 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
     - Người chơi có thể ngắt chiêu nếu đánh trúng hoặc choáng Werewolf trong thời gian tụ lực.
     - **Lao có cự ly cố định & hãm tốc**: Chỉ lao đúng một đoạn $95.0$px với vận tốc đầm $175.0$px/s (khi đi được 70% quãng đường sẽ giảm tốc để tiếp đất tự nhiên cào xé).
   - Tự động dừng lao nếu va chạm tường đá.
-- **Tích hợp Dungeon (`Scene/Map/dungeon_generator.gd`):** Đăng ký `werewolf.tscn` vào danh sách `enemy_scenes`, xuất hiện ngẫu nhiên trong các phòng Combat của hầm ngục.
-- **Cốt truyện (`Menu/main menu/main_menu.gd`):** Bổ sung `"Warg-breed Werewolves"` vào danh sách quái vật bóng tối Moria trong Lore modal.
+- **Tích hợp Dungeon (`scenes/dungeon/dungeon_generator.gd`):** Đăng ký `werewolf.tscn` vào danh sách `enemy_scenes`, xuất hiện ngẫu nhiên trong các phòng Combat của hầm ngục.
+- **Cốt truyện (`scenes/menus/main_menu/main_menu.gd`):** Bổ sung `"Warg-breed Werewolves"` vào danh sách quái vật bóng tối Moria trong Lore modal.
 
 ### 🧹 Dọn Dẹp Mã Nguồn (Codebase Clean-up)
 - Loại bỏ toàn bộ các file, thư mục chỉ dùng cho mục đích kiểm thử/báo cáo học phần để tinh gọn dự án cho bản phát hành:
   - **Thư mục `tests/`**: Xóa toàn bộ Unit tests, Concurrency harness, thư mục `vt075/` và các script Python/PowerShell đo đạc.
   - **Thư mục `Test/`**: Xóa file `TestCase.xlsx`, `TestCase.csv`, các file `TestCase.*.translation`, Jira links.
-  - **Thư mục gốc**: Xóa `run_tests.bat`, `test_orc_battle.gd`, `test_orc_battle.tscn`, `test_orc_battle.gd.uid`.
-  - **Logic kiểm thử phụ**: Xóa `Scene/Review/review_service.gd` (module kiểm thử vai trò Reviewer).
-  - **Tài liệu kiểm thử**: Xóa `docs/vt075/` và `docs/BENCHMARK_REPORT.md`.
+  - **Thư mục gốc**: Xóa `run_tests.bat`, `tests\test_orc_battle.gd`, `tests\test_orc_battle.tscn`, `tests\test_orc_battle.gd.uid`.
+  - **Logic kiểm thử phụ**: Xóa `scripts/review/review_service.gd` (module kiểm thử vai trò Reviewer).
+  - **Tài liệu kiểm thử**: Xóa `docs/vt075/` và `benchmarks/reports/GENERATOR_PERFORMANCE_REPORT.md`.
 
 ---
 
@@ -39,7 +77,7 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 > Doraemon — chú mèo máy đến từ thế kỷ 22 — chiến đấu bằng **toàn bộ Túi Thần Kỳ**: 20 bảo bối, 6 người bạn và 10 siêu chiêu. Nhân vật, sprite và bộ chiêu được chuyển thể từ nhân vật M.U.G.E.N **"DORAemon"** (tác giả gốc SUGIO, bản chỉnh sửa của カイリ / KAIemon).
 
 ### Chỉ số & Vị trí trong Roster
-- Anh hùng thứ 6 (index 5) sau Yugi: thêm `"doraemon"` vào `HERO_ORDER` và `HERO_STATS` (`Scene/BalanceConfig.gd`), `doraemon.tscn` vào `CHARACTER_SCENES` (`Scene/GameManager.gd`) và màn chọn tướng (`Scene/UI/character_select.gd`, hàm `_add_doraemon_portrait()`).
+- Anh hùng thứ 6 (index 5) sau Yugi: thêm `"doraemon"` vào `HERO_ORDER` và `HERO_STATS` (`scripts/core/balance_config.gd`), `doraemon.tscn` vào `CHARACTER_SCENES` (`scripts/core/game_manager.gd`) và màn chọn tướng (`scenes/ui/character_select.gd`, hàm `_add_doraemon_portrait()`).
 - **Máu 5 · Giáp 2 · Sát thương 1 · Tốc độ 150** — tướng đánh xa / hỗ trợ, yếu khi bị áp sát.
 - Menu chính: cốt truyện đổi thành "SIX CHAMPIONS", thêm lời giới thiệu Doraemon và phím điều khiển vào bảng hướng dẫn.
 
@@ -89,7 +127,7 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 
 ### Kỹ Thuật
 - **Sprite (`Assets/Character/Doraemon/`, 82 hoạt ảnh / hình + chân dung):** giải mã `doraemon.sff` (SFF v1, bảng màu `doraemon.ACT`) và ghép khung theo `doraemon.air` thành các dải sprite cùng điểm neo (chân / điểm va chạm), thời lượng từng khung theo tick 60 Hz của file AIR. Chiêu và thông số tham khảo từ `doraemon.cns`, `chou*.cns`, `rand.cns`, `DORAYAKIN.cns` và file hướng dẫn tiếng Nhật đi kèm.
-- **Script (`Scene/Character/Doraemon/`):**
+- **Script (`scenes/characters/doraemon/`):**
   - `doraemon.gd` — nhân vật, Túi Thần Kỳ, thanh năng lượng, bạn bè, siêu chiêu và các trạng thái đặc biệt (cửa, lướt, áo choàng, SL, Uradoraman, đấm liên hoàn).
   - `dora_projectile.gd` — đạn dùng chung: thẳng, đuổi mục tiêu, nảy tường, trôi, ném vòng, rơi từ trời, nổ diện rộng.
   - `dora_walker.gd` — vật triệu hồi di chuyển (Mini-Dora, búp bê, mèo, bạn bè, Jaian, Nobita).
@@ -109,11 +147,11 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 ## [2026-11-02] — Boss Mới: Skeleton King & Đấu Trường Laser
 
 ### Tính năng Mới & Cơ chế Lối chơi
-- **Phòng Boss cố định mỗi 3 tầng (`Scene/Map/dungeon_generator.gd`):**
+- **Phòng Boss cố định mỗi 3 tầng (`scenes/dungeon/dungeon_generator.gd`):**
   - Sau mỗi 2 tầng hoàn thành, phòng Boss của tầng kế tiếp (tầng 3, 6, 9, ...) được thay bằng **đấu trường Skeleton King** kích thước cố định 32×18 ô, sàn trống hoàn toàn (không cột đá, không cụm vật cản, không bẫy) theo bố cục `example_room_layout`.
   - Vẫn rút đủ số ngẫu nhiên khi tạo kích thước phòng nên các phòng khác của tầng giữ nguyên bố cục theo Seed. Tầng 1, 2, 4, 5... vẫn dùng Necromancer / Orc Rider như cũ.
   - Hàm mới `is_skeleton_king_floor()` và biến `skeleton_king_room_index`.
-- **Skeleton King (`Scene/Enemies/Boss/Skeleton King/skeleton_king.gd`):**
+- **Skeleton King (`scenes/enemies/bosses/skeleton_king/skeleton_king.gd`):**
   - Sprite khổng lồ đứng sau bức tường trên cùng, hai tay tì lên tường, căn giữa phòng; không chịu ánh sáng tối của hầm ngục nên luôn nổi bật. Dùng đủ 7 hoạt ảnh: `idle`, `idle_enraged`, `hit`, `slam` (sự kiện impact khung 8), `cast` (sự kiện release khung 9), `enrage`, `death`.
   - Ngủ (tối màu) cho tới khi người chơi bước vào và cửa khóa; khi thức tỉnh camera tự lùi ra để thấy toàn bộ đấu trường lẫn Boss (chừa chỗ cho thanh máu Boss và hotbar), sau khi Boss chết camera trả về nhân vật.
   - **Bất khả xâm phạm** — chỉ mất máu khi người chơi đập vỡ Pha Lê Linh Hồn.
@@ -129,7 +167,7 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
   - **Bám rễ — không thể bị di chuyển:** pha lê luôn đứng yên tại chỗ mọc; chiêu kéo (Yugi Special Summon 4) chỉ gây sát thương tại chỗ, sét choáng (Yugi Special Summon 3) chỉ hiện hiệu ứng mà không đóng băng pha lê (`is_immovable` trong `room_pull.gd` / `lightning_hit.gd`), và pha lê tự neo lại nếu bị dịch chuyển.
   - **Thời gian tồn tại:** mỗi pha lê sống 9s (7.5s khi Boss nổi giận), có vòng đếm ngược quanh chân và nhấp nháy đỏ trong 3s cuối. Hết giờ mà chưa bị phá, pha lê tan thành luồng năng lượng xanh chảy về Boss và **hồi cho Boss 50% lượng máu mà một pha lê vỡ gây ra** (tầng 3: +6 máu, không vượt quá máu tối đa).
 - **Tia laser (`skeleton_king_laser.gd`):** quản lý cảnh báo, bắn, mờ dần và gây sát thương cho người chơi đứng trên tia (mỗi người chơi tối đa 1 lần / 0.45s).
-- **Cân bằng (`Scene/BalanceConfig.gd`):** thêm mục `skeleton_king` (Máu 60 +15 mỗi bậc, 5 pha lê +1 mỗi bậc, máu pha lê 6 +2 mỗi bậc, pha lê tồn tại 9s / 7.5s và hồi 50% khi hết giờ, laser 1 sát thương +1 mỗi bậc, hồi chiêu 2.6s / 1.7s khi nổi giận). Bậc = tầng / 3.
+- **Cân bằng (`scripts/core/balance_config.gd`):** thêm mục `skeleton_king` (Máu 60 +15 mỗi bậc, 5 pha lê +1 mỗi bậc, máu pha lê 6 +2 mỗi bậc, pha lê tồn tại 9s / 7.5s và hồi 50% khi hết giờ, laser 1 sát thương +1 mỗi bậc, hồi chiêu 2.6s / 1.7s khi nổi giận). Bậc = tầng / 3.
 - **Tài nguyên:** thêm bộ sprite Skeleton King vào `Assets/Character/Skeleton King/`.
 
 ### Kiểm Thử
@@ -141,7 +179,7 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 ## [2026-11-02] — Tướng Thứ 5: Yugi / Atem (Pharaoh Summoner)
 
 ### Tính năng Mới & Cơ chế Lối chơi
-- **Bổ sung Anh hùng thứ 5 — Yugi / Atem (`Scene/Character/Yugi/`):**
+- **Bổ sung Anh hùng thứ 5 — Yugi / Atem (`scenes/characters/yugi/`):**
   - Port toàn bộ nhân vật từ nhánh `development`: `yugi.gd`, `yugi.tscn`, `YugiSprites.gd`, shader tách nền `key_green.gdshader` và các hiệu ứng triệu hồi (`summon.gd`, `energy_ball.gd`, `fire_beam.gd`, `lightning_hit.gd`, `explosion_flash.gd`, `target_ring.gd`, `room_blast.gd`, `room_laser.gd`, `room_lightning.gd`, `room_pull.gd`, `room_fire.gd`).
   - Bổ sung bộ sprite & file `.import` tại `Assets/Character/Yugi/` (intro, stance, run, guard, death, special, các đòn click và 5 kết quả Special Summon).
   - Cơ chế điều khiển:
@@ -152,22 +190,22 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
     - Hoạt cảnh Intro khi xuất hiện: khóa mọi thao tác (trừ ESC) và miễn sát thương cho đến khi kết thúc.
 
 ### Tích hợp Hệ thống
-- **`Scene/BalanceConfig.gd`:** Thêm `"yugi"` vào `HERO_ORDER` (index 4) và bổ sung bảng chỉ số: Máu 5, Giáp 1, Sát thương 1, Tốc độ 150, Hồi chiêu Q 12s, icon kỹ năng `crystal`; lore & mô tả kỹ năng viết bằng tiếng Anh đồng bộ phong cách Fellowship Vanguard.
-- **`Scene/GameManager.gd`:**
-  - Thêm `res://Scene/Character/Yugi/yugi.tscn` vào `CHARACTER_SCENES`.
+- **`scripts/core/balance_config.gd`:** Thêm `"yugi"` vào `HERO_ORDER` (index 4) và bổ sung bảng chỉ số: Máu 5, Giáp 1, Sát thương 1, Tốc độ 150, Hồi chiêu Q 12s, icon kỹ năng `crystal`; lore & mô tả kỹ năng viết bằng tiếng Anh đồng bộ phong cách Fellowship Vanguard.
+- **`scripts/core/game_manager.gd`:**
+  - Thêm `res://scenes/characters/yugi/yugi.tscn` vào `CHARACTER_SCENES`.
   - `_sanitize_replay_frames()` giữ lại các trường input riêng của Yugi (`shift`, `lp`, `lr`, `rp`, `rr`, `result`) để Replay tái hiện chính xác thao tác Guard / nhấn-thả chuột / kết quả Special Summon.
-- **`Scene/UI/character_select.gd`:**
+- **`scenes/ui/character_select.gd`:**
   - Thêm Yugi vào `character_scenes`.
   - Hàm mới `_add_yugi_portrait()` dựng portrait thứ 5 từ `Assets/Character/Yugi/icon.png` (cắt viền 1px, căn baseline chân giống 4 tướng còn lại, áp shader tách nền) và chèn trước spacer cuối danh sách.
-- **`Menu/main menu/main_menu.gd`:**
+- **`scenes/menus/main_menu/main_menu.gd`:**
   - Cốt truyện đổi thành "FIVE CHAMPIONS OF THE FELLOWSHIP VANGUARD" và thêm dòng giới thiệu Yugi / Atem.
   - Bảng hướng dẫn điều khiển bổ sung phím riêng của Yugi.
 
 ### Sửa lỗi
-- **Special Summon kết quả 1 (`Scene/Character/Yugi/room_blast.gd`):** Quái thú triệu hồi không còn cố định quay sang phải — sprite quái thú và quả cầu năng lượng tự lật (`flip_h`) để luôn hướng về tâm phòng.
-- **Special Summon kết quả 5 (`Scene/Character/Yugi/room_fire.gd`):** Quái thú lửa không còn cố định quay sang phải — khi triệu hồi sẽ đếm kẻ địch trong phòng ở hai bên và quay về phía đông hơn (hòa hoặc không có địch thì quay về tâm phòng); điểm phát tia lửa cũng lật theo hướng quay.
-- **Special Summon kết quả 3 (`Scene/Character/Yugi/room_lightning.gd`):** Rồng sấm không còn cố định quay sang phải — dùng chung logic `_faces_left()` (chuyển lên lớp cha `room_blast.gd`) để quay về phía có nhiều kẻ địch hơn, hòa thì quay về tâm phòng.
-- **Special Summon kết quả 2 (`Scene/Character/Yugi/room_laser.gd`):** Phù thủy bóng tối không còn quay sang phải lúc triệu hồi — ngay khi xuất hiện đã quay về phía có nhiều kẻ địch hơn (`_faces_left()`), khi tia laser bắt đầu bắn thì vẫn khóa kẻ địch máu cao nhất trong phòng bất kể vị trí và quay người về phía mục tiêu đó.
+- **Special Summon kết quả 1 (`scenes/characters/yugi/room_blast.gd`):** Quái thú triệu hồi không còn cố định quay sang phải — sprite quái thú và quả cầu năng lượng tự lật (`flip_h`) để luôn hướng về tâm phòng.
+- **Special Summon kết quả 5 (`scenes/characters/yugi/room_fire.gd`):** Quái thú lửa không còn cố định quay sang phải — khi triệu hồi sẽ đếm kẻ địch trong phòng ở hai bên và quay về phía đông hơn (hòa hoặc không có địch thì quay về tâm phòng); điểm phát tia lửa cũng lật theo hướng quay.
+- **Special Summon kết quả 3 (`scenes/characters/yugi/room_lightning.gd`):** Rồng sấm không còn cố định quay sang phải — dùng chung logic `_faces_left()` (chuyển lên lớp cha `room_blast.gd`) để quay về phía có nhiều kẻ địch hơn, hòa thì quay về tâm phòng.
+- **Special Summon kết quả 2 (`scenes/characters/yugi/room_laser.gd`):** Phù thủy bóng tối không còn quay sang phải lúc triệu hồi — ngay khi xuất hiện đã quay về phía có nhiều kẻ địch hơn (`_faces_left()`), khi tia laser bắt đầu bắn thì vẫn khóa kẻ địch máu cao nhất trong phòng bất kể vị trí và quay người về phía mục tiêu đó.
 
 ### Kiểm Thử
 - Thêm bộ test `tests/test_yugi.gd` / `tests/test_yugi.tscn` (chọn tướng index 4, Guard, Replay, Special Summon, sanitize replay frames) — **PASS**.
@@ -182,15 +220,15 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
   - Che giấu 100% các phòng chưa bước chân tới trong bóng tối dày đặc của hầm mỏ Moria.
   - Tự động mở sáng phòng tương ứng khi nhân vật đặt chân qua ngưỡng cửa.
   - Hành lang chỉ vẽ hoàn chỉnh khi đã khám phá cả hai đầu, hoặc vẽ nhánh mờ ngắn chỉ hướng vào màn đêm sâu thẳm.
-- **Bầu Không Khí Ngục Tối U Ám & Đèn Lồng Linh Hồn (`Scene/Map/dungeon_atmosphere.gd`):**
+- **Bầu Không Khí Ngục Tối U Ám & Đèn Lồng Linh Hồn (`scenes/dungeon/dungeon_atmosphere.gd`):**
   - Đẩy ánh sáng môi trường ngục tối toàn cục về mức sâu thẳm `Color(0.06, 0.06, 0.10, 1.0)`.
   - Nhân vật mang theo đèn lồng linh hồn (`PlayerSoulLight`) với quầng sáng ấm áp soi rọi bán kính xung quanh.
   - Đuốc treo tường tại các phòng chưa khám phá ở trạng thái tắt lịm, tự động bừng lửa khi nhân vật tiến vào phòng.
-- **Cơ Chế Bẫy Kim Cọc Vật Lý (`Scene/Map/spike_trap.gd`):**
+- **Cơ Chế Bẫy Kim Cọc Vật Lý (`scenes/dungeon/spike_trap.gd`):**
   - Quái vật và kẻ địch hoàn toàn miễn nhiễm sát thương từ bẫy kim cọc, chỉ người chơi chịu tổn thất.
   - Khi cọc chông đâm trồi lên, khối rào cản vật lý `StaticBody2D` kích hoạt chặn đứng hoàn toàn người chơi và quái vật.
   - Thời gian duy trì cọc nhô lên được kéo dài đến 2.8s.
-- **Cân Bằng Chỉ Số & Độ Khó Leo Thang Theo Tầng (`Scene/BalanceConfig.gd` & `Scene/Map/dungeon_generator.gd`):**
+- **Cân Bằng Chỉ Số & Độ Khó Leo Thang Theo Tầng (`scripts/core/balance_config.gd` & `scenes/dungeon/dungeon_generator.gd`):**
   - Cường hóa quái vật: Moria Orc (Máu 4, ST 2, Tốc độ 75), Armored Uruk-hai (Máu 5, Giáp 6, Cuồng nộ ST 4), Barrow-wight Skeleton (Máu 3, Tốc độ 110), Minas Morgul Bone Archer (Máu 5, Hồi chiêu 1.6s), Angmar Blood Bat (Máu 5, Hồi chiêu 1.4s, Tốc độ 85).
   - Cường hóa Boss: Tử Linh Pháp Sư Dol Guldur (Máu 45, ST 2, Độc tố 3), Thủ Lĩnh Kỵ Binh Warg (Máu 50, ST 3, Tốc độ 75).
   - Tăng mật độ quái: Mật độ quái mỗi phòng tăng lên 3 — 7 ở Tầng 1, tự động tăng tiến theo độ sâu các tầng tiếp theo.
@@ -206,10 +244,10 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 ## [2026-10-29] — Cân Bằng Chỉ Số (BalanceConfig), Nerf Cung Thủ Miya & Cốt Truyện Chúa Tể Của Những Chiếc Nhẫn (Moria)
 
 ### Tính năng Mới (New Features)
-- **Hệ thống Cân Bằng Tập Trung (`Scene/BalanceConfig.gd`):**
+- **Hệ thống Cân Bằng Tập Trung (`scripts/core/balance_config.gd`):**
   - Đóng vai trò Single Source of Truth (SSOT) cho toàn bộ chỉ số của 4 Anh hùng, 5 Quái vật và 2 Boss.
   - Hỗ trợ hàm cập nhật chỉ số động `BalanceConfig.set_unit_stat(category, unit_id, stat_name, value)` phục vụ quy trình cân bằng và kiểm thử tự động.
-  - Tích hợp tài liệu quy trình chuẩn hóa: [`.agent/workflows/balance-unit.md`](.agent/workflows/balance-unit.md) và [`docs/BALANCE_WORKFLOW.md`](docs/BALANCE_WORKFLOW.md).
+  - Tích hợp tài liệu quy trình chuẩn hóa: [`.agent/workflows/balance-unit.md`](.agent/workflows/balance-unit.md) và [`docs/gameplay/BALANCE_WORKFLOW.md`](docs/gameplay/BALANCE_WORKFLOW.md).
 - **Chuyển Đổi Cốt Truyện Sang "Chúa Tể Của Những Chiếc Nhẫn" (The Lord of the Rings):**
   - Bối cảnh: Hầm Mỏ Moria (Khazad-dûm) dưới dãy núi sương mù Misty Mountains.
   - Khái niệm Seed được tích hợp vào lore: *Thủy Tinh Cầu Palantír* — tọa độ quang học bất biến khóa chặt kiến trúc phòng ngục cổ xưa.
@@ -219,7 +257,7 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
   - Bổ sung `UT-13` trong [`tests/test_dungeon_generator_unit.gd`](tests/test_dungeon_generator_unit.gd), nâng tổng số bài kiểm tra lên 19/19 Unit Tests PASS 100%.
 
 ### Cân Bằng Chỉ Số (Balance Changes)
-- **Nerf Cung Thủ Miya (`Scene/Character/Player 3_Miya/player_3.gd`):**
+- **Nerf Cung Thủ Miya (`scenes/characters/miya/player.gd`):**
   - Máu (HP): Giảm từ `4` xuống `3` (bù lại ưu thế tấn công tầm xa tuyệt đối).
   - Sát thương đòn đánh: Giảm từ `2` xuống `1`.
   - Tốc độ di chuyển: Giảm từ `180` xuống `165`.
@@ -248,8 +286,8 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 - **GitHub Evidence & Kiểm thử Tự động:**
   - **Unit Tests:** [`tests/test_dungeon_generator_unit.gd`](tests/test_dungeon_generator_unit.gd) (`10/10 PASS`).
   - **Property Tests:** [`tests/test_dungeon_properties.gd`](tests/test_dungeon_properties.gd) (`5/5 bất biến x 100 Seeds = 500/500 PASS`).
-  - **Benchmark:** [`tests/benchmark_dungeon_generator.gd`](tests/benchmark_dungeon_generator.gd) & [`docs/BENCHMARK_REPORT.md`](docs/BENCHMARK_REPORT.md).
-  - **Seed Bug Issues:** [`docs/SEED_BUG_ISSUES.md`](docs/SEED_BUG_ISSUES.md) & [`.github/ISSUE_TEMPLATE/seed_bug_report.md`](.github/ISSUE_TEMPLATE/seed_bug_report.md).
+  - **Benchmark:** [`benchmarks/benchmark_dungeon_generator.gd`](benchmarks/benchmark_dungeon_generator.gd) & [`benchmarks/reports/GENERATOR_PERFORMANCE_REPORT.md`](benchmarks/reports/GENERATOR_PERFORMANCE_REPORT.md).
+  - **Seed Bug Issues:** [`docs/qa/SEED_BUG_ISSUES.md`](docs/qa/SEED_BUG_ISSUES.md) & [`.github/ISSUE_TEMPLATE/seed_bug_report.md`](.github/ISSUE_TEMPLATE/seed_bug_report.md).
   - **CI Workflow:** [`.github/workflows/ci.yml`](.github/workflows/ci.yml) & [`run_tests.bat`](run_tests.bat).
 
 ### Sửa lỗi (Bug Fixes)
@@ -270,4 +308,4 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 ### Sửa lỗi (Bug Fixes)
 - **[ORC] Cannot attack Player when Player is below Orc within 35px:**
   - Cập nhật `orc.gd` & `orc.tscn` xoay `axe_hitbox.rotation = direction.angle()` và mở rộng `CollisionShape2D` lên `32x26`.
-  - Xác minh bằng `test_orc_battle.tscn` (5/5 test cases PASS).
+  - Xác minh bằng `tests\test_orc_battle.tscn` (5/5 test cases PASS).

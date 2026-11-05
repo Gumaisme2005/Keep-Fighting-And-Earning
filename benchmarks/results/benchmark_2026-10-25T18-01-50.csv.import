@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://b6gq5vgn6awyk"
+
+[deps]
+
+files=["res://benchmarks/results/benchmark_2026-10-25T18-01-50.trial.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.seed.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.total.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.prepare.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.layout.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.traps.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.pillars.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.decor.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.room.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.edge.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.boss.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.treasure.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.trap.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.graph.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.trap.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.trap.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.reproducible.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.passed.translation"]
+
+source_file="res://benchmarks/results/benchmark_2026-10-25T18-01-50.csv"
+dest_files=["res://benchmarks/results/benchmark_2026-10-25T18-01-50.trial.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.seed.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.total.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.prepare.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.layout.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.traps.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.pillars.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.decor.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.room.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.edge.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.boss.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.treasure.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.trap.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.graph.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.trap.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.trap.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.reproducible.translation", "res://benchmarks/results/benchmark_2026-10-25T18-01-50.passed.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

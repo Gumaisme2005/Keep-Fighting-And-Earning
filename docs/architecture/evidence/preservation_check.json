@@ -1,0 +1,23 @@
+{
+  "missing_files": [],
+  "protected_files_changed": [],
+  "gdscript_changes_beyond_path_replacements": [],
+  "seed_comparison": {
+    "before": "benchmarks/advanced/results/seed_replay_2026-11-05T15-04-54_11684.csv",
+    "after": "benchmarks/advanced/results/seed_replay_2026-11-05T15-16-30_18068.csv",
+    "cases_before": 200,
+    "cases_after": 200,
+    "same_keys": true,
+    "compared_columns": [
+      "room_count",
+      "layer_count",
+      "geometry_sha256",
+      "tilemap_sha256",
+      "full_sha256"
+    ],
+    "mismatches": [],
+    "engine_versions": [
+      "4.7.2-stable (official)"
+    ]
+  }
+}

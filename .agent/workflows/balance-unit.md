@@ -4,10 +4,10 @@ description: Quy trình chuẩn để Buff hoặc Nerf chỉ số của Nhân v�
 
 # Workflow Cân Bằng Chỉ Số (Buff / Nerf Nhân Vật & Quái Vật)
 
-Toàn bộ chỉ số chiến đấu của 4 Anh hùng Đoàn Hộ Nhẫn, 5 loại Quái vật Moria và 2 Đại Thủ Lĩnh được quản lý tập trung tại một nguồn duy nhất (**Single Source of Truth**): [`Scene/BalanceConfig.gd`](../../Scene/BalanceConfig.gd).
+Toàn bộ chỉ số chiến đấu của 4 Anh hùng Đoàn Hộ Nhẫn, 5 loại Quái vật Moria và 2 Đại Thủ Lĩnh được quản lý tập trung tại một nguồn duy nhất (**Single Source of Truth**): [`scripts/core/balance_config.gd`](../../scripts/core/balance_config.gd).
 
-## Bước 1: Chỉnh sửa chỉ số tại `Scene/BalanceConfig.gd`
-Mở file `Scene/BalanceConfig.gd` và điều chỉnh trực tiếp trong các bảng:
+## Bước 1: Chỉnh sửa chỉ số tại `scripts/core/balance_config.gd`
+Mở file `scripts/core/balance_config.gd` và điều chỉnh trực tiếp trong các bảng:
 1. **`HERO_STATS`** (`"miya"`, `"olaf"`, `"pyrois"`, `"charlotte"`):
    - `hp`: Máu tối đa cơ bản
    - `armor`: Giáp khởi đầu (tự hồi phục sau giao tranh)
@@ -27,7 +27,7 @@ Mở file `Scene/BalanceConfig.gd` và điều chỉnh trực tiếp trong các 
 // turbo
 Chạy lệnh kiểm thử Headless để kiểm tra `UT-13` (đảm bảo chỉ số trong `BalanceConfig.gd` đã tự động áp dụng lên thực thể trong game và UI):
 ```powershell
-& "B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe" --headless tests/test_dungeon_generator_unit.tscn
+& $env:GODOT_BIN --headless --path . res://tests/test_dungeon_generator_unit.tscn
 ```
 
 ## Bước 3: Cập nhật bảng chỉ số trong `README.md` và `CHANGELOG.md`
@@ -35,6 +35,6 @@ Chạy lệnh kiểm thử Headless để kiểm tra `UT-13` (đảm bảo chỉ
 
 ## Bước 4: Commit theo chuẩn Conventional Commits
 ```powershell
-git add Scene/BalanceConfig.gd README.md CHANGELOG.md
+git add scripts/core/balance_config.gd README.md CHANGELOG.md
 git commit -m "balance(<ten_don_vi>): <buff/nerf> <chi_so> tu X -> Y"
 ```
