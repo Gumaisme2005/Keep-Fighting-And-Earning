@@ -1,155 +1,200 @@
-# Keep Fighting And Earning — Procedural Dungeon (Roguelike có Seed Tái Lập)
+# Keep Fighting And Earning - Procedural Dungeon Roguelike
 
-[![Godot Engine](https://img.shields.io/badge/Godot_Engine-4.7-478cbf?logo=godotengine&logoColor=white)](https://godotengine.org)
-[![Tests](https://img.shields.io/badge/Tests-19_Unit_%7C_500_Property_%7C_5_Combat_PASS-2ea44f)](#6-github-evidence--bộ-kiểm-thử-tự-động)
-[![Security](https://img.shields.io/badge/Security-Hardened_Input_%26_JSON_Schema-blue)](docs/SECURITY.md)
-[![Balance](https://img.shields.io/badge/Balance_Workflow-Single_Source_of_Truth-purple)](docs/BALANCE_WORKFLOW.md)
-
-**Keep Fighting And Earning** (*Biên Niên Sử Trung Địa: Hầm Mỏ Moria*) là tựa game **2D Top-Down Action Roguelike / Procedural Dungeon** lấy bối cảnh sử thi **Chúa Tể Của Những Chiếc Nhẫn (The Lord of the Rings)** kết hợp lối chơi hành động nhịp độ cao của *Soul Knight*, phát triển trên **Godot Engine 4**. Trò chơi ứng dụng thuật toán **Đồ thị Cây Khung & Tìm kiếm Chiều rộng (Graph Spanning Tree + BFS)** kết hợp **Thủy Tinh Cầu Palantír — Seed tái lập 100% (Deterministic Seed)**, đảm bảo cùng một Seed luôn kiến tạo chính xác cùng một cấu trúc hầm mỏ Moria, vị trí bẫy, quái vật, đuốc lửa gắn tường và vật phẩm rơi để phục vụ chơi lại (Replay), kiểm thử tự động và gỡ lỗi (Debug).
+Keep Fighting And Earning is a 2D top-down action roguelike developed using Godot Engine 4. The project incorporates deterministic procedural dungeon generation, real-time combat mechanics, centralized stat balancing, and an automated verification test suite.
 
 ---
 
-## 1. Bảng Đối Chiếu Mục Tiêu & Tiêu Chí Chấm Điểm (AI Grader Checklist)
+## 1. System Architecture and Core Mechanics
 
-| Hạng mục bắt buộc | Trạng thái | Hiện thực kỹ thuật & Bằng chứng trong mã nguồn |
-| :--- | :---: | :--- |
-| **Sinh Dungeon hợp lệ (Graph/Grid)** | `[PASS]` | Thuật toán tạo cây khung 16 phòng/tầng (`E = V - 1 = 15`), hành lang rộng 5 ô, BFS đặt Boss xa nhất (`Scene/Map/dungeon_generator.gd`). |
-| **Cùng Seed tạo cùng Dungeon** | `[PASS]` | Băm `map_seed` khởi tạo `RandomNumberGenerator` độc lập cho sơ đồ phòng, bẫy, quái và rương (`loot_seed`). Kiểm chứng trên 100 Seeds (`PROP-01`). |
-| **Combat thời gian thực** | `[PASS]` | Cơ chế Máu + Giáp tự hồi, I-Frames tăng tốc thoát vây, kiểm tra tầm nhìn (`has_line_of_sight`) chặn đánh xuyên tường/cửa đóng (`player.gd`, `arrow.gd`, `bomb.gd`). |
-| **Hệ thống Buff / Nerf tập trung** | `[PASS]` | Quản lý toàn bộ chỉ số 4 Tướng, 5 Quái, 2 Boss tại một nguồn duy nhất (`Scene/BalanceConfig.gd`) kèm quy trình [`.agent/workflows/balance-unit.md`](.agent/workflows/balance-unit.md). |
-| **Inventory & Trang bị** | `[PASS]` | Túi đồ 16 ô (`4x4`), 3 ô Trang bị (`Mũ`, `Giáp`, `Vũ khí`), Hotbar 9 phím (`1`–`9`), mở bằng phím `I` / `Tab` (`Scene/Character/InventoryManager.gd`). |
-| **Tối thiểu 3 loại Enemy** | `[PASS]` (5 loại) | `Orc Moria`, `Uruk-hai Thiết Giáp`, `Hài Cốt Barrow-wight`, `Cung Thủ Xương Minas Morgul` (AI thả diều + né tường), `Ác Linh Huyết Quỷ Angmar` (`Scene/Enemies/`). |
-| **Tối thiểu 1 Boss** | `[PASS]` (2 Boss) | `Tử Linh Pháp Sư Dol Guldur` (Tầng lẻ, 3 Phase) & `Thủ Lĩnh Kỵ Binh Warg` (Tầng chẵn, 3 Phase) kèm Thanh Máu Boss động (`Scene/Enemies/Boss/`). |
-| **Lưu Seed & Replay một Run** | `[PASS]` (Kép) | Lưu/Copy Seed Palantír + Phát lại thao tác 60Hz (`Action Replay`) hoặc Chơi lại cùng Seed (`Seed Replay`) (`Scene/GameManager.gd`). |
-| **Bầu không khí Ngục tối & Âm thanh** | `[PASS]` | Ánh sáng heo hắt (`CanvasModulate` + `PointLight2D`), đuốc sắt đính trực tiếp lên gạch tường, bóng ma xanh (`dungeon_atmosphere.gd`) & Soundtrack/SFX (`AudioManager.gd`). |
-| **Bảo mật (Security Hardening)** | `[PASS]` | Whitelist `sanitize_seed`, kiểm tra tràn số `NaN`/`INF` trong Replay JSON, giới hạn file lưu `2 MB` (`docs/SECURITY.md`). |
-| **GitHub Evidence (5/5)** | `[PASS]` | Unit Tests (`19/19`), Property Tests (`500/500`), Benchmark (`10..50` phòng), 5 Seed Bug Issues (`docs/SEED_BUG_ISSUES.md`), GitHub Actions CI (`.github/workflows/ci.yml`). |
+### 1.1 Procedural Dungeon Generation
+- **Graph Spanning Tree and BFS Topology**: Generates 16 interconnected rooms per floor with corridor widths of 5 tiles. Boss rooms are dynamically positioned at the maximum shortest-path distance (BFS) from the starting room.
+- **Deterministic Seed Engine**: An isolated RandomNumberGenerator instance driven by sanitized seed strings ensures identical seeds reproduce exact room topologies, obstacle placements, trap patterns, and entity spawns across runs.
+- **Multi-Floor Progression**: Supports escalating difficulty across dungeon tiers, including specialized milestone arenas (such as the Skeleton King boss chamber).
+
+### 1.2 Combat and Physics System
+- **Real-Time Combat Mechanics**: Combines discrete Health and regenerating Armor pools, invulnerability frames (I-Frames), and 360-degree rotational hitboxes.
+- **Line-of-Sight (LoS) Validation**: Employs spatial grid raycasting to verify unobstructed line-of-sight between combatants, preventing attacks or projectile trajectories from clipping through walls or closed doors.
+- **Centralized Balance Configuration**: Combat statistics across all heroes, monsters, and bosses are maintained within `Scene/BalanceConfig.gd` as the single source of truth.
+
+### 1.3 Inventory, Equipment and Interface
+- **16-Slot Inventory**: Includes a 4x4 grid backpack storage, a 9-slot action hotbar, and expandable equipment slots (Helmet, Armor, Weapon, Magic Resist, Boots).
+- **Minecraft-Style Item Stacking**: Stackable consumable items (potions) automatically merge up to 16 units per slot, displaying item count badges. Consuming items decrements the active stack count.
+- **Item Drop and Discard Mechanics**: Supports dropping items onto the floor via the G hotkey or right-clicking inventory slots to spawn collectible world pickups.
+- **MOBA-Style HUD Display**: Replaces individual heart icons with clean numeric progress bars for Health and Armor (with dynamic color thresholds), providing immediate combat clarity.
+- **Loot Table Engine**: Handles equipment and consumable drops (potions, armor sets, weapons) driven by deterministic roll seeding.
+
+### 1.4 Replay System and Memory Protection (Multiplayer Ready)
+- **10-Replay Maximum Capacity (`MAX_SAVED_REPLAYS = 10`)**: Automatic FIFO eviction of raw input frames for older runs, preserving only high-level run metadata to avoid RAM leaks.
+- **Manual Replay Deletion**: Direct delete buttons in the Expedition History interface allow users to manually purge individual replay data or wipe replay memory.
+- **Anti-DoS Input Compression and Bounding**: Limits disk frames to 3,600 (approx. 60s at 60 FPS) and deduplicates consecutive stationary idle frames. Enforces strict 2 MB maximum save file limits, ready for online multiplayer packet transmission.
 
 ---
 
-## 2. Đoàn Hộ Nhẫn Tiền Thưởng (4 Playable Heroes — Bối Cảnh Trung Địa)
+## 2. Playable Character Roster
 
-Toàn bộ chỉ số nhân vật được đồng bộ tự động từ [`Scene/BalanceConfig.gd`](Scene/BalanceConfig.gd) (xem chi tiết quy trình Buff/Nerf tại [`docs/BALANCE_WORKFLOW.md`](docs/BALANCE_WORKFLOW.md)):
+The roster features 6 distinct heroes, selectable from the character selection screen. All parameters reflect the centralized balance configuration in `Scene/BalanceConfig.gd`.
 
-| Ảnh đại diện | Tên Tướng | Danh xưng Trung Địa | Tốc độ | Máu | Giáp | ST Cơ bản | Kỹ năng đặc biệt (`Phím Q` / `Chuột phải`) |
+### 2.1 Roster Overview Table
+
+| Index | Name | Class / Role | HP | Armor | Damage | Speed (px/s) | Primary Weapon / Mechanism |
 | :---: | :--- | :--- | :---: | :---: | :---: | :---: | :--- |
-| <img src="docs/images/hero_pyrois.png" width="56" height="56" alt="Pyrois" /> | **Pyrois** | Hiệp Sĩ Thành Gondor *(Balanced)* | `150` | `4` | `4` | `1` | **Xung Kích Vương Giả (`Q`):** Lao tới trước với trạng thái Bất Tử (I-Frames), bổ kiếm Andúril gây `+2` sát thương (CD: `5s`). |
-| <img src="docs/images/hero_olaf.png" width="56" height="56" alt="Olaf" /> | **Olaf** | Chiến Binh Người Lùn Erebor *(Berserker)* | `160` | `6` | `1` | `2` | **Chiến Nộ Durin (`Q`):** Gầm vang cơn thịnh nộ người Lùn, nhân đôi (`x2`) sát thương rìu trong `5s` (CD: `5s`). |
-| <img src="docs/images/hero_miya.png" width="56" height="56" alt="Miya" /> | **Miya** *(Nerfed v1.3)* | Cung Thủ Tiên Tộc Mirkwood *(Ranger)* | `165` | `3` | `1` | `1` | **Lửa Orthanc (`Q`):** Ném bộc phá nổ diện rộng gây `x2 ST + 1` (CD: `6.5s`).<br>**Tên Tinh Linh (`Chuột Trái`):** Bắn tên tầm xa (Nhịp bắn: `0.46s`). |
-| <img src="docs/images/hero_charlotte.png" width="56" height="56" alt="Charlotte" /> | **Charlotte** | Biệt Kích Dúnedain *(Assassin)* | `180` | `5` | `0` | `2` | **Tam Đoạn Trảm (`Q`):** Chém 3 nhịp liên tiếp (CD: `3s`).<br>**Ảnh Bộ Đột Kích (`Chuột phải`):** Lướt `400px` bật I-Frames rồi đâm 4 nhịp (CD: `5s`). |
+| 0 | Miya | Elven Archer | 3 | 1 | 1 | 165.0 | Galadhrim Bow (rapid ranged arrows, 0.46s CD) |
+| 1 | Olaf | Dwarven Berserker | 6 | 1 | 2 | 160.0 | Greataxe of Khazad-dum (cleave arc, 0.34s CD) |
+| 2 | Pyrois | White Tower Knight | 4 | 4 | 1 | 150.0 | Sword and Shield (defensive rush, 0.30s CD) |
+| 3 | Charlotte | Dunedain Shadow Ranger | 5 | 0 | 2 | 180.0 | Twin Blades (high-speed dash and flurry, 0.28s CD) |
+| 4 | Yugi / Atem | Pharaoh Summoner | 5 | 1 | 1 | 150.0 | Millennium Puzzle (monsters, guard, room spells) |
+| 5 | Doraemon | 22nd-Century Specialist | 5 | 2 | 1 | 150.0 | 4D Pocket (20 gadgets, 6 assists, 10 supers) |
+
+### 2.2 Hero Profiles and Ability Breakdown
+
+#### Index 0: Miya (Elven Archer)
+- **Playstyle**: Long-range kiting scout with consistent sustained projectile output.
+- **Primary Attack (LMB)**: Fires rapid piercing arrows toward the cursor (cooldown: 0.46s, projectile speed: 280 px/s).
+- **Special Skill (Q - Orthanc Fire)**: Hurls an alchemical explosive dealing 2x area damage plus 1 bonus damage upon detonation (cooldown: 6.5s).
+
+#### Index 1: Olaf (Dwarven Berserker)
+- **Playstyle**: Resilient frontline bruiser excelling at close-quarters crowd control.
+- **Primary Attack (LMB)**: Sweeps a broad greataxe arc striking multiple adjacent enemies (cooldown: 0.34s).
+- **Special Skill (Q - Durin's Wrath)**: Enters a battle frenzy that doubles melee cleave damage (2x multiplier) for 5.0 seconds (cooldown: 5.0s).
+
+#### Index 2: Pyrois (Knight of the White Tower)
+- **Playstyle**: Heavily armored vanguard relying on defensive absorption and shield rushes.
+- **Primary Attack (LMB)**: Disciplined sword thrust piercing through enemy vanguards (cooldown: 0.30s).
+- **Special Skill (Q - Sovereign Rush)**: Charges forward with invulnerability frames, piercing targets for +2 bonus damage (cooldown: 5.0s).
+
+#### Index 3: Charlotte (Dunedain Shadow Ranger)
+- **Playstyle**: Agile glass cannon trading armor for supreme mobility and burst combinations.
+- **Primary Attack (LMB)**: Fast dual-blade strike sequence (cooldown: 0.28s).
+- **Special Skill (Q - Triple Flurry)**: Executes three rapid slashes in stationary burst (cooldown: 3.0s).
+- **Secondary Action (RMB - Shadow Step)**: Dashes forward at 400 px/s with invulnerability frames, followed by 4 piercing stabs (cooldown: 5.0s).
+
+#### Index 4: Yugi / Atem (Pharaoh Summoner)
+- **Playstyle**: Tactical summoner combining directional monster attacks, guard stance, and room-wide spells.
+- **Primary Attack (LMB)**: Quick monster strike (1x damage); holding for 0.65s charges a 2x damage attack.
+- **Secondary Action (RMB)**: Target-location summon (1x damage); holding for 0.65s charges a 3x damage summon.
+- **Defensive Stance (Hold Shift)**: Summons a guard spirit that reduces incoming threat and allows tactical repositioning. Clicking during guard executes a combo summon (2x damage).
+- **Special Skill (Q - Special Summon)**: Randomly casts 1 of 5 room-wide spells: Room Blast (explosion), Room Laser (piercing beam), Room Lightning (electrical shock), Room Pull (vortex draw), or Room Fire (burning ticks) (cooldown: 12.0s).
+
+#### Index 5: Doraemon (22nd-Century Gadget Specialist)
+- **Playstyle**: Versatile hybrid fighter utilizing an extensive 4D pocket gadget arsenal and companion assists.
+- **4D Pocket System (20 Gadgets across 10 Pages)**: Cycle pages using Mouse Wheel or Z / X keys. LMB and RMB trigger the two gadgets of the active page (Air Cannon, Anywhere Door, Champion Glove, Shock Gun, Pencil Missiles, Mini-Doras, T-Rex summon, etc.).
+- **Companion Assists (Q without full power bar)**: Summons 1 of 6 companions in rotation (Nobita, Gian, Shizuka, Dorami, Suneo, Come-come Cat) to execute an assist strike (cooldown: 8.0s).
+- **Super Moves (Q with power bar >= 100)**: Consumes accumulated power gauge to cast page-specific super abilities (Uradoraman, SL Chimney, Gian Recital, Dorayakin, etc.).
+- **Consumable (F - Dorayaki)**: Consumes a dorayaki to recover 1 HP and restore 40 power gauge points (cooldown: 12.0s).
 
 ---
 
-## 3. Quân Đoàn Hắc Ám Moria (5 Enemies) & Đại Thủ Lĩnh (2 Bosses)
+## 3. Enemies and Boss Encounters
 
-### 3.1. Quái Thường Quân Đoàn Mordor & Moria (5 Loại)
+### 3.1 Standard Enemies
+- **Orc**: Basic melee fighter with frontal axe sweeps.
+- **Armored Orc**: Heavy melee warrior with elevated defense and an enrage attack phase.
+- **Skeleton**: Swift light melee unit with aggressive closing behavior.
+- **Skeleton Archer**: Tactical ranged skirmisher that kites players and repositions along walls.
+- **Vampire**: High-speed aerial predator with life-steal melee strikes.
+- **Werewolf**: Aggressive beast with fast claw combos and telegraphed leaping pounce attacks.
 
-| Ảnh đại diện | Tên Quái | Phân loại AI | Máu | Sát thương | Cơ chế hành vi đặc trưng |
-| :---: | :--- | :--- | :---: | :---: | :--- |
-| <img src="docs/images/enemy_orc.png" width="52" height="52" alt="Orc" /> | **Orc Moria** | Cận chiến tiên phong | `4` | `2` | Truy đuổi trực diện bằng rìu với tốc độ `75.0` khi cửa đá sập xuống. |
-| <img src="docs/images/enemy_armored_orc.png" width="52" height="52" alt="Armored Orc" /> | **Uruk-hai Thiết Giáp** | Thiết giáp 2 trạng thái | `6 Giáp + 5 Máu` | `2 -> 4` | Khi vỡ hết `6` điểm Giáp sẽ hóa **Cuồng Nộ (Enraged)**: tăng tốc `x2` và bổ rìu `4` sát thương. |
-| <img src="docs/images/enemy_skeleton.png" width="52" height="52" alt="Skeleton" /> | **Hài Cốt Barrow-wight** | Xương khô tốc kích | `3` | `1` | Tốc độ di chuyển cao (`110.0`), áp sát nhanh chóng theo bầy hoặc được Tử Linh Pháp Sư triệu hồi. |
-| <img src="docs/images/enemy_skeleton_archer.png" width="52" height="52" alt="Skeleton Archer" /> | **Cung Thủ Xương Minas Morgul** | Xạ thủ thả diều *(Kiting AI)* | `5` | `2` | Tự lùi khi người chơi áp sát `< 85px`, né ngang khi hồi chiêu và bắn tên nhanh với nhịp `1.6s` (`195px`). |
-| <img src="docs/images/enemy_vampire.png" width="52" height="52" alt="Vampire" /> | **Ác Linh Huyết Quỷ Angmar** | Huyết tộc phục kích | `5` | `2` | Sinh lực bền bỉ, tốc độ bay `85.0`, hồi chiêu cắn `1.4s` và bắn ma thuật bóng đêm tầm xa. |
-
-### 3.2. Đại Thủ Lĩnh Trung Địa — Bosses (2 Loại, 3 Phases)
-
-| Ảnh đại diện | Tên Boss | Xuất hiện | Máu | Các giai đoạn chiến đấu (3 Phases) |
-| :---: | :--- | :---: | :---: | :--- |
-| <img src="docs/images/boss_necromancer.png" width="64" height="64" alt="Necromancer" /> | **Tử Linh Pháp Sư Dol Guldur**<br>*(Necromancer)* | Tầng lẻ (`1, 3, ...`) | `45` | **Phase 1 (`>30 HP`):** Cận chiến `2` ST, triệu hồi 3 Hài Cốt Barrow-wight.<br>**Phase 2 (`16–30 HP`):** Kích nổ 8 cột độc tố bóng đêm gây `3` ST.<br>**Phase 3 (`<=15 HP`):** Cuồng nộ tốc độ `x1.5`, giảm nửa thời gian hồi chiêu. |
-| <img src="docs/images/boss_orc_rider.png" width="64" height="64" alt="Orc Rider" /> | **Thủ Lĩnh Kỵ Binh Warg**<br>*(Orc Rider)* | Tầng chẵn (`2, 4, ...`) | `50` | **Phase 1 (`>35 HP`):** Bổ giáo cận chiến diện rộng gây `3` ST.<br>**Phase 2 (`18–35 HP`):** Cảnh báo vệt đỏ rồi cưỡi sói Warg lao tông tốc độ `x4`.<br>**Phase 3 (`<=17 HP`):** Xoay giáo bão tố liên hoàn kết hợp lao tông. |
-
-*Xem chi tiết cơ chế tăng độ khó leo thang theo tầng tại [`docs/DUNGEON_FOG_AND_BALANCE.md`](docs/DUNGEON_FOG_AND_BALANCE.md).*
+### 3.2 Boss Encounters
+- **Necromancer (Floor 1)**: Triple-phase spellcaster that fires homing skulls and raises undead minions.
+- **Orc Rider (Floor 2)**: Heavy cavalry chieftain with high poise, charging dash attacks, and spinning hammer strikes.
+- **Skeleton King (Floors 3, 6, 9)**: Tiered arena overlord protected by invulnerable Soul Crystals, multidirectional laser volleys, and summoned reinforcements.
 
 ---
 
-## 4. Điểm Nhấn Giao Diện, Sương Mù Chiến Tranh & Âm Thanh
+## 4. Project Directory Structure
 
-- **Sương Mù Chiến Tranh & Bản Đồ Nhỏ — Minimap Fog of War (`Scene/UI/GameUI.gd`):**
-  - Che giấu 100% các phòng chưa bước chân tới trong bóng tối dày đặc theo phong cách Đế Chế.
-  - Tự động mở sáng phòng tương ứng khi nhân vật đặt chân qua cửa ngục (`Xanh lá`: Xuất phát, `Xanh dương`: Đã dọn sạch, `Cam`: Đang giao tranh, `Vàng`: Kho báu, `Đỏ`: Thủ lĩnh Boss).
-  - Đường hành lang chỉ hiển thị hoàn chỉnh khi đã khám phá cả hai đầu.
-- **Bầu Không Khí Ngục Tối U Ám & Đèn Lồng Linh Hồn (`Scene/Map/dungeon_atmosphere.gd`):**
-  - Môi trường ngục tối trầm mặc sâu thẳm (`Color(0.06, 0.06, 0.10)`), nhân vật mang đèn lồng soi rọi bán kính xung quanh.
-  - Đuốc treo tường tại các phòng chưa khám phá ở trạng thái tắt lịm, chỉ bừng sáng khi người chơi tiến vào phòng.
-  - Những bóng ma xanh lượn lờ phát sáng huyền bí trong các gian phòng đã thức giấc.
-- **Cơ Chế Bẫy Kim Cọc Vật Lý — Spike Trap (`Scene/Map/spike_trap.gd`):**
-  - Quái vật và kẻ địch hoàn toàn miễn nhiễm sát thương từ bẫy kim cọc, chỉ người chơi chịu tổn thất khi dẫm phải.
-  - Khi cọc chông đâm trồi lên, khối rào cản vật lý `StaticBody2D` kích hoạt chặn đứng hoàn toàn người chơi và quái vật.
-  - Thời gian duy trì cọc nhô lên được kéo dài đến `2.8s`.
-- **Giao Diện Trung Cổ Trang Nhã:** Toàn bộ các icon logo pixel vụn vặt đã được loại bỏ, mang lại giao diện phong cách chữ Gothic cổ điển đậm chất sử thi.
-- **Hệ Thống Soundtrack & SFX (`Scene/AudioManager.gd`):**
-  - Đồng bộ bản nhạc hùng tráng **Glorious Morning (Waterflame — Age of War)** cho toàn bộ **Main Menu (`bgm_menu.wav`)**, **Khám phá Ngục tối (`bgm_dungeon.wav`)** và **Giao tranh Boss (`bgm_boss.wav`)**.
-  - Hiệu ứng âm thanh chiến đấu (`sfx_slash`, `sfx_hit`, `sfx_pickup`, `sfx_portal`) kèm nút bật/tắt âm thanh nhanh (`Phím N`).
-
----
-
-## 5. Hướng Dẫn Điều Khiển (Controls)
-
-| Phím / Thao tác | Chức năng |
-| :---: | :--- |
-| `W` `A` `S` `D` | Di chuyển nhân vật 4 hướng |
-| `Chuột trái` | Tấn công cơ bản theo hướng con trỏ chuột |
-| `Phím Q` / `Chuột phải` | Kích hoạt kỹ năng đặc biệt của Tướng |
-| `Phím E` | Nhặt vật phẩm trên mặt đất |
-| `1` – `9` | Sử dụng nhanh vật phẩm / trang bị trên thanh Hotbar |
-| `Phím I` / `Tab` | Mở / Đóng Túi đồ 16 ô & 3 ô Trang bị |
-| `Phím M` | Phóng to / Thu nhỏ bản đồ Minimap |
-| `Phím N` | Bật / Tắt Nhạc nền & Âm thanh (Mute/Unmute) |
-| `ESC` | Mở Menu Tạm dừng (Lưu Seed, Copy Seed, Chơi lại Run) |
-
----
-
-## 6. GitHub Evidence & Bộ Kiểm Thử Tự Động
-
-Chạy toàn bộ bộ kiểm thử tự động (Unit Tests, Security Tests, Property-Based Tests 100 Seeds, Combat Tests & Benchmark) bằng lệnh:
-
-```bat
-.\run_tests.bat
+```
+Keep-Fighting-And-Earning/
+|-- Assets/                   # Audio tracks, sound effects, character and environment sprites
+|-- docs/                     # Technical specifications, benchmarks, design documents
+|-- Menu/                     # Main menu and interface scenes
+|-- Scene/                    # Gameplay scenes and core scripts
+|   |-- BalanceConfig.gd      # Single source of truth for all unit statistics
+|   |-- GameManager.gd        # State management, seed pipeline, and replay controller
+|   |-- Character/            # Playable hero scenes, controllers, and gadget modules
+|   |-- Enemies/              # Standard enemy and boss entity implementations
+|   |-- Map/                  # Procedural dungeon generator, tilesets, and room management
+|   `-- UI/                   # In-game HUD, minimap, inventory, and character select screens
+|-- Test/                     # QA test case matrices and tracking sheets
+|-- tests/                    # Automated headless test suites and regression scripts
+|-- .github/workflows/ci.yml  # GitHub Actions continuous integration pipeline
+|-- project.godot             # Godot Engine project configuration
+|-- run_game.bat              # Script to launch the game client
+`-- run_tests.bat             # Script to execute all automated test suites
 ```
 
-1. **Unit, Security, UI & Audio Tests ([`tests/test_dungeon_generator_unit.gd`](tests/test_dungeon_generator_unit.gd)):** `19/19 PASS` (`UT-01` đến `UT-13` kiểm tra cấu trúc đồ thị, BFS Boss, vùng cấm bẫy, chống XSS/SQLi/Path Traversal, Z-Index cửa đóng, vị trí thực tế trên Minimap, Đuốc/Bóng ma xanh, `AudioManager` nạp nhạc Glorious Morning, chặn đánh xuyên tường/khóa phòng nhầm tại Seed `SEED-Q244GL`, bắn cung Miya không bị stunlock và cấu hình cân bằng tập trung `BalanceConfig`).
-2. **Property-Based Tests ([`tests/test_dungeon_properties.gd`](tests/test_dungeon_properties.gd)):** `5/5 PASS` (`500/500` phép kiểm chứng trên 100 Seeds ngẫu nhiên cho tính tái lập, liên thông đồ thị, Flood-Fill lưới gạch, tối ưu BFS Boss và an toàn tọa độ sinh thực thể).
-3. **Combat & Inventory Tests ([`Scene/Test/test_combat.gd`](Scene/Test/test_combat.gd)):** `5/5 PASS` (Kiểm chứng trừ Giáp trước Máu, hồi Giáp, cộng dồn chỉ số Trang bị và bất tử I-Frames).
-4. **Benchmark ([`docs/BENCHMARK_REPORT.md`](docs/BENCHMARK_REPORT.md)):** Đo thời gian sinh ngục từ `10` đến `50` phòng.
-5. **Tài liệu Thiết kế, Bảo mật & Seed Bug Issues:** Xem tại [`docs/GAME_DESIGN_DOCUMENT.md`](docs/GAME_DESIGN_DOCUMENT.md), [`docs/SECURITY.md`](docs/SECURITY.md) và [`docs/SEED_BUG_ISSUES.md`](docs/SEED_BUG_ISSUES.md).
-6. **BT Cá Nhân 3 — Biến Thể VT-075 (Reviewer Role & Concurrency Testing):**
-   - **Mã sinh viên:** 23001837 — Bùi Quang Chiến (Nhóm SE2026-T19).
-   - **Change Request:** Thêm vai trò Reviewer có quyền đọc và phê duyệt run nhưng không được sửa dữ liệu gốc ([`Scene/Review/review_service.gd`](Scene/Review/review_service.gd)).
-   - **Lệnh chạy kiểm thử VT-075 (24/24 PASS):**
-     ```powershell
-     & "B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe" --headless "res://tests/test_reviewer_concurrency.tscn"
-     ```
-   - **Lệnh chạy kiểm chứng tải 120 tác vụ đồng thời (p95 <= 3.5s):**
-     ```powershell
-     & "B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe" --headless "res://tests/vt075/load_p95.tscn"
-     ```
-   - **Báo cáo kỹ thuật chi tiết:**
-     - Đặc tả & AI Plan Review: [`docs/vt075/01_spec_and_plan.md`](docs/vt075/01_spec_and_plan.md)
-     - Chiến lược kiểm thử & Concurrency: [`docs/vt075/02_test_strategy.md`](docs/vt075/02_test_strategy.md)
-     - Đánh giá Mutation & Đo tải: [`docs/vt075/03_test_evaluation.md`](docs/vt075/03_test_evaluation.md)
-     - Ma trận truy vết, AI Usage Log & Reflection: [`docs/vt075/04_engineering_evidence_and_reflection.md`](docs/vt075/04_engineering_evidence_and_reflection.md)
+---
+
+## 5. Automated Test Suite and Quality Assurance
+
+The test suite is executable headlessly in Godot Engine:
+
+1. **Unit Tests (`tests/test_dungeon_generator_unit.tscn`)**:
+   - Validates room constraints, start and boss placement, corridor tree connectivity, trap placement, hero attack mechanics, and seed sanitization (19/19 passing).
+2. **Property-Based Invariant Tests (`tests/test_dungeon_properties.tscn`)**:
+   - Tests 100 random seeds across 5 structural invariants: determinism, connectivity, flood-fill walkability, boss optimality, and safe entity spawns (500/500 passing).
+3. **Combat Regression Tests (`tests/test_orc_battle.tscn`)**:
+   - Verifies 360-degree rotational hitbox accuracy across 5 primary directions (5/5 passing).
+4. **Dungeon Generator Performance Benchmark (`tests/benchmark_dungeon_generator.tscn`)**:
+   - Evaluates dungeon generation execution times across scales from 10 to 50 rooms.
+5. **Skeleton King Arena Tests (`tests/test_skeleton_king.tscn`)**:
+   - Tests specialized arena layout, crystal destruction, laser grid volleys, enrage states, and defeat transitions (21/21 passing).
+6. **Doraemon Hero Tests (`tests/test_doraemon.tscn`)**:
+   - Exercises all 20 gadgets, 6 companion assists, 10 super abilities, crate collision blocking, and pocket HUD pagination (48/48 passing).
+7. **Yugi Atem Hero Tests (`tests/test_yugi.tscn`)**:
+   - Validates character animations, directional attacks, guard stance, and special summons.
+8. **Werewolf Functional Tests (`tests/test_werewolf.tscn`)**:
+   - Tests claw attacks, pounce warning telegraphs, damage interruption, and pounce distance bounding (50/50 passing).
+9. **MOBA HUD and Inventory Stacking Tests (`tests/test_moba_hud_and_inventory.tscn`)**:
+   - Validates numeric health and armor progress bars, Minecraft-style potion stacking up to 16, stack consumption, item dropping, and RPG equipment stat calculations (34/34 passing).
+10. **Replay Capacity and Memory Protection Tests (`tests/test_replay_security.tscn`)**:
+    - Validates 10-replay hard cap enforcement, FIFO memory deallocation of old replay frames, manual replay deletion, clear all, and anti-DoS idle frame compression (39/39 passing).
 
 ---
 
-## 7. Khởi Chạy Trò Chơi
+## 6. Execution Instructions
 
-- Chạy trực tiếp file [`run_game.bat`](run_game.bat) (hoặc mở `project.godot` bằng **Godot Engine 4.3+** và nhấn `F5`).
+### 6.1 Prerequisites
+- Godot Engine 4.7 or later (Console / Headless binary recommended for automated tests).
+
+### 6.2 Running the Game
+Launch the project through Godot Engine or execute:
+```cmd
+run_game.bat
+```
+
+### 6.3 Running Automated Tests
+Run the entire suite locally with:
+```cmd
+run_tests.bat
+```
+Or execute individual test scenes headlessly:
+```cmd
+godot --headless --path . "res://tests/test_dungeon_generator_unit.tscn"
+godot --headless --path . "res://tests/test_dungeon_properties.tscn"
+godot --headless --path . "res://tests/test_orc_battle.tscn"
+godot --headless --path . "res://tests/test_skeleton_king.tscn"
+godot --headless --path . "res://tests/test_doraemon.tscn"
+godot --headless --path . "res://tests/test_yugi.tscn"
+godot --headless --path . "res://tests/test_werewolf.tscn"
+godot --headless --path . "res://tests/test_moba_hud_and_inventory.tscn"
+godot --headless --path . "res://tests/test_replay_security.tscn"
+```
 
 ---
 
-## 8. Hướng Dẫn Vận Hành Qua Docker (Dockerization)
+## 7. Controls
 
-Dự án đã được Dockerize hoàn chỉnh với cấu hình Multi-stage Dockerfile và Nginx WebAssembly server:
-
-### 8.1. Khởi chạy Web Game chơi trực tiếp trên trình duyệt
-```bash
-docker compose up game --build
-```
-Mở trình duyệt truy cập: `http://localhost:8080`
-
-### 8.2. Chạy toàn bộ bộ kiểm thử tự động Headless
-```bash
-docker compose run --rm test
-```
-*Xem hướng dẫn chi tiết tại [`docs/DUNGEON_FOG_AND_BALANCE.md`](docs/DUNGEON_FOG_AND_BALANCE.md).*
+- **Movement**: W, A, S, D or Arrow Keys
+- **Primary Attack**: Left Mouse Button
+- **Special Skill**: Q
+- **Secondary Action / Skill**: Right Mouse Button
+- **Guard Stance (Yugi)**: Hold Shift
+- **Gadget Page Selection (Doraemon)**: Mouse Scroll Wheel, Z, X
+- **Eat Snack / Dorayaki (Doraemon)**: F
+- **Interact / Pick Up**: E
+- **Drop Item**: G or Right-Click inventory slot
+- **Backpack / Inventory Toggle**: B, I, or Tab
+- **Minimap Toggle**: M
+- **Audio Mute Toggle**: N
+- **Pause Menu**: Escape

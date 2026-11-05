@@ -67,7 +67,7 @@ func _build_extra_pause_controls() -> void:
 	new_seed_btn.pressed.connect(func():
 		get_tree().paused = false
 		if get_node_or_null("/root/GameManager") != null:
-			var s := GameManager.generate_random_seed()
+			var s: String = GameManager.generate_random_seed()
 			GameManager.replay_seed_run(s, GameManager.selected_character_index)
 		else:
 			get_tree().reload_current_scene()

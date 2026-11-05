@@ -11,6 +11,7 @@ const MAX_SEED_LENGTH: int = 32
 const MAX_NOTE_LENGTH: int = 80
 const MAX_SAVED_SEEDS: int = 20
 const MAX_RUN_HISTORY: int = 15
+const MAX_SAVED_REPLAYS: int = 10 # Giới hạn tối đa 10 replay chống tràn RAM / Memory Leaks
 const MAX_REPLAY_FRAMES: int = 18000
 const MAX_DISK_REPLAY_FRAMES: int = 3600
 const MAX_SAVE_FILE_BYTES: int = 2097152 # 2 MB chống DoS / Memory Exhaustion
@@ -23,6 +24,8 @@ const CHARACTER_SCENES: Array[PackedScene] = [
 	preload("res://Scene/Character/Player 2_Olaf/player_2.tscn"),
 	preload("res://Scene/Character/Player 1_Pyrois/player.tscn"),
 	preload("res://Scene/Character/Player 4_Charlotte/player_4.tscn"),
+	preload("res://Scene/Character/Yugi/yugi.tscn"),
+	preload("res://Scene/Character/Doraemon/doraemon.tscn"),
 ]
 
 var WORLD_LORE: Dictionary = BalanceData.WORLD_LORE
@@ -107,7 +110,17 @@ static func _sanitize_replay_frames(raw_frames: Variant, max_count: int) -> Arra
 			"atk": bool(item.get("atk", false)) if item.get("atk") is bool else false,
 			"q": bool(item.get("q", false)) if item.get("q") is bool else false,
 			"rmb": bool(item.get("rmb", false)) if item.get("rmb") is bool else false,
-			"slot": clampi(slot_idx, -1, 15)
+			"slot": clampi(slot_idx, -1, 15),
+			# Yugi-specific inputs (Shift guard, mouse press/release, Q special result)
+			"shift": item.get("shift", false) == true,
+			"lp": item.get("lp", false) == true,
+			"lr": item.get("lr", false) == true,
+			"rp": item.get("rp", false) == true,
+			"rr": item.get("rr", false) == true,
+			"result": clampi(int(item.get("result", 0)), 0, 5) if item.get("result", 0) is int else 0,
+			# Doraemon's 4D pocket: gadget page switch (-n..n) and Dorayaki key
+			"pg": clampi(int(item.get("pg", 0)), -10, 10) if (item.get("pg", 0) is int or item.get("pg", 0) is float) else 0,
+			"eat": item.get("eat", false) == true
 		})
 	return safe_frames
 
@@ -156,8 +169,37 @@ func start_new_run(custom_seed: String = "", replay_mode: bool = false, frames_t
 func record_frame_input(frame_data: Dictionary) -> void:
 	if is_replaying:
 		return
-	if current_recording_frames.size() < MAX_REPLAY_FRAMES:
-		current_recording_frames.append(frame_data)
+	if current_recording_frames.size() >= MAX_REPLAY_FRAMES:
+		return
+
+	# Nén/khử trùng lặp trạng thái đứng yên (anti-DoS / memory ballooning):
+	# Nếu nhân vật không thao tác và hướng chuột không đổi, không lặp lại frame tĩnh
+	if not current_recording_frames.is_empty():
+		var last_f: Dictionary = current_recording_frames[-1]
+		var is_idle: bool = (
+			float(frame_data.get("dx", 0.0)) == 0.0 and float(frame_data.get("dy", 0.0)) == 0.0
+			and not bool(frame_data.get("atk", false)) and not bool(frame_data.get("q", false))
+			and not bool(frame_data.get("rmb", false)) and not bool(frame_data.get("shift", false))
+			and not bool(frame_data.get("lp", false)) and not bool(frame_data.get("lr", false))
+			and not bool(frame_data.get("rp", false)) and not bool(frame_data.get("rr", false))
+			and int(frame_data.get("pg", 0)) == 0 and not bool(frame_data.get("eat", false))
+			and int(frame_data.get("slot", -1)) == -1
+		)
+		var last_idle: bool = (
+			float(last_f.get("dx", 0.0)) == 0.0 and float(last_f.get("dy", 0.0)) == 0.0
+			and not bool(last_f.get("atk", false)) and not bool(last_f.get("q", false))
+			and not bool(last_f.get("rmb", false)) and not bool(last_f.get("shift", false))
+			and not bool(last_f.get("lp", false)) and not bool(last_f.get("lr", false))
+			and not bool(last_f.get("rp", false)) and not bool(last_f.get("rr", false))
+			and int(last_f.get("pg", 0)) == 0 and not bool(last_f.get("eat", false))
+			and int(last_f.get("slot", -1)) == -1
+			and absf(float(last_f.get("ax", 0.0)) - float(frame_data.get("ax", 0.0))) < 1.0
+			and absf(float(last_f.get("ay", 0.0)) - float(frame_data.get("ay", 0.0))) < 1.0
+		)
+		if is_idle and last_idle:
+			return
+
+	current_recording_frames.append(frame_data)
 
 func register_enemy_kill() -> void:
 	enemies_killed += 1
@@ -183,16 +225,70 @@ func finish_run(reason: String = "Game Over") -> void:
 		last_recorded_run = entry.duplicate(true)
 		last_recorded_run["frames"] = current_recording_frames.duplicate(true)
 		entry["has_replay"] = true
-		entry["frames"] = current_recording_frames.slice(0, min(current_recording_frames.size(), MAX_DISK_REPLAY_FRAMES))
+		entry["frames"] = current_recording_frames.slice(0, mini(current_recording_frames.size(), MAX_DISK_REPLAY_FRAMES))
 	else:
 		entry["has_replay"] = false
 		entry["frames"] = []
 
 	run_history.push_front(entry)
+	enforce_replay_limits()
 	if run_history.size() > MAX_RUN_HISTORY:
 		run_history.resize(MAX_RUN_HISTORY)
 	save_data_to_disk()
 	saved_data_changed.emit()
+
+# --- CƠ CHẾ GIỚI HẠN & GIẢI PHÓNG BỘ NHỚ REPLAY (ANTI-MEMORY LEAK / MULTIPLAYER READY) ---
+func enforce_replay_limits() -> void:
+	var replay_count := 0
+	for item in run_history:
+		if bool(item.get("has_replay", false)) and item.has("frames") and not item["frames"].is_empty():
+			replay_count += 1
+			if replay_count > MAX_SAVED_REPLAYS:
+				# Thu hồi vùng nhớ các mảng frame của các replay cũ vượt quá giới hạn 10
+				item["frames"].clear()
+				item["has_replay"] = false
+
+func delete_replay(run_entry: Dictionary) -> bool:
+	for entry in run_history:
+		if entry == run_entry or (entry.get("date") == run_entry.get("date") and entry.get("seed") == run_entry.get("seed")):
+			if entry.has("frames") and entry["frames"] is Array:
+				entry["frames"].clear()
+			entry["has_replay"] = false
+			if last_recorded_run.get("date") == entry.get("date"):
+				last_recorded_run.clear()
+			save_data_to_disk()
+			saved_data_changed.emit()
+			return true
+	return false
+
+func delete_run_history_entry(index: int) -> bool:
+	if index >= 0 and index < run_history.size():
+		var entry = run_history[index]
+		if entry.has("frames") and entry["frames"] is Array:
+			entry["frames"].clear()
+		run_history.remove_at(index)
+		save_data_to_disk()
+		saved_data_changed.emit()
+		return true
+	return false
+
+func clear_all_replays() -> void:
+	for entry in run_history:
+		if entry.has("frames") and entry["frames"] is Array:
+			entry["frames"].clear()
+		entry["has_replay"] = false
+	last_recorded_run.clear()
+	replay_frames.clear()
+	current_recording_frames.clear()
+	save_data_to_disk()
+	saved_data_changed.emit()
+
+func get_saved_replays_count() -> int:
+	var count := 0
+	for entry in run_history:
+		if bool(entry.get("has_replay", false)) and not entry.get("frames", []).is_empty():
+			count += 1
+	return count
 
 func save_seed_entry(seed_str: String, note: String = "", hero_idx: int = -1) -> void:
 	var clean_seed := sanitize_seed(seed_str)
@@ -317,6 +413,7 @@ func load_save_data() -> void:
 					"has_replay": bool(r.get("has_replay", false)) and not safe_frames.is_empty(),
 					"frames": safe_frames
 				})
+		enforce_replay_limits()
 	if parsed.has("last_recorded_run") and parsed["last_recorded_run"] is Dictionary:
 		var lr: Dictionary = parsed["last_recorded_run"]
 		var lr_frames := _sanitize_replay_frames(lr.get("frames", []), MAX_REPLAY_FRAMES)
