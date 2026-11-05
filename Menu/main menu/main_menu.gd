@@ -14,6 +14,7 @@ var history_list_vbox: VBoxContainer = null
 var seed_modal: PanelContainer = null
 var lore_modal: PanelContainer = null
 var help_modal: PanelContainer = null
+var history_hdr_label: Label = null
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -261,10 +262,10 @@ func _build_seed_and_replay_modal() -> void:
 	right_vbox.add_theme_constant_override("separation", 8)
 	right_panel.add_child(right_vbox)
 
-	var r_hdr := Label.new()
-	r_hdr.text = "EXPEDITION HISTORY & REPLAYS:"
-	UITheme.style_header_label(r_hdr, 13, UITheme.COLOR_TEXT_GOLD)
-	right_vbox.add_child(r_hdr)
+	history_hdr_label = Label.new()
+	history_hdr_label.text = "EXPEDITION HISTORY & REPLAYS (Saved: 0/10):"
+	UITheme.style_header_label(history_hdr_label, 13, UITheme.COLOR_TEXT_GOLD)
+	right_vbox.add_child(history_hdr_label)
 
 	var r_scroll := ScrollContainer.new()
 	r_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -358,7 +359,18 @@ func _refresh_seed_lists() -> void:
 				)
 				row.add_child(watch_btn)
 
+				var del_replay_btn := UITheme.create_danger_button("Del", "", Vector2(50, 28), 11)
+				del_replay_btn.tooltip_text = "Delete replay data to free memory"
+				del_replay_btn.pressed.connect(func():
+					GameManager.delete_replay(run_item)
+					_refresh_seed_lists()
+				)
+				row.add_child(del_replay_btn)
+
 			history_list_vbox.add_child(card)
+
+	if history_hdr_label != null:
+		history_hdr_label.text = "EXPEDITION HISTORY & REPLAYS (Saved: %d/10):" % GameManager.get_saved_replays_count()
 
 func _build_lore_modal() -> void:
 	lore_modal = PanelContainer.new()
