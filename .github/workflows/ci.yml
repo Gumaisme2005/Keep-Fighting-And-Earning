@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  GODOT_VERSION: "4.3.0"
+  GODOT_VERSION: "4.7.2"
 
 jobs:
   automated-tests-and-benchmark:
@@ -60,6 +60,14 @@ jobs:
       - name: 8. Run Werewolf Functional and Integration Tests (50 Checks)
         run: |
           godot --headless "res://tests/test_werewolf.tscn"
+
+      - name: 9. Run MOBA HUD & Minecraft Inventory Stacking Tests (26 Checks)
+        run: |
+          godot --headless "res://tests/test_moba_hud_and_inventory.tscn"
+
+      - name: 10. Run Replay Capacity & Memory Protection Tests (39 Checks)
+        run: |
+          godot --headless "res://tests/test_replay_security.tscn"
 
       - name: Upload Benchmark Evidence Artifact
         uses: actions/upload-artifact@v4

@@ -155,7 +155,7 @@ The test suite is executable headlessly in Godot Engine:
 ## 6. Execution Instructions
 
 ### 6.1 Prerequisites
-- Godot Engine 4.3 or later (Console / Headless binary recommended for automated tests).
+- Godot Engine 4.7 or later (Console / Headless binary recommended for automated tests).
 
 ### 6.2 Running the Game
 Launch the project through Godot Engine or execute:
