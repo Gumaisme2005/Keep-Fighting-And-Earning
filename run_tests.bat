@@ -98,10 +98,19 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 echo.
-echo [9/9] Running MOBA HUD, Stacking and Equipment Tests (34 checks)...
+echo [9/10] Running MOBA HUD, Stacking and Equipment Tests (34 checks)...
 "!GODOT_BIN!" --headless --path . "res://tests/test_moba_hud_and_inventory.tscn"
 if !ERRORLEVEL! NEQ 0 (
     echo [FAILED] MOBA HUD and Inventory Tests failed.
+    pause
+    exit /b 1
+)
+
+echo.
+echo [10/10] Running Replay Capacity and Memory Protection Tests (39 checks)...
+"!GODOT_BIN!" --headless --path . "res://tests/test_replay_security.tscn"
+if !ERRORLEVEL! NEQ 0 (
+    echo [FAILED] Replay Capacity and Memory Protection Tests failed.
     pause
     exit /b 1
 )

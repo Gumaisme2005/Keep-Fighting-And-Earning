@@ -181,10 +181,10 @@ func _test_ut07_multi_level_seed_derivation() -> void:
 	gen_lv2.get_parent().free()
 
 func _test_ut08_security_seed_and_replay_sanitization() -> void:
-	var malicious_seed := "<script>alert(1)</script>../../etc/passwd;DROP_TABLE_USERS_1234567890"
-	var sanitized := GameManager.sanitize_seed(malicious_seed)
-	var valid_len := sanitized.length() > 0 and sanitized.length() <= GameManager.MAX_SEED_LENGTH
-	var no_bad_chars := not sanitized.contains("<") and not sanitized.contains(">") and not sanitized.contains("/") and not sanitized.contains(".") and not sanitized.contains(";")
+	var malicious_seed: String = "<script>alert(1)</script>../../etc/passwd;DROP_TABLE_USERS_1234567890"
+	var sanitized: String = GameManager.sanitize_seed(malicious_seed)
+	var valid_len: bool = sanitized.length() > 0 and sanitized.length() <= GameManager.MAX_SEED_LENGTH
+	var no_bad_chars: bool = not sanitized.contains("<") and not sanitized.contains(">") and not sanitized.contains("/") and not sanitized.contains(".") and not sanitized.contains(";")
 	_assert_true(
 		valid_len and no_bad_chars,
 		"UT-08a: Security seed sanitization blocks XSS/traversal/SQLi chars and enforces max length <= 32",
@@ -195,7 +195,7 @@ func _test_ut08_security_seed_and_replay_sanitization() -> void:
 		{"dx": 999.0, "dy": -999.0, "ax": INF, "ay": NAN, "atk": "truthy", "slot": 999},
 		"invalid_non_dict_element"
 	]
-	var clean_frames := GameManager._sanitize_replay_frames(malformed_frames, 10)
+	var clean_frames: Array = GameManager._sanitize_replay_frames(malformed_frames, 10)
 	var f0: Dictionary = clean_frames[0] if clean_frames.size() > 0 else {}
 	var bounds_ok: bool = (
 		clean_frames.size() == 1
@@ -228,7 +228,7 @@ func _test_ut09_ui_scenes_and_theme_integrity() -> void:
 	var over_inst := over_scene.instantiate()
 	add_child(over_inst)
 
-	var icon_tex := UITheme.get_icon("soul_stone")
+	var icon_tex: Texture2D = UITheme.get_icon("soul_stone")
 	var ui_ok := (
 		menu_inst != null and char_inst != null and hud_inst != null
 		and pause_inst != null and over_inst != null
