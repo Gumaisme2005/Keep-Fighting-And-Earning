@@ -4,6 +4,7 @@ const Sprites = preload("res://Scene/Character/Yugi/YugiSprites.gd")
 const Flash = preload("res://Scene/Character/Yugi/explosion_flash.gd")
 const RELEASE_TIME := 0.8
 const IMPACT_TIME := 1.3
+const DAMAGE_RATIO := 0.5
 var caster: Node2D
 var room_rect := Rect2i()
 var elapsed := 0.0
@@ -95,7 +96,7 @@ func _detonate() -> void:
 	# Snapshot all HP before applying any hits; death callbacks cannot change the mean.
 	var total_hp := 0.0
 	for target in targets: total_hp += float(target.get("hp"))
-	last_damage = roundi(total_hp / targets.size()) if not targets.is_empty() else 0
+	last_damage = maxi(1, floori(total_hp / targets.size() * DAMAGE_RATIO)) if not targets.is_empty() else 0
 	for target in targets:
 		if is_instance_valid(target): target.take_damage(last_damage)
 	var flash := Flash.new()

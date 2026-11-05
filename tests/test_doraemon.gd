@@ -90,7 +90,7 @@ func _ready() -> void:
 	print("\n=== DORAEMON TESTS ===")
 	GameManager.set_character_by_index(5)
 	var info: Dictionary = GameManager.get_selected_character_info()
-	_check(info.get("id") == "doraemon" and GameManager.CHARACTER_SCENES.size() == 6 and GameManager.CHARACTER_INFO.size() == 6,
+	_check(info.get("id") == "doraemon" and GameManager.CHARACTER_SCENES.size() >= 6 and GameManager.CHARACTER_INFO.size() == GameManager.CHARACTER_SCENES.size(),
 		"DR-01: Doraemon is the 6th hero (index 5) in roster, scenes and balance data")
 	GameManager.current_seed = "ALOALO1234"
 	GameManager.current_level = 1
@@ -239,7 +239,15 @@ func _ready() -> void:
 		"DR-11: Magic Hand reaches 110px with its own hand sprite, slaps once and trips the enemy",
 		"hits=%d tripped=%s grip_pose=%s" % [hand_target.hits, str(tripped), str(grip_pose)])
 
-	# --- DR-12: Air Cannon blocked by wooden crate decoration
+	# --- The sword hitbox turns with Doraemon
+	_reset_field([])
+	await _press("none", 3, Vector2(-60, 0))
+	var hb_left: bool = p.sword_hitbox.scale.x == -1.0 and p.sword_collision.global_position.x < p.global_position.x
+	await _press("none", 3, Vector2(60, 0))
+	var hb_right: bool = p.sword_hitbox.scale.x == 1.0 and p.sword_collision.global_position.x > p.global_position.x
+	_check(hb_left and hb_right, "DR-12: The hitbox turns with Doraemon (left / right)")
+
+	# --- DR-13: Air Cannon blocked by wooden crate decoration
 	_reset_field([Vector2(64, 0)])
 	p.page = 0
 	var crate_cell: Vector2i = gen.local_to_map(gen.to_local(home + Vector2(32, 0)))
@@ -247,7 +255,7 @@ func _ready() -> void:
 	await _press("atk", 60, Vector2(64, 0))
 	var crate_blocked: bool = (_total_damage() == 0)
 	gen.erase_cell(gen.LAYER_DECOR, crate_cell)
-	_check(crate_blocked, "DR-12: Air Cannon is blocked by wooden crates and cannot hit enemies behind crates")
+	_check(crate_blocked, "DR-13: Air Cannon is blocked by wooden crates and cannot hit enemies behind crates")
 
 	GameManager.is_replaying = false
 	print("[SUMMARY] DORAEMON: %d PASSED | %d FAILED" % [passed, failed])

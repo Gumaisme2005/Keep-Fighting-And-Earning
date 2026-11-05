@@ -103,6 +103,8 @@ func _physics_process(delta: float) -> void:
 		return
 	current_aim_offset = Vector2(float(f.get("ax", 32)), float(f.get("ay", 0)))
 	animated_sprite.flip_h = current_aim_offset.x < 0
+	# Keep the (inherited) sword hitbox on the side Yugi faces, like the base hero does.
+	sword_hitbox.scale.x = -1.0 if animated_sprite.flip_h else 1.0
 	var move := Vector2(float(f.get("dx", 0)), float(f.get("dy", 0)))
 	var shift := bool(f.get("shift", false))
 	if not shift: suppress_guard = false

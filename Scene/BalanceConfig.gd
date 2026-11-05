@@ -18,9 +18,9 @@ The White Council has summoned four champions to form the Fellowship Vanguard, g
 
 # ------------------------------------------------------------------------------
 # 1. CHAMPION ROSTER & COMBAT BALANCE TABLE
-# Order in CharacterSelect: 0 = Miya, 1 = Olaf, 2 = Pyrois, 3 = Charlotte, 4 = Yugi, 5 = Doraemon
+# Order in CharacterSelect: 0 = Miya, 1 = Olaf, 2 = Pyrois, 3 = Charlotte, 4 = Yugi, 5 = Doraemon, 6 = Miyabi, 7 = Lương Thơ
 # ------------------------------------------------------------------------------
-const HERO_ORDER: Array[String] = ["miya", "olaf", "pyrois", "charlotte", "yugi", "doraemon"]
+const HERO_ORDER: Array[String] = ["miya", "olaf", "pyrois", "charlotte", "yugi", "doraemon", "miyabi", "luong_tho"]
 
 static var HERO_STATS: Dictionary = {
 	"miya": {
@@ -133,6 +133,49 @@ static var HERO_STATS: Dictionary = {
 		"lore": "A robot cat from the future fighting with the whole 4D Pocket: Air Cannon, Anywhere Door, Shock Gun, Pencil Missiles, a dango-tamed T-Rex, Mini-Doras, his friends on Take-copters and ten super moves fuelled by a 3-bar power gauge.",
 		"skill_q": "Friends / Super — Key Q: summon the next friend (Nobita, Gian, Shizuka, Dorami, Suneo, Come-come Cat). With a full power bar: the current page's SUPER. F: eat a Dorayaki.",
 		"skill_rmb": "4D Pocket — Mouse Wheel or Z / X: switch gadget page (10 pages). Left / Right Click: use the page's two gadgets."
+	},
+	"miyabi": {
+		"index": 6,
+		"id": "miyabi",
+		"name": "Hoshimi Miyabi",
+		"role": "Frost Swordswoman",
+		"weapon": "Frostbound Blade & Ice Spirit",
+		"skill_icon": "sword_royal",
+		"hp": 4,
+		"armor": 2,
+		"damage": 1,
+		"speed": 160.0,
+		"skill_cooldown": 8.0,
+		"rmb_cooldown": 2.0,
+		"dash_cooldown": 1.2,
+		"dash_distance": 72.0,
+		"dash_damage_mult": 2,
+		"bloom_damage_mult": 3,
+		"bloom_freeze": 1.2,
+		"spirit_cooldown": 2.0,
+		"lore": "A swift swordswoman whose blade leaves frost in its wake. An ice spirit floats at her shoulder and fires spirit bolts at the nearest foe on its own. Left Click: 3-hit frost combo. Shift: dash slash.",
+		"skill_q": "Frost Bloom — Key Q: Drive the blade into the ground; a line of ice spikes erupts in front of her (3x damage + freeze), then shatters (1x). Cooldown: 8s.",
+		"skill_rmb": "Frost Wave — Hold Right Click to charge, release to send a frost wave (1x / 2x / 3x; full charge freezes). Cooldown: 2s."
+	},
+	"luong_tho": {
+		"index": 7,
+		"id": "luong_tho",
+		"name": "Lương Thơ",
+		"role": "Twin Gunblade Duelist",
+		"weapon": "Twin Tonfa-Gunblades",
+		"skill_icon": "sword_large",
+		"hp": 5,
+		"armor": 2,
+		"damage": 1,
+		"speed": 155.0,
+		"skill_cooldown": 20.0,
+		"rmb_cooldown": 0.8,
+		"upgrade_duration": 12.0,
+		"bullet_speed": 320.0,
+		"bullet_range": 220.0,
+		"lore": "A duelist wielding twin tonfa-gunblades - hammer heads, gear boxes and long barrels. She keeps them on her back until the fight starts. Left Click: 3-step combo Stab -> Twin Swing -> Ground Smash (2x + daze).",
+		"skill_q": "White Moon — Key Q: Transform into the white-haired form for 12s: immune to all damage, +1 damage on every hit, 25% faster attacks, 20% faster movement, piercing rounds. Cooldown: 20s.",
+		"skill_rmb": "Twin Barrels — Right Click: Fire both barrels along the aim, 2 rounds (hold to keep firing). Cooldown: 0.8s."
 	}
 }
 

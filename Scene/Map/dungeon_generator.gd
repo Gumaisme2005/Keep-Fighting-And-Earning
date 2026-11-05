@@ -678,10 +678,15 @@ func is_global_pos_wall_or_door(world_pos: Vector2) -> bool:
 	var cell: Vector2i = local_to_map(to_local(world_pos))
 	if get_cell_atlas_coords(LAYER_FLOOR, cell) != FLOOR_COORD:
 		return true
-	if get_layers_count() > LAYER_DECOR and get_cell_source_id(LAYER_DECOR, cell) != -1:
-		return true
 	if get_layers_count() > 2 and get_cell_source_id(2, cell) != -1:
 		return true
+	# Solid decorations (wooden crates) live on a separate layer from the floor.
+	# Only collision-bearing tiles block shots; purely visual decor stays transparent.
+	var decor: TileData = get_cell_tile_data(LAYER_DECOR, cell)
+	if decor != null and tile_set != null:
+		for layer in range(tile_set.get_physics_layers_count()):
+			if decor.get_collision_polygons_count(layer) > 0:
+				return true
 	return false
 
 func has_line_of_sight(from_global: Vector2, to_global: Vector2) -> bool:
@@ -691,15 +696,10 @@ func has_line_of_sight(from_global: Vector2, to_global: Vector2) -> bool:
 	if dist < 4.0:
 		return not is_global_pos_wall_or_door(to_global)
 	var steps: int = maxi(2, int(ceil(dist / 4.0)))
-	for s in range(1, steps):
+	for s in range(0, steps + 1):
 		var t: float = float(s) / float(steps)
 		var sample_local: Vector2 = p0.lerp(p1, t)
-		var cell: Vector2i = local_to_map(sample_local)
-		if get_cell_atlas_coords(LAYER_FLOOR, cell) != FLOOR_COORD:
-			return false
-		if get_layers_count() > LAYER_DECOR and get_cell_source_id(LAYER_DECOR, cell) != -1:
-			return false
-		if get_layers_count() > 2 and get_cell_source_id(2, cell) != -1:
+		if is_global_pos_wall_or_door(to_global(sample_local)):
 			return false
 	return true
 

@@ -32,7 +32,7 @@ Keep Fighting And Earning is a 2D top-down action roguelike developed using Godo
 
 ## 2. Playable Character Roster
 
-The roster features 6 distinct heroes, selectable from the character selection screen. All parameters reflect the centralized balance configuration in `Scene/BalanceConfig.gd`.
+The roster features 8 distinct heroes, selectable from the character selection screen. All parameters reflect the centralized balance configuration in `Scene/BalanceConfig.gd`.
 
 ### 2.1 Roster Overview Table
 
@@ -44,6 +44,8 @@ The roster features 6 distinct heroes, selectable from the character selection s
 | 3 | Charlotte | Dunedain Shadow Ranger | 5 | 0 | 2 | 180.0 | Twin Blades (high-speed dash and flurry, 0.28s CD) |
 | 4 | Yugi / Atem | Pharaoh Summoner | 5 | 1 | 1 | 150.0 | Millennium Puzzle (monsters, guard, room spells) |
 | 5 | Doraemon | 22nd-Century Specialist | 5 | 2 | 1 | 150.0 | 4D Pocket (20 gadgets, 6 assists, 10 supers) |
+| 6 | Hoshimi Miyabi | Frost Swordswoman | 4 | 2 | 1 | 160.0 | Frost combo, dash, charged wave, Frost Bloom and ice spirit |
+| 7 | Lương Thơ | Twin Gunblade Duelist | 5 | 2 | 1 | 155.0 | Three-hit combo, Twin Barrels and White Moon transformation |
 
 ### 2.2 Hero Profiles and Ability Breakdown
 
@@ -73,7 +75,7 @@ The roster features 6 distinct heroes, selectable from the character selection s
 - **Primary Attack (LMB)**: Quick monster strike (1x damage); holding for 0.65s charges a 2x damage attack.
 - **Secondary Action (RMB)**: Target-location summon (1x damage); holding for 0.65s charges a 3x damage summon.
 - **Defensive Stance (Hold Shift)**: Summons a guard spirit that reduces incoming threat and allows tactical repositioning. Clicking during guard executes a combo summon (2x damage).
-- **Special Skill (Q - Special Summon)**: Randomly casts 1 of 5 room-wide spells: Room Blast (explosion), Room Laser (piercing beam), Room Lightning (electrical shock), Room Pull (vortex draw), or Room Fire (burning ticks) (cooldown: 12.0s).
+- **Special Skill (Q - Special Summon)**: Randomly casts 1 of 5 room-wide spells: Room Blast (50% of average current enemy HP, rounded down, minimum 1), Room Laser (piercing beam), Room Lightning (electrical shock), Room Pull (vortex draw), or Room Fire (burning ticks) (cooldown: 12.0s).
 
 #### Index 5: Doraemon (22nd-Century Gadget Specialist)
 - **Playstyle**: Versatile hybrid fighter utilizing an extensive 4D pocket gadget arsenal and companion assists.
@@ -81,6 +83,15 @@ The roster features 6 distinct heroes, selectable from the character selection s
 - **Companion Assists (Q without full power bar)**: Summons 1 of 6 companions in rotation (Nobita, Gian, Shizuka, Dorami, Suneo, Come-come Cat) to execute an assist strike (cooldown: 8.0s).
 - **Super Moves (Q with power bar >= 100)**: Consumes accumulated power gauge to cast page-specific super abilities (Uradoraman, SL Chimney, Gian Recital, Dorayakin, etc.).
 - **Consumable (F - Dorayaki)**: Consumes a dorayaki to recover 1 HP and restore 40 power gauge points (cooldown: 12.0s).
+
+#### Index 6: Hoshimi Miyabi (Frost Swordswoman)
+- **LMB**: Three-hit frost combo; **Shift**: invulnerable slashing dash.
+- **Hold/release RMB**: Charged Frost Wave; **Q**: Frost Bloom ice spikes.
+- An ice spirit follows Miyabi and automatically attacks nearby visible enemies.
+
+#### Index 7: Lương Thơ (Twin Gunblade Duelist)
+- **LMB**: Stab, twin swing and ground-smash combo; **RMB**: Twin Barrels.
+- **Q**: White Moon transformation grants 12 seconds of invulnerability, stronger and faster attacks, faster movement and piercing bullets.
 
 ---
 
@@ -140,7 +151,7 @@ The test suite is executable headlessly in Godot Engine:
 5. **Skeleton King Arena Tests (`tests/test_skeleton_king.tscn`)**:
    - Tests specialized arena layout, crystal destruction, laser grid volleys, enrage states, and defeat transitions (21/21 passing).
 6. **Doraemon Hero Tests (`tests/test_doraemon.tscn`)**:
-   - Exercises all 20 gadgets, 6 companion assists, 10 super abilities, crate collision blocking, and pocket HUD pagination (48/48 passing).
+   - Exercises all 20 gadgets, 6 companion assists, 10 super abilities, crate collision blocking, and pocket HUD pagination and facing hitbox regression (49 checks).
 7. **Yugi Atem Hero Tests (`tests/test_yugi.tscn`)**:
    - Validates character animations, directional attacks, guard stance, and special summons.
 8. **Werewolf Functional Tests (`tests/test_werewolf.tscn`)**:
@@ -149,6 +160,11 @@ The test suite is executable headlessly in Godot Engine:
    - Validates numeric health and armor progress bars, Minecraft-style potion stacking up to 16, stack consumption, item dropping, and RPG equipment stat calculations (34/34 passing).
 10. **Replay Capacity and Memory Protection Tests (`tests/test_replay_security.tscn`)**:
     - Validates 10-replay hard cap enforcement, FIFO memory deallocation of old replay frames, manual replay deletion, clear all, and anti-DoS idle frame compression (39/39 passing).
+
+9. **MOBA HUD and Inventory Tests (`tests/test_moba_hud_and_inventory.tscn`)**: Numeric bars, item stacking, equipment and dropping items.
+10. **Miyabi Tests (`tests/test_miyabi.tscn`)**: Frost abilities, spirit, facing and replay.
+11. **Lương Thơ Tests (`tests/test_luong_tho.tscn`)**: Combo, firearms, transformation and replay.
+12. **Projectile Obstacle Tests (`tests/test_projectile_obstacles.tscn`)**: Crates block fast projectiles; ricochets bounce; non-solid decoration remains transparent.
 
 ---
 
