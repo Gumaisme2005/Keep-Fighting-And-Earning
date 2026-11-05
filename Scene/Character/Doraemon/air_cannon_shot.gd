@@ -19,7 +19,7 @@ func _ready() -> void:
 	var circle := CircleShape2D.new()
 	circle.radius = 7.0
 	shape.shape = circle
-	add_child(shape)
+	add_child(shape)https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/pull/33/conflict?name=Scene%252FMap%252Fdungeon_generator.gd&ancestor_oid=5bc9349e7b8cbffa1b8c17c4bfeffea35192e42d&base_oid=9d84a20fb1f54ce94ab21c10ee88592d006b8893&head_oid=b1d07b77e58de2dde681fc5393b57bea7a243347
 	sprite = Sprite2D.new()
 	sprite.texture = Sprites.texture("doraemon_air_shot.png")
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -27,14 +27,18 @@ func _ready() -> void:
 	sprite.rotation = direction.angle()
 	add_child(sprite)
 	area_entered.connect(_on_area_entered)
+	body_entered.connect(_on_body_entered)
 
 func _physics_process(delta: float) -> void:
 	if spent:
 		return
 	var step := direction * speed * delta
 	var tmap = get_parent()
-	if tmap != null and tmap.has_method("is_global_pos_wall_or_door"):
-		if tmap.is_global_pos_wall_or_door(global_position + step) or not tmap.has_line_of_sight(global_position, global_position + step):
+	if tmap != null:
+		if tmap.has_method("is_global_pos_wall_or_door") and tmap.is_global_pos_wall_or_door(global_position + step):
+			_burst()
+			return
+		if tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, global_position + step):
 			_burst()
 			return
 	global_position += step
@@ -43,6 +47,12 @@ func _physics_process(delta: float) -> void:
 	sprite.modulate.a = clampf(1.6 - travelled / max_distance, 0.0, 1.0)
 	if travelled >= max_distance:
 		queue_free()
+
+func _on_body_entered(body: Node2D) -> void:
+	if spent:
+		return
+	if body is TileMap or body is StaticBody2D:
+		_burst()
 
 func _on_area_entered(area: Area2D) -> void:
 	if spent or area.name != "Hurtbox":

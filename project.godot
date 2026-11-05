@@ -28,7 +28,7 @@ window/stretch/aspect="expand"
 
 [gui]
 
-theme/custom_font="res://Assets/Fonts/Grenze-Medium.ttf"
+theme/custom_font="res://Assets/Fonts/BeVietnamPro-Medium.ttf"
 
 [input]
 

@@ -24,6 +24,14 @@ var player: Node2D = null
 var inventory: Node = null
 var dungeon_map: TileMap = null
 
+# --- MOBA STATUS HUD (BARS & NUMBERS) ---
+var hero_name_label: Label = null
+var hero_dmg_label: Label = null
+var player_hp_bar: ProgressBar = null
+var player_hp_text: Label = null
+var player_armor_bar: ProgressBar = null
+var player_armor_text: Label = null
+
 # --- CÁC THÀNH PHẦN UI MỞ RỘNG ---
 var stats_summary_label: Label = null
 var seed_label: Label = null
@@ -182,11 +190,18 @@ func _ready() -> void:
 	if $HUD != null:
 		$HUD.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 
+	# Hide legacy individual heart/shield icon containers
+	if has_node("HUD/VBoxContainer/HBoxHP"):
+		$HUD/VBoxContainer/HBoxHP.visible = false
+	if has_node("HUD/VBoxContainer/HBoxShield"):
+		$HUD/VBoxContainer/HBoxShield.visible = false
+
 	for i in range(HOTBAR_SIZE):
 		var slot = SLOT_SCENE.instantiate()
 		hotbar_container.add_child(slot)
 		slot.slot_index = i
 		slot.slot_clicked.connect(_on_slot_clicked)
+		slot.slot_right_clicked.connect(_on_slot_right_clicked)
 		hotbar_slots.append(slot)
 
 	_build_enhanced_ui()
@@ -195,17 +210,111 @@ func _ready() -> void:
 	_connect_to_player_and_map()
 
 func _build_enhanced_ui() -> void:
-	# 1. Khung trạng thái Soul Knight ở góc trên bên trái
-	var stats_row := HBoxContainer.new()
-	stats_row.add_theme_constant_override("separation", 4)
-	stats_summary_label = Label.new()
-	stats_summary_label.add_theme_font_size_override("font_size", 9)
-	stats_summary_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_GOLD)
-	stats_summary_label.add_theme_color_override("font_outline_color", Color(0.08, 0.08, 0.12, 0.95))
-	stats_summary_label.add_theme_constant_override("outline_size", 2)
-	stats_summary_label.text = "DMG: 1  •  Armor: 4/4  •  HP: 4/4"
-	stats_row.add_child(stats_summary_label)
-	$HUD/VBoxContainer.add_child(stats_row)
+	# 1. MOBA-Style Health & Armor Status Panel (League of Legends style)
+	var moba_box := VBoxContainer.new()
+	moba_box.add_theme_constant_override("separation", 3)
+	moba_box.custom_minimum_size = Vector2(210, 0)
+
+	# Dòng tiêu đề: Tên Tướng + Chỉ số Sát thương
+	var header_row := HBoxContainer.new()
+	header_row.add_theme_constant_override("separation", 6)
+
+	hero_name_label = Label.new()
+	hero_name_label.add_theme_font_override("font", UITheme.FONT_TITLE)
+	hero_name_label.add_theme_font_size_override("font_size", 14)
+	hero_name_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_GOLD)
+	hero_name_label.add_theme_color_override("font_outline_color", Color(0.05, 0.05, 0.08, 0.95))
+	hero_name_label.add_theme_constant_override("outline_size", 2)
+	hero_name_label.text = "HERO"
+	header_row.add_child(hero_name_label)
+
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header_row.add_child(spacer)
+
+	hero_dmg_label = Label.new()
+	hero_dmg_label.add_theme_font_override("font", UITheme.FONT_BODY_BOLD)
+	hero_dmg_label.add_theme_font_size_override("font_size", 11)
+	hero_dmg_label.add_theme_color_override("font_color", Color(1.0, 0.90, 0.50))
+	hero_dmg_label.add_theme_color_override("font_outline_color", Color(0.05, 0.05, 0.08, 0.95))
+	hero_dmg_label.add_theme_constant_override("outline_size", 2)
+	hero_dmg_label.text = "⚔ 1 DMG"
+	header_row.add_child(hero_dmg_label)
+	moba_box.add_child(header_row)
+
+	# Thanh Máu (Health ProgressBar kèm số hiển thị trung tâm)
+	var hp_overlay := MarginContainer.new()
+	hp_overlay.custom_minimum_size = Vector2(210, 18)
+
+	player_hp_bar = ProgressBar.new()
+	player_hp_bar.custom_minimum_size = Vector2(210, 18)
+	player_hp_bar.show_percentage = false
+	player_hp_bar.min_value = 0
+	player_hp_bar.max_value = 100
+	player_hp_bar.value = 100
+
+	var hp_bg := StyleBoxFlat.new()
+	hp_bg.bg_color = Color(0.12, 0.07, 0.08, 0.92)
+	hp_bg.border_color = Color(0.32, 0.16, 0.18, 0.95)
+	hp_bg.set_border_width_all(1)
+	hp_bg.set_corner_radius_all(3)
+	player_hp_bar.add_theme_stylebox_override("background", hp_bg)
+
+	var hp_fill := StyleBoxFlat.new()
+	hp_fill.bg_color = Color(0.18, 0.78, 0.36)
+	hp_fill.set_corner_radius_all(3)
+	player_hp_bar.add_theme_stylebox_override("fill", hp_fill)
+	hp_overlay.add_child(player_hp_bar)
+
+	player_hp_text = Label.new()
+	player_hp_text.add_theme_font_override("font", UITheme.FONT_BODY_BOLD)
+	player_hp_text.add_theme_font_size_override("font_size", 10)
+	player_hp_text.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
+	player_hp_text.add_theme_color_override("font_outline_color", Color(0.02, 0.05, 0.02, 0.95))
+	player_hp_text.add_theme_constant_override("outline_size", 3)
+	player_hp_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	player_hp_text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	player_hp_text.text = "100 / 100"
+	hp_overlay.add_child(player_hp_text)
+	moba_box.add_child(hp_overlay)
+
+	# Thanh Giáp (Armor ProgressBar kèm số hiển thị trung tâm)
+	var armor_overlay := MarginContainer.new()
+	armor_overlay.custom_minimum_size = Vector2(210, 14)
+
+	player_armor_bar = ProgressBar.new()
+	player_armor_bar.custom_minimum_size = Vector2(210, 14)
+	player_armor_bar.show_percentage = false
+	player_armor_bar.min_value = 0
+	player_armor_bar.max_value = 100
+	player_armor_bar.value = 100
+
+	var arm_bg := StyleBoxFlat.new()
+	arm_bg.bg_color = Color(0.06, 0.10, 0.16, 0.92)
+	arm_bg.border_color = Color(0.18, 0.28, 0.42, 0.95)
+	arm_bg.set_border_width_all(1)
+	arm_bg.set_corner_radius_all(3)
+	player_armor_bar.add_theme_stylebox_override("background", arm_bg)
+
+	var arm_fill := StyleBoxFlat.new()
+	arm_fill.bg_color = Color(0.24, 0.62, 0.94)
+	arm_fill.set_corner_radius_all(3)
+	player_armor_bar.add_theme_stylebox_override("fill", arm_fill)
+	armor_overlay.add_child(player_armor_bar)
+
+	player_armor_text = Label.new()
+	player_armor_text.add_theme_font_override("font", UITheme.FONT_BODY_BOLD)
+	player_armor_text.add_theme_font_size_override("font_size", 9)
+	player_armor_text.add_theme_color_override("font_color", Color(0.92, 0.96, 1.0))
+	player_armor_text.add_theme_color_override("font_outline_color", Color(0.02, 0.04, 0.08, 0.95))
+	player_armor_text.add_theme_constant_override("outline_size", 3)
+	player_armor_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	player_armor_text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	player_armor_text.text = "5 / 5"
+	armor_overlay.add_child(player_armor_text)
+	moba_box.add_child(armor_overlay)
+
+	$HUD/VBoxContainer.add_child(moba_box)
 
 	# 2. Panel Góc Trên Phải: Tầng, Hạ gục, Seed & Phím điều khiển nhanh
 	var top_right := VBoxContainer.new()
@@ -396,7 +505,7 @@ func _build_enhanced_ui() -> void:
 	rmb_hbox.add_child(skill_rmb_label)
 	skill_rmb_panel.add_child(rmb_hbox)
 
-	bag_button = UITheme.create_button("Inventory — Press I", "", Vector2(180, 28), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 11)
+	bag_button = UITheme.create_button("Backpack [B / I]", "", Vector2(180, 28), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 11)
 	bag_button.focus_mode = Control.FOCUS_NONE
 	bag_button.pressed.connect(toggle_inventory_modal)
 	bottom_bar.add_child(bag_button)
@@ -568,6 +677,7 @@ func _build_inventory_modal() -> void:
 		slot.custom_minimum_size = Vector2(42, 42)
 		slot.slot_index = i
 		slot.slot_clicked.connect(_on_slot_clicked)
+		slot.slot_right_clicked.connect(_on_slot_right_clicked)
 		grid.add_child(slot)
 		bag_slots.append(slot)
 
@@ -648,8 +758,11 @@ func _connect_to_player_and_map() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == KEY_I or event.keycode == KEY_TAB:
+		if event.keycode == KEY_I or event.keycode == KEY_TAB or event.keycode == KEY_B:
 			toggle_inventory_modal()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_G:
+			_quick_drop_item()
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_M:
 			_toggle_minimap_size()
@@ -657,6 +770,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_N:
 			_on_toggle_mute_pressed()
 			get_viewport().set_input_as_handled()
+
+func _quick_drop_item() -> void:
+	if inventory != null and player != null and inventory.bag.size() > 0:
+		var item = inventory.bag[0]
+		var item_name: String = item.item_name if item != null else "Item"
+		var drop_pos: Vector2 = player.global_position + Vector2(16, 0)
+		if inventory.has_method("drop_item"):
+			if inventory.drop_item(0, false, drop_pos):
+				show_toast("Dropped 1x " + item_name)
 
 func _on_toggle_mute_pressed() -> void:
 	if get_node_or_null("/root/AudioManager") != null:
@@ -775,40 +897,57 @@ func _on_skill_cooldown_changed(q_left: float, _q_max: float, rmb_left: float, r
 			skill_rmb_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_MUTED)
 
 func update_hud(current_hp: int, max_hp: int, current_shield: int, max_shield: int) -> void:
-	for child in heart_bar.get_children():
-		child.queue_free()
+	# 1. Cập nhật thanh Máu dạng số chuẩn MOBA (Health Bar & Numeric Text)
+	if player_hp_bar != null:
+		player_hp_bar.max_value = max(1, max_hp)
+		player_hp_bar.value = clamp(current_hp, 0, max_hp)
 
-	for i in range(max_hp):
-		var heart = TextureRect.new()
-		heart.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		heart.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		heart.texture = heart_full if i < current_hp else heart_empty
-		heart_bar.add_child(heart)
+		var hp_ratio := float(current_hp) / float(max(1, max_hp))
+		var fill_style: StyleBoxFlat = player_hp_bar.get_theme_stylebox("fill").duplicate()
+		if hp_ratio > 0.5:
+			fill_style.bg_color = Color(0.18, 0.78, 0.36)
+		elif hp_ratio > 0.25:
+			fill_style.bg_color = Color(0.92, 0.65, 0.18)
+		else:
+			fill_style.bg_color = Color(0.88, 0.22, 0.22)
+		player_hp_bar.add_theme_stylebox_override("fill", fill_style)
 
-	for child in shield_bar.get_children():
-		child.queue_free()
+	if player_hp_text != null:
+		player_hp_text.text = "%d / %d" % [current_hp, max_hp]
 
-	for i in range(max_shield):
-		var shield = TextureRect.new()
-		shield.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		shield.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		shield.texture = shield_full if i < current_shield else shield_empty
-		shield_bar.add_child(shield)
+	# 2. Cập nhật thanh Giáp dạng số chuẩn MOBA (Armor Bar & Numeric Text)
+	if player_armor_bar != null:
+		player_armor_bar.max_value = max(1, max_shield)
+		player_armor_bar.value = clamp(current_shield, 0, max_shield)
 
-	if stats_summary_label != null and player != null:
-		var dmg = player.get_total_damage() if player.has_method("get_total_damage") else 1
-		var hero_prefix := ""
+	if player_armor_text != null:
+		player_armor_text.text = "%d / %d" % [current_shield, max_shield]
+
+	# 3. Cập nhật Tiêu đề Tướng và Chỉ số Sát thương
+	if hero_name_label != null:
+		var hero_title := "HERO"
 		if get_node_or_null("/root/GameManager") != null:
 			var h_info: Dictionary = GameManager.get_selected_character_info()
 			if h_info.has("name"):
-				hero_prefix = "%s  •  " % String(h_info["name"]).to_upper()
-		stats_summary_label.text = "%sHP: %d/%d  •  Armor: %d/%d  •  DMG: %d" % [
-			hero_prefix, current_hp, max_hp, current_shield, max_shield, dmg
-		]
+				hero_title = String(h_info["name"]).to_upper()
+		hero_name_label.text = hero_title
+
+	if hero_dmg_label != null and player != null:
+		var dmg = player.get_total_damage() if player.has_method("get_total_damage") else 1
+		hero_dmg_label.text = "⚔ %d DMG" % dmg
 
 func _on_slot_clicked(index: int) -> void:
 	if inventory != null and player != null and index >= 0:
 		inventory.use_or_equip_item(index, player)
+
+func _on_slot_right_clicked(index: int) -> void:
+	if inventory != null and player != null and index >= 0 and index < inventory.bag.size():
+		var item = inventory.bag[index]
+		var item_name: String = item.item_name if item != null else "Item"
+		var drop_pos: Vector2 = player.global_position + Vector2(16, 0)
+		if inventory.has_method("drop_item"):
+			if inventory.drop_item(index, false, drop_pos):
+				show_toast("Dropped 1x " + item_name)
 
 func refresh_ui() -> void:
 	if inventory == null:
@@ -826,7 +965,7 @@ func refresh_ui() -> void:
 			bag_slots[i].set_item(null)
 
 	if bag_button != null:
-		bag_button.text = "Backpack: %d / %d" % [inventory.bag.size(), inventory.max_slots]
+		bag_button.text = "Backpack: %d / %d [B]" % [inventory.bag.size(), inventory.max_slots]
 
 	if equip_helmet_slot != null:
 		equip_helmet_slot.set_item(inventory.equipped_helmet)
@@ -837,11 +976,21 @@ func refresh_ui() -> void:
 
 	if equip_stats_label != null and player != null:
 		var total_dmg = player.get_total_damage() if player.has_method("get_total_damage") else 1
-		equip_stats_label.text = "TOTAL ATTRIBUTES:\n• Attack Power: %d • Weapon: +%d\n• Total Defense: +%d\n• Bonus Max HP: +%d" % [
+		var extra_stats: Array[String] = []
+		if inventory.has_method("get_magic_resistance") and inventory.get_magic_resistance() > 0:
+			extra_stats.append("• Magic Resist: +%d" % inventory.get_magic_resistance())
+		if inventory.has_method("get_speed_bonus") and inventory.get_speed_bonus() > 0.0:
+			extra_stats.append("• Move Speed: +%d%%" % int(inventory.get_speed_bonus() * 100))
+		if inventory.has_method("get_attack_speed_bonus") and inventory.get_attack_speed_bonus() > 0.0:
+			extra_stats.append("• Attack Speed: +%d%%" % int(inventory.get_attack_speed_bonus() * 100))
+
+		var extra_text := ("\n" + "\n".join(extra_stats)) if not extra_stats.is_empty() else ""
+		equip_stats_label.text = "TOTAL ATTRIBUTES:\n• Attack Power: %d • Weapon: +%d\n• Physical Defense: +%d\n• Bonus Max HP: +%d%s" % [
 			total_dmg,
 			inventory.get_weapon_damage(),
 			inventory.get_total_defense(),
-			inventory.get_total_max_hp_bonus()
+			inventory.get_total_max_hp_bonus(),
+			extra_text
 		]
 
 func show_banner(text: String, color: Color = Color.WHITE) -> void:

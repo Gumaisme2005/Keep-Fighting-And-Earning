@@ -246,6 +246,15 @@ func _ready() -> void:
 	await _press("none", 3, Vector2(60, 0))
 	var hb_right: bool = p.sword_hitbox.scale.x == 1.0 and p.sword_collision.global_position.x > p.global_position.x
 	_check(hb_left and hb_right, "DR-12: The hitbox turns with Doraemon (left / right)")
+	# --- DR-12: Air Cannon blocked by wooden crate decoration
+	_reset_field([Vector2(64, 0)])
+	p.page = 0
+	var crate_cell: Vector2i = gen.local_to_map(gen.to_local(home + Vector2(32, 0)))
+	gen.set_cell(gen.LAYER_DECOR, crate_cell, gen.SOURCE_OBJECTS, Vector2i(1, 2))
+	await _press("atk", 60, Vector2(64, 0))
+	var crate_blocked: bool = (_total_damage() == 0)
+	gen.erase_cell(gen.LAYER_DECOR, crate_cell)
+	_check(crate_blocked, "DR-12: Air Cannon is blocked by wooden crates and cannot hit enemies behind crates")
 
 	GameManager.is_replaying = false
 	print("[SUMMARY] DORAEMON: %d PASSED | %d FAILED" % [passed, failed])
