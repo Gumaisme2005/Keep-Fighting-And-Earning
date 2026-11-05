@@ -16,9 +16,17 @@ Keep Fighting And Earning is a 2D top-down action roguelike developed using Godo
 - **Line-of-Sight (LoS) Validation**: Employs spatial grid raycasting to verify unobstructed line-of-sight between combatants, preventing attacks or projectile trajectories from clipping through walls or closed doors.
 - **Centralized Balance Configuration**: Combat statistics across all heroes, monsters, and bosses are maintained within `Scene/BalanceConfig.gd` as the single source of truth.
 
-### 1.3 Inventory and Equipment
-- **16-Slot Inventory**: Includes a 4x4 grid inventory system, a 9-slot hotbar, and 3 dedicated equipment slots (Helmet, Armor, Weapon).
+### 1.3 Inventory, Equipment and Interface
+- **16-Slot Inventory**: Includes a 4x4 grid backpack storage, a 9-slot action hotbar, and expandable equipment slots (Helmet, Armor, Weapon, Magic Resist, Boots).
+- **Minecraft-Style Item Stacking**: Stackable consumable items (potions) automatically merge up to 16 units per slot, displaying item count badges. Consuming items decrements the active stack count.
+- **Item Drop and Discard Mechanics**: Supports dropping items onto the floor via the G hotkey or right-clicking inventory slots to spawn collectible world pickups.
+- **MOBA-Style HUD Display**: Replaces individual heart icons with clean numeric progress bars for Health and Armor (with dynamic color thresholds), providing immediate combat clarity.
 - **Loot Table Engine**: Handles equipment and consumable drops (potions, armor sets, weapons) driven by deterministic roll seeding.
+
+### 1.4 Replay System and Memory Protection (Multiplayer Ready)
+- **10-Replay Maximum Capacity (`MAX_SAVED_REPLAYS = 10`)**: Automatic FIFO eviction of raw input frames for older runs, preserving only high-level run metadata to avoid RAM leaks.
+- **Manual Replay Deletion**: Direct delete buttons in the Expedition History interface allow users to manually purge individual replay data or wipe replay memory.
+- **Anti-DoS Input Compression and Bounding**: Limits disk frames to 3,600 (approx. 60s at 60 FPS) and deduplicates consecutive stationary idle frames. Enforces strict 2 MB maximum save file limits, ready for online multiplayer packet transmission.
 
 ---
 
@@ -148,6 +156,10 @@ The test suite is executable headlessly in Godot Engine:
    - Validates character animations, directional attacks, guard stance, and special summons.
 8. **Werewolf Functional Tests (`tests/test_werewolf.tscn`)**:
    - Tests claw attacks, pounce warning telegraphs, damage interruption, and pounce distance bounding (50/50 passing).
+9. **MOBA HUD and Inventory Stacking Tests (`tests/test_moba_hud_and_inventory.tscn`)**:
+   - Validates numeric health and armor progress bars, Minecraft-style potion stacking up to 16, stack consumption, item dropping, and RPG equipment stat calculations (34/34 passing).
+10. **Replay Capacity and Memory Protection Tests (`tests/test_replay_security.tscn`)**:
+    - Validates 10-replay hard cap enforcement, FIFO memory deallocation of old replay frames, manual replay deletion, clear all, and anti-DoS idle frame compression (39/39 passing).
 
 9. **MOBA HUD and Inventory Tests (`tests/test_moba_hud_and_inventory.tscn`)**: Numeric bars, item stacking, equipment and dropping items.
 10. **Miyabi Tests (`tests/test_miyabi.tscn`)**: Frost abilities, spirit, facing and replay.
@@ -159,7 +171,7 @@ The test suite is executable headlessly in Godot Engine:
 ## 6. Execution Instructions
 
 ### 6.1 Prerequisites
-- Godot Engine 4.3 or later (Console / Headless binary recommended for automated tests).
+- Godot Engine 4.7 or later (Console / Headless binary recommended for automated tests).
 
 ### 6.2 Running the Game
 Launch the project through Godot Engine or execute:
@@ -181,6 +193,8 @@ godot --headless --path . "res://tests/test_skeleton_king.tscn"
 godot --headless --path . "res://tests/test_doraemon.tscn"
 godot --headless --path . "res://tests/test_yugi.tscn"
 godot --headless --path . "res://tests/test_werewolf.tscn"
+godot --headless --path . "res://tests/test_moba_hud_and_inventory.tscn"
+godot --headless --path . "res://tests/test_replay_security.tscn"
 ```
 
 ---
@@ -195,6 +209,8 @@ godot --headless --path . "res://tests/test_werewolf.tscn"
 - **Gadget Page Selection (Doraemon)**: Mouse Scroll Wheel, Z, X
 - **Eat Snack / Dorayaki (Doraemon)**: F
 - **Interact / Pick Up**: E
-- **Inventory Toggle**: I or Tab
+- **Drop Item**: G or Right-Click inventory slot
+- **Backpack / Inventory Toggle**: B, I, or Tab
 - **Minimap Toggle**: M
+- **Audio Mute Toggle**: N
 - **Pause Menu**: Escape

@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://tests/test_replay_security.gd" id="1_test_script"]
+
+[node name="TestReplaySecurity" type="Node"]
+script = ExtResource("1_test_script")
+

@@ -282,7 +282,7 @@ func _build_hero_details_and_seed_bar() -> void:
 	var rnd_btn := UITheme.create_button("RANDOM", "", Vector2(120, 34), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
 	rnd_btn.pressed.connect(func():
 		if get_node_or_null("/root/GameManager") != null:
-			var s := GameManager.generate_random_seed()
+			var s: String = GameManager.generate_random_seed()
 			GameManager.set_seed(s)
 			seed_input.text = s
 	)
@@ -416,7 +416,7 @@ func _on_hero_selection_button_pressed() -> void:
 		return
 	if get_node_or_null("/root/GameManager") != null:
 		GameManager.set_character_by_index(selected_index)
-		var chosen_seed := seed_input.text if seed_input != null else GameManager.current_seed
+		var chosen_seed: String = seed_input.text if seed_input != null else GameManager.current_seed
 		GameManager.start_new_run(chosen_seed, false, [])
 	var error := get_tree().change_scene_to_file(game_world_path)
 	if error != OK:
