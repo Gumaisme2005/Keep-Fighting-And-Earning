@@ -49,7 +49,7 @@ jobs:
         run: |
           godot --headless "res://tests/test_skeleton_king.tscn"
 
-      - name: 6. Run Doraemon Hero Tests (47 Checks)
+      - name: 6. Run Doraemon Hero Tests (49 Checks)
         run: |
           godot --headless "res://tests/test_doraemon.tscn"
 
@@ -60,6 +60,22 @@ jobs:
       - name: 8. Run Werewolf Functional and Integration Tests (50 Checks)
         run: |
           godot --headless "res://tests/test_werewolf.tscn"
+
+      - name: 9. Run MOBA HUD and Inventory Tests
+        run: |
+          godot --headless "res://tests/test_moba_hud_and_inventory.tscn"
+
+      - name: 10. Run Hoshimi Miyabi Hero Tests
+        run: |
+          godot --headless "res://tests/test_miyabi.tscn"
+
+      - name: 11. Run Luong Tho Hero Tests
+        run: |
+          godot --headless "res://tests/test_luong_tho.tscn"
+
+      - name: 12. Run Projectile Obstacles Tests
+        run: |
+          godot --headless "res://tests/test_projectile_obstacles.tscn"
 
       - name: Upload Benchmark Evidence Artifact
         uses: actions/upload-artifact@v4

@@ -14,6 +14,8 @@ const SWORDSMAN_PORTRAIT: Texture2D = preload("res://Assets/UI/Button&Character/
 	preload("res://Scene/Character/Player 4_Charlotte/player_4.tscn"),
 	preload("res://Scene/Character/Yugi/yugi.tscn"),
 	preload("res://Scene/Character/Doraemon/doraemon.tscn"),
+	preload("res://Scene/Character/Miyabi/miyabi.tscn"),
+	preload("res://Scene/Character/LuongTho/luong_tho.tscn"),
 ]
 @export_file("*.tscn") var game_world_path: String = "res://world.tscn"
 
@@ -60,6 +62,8 @@ func _ready() -> void:
 
 	_add_yugi_portrait()
 	_add_doraemon_portrait()
+	_add_miyabi_portrait()
+	_add_luong_tho_portrait()
 
 	var idx_counter: int = 0
 	for child in object_container.get_children():
@@ -110,6 +114,28 @@ func _ready() -> void:
 	_select_deselect_highlight()
 	_update_buttons()
 	_update_hero_info_display()
+
+func _add_luong_tho_portrait() -> void:
+	var portrait := TextureRect.new()
+	portrait.name = "TextureRect8"
+	# 52x52 canvas (base-form idle frame) with the feet at ~83% height, like the other portraits.
+	portrait.texture = preload("res://Scene/Character/LuongTho/LTSprites.gd").texture("lt_portrait.png")
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	object_container.add_child(portrait)
+	# Keep the trailing MarginContainer spacer as the last child.
+	object_container.move_child(portrait, object_container.get_child_count() - 2)
+
+func _add_miyabi_portrait() -> void:
+	var portrait := TextureRect.new()
+	portrait.name = "TextureRect7"
+	# 52x52 canvas (Miyabi + her spirit) with the feet at ~83% height, like the other portraits.
+	portrait.texture = preload("res://Scene/Character/Miyabi/MiyabiSprites.gd").texture("miyabi_portrait.png")
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	object_container.add_child(portrait)
+	# Keep the trailing MarginContainer spacer as the last child.
+	object_container.move_child(portrait, object_container.get_child_count() - 2)
 
 func _add_doraemon_portrait() -> void:
 	var portrait := TextureRect.new()

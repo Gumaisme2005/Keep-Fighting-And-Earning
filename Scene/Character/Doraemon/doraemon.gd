@@ -154,6 +154,8 @@ func _set_flip(left: bool) -> void:
 	if animated_sprite.flip_h != left:
 		animated_sprite.flip_h = left
 		_sync_anchor()
+	# Keep the (inherited) sword hitbox on the side Doraemon faces, like the base hero does.
+	sword_hitbox.scale.x = -1.0 if left else 1.0
 
 # ------------------------------------------------------------------ input
 func _unhandled_input(event: InputEvent) -> void:
