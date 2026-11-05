@@ -81,3 +81,16 @@
 - **Priority:** Medium.
 - **Related Test Cases:** TC-MI-05, TC-MP-08, TC-MV-05 (no dedicated Doraemon test case).
 - **Status:** To Do.
+
+## 2026-11-05
+
+### QA
+- **11:46** - Executed **TC-SP-02** to verify spike trap damage.
+- Identified an issue where the player standing at the edge of the spike row takes no damage when the spikes pop up. The character only reaches the outer edge of the trap, which suggests a mismatch between the spike animation and its damage area.
+
+### Bug
+- Logged Jira bug: **[Spike Trap] Player standing at the edge of the spike row takes no damage when spikes are active**
+- **Bug Type:** Visual / Animation (possible hitbox mismatch).
+- **Priority:** Low.
+- **Related Test Cases:** TC-SP-02 (also related to TC-SP-01).
+- **Status:** To Do.
