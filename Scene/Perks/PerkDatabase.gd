@@ -292,10 +292,10 @@ static func _init_catalog() -> void:
 	_register(_build_perk(
 		"berserk_frenzy",
 		"Cuồng Chiến Đồ Đao",
-		"Càng ít Máu càng mạnh: Mỗi 1 điểm Máu bị mất tăng thêm +2% Sát thương và +2 Tốc độ chạy.",
+		"Càng ít Máu càng mạnh: Mỗi 1 điểm Máu bị mất tăng thêm +15% Sát thương và +8 Tốc độ chạy.",
 		PerkData.Rarity.LEGENDARY,
 		"103.png",
-		{"low_hp_scaling": true, "dmg_per_missing_hp": 0.02, "speed_per_missing_hp": 2.0}
+		{"low_hp_scaling": true, "dmg_per_missing_hp": 0.15, "speed_per_missing_hp": 8.0}
 	))
 
 	_register(_build_perk(
