@@ -26,7 +26,7 @@ echo   Godot: !GODOT_BIN!
 echo ==================================================================
 
 echo.
-echo [1/12] Running Unit Tests (UT-01 .. UT-13)...
+echo [1/13] Running Unit Tests (UT-01 .. UT-13)...
 "!GODOT_BIN!" --headless --path . "res://tests/test_dungeon_generator_unit.tscn"
 if !ERRORLEVEL! NEQ 0 (
     echo [FAILED] Unit Tests failed.
@@ -125,10 +125,19 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 echo.
-echo [12/12] Running Projectile Obstacle Regression Tests (11 checks)...
+echo [12/13] Running Projectile Obstacle Regression Tests (11 checks)...
 "!GODOT_BIN!" --headless --path . "res://tests/test_projectile_obstacles.tscn"
 if !ERRORLEVEL! NEQ 0 (
     echo [FAILED] Projectile Obstacle Tests failed.
+    pause
+    exit /b 1
+)
+
+echo.
+echo [13/13] Running Perk System Tests (Step 1 & Step 2 Verification)...
+"!GODOT_BIN!" --headless --path . "res://tests/test_perk_system.tscn"
+if !ERRORLEVEL! NEQ 0 (
+    echo [FAILED] Perk System Tests failed.
     pause
     exit /b 1
 )

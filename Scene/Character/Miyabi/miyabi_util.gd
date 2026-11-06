@@ -71,7 +71,12 @@ static func hit(world: Node, target: Node, amount: int, freeze_time: float = 0.0
 	if not is_instance_valid(target) or amount <= 0 or target.get("is_dead") == true:
 		return
 	var at := hit_point(target as Node2D)
-	target.take_damage(amount)
+	var final_amt := amount
+	if world != null and world.get_tree() != null:
+		var players = world.get_tree().get_nodes_in_group("player")
+		if not players.is_empty() and players[0].has_method("apply_on_hit_effects"):
+			final_amt = players[0].apply_on_hit_effects(target as Node2D, amount)
+	target.take_damage(final_amt)
 	Fx.spawn(world, "frost_hit", at)
 	if freeze_time > 0.0:
 		freeze(target, freeze_time)

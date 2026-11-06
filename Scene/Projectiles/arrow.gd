@@ -61,7 +61,11 @@ func _on_area_entered(area: Area2D) -> void:
 
 		if target.has_method("take_damage"):
 			is_broken = true
-			target.take_damage(damage)
+			var final_dmg = damage
+			var players = get_tree().get_nodes_in_group("player")
+			if not players.is_empty() and players[0].has_method("apply_on_hit_effects"):
+				final_dmg = players[0].apply_on_hit_effects(target, damage)
+			target.take_damage(final_dmg)
 			queue_free()
 
 func _on_body_entered(body: Node2D) -> void:

@@ -43,6 +43,7 @@ var pending_rmb_skill: bool = false
 var current_aim_offset: Vector2 = Vector2.RIGHT * 32.0
 
 const BalanceData = preload("res://Scene/BalanceConfig.gd")
+const PerkData = preload("res://Scene/Perks/PerkData.gd")
 @export var hero_balance_id: String = "pyrois"
 
 @onready var animated_sprite = $AnimatedSprite2D
@@ -86,6 +87,10 @@ func _ready() -> void:
 	# Trang bị khởi đầu cân bằng: 1 Bình máu nhỏ
 	var starter_potion = preload("res://Scene/Items/health_potion.tres")
 	inventory.add_item(starter_potion)
+
+	# Tự động nạp lại các Perk đang kích hoạt khi chuyển sang tầng mới
+	if get_node_or_null("/root/PerkManager") != null:
+		PerkManager.apply_all_perks_to_player(self)
 
 func get_aim_world_position() -> Vector2:
 	if get_node_or_null("/root/GameManager") != null and GameManager.is_replaying:
@@ -178,6 +183,12 @@ func _physics_process(delta: float) -> void:
 
 	# Khi dính sát thương (đang nhấp nháy bất tử), cho phép nhân vật di chuyển thoát vây mượt mà (tăng nhẹ 15% tốc chạy thoát thân)
 	var effective_speed: float = speed * 1.15 if is_invincible else speed
+	if get_node_or_null("/root/PerkManager") != null:
+		effective_speed += PerkManager.get_total_speed_bonus()
+		for p in PerkManager.get_active_perks():
+			if p.get_modifier("low_hp_scaling", false):
+				var missing_hp: int = maxi(0, max_hp - hp)
+				effective_speed += missing_hp * float(p.get_modifier("speed_per_missing_hp", 10.0))
 
 	if want_q and can_use_skill and not is_attacking and not is_casting_skill:
 		use_special_skill()
@@ -229,6 +240,7 @@ func take_damage(amount: int) -> void:
 	regen_tick_timer.stop()
 	regen_delay_timer.start()
 
+	var had_armor: bool = current_armor > 0
 	if current_armor >= amount:
 		current_armor -= amount
 		if get_tree():
@@ -240,6 +252,10 @@ func take_damage(amount: int) -> void:
 		if get_tree():
 			get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -24), overflow_damage, Color(1.0, 0.25, 0.25))
 
+	if had_armor and current_armor == 0 and get_node_or_null("/root/PerkManager") != null:
+		if PerkManager.has_armor_break_blast():
+			_trigger_armor_break_blast()
+
 	stats_changed.emit(hp, max_hp, current_armor, max_armor)
 
 	if hp > 0:
@@ -249,6 +265,17 @@ func take_damage(amount: int) -> void:
 			animated_sprite.play("hurt")
 		start_invincibility()
 	else:
+		if get_node_or_null("/root/PerkManager") != null and PerkManager.has_second_chance():
+			PerkManager.consume_second_chance()
+			hp = maxi(1, int(max_hp * 0.5))
+			current_armor = max_armor
+			stats_changed.emit(hp, max_hp, current_armor, max_armor)
+			if get_tree():
+				get_tree().call_group("game_ui", "show_banner", "IMMORTAL WILL - REVIVED!", Color(1.0, 0.85, 0.2))
+				get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -32), hp, Color(1.0, 0.85, 0.2))
+			start_invincibility()
+			return
+
 		if not is_dead:
 			is_dead = true
 			regen_delay_timer.stop()
@@ -342,8 +369,95 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		if not is_dead:
 			animated_sprite.play("idle")
 
+func is_spike_immune() -> bool:
+	if get_node_or_null("/root/PerkManager") != null:
+		return PerkManager.is_spike_immune()
+	return false
+
+func get_raw_damage() -> float:
+	var dmg: float = float(base_damage + inventory.get_weapon_damage())
+	if get_node_or_null("/root/PerkManager") != null:
+		dmg += float(PerkManager.get_total_bonus_damage())
+		for p in PerkManager.get_active_perks():
+			if p.get_modifier("low_hp_scaling", false):
+				var missing_hp: int = maxi(0, max_hp - hp)
+				dmg *= (1.0 + float(missing_hp) * float(p.get_modifier("dmg_per_missing_hp", 0.02)))
+	return dmg
+
 func get_total_damage() -> int:
-	return base_damage + inventory.get_weapon_damage()
+	var raw := get_raw_damage()
+	if get_node_or_null("/root/PerkManager") != null:
+		return PerkManager.resolve_stochastic_damage(raw)
+	return int(round(raw))
+
+func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
+	var final_dmg: int = in_damage
+	var pm = get_node_or_null("/root/PerkManager")
+	if pm == null:
+		return final_dmg
+
+	# 1. Critical Hit (Đòn Đánh Tử Huyệt & Xé Toạc Sinh Mệnh)
+	var crit_chance: float = pm.get_crit_chance()
+	if crit_chance > 0.0:
+		var rng := RandomNumberGenerator.new()
+		rng.randomize()
+		if rng.randf() <= crit_chance:
+			var mult: float = pm.get_crit_multiplier() if pm.has_method("get_crit_multiplier") else 2.0
+			var raw_crit: float = float(in_damage) * mult
+			final_dmg = PerkManager.resolve_stochastic_damage(raw_crit)
+			if get_tree():
+				get_tree().call_group("game_ui", "spawn_damage_number", target.global_position + Vector2(0, -28), final_dmg, Color(1.0, 0.85, 0.1))
+
+	# 2. Burn On Hit (Liệt Hỏa)
+	if pm.has_burn_on_hit():
+		for p in pm.get_active_perks():
+			if p.get_modifier("on_hit_burn", false):
+				var chance: float = float(p.get_modifier("burn_chance", 0.35))
+				var b_rng := RandomNumberGenerator.new()
+				b_rng.randomize()
+				if b_rng.randf() <= chance:
+					var burn_amt: int = int(p.get_modifier("burn_damage", 2))
+					if target.has_method("take_damage"):
+						target.call_deferred("take_damage", burn_amt)
+						if get_tree():
+							get_tree().call_group("game_ui", "spawn_damage_number", target.global_position + Vector2(10, -20), burn_amt, Color(1.0, 0.45, 0.1))
+
+	# 3. Chain Lightning (Lôi Thần Trừng Phạt)
+	if pm.has_lightning_on_hit():
+		_trigger_chain_lightning(target)
+
+	return final_dmg
+
+func _trigger_chain_lightning(primary_target: Node2D) -> void:
+	var enemies = get_tree().get_nodes_in_group("enemies")
+	var chained := 0
+	for e in enemies:
+		if e != primary_target and is_instance_valid(e) and not bool(e.get("is_dead")):
+			var dist = primary_target.global_position.distance_to(e.global_position)
+			if dist <= 95.0:
+				if e.has_method("take_damage"):
+					e.take_damage(2)
+					if get_tree():
+						get_tree().call_group("game_ui", "spawn_damage_number", e.global_position + Vector2(0, -24), 2, Color(0.4, 0.85, 1.0))
+				chained += 1
+				if chained >= 2:
+					break
+
+func _trigger_armor_break_blast() -> void:
+	if get_tree():
+		get_tree().call_group("game_ui", "show_banner", "AEGIS SHATTERED - SHOCKWAVE!", Color(0.6, 0.3, 0.9))
+	var enemies = get_tree().get_nodes_in_group("enemies")
+	for e in enemies:
+		if is_instance_valid(e) and not bool(e.get("is_dead")):
+			var dist = global_position.distance_to(e.global_position)
+			if dist <= 90.0:
+				var push_dir = (e.global_position - global_position).normalized()
+				if e is CharacterBody2D:
+					e.velocity += push_dir * 180.0
+				if e.has_method("take_damage"):
+					e.take_damage(3)
+					if get_tree():
+						get_tree().call_group("game_ui", "spawn_damage_number", e.global_position + Vector2(0, -24), 3, Color(0.7, 0.4, 1.0))
 
 func _on_sword_hitbox_area_entered(area: Area2D) -> void:
 	if area.name == "Hurtbox":
@@ -361,6 +475,7 @@ func _on_sword_hitbox_area_entered(area: Area2D) -> void:
 			var total_dmg = get_total_damage()
 			if animated_sprite.animation == "attack_2":
 				total_dmg += 2
+			total_dmg = apply_on_hit_effects(target, total_dmg)
 			target.take_damage(total_dmg)
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -403,10 +518,13 @@ func use_special_skill() -> void:
 
 func start_skill_cooldown() -> void:
 	can_use_skill = false
-	q_cd_remaining = skill_cooldown
-	skill_cooldown_changed.emit(q_cd_remaining, skill_cooldown, rmb_cd_remaining, rmb_cd_max)
-	await get_tree().create_timer(skill_cooldown).timeout
+	var effective_cd := skill_cooldown
+	if get_node_or_null("/root/PerkManager") != null:
+		effective_cd = skill_cooldown * (1.0 - PerkManager.get_cooldown_reduction())
+	q_cd_remaining = effective_cd
+	skill_cooldown_changed.emit(q_cd_remaining, effective_cd, rmb_cd_remaining, rmb_cd_max)
+	await get_tree().create_timer(effective_cd).timeout
 	if not is_dead:
 		can_use_skill = true
 		q_cd_remaining = 0.0
-		skill_cooldown_changed.emit(0.0, skill_cooldown, rmb_cd_remaining, rmb_cd_max)
+		skill_cooldown_changed.emit(0.0, effective_cd, rmb_cd_remaining, rmb_cd_max)
