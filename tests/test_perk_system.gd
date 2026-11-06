@@ -241,6 +241,19 @@ func test_character_combat_hooks_and_revive() -> void:
 	_assert_test(player.is_dead == false, "Player survived fatal hit via Immortal Will")
 	_assert_test(player.hp >= int(player.max_hp * 0.5), "Player HP restored to at least 50% upon revive")
 
+	# 5. Thêm Perk Cuồng Chiến Đồ Đao (Berserk Frenzy)
+	var p_frenzy = PerkDatabase.get_perk_by_id("berserk_frenzy")
+	PerkManager.add_perk(p_frenzy, player)
+	player.hp = 1 # Đang còn 1 máu
+	var missing: int = player.max_hp - player.hp
+	var raw_berserk_dmg: float = player.get_raw_damage()
+	var expected_raw: float = float(player.base_damage) * (1.0 + float(missing) * 0.15)
+	_assert_test(abs(raw_berserk_dmg - expected_raw) < 0.01, "Berserk Frenzy raw damage scales +15% per missing HP (Expected: %.2f, Got: %.2f)" % [expected_raw, raw_berserk_dmg])
+
+	# 6. Kiểm tra trần tốc độ chạy tối đa (max_speed_cap)
+	player.speed = 999.0
+	_assert_test(player.get_effective_speed() == player.max_speed_cap, "Movement speed is capped at max_speed_cap (%.1f)" % player.max_speed_cap)
+
 	player.queue_free()
 	PerkManager.reset()
 

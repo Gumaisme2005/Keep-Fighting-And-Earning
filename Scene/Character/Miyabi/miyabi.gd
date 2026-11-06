@@ -203,7 +203,7 @@ func _physics_process(delta: float) -> void:
 		_start_swing(combo_step + 1 if combo_chain > 0.0 and combo_step < COMBO.size() - 1 else 0)
 	if move != "":
 		return
-	var effective_speed: float = speed * 1.15 if is_invincible else speed
+	var effective_speed: float = get_effective_speed()
 	velocity = direction * effective_speed
 	move_and_slide()
 	if not is_hurt:

@@ -5,6 +5,7 @@ signal skill_cooldown_changed(skill_q_left: float, skill_q_max: float, skill_rmb
 
 # --- CHỈ SỐ CƠ BẢN ---
 @export var speed: float = 150.0
+@export var max_speed_cap: float = 260.0 # Trần tốc độ chạy tối đa, tránh lỗi va chạm tường và mất kiểm soát
 @export var base_damage: int = 1
 @export var base_max_hp: int = 4
 @export var max_hp: int = 4
@@ -182,13 +183,7 @@ func _physics_process(delta: float) -> void:
 		sword_hitbox.scale.x = 1
 
 	# Khi dính sát thương (đang nhấp nháy bất tử), cho phép nhân vật di chuyển thoát vây mượt mà (tăng nhẹ 15% tốc chạy thoát thân)
-	var effective_speed: float = speed * 1.15 if is_invincible else speed
-	if get_node_or_null("/root/PerkManager") != null:
-		effective_speed += PerkManager.get_total_speed_bonus()
-		for p in PerkManager.get_active_perks():
-			if p.get_modifier("low_hp_scaling", false):
-				var missing_hp: int = maxi(0, max_hp - hp)
-				effective_speed += missing_hp * float(p.get_modifier("speed_per_missing_hp", 10.0))
+	var effective_speed: float = get_effective_speed()
 
 	if want_q and can_use_skill and not is_attacking and not is_casting_skill:
 		use_special_skill()
@@ -374,6 +369,16 @@ func is_spike_immune() -> bool:
 		return PerkManager.is_spike_immune()
 	return false
 
+func get_effective_speed() -> float:
+	var eff: float = speed * 1.15 if is_invincible else speed
+	if get_node_or_null("/root/PerkManager") != null:
+		eff += PerkManager.get_total_speed_bonus()
+		for p in PerkManager.get_active_perks():
+			if p.get_modifier("low_hp_scaling", false):
+				var missing_hp: int = maxi(0, max_hp - hp)
+				eff += missing_hp * float(p.get_modifier("speed_per_missing_hp", 8.0))
+	return minf(eff, max_speed_cap)
+
 func get_raw_damage() -> float:
 	var dmg: float = float(base_damage + inventory.get_weapon_damage())
 	if get_node_or_null("/root/PerkManager") != null:
@@ -381,7 +386,7 @@ func get_raw_damage() -> float:
 		for p in PerkManager.get_active_perks():
 			if p.get_modifier("low_hp_scaling", false):
 				var missing_hp: int = maxi(0, max_hp - hp)
-				dmg *= (1.0 + float(missing_hp) * float(p.get_modifier("dmg_per_missing_hp", 0.02)))
+				dmg *= (1.0 + float(missing_hp) * float(p.get_modifier("dmg_per_missing_hp", 0.15)))
 	return dmg
 
 func get_total_damage() -> int:

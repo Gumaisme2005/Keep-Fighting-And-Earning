@@ -181,9 +181,8 @@ func _physics_process(delta: float) -> void:
 		_start_swing(combo_step + 1 if combo_chain > 0.0 and combo_step < COMBO.size() - 1 else 0)
 	if move != "":
 		return
-	var run_speed: float = speed * (UPGRADED_SPEED if form == "upgraded" else 1.0)
-	if is_invincible:
-		run_speed *= 1.15
+	var run_speed: float = get_effective_speed() * (UPGRADED_SPEED if form == "upgraded" else 1.0)
+	run_speed = minf(run_speed, max_speed_cap)
 	velocity = direction * run_speed
 	move_and_slide()
 	if not is_hurt:

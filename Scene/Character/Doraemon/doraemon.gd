@@ -248,7 +248,7 @@ func _physics_process(delta: float) -> void:
 	elif bool(f.get("atk", false)) and float(cooldowns[pg["lmb"]]) <= 0.0:
 		_use(String(pg["lmb"]))
 	if _mode == "" and _cast_move == "":
-		var effective_speed: float = speed * 1.15 if is_invincible else speed
+		var effective_speed: float = get_effective_speed()
 		velocity = direction * effective_speed
 		move_and_slide()
 		if not is_hurt:
