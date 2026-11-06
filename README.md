@@ -2,6 +2,10 @@
 
 Keep Fighting And Earning is a 2D top-down action roguelike developed using Godot Engine 4. The project incorporates deterministic procedural dungeon generation, real-time combat mechanics, centralized stat balancing, and an automated verification test suite.
 
+> **Base Commit & Development Alignment**:
+> Nhánh `development` được căn chuẩn trên commit nền **`d718e45`** (từ `origin/main`), bảo toàn toàn bộ tính năng hữu ích của `main` (Dungeon Benchmark, Fog of War, Spike Traps, Audio Glorious Morning, Soul Knight UI) và tích hợp hoàn chỉnh 2 nhân vật mới **Yugi / Atem** cùng **Doraemon** (kèm các nhân vật và hệ thống mở rộng).
+> Chi tiết bảng diff, rà soát xung đột và bằng chứng kiểm thử: xem tại [`docs/BASE_COMMIT_ANALYSIS_AND_DIFF.md`](docs/BASE_COMMIT_ANALYSIS_AND_DIFF.md).
+
 ---
 
 ## 1. System Architecture and Core Mechanics
