@@ -68,6 +68,9 @@ func _test_floor_rotation_and_layout() -> void:
 		if r.size.x < g3.room_min_size or r.size.x > g3.room_max_size or r.size.y < g3.room_min_size or r.size.y > g3.room_max_size:
 			others_ok = false
 	_check(others_ok and g3.generated_rooms.size() == 16, "SK-02: Other rooms on a king floor stay within normal size bounds")
+	_check(g3.enable_combat_room_variants and g3.combat_room_variants.size() == g3.generated_rooms.size()
+		and g3.combat_room_variants[boss3] == g3.CombatRoomVariant.NONE and g3.combat_room_pillar_counts[boss3] == 0,
+		"SK-02b: Enabled combat variants leave Skeleton King metadata NONE with zero variant pillars")
 	g3.get_parent().free()
 
 func _test_boss_fight() -> void:

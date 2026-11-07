@@ -2,6 +2,8 @@ extends Node2D
 
 const WORLD_SCENE = preload("res://world.tscn")
 const NUM_PROPERTY_SEEDS: int = 100
+const VariantChecks = preload("res://tests/dungeon_variant_test_support.gd")
+const TOTAL_PROPERTIES: int = 11
 
 var passed_properties: int = 0
 var failed_properties: int = 0
@@ -115,10 +117,11 @@ func _ready() -> void:
 	_record_result(prop3_fail.is_empty(), "PROP-03 [Grid Tile Flood-Fill Walkability across all rooms]", "Verified %d/%d seeds walkable on TileMap" % [seeds.size(), seeds.size()] if prop3_fail.is_empty() else ("Failed on " + prop3_fail))
 	_record_result(prop4_fail.is_empty(), "PROP-04 [Boss Room Optimality: dist(START, BOSS) == max_v dist(START, v)]", "Verified %d/%d seeds optimal" % [seeds.size(), seeds.size()] if prop4_fail.is_empty() else ("Failed on " + prop4_fail))
 	_record_result(prop5_fail.is_empty(), "PROP-05 [Safe Spawn Invariant: 0 entities/centers overlap obstacles/traps]", "Verified %d/%d seeds collision-free" % [seeds.size(), seeds.size()] if prop5_fail.is_empty() else ("Failed on " + prop5_fail))
+	_run_variant_properties(seeds)
 
 	print("------------------------------------------------------------------")
-	print("[SUMMARY] PROPERTY TESTS: %d/5 PROPERTIES PASSED (%d total invariant checks)" % [
-		passed_properties, passed_properties * NUM_PROPERTY_SEEDS
+	print("[SUMMARY] PROPERTY TESTS: %d/%d PROPERTIES PASSED (original %d seeds + %d variant matrix cases)" % [
+		passed_properties, TOTAL_PROPERTIES, seeds.size(), seeds.size()
 	])
 	print("==================================================================\n")
 
@@ -126,6 +129,51 @@ func _ready() -> void:
 		get_tree().quit(1)
 	else:
 		get_tree().quit(0)
+
+func _run_variant_properties(seeds: Array[String]) -> void:
+	print("[VARIANT PROPERTIES] %d seeds distributed over 8/16/32 rooms x floors 1/2/3" % seeds.size())
+	var errors = {"assignment": "", "pillars": "", "determinism": "", "paths": "", "boss": ""}
+	var seen_variants: Dictionary = {}
+	var configurations: Dictionary = {}
+	var world = WORLD_SCENE.instantiate()
+	var repeat_world = WORLD_SCENE.instantiate()
+	var gen: TileMap = world.get_node("TileMap")
+	var repeated: TileMap = repeat_world.get_node("TileMap")
+	for i in range(seeds.size()):
+		# 100 distinct seeds, balanced across all nine configurations (not 900 cases).
+		var rooms: int = [8, 16, 32][i % 3]
+		var level: int = 1 + floori(i / 3.0) % 3
+		configurations["%d/%d" % [rooms, level]] = true
+		for g in [gen, repeated]:
+			g.map_seed = seeds[i]
+			g.num_rooms = rooms
+			g.current_level = level
+			g.enable_combat_room_variants = true
+			g.generate_dungeon()
+		var results = {
+			"assignment": VariantChecks.metadata_error(gen),
+			"pillars": VariantChecks.pillar_error(gen),
+			"determinism": VariantChecks.snapshot_difference(VariantChecks.snapshot(gen), VariantChecks.snapshot(repeated)),
+			"paths": VariantChecks.safe_paths_error(gen),
+			"boss": VariantChecks.boss_error(gen)
+		}
+		for property_name in errors:
+			if errors[property_name].is_empty() and not results[property_name].is_empty():
+				errors[property_name] = VariantChecks.context(gen) + " " + results[property_name]
+		for variant in gen.combat_room_variants:
+			seen_variants[variant] = true
+		if (i + 1) % 20 == 0:
+			print("[VARIANT PROGRESS] %d/%d seeds" % [i + 1, seeds.size()])
+	var both_variants_seen: bool = seen_variants.has(gen.CombatRoomVariant.OPEN_ARENA) and seen_variants.has(gen.CombatRoomVariant.COVER_ROOM)
+	world.free()
+	repeat_world.free()
+	var coverage = "%d seeds / %d configurations" % [seeds.size(), configurations.size()]
+	_record_result(errors.assignment.is_empty(), "VAR-01 [Variant assignment and metadata indexing]", coverage if errors.assignment.is_empty() else errors.assignment)
+	_record_result(errors.pillars.is_empty(), "VAR-02 [Actual pillar footprints/counts and OPEN/COVER limits]", coverage if errors.pillars.is_empty() else errors.pillars)
+	_record_result(errors.determinism.is_empty(), "VAR-03 [Reproducible variants, pillars, all tiles, traps, enemy spawns and RNG]", coverage if errors.determinism.is_empty() else errors.determinism)
+	_record_result(errors.paths.is_empty(), "VAR-04 [Actual collision, connected rooms, entrances and reachable safe spawns]", coverage if errors.paths.is_empty() else errors.paths)
+	_record_result(both_variants_seen and configurations.size() == 9, "VAR-05 [Both OPEN_ARENA and COVER_ROOM observed; all nine configurations covered]", coverage + " observed variants=" + str(seen_variants.keys()))
+	_record_result(errors.boss.is_empty(), "VAR-06 [Clean boss rooms and fixed Skeleton King arena on floor 3]", coverage if errors.boss.is_empty() else errors.boss)
 
 func _generate_test_seeds(count: int) -> Array[String]:
 	var list: Array[String] = [
