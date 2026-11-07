@@ -10,6 +10,6 @@ type = 3
 rarity = 3
 icon = ExtResource("1_icon")
 description = "Blessed water reflecting the light of Earendil, fully revitalizing fallen heroes."
-max_hp_bonus = 4
+max_hp_bonus = 5
 heal_amount = 10
 is_stackable = true
