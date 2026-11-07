@@ -26,6 +26,10 @@ func _ready() -> void:
 	test_potion_consumption_from_stack()
 	test_item_drop_mechanism()
 	test_equipment_magic_resist_and_boots()
+	test_fixed_16_slots_and_anti_shift_invariants()
+	test_anti_duplicate_partial_pickup()
+	test_polymorphic_equipment_dictionary_and_tooltip()
+	test_drag_and_drop_slot_mechanics()
 	test_item_count_and_inverse_rarity_rule()
 	test_minimum_equipment_sets()
 	test_mythic_secondary_stats()
@@ -78,21 +82,23 @@ func test_minecraft_item_stacking() -> void:
 	# Add 8 health potions
 	var ok1 = inv.add_item(potion, 8)
 	assert_test(ok1, "Adding 8 potions succeeded")
-	assert_test(inv.bag.size() == 1, "8 potions occupy exactly 1 inventory slot (Minecraft-style)")
-	assert_test(inv.bag[0].stack_count == 8, "Slot 0 stack_count equals 8")
+	assert_test(inv.bag.size() == 16, "Inventory maintains fixed 16 slots invariant")
+	assert_test(inv.get_occupied_slots_count() == 1, "8 potions occupy exactly 1 inventory slot (Minecraft-style)")
+	assert_test(inv.bag[0] != null and inv.bag[0].stack_count == 8, "Slot 0 stack_count equals 8")
 
 	# Add 5 more health potions -> total 13
 	var ok2 = inv.add_item(potion, 5)
 	assert_test(ok2, "Adding 5 more potions succeeded")
-	assert_test(inv.bag.size() == 1, "Still occupies exactly 1 slot")
+	assert_test(inv.get_occupied_slots_count() == 1, "Still occupies exactly 1 slot")
 	assert_test(inv.bag[0].stack_count == 13, "Slot 0 stack_count merged to 13")
 
 	# Add 5 more health potions -> total 18 (should cap slot 0 at 16, create slot 1 with 2)
 	var ok3 = inv.add_item(potion, 5)
 	assert_test(ok3, "Adding 5 more potions (exceeding max_stack 16) succeeded")
-	assert_test(inv.bag.size() == 2, "Overflow created exactly 2nd slot")
+	assert_test(inv.bag.size() == 16, "Inventory size remains fixed at 16")
+	assert_test(inv.get_occupied_slots_count() == 2, "Overflow created exactly 2nd slot")
 	assert_test(inv.bag[0].stack_count == 16, "First slot capped at max_stack 16")
-	assert_test(inv.bag[1].stack_count == 2, "Second slot contains remainder 2")
+	assert_test(inv.bag[1] != null and inv.bag[1].stack_count == 2, "Second slot contains remainder 2")
 
 	inv.queue_free()
 
@@ -114,13 +120,15 @@ func test_potion_consumption_from_stack() -> void:
 
 	# Consume 1 potion
 	inv.use_or_equip_item(0, mock_player)
-	assert_test(inv.bag.size() == 1, "Slot is not removed after consuming 1 potion from stack")
-	assert_test(inv.bag[0].stack_count == 2, "stack_count decremented from 3 to 2")
+	assert_test(inv.get_occupied_slots_count() == 1, "Slot is not removed after consuming 1 potion from stack")
+	assert_test(inv.bag[0] != null and inv.bag[0].stack_count == 2, "stack_count decremented from 3 to 2")
 
 	# Consume remaining 2 potions
 	inv.use_or_equip_item(0, mock_player)
 	inv.use_or_equip_item(0, mock_player)
-	assert_test(inv.bag.size() == 0, "Slot is cleanly removed when stack reaches 0")
+	assert_test(inv.bag.size() == 16, "Inventory size remains fixed at 16")
+	assert_test(inv.get_occupied_slots_count() == 0, "Slot is cleanly cleared when stack reaches 0")
+	assert_test(inv.bag[0] == null, "Slot 0 is now null without shifting array indices")
 
 	mock_player.queue_free()
 	inv.queue_free()
@@ -139,13 +147,15 @@ func test_item_drop_mechanism() -> void:
 	# Drop 1 item
 	var drop_ok = inv.drop_item(0, false, Vector2.ZERO)
 	assert_test(drop_ok, "drop_item returned true")
-	assert_test(inv.bag.size() == 1, "Slot still remains for remaining stack")
-	assert_test(inv.bag[0].stack_count == 3, "Stack count reduced from 4 to 3")
+	assert_test(inv.get_occupied_slots_count() == 1, "Slot still remains for remaining stack")
+	assert_test(inv.bag[0] != null and inv.bag[0].stack_count == 3, "Stack count reduced from 4 to 3")
 
 	# Drop all remaining
 	var drop_all_ok = inv.drop_item(0, true, Vector2.ZERO)
 	assert_test(drop_all_ok, "drop_item all returned true")
-	assert_test(inv.bag.size() == 0, "Slot removed after dropping all items")
+	assert_test(inv.bag.size() == 16, "Inventory size remains fixed at 16")
+	assert_test(inv.get_occupied_slots_count() == 0, "Slot removed after dropping all items")
+	assert_test(inv.bag[0] == null, "Slot 0 is now null")
 
 	inv.queue_free()
 
@@ -177,19 +187,252 @@ func test_equipment_magic_resist_and_boots() -> void:
 	# Equip helm (slot 0)
 	inv.use_or_equip_item(0, dummy)
 	assert_test(inv.equipped_helmet != null, "Helmet equipped successfully")
+	assert_test(inv.bag[0] == null, "Slot 0 became empty (null) without shifting other slots")
 
-	# Equip armor (slot 0)
-	inv.use_or_equip_item(0, dummy)
+	# Equip armor (slot 1) - vị trí slot 1 không bị trôi!
+	inv.use_or_equip_item(1, dummy)
 	assert_test(inv.equipped_armor != null, "Armor equipped successfully")
 	assert_test(inv.get_total_defense() == 6, "Total defense from Helm (2) + Armor (4) equals 6")
+	assert_test(inv.bag[1] == null, "Slot 1 became empty (null)")
 
-	# Equip weapon (slot 0)
-	inv.use_or_equip_item(0, dummy)
+	# Equip weapon (slot 2) - vị trí slot 2 không bị trôi!
+	inv.use_or_equip_item(2, dummy)
 	assert_test(inv.equipped_weapon != null, "Weapon equipped successfully")
 	assert_test(inv.get_weapon_damage() == 3, "Weapon damage equals 3")
+	assert_test(inv.bag[2] == null, "Slot 2 became empty (null)")
 
 	dummy.queue_free()
 	inv.queue_free()
+
+func test_fixed_16_slots_and_anti_shift_invariants() -> void:
+	print("\n--- Test Group 5B: Fixed 16 Slots & Anti-Shift Invariants ---")
+	var inv = INVENTORY_MANAGER_SCRIPT.new()
+	add_child(inv)
+
+	# 1. Bất biến khởi tạo: Balo luôn có đúng 16 ô null
+	assert_test(inv.bag.size() == 16, "Fresh inventory has exactly 16 slots")
+	assert_test(inv.get_occupied_slots_count() == 0, "All 16 slots are initially null")
+	assert_test(not inv.is_full(), "Fresh inventory is not full")
+
+	# 2. Thêm vật phẩm A vào slot 0, vật phẩm B vào slot 1
+	var pot = ITEM_DATA_SCRIPT.new()
+	pot.item_name = "Speed Potion"
+	pot.type = ItemData.ItemType.POTION
+	pot.stack_count = 1
+	inv.add_item(pot)
+
+	var sword = ITEM_DATA_SCRIPT.new()
+	sword.item_name = "Shadow Dagger"
+	sword.type = ItemData.ItemType.WEAPON
+	sword.damage = 5
+	inv.add_item(sword)
+
+	assert_test(inv.bag[0] != null and inv.bag[0].item_name == "Speed Potion", "Item A is at slot 0")
+	assert_test(inv.bag[1] != null and inv.bag[1].item_name == "Shadow Dagger", "Item B is at slot 1")
+
+	# 3. Chuyển Item B từ slot 1 sang slot 4 (phím tắt số 5)
+	var swap_ok := inv.swap_slots(1, 4)
+	assert_test(swap_ok, "swap_slots(1, 4) succeeded")
+	assert_test(inv.bag[1] == null, "Slot 1 is now empty (null)")
+	assert_test(inv.bag[4] != null and inv.bag[4].item_name == "Shadow Dagger", "Item B moved cleanly to slot 4")
+
+	# 4. KIỂM TRA CHỐNG DỒN Ô (ANTI-SHIFT): Uống hết thuốc ở slot 0
+	var mock_player = Node2D.new()
+	mock_player.set_script(load("res://tests/mock_player.gd"))
+	inv.use_or_equip_item(0, mock_player)
+
+	assert_test(inv.bag[0] == null, "Slot 0 is now empty (null) after consuming potion")
+	assert_test(inv.bag.size() == 16, "Inventory size remains strictly 16 (never shrank)")
+	assert_test(inv.bag[4] != null and inv.bag[4].item_name == "Shadow Dagger", "Anti-Shift Invariant: Item at slot 4 did NOT shift!")
+
+	# 5. KIỂM TRA HOÁN ĐỔI TRANG BỊ TẠI CHỖ (Equipment Swap-in-Place)
+	var dummy = Node2D.new()
+	inv.use_or_equip_item(4, dummy) # Mặc Shadow Dagger từ slot 4
+	assert_test(inv.equipped_weapon != null and inv.equipped_weapon.item_name == "Shadow Dagger", "Equipped Shadow Dagger")
+	assert_test(inv.bag[4] == null, "Slot 4 is now empty")
+
+	# Đặt vũ khí thứ hai vào slot 4
+	var sword2 = ITEM_DATA_SCRIPT.new()
+	sword2.item_name = "Valyrian Greatsword"
+	sword2.type = ItemData.ItemType.WEAPON
+	sword2.damage = 9
+	inv.bag[4] = sword2
+
+	# Mặc Valyrian Greatsword từ slot 4 -> Shadow Dagger cũ phải swap về đúng slot 4!
+	inv.use_or_equip_item(4, dummy)
+	assert_test(inv.equipped_weapon.item_name == "Valyrian Greatsword", "New weapon equipped")
+	assert_test(inv.bag[4] != null and inv.bag[4].item_name == "Shadow Dagger", "Old weapon swapped back directly into slot 4")
+
+	dummy.queue_free()
+	mock_player.queue_free()
+	inv.queue_free()
+
+func test_anti_duplicate_partial_pickup() -> void:
+	print("\n--- Test Group 5C: Anti-Duplicate Item Pickup Protection ---")
+	var inv = INVENTORY_MANAGER_SCRIPT.new()
+	add_child(inv)
+
+	# 1. Chiếm dụng 15 slot đầu tiên (0..14) bằng các món đồ rác
+	for i in range(15):
+		var junk = ITEM_DATA_SCRIPT.new()
+		junk.item_name = "Junk Stone %d" % i
+		junk.type = ItemData.ItemType.WEAPON
+		junk.stack_count = 1
+		inv.bag[i] = junk
+
+	# 2. Slot 15 đặt 14 bình Health Potion (max stack = 16, chỉ còn chứa thêm được 2 bình)
+	var pot_slot = ITEM_DATA_SCRIPT.new()
+	pot_slot.item_name = "Health Potion"
+	pot_slot.type = ItemData.ItemType.POTION
+	pot_slot.heal_amount = 2
+	pot_slot.max_stack = 16
+	pot_slot.stack_count = 14
+	inv.bag[15] = pot_slot
+
+	assert_test(inv.get_occupied_slots_count() == 16, "All 16 slots are occupied")
+	assert_test(inv.is_full(), "Backpack has no empty slots left")
+
+	# 3. Giả lập một WorldItem rơi trên sàn với stack_count = 5
+	var floor_drop = ITEM_DATA_SCRIPT.new()
+	floor_drop.item_name = "Health Potion"
+	floor_drop.type = ItemData.ItemType.POTION
+	floor_drop.heal_amount = 2
+	floor_drop.max_stack = 16
+	floor_drop.stack_count = 5
+
+	# 4. Nhặt đồ: Chỉ nhặt được 2 bình vào slot 15, còn dư 3 bình trên sàn
+	var fully_added = inv.add_item(floor_drop, floor_drop.stack_count)
+	assert_test(not fully_added, "add_item returned false due to partial capacity")
+	assert_test(inv.bag[15].stack_count == 16, "Slot 15 stack filled to exactly max_stack 16 (took 2 potions)")
+	assert_test(floor_drop.stack_count == 3, "Floor item stack_count reduced strictly to remainder 3 (Anti-Duplicate Guard)")
+	assert_test((inv.bag[15].stack_count - 14) + floor_drop.stack_count == 5, "Total item quantity strictly conserved (2 in bag + 3 on floor == 5)")
+
+	# 5. Khi balo đầy 100% không còn ô nào và không thể gộp thêm:
+	var sword = ITEM_DATA_SCRIPT.new()
+	sword.item_name = "Claymore"
+	sword.type = ItemData.ItemType.WEAPON
+	sword.stack_count = 1
+	var add_fail = inv.add_item(sword)
+	assert_test(not add_fail, "Cannot add new item when backpack is 100% full")
+	assert_test(sword.stack_count == 1, "Item stack_count remained 1 with 0 loss or duplication")
+
+	inv.queue_free()
+
+func test_polymorphic_equipment_dictionary_and_tooltip() -> void:
+	print("\n--- Test Group 5D: Polymorphic Equipment Dictionary & Encapsulated Tooltips ---")
+	var inv = INVENTORY_MANAGER_SCRIPT.new()
+	add_child(inv)
+
+	# 1. Kiểm tra cấu trúc equipment: Dictionary
+	assert_test(inv.equipment is Dictionary, "Equipment is backed by a Dictionary")
+	assert_test(inv.equipment.has(ItemData.ItemType.HELMET), "Equipment dict has HELMET slot")
+	assert_test(inv.equipment.has(ItemData.ItemType.ARMOR), "Equipment dict has ARMOR slot")
+	assert_test(inv.equipment.has(ItemData.ItemType.WEAPON), "Equipment dict has WEAPON slot")
+
+	# 2. Tạo món đồ và kiểm tra hàm get_tooltip_text() của ItemData
+	var test_blade = ITEM_DATA_SCRIPT.new()
+	test_blade.item_name = "Starforged Katana"
+	test_blade.type = ItemData.ItemType.WEAPON
+	test_blade.rarity = ItemData.Rarity.MYTHIC
+	test_blade.damage = 15
+	test_blade.attack_speed_bonus = 0.25
+	test_blade.special_effect = "Void Slash"
+	test_blade.description = "A sword forged from fallen meteors."
+
+	var tt: String = test_blade.get_tooltip_text()
+	assert_test(tt.contains("[Mythic] Starforged Katana"), "Tooltip includes formatted rarity tag and item name")
+	assert_test(tt.contains("• Attack Power: +15"), "Tooltip includes Attack Power line")
+	assert_test(tt.contains("• Attack Speed: +25%"), "Tooltip includes Attack Speed line")
+	assert_test(tt.contains("★ Mythic Effect: Void Slash"), "Tooltip includes Mythic Effect line")
+	assert_test(tt.contains("A sword forged from fallen meteors."), "Tooltip includes description")
+
+	# 3. Mặc vào người qua use_or_equip_item và kiểm tra tính tương thích 2 chiều
+	inv.bag[0] = test_blade
+	var dummy = Node2D.new()
+	inv.use_or_equip_item(0, dummy)
+
+	assert_test(inv.is_slot_equipped(ItemData.ItemType.WEAPON), "Weapon slot is marked as equipped")
+	assert_test(inv.get_equipped_item(ItemData.ItemType.WEAPON) == test_blade, "get_equipped_item(WEAPON) returns Starforged Katana")
+	assert_test(inv.equipped_weapon == test_blade, "Backward-compatible getter inv.equipped_weapon returns Starforged Katana")
+	assert_test(inv.get_weapon_damage() == 15, "get_weapon_damage() reflects dictionary lookup value 15")
+	assert_test(inv.get_attack_speed_bonus() == 0.25, "get_attack_speed_bonus() reflects dictionary lookup value 0.25")
+	assert_test(inv.has_mythic_weapon(), "has_mythic_weapon() returns true")
+
+	# 4. Tháo trang bị tổng quát
+	inv.unequip_item(ItemData.ItemType.WEAPON)
+	assert_test(not inv.is_slot_equipped(ItemData.ItemType.WEAPON), "Weapon slot is now unequipped")
+	assert_test(inv.equipped_weapon == null, "Backward-compatible getter inv.equipped_weapon is null")
+	assert_test(inv.bag[0] == test_blade, "Weapon safely stored back into bag[0]")
+
+	dummy.queue_free()
+	inv.queue_free()
+
+func test_drag_and_drop_slot_mechanics() -> void:
+	print("\n--- Test Group 5E: Drag & Drop Slot Interaction Mechanics ---")
+	var slot_scene = preload("res://Scene/UI/InventorySlot.tscn")
+	var slot_a = slot_scene.instantiate()
+	var slot_b = slot_scene.instantiate()
+	var equip_slot = slot_scene.instantiate()
+
+	add_child(slot_a)
+	add_child(slot_b)
+	add_child(equip_slot)
+
+	slot_a.slot_index = 0
+	slot_a.slot_kind = 0 # BAG
+	slot_b.slot_index = 1
+	slot_b.slot_kind = 0 # BAG
+
+	equip_slot.slot_index = -10
+	equip_slot.slot_kind = 1 # EQUIPMENT
+	equip_slot.equip_type = ItemData.ItemType.HELMET
+
+	# 1. Khi ô rỗng: Không thể tạo drag data
+	var empty_drag = slot_a._get_drag_data(Vector2.ZERO)
+	assert_test(empty_drag == null, "Empty slot produces null drag data")
+
+	# 2. Gán vật phẩm vào slot_a
+	var blade = ITEM_DATA_SCRIPT.new()
+	blade.item_name = "Shadow Dagger"
+	blade.type = ItemData.ItemType.WEAPON
+	blade.icon = Texture2D.new()
+	slot_a.set_item(blade)
+
+	var drag_data = slot_a._get_drag_data(Vector2.ZERO)
+	assert_test(drag_data != null and drag_data is Dictionary, "Slot with item generates valid drag dictionary")
+	assert_test(drag_data.get("type") == "inventory_slot", "Drag data type equals 'inventory_slot'")
+	assert_test(drag_data.get("slot_index") == 0, "Source slot_index is 0")
+	assert_test(drag_data.get("item") == blade, "Drag data references the correct item")
+
+	# 3. Kiểm tra tính hợp lệ khi thả (can_drop)
+	# Không cho thả vào chính nó
+	assert_test(not slot_a._can_drop_data(Vector2.ZERO, drag_data), "Cannot drop item onto itself")
+	# Thả sang ô balo khác (slot_b)
+	assert_test(slot_b._can_drop_data(Vector2.ZERO, drag_data), "Can drop item into another bag slot")
+	# Thả Kiếm vào ô Mũ (EQUIPMENT) -> Phải từ chối vì sai loại!
+	assert_test(not equip_slot._can_drop_data(Vector2.ZERO, drag_data), "Equipment slot rejects invalid item type (Weapon into Helmet slot)")
+
+	# 4. Tạo Mũ và kiểm tra thả vào ô Mũ
+	var helm = ITEM_DATA_SCRIPT.new()
+	helm.item_name = "Steel Cap"
+	helm.type = ItemData.ItemType.HELMET
+	helm.icon = Texture2D.new()
+	slot_b.set_item(helm)
+	var helm_drag = slot_b._get_drag_data(Vector2.ZERO)
+
+	assert_test(equip_slot._can_drop_data(Vector2.ZERO, helm_drag), "Equipment slot accepts matching item type (Helmet into Helmet slot)")
+
+	# 5. Kiểm tra phát tín hiệu slot_dropped
+	var dropped_signal_received := false
+	slot_b.slot_dropped.connect(func(_src, _tgt):
+		dropped_signal_received = true
+	)
+	slot_b._drop_data(Vector2.ZERO, drag_data)
+	assert_test(dropped_signal_received, "slot_dropped signal emitted successfully upon drop")
+
+	slot_a.queue_free()
+	slot_b.queue_free()
+	equip_slot.queue_free()
 
 func test_item_count_and_inverse_rarity_rule() -> void:
 	print("\n--- Test Group 6: Item Count & Inverse Rarity Distribution ---")

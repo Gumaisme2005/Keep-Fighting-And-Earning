@@ -32,6 +32,40 @@ func get_rarity_name() -> String:
 func get_rarity_color() -> Color:
 	return rarity_to_color(rarity)
 
+## Tạo chuỗi danh sách các chỉ số cộng thêm của vật phẩm (Information Expert)
+func get_stats_description() -> String:
+	var stats_lines: Array[String] = []
+	if damage > 0:
+		stats_lines.append("• Attack Power: +%d" % damage)
+	if armor > 0:
+		stats_lines.append("• Physical Armor: +%d" % armor)
+	if max_hp_bonus > 0:
+		stats_lines.append("• Max Health: +%d" % max_hp_bonus)
+	if heal_amount > 0:
+		stats_lines.append("• Restores Health: +%d" % heal_amount)
+	if attack_speed_bonus > 0.0:
+		stats_lines.append("• Attack Speed: +%d%%" % int(attack_speed_bonus * 100))
+	if not special_effect.is_empty():
+		stats_lines.append("★ Mythic Effect: %s" % special_effect)
+	return "\n".join(stats_lines)
+
+## Tạo chuỗi Tooltip hoàn chỉnh hiển thị trên giao diện người dùng
+func get_tooltip_text(action_hint: String = "Left-click: Use / Equip\nRight-click: Drop 1 onto floor") -> String:
+	var rarity_tag: String = "[%s] " % get_rarity_name()
+	var stack_info: String = " (x%d)" % stack_count if stack_count > 1 else ""
+	var stats_text: String = get_stats_description()
+	var formatted_stats: String = (stats_text + "\n") if not stats_text.is_empty() else ""
+	var hint_text: String = ("\n" + action_hint) if not action_hint.is_empty() else ""
+
+	return "%s%s%s\n%s%s%s" % [
+		rarity_tag,
+		item_name,
+		stack_info,
+		formatted_stats,
+		description,
+		hint_text
+	]
+
 static func rarity_to_string(r: Rarity) -> String:
 	match r:
 		Rarity.COMMON:
