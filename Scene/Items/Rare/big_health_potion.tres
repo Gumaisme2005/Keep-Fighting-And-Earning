@@ -10,6 +10,8 @@ region = Rect2(80, 272, 16, 16)
 [resource]
 script = ExtResource("1_mktl5")
 item_name = "Elixir of Rivendell"
+type = 3
+rarity = 1
 icon = SubResource("AtlasTexture_530bj")
 description = "Sacred cordial of the Eldar that restores vitality and permanently fortifies maximum health."
 max_hp_bonus = 1

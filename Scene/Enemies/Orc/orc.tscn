@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="3_0sdxh"]
 [ext_resource type="Texture2D" uid="uid://cykntk4mxdh0q" path="res://Assets/Character/Orc/Orc with shadows/Orc_Death.png" id="3_20v7j"]
 [ext_resource type="Texture2D" uid="uid://cxh4bv7wabk3a" path="res://Assets/Character/Orc/Orc with shadows/Orc_Hurt.png" id="4_4281o"]
-[ext_resource type="Resource" uid="uid://dokmb6uincmku" path="res://Scene/Items/health_potion.tres" id="4_qhhuc"]
+[ext_resource type="Resource" uid="uid://dokmb6uincmku" path="res://Scene/Items/Common/health_potion.tres" id="4_qhhuc"]
 [ext_resource type="Texture2D" uid="uid://bfmucspow1v3w" path="res://Assets/Character/Orc/Orc with shadows/Orc_Idle.png" id="5_n5rr8"]
 [ext_resource type="Texture2D" uid="uid://65p6vn2vn287" path="res://Assets/Character/Orc/Orc with shadows/Orc_Walk.png" id="6_xdbtq"]
 

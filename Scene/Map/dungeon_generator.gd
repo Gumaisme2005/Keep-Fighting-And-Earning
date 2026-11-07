@@ -878,12 +878,25 @@ func get_smart_steer_direction(from_global: Vector2, desired_dir: Vector2) -> Ve
 			return cand
 	return base_dir
 
-# --- CƠ CHẾ QUA MÀN ---
+# --- CƠ CHẾ QUA MÀN & RƯƠNG BOSS ---
 func spawn_portal(pos: Vector2):
-	print("[VICTORY] Boss đã gục ngã! Triệu hồi Cổng Dịch Chuyển...")
+	print("[VICTORY] Boss đã gục ngã! Triệu hồi Cổng Dịch Chuyển & 2 Rương Kho Báu...")
 	var portal = PORTAL_SCENE.instantiate()
 	add_child(portal)
 	portal.global_position = pos
+
+	# SINH 2 RƯƠNG BÁU PHÒNG BOSS
+	spawn_boss_chests(pos)
+
+func spawn_boss_chests(center_pos: Vector2) -> void:
+	var offsets: Array[Vector2] = [Vector2(-48, 8), Vector2(48, 8)]
+	for i in range(2):
+		var chest = CHEST_SCENE.instantiate()
+		chest.set("is_boss_chest", true)
+		if "loot_seed" in chest:
+			chest.loot_seed = (get_effective_seed_string() + "_boss_chest_" + str(current_level) + "_" + str(i)).hash()
+		add_child(chest)
+		chest.global_position = center_pos + offsets[i]
 
 func next_level():
 	current_level += 1

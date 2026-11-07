@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cniyfmnhpykqc"]
+
+[ext_resource type="Texture2D" uid="uid://u10fag2y6vtm" path="res://Assets/Items/Custom/Item_44.png" id="1_icon"]
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="2_script"]
+
+[resource]
+script = ExtResource("2_script")
+item_name = "Crimson Citadel Plate"
+type = 1
+rarity = 2
+icon = ExtResource("1_icon")
+description = "Heavy ceremonial plate hardened in dragon fire to withstand brute onslaughts."
+armor = 4
+max_hp_bonus = 3
+attack_speed_bonus = 0.05
+max_stack = 1

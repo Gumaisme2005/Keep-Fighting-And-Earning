@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ItemData" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Items/Custom/sword14.png" id="1_icon"]
+[ext_resource type="Script" path="res://Scene/Items/ItemData.gd" id="2_script"]
+
+[resource]
+script = ExtResource("2_script")
+item_name = "Sunforged Knight Blade"
+type = 2
+rarity = 2
+icon = ExtResource("1_icon")
+description = "Golden steel sword consecrated in Minas Tirith that cleaves shadowy hide."
+damage = 4
+armor = 0
+max_hp_bonus = 0
+heal_amount = 0
+attack_speed_bonus = 0.15
+special_effect = ""
+is_stackable = false
+max_stack = 1
+stack_count = 1

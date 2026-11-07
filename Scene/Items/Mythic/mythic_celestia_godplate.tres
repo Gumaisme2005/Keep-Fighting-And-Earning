@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://b8xc87qrh67kr"]
+
+[ext_resource type="Texture2D" uid="uid://dykjrbn4fgloy" path="res://Assets/Items/Custom/Item__59.png" id="1_ltl2a"]
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="2_script"]
+
+[resource]
+script = ExtResource("2_script")
+item_name = "Celestia Godplate of Anarion"
+type = 1
+rarity = 4
+icon = ExtResource("1_ltl2a")
+description = "[MYTHIC] Impervious war-harness worn by the High Kings of Numenor."
+special_effect = "Divine Retaliation - Khi nhan don, phan lai 75% sat thuong (toi thieu 3) len tat ca ke dich xung quanh."
+damage = 2
+armor = 10
+max_hp_bonus = 10
+attack_speed_bonus = 0.15
+max_stack = 1

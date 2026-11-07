@@ -6,10 +6,6 @@
 [sub_resource type="SystemFont" id="SystemFont_8f8xy"]
 font_names = PackedStringArray("Impact")
 
-[sub_resource type="SystemFont" id="SystemFont_tvcto"]
-font_names = PackedStringArray("Impact")
-subpixel_positioning = 0
-
 [node name="Main_menu" type="Control" unique_id=985923920]
 layout_mode = 3
 anchors_preset = 15

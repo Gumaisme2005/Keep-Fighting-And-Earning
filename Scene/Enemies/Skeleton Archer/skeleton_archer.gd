@@ -11,8 +11,8 @@ const BalanceData = preload("res://Scene/BalanceConfig.gd")
 @export var arrow_scene: PackedScene
 @export var world_item_scene: PackedScene = preload("res://Scene/Items/WorldItem/WorldItem.tscn")
 @export var loot_table: Array[ItemData] = [
-	preload("res://Scene/Items/health_potion.tres"),
-	preload("res://Scene/Items/iron_helmet.tres")
+	preload("res://Scene/Items/Common/health_potion.tres"),
+	preload("res://Scene/Items/Common/iron_helmet.tres")
 ]
 @export var drop_chance: float = 0.3
 var loot_seed: int = 0
@@ -179,12 +179,19 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		anim.play("idle")
 
 func drop_loot() -> void:
-	if world_item_scene != null and loot_table.size() > 0:
-		var rng := RandomNumberGenerator.new()
-		rng.seed = loot_seed if loot_seed != 0 else (int(global_position.x * 911) ^ int(global_position.y * 3571))
-		if rng.randf() <= drop_chance:
-			var random_item = loot_table[rng.randi() % loot_table.size()]
-			var item_drop = world_item_scene.instantiate()
+	var item_scene = world_item_scene if world_item_scene != null else preload("res://Scene/Items/WorldItem/WorldItem.tscn")
+	var rng := RandomNumberGenerator.new()
+	rng.seed = loot_seed if loot_seed != 0 else (int(global_position.x * 911) ^ int(global_position.y * 3571))
+	if rng.randf() <= drop_chance:
+		var floor_lvl := 1
+		if get_node_or_null("/root/GameManager") != null:
+			floor_lvl = GameManager.current_level
+		var random_item: ItemData = ItemDatabase.get_random_drop(floor_lvl, false, rng)
+		if random_item == null and loot_table.size() > 0:
+			random_item = loot_table[rng.randi() % loot_table.size()]
+
+		if random_item != null:
+			var item_drop = item_scene.instantiate()
 			item_drop.item_data = random_item
 			item_drop.global_position = global_position
 			var parent_node = get_parent() if get_parent() != null else get_tree().current_scene

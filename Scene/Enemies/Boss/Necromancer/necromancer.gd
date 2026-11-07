@@ -154,12 +154,26 @@ func take_damage(damage_amount: int) -> void:
 		is_dead = true
 		if get_node_or_null("/root/GameManager") != null:
 			GameManager.register_enemy_kill()
+		_drop_boss_loot()
 		_cleanup_summoned_minions()
 		anim.modulate = Color.WHITE
 		anim.play("death")
 		$Hurtbox/CollisionShape2D.set_deferred("disabled", true)
 		$CollisionShape2D.set_deferred("disabled", true)
 		scythe_collision.set_deferred("disabled", true)
+
+func _drop_boss_loot() -> void:
+	var floor_lvl := 1
+	if get_node_or_null("/root/GameManager") != null:
+		floor_lvl = GameManager.current_level
+	var boss_item: ItemData = ItemDatabase.get_random_drop(floor_lvl, true)
+	if boss_item != null:
+		var item_scene = preload("res://Scene/Items/WorldItem/WorldItem.tscn")
+		var item_drop = item_scene.instantiate()
+		item_drop.item_data = boss_item
+		item_drop.global_position = global_position
+		var parent_node = get_parent() if get_parent() != null else get_tree().current_scene
+		parent_node.call_deferred("add_child", item_drop)
 
 func _cleanup_summoned_minions() -> void:
 	for minion in summoned_minions:

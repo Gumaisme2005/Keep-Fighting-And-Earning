@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ItemData" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Items/Custom/purple_mystery_potion.png" id="1_icon"]
+[ext_resource type="Script" path="res://Scene/Items/ItemData.gd" id="2_script"]
+
+[resource]
+script = ExtResource("2_script")
+item_name = "Alchemical Battle Draught"
+type = 3
+rarity = 2
+icon = ExtResource("1_icon")
+description = "Potent concoction granting immense rejuvenation and vitality under pressure."
+damage = 0
+armor = 0
+max_hp_bonus = 3
+heal_amount = 6
+attack_speed_bonus = 0.0
+special_effect = ""
+is_stackable = true
+max_stack = 16
+stack_count = 1

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cg5xilmaxil37"]
+
+[ext_resource type="Texture2D" uid="uid://dl6pudfuww0fw" path="res://Assets/Items/Custom/Item_37.png" id="1_icon"]
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="2_script"]
+
+[resource]
+script = ExtResource("2_script")
+item_name = "Helm of Minas Tirith"
+type = 0
+rarity = 2
+icon = ExtResource("1_icon")
+description = "High-crested silver helm worn by captains of the White Tower."
+armor = 3
+max_hp_bonus = 3
+max_stack = 1

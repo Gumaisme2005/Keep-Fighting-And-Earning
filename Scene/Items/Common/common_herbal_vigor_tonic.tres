@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://dkcwlfighd6nw"]
+
+[ext_resource type="Texture2D" uid="uid://bdnifdo1omk0" path="res://Assets/Items/Custom/green_poison_potion.png" id="1_icon"]
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="2_script"]
+
+[resource]
+script = ExtResource("2_script")
+item_name = "Herbal Vigor Tonic"
+type = 3
+rarity = 0
+icon = ExtResource("1_icon")
+description = "Stimulating tonic that refreshes vitality and permanently bolsters fortitude."
+max_hp_bonus = 1
+heal_amount = 1
+is_stackable = true
