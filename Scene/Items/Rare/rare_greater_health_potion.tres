@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://ddalscujfl1sn"]
+
+[ext_resource type="Texture2D" uid="uid://bej11ru75ng2c" path="res://Assets/Items/Custom/red_health_potion.png" id="1_icon"]
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="2_script"]
+
+[resource]
+script = ExtResource("2_script")
+item_name = "Greater Health Potion"
+type = 3
+rarity = 1
+icon = ExtResource("1_icon")
+description = "Concentrated infusion of Athelas that heals grievous lacerations. Restores 4 HP."
+heal_amount = 4
+is_stackable = true

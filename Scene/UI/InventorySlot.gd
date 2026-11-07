@@ -83,20 +83,22 @@ func set_item(item: ItemData) -> void:
 			stats_lines.append("• Attack Power: +%d" % item.damage)
 		if item.armor > 0:
 			stats_lines.append("• Physical Armor: +%d" % item.armor)
-		if item.magic_resist > 0:
-			stats_lines.append("• Magic Resistance: +%d" % item.magic_resist)
 		if item.max_hp_bonus > 0:
 			stats_lines.append("• Max Health: +%d" % item.max_hp_bonus)
 		if item.heal_amount > 0:
 			stats_lines.append("• Restores Health: +%d" % item.heal_amount)
-		if item.move_speed_bonus > 0.0:
-			stats_lines.append("• Movement Speed: +%d%%" % int(item.move_speed_bonus * 100))
 		if item.attack_speed_bonus > 0.0:
 			stats_lines.append("• Attack Speed: +%d%%" % int(item.attack_speed_bonus * 100))
+		if not item.special_effect.is_empty():
+			stats_lines.append("★ Mythic Effect: %s" % item.special_effect)
 
 		var stats_text := "\n".join(stats_lines)
 		var stack_info := " (x%d)" % item.stack_count if item.stack_count > 1 else ""
-		tooltip_text = "%s%s\n%s%s\nLeft-click: Use / Equip\nRight-click: Drop 1 onto floor" % [
+		var rarity_tag: String = ""
+		if item.has_method("get_rarity_name"):
+			rarity_tag = "[%s] " % item.get_rarity_name()
+		tooltip_text = "%s%s%s\n%s%s\nLeft-click: Use / Equip\nRight-click: Drop 1 onto floor" % [
+			rarity_tag,
 			item.item_name,
 			stack_info,
 			(stats_text + "\n") if not stats_text.is_empty() else "",

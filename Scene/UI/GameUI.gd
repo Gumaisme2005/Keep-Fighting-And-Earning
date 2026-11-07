@@ -1038,10 +1038,6 @@ func refresh_ui() -> void:
 	if equip_stats_label != null and player != null:
 		var total_dmg = player.get_total_damage() if player.has_method("get_total_damage") else 1
 		var extra_stats: Array[String] = []
-		if inventory.has_method("get_magic_resistance") and inventory.get_magic_resistance() > 0:
-			extra_stats.append("• Magic Resist: +%d" % inventory.get_magic_resistance())
-		if inventory.has_method("get_speed_bonus") and inventory.get_speed_bonus() > 0.0:
-			extra_stats.append("• Move Speed: +%d%%" % int(inventory.get_speed_bonus() * 100))
 		if inventory.has_method("get_attack_speed_bonus") and inventory.get_attack_speed_bonus() > 0.0:
 			extra_stats.append("• Attack Speed: +%d%%" % int(inventory.get_attack_speed_bonus() * 100))
 

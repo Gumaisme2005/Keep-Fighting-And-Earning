@@ -86,7 +86,7 @@ func _ready() -> void:
 	inventory.equipment_changed.connect(_on_equipment_changed)
 
 	# Trang bị khởi đầu cân bằng: 1 Bình máu nhỏ
-	var starter_potion = preload("res://Scene/Items/health_potion.tres")
+	var starter_potion = preload("res://Scene/Items/Common/health_potion.tres")
 	inventory.add_item(starter_potion)
 
 	# Tự động nạp lại các Perk đang kích hoạt khi chuyển sang tầng mới
@@ -250,6 +250,10 @@ func take_damage(amount: int) -> void:
 	if had_armor and current_armor == 0 and get_node_or_null("/root/PerkManager") != null:
 		if PerkManager.has_armor_break_blast():
 			_trigger_armor_break_blast()
+
+	# HIỆU ỨNG ĐẶC BIỆT CỦA GIÁP MYTHIC: DIVINE RETALIATION (PHẢN ĐÒN)
+	if inventory != null and inventory.has_method("has_mythic_armor") and inventory.has_mythic_armor():
+		_trigger_mythic_thorns(amount)
 
 	stats_changed.emit(hp, max_hp, current_armor, max_armor)
 
@@ -431,7 +435,39 @@ func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
 	if pm.has_lightning_on_hit():
 		_trigger_chain_lightning(target)
 
+	# 4. Mythic Weapon Effect: Solar Ignite (Thánh Quang Thiêu Đốt)
+	if inventory != null and inventory.has_method("has_mythic_weapon") and inventory.has_mythic_weapon():
+		var burn_amt := 4
+		if target.has_method("take_damage"):
+			target.call_deferred("take_damage", burn_amt)
+			if get_tree():
+				get_tree().call_group("game_ui", "spawn_damage_number", target.global_position + Vector2(12, -26), burn_amt, Color(1.0, 0.45, 0.1))
+
+	# 5. Mythic Helmet Effect: Celestial Smite (Thiên Phạt Sấm Sét)
+	if inventory != null and inventory.has_method("has_mythic_helmet") and inventory.has_mythic_helmet():
+		var smite_rng := RandomNumberGenerator.new()
+		smite_rng.randomize()
+		if smite_rng.randf() <= 0.40:
+			var smite_dmg := 5
+			if target.has_method("take_damage"):
+				target.call_deferred("take_damage", smite_dmg)
+				if get_tree():
+					get_tree().call_group("game_ui", "spawn_damage_number", target.global_position + Vector2(-12, -26), smite_dmg, Color(0.35, 0.9, 1.0))
+			_trigger_chain_lightning(target)
+
 	return final_dmg
+
+func _trigger_mythic_thorns(incoming_damage: int) -> void:
+	var reflect_dmg: int = maxi(3, int(incoming_damage * 0.75))
+	var enemies = get_tree().get_nodes_in_group("enemies")
+	for e in enemies:
+		if is_instance_valid(e) and not bool(e.get("is_dead")):
+			var dist = global_position.distance_to(e.global_position)
+			if dist <= 95.0:
+				if e.has_method("take_damage"):
+					e.call_deferred("take_damage", reflect_dmg)
+					if get_tree():
+						get_tree().call_group("game_ui", "spawn_damage_number", e.global_position + Vector2(0, -22), reflect_dmg, Color(1.0, 0.3, 0.35))
 
 func _trigger_chain_lightning(primary_target: Node2D) -> void:
 	var enemies = get_tree().get_nodes_in_group("enemies")

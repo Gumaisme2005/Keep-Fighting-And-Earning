@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://b7t1d682tlpct"]
+
+[ext_resource type="Texture2D" uid="uid://crgpdmc38ekd2" path="res://Assets/Items/Custom/Item_39.png" id="1_fhbn7"]
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="2_script"]
+
+[resource]
+script = ExtResource("2_script")
+item_name = "Crown of the First Ages"
+type = 0
+rarity = 3
+icon = ExtResource("1_fhbn7")
+description = "Ancient dwarven gold diadem woven with protective spells of Durin's folk."
+armor = 5
+max_hp_bonus = 4
+max_stack = 1

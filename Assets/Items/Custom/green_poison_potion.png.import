@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d0i04ly8rljlq"
-path="res://.godot/imported/Icon187.png-6557f5e2831242b7be92e3a89bde7c86.ctex"
+uid="uid://bdnifdo1omk0"
+path="res://.godot/imported/green_poison_potion.png-55dca61e1aeeb746432b57c9c57caee9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Items/Items/Icon187.png"
-dest_files=["res://.godot/imported/Icon187.png-6557f5e2831242b7be92e3a89bde7c86.ctex"]
+source_file="res://Assets/Items/Custom/green_poison_potion.png"
+dest_files=["res://.godot/imported/green_poison_potion.png-55dca61e1aeeb746432b57c9c57caee9.ctex"]
 
 [params]
 

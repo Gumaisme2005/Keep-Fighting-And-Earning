@@ -143,33 +143,43 @@ func test_item_drop_mechanism() -> void:
 	inv.queue_free()
 
 func test_equipment_magic_resist_and_boots() -> void:
-	print("\n--- Test Group 5: RPG Equipment Magic Resist & Boots ---")
+	print("\n--- Test Group 5: RPG Equipment Helmet & Armor & Weapon ---")
 	var inv = INVENTORY_MANAGER_SCRIPT.new()
 	add_child(inv)
 
-	var mantle = ITEM_DATA_SCRIPT.new()
-	mantle.item_name = "Mantle of Magic Resistance"
-	mantle.type = ItemData.ItemType.MAGIC_RESIST
-	mantle.magic_resist = 35
+	var helm = ITEM_DATA_SCRIPT.new()
+	helm.item_name = "Iron Helm"
+	helm.type = ItemData.ItemType.HELMET
+	helm.armor = 2
 
-	var boots = ITEM_DATA_SCRIPT.new()
-	boots.item_name = "Elven Boots of Swiftness"
-	boots.type = ItemData.ItemType.BOOTS
-	boots.move_speed_bonus = 0.20
+	var armor_item = ITEM_DATA_SCRIPT.new()
+	armor_item.item_name = "Reinforced Steel Cuirass"
+	armor_item.type = ItemData.ItemType.ARMOR
+	armor_item.armor = 4
 
-	inv.add_item(mantle)
-	inv.add_item(boots)
+	var weapon = ITEM_DATA_SCRIPT.new()
+	weapon.item_name = "Broadsword"
+	weapon.type = ItemData.ItemType.WEAPON
+	weapon.damage = 3
+
+	inv.add_item(helm)
+	inv.add_item(armor_item)
+	inv.add_item(weapon)
 
 	var dummy = Node2D.new()
-	# Equip mantle (slot 0)
+	# Equip helm (slot 0)
 	inv.use_or_equip_item(0, dummy)
-	assert_test(inv.equipped_magic_resist != null, "Magic Resist Mantle equipped")
-	assert_test(inv.get_magic_resistance() == 35, "get_magic_resistance() returns 35")
+	assert_test(inv.equipped_helmet != null, "Helmet equipped successfully")
 
-	# Equip boots (now slot 0)
+	# Equip armor (slot 0)
 	inv.use_or_equip_item(0, dummy)
-	assert_test(inv.equipped_boots != null, "Boots of Swiftness equipped")
-	assert_test(inv.get_speed_bonus() == 0.20, "get_speed_bonus() returns 0.20 (20%)")
+	assert_test(inv.equipped_armor != null, "Armor equipped successfully")
+	assert_test(inv.get_total_defense() == 6, "Total defense from Helm (2) + Armor (4) equals 6")
+
+	# Equip weapon (slot 0)
+	inv.use_or_equip_item(0, dummy)
+	assert_test(inv.equipped_weapon != null, "Weapon equipped successfully")
+	assert_test(inv.get_weapon_damage() == 3, "Weapon damage equals 3")
 
 	dummy.queue_free()
 	inv.queue_free()

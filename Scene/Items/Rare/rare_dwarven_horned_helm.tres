@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://b4tjmd3g7cdpr"]
+
+[ext_resource type="Texture2D" uid="uid://wcajx7ojqjdp" path="res://Assets/Items/Custom/Item__52.png" id="1_1mw1g"]
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="2_script"]
+
+[resource]
+script = ExtResource("2_script")
+item_name = "Dwarven Horned Helm"
+type = 0
+rarity = 1
+icon = ExtResource("1_1mw1g")
+description = "Reinforced steel helmet adorned with short dwarven horns, providing stout guard."
+armor = 2
+max_hp_bonus = 1
+max_stack = 1

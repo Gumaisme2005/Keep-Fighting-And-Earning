@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://ci876jkma1bba"]
+
+[ext_resource type="Script" uid="uid://df789qwe99999" path="res://tests/test_boss_and_floor_loot.gd" id="1_boss_loot_test"]
+
+[node name="TestBossLoot" type="Node"]
+script = ExtResource("1_boss_loot_test")

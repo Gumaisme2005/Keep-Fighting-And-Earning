@@ -12,8 +12,6 @@ var bag: Array[ItemData] = []
 var equipped_helmet: ItemData = null
 var equipped_armor: ItemData = null
 var equipped_weapon: ItemData = null
-var equipped_magic_resist: ItemData = null
-var equipped_boots: ItemData = null
 
 # 1. NHẶT ĐỒ VÀO TÚI (CƠ CHẾ MINECRAFT STACKING)
 func add_item(item: ItemData, count: int = 1) -> bool:
@@ -98,24 +96,6 @@ func use_or_equip_item(index: int, player: Node2D) -> void:
 			print("[EQUIP] Equipped Weapon: ", item.item_name, " (+", item.damage, " DMG, +", item.max_hp_bonus, " HP)")
 			equipment_changed.emit()
 
-		ItemData.ItemType.MAGIC_RESIST:
-			if equipped_magic_resist != null:
-				bag[index] = equipped_magic_resist
-			else:
-				bag.remove_at(index)
-			equipped_magic_resist = item
-			print("[EQUIP] Equipped Magic Resist: ", item.item_name, " (+", item.magic_resist, " MR)")
-			equipment_changed.emit()
-
-		ItemData.ItemType.BOOTS:
-			if equipped_boots != null:
-				bag[index] = equipped_boots
-			else:
-				bag.remove_at(index)
-			equipped_boots = item
-			print("[EQUIP] Equipped Boots: ", item.item_name, " (+", int(item.move_speed_bonus * 100), "% Speed)")
-			equipment_changed.emit()
-
 	inventory_changed.emit()
 
 # 3. THÁO ĐỒ VÀO TÚI
@@ -137,14 +117,6 @@ func unequip_item(type: ItemData.ItemType) -> void:
 			if equipped_weapon != null:
 				bag.append(equipped_weapon)
 				equipped_weapon = null
-		ItemData.ItemType.MAGIC_RESIST:
-			if equipped_magic_resist != null:
-				bag.append(equipped_magic_resist)
-				equipped_magic_resist = null
-		ItemData.ItemType.BOOTS:
-			if equipped_boots != null:
-				bag.append(equipped_boots)
-				equipped_boots = null
 
 	equipment_changed.emit()
 	inventory_changed.emit()
@@ -185,14 +157,6 @@ func get_total_defense() -> int:
 	if equipped_armor != null: total += equipped_armor.armor
 	return total
 
-# TÍNH TỔNG GIÁP KHÁNG PHÉP (MAGIC RESISTANCE)
-func get_magic_resistance() -> int:
-	var total = 0
-	if equipped_magic_resist != null: total += equipped_magic_resist.magic_resist
-	if equipped_armor != null: total += equipped_armor.magic_resist
-	if equipped_helmet != null: total += equipped_helmet.magic_resist
-	return total
-
 # TÍNH TỔNG SÁT THƯƠNG VŨ KHÍ
 func get_weapon_damage() -> int:
 	if equipped_weapon != null:
@@ -207,14 +171,19 @@ func get_total_max_hp_bonus() -> int:
 	if equipped_weapon != null: total += equipped_weapon.max_hp_bonus
 	return total
 
-# TÍNH TỔNG TỐC ĐỘ DI CHUYỂN TĂNG THÊM
-func get_speed_bonus() -> float:
-	var total = 0.0
-	if equipped_boots != null: total += equipped_boots.move_speed_bonus
-	return total
-
 # TÍNH TỔNG TỐC ĐỘ ĐÁNH TĂNG THÊM
 func get_attack_speed_bonus() -> float:
 	var total = 0.0
 	if equipped_weapon != null: total += equipped_weapon.attack_speed_bonus
+	if equipped_armor != null: total += equipped_armor.attack_speed_bonus
 	return total
+
+# KIỂM TRA HIỆU ỨNG TRANG BỊ ĐẶC BIỆT (MYTHIC EQUIPMENT)
+func has_mythic_weapon() -> bool:
+	return equipped_weapon != null and equipped_weapon.rarity == ItemData.Rarity.MYTHIC
+
+func has_mythic_armor() -> bool:
+	return equipped_armor != null and equipped_armor.rarity == ItemData.Rarity.MYTHIC
+
+func has_mythic_helmet() -> bool:
+	return equipped_helmet != null and equipped_helmet.rarity == ItemData.Rarity.MYTHIC

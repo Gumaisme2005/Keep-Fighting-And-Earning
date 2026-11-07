@@ -11,6 +11,7 @@ region = Rect2(48, 128, 16, 16)
 script = ExtResource("1_prmxy")
 item_name = "Bane of Morgul"
 type = 2
+rarity = 3
 icon = SubResource("AtlasTexture_6ad7n")
 description = "Enchanted elven blade glowing with cold wrath against the shadow, augmenting both strike and ward."
 damage = 8

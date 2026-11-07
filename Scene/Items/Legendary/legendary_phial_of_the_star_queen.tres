@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://crhdvx11icrnn"]
+
+[ext_resource type="Texture2D" uid="uid://4vssm4qkbaf6" path="res://Assets/Items/Custom/blue_mana_potion.png" id="1_icon"]
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="2_script"]
+
+[resource]
+script = ExtResource("2_script")
+item_name = "Phial of the Star Queen"
+type = 3
+rarity = 3
+icon = ExtResource("1_icon")
+description = "Blessed water reflecting the light of Earendil, fully revitalizing fallen heroes."
+max_hp_bonus = 4
+heal_amount = 10
+is_stackable = true
