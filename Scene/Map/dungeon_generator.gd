@@ -121,12 +121,7 @@ func generate_dungeon():
 	plan_traps() # Bước 1: Tính toán vị trí bẫy trước
 
 	# Bước 2: Xây gạch và trang trí (Né các vị trí bẫy, tâm phòng và lối vào)
-	for i in range(generated_rooms.size()):
-		var type = room_types[i]
-		if i == skeleton_king_room_index or type == RoomType.BOSS:
-			continue # Boss arenas stay clean, open floors without obstructive pillars.
-		if type == RoomType.COMBAT:
-			decorate_pillars(generated_rooms[i])
+	_decorate_combat_room_pillars()
 	scatter_decorations()
 	plan_enemy_spawns()
 	dungeon_generated.emit()
@@ -392,6 +387,14 @@ func build_walls():
 
 	set_cells_terrain_connect(LAYER_FLOOR, wall_cells, 0, 0)
 
+func _decorate_combat_room_pillars():
+	for i in range(generated_rooms.size()):
+		var type = room_types[i]
+		if i == skeleton_king_room_index or type == RoomType.BOSS:
+			continue # Boss arenas stay clean, open floors without obstructive pillars.
+		if type == RoomType.COMBAT:
+			decorate_pillars(generated_rooms[i])
+
 func decorate_pillars(room: Rect2i):
 	var num_pillars = rng.randi_range(2, 5)
 	for i in range(num_pillars):
@@ -434,41 +437,44 @@ func scatter_decorations():
 		if i == skeleton_king_room_index:
 			continue
 
-		var center = room.get_center()
-		var num_clusters = rng.randi_range(1, 3)
+		_scatter_room_decorations(room, decor_patterns)
 
-		for c in range(num_clusters):
-			var selected_pattern = decor_patterns[rng.randi() % decor_patterns.size()]
-			var pattern_height = selected_pattern.size()
-			var pattern_width = selected_pattern[0].size()
+func _scatter_room_decorations(room: Rect2i, decor_patterns: Array):
+	var center = room.get_center()
+	var num_clusters = rng.randi_range(1, 3)
 
-			var anchor_x = rng.randi_range(room.position.x + 2, room.end.x - pattern_width - 2)
-			var anchor_y = rng.randi_range(room.position.y + 2, room.end.y - pattern_height - 2)
-			var anchor = Vector2i(anchor_x, anchor_y)
+	for c in range(num_clusters):
+		var selected_pattern = decor_patterns[rng.randi() % decor_patterns.size()]
+		var pattern_height = selected_pattern.size()
+		var pattern_width = selected_pattern[0].size()
 
-			if Vector2(anchor).distance_to(Vector2(center)) < 4.0:
-				continue
+		var anchor_x = rng.randi_range(room.position.x + 2, room.end.x - pattern_width - 2)
+		var anchor_y = rng.randi_range(room.position.y + 2, room.end.y - pattern_height - 2)
+		var anchor = Vector2i(anchor_x, anchor_y)
 
-			var cluster_decor = decor_coords[rng.randi() % decor_coords.size()]
+		if Vector2(anchor).distance_to(Vector2(center)) < 4.0:
+			continue
 
-			var can_place = true
+		var cluster_decor = decor_coords[rng.randi() % decor_coords.size()]
+
+		var can_place = true
+		for y in range(pattern_height):
+			for x in range(pattern_width):
+				if selected_pattern[y][x] == 1:
+					var check_cell = anchor + Vector2i(x, y)
+					if corridor_cells.has(check_cell) or get_cell_atlas_coords(LAYER_FLOOR, check_cell) != FLOOR_COORD or forbidden_decor_cells.has(check_cell):
+						can_place = false
+						break
+			if not can_place:
+				break
+
+		if can_place:
 			for y in range(pattern_height):
 				for x in range(pattern_width):
 					if selected_pattern[y][x] == 1:
-						var check_cell = anchor + Vector2i(x, y)
-						if corridor_cells.has(check_cell) or get_cell_atlas_coords(LAYER_FLOOR, check_cell) != FLOOR_COORD or forbidden_decor_cells.has(check_cell):
-							can_place = false
-							break
-				if not can_place:
-					break
-
-			if can_place:
-				for y in range(pattern_height):
-					for x in range(pattern_width):
-						if selected_pattern[y][x] == 1:
-							var target_cell = anchor + Vector2i(x, y)
-							if get_cell_source_id(LAYER_DECOR, target_cell) == -1:
-								set_cell(LAYER_DECOR, target_cell, SOURCE_OBJECTS, cluster_decor)
+						var target_cell = anchor + Vector2i(x, y)
+						if get_cell_source_id(LAYER_DECOR, target_cell) == -1:
+							set_cell(LAYER_DECOR, target_cell, SOURCE_OBJECTS, cluster_decor)
 
 # --- THẢ QUÁI / BẪY / RƯƠNG / PLAYER ---
 func spawn_entities():
