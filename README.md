@@ -3,8 +3,8 @@
 Keep Fighting And Earning is a 2D top-down action roguelike developed using Godot Engine 4. The project incorporates deterministic procedural dungeon generation, real-time combat mechanics, centralized stat balancing, and an automated verification test suite.
 
 > **Base Commit & Development Alignment**:
-> Nhánh `development` được căn chuẩn trên commit nền **`d718e45`** (từ `origin/main`), bảo toàn toàn bộ tính năng hữu ích của `main` (Dungeon Benchmark, Fog of War, Spike Traps, Audio Glorious Morning, Soul Knight UI) và tích hợp hoàn chỉnh 2 nhân vật mới **Yugi / Atem** cùng **Doraemon** (kèm các nhân vật và hệ thống mở rộng).
-> Chi tiết bảng diff, rà soát xung đột và bằng chứng kiểm thử: xem tại [`docs/BASE_COMMIT_ANALYSIS_AND_DIFF.md`](docs/BASE_COMMIT_ANALYSIS_AND_DIFF.md).
+> The `development` branch is aligned against base commit **`d718e45`** (from `origin/main`), preserving all features from `main` (Dungeon Benchmark, Fog of War, Spike Traps, Glorious Morning audio, Soul Knight UI) while integrating the complete hero roster, including **Yugi / Atem** and **Doraemon** alongside expanded systems.
+> For diff tables, conflict resolution, and test verification logs, refer to [`docs/BASE_COMMIT_ANALYSIS_AND_DIFF.md`](docs/BASE_COMMIT_ANALYSIS_AND_DIFF.md).
 
 ---
 
@@ -145,7 +145,7 @@ Keep-Fighting-And-Earning/
 The test suite is executable headlessly in Godot Engine:
 
 1. **Unit Tests (`tests/test_dungeon_generator_unit.tscn`)**:
-   - Validates room constraints, start and boss placement, corridor tree connectivity, trap placement, hero attack mechanics, and seed sanitization (19/19 passing).
+   - Validates room constraints, start and boss placement, corridor tree connectivity, trap placement, hero attack mechanics, UI scene instantiation, and seed sanitization (19/19 passing).
 2. **Property-Based Invariant Tests (`tests/test_dungeon_properties.tscn`)**:
    - Tests 100 random seeds across 5 structural invariants: determinism, connectivity, flood-fill walkability, boss optimality, and safe entity spawns (500/500 passing).
 3. **Combat Regression Tests (`tests/test_orc_battle.tscn`)**:
@@ -155,20 +155,23 @@ The test suite is executable headlessly in Godot Engine:
 5. **Skeleton King Arena Tests (`tests/test_skeleton_king.tscn`)**:
    - Tests specialized arena layout, crystal destruction, laser grid volleys, enrage states, and defeat transitions (21/21 passing).
 6. **Doraemon Hero Tests (`tests/test_doraemon.tscn`)**:
-   - Exercises all 20 gadgets, 6 companion assists, 10 super abilities, crate collision blocking, and pocket HUD pagination and facing hitbox regression (49 checks).
+   - Exercises all 20 gadgets, 6 companion assists, 10 super abilities, crate collision blocking, pocket HUD pagination, and facing hitbox regression (49/49 passing).
 7. **Yugi Atem Hero Tests (`tests/test_yugi.tscn`)**:
-   - Validates character animations, directional attacks, guard stance, and special summons.
+   - Validates character animations, directional attacks, charged attacks, guard stance, and 5 room spells (passing).
 8. **Werewolf Functional Tests (`tests/test_werewolf.tscn`)**:
    - Tests claw attacks, pounce warning telegraphs, damage interruption, and pounce distance bounding (50/50 passing).
 9. **MOBA HUD and Inventory Stacking Tests (`tests/test_moba_hud_and_inventory.tscn`)**:
    - Validates numeric health and armor progress bars, Minecraft-style potion stacking up to 16, stack consumption, item dropping, and RPG equipment stat calculations (34/34 passing).
 10. **Replay Capacity and Memory Protection Tests (`tests/test_replay_security.tscn`)**:
     - Validates 10-replay hard cap enforcement, FIFO memory deallocation of old replay frames, manual replay deletion, clear all, and anti-DoS idle frame compression (39/39 passing).
-
-9. **MOBA HUD and Inventory Tests (`tests/test_moba_hud_and_inventory.tscn`)**: Numeric bars, item stacking, equipment and dropping items.
-10. **Miyabi Tests (`tests/test_miyabi.tscn`)**: Frost abilities, spirit, facing and replay.
-11. **Lương Thơ Tests (`tests/test_luong_tho.tscn`)**: Combo, firearms, transformation and replay.
-12. **Projectile Obstacle Tests (`tests/test_projectile_obstacles.tscn`)**: Crates block fast projectiles; ricochets bounce; non-solid decoration remains transparent.
+11. **Hoshimi Miyabi Tests (`tests/test_miyabi.tscn`)**:
+    - Tests 3-hit frost combo, invulnerable dash slash, charged frost waves, Frost Bloom ice spikes, and autonomous ice spirit targeting (18/18 passing).
+12. **Luong Tho Tests (`tests/test_luong_tho.tscn`)**:
+    - Tests 3-step weapon combo, Twin Barrels firing along cursor vector, White Moon transformation, piercing rounds, and invulnerability (15/15 passing).
+13. **Projectile Obstacle Tests (`tests/test_projectile_obstacles.tscn`)**:
+    - Validates that wooden crates block fast projectiles, ricochets bounce properly, and non-solid decorations remain transparent (passing).
+14. **Perk Progression System Tests (`tests/test_perk_system.tscn`)**:
+    - Validates 30 perks across 4 rarities, deterministic drafting rolls, unique perk deduplication, combat hook integrations, stochastic damage rounding, and second-chance revivals (37/37 passing).
 
 ---
 
@@ -199,22 +202,97 @@ godot --headless --path . "res://tests/test_yugi.tscn"
 godot --headless --path . "res://tests/test_werewolf.tscn"
 godot --headless --path . "res://tests/test_moba_hud_and_inventory.tscn"
 godot --headless --path . "res://tests/test_replay_security.tscn"
+godot --headless --path . "res://tests/test_miyabi.tscn"
+godot --headless --path . "res://tests/test_luong_tho.tscn"
+godot --headless --path . "res://tests/test_projectile_obstacles.tscn"
+godot --headless --path . "res://tests/test_perk_system.tscn"
 ```
 
 ---
 
-## 7. Controls
+## 7. Controls and How to Play
 
-- **Movement**: W, A, S, D or Arrow Keys
-- **Primary Attack**: Left Mouse Button
-- **Special Skill**: Q
-- **Secondary Action / Skill**: Right Mouse Button
-- **Guard Stance (Yugi)**: Hold Shift
-- **Gadget Page Selection (Doraemon)**: Mouse Scroll Wheel, Z, X
-- **Eat Snack / Dorayaki (Doraemon)**: F
-- **Interact / Pick Up**: E
-- **Drop Item**: G or Right-Click inventory slot
-- **Backpack / Inventory Toggle**: B, I, or Tab
-- **Minimap Toggle**: M
-- **Audio Mute Toggle**: N
-- **Pause Menu**: Escape
+### 7.1 General Controls and Movement
+- **Movement (W, A, S, D / Arrow Keys)**: Move your champion smoothly across 8 directions (cardinal and diagonal).
+- **Mouse Cursor 360-Degree Aiming**: The champion continuously aims and turns toward the mouse cursor. All basic attacks, skillshots, dashes, projectile trajectories, and directional summons align directly with the cursor position.
+- **Primary Attack (Left Mouse Button / LMB)**: Unleashes basic weapon strikes or projectile volleys. Holding LMB continuously attacks at your champion's base cooldown rate.
+- **Secondary Action (Right Mouse Button / RMB)**: Triggers secondary attacks, dashes, or charged summon mechanisms.
+- **Primary Active Skill (Q)**: Casts the champion's signature ability (indicated by cooldown clock on the HUD).
+- **Interact / Pick Up (E)**: Opens treasure chests, collects world item drops, or steps through dimensional portals.
+- **Expedition Manual and Lore (H or F1)**: Opens the in-game Guide modal with full control references, active hero mechanics, and Middle-earth expedition lore.
+- **Inventory and Equipment (Tab, I, or B)**: Toggles the 16-slot Backpack and Equipment window.
+- **Action Hotbar (Keys 1 to 9)**: Instantly consumes stacked potions or activates hotbar equipment items.
+- **Drop First Item (G)**: Drops the first item from your backpack onto the dungeon floor.
+- **Drop Specific Item (Right-Click in Inventory)**: Spawns an interactive world pickup from any selected slot.
+- **Minimap Toggle (M)**: Switches between the compact corner radar and the expanded full dungeon tactical overview.
+- **Audio Mute Toggle (N)**: Toggles background music and sound effects on or off.
+- **Pause Menu (Escape)**: Pauses the expedition, displaying seed details, manual, and surrender options.
+
+### 7.2 Champion-Specific Combos and Tactics
+- **Pyrois (Knight)**:
+  - LMB: Sword thrust.
+  - Q Sovereign Rush: Charges forward with invulnerability frames, dealing +2 bonus damage (5s cooldown).
+  - Tactics: Use regenerating Armor to absorb vanguard hits, then strike with Sovereign Rush to breach fortified corridors.
+- **Olaf (Berserker)**:
+  - LMB: Wide greataxe cleave hitting all enemies within arc range.
+  - Q Durin's Wrath: Roars into a 5-second battle trance doubling all melee damage (5s cooldown).
+  - Tactics: Funnel monster swarms into choke points, trigger Durin's Wrath, and cleave multiple foes in single swings.
+- **Miya (Archer)**:
+  - LMB: Rapid long-range arrows (280 px/s velocity, 0.46s cooldown).
+  - Q Orthanc Fire: Hurls an alchemical explosive dealing 2x area damage + 1 bonus damage (6.5s cooldown).
+  - Tactics: Maintain maximum distance using 360-degree mouse aiming. Use dungeon pillars to break enemy line of sight while kiting.
+- **Charlotte (Shadow Ranger)**:
+  - LMB: Rapid dual-blade flurry (0.28s cooldown).
+  - RMB Shadow Step: High-speed 400 px/s invulnerable dash followed by 4 piercing stabs (5s cooldown).
+  - Q Triple Flurry: Rapid 3-slash stationary burst (3s cooldown).
+  - Tactics: Execute Shadow Step to bypass traps and projectile volleys, reappearing behind elite foes for instant critical strikes.
+- **Yugi / Atem (Summoner)**:
+  - LMB: Quick monster strike (1x damage); hold 0.65s for a 2x charged summon.
+  - RMB: Location-targeted monster summon (1x damage); hold 0.65s for a 3x charged summon.
+  - Hold Shift: Enters Guard Spirit stance. Clicking during guard releases a 2x combo summon.
+  - Q Special Summon: Randomly triggers 1 of 5 room-wide spells: Room Blast (50% enemy current HP), Room Laser, Room Lightning, Room Pull, or Room Fire (12s cooldown).
+  - Tactics: Place location summons ahead of your position to scout dangerous rooms. Hold Shift to absorb incoming projectiles while charging counter-attacks.
+- **Doraemon (Gadget Specialist)**:
+  - Mouse Scroll Wheel or Z / X: Cycles through 10 pocket pages containing 20 futuristic gadgets.
+  - LMB and RMB: Activates Gadget 1 and Gadget 2 of the active page (Air Cannon, Anywhere Door, Champion Glove, Shock Gun, Pencil Missiles, Mini-Doras, T-Rex summon, etc.).
+  - Q Friend Assist / Super Move: Summons 1 of 6 friends (Nobita, Gian, Shizuka, Dorami, Suneo, Come-come Cat). When the power bar reaches 100+, Q triggers devastating super moves.
+  - F Snack: Eats a Dorayaki to heal 1 HP and generate +40 power gauge points (12s cooldown).
+  - Tactics: Use Anywhere Door to bypass locked corridors and hazardous spike traps. Build power gauge with Air Cannon before unleashing super attacks.
+- **Hoshimi Miyabi (Frost Swordswoman)**:
+  - LMB: 3-hit frost combo; the third hit lunges forward and inflicts freeze.
+  - Shift: Invulnerable 72px dash slash cutting through all enemies in path (2x damage).
+  - Hold RMB: Charges a piercing Frost Wave that penetrates enemy formations and freezes targets.
+  - Q Frost Bloom: Erupts sharp ice spikes in front of her (3x damage + freeze), followed by a shattering burst.
+  - Ice Spirit: An autonomous spirit familiar continuously tracks and snipes the nearest visible threat every 2 seconds.
+  - Tactics: Freeze elite enemies with the 3rd combo hit or charged Frost Wave, then dash through them with Shift for guaranteed critical damage.
+- **Luong Tho (Twin Gunblade Duelist)**:
+  - LMB: 3-step melee sequence: Stab, Twin Swing (2 hits), and Ground Smash (2x damage + daze).
+  - RMB Twin Barrels: Fires twin gunblade cartridges along the cursor vector.
+  - Q White Moon Transformation: Transforms into the White Moon form for 12 seconds, granting complete damage immunity, +1 damage bonus, 25% attack speed, 20% move speed, and piercing rounds.
+  - Tactics: Engage swarms with Twin Barrels at medium range. When surrounded by bosses or high-damage elites, activate White Moon to eliminate threats without risk of taking damage.
+
+### 7.3 Dungeon Survival Mechanics
+- **Shields and Regenerating Armor**: Armor pools absorb damage before Health is depleted. Remaining out of combat for 5 seconds triggers continuous Armor regeneration back to maximum capacity.
+- **Line-of-Sight and Solid Obstacles**: Arrows, spells, and weapon arcs cannot pass through stone walls, closed doors, or wooden crates. Use dungeon architecture to bait enemies and nullify ranged projectiles.
+- **Spike Trap Timing**: Retractable spike floor tiles alternate states. Cross tiles while spikes are retracted, or acquire the Stone Bulwark perk for permanent spike immunity.
+- **Room Lockouts**: Entering an uncleared monster room immediately seals all entry and exit doors. Clear all hostile entities to reopen passages and claim treasure.
+
+---
+
+## 8. Expedition Narrative and World Lore
+
+### 8.1 The Chronicles of Middle-earth: Khazad-dum
+Long before the Third Age, the subterranean kingdom of Khazad-dum stood as the crowning jewel of Dwarven civilization under the Misty Mountains. Yet the greed of the Naugrim dug too deeply into the roots of Caradhras, awakening ancient terrors and releasing shadowy abyssal forces that overran the Great Halls.
+
+Today, the abandoned halls of Moria echo with the drumbeats of Orc warbands, rabid werewolf packs, and ancient sorcerers practicing dark necromancy. From across dimensions and eras, eight champions have been drawn to the Doors of Durin, seeking to reclaim lost relics, conquer the subterranean horrors, and seal the ancient rifts.
+
+### 8.2 The Palantir Stone and Deterministic Coordinates
+At the core of Khazad-dum lies an ancient Seeing Stone—a Palantir woven into the subterranean bedrock. The stone projects immutable spatial coordinates across the endless labyrinth:
+- **Spatial Seeding**: Every expedition seed string generates an identical, immutable arrangement of 16 chambers, corridor trees, spike traps, treasure vaults, and boss lairs.
+- **Replay Crystals**: Ancient crystal nodes record the precise kinetic actions and keystrokes of every hero at 60 Hz, enabling adventurers to study past expeditions and master the dungeon's deterministic patterns.
+
+### 8.3 The Subterranean Hierarchy
+- **Orc Warbands and Warg Riders**: The subterranean frontlines are held by disciplined Orc vanguards and heavily armored Chieftains.
+- **Werewolf Stalkers**: Fast, feral beasts lurking in corridor shadows, telegraphing deadly pounce attacks that must be interrupted or dodged.
+- **The Necromancer of the Lower Depths**: An ancient defiler in Floor 1 summoning undead thralls and homing skull curses.
+- **The Skeleton King**: An undying monarch residing in Floors 3, 6, and 9. Protected by invulnerable Soul Crystals and devastating laser grid volleys, the Skeleton King can only be damaged by systematically shattering his resonant soul anchors.

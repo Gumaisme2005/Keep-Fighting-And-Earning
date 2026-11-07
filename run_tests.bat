@@ -134,7 +134,7 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 echo.
-echo [13/13] Running Perk System Tests (Step 1 & Step 2 Verification)...
+echo [13/13] Running Perk System Tests (Step 1 and Step 2 Verification)...
 "!GODOT_BIN!" --headless --path . "res://tests/test_perk_system.tscn"
 if !ERRORLEVEL! NEQ 0 (
     echo [FAILED] Perk System Tests failed.

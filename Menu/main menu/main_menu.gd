@@ -378,10 +378,10 @@ func _build_lore_modal() -> void:
 	lore_modal.anchor_right = 0.5
 	lore_modal.anchor_top = 0.5
 	lore_modal.anchor_bottom = 0.5
-	lore_modal.offset_left = -350.0
-	lore_modal.offset_right = 350.0
-	lore_modal.offset_top = -220.0
-	lore_modal.offset_bottom = 220.0
+	lore_modal.offset_left = -430.0
+	lore_modal.offset_right = 430.0
+	lore_modal.offset_top = -250.0
+	lore_modal.offset_bottom = 250.0
 	lore_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_PANEL, UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
 	lore_modal.visible = false
 	add_child(lore_modal)
@@ -392,11 +392,9 @@ func _build_lore_modal() -> void:
 
 	var header := HBoxContainer.new()
 	vbox.add_child(header)
-	var h_title := Label.new()
-	h_title.text = "CHRONICLES OF MIDDLE-EARTH: MINES OF MORIA"
-	UITheme.style_header_label(h_title, 15, UITheme.COLOR_TEXT_GOLD)
-	h_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	header.add_child(h_title)
+	var icon_hdr := UITheme.create_icon_header("scroll_gold", "CHRONICLES OF MORIA: STORYLINE & HERO DOSSIERS", 16, UITheme.COLOR_TEXT_GOLD)
+	icon_hdr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header.add_child(icon_hdr)
 
 	var close_btn := UITheme.create_danger_button("Close", "", Vector2(84, 30), 12)
 	close_btn.pressed.connect(func(): lore_modal.visible = false)
@@ -408,27 +406,110 @@ func _build_lore_modal() -> void:
 
 	var content_vbox := VBoxContainer.new()
 	content_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	content_vbox.add_theme_constant_override("separation", 8)
+	content_vbox.add_theme_constant_override("separation", 12)
 	scroll.add_child(content_vbox)
 
-	var story_lbl := Label.new()
-	story_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	story_lbl.add_theme_font_size_override("font_size", 13)
-	story_lbl.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
-	story_lbl.text = GameManager.WORLD_LORE["story"] + "\n\n" + \
-		"• EIGHT CHAMPIONS OF THE FELLOWSHIP VANGUARD:\n" + \
-		"  1. Pyrois — Knight of the White Tower: Vitality 4, Armor 4, Damage 1. Wields the Blade of Andúril and Gondor Aegis, initiating Sovereign Rush.\n" + \
-		"  2. Olaf — Dwarven Berserker of Erebor: Vitality 6, Armor 1, Damage 2. Swings the Greataxe of Khazad-dûm, unleashing Durin's Wrath to double strike damage.\n" + \
-		"  3. Miya — Mirkwood Elven Archer: Vitality 3, Armor 1, Damage 1. Draws the Galadhrim Bow from afar, bombarding hordes with Orthanc Fire.\n" + \
-		"  4. Charlotte — Dúnedain Shadow Ranger: Vitality 5, Armor 0, Damage 2. Brandishes the Twin Blades of Narsil with Triple Flurry and evasive Shadow Step.\n" + \
-		"  5. Yugi / Atem — Pharaoh Summoner: Vitality 5, Armor 1, Damage 1. Summons monsters from his Duel Deck, guards with Shift, and unleashes a random Special Summon with Q.\n" + \
-		"  6. Doraemon — Gadget Cat of the 22nd Century: Vitality 5, Armor 2, Damage 1. Fights with his whole 4D Pocket: 20 gadgets on 10 pages, 6 friends on Take-copters and 10 super moves powered by a 3-bar gauge.\n" + \
-		"  7. Hoshimi Miyabi — Frost Swordswoman: Vitality 4, Armor 2, Damage 1. A 3-hit frost combo, an icy dash slash, a charged Frost Wave and the Frost Bloom ice spikes, with an ice spirit firing bolts at her side.\n" + \
-		"  8. Lương Thơ — Twin Gunblade Duelist: Vitality 5, Armor 2, Damage 1. Stabs, swings and smashes with twin tonfa-gunblades, fires both barrels, and transforms into her invulnerable white-haired White Moon form.\n\n" + \
-		"• THE SHADOW LEGION OF MORIA:\n" + \
-		"  - Hostile Ranks: Moria Orcs, Armored Uruk-hai, Barrow-wight Remains, Minas Morgul Bone Archers, Angmar Blood Bats, and Warg-breed Werewolves.\n" + \
-		"  - Dungeon Overlords: The Necromancer of Dol Guldur summoning toxic shades, and the ruthless Warg Rider Chieftain."
-	content_vbox.add_child(story_lbl)
+	# 1. Prologue & World Story
+	var prologue_box := PanelContainer.new()
+	prologue_box.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_DARK, UITheme.COLOR_GOLD_BORDER_MUTED, 1, 4, 12, 10))
+	content_vbox.add_child(prologue_box)
+
+	var p_vbox := VBoxContainer.new()
+	p_vbox.add_theme_constant_override("separation", 6)
+	prologue_box.add_child(p_vbox)
+
+	var p_hdr := Label.new()
+	p_hdr.text = "PROLOGUE: THE RESURGENCE IN KHAZAD-DÛM"
+	UITheme.style_header_label(p_hdr, 14, UITheme.COLOR_TEXT_GOLD)
+	p_vbox.add_child(p_hdr)
+
+	var p_txt := Label.new()
+	p_txt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	p_txt.add_theme_font_override("font", UITheme.FONT_BODY)
+	p_txt.add_theme_font_size_override("font_size", 12)
+	p_txt.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
+	p_txt.text = GameManager.WORLD_LORE.get("story", "")
+	p_vbox.add_child(p_txt)
+
+	# 2. Lore Chapters (Palantir & Determinism, Convergence)
+	var chapters: Array = GameManager.WORLD_LORE.get("chapters", [])
+	for chap in chapters:
+		if chap is Dictionary:
+			var chap_box := PanelContainer.new()
+			chap_box.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_DARK, UITheme.COLOR_GOLD_BORDER_MUTED, 1, 4, 10, 8))
+			content_vbox.add_child(chap_box)
+			var c_vbox := VBoxContainer.new()
+			c_vbox.add_theme_constant_override("separation", 4)
+			chap_box.add_child(c_vbox)
+			var c_title := Label.new()
+			c_title.text = String(chap.get("title", ""))
+			UITheme.style_header_label(c_title, 13, Color(0.60, 0.88, 1.0))
+			c_vbox.add_child(c_title)
+			var c_text := Label.new()
+			c_text.text = String(chap.get("text", ""))
+			c_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			c_text.add_theme_font_override("font", UITheme.FONT_BODY)
+			c_text.add_theme_font_size_override("font_size", 12)
+			c_text.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
+			c_vbox.add_child(c_text)
+
+	# 3. Eight Champions Detailed Profiles
+	var heroes_hdr := Label.new()
+	heroes_hdr.text = "THE EIGHT CHAMPIONS OF THE FELLOWSHIP VANGUARD"
+	UITheme.style_header_label(heroes_hdr, 15, UITheme.COLOR_TEXT_GOLD)
+	content_vbox.add_child(heroes_hdr)
+
+	for h in GameManager.CHARACTER_INFO:
+		var h_card := PanelContainer.new()
+		h_card.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_DARK, UITheme.COLOR_GOLD_BORDER, 1, 4, 12, 10))
+		content_vbox.add_child(h_card)
+
+		var h_vbox := VBoxContainer.new()
+		h_vbox.add_theme_constant_override("separation", 5)
+		h_card.add_child(h_vbox)
+
+		var h_title := Label.new()
+		h_title.text = "%d. %s  —  %s  (%s)" % [
+			int(h.get("index", 0)) + 1,
+			String(h.get("name", "")).to_upper(),
+			String(h.get("role", "")),
+			String(h.get("weapon", ""))
+		]
+		UITheme.style_header_label(h_title, 13, UITheme.COLOR_TEXT_GOLD)
+		h_vbox.add_child(h_title)
+
+		if h.has("quote") and not String(h.get("quote", "")).is_empty():
+			var q_lbl := Label.new()
+			q_lbl.text = String(h.get("quote", ""))
+			q_lbl.add_theme_font_override("font", UITheme.FONT_BODY)
+			q_lbl.add_theme_font_size_override("font_size", 11)
+			q_lbl.add_theme_color_override("font_color", Color(1.0, 0.88, 0.55))
+			h_vbox.add_child(q_lbl)
+
+		var origin_txt := ""
+		if h.has("origin"):
+			origin_txt += "• Origin: " + String(h.get("origin", "")) + "\n"
+		if h.has("motivation"):
+			origin_txt += "• Motivation: " + String(h.get("motivation", "")) + "\n"
+		if h.has("tactics"):
+			origin_txt += "• Combat Tactics: " + String(h.get("tactics", ""))
+
+		if not origin_txt.is_empty():
+			var o_lbl := Label.new()
+			o_lbl.text = origin_txt
+			o_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			o_lbl.add_theme_font_override("font", UITheme.FONT_BODY)
+			o_lbl.add_theme_font_size_override("font_size", 12)
+			o_lbl.add_theme_color_override("font_color", Color(0.78, 0.88, 1.0))
+			h_vbox.add_child(o_lbl)
+
+		var lore_lbl := Label.new()
+		lore_lbl.text = String(h.get("lore", ""))
+		lore_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lore_lbl.add_theme_font_override("font", UITheme.FONT_BODY)
+		lore_lbl.add_theme_font_size_override("font_size", 12)
+		lore_lbl.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
+		h_vbox.add_child(lore_lbl)
 
 func _build_help_modal() -> void:
 	help_modal = PanelContainer.new()
@@ -436,10 +517,10 @@ func _build_help_modal() -> void:
 	help_modal.anchor_right = 0.5
 	help_modal.anchor_top = 0.5
 	help_modal.anchor_bottom = 0.5
-	help_modal.offset_left = -310.0
-	help_modal.offset_right = 310.0
-	help_modal.offset_top = -200.0
-	help_modal.offset_bottom = 200.0
+	help_modal.offset_left = -430.0
+	help_modal.offset_right = 430.0
+	help_modal.offset_top = -250.0
+	help_modal.offset_bottom = 250.0
 	help_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_PANEL, UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
 	help_modal.visible = false
 	add_child(help_modal)
@@ -450,33 +531,144 @@ func _build_help_modal() -> void:
 
 	var header := HBoxContainer.new()
 	vbox.add_child(header)
-	var h_title := Label.new()
-	h_title.text = "COMBAT CONTROLS & MECHANICS"
-	UITheme.style_header_label(h_title, 15, UITheme.COLOR_TEXT_GOLD)
-	h_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	header.add_child(h_title)
+	var modal_hdr := UITheme.create_icon_header("question", "EXPEDITION MANUAL: CONTROLS, SHORTCUTS & MECHANICS", 16, UITheme.COLOR_TEXT_GOLD)
+	modal_hdr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header.add_child(modal_hdr)
 
 	var close_top := UITheme.create_danger_button("Close", "", Vector2(84, 30), 12)
 	close_top.pressed.connect(func(): help_modal.visible = false)
 	header.add_child(close_top)
 
-	var body := Label.new()
-	body.add_theme_font_size_override("font_size", 13)
-	body.add_theme_color_override("font_color", Color(0.92, 0.95, 0.98))
-	body.text = """• W, A, S, D: Move your champion in 4 directions
-• Left Click: Strike or fire towards mouse cursor
-• Key Q: Unleash champion active ability
-• Right Click: Shadow Step dash exclusive to Charlotte
-• Yugi: Left/Right Click to summon (hold 0.65s to charge), hold Shift to guard, Shift + Click for combo summons
-• Doraemon: Mouse Wheel / Z / X switch gadget page, Left / Right Click use the page gadgets, Q friend (or SUPER with a full power bar), F Dorayaki
-• Miyabi: Left Click 3-hit combo, Shift dash slash, hold / release Right Click for a Frost Wave, Q Frost Bloom
-• Lương Thơ: Left Click combo Stab → Twin Swing → Ground Smash, Right Click Twin Barrels, Q White Moon transformation
-• Key E: Interact and pick up dropped loot or chests
-• Keys 1 to 9: Quick-use potions or equip hotbar items
-• Key I or Tab: Toggle Backpack & Equipment screen
-• Key M: Expand or minimize the tactical Minimap
-• Key ESC: Pause expedition, save seed, or retry"""
-	vbox.add_child(body)
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	vbox.add_child(scroll)
+
+	var content_vbox := VBoxContainer.new()
+	content_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content_vbox.add_theme_constant_override("separation", 12)
+	scroll.add_child(content_vbox)
+
+	# Section 1: Movement & Mouse Aiming
+	var move_card := PanelContainer.new()
+	move_card.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_DARK, UITheme.COLOR_GOLD_BORDER, 1, 4, 12, 10))
+	content_vbox.add_child(move_card)
+
+	var m_vbox := VBoxContainer.new()
+	m_vbox.add_theme_constant_override("separation", 6)
+	move_card.add_child(m_vbox)
+
+	var m_title := Label.new()
+	m_title.text = "1. MOVEMENT & MOUSE AIMING"
+	UITheme.style_header_label(m_title, 14, UITheme.COLOR_TEXT_GOLD)
+	m_vbox.add_child(m_title)
+
+	var m_body := Label.new()
+	m_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	m_body.add_theme_font_override("font", UITheme.FONT_BODY)
+	m_body.add_theme_font_size_override("font_size", 12)
+	m_body.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
+	m_body.text = """• W, A, S, D or Arrow Keys: Move your champion across the 4 cardinal directions.
+• Mouse Cursor Aiming: Character continuously rotates 360 degrees toward the cursor. All projectile shots, melee cleaves, dashes, and directional abilities fire exactly toward the cursor's location.
+• Left Mouse Button (LMB): Primary attack / weapon strike / arrow shot. Holding the button auto-repeats attacks at champion cooldown speed.
+• Right Mouse Button (RMB): Secondary action or specialty ability (unique per hero).
+• Key Q: Unleash champion primary active skill (cooldown displayed in HUD).
+• Key E: Interact with objects, open dungeon chests, collect world item drops, or step through dimensional portals."""
+	m_vbox.add_child(m_body)
+
+	# Section 2: Champion-Specific Keybindings
+	var hero_card := PanelContainer.new()
+	hero_card.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_DARK, UITheme.COLOR_GOLD_BORDER, 1, 4, 12, 10))
+	content_vbox.add_child(hero_card)
+
+	var h_vbox := VBoxContainer.new()
+	h_vbox.add_theme_constant_override("separation", 6)
+	hero_card.add_child(h_vbox)
+
+	var h_title := Label.new()
+	h_title.text = "2. CHAMPION-SPECIFIC BUTTONS & COMBOS"
+	UITheme.style_header_label(h_title, 14, UITheme.COLOR_TEXT_GOLD)
+	h_vbox.add_child(h_title)
+
+	var h_body := Label.new()
+	h_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	h_body.add_theme_font_override("font", UITheme.FONT_BODY)
+	h_body.add_theme_font_size_override("font_size", 12)
+	h_body.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
+	h_body.text = """• Pyrois (Knight): LMB sword thrust | Q Sovereign Rush: invulnerable charge forward dealing +2 bonus damage (5s CD).
+• Olaf (Berserker): LMB wide greataxe cleave hitting multiple foes | Q Durin's Wrath: roar to double melee damage for 5 seconds (5s CD).
+• Miya (Archer): LMB rapid long-range arrows (280 px/s) | Q Orthanc Fire: throw alchemical explosive dealing 2x area damage + 1 bonus damage (6.5s CD).
+• Charlotte (Shadow Ranger): LMB dual blade flurry | RMB Shadow Step: 400 px/s invulnerable dash + 4 piercing stabs (5s CD) | Q Triple Flurry: rapid 3-slash stationary burst (3s CD).
+• Yugi / Atem (Summoner): LMB quick monster strike (hold 0.65s for 2x charge) | RMB location summon (hold 0.65s for 3x charge) | Hold Shift: guard spirit stance; click during guard for 2x combo summon | Q Special Summon: cast 1 of 5 room spells (12s CD).
+• Doraemon (Gadget Cat): Mouse Wheel or Z / X: switch active gadget page (10 pages / 20 gadgets) | LMB & RMB: activate page gadgets | Q: friend assist (Nobita, Gian, Shizuka, Dorami, Suneo, Cat) or SUPER move at 100+ power | Key F: eat Dorayaki (+1 HP, +40 power, 12s CD).
+• Hoshimi Miyabi (Frost): LMB 3-hit frost combo (3rd hit lunges & freezes) | Shift: invulnerable 72px dash slash | Hold RMB: charge piercing Frost Wave | Q: Frost Bloom ice spike eruption (3x + freeze) | Autonomous Ice Spirit snipes nearby enemies.
+• Lương Thơ (Gunblade): LMB 3-step combo: Stab -> Twin Swing -> Ground Smash (2x + daze) | RMB: fire Twin Barrels along cursor | Q: White Moon form (12s total invulnerability, +1 dmg, 25% faster attack, 20% faster move, piercing rounds)."""
+	h_vbox.add_child(h_body)
+
+	# Section 3: Backpack, Equipment & Hotbar
+	var bag_card := PanelContainer.new()
+	bag_card.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_DARK, UITheme.COLOR_GOLD_BORDER, 1, 4, 12, 10))
+	content_vbox.add_child(bag_card)
+
+	var b_vbox := VBoxContainer.new()
+	b_vbox.add_theme_constant_override("separation", 6)
+	bag_card.add_child(b_vbox)
+
+	var b_title := Label.new()
+	b_title.text = "3. BACKPACK, EQUIPMENT & HOTBAR SHORTCUTS"
+	UITheme.style_header_label(b_title, 14, UITheme.COLOR_TEXT_GOLD)
+	b_vbox.add_child(b_title)
+
+	var b_body := Label.new()
+	b_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	b_body.add_theme_font_override("font", UITheme.FONT_BODY)
+	b_body.add_theme_font_size_override("font_size", 12)
+	b_body.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
+	b_body.text = """• Tab, I, or B: Toggle the 16-slot Backpack and Equipment window.
+• Hotbar Keys 1 to 9: Quickly consume potions or switch active equipment without opening the inventory.
+• Key G: Instantly drop the first item in your backpack onto the floor.
+• Right-Click in Inventory: Drop a specific item from any inventory slot to spawn a collectible floor pickup.
+• Item Stacking: Consumable potions automatically stack up to 16 units per slot, displaying item count badges."""
+	b_vbox.add_child(b_body)
+
+	# Section 4: Exploration & Combat Rules
+	var rules_card := PanelContainer.new()
+	rules_card.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_DARK, UITheme.COLOR_GOLD_BORDER, 1, 4, 12, 10))
+	content_vbox.add_child(rules_card)
+
+	var r_vbox := VBoxContainer.new()
+	r_vbox.add_theme_constant_override("separation", 6)
+	rules_card.add_child(r_vbox)
+
+	var r_title := Label.new()
+	r_title.text = "4. COMBAT MECHANICS & DUNGEON SURVIVAL"
+	UITheme.style_header_label(r_title, 14, UITheme.COLOR_TEXT_GOLD)
+	r_vbox.add_child(r_title)
+
+	var r_body := Label.new()
+	r_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	r_body.add_theme_font_override("font", UITheme.FONT_BODY)
+	r_body.add_theme_font_size_override("font_size", 12)
+	r_body.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
+	r_body.text = """• Health & Regenerating Armor: Armor shields absorb incoming attacks first. If you avoid damage for 5 seconds, your Armor begins regenerating back to full!
+• Line-of-Sight (LoS) & Obstacles: Projectiles and attacks cannot pass through stone walls, closed doors, or wooden crates. Use dungeon pillars to block enemy arrows and break enemy lines of sight.
+• Room Locking: Entering an unvisited monster room locks all entrance and exit doors until all enemies are defeated.
+• Key M: Toggle between the compact corner minimap radar and the expanded full dungeon tactical overview.
+• Key N: Toggle audio BGM and sound effects mute.
+• Key ESC: Pause expedition, check seed information, access manual, or retry."""
+	r_vbox.add_child(r_body)
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_ESCAPE:
+			if help_modal != null and help_modal.visible:
+				help_modal.visible = false
+				get_viewport().set_input_as_handled()
+			elif lore_modal != null and lore_modal.visible:
+				lore_modal.visible = false
+				get_viewport().set_input_as_handled()
+			elif seed_modal != null and seed_modal.visible:
+				seed_modal.visible = false
+				get_viewport().set_input_as_handled()
 
 func on_start_pressed() -> void:
 	_on_start_button_pressed()

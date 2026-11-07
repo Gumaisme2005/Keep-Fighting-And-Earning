@@ -3,6 +3,9 @@ extends Control
 const UITheme = preload("res://Scene/UI/UITheme.gd")
 
 var info_label: Label = null
+var guide_modal: PanelContainer = null
+var guide_title_label: Label = null
+var guide_body_label: Label = null
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -48,6 +51,20 @@ func _build_extra_pause_controls() -> void:
 		resume_btn.custom_minimum_size = Vector2(260, 38)
 		UITheme.style_button(resume_btn, "", UITheme.COLOR_GOLD_BORDER_HOVER, UITheme.COLOR_BG_DARK, 14)
 
+	var controls_btn := UITheme.create_button("CONTROLS & HOW TO PLAY", "question", Vector2(260, 36), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
+	controls_btn.pressed.connect(func():
+		_show_pause_guide("controls")
+	)
+	vbox.add_child(controls_btn)
+	vbox.move_child(controls_btn, 2)
+
+	var lore_btn := UITheme.create_button("EXPEDITION LORE & STORY", "scroll_gold", Vector2(260, 36), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
+	lore_btn.pressed.connect(func():
+		_show_pause_guide("lore")
+	)
+	vbox.add_child(lore_btn)
+	vbox.move_child(lore_btn, 3)
+
 	var restart_btn := vbox.get_node_or_null("Restart_button") as Button
 	if restart_btn != null:
 		restart_btn.text = "RETRY CURRENT SEED"
@@ -88,11 +105,122 @@ func _build_extra_pause_controls() -> void:
 		UITheme.style_danger_button(exit_btn, "", 13)
 		vbox.move_child(exit_btn, vbox.get_child_count() - 1)
 
+	_build_pause_guide_modal()
+
+func _build_pause_guide_modal() -> void:
+	guide_modal = PanelContainer.new()
+	guide_modal.anchor_left = 0.5
+	guide_modal.anchor_right = 0.5
+	guide_modal.anchor_top = 0.5
+	guide_modal.anchor_bottom = 0.5
+	guide_modal.offset_left = -390.0
+	guide_modal.offset_right = 390.0
+	guide_modal.offset_top = -225.0
+	guide_modal.offset_bottom = 225.0
+	guide_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_PANEL, UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
+	guide_modal.visible = false
+	add_child(guide_modal)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 10)
+	guide_modal.add_child(vbox)
+
+	var header := HBoxContainer.new()
+	vbox.add_child(header)
+
+	guide_title_label = Label.new()
+	guide_title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	UITheme.style_header_label(guide_title_label, 15, UITheme.COLOR_TEXT_GOLD)
+	header.add_child(guide_title_label)
+
+	var close_btn := UITheme.create_danger_button("Close", "", Vector2(84, 30), 12)
+	close_btn.pressed.connect(func(): guide_modal.visible = false)
+	header.add_child(close_btn)
+
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	vbox.add_child(scroll)
+
+	guide_body_label = Label.new()
+	guide_body_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	guide_body_label.add_theme_font_override("font", UITheme.FONT_BODY)
+	guide_body_label.add_theme_font_size_override("font_size", 12)
+	guide_body_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
+	scroll.add_child(guide_body_label)
+
+func _show_pause_guide(mode: String) -> void:
+	if guide_modal == null:
+		return
+	var hero_info: Dictionary = {}
+	if get_node_or_null("/root/GameManager") != null:
+		hero_info = GameManager.get_selected_character_info()
+
+	var hero_name: String = String(hero_info.get("name", "Active Hero"))
+	var hero_role: String = String(hero_info.get("role", ""))
+
+	if mode == "controls":
+		guide_title_label.text = "EXPEDITION CONTROLS & MANUAL"
+		guide_body_label.text = """• MOVEMENT & MOUSE AIMING:
+  - W, A, S, D / Arrow Keys: Move your hero in 4 directions.
+  - Mouse Cursor: 360-degree aiming. All attacks, arrows, and spells fly toward your cursor.
+  - Left Mouse Button (LMB): Primary attack / weapon strike / archery.
+  - Right Mouse Button (RMB): Secondary action / specialty skill.
+  - Key Q: Primary active skill.
+  - Key E: Interact, open chests, collect dropped loot, step through portals.
+
+• ACTIVE HERO: %s (%s)
+  - %s
+  - %s
+  - %s
+
+• INVENTORY, HOTBAR & SYSTEM:
+  - Tab / I / B: Open 16-slot Backpack and Equipment screen.
+  - Keys 1 to 9: Hotbar quick consumption / gear swap.
+  - Key G / Right-Click: Drop items onto the floor.
+  - Key M: Expand or minimize tactical Minimap.
+  - Key N: Toggle audio mute.
+  - Key ESC: Pause / Resume.
+
+• COMBAT SURVIVAL:
+  - Armor automatically regenerates to full after 5 seconds without taking damage.
+  - Use stone columns and walls to block enemy projectiles and kite swarms.""" % [
+			hero_name.to_upper(), hero_role,
+			String(hero_info.get("controls_guide", "")),
+			String(hero_info.get("skill_q", "")),
+			String(hero_info.get("tactics", ""))
+		]
+	else:
+		guide_title_label.text = "THE CHRONICLES OF MORIA & STORY"
+		var story_txt: String = ""
+		if get_node_or_null("/root/GameManager") != null:
+			story_txt = String(GameManager.WORLD_LORE.get("story", ""))
+		guide_body_label.text = """• THE RESURGENCE IN KHAZAD-DÛM:
+%s
+
+• CURRENT CHAMPION DOSSIER: %s (%s)
+  - Origin: %s
+  - Motivation: %s
+  - Lore: %s
+  - Quote: %s""" % [
+			story_txt,
+			hero_name.to_upper(), hero_role,
+			String(hero_info.get("origin", "Middle-earth")),
+			String(hero_info.get("motivation", "To defeat the shadow")),
+			String(hero_info.get("lore", "")),
+			String(hero_info.get("quote", ""))
+		]
+
+	guide_modal.visible = true
+
 func _unhandled_input(event: InputEvent) -> void:
 	var game_over_menu := get_tree().get_first_node_in_group("game_over_menu")
 	if game_over_menu != null and game_over_menu.is_visible_in_tree():
 		return
 	if event.is_action_pressed("esc") and not event.is_echo():
+		if guide_modal != null and guide_modal.visible:
+			guide_modal.visible = false
+			get_viewport().set_input_as_handled()
+			return
 		if get_tree().paused:
 			resume()
 		else:

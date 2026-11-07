@@ -53,6 +53,10 @@ var toast_label: Label = null
 var replay_banner: PanelContainer = null
 
 var inventory_modal: PanelContainer = null
+var guide_modal: PanelContainer = null
+var guide_title_label: Label = null
+var guide_body_label: Label = null
+var guide_active_tab: String = "controls"
 var equip_stats_label: Label = null
 var minimap_control: Control = null
 var minimap_panel: PanelContainer = null
@@ -387,7 +391,12 @@ func _build_enhanced_ui() -> void:
 	map_btn.pressed.connect(_toggle_minimap_size)
 	seed_btn_hbox.add_child(map_btn)
 
-	var is_muted_now: bool = (get_node_or_null("/root/AudioManager") != null and AudioManager.is_muted)
+	var guide_btn := UITheme.create_button("Guide", "question", Vector2(0, 24), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 10, 5, 4)
+	guide_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	guide_btn.focus_mode = Control.FOCUS_NONE
+	guide_btn.tooltip_text = "Expedition Manual & Lore (Press H)"
+	guide_btn.pressed.connect(toggle_guide_modal)
+	seed_btn_hbox.add_child(guide_btn)
 	mute_btn = UITheme.create_button("Audio", "", Vector2(0, 24), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 11, 5, 4)
 	mute_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	mute_btn.focus_mode = Control.FOCUS_NONE
@@ -603,7 +612,10 @@ func _build_enhanced_ui() -> void:
 	# 7. Cửa sổ Hành trang & Trang bị
 	_build_inventory_modal()
 
-	# 8. Cửa sổ Chọn Perk Chúc Phúc
+	# 8. Cửa sổ Hướng dẫn Chơi & Cốt truyện (Manual & Lore)
+	_build_guide_modal()
+
+	# 9. Cửa sổ Chọn Perk Chúc Phúc
 	perk_modal = PERK_MODAL_SCENE.instantiate()
 	add_child(perk_modal)
 
@@ -769,6 +781,159 @@ func _create_equip_slot(label_txt: String, icon_name: String, item_type: int, pa
 	vbox.add_child(slot)
 	return slot
 
+func toggle_guide_modal() -> void:
+	if guide_modal != null:
+		guide_modal.visible = not guide_modal.visible
+		if guide_modal.visible:
+			_update_guide_modal_content(guide_active_tab)
+
+func _build_guide_modal() -> void:
+	guide_modal = PanelContainer.new()
+	guide_modal.anchor_left = 0.5
+	guide_modal.anchor_right = 0.5
+	guide_modal.anchor_top = 0.5
+	guide_modal.anchor_bottom = 0.5
+	guide_modal.offset_left = -400.0
+	guide_modal.offset_right = 400.0
+	guide_modal.offset_top = -230.0
+	guide_modal.offset_bottom = 230.0
+	guide_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.07, 0.09, 0.15, 0.97), Color(0.88, 0.72, 0.34), 2, 6, 16, 12))
+	guide_modal.visible = false
+	add_child(guide_modal)
+
+	var root_vbox := VBoxContainer.new()
+	root_vbox.add_theme_constant_override("separation", 8)
+	guide_modal.add_child(root_vbox)
+
+	# 1. Header
+	var header_hbox := HBoxContainer.new()
+	root_vbox.add_child(header_hbox)
+
+	guide_title_label = Label.new()
+	guide_title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	UITheme.style_header_label(guide_title_label, 15, Color(1.0, 0.86, 0.35))
+	header_hbox.add_child(guide_title_label)
+
+	var close_btn := UITheme.create_button("Close [H / ESC]", "", Vector2(120, 28), Color(0.85, 0.4, 0.4), Color(0.20, 0.12, 0.14, 0.96), 11)
+	close_btn.pressed.connect(toggle_guide_modal)
+	header_hbox.add_child(close_btn)
+
+	# 2. Tab Bar
+	var tab_hbox := HBoxContainer.new()
+	tab_hbox.add_theme_constant_override("separation", 8)
+	root_vbox.add_child(tab_hbox)
+
+	var tab_controls := UITheme.create_button("CONTROLS & MOUSE", "question", Vector2(170, 30), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 11)
+	tab_controls.pressed.connect(func(): _update_guide_modal_content("controls"))
+	tab_hbox.add_child(tab_controls)
+
+	var tab_hero := UITheme.create_button("CURRENT CHAMPION", "hero", Vector2(170, 30), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 11)
+	tab_hero.pressed.connect(func(): _update_guide_modal_content("hero"))
+	tab_hbox.add_child(tab_hero)
+
+	var tab_lore := UITheme.create_button("MORIA LORE & STORY", "scroll_gold", Vector2(170, 30), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 11)
+	tab_lore.pressed.connect(func(): _update_guide_modal_content("lore"))
+	tab_hbox.add_child(tab_lore)
+
+	# 3. Content Scroll
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root_vbox.add_child(scroll)
+
+	guide_body_label = Label.new()
+	guide_body_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	guide_body_label.add_theme_font_override("font", UITheme.FONT_BODY)
+	guide_body_label.add_theme_font_size_override("font_size", 12)
+	guide_body_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
+	scroll.add_child(guide_body_label)
+
+	_update_guide_modal_content("controls")
+
+func _update_guide_modal_content(tab: String) -> void:
+	guide_active_tab = tab
+	if guide_title_label == null or guide_body_label == null:
+		return
+
+	var hero_info: Dictionary = {}
+	if get_node_or_null("/root/GameManager") != null:
+		hero_info = GameManager.get_selected_character_info()
+
+	var h_name: String = String(hero_info.get("name", "Active Hero"))
+	var h_role: String = String(hero_info.get("role", ""))
+
+	match tab:
+		"controls":
+			guide_title_label.text = "EXPEDITION MANUAL: CONTROLS & SHORTCUTS"
+			guide_body_label.text = """• MOVEMENT & MOUSE AIMING:
+  - W, A, S, D or Arrow Keys: 4-directional player movement.
+  - Mouse Cursor: 360-degree rotational look and aim tracking. Attacks, projectiles, and directional skills fly toward cursor position.
+  - Left Mouse Button (LMB): Primary attack / weapon strike / arrow shot. Holding auto-repeats attacks.
+  - Right Mouse Button (RMB): Secondary action or specialty ability (dash, summon, dual firearms, frost wave, gadget 2).
+  - Key Q: Primary champion active skill.
+  - Key E: Interact with objects, open chests, collect world item drops, or enter dimensional portals.
+
+• BACKPACK, EQUIPMENT & HOTBAR:
+  - Tab, I, or B: Toggle the 16-slot Backpack and Equipment screen.
+  - Keys 1 to 9: Hotbar quick consumption / equipment swap.
+  - Key G / Right-Click: Drop items onto the floor to share or free space.
+  - Potion Stacking: Potions stack up to 16 units in a single slot.
+
+• DUNGEON SYSTEMS & TACTICAL RULES:
+  - Key M: Toggle tactical Minimap between compact radar and expanded overview.
+  - Key N: Toggle audio BGM and sound effects mute.
+  - Key H or F1: Open or close this expedition manual.
+  - Key ESC: Pause game expedition.
+  - Armor Regeneration: Discrete armor absorbs damage first and automatically regenerates after 5s out of combat.
+  - Line-of-Sight (LoS): Attacks and projectiles cannot cross stone walls or pillars. Use cover to kite monsters."""
+		"hero":
+			guide_title_label.text = "ACTIVE CHAMPION: %s (%s)" % [h_name.to_upper(), h_role]
+			var quote_str: String = ""
+			if hero_info.has("quote") and not String(hero_info.get("quote", "")).is_empty():
+				quote_str = "\n• QUOTE: " + String(hero_info.get("quote", "")) + "\n"
+			guide_body_label.text = """• CHAMPION IDENTITY:
+  - Name: %s
+  - Role: %s
+  - Weapon: %s
+  - Origin: %s
+  - Motivation: %s%s
+• CONTROLS & SPECIAL BUTTONS:
+  %s
+  - Active Skill [Q]: %s
+  - Secondary Action [RMB]: %s
+
+• COMBAT TACTICS & PLAYSTYLE:
+  %s
+
+• STAT PROFILE:
+  - Vitality: %d HP | Armor: %d Shields | Damage: %d | Speed: %d px/s""" % [
+				h_name.to_upper(), h_role,
+				String(hero_info.get("weapon", "")),
+				String(hero_info.get("origin", "Middle-earth")),
+				String(hero_info.get("motivation", "Purge the subterranean shadow")),
+				quote_str,
+				String(hero_info.get("controls_guide", "")),
+				String(hero_info.get("skill_q", "")),
+				String(hero_info.get("skill_rmb", "")),
+				String(hero_info.get("tactics", "")),
+				int(hero_info.get("hp", 4)),
+				int(hero_info.get("armor", 1)),
+				int(hero_info.get("damage", 1)),
+				int(hero_info.get("speed", 150))
+			]
+		"lore":
+			guide_title_label.text = "CHRONICLES OF MIDDLE-EARTH: MINES OF MORIA"
+			var story_txt: String = ""
+			if get_node_or_null("/root/GameManager") != null:
+				story_txt = String(GameManager.WORLD_LORE.get("story", ""))
+			guide_body_label.text = """• PROLOGUE: THE SHADOW IN KHAZAD-DÛM
+%s
+
+• THE PALANTÍR SEEING STONE & DETERMINISTIC COORDINATES:
+Every dungeon expedition is governed by the Seeing Stone. Identical seeds lock an immutable spatial coordinate in time: reproducing the exact 16-room graph topology, stone corridors, pressure-plate spike traps, loot chests, and enemy spawns. Through the Mirror of Galadriel, every combat frame is recorded into Action Replay Crystals at 60Hz.
+
+• THE EIGHT CHAMPIONS:
+Eight legendary heroes from Middle-earth and beyond have answered the call: Pyrois of Gondor, Olaf of Erebor, Miya of Mirkwood, Charlotte of the Dúnedain, Pharaoh Atem, Doraemon of the 22nd Century, Hoshimi Miyabi of Section 6, and Lương Thơ of the Celestial Academy. Together, they march into the abyss to vanquish the Necromancer, the Orc Rider Chieftain, and the ancient Skeleton King.""" % story_txt
+
 func _connect_to_player_and_map() -> void:
 	if get_parent() and get_parent().has_node("Inventory"):
 		player = get_parent()
@@ -816,12 +981,21 @@ func _connect_to_player_and_map() -> void:
 		_on_game_stats_updated(GameManager.current_level, GameManager.enemies_killed)
 		seed_label.text = "Seed: " + GameManager.current_seed
 		replay_banner.visible = GameManager.is_replaying
+		if GameManager.current_level == 1 and not GameManager.is_replaying:
+			call_deferred("show_banner", "WELCOME TO MORIA! [WASD] Move • [Mouse] Aim • [LMB] Strike • [H] Guide", Color(1.0, 0.90, 0.45))
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_I or event.keycode == KEY_TAB or event.keycode == KEY_B:
 			toggle_inventory_modal()
 			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_H or event.keycode == KEY_F1:
+			toggle_guide_modal()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_ESCAPE:
+			if guide_modal != null and guide_modal.visible:
+				guide_modal.visible = false
+				get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_G:
 			_quick_drop_item()
 			get_viewport().set_input_as_handled()

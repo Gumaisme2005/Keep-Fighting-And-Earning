@@ -2,6 +2,7 @@ extends Node2D
 
 const PerkData = preload("res://Scene/Perks/PerkData.gd")
 const PerkDatabase = preload("res://Scene/Perks/PerkDatabase.gd")
+const PerkManagerScript = preload("res://Scene/Perks/PerkManager.gd")
 
 class MockPlayerForPerks extends Node2D:
 	signal stats_changed(hp, max_hp, armor, max_armor)
@@ -111,13 +112,13 @@ func test_perk_database_integrity() -> void:
 
 func test_deterministic_perk_rolling() -> void:
 	print("\n[TEST 3] Testing Deterministic Perk Rolling...")
-	var manager := PerkManager.new()
+	var manager = PerkManagerScript.new()
 	add_child(manager)
 	manager.reset()
 
 	var seed_test := "TEST_HERO_SEED_2026"
-	var roll_1 := manager.roll_perks(3, seed_test, 1)
-	var roll_2 := manager.roll_perks(3, seed_test, 1)
+	var roll_1 = manager.roll_perks(3, seed_test, 1)
+	var roll_2 = manager.roll_perks(3, seed_test, 1)
 
 	_assert_test(roll_1.size() == 3, "Roll returned exactly 3 perks")
 
@@ -129,22 +130,22 @@ func test_deterministic_perk_rolling() -> void:
 	_assert_test(same_order, "Roll with identical seed and floor is 100% deterministic")
 
 	# Roll tầng khác nhau phải cho kết quả khác
-	var roll_floor_2 := manager.roll_perks(3, seed_test, 2)
-	var diff_floor := (roll_1[0].id != roll_floor_2[0].id or roll_1[1].id != roll_floor_2[1].id)
+	var roll_floor_2 = manager.roll_perks(3, seed_test, 2)
+	var diff_floor: bool = (roll_1[0].id != roll_floor_2[0].id or roll_1[1].id != roll_floor_2[1].id)
 	_assert_test(diff_floor, "Different floor produces distinct roll combination")
 
 	manager.queue_free()
 
 func test_unique_perk_filtering() -> void:
 	print("\n[TEST 4] Testing Unique Perk Filtering...")
-	var manager := PerkManager.new()
+	var manager = PerkManagerScript.new()
 	add_child(manager)
 	manager.reset()
 
-	var p1 := PerkDatabase.get_perk_by_id("iron_sinew")
+	var p1 = PerkDatabase.get_perk_by_id("iron_sinew")
 	manager.add_perk(p1, null)
 
-	var rolled := manager.roll_perks(3, "TEST_SEED", 1)
+	var rolled = manager.roll_perks(3, "TEST_SEED", 1)
 	var contains_owned := false
 	for p in rolled:
 		if p.id == "iron_sinew":
@@ -155,7 +156,7 @@ func test_unique_perk_filtering() -> void:
 
 func test_apply_perk_to_mock_player() -> void:
 	print("\n[TEST 5] Testing Applying Perks to Player...")
-	var manager := PerkManager.new()
+	var manager = PerkManagerScript.new()
 	add_child(manager)
 	manager.reset()
 
@@ -163,19 +164,19 @@ func test_apply_perk_to_mock_player() -> void:
 	add_child(player)
 
 	# 1. Thêm Gân Cốt Thép (+1 HP, +1 Giáp)
-	var perk_iron := PerkDatabase.get_perk_by_id("iron_sinew")
+	var perk_iron = PerkDatabase.get_perk_by_id("iron_sinew")
 	manager.add_perk(perk_iron, player)
 	_assert_test(player.max_hp == 5 and player.hp == 5, "Bonus HP applied (+1 HP -> 5)")
 	_assert_test(player.max_armor == 3 and player.current_armor == 3, "Bonus Armor applied (+1 Armor -> 3)")
 
 	# 2. Thêm Bộ Pháp Tật Phong (+15 Tốc độ sau khi người dùng tinh chỉnh)
-	var perk_speed := PerkDatabase.get_perk_by_id("swift_stride")
+	var perk_speed = PerkDatabase.get_perk_by_id("swift_stride")
 	manager.add_perk(perk_speed, player)
 	var expected_spd = 150.0 + float(perk_speed.get_modifier("speed_bonus", 15.0))
 	_assert_test(player.speed == expected_spd, "Speed bonus applied (+%d -> %d)" % [int(perk_speed.get_modifier("speed_bonus", 15.0)), int(expected_spd)])
 
 	# 3. Thêm Lưỡi Kiếm Tôi Rèn (+1 Sát thương)
-	var perk_dmg := PerkDatabase.get_perk_by_id("sharpened_edge")
+	var perk_dmg = PerkDatabase.get_perk_by_id("sharpened_edge")
 	manager.add_perk(perk_dmg, player)
 	_assert_test(player.base_damage == 2, "Base damage applied (+1 -> 2)")
 
@@ -184,14 +185,14 @@ func test_apply_perk_to_mock_player() -> void:
 
 func test_perk_manager_query_helpers() -> void:
 	print("\n[TEST 6] Testing PerkManager Query Helpers...")
-	var manager := PerkManager.new()
+	var manager = PerkManagerScript.new()
 	add_child(manager)
 	manager.reset()
 
-	var p_lightning := PerkDatabase.get_perk_by_id("chain_lightning")
-	var p_stone := PerkDatabase.get_perk_by_id("stone_bastion")
-	var p_will := PerkDatabase.get_perk_by_id("immortal_will")
-	var p_chrono := PerkDatabase.get_perk_by_id("chrono_dial")
+	var p_lightning = PerkDatabase.get_perk_by_id("chain_lightning")
+	var p_stone = PerkDatabase.get_perk_by_id("stone_bastion")
+	var p_will = PerkDatabase.get_perk_by_id("immortal_will")
+	var p_chrono = PerkDatabase.get_perk_by_id("chrono_dial")
 
 	manager.add_perk(p_lightning, null)
 	manager.add_perk(p_stone, null)
@@ -203,7 +204,7 @@ func test_perk_manager_query_helpers() -> void:
 	_assert_test(manager.get_cooldown_reduction() == 0.25, "get_cooldown_reduction() == 0.25")
 	_assert_test(manager.has_second_chance() == true, "has_second_chance() is true")
 
-	var consumed := manager.consume_second_chance()
+	var consumed = manager.consume_second_chance()
 	_assert_test(consumed == true and manager.has_second_chance() == false, "Second chance consumed successfully")
 
 	manager.reset()
@@ -248,7 +249,7 @@ func test_character_combat_hooks_and_revive() -> void:
 	var missing: int = player.max_hp - player.hp
 	var raw_berserk_dmg: float = player.get_raw_damage()
 	var expected_raw: float = float(player.base_damage) * (1.0 + float(missing) * 0.15)
-	_assert_test(abs(raw_berserk_dmg - expected_raw) < 0.01, "Berserk Frenzy raw damage scales +15% per missing HP (Expected: %.2f, Got: %.2f)" % [expected_raw, raw_berserk_dmg])
+	_assert_test(abs(raw_berserk_dmg - expected_raw) < 0.01, "Berserk Frenzy raw damage scales +15%% per missing HP (Expected: %.2f, Got: %.2f)" % [expected_raw, raw_berserk_dmg])
 
 	# 6. Kiểm tra trần tốc độ chạy tối đa (max_speed_cap)
 	player.speed = 999.0
@@ -280,9 +281,9 @@ func test_perk_selection_modal() -> void:
 	var modal = modal_scene.instantiate()
 	add_child(modal)
 
-	var callback_called := false
+	var callback_called := [false]
 	modal.show_selection(null, func():
-		callback_called = true
+		callback_called[0] = true
 	)
 
 	_assert_test(modal.visible == true, "PerkSelectionModal is visible when shown")
@@ -294,7 +295,7 @@ func test_perk_selection_modal() -> void:
 	modal._on_perk_card_selected(first_perk)
 
 	_assert_test(modal.visible == false, "Modal hidden after selection")
-	_assert_test(callback_called == true, "Completion callback invoked upon perk selection")
+	_assert_test(callback_called[0] == true, "Completion callback invoked upon perk selection")
 	_assert_test(PerkManager.has_perk("iron_sinew") == true, "Perk acquired into PerkManager")
 
 	modal.queue_free()

@@ -382,7 +382,6 @@ func get_effective_speed() -> float:
 func get_raw_damage() -> float:
 	var dmg: float = float(base_damage + inventory.get_weapon_damage())
 	if get_node_or_null("/root/PerkManager") != null:
-		dmg += float(PerkManager.get_total_bonus_damage())
 		for p in PerkManager.get_active_perks():
 			if p.get_modifier("low_hp_scaling", false):
 				var missing_hp: int = maxi(0, max_hp - hp)
