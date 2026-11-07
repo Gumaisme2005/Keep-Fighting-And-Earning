@@ -75,3 +75,54 @@ Trong đợt stress test **1.000 seed/cấu hình**, trung bình là **99,617 ms
 - `CHANGELOG.md`: ghi lại những công việc benchmark thực tế đã thực hiện và những vấn đề còn mở.
 
 **Cách chạy lại:** Mở dự án với Godot 4.7.2, vào PowerShell tại thư mục chứa `project.godot`, dùng `--headless --path "." --script "res://benchmark/advanced/stress_benchmark.gd"` (hoặc thay bằng script phù hợp ở `advanced/` và `scalability/`). Cần trỏ tới file thực thi Godot đang cài trên máy. Khi đo thời gian dựng tường, generator phải có điểm đo `benchmark_walls_us` như trong bản benchmark đã thử nghiệm.
+
+## 6. Combat Room Variants — benchmark ON/OFF
+
+Runner mới: `res://benchmark/combat_room_variants_benchmark.tscn` (F6 trong Editor).
+Các phần 1–5 ở trên giữ nguyên dữ liệu lịch sử; không dùng chúng làm baseline cho phép so sánh ON/OFF mới.
+
+Runner dùng cùng generator hiện tại, bật/tắt `enable_combat_room_variants`, ghép cặp cùng seed,
+8/16/32 phòng và tầng 1/2/3. Chỉ đo `generate_dungeon()` bằng `Time.get_ticks_usec()`;
+khởi tạo world, warm-up, kiểm tra correctness/repeatability, CSV và log nằm ngoài khoảng đo.
+World không được thêm vào SceneTree nên không chạy `_ready()` hay `spawn_entities()`.
+Thứ tự OFF/ON luân phiên giữa các cặp. Không chạy benchmark đồng thời với test hoặc công việc nặng khác.
+
+PowerShell: đặt `$GodotExecutable` thành đường dẫn Godot 4.7.2 trên máy, rồi chạy tại gốc project:
+
+```powershell
+# Smoke: 54 samples (9 configurations x 3 seeds x 1 repetition x 2 modes).
+& $GodotExecutable --headless --path . res://benchmark/combat_room_variants_benchmark.tscn -- --seeds 3 --repetitions 1 --warmups 1 --label smoke
+
+# Full default: 1,080 samples (20 seeds/configuration x 3 repetitions/mode).
+& $GodotExecutable --headless --path . res://benchmark/combat_room_variants_benchmark.tscn -- --seeds 20 --repetitions 3 --warmups 3 --label full
+```
+
+Có thể truyền thêm `--source-commit <full-hash> --source-branch <branch>` để ghi provenance.
+Đây là thông tin người chạy cung cấp; SHA256 của generator, benchmark, helper, world và fixture được đọc trực tiếp từ file.
+Trong Editor, các giá trị tương ứng nằm trong Inspector của scene runner.
+
+Mỗi run tạo thư mục mới tại `user://combat_room_variants_benchmark/` và in đường dẫn tuyệt đối:
+
+- `samples.csv`: từng sample, pair ID, thứ tự đo, seed/configuration, microseconds/milliseconds và trạng thái correctness.
+- `summary.json`: n, mean, median, P95, min/max theo từng cấu hình/mode; delta và phân phối delta theo cặp.
+- `metadata.json`: môi trường, nguồn code, cấu hình và trạng thái run.
+- `preflight.json`: 27 phép đối chiếu độc lập với fixture Commit 1 trước khi đo.
+
+Kiểm chứng CSV, ghép cặp, thứ tự đo và toàn bộ phép tính thống kê độc lập bằng Python 3 (chỉ standard library):
+
+```powershell
+py benchmark/verify_combat_room_variants.py "<absolute run directory printed by Godot>"
+```
+
+Median dùng trung bình hai phần tử giữa khi n chẵn. P95 dùng nearest rank: `sorted[ceil(0.95*n)-1]`.
+Delta trong bảng chính là `ON median - OFF median`; phần trăm chia cho OFF median.
+`paired_delta` tính từng `ON - OFF` với cùng rooms/floor/seed/repetition rồi mới thống kê; đây là chỉ số khác.
+Sample FAIL vẫn được giữ trong CSV và thống kê; bất kỳ lỗi correctness nào làm run FAIL và không được diễn giải hiệu năng.
+Không áp ngưỡng hiệu năng tự đặt. Không suy diễn FPS hoặc thời gian chuyển tầng từ phép đo này.
+
+Tái sử dụng kiểm tra cấu trúc/graph của benchmark cũ và helper Commit 3.
+ON được kiểm tra thêm footprint cột, collision, đường đi và safe spawn.
+OFF giữ quy tắc legacy và phải vượt qua fixture Commit 1; không áp chính sách clearance mới lên layout legacy.
+Các script cũ mô phỏng riêng từng giai đoạn trong `advanced/`/`scalability/` vẫn giữ nguyên, chưa đại diện cho pipeline variants hiện tại.
+
+Báo cáo phép đo mới: [COMBAT_ROOM_VARIANTS_BENCHMARK.md](reports/COMBAT_ROOM_VARIANTS_BENCHMARK.md).

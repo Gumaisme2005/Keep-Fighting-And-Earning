@@ -6,12 +6,14 @@ signal room_state_changed()
 
 # 1. ĐỊNH NGHĨA CÁC LOẠI PHÒNG
 enum RoomType { START, COMBAT, TREASURE, BOSS }
+enum CombatRoomVariant { NONE, OPEN_ARENA, COVER_ROOM }
 
 @export var map_seed: String = "ALOALO1234"
 @export var num_rooms: int = 16
 @export var cell_size: int = 40
 @export var room_min_size: int = 16
 @export var room_max_size: int = 25
+@export var enable_combat_room_variants: bool = true
 
 # --- ĐƯỜNG DẪN SCENE ---
 const PLAYER_SCENE = preload("res://Scene/Character/Player 1_Pyrois/player.tscn")
@@ -66,6 +68,12 @@ var boss_grid_pos: Vector2i = Vector2i.ZERO
 var generated_rooms: Array[Rect2i] = []
 var room_types: Array = []
 var corridor_cells = {}
+var combat_room_variants: Array[int] = [] # Indexed by generated_rooms; non-COMBAT rooms use NONE.
+var combat_room_pillar_counts: Array[int] = [] # Actual variant pillars; zero when variants are disabled.
+var _combat_room_spawn_cells: Dictionary = {} # room_index -> cells reachable with body clearance.
+
+const COMBAT_PILLAR_ATTEMPTS: int = 64
+const COMBAT_PATH_DIRECTIONS = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
 
 # --- BIẾN QUẢN LÝ VÙNG CẤM & TRẠNG THÁI PHÒNG ---
 var reserved_trap_positions: Array[Vector2i] = []
@@ -121,18 +129,16 @@ func generate_dungeon():
 	plan_traps() # Bước 1: Tính toán vị trí bẫy trước
 
 	# Bước 2: Xây gạch và trang trí (Né các vị trí bẫy, tâm phòng và lối vào)
-	for i in range(generated_rooms.size()):
-		var type = room_types[i]
-		if i == skeleton_king_room_index or type == RoomType.BOSS:
-			continue # Boss arenas stay clean, open floors without obstructive pillars.
-		if type == RoomType.COMBAT:
-			decorate_pillars(generated_rooms[i])
+	_decorate_combat_room_pillars()
 	scatter_decorations()
 	plan_enemy_spawns()
 	dungeon_generated.emit()
 
 # --- HÀM TỰ ĐỘNG XÂY DỰNG TOÀN BỘ KHUNG BẢN ĐỒ ---
 func build_dungeon_layout():
+	combat_room_variants.clear()
+	combat_room_pillar_counts.clear()
+	_combat_room_spawn_cells.clear()
 	room_grid.clear()
 	room_positions.clear()
 	edges.clear()
@@ -308,6 +314,12 @@ func is_valid_entity_spawn_cell(cell: Vector2i) -> bool:
 				return false
 	return true
 
+func _is_valid_combat_spawn_cell(room_index: int, cell: Vector2i) -> bool:
+	if not is_valid_entity_spawn_cell(cell):
+		return false
+	# Keep the public spawn predicate unchanged: Skeleton King also uses it for summons.
+	return not enable_combat_room_variants or _combat_room_spawn_cells.get(room_index, {}).has(cell)
+
 func plan_enemy_spawns():
 	planned_enemy_spawns.clear()
 	for i in range(generated_rooms.size()):
@@ -329,7 +341,7 @@ func plan_enemy_spawns():
 				var rx = rng.randi_range(room.position.x + 3, room.end.x - 4)
 				var ry = rng.randi_range(room.position.y + 3, room.end.y - 4)
 				var candidate = Vector2i(rx, ry)
-				if not used_cells.has(candidate) and is_valid_entity_spawn_cell(candidate):
+				if not used_cells.has(candidate) and _is_valid_combat_spawn_cell(i, candidate):
 					chosen_cell = candidate
 					break
 
@@ -338,7 +350,7 @@ func plan_enemy_spawns():
 				for rx in range(room.position.x + 3, room.end.x - 3):
 					for ry in range(room.position.y + 3, room.end.y - 3):
 						var candidate = Vector2i(rx, ry)
-						if not used_cells.has(candidate) and is_valid_entity_spawn_cell(candidate):
+						if not used_cells.has(candidate) and _is_valid_combat_spawn_cell(i, candidate):
 							chosen_cell = candidate
 							break
 					if chosen_cell != Vector2i(-9999, -9999):
@@ -392,6 +404,150 @@ func build_walls():
 
 	set_cells_terrain_connect(LAYER_FLOOR, wall_cells, 0, 0)
 
+func _decorate_combat_room_pillars():
+	_plan_combat_room_variants()
+	for i in range(generated_rooms.size()):
+		var type = room_types[i]
+		if i == skeleton_king_room_index or type == RoomType.BOSS:
+			continue # Boss arenas stay clean, open floors without obstructive pillars.
+		if type == RoomType.COMBAT:
+			if enable_combat_room_variants:
+				_decorate_variant_room_pillars(i)
+			else:
+				decorate_pillars(generated_rooms[i])
+
+func _combat_room_rng(room_index: int, feature: String) -> RandomNumberGenerator:
+	var room_rng = RandomNumberGenerator.new()
+	room_rng.seed = ("%s|combat_room_variants_v1|%d|%s" % [get_effective_seed_string(), room_index, feature]).hash()
+	return room_rng
+
+func _plan_combat_room_variants():
+	combat_room_variants.resize(generated_rooms.size())
+	combat_room_variants.fill(CombatRoomVariant.NONE)
+	combat_room_pillar_counts.resize(generated_rooms.size())
+	combat_room_pillar_counts.fill(0)
+	_combat_room_spawn_cells.clear()
+	if not enable_combat_room_variants:
+		return
+	for i in range(generated_rooms.size()):
+		if room_types[i] == RoomType.COMBAT and i != skeleton_king_room_index:
+			var variant_rng = _combat_room_rng(i, "variant")
+			combat_room_variants[i] = variant_rng.randi_range(CombatRoomVariant.OPEN_ARENA, CombatRoomVariant.COVER_ROOM)
+
+func _decorate_variant_room_pillars(room_index: int):
+	var room = generated_rooms[room_index]
+	var pillar_rng = _combat_room_rng(room_index, "pillars")
+	var is_cover = combat_room_variants[room_index] == CombatRoomVariant.COVER_ROOM
+	var target_count: int
+	if is_cover:
+		var max_pillars = clampi(floori(room.get_area() / 120.0), 2, 4)
+		target_count = pillar_rng.randi_range(2, max_pillars)
+	else:
+		target_count = pillar_rng.randi_range(0, 1)
+
+	var pillars: Array[Vector2i] = []
+	var empty_room_cells = _get_combat_room_safe_cells(room, pillars)
+	var safe_cells = empty_room_cells
+	# Plan in memory: rejected candidates and fallback never need to undo TileMap writes.
+	for attempt in range(COMBAT_PILLAR_ATTEMPTS):
+		if pillars.size() >= target_count or room.size.x < 8 or room.size.y < 8:
+			break
+		var anchor = Vector2i(
+			pillar_rng.randi_range(room.position.x + 3, room.end.x - 5),
+			pillar_rng.randi_range(room.position.y + 3, room.end.y - 5)
+		)
+		if not _can_place_combat_pillar(room, anchor, pillars):
+			continue
+		pillars.append(anchor)
+		var candidate_cells = _get_combat_room_safe_cells(room, pillars)
+		if candidate_cells.is_empty():
+			pillars.pop_back()
+		else:
+			safe_cells = candidate_cells
+
+	if is_cover and pillars.size() < 2:
+		pillars.clear()
+		safe_cells = empty_room_cells
+		combat_room_variants[room_index] = CombatRoomVariant.OPEN_ARENA
+	combat_room_pillar_counts[room_index] = pillars.size()
+	_combat_room_spawn_cells[room_index] = safe_cells
+	for anchor in pillars:
+		for dx in range(2):
+			for dy in range(2):
+				set_cell(LAYER_FLOOR, anchor + Vector2i(dx, dy), SOURCE_WALLS, WALL_COORD)
+
+func _can_place_combat_pillar(room: Rect2i, anchor: Vector2i, pillars: Array[Vector2i]) -> bool:
+	var footprint = Rect2i(anchor, Vector2i(2, 2))
+	# A tile of clearance protects entrances, room centers and the existing trap exclusion zones.
+	var protected_area = footprint.grow(1)
+	for x in range(protected_area.position.x, protected_area.end.x):
+		for y in range(protected_area.position.y, protected_area.end.y):
+			var cell = Vector2i(x, y)
+			if not room.has_point(cell) or corridor_cells.has(cell) or forbidden_decor_cells.has(cell):
+				return false
+			if get_cell_atlas_coords(LAYER_FLOOR, cell) != FLOOR_COORD or get_cell_source_id(LAYER_DECOR, cell) != -1:
+				return false
+	for placed_anchor in pillars:
+		if Rect2i(placed_anchor, Vector2i(2, 2)).grow(2).intersects(footprint):
+			return false
+	return true
+
+func _get_combat_room_safe_cells(room: Rect2i, pillars: Array[Vector2i]) -> Dictionary:
+	var blocked: Dictionary = {}
+	var clearance_blocked: Dictionary = {}
+	for anchor in pillars:
+		for dx in range(-1, 3):
+			for dy in range(-1, 3):
+				var cell = anchor + Vector2i(dx, dy)
+				clearance_blocked[cell] = true
+				if dx >= 0 and dx < 2 and dy >= 0 and dy < 2:
+					blocked[cell] = true
+
+	var floor_cells: Dictionary = {}
+	var safe_cells: Dictionary = {}
+	var inner_room = room.grow(-1)
+	var spawn_area = room.grow(-3)
+	var spawn_count: int = 0
+	for x in range(room.position.x, room.end.x):
+		for y in range(room.position.y, room.end.y):
+			var cell = Vector2i(x, y)
+			if blocked.has(cell) or get_cell_atlas_coords(LAYER_FLOOR, cell) != FLOOR_COORD:
+				continue
+			floor_cells[cell] = true
+			if inner_room.has_point(cell):
+				if clearance_blocked.has(cell):
+					if corridor_cells.has(cell):
+						return {}
+				else:
+					safe_cells[cell] = true
+					if spawn_area.has_point(cell) and not reserved_trap_positions.has(cell):
+						spawn_count += 1
+
+	# Check inside this room, so a detour through another room cannot hide a sealed area.
+	# Check both tile connectivity and a full 3x3 floor footprint for moving bodies.
+	var center = room.get_center()
+	if not _combat_cells_connected(floor_cells, center) or not _combat_cells_connected(safe_cells, center):
+		return {}
+	if spawn_count < max_enemies:
+		return {}
+	return safe_cells
+
+func _combat_cells_connected(cells: Dictionary, start: Vector2i) -> bool:
+	if not cells.has(start):
+		return false
+	var visited: Dictionary = {start: true}
+	var queue: Array[Vector2i] = [start]
+	var head: int = 0
+	while head < queue.size():
+		var cell = queue[head]
+		head += 1
+		for direction in COMBAT_PATH_DIRECTIONS:
+			var neighbor: Vector2i = cell + direction
+			if cells.has(neighbor) and not visited.has(neighbor):
+				visited[neighbor] = true
+				queue.append(neighbor)
+	return visited.size() == cells.size()
+
 func decorate_pillars(room: Rect2i):
 	var num_pillars = rng.randi_range(2, 5)
 	for i in range(num_pillars):
@@ -416,6 +572,10 @@ func decorate_pillars(room: Rect2i):
 			set_cell(LAYER_FLOOR, Vector2i(px + 1, py + 1), SOURCE_WALLS, WALL_COORD)
 
 func scatter_decorations():
+	if enable_combat_room_variants:
+		# Variants use the validated 2x2 pillars only. Legacy 32x32 decor collision
+		# extends beyond one map cell and must not invalidate the checked paths.
+		return
 	var decor_patterns = [
 		[[1, 1], [1, 1]], # Vuông 2x2
 		[[1, 0], [1, 1]], # Chữ L
@@ -434,41 +594,44 @@ func scatter_decorations():
 		if i == skeleton_king_room_index:
 			continue
 
-		var center = room.get_center()
-		var num_clusters = rng.randi_range(1, 3)
+		_scatter_room_decorations(room, decor_patterns)
 
-		for c in range(num_clusters):
-			var selected_pattern = decor_patterns[rng.randi() % decor_patterns.size()]
-			var pattern_height = selected_pattern.size()
-			var pattern_width = selected_pattern[0].size()
+func _scatter_room_decorations(room: Rect2i, decor_patterns: Array):
+	var center = room.get_center()
+	var num_clusters = rng.randi_range(1, 3)
 
-			var anchor_x = rng.randi_range(room.position.x + 2, room.end.x - pattern_width - 2)
-			var anchor_y = rng.randi_range(room.position.y + 2, room.end.y - pattern_height - 2)
-			var anchor = Vector2i(anchor_x, anchor_y)
+	for c in range(num_clusters):
+		var selected_pattern = decor_patterns[rng.randi() % decor_patterns.size()]
+		var pattern_height = selected_pattern.size()
+		var pattern_width = selected_pattern[0].size()
 
-			if Vector2(anchor).distance_to(Vector2(center)) < 4.0:
-				continue
+		var anchor_x = rng.randi_range(room.position.x + 2, room.end.x - pattern_width - 2)
+		var anchor_y = rng.randi_range(room.position.y + 2, room.end.y - pattern_height - 2)
+		var anchor = Vector2i(anchor_x, anchor_y)
 
-			var cluster_decor = decor_coords[rng.randi() % decor_coords.size()]
+		if Vector2(anchor).distance_to(Vector2(center)) < 4.0:
+			continue
 
-			var can_place = true
+		var cluster_decor = decor_coords[rng.randi() % decor_coords.size()]
+
+		var can_place = true
+		for y in range(pattern_height):
+			for x in range(pattern_width):
+				if selected_pattern[y][x] == 1:
+					var check_cell = anchor + Vector2i(x, y)
+					if corridor_cells.has(check_cell) or get_cell_atlas_coords(LAYER_FLOOR, check_cell) != FLOOR_COORD or forbidden_decor_cells.has(check_cell):
+						can_place = false
+						break
+			if not can_place:
+				break
+
+		if can_place:
 			for y in range(pattern_height):
 				for x in range(pattern_width):
 					if selected_pattern[y][x] == 1:
-						var check_cell = anchor + Vector2i(x, y)
-						if corridor_cells.has(check_cell) or get_cell_atlas_coords(LAYER_FLOOR, check_cell) != FLOOR_COORD or forbidden_decor_cells.has(check_cell):
-							can_place = false
-							break
-				if not can_place:
-					break
-
-			if can_place:
-				for y in range(pattern_height):
-					for x in range(pattern_width):
-						if selected_pattern[y][x] == 1:
-							var target_cell = anchor + Vector2i(x, y)
-							if get_cell_source_id(LAYER_DECOR, target_cell) == -1:
-								set_cell(LAYER_DECOR, target_cell, SOURCE_OBJECTS, cluster_decor)
+						var target_cell = anchor + Vector2i(x, y)
+						if get_cell_source_id(LAYER_DECOR, target_cell) == -1:
+							set_cell(LAYER_DECOR, target_cell, SOURCE_OBJECTS, cluster_decor)
 
 # --- THẢ QUÁI / BẪY / RƯƠNG / PLAYER ---
 func spawn_entities():
