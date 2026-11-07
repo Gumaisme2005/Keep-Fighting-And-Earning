@@ -423,12 +423,12 @@ func test_drag_and_drop_slot_mechanics() -> void:
 	assert_test(equip_slot._can_drop_data(Vector2.ZERO, helm_drag), "Equipment slot accepts matching item type (Helmet into Helmet slot)")
 
 	# 5. Kiểm tra phát tín hiệu slot_dropped
-	var dropped_signal_received := false
+	var dropped_signal_received := [false]
 	slot_b.slot_dropped.connect(func(_src, _tgt):
-		dropped_signal_received = true
+		dropped_signal_received[0] = true
 	)
 	slot_b._drop_data(Vector2.ZERO, drag_data)
-	assert_test(dropped_signal_received, "slot_dropped signal emitted successfully upon drop")
+	assert_test(dropped_signal_received[0], "slot_dropped signal emitted successfully upon drop")
 
 	slot_a.queue_free()
 	slot_b.queue_free()
