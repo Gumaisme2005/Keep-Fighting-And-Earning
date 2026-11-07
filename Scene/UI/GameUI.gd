@@ -875,15 +875,24 @@ func _build_guide_modal() -> void:
 
 	# 3. Content Scroll
 	var scroll := ScrollContainer.new()
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	root_vbox.add_child(scroll)
 
+	var content_vbox := VBoxContainer.new()
+	content_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content_vbox.custom_minimum_size = Vector2(740, 0)
+	scroll.add_child(content_vbox)
+
 	guide_body_label = Label.new()
+	guide_body_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	guide_body_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	guide_body_label.add_theme_font_override("font", UITheme.FONT_BODY)
 	guide_body_label.add_theme_font_size_override("font_size", 12)
 	guide_body_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
-	scroll.add_child(guide_body_label)
+	content_vbox.add_child(guide_body_label)
 
 	_update_guide_modal_content("controls")
 

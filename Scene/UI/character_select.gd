@@ -47,7 +47,9 @@ var skill_icon_rect: TextureRect = null
 var skill_q_label: Label = null
 var skill_rmb_label: Label = null
 var seed_input: LineEdit = null
+var dossier_scroll: ScrollContainer = null
 var guide_modal: PanelContainer = null
+var guide_backdrop: ColorRect = null
 var settings_modal: Control = null
 
 func _ready() -> void:
@@ -211,10 +213,7 @@ func _build_hero_details_and_seed_bar() -> void:
 	header_hbox.add_child(title_lbl)
 
 	var guide_btn := UITheme.create_button("GUIDE & LORE (H)", "question", Vector2(165, 34), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 12)
-	guide_btn.pressed.connect(func():
-		if guide_modal != null:
-			guide_modal.visible = not guide_modal.visible
-	)
+	guide_btn.pressed.connect(_open_guide_modal)
 	header_hbox.add_child(guide_btn)
 
 	var settings_btn := UITheme.create_button("SETTINGS", "gear", Vector2(120, 34), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 12)
@@ -224,56 +223,46 @@ func _build_hero_details_and_seed_bar() -> void:
 	)
 	header_hbox.add_child(settings_btn)
 
-	# 2. Bảng Hồ Sơ Anh Hùng
+	# 2. Bảng Hồ Sơ Anh Hùng (Fixed Box Container)
 	var info_panel := PanelContainer.new()
-	info_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_PANEL, UITheme.COLOR_GOLD_BORDER, 2, 6, 16, 10))
+	info_panel.custom_minimum_size = Vector2(0, 265)
+	info_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	info_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_PANEL, UITheme.COLOR_GOLD_BORDER, 2, 6, 16, 8))
 	main_vbox.add_child(info_panel)
 	main_vbox.move_child(info_panel, 2)
 
 	var dossier_vbox := VBoxContainer.new()
-	dossier_vbox.add_theme_constant_override("separation", 5)
+	dossier_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	dossier_vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	dossier_vbox.add_theme_constant_override("separation", 4)
 	info_panel.add_child(dossier_vbox)
 
-	# Tên & Vai trò
+	# Tên & Vai trò (Fixed Header)
 	var name_row := HBoxContainer.new()
 	name_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	name_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	name_row.add_theme_constant_override("separation", 8)
 	hero_name_label = Label.new()
-	UITheme.style_header_label(hero_name_label, 17, Color(1.0, 0.88, 0.38))
+	hero_name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	UITheme.style_header_label(hero_name_label, 16, Color(1.0, 0.88, 0.38))
 	name_row.add_child(hero_name_label)
 	dossier_vbox.add_child(name_row)
 
 	# Câu danh ngôn nhân vật (Quote)
 	hero_quote_label = Label.new()
 	hero_quote_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hero_quote_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hero_quote_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hero_quote_label.add_theme_font_override("font", UITheme.FONT_BODY)
 	hero_quote_label.add_theme_font_size_override("font_size", 11)
 	hero_quote_label.add_theme_color_override("font_color", Color(1.0, 0.88, 0.55))
 	dossier_vbox.add_child(hero_quote_label)
 
-	# Xuất thân & Động lực (Origin & Motivation)
-	hero_origin_label = Label.new()
-	hero_origin_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	hero_origin_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	hero_origin_label.add_theme_font_override("font", UITheme.FONT_BODY)
-	hero_origin_label.add_theme_font_size_override("font_size", 12)
-	hero_origin_label.add_theme_color_override("font_color", Color(0.60, 0.88, 1.0))
-	dossier_vbox.add_child(hero_origin_label)
-
-	# Tiểu sử ngắn
-	hero_lore_label = Label.new()
-	hero_lore_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	hero_lore_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	hero_lore_label.add_theme_font_override("font", UITheme.FONT_BODY)
-	hero_lore_label.add_theme_font_size_override("font_size", 12)
-	hero_lore_label.add_theme_color_override("font_color", Color(0.85, 0.90, 0.96))
-	dossier_vbox.add_child(hero_lore_label)
-
 	# Hàng 4 Chỉ số có Icon Pixel Art
 	var stats_row := HBoxContainer.new()
 	stats_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	stats_row.add_theme_constant_override("separation", 24)
+	stats_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	stats_row.add_theme_constant_override("separation", 28)
 	dossier_vbox.add_child(stats_row)
 
 	stat_hp_label = _create_stat_badge(stats_row, "HP:", Color(1.0, 0.45, 0.48))
@@ -281,37 +270,81 @@ func _build_hero_details_and_seed_bar() -> void:
 	stat_dmg_label = _create_stat_badge(stats_row, "DMG:", Color(1.0, 0.82, 0.38))
 	stat_spd_label = _create_stat_badge(stats_row, "SPD:", Color(0.55, 0.95, 0.68))
 
+	# Khung cuộn cố định (Fixed Scrollable Box) chứa toàn bộ văn bản chi tiết
+	dossier_scroll = ScrollContainer.new()
+	dossier_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	dossier_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	dossier_scroll.custom_minimum_size = Vector2(0, 160)
+	dossier_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	dossier_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	dossier_vbox.add_child(dossier_scroll)
+
+	var scroll_content := VBoxContainer.new()
+	scroll_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll_content.add_theme_constant_override("separation", 6)
+	dossier_scroll.add_child(scroll_content)
+
+	# Xuất thân & Động lực (Origin & Motivation)
+	hero_origin_label = Label.new()
+	hero_origin_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	hero_origin_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hero_origin_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hero_origin_label.add_theme_font_override("font", UITheme.FONT_BODY)
+	hero_origin_label.add_theme_font_size_override("font_size", 11)
+	hero_origin_label.add_theme_color_override("font_color", Color(0.60, 0.88, 1.0))
+	scroll_content.add_child(hero_origin_label)
+
+	# Tiểu sử ngắn
+	hero_lore_label = Label.new()
+	hero_lore_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	hero_lore_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hero_lore_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hero_lore_label.add_theme_font_override("font", UITheme.FONT_BODY)
+	hero_lore_label.add_theme_font_size_override("font_size", 11)
+	hero_lore_label.add_theme_color_override("font_color", Color(0.85, 0.90, 0.96))
+	scroll_content.add_child(hero_lore_label)
+
 	# Khung Tuyệt Kỹ & Chỉ dẫn phím bấm
 	var skill_panel := PanelContainer.new()
-	skill_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_DARK, UITheme.COLOR_GOLD_BORDER, 1, 4, 12, 6))
-	dossier_vbox.add_child(skill_panel)
+	skill_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	skill_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_DARK, Color(0.78, 0.62, 0.30, 0.70), 1, 4, 12, 6))
+	scroll_content.add_child(skill_panel)
 
 	var skill_text_vbox := VBoxContainer.new()
-	skill_text_vbox.add_theme_constant_override("separation", 3)
+	skill_text_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	skill_text_vbox.add_theme_constant_override("separation", 4)
 	skill_panel.add_child(skill_text_vbox)
 
 	skill_q_label = Label.new()
+	skill_q_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	skill_q_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	skill_q_label.add_theme_font_override("font", UITheme.FONT_BODY)
-	skill_q_label.add_theme_font_size_override("font_size", 12)
+	skill_q_label.add_theme_font_size_override("font_size", 11)
 	skill_q_label.add_theme_color_override("font_color", Color(0.58, 0.94, 1.0))
 	skill_text_vbox.add_child(skill_q_label)
 
 	skill_rmb_label = Label.new()
+	skill_rmb_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	skill_rmb_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	skill_rmb_label.add_theme_font_override("font", UITheme.FONT_BODY)
-	skill_rmb_label.add_theme_font_size_override("font_size", 12)
+	skill_rmb_label.add_theme_font_size_override("font_size", 11)
 	skill_rmb_label.add_theme_color_override("font_color", Color(0.95, 0.86, 0.65))
 	skill_text_vbox.add_child(skill_rmb_label)
 
 	hero_controls_label = Label.new()
+	hero_controls_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hero_controls_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hero_controls_label.add_theme_font_override("font", UITheme.FONT_BODY)
 	hero_controls_label.add_theme_font_size_override("font_size", 11)
 	hero_controls_label.add_theme_color_override("font_color", Color(0.50, 1.0, 0.70))
 	skill_text_vbox.add_child(hero_controls_label)
 
 	hero_tactics_label = Label.new()
+	hero_tactics_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hero_tactics_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hero_tactics_label.add_theme_font_override("font", UITheme.FONT_BODY)
 	hero_tactics_label.add_theme_font_size_override("font_size", 11)
-	hero_tactics_label.add_theme_color_override("font_color", Color(0.85, 0.85, 0.85))
+	hero_tactics_label.add_theme_color_override("font_color", Color(0.85, 0.88, 0.92))
 	skill_text_vbox.add_child(hero_tactics_label)
 
 	_build_character_select_guide_modal()
@@ -382,20 +415,48 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:
 			_on_hero_selection_button_pressed()
 		elif event.keycode == KEY_H or event.keycode == KEY_F1:
-			if guide_modal != null:
-				guide_modal.visible = not guide_modal.visible
-				get_viewport().set_input_as_handled()
+			if guide_modal != null and guide_modal.visible:
+				_close_guide_modal()
+			else:
+				_open_guide_modal()
+			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_ESCAPE:
 			if settings_modal != null and settings_modal.visible:
 				settings_modal.hide_modal()
 				get_viewport().set_input_as_handled()
 			elif guide_modal != null and guide_modal.visible:
-				guide_modal.visible = false
+				_close_guide_modal()
 				get_viewport().set_input_as_handled()
 			else:
 				get_tree().change_scene_to_file("res://Menu/main menu/main_menu.tscn")
+				get_viewport().set_input_as_handled()
+
+func _open_guide_modal() -> void:
+	if guide_backdrop != null:
+		guide_backdrop.visible = true
+		guide_backdrop.move_to_front()
+	if guide_modal != null:
+		guide_modal.visible = true
+		guide_modal.move_to_front()
+
+func _close_guide_modal() -> void:
+	if guide_modal != null:
+		guide_modal.visible = false
+	if guide_backdrop != null:
+		guide_backdrop.visible = false
 
 func _build_character_select_guide_modal() -> void:
+	guide_backdrop = ColorRect.new()
+	guide_backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	guide_backdrop.color = Color(0.02, 0.03, 0.06, 0.88)
+	guide_backdrop.mouse_filter = Control.MOUSE_FILTER_STOP
+	guide_backdrop.visible = false
+	guide_backdrop.gui_input.connect(func(ev: InputEvent):
+		if ev is InputEventMouseButton and ev.pressed:
+			_close_guide_modal()
+	)
+	add_child(guide_backdrop)
+
 	guide_modal = PanelContainer.new()
 	guide_modal.anchor_left = 0.5
 	guide_modal.anchor_right = 0.5
@@ -420,19 +481,24 @@ func _build_character_select_guide_modal() -> void:
 	header.add_child(h_title)
 
 	var close_btn := UITheme.create_danger_button("Close", "", Vector2(84, 30), 12)
-	close_btn.pressed.connect(func(): guide_modal.visible = false)
+	close_btn.pressed.connect(_close_guide_modal)
 	header.add_child(close_btn)
 
 	var scroll := ScrollContainer.new()
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	vbox.add_child(scroll)
 
 	var content_vbox := VBoxContainer.new()
 	content_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content_vbox.custom_minimum_size = Vector2(780, 0)
 	content_vbox.add_theme_constant_override("separation", 10)
 	scroll.add_child(content_vbox)
 
 	var guide_txt := Label.new()
+	guide_txt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	guide_txt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	guide_txt.add_theme_font_override("font", UITheme.FONT_BODY)
 	guide_txt.add_theme_font_size_override("font_size", 12)
@@ -543,8 +609,20 @@ func _update_hero_info_display() -> void:
 
 	if skill_icon_rect != null:
 		skill_icon_rect.texture = UITheme.get_icon(String(info.get("skill_icon", "skill_slash")))
-	skill_q_label.text = String(info.get("skill_q", ""))
-	skill_rmb_label.text = String(info.get("skill_rmb", ""))
+
+	var q_str := String(info.get("skill_q", ""))
+	if not q_str.is_empty():
+		skill_q_label.text = "Active Skill [Q]: " + q_str
+		skill_q_label.visible = true
+	else:
+		skill_q_label.visible = false
+
+	var rmb_str := String(info.get("skill_rmb", ""))
+	if not rmb_str.is_empty():
+		skill_rmb_label.text = "Secondary Ability [RMB]: " + rmb_str
+		skill_rmb_label.visible = true
+	else:
+		skill_rmb_label.visible = false
 
 	if hero_quote_label != null:
 		hero_quote_label.text = String(info.get("quote", ""))
@@ -574,6 +652,9 @@ func _update_hero_info_display() -> void:
 			hero_tactics_label.visible = true
 		else:
 			hero_tactics_label.visible = false
+
+	if dossier_scroll != null:
+		dossier_scroll.scroll_vertical = 0
 
 func _update_buttons() -> void:
 	previous_button.disabled = portraits.is_empty() or selected_index == 0

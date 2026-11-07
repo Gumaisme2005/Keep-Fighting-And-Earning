@@ -243,6 +243,7 @@ func test_pause_menu_layout_and_settings() -> void:
 
 	_assert_test(pause.settings_modal != null, "PauseMenu has settings_modal instance")
 	_assert_test(pause.card_panel != null, "PauseMenu has unified card_panel container (prevents title overlap)")
+	_assert_test(pause.guide_backdrop != null, "PauseMenu has guide_backdrop click blocker")
 
 	pause.settings_modal.show_modal()
 	_assert_test(pause.settings_modal.visible == true, "PauseMenu settings modal opens cleanly")
@@ -250,10 +251,19 @@ func test_pause_menu_layout_and_settings() -> void:
 	pause._close_all_submodals()
 	_assert_test(pause.settings_modal.visible == false, "PauseMenu submodals close cleanly")
 
+	# Test Pause Guide / Lore modal
+	pause._show_pause_guide("lore")
+	_assert_test(pause.guide_modal.visible == true, "PauseMenu lore modal opens cleanly")
+	_assert_test(pause.guide_backdrop.visible == true, "PauseMenu lore modal darkens backdrop")
+	_assert_test(pause.guide_body_label.autowrap_mode == TextServer.AUTOWRAP_WORD_SMART, "PauseMenu lore text has word smart wrap enabled")
+
+	pause._close_all_submodals()
+	_assert_test(pause.guide_modal.visible == false and pause.guide_backdrop.visible == false, "PauseMenu lore modal closes cleanly")
+
 	pause.queue_free()
 
 func test_character_select_margins_and_settings() -> void:
-	print("\n[TEST 9] Testing CharacterSelect Layout Margins & Settings...")
+	print("\n[TEST 9] Testing CharacterSelect Layout Margins, Fixed Box & Word Wrap...")
 	var cs = CharacterSelectScene.instantiate()
 	add_child(cs)
 
@@ -264,6 +274,22 @@ func test_character_select_margins_and_settings() -> void:
 		var top_m = margin_container.get_theme_constant("margin_top")
 		var bot_m = margin_container.get_theme_constant("margin_bottom")
 		_assert_test(top_m <= 16 and bot_m <= 16, "CharacterSelect margins tightened to <= 16px to prevent 720p vertical clipping")
+
+	_assert_test(cs.dossier_scroll != null, "CharacterSelect has fixed dossier_scroll container")
+	_assert_test(cs.dossier_scroll.horizontal_scroll_mode == ScrollContainer.SCROLL_MODE_DISABLED, "dossier_scroll disables horizontal scroll to prevent horizontal text overflow")
+
+	_assert_test(cs.skill_q_label.autowrap_mode == TextServer.AUTOWRAP_WORD_SMART, "skill_q_label has AUTOWRAP_WORD_SMART")
+	_assert_test(cs.skill_rmb_label.autowrap_mode == TextServer.AUTOWRAP_WORD_SMART, "skill_rmb_label has AUTOWRAP_WORD_SMART")
+	_assert_test(cs.hero_controls_label.autowrap_mode == TextServer.AUTOWRAP_WORD_SMART, "hero_controls_label has AUTOWRAP_WORD_SMART")
+	_assert_test(cs.hero_tactics_label.autowrap_mode == TextServer.AUTOWRAP_WORD_SMART, "hero_tactics_label has AUTOWRAP_WORD_SMART")
+	_assert_test(cs.hero_lore_label.autowrap_mode == TextServer.AUTOWRAP_WORD_SMART, "hero_lore_label has AUTOWRAP_WORD_SMART")
+	_assert_test(cs.hero_origin_label.autowrap_mode == TextServer.AUTOWRAP_WORD_SMART, "hero_origin_label has AUTOWRAP_WORD_SMART")
+
+	# Test selecting hero 7 (Luong Tho) with extensive text
+	cs.selected_index = 7
+	cs._update_hero_info_display()
+	_assert_test(cs.hero_name_label.text.contains("LUONG THO") or cs.hero_name_label.text.contains("LƯƠNG THƠ"), "Hero 7 details displayed")
+	_assert_test(cs.dossier_scroll.scroll_vertical == 0, "dossier_scroll resets scroll position to top upon hero selection")
 
 	cs.queue_free()
 
