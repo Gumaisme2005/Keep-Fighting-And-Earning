@@ -3,6 +3,7 @@ extends Node2D
 const UITheme = preload("res://Scene/UI/UITheme.gd")
 const BalanceConfig = preload("res://Scene/BalanceConfig.gd")
 const WORLD_SCENE = preload("res://world.tscn")
+const VariantChecks = preload("res://tests/dungeon_variant_test_support.gd")
 
 var passed_count: int = 0
 var failed_count: int = 0
@@ -25,6 +26,14 @@ func _ready() -> void:
 	_test_ut11_wall_line_of_sight_and_room_lock_protection()
 	_test_ut12_archer_arrow_shooting_and_anti_stunlock()
 	_test_ut13_balance_config_archer_nerf_and_lotr_lore()
+	_test_ut14_combat_variant_assignment()
+	_test_ut15_actual_variant_pillars()
+	_test_ut16_variant_metadata_reset()
+	_test_ut17_blocked_cover_fallback()
+	_test_ut18_partial_cover_fallback()
+	_test_ut19_commit1_compatibility()
+	_test_ut20_variant_rng_isolation()
+	_test_ut21_collision_checks_detect_obstructions()
 
 	print("------------------------------------------------------------------")
 	print("[SUMMARY] UNIT TESTS: %d PASSED | %d FAILED" % [passed_count, failed_count])
@@ -409,4 +418,205 @@ func _test_ut13_balance_config_archer_nerf_and_lotr_lore() -> void:
 		archer_nerfed_ok and dynamic_buff_ok and lore_ok,
 		"UT-13: Centralized BalanceConfig applies Archer (Miya) nerf, dynamic unit buff/nerf & Lord of the Rings lore"
 	)
+
+func _create_variant_generator(seed_str: String, rooms: int = 16, level: int = 1, enabled: bool = true, generate: bool = true) -> TileMap:
+	var world = WORLD_SCENE.instantiate()
+	var gen: TileMap = world.get_node("TileMap")
+	gen.map_seed = seed_str
+	gen.num_rooms = rooms
+	gen.current_level = level
+	gen.enable_combat_room_variants = enabled
+	if generate:
+		gen.generate_dungeon()
+	return gen
+
+func _test_ut14_combat_variant_assignment() -> void:
+	var gen = _create_variant_generator("ALOALO1234")
+	var error = VariantChecks.metadata_error(gen)
+	_assert_true(error.is_empty(), "UT-14: Variant metadata matches room indices and COMBAT/noncombat types", VariantChecks.context(gen) + " " + error)
+	gen.get_parent().free()
+
+func _test_ut15_actual_variant_pillars() -> void:
+	var gen = _create_variant_generator("BUG_PILLAR_SPAWN_42", 32, 3)
+	var error = VariantChecks.pillar_error(gen)
+	_assert_true(error.is_empty(), "UT-15: Actual separate 2x2 pillars match metadata and variant limits", VariantChecks.context(gen) + " " + error)
+	gen.get_parent().free()
+
+func _test_ut16_variant_metadata_reset() -> void:
+	var gen = _create_variant_generator("RESET_INITIAL", 32, 3)
+	var error := ""
+	for config in [["RESET_A", 8, 1, true], ["RESET_B", 16, 2, false], ["RESET_C", 32, 3, true], ["RESET_D", 8, 2, true]]:
+		gen.map_seed = config[0]
+		gen.num_rooms = config[1]
+		gen.current_level = config[2]
+		gen.enable_combat_room_variants = config[3]
+		gen.generate_dungeon()
+		var fresh = _create_variant_generator(config[0], config[1], config[2], config[3])
+		error = VariantChecks.metadata_error(gen)
+		if error.is_empty():
+			error = VariantChecks.snapshot_difference(VariantChecks.snapshot(fresh), VariantChecks.snapshot(gen))
+		if error.is_empty() and gen._combat_room_spawn_cells != fresh._combat_room_spawn_cells:
+			error = "stale room spawn cache"
+		fresh.get_parent().free()
+		if not error.is_empty():
+			error = VariantChecks.context(gen) + " " + error
+			break
+	_assert_true(error.is_empty(), "UT-16: Regeneration resets metadata/cache across seeds, floors, room counts and mode changes", error)
+	gen.get_parent().free()
+
+func _test_ut17_blocked_cover_fallback() -> void:
+	var error = _constrained_cover_fallback_error(false)
+	_assert_true(error.is_empty(), "UT-17: Fully protected COVER_ROOM deterministically falls back to an empty OPEN_ARENA", error)
+
+func _test_ut18_partial_cover_fallback() -> void:
+	var error = _constrained_cover_fallback_error(true)
+	_assert_true(error.is_empty(), "UT-18: One-pillar-only COVER_ROOM removes the partial layout and updates metadata", error)
+
+func _constrained_cover_fallback_error(allow_one: bool) -> String:
+	var gen = _create_variant_generator("FORCED_PARTIAL_COVER", 8, 3, true, false)
+	gen.room_min_size = 25
+	gen.room_max_size = 25
+	gen.generate_dungeon()
+	var room_index: int = gen.room_types.find(gen.RoomType.COMBAT)
+	var anchor := Vector2i.ZERO
+	if allow_one:
+		room_index = -1
+		# Reuse a pillar observed in a real COVER_ROOM: its deterministic RNG
+		# sequence already reached this anchor within the production attempt limit.
+		for i in range(gen.generated_rooms.size()):
+			if gen.combat_room_variants[i] == gen.CombatRoomVariant.COVER_ROOM:
+				var layout = VariantChecks.pillar_layout(gen, i)
+				if layout.error.is_empty() and layout.anchors.size() >= 2:
+					room_index = i
+					anchor = layout.anchors[0]
+					break
+	if room_index < 0:
+		gen.get_parent().free()
+		return "fallback fixture could not find a real eligible combat room"
+	var room: Rect2i = gen.generated_rooms[room_index]
+	gen.carve_room(room)
+	for x in range(room.position.x, room.end.x):
+		for y in range(room.position.y, room.end.y):
+			gen.forbidden_decor_cells[Vector2i(x, y)] = true
+	if allow_one:
+		# Exactly one 4x4 clearance rectangle remains available for a 2x2 pillar.
+		for x in range(anchor.x - 1, anchor.x + 3):
+			for y in range(anchor.y - 1, anchor.y + 3):
+				gen.forbidden_decor_cells.erase(Vector2i(x, y))
+	var before_tiles = VariantChecks.tile_hash(gen)
+	var state: int = gen.rng.state
+	var expected: Dictionary = {}
+	var error := ""
+	for repetition in range(2):
+		# Request COVER explicitly; placement, validation and fallback run unmocked.
+		gen.combat_room_variants[room_index] = gen.CombatRoomVariant.COVER_ROOM
+		gen._decorate_variant_room_pillars(room_index)
+		var layout = VariantChecks.pillar_layout(gen, room_index)
+		if not layout.error.is_empty() or not layout.anchors.is_empty() or VariantChecks.tile_hash(gen) != before_tiles:
+			error = "fallback left a partial pillar layout"
+		elif gen.combat_room_variants[room_index] != gen.CombatRoomVariant.OPEN_ARENA or gen.combat_room_pillar_counts[room_index] != 0:
+			error = "fallback metadata does not reflect empty OPEN_ARENA"
+		elif gen.rng.state != state:
+			error = "fallback consumed the main RNG"
+		else:
+			error = VariantChecks.safe_paths_error(gen)
+		var actual = VariantChecks.snapshot(gen)
+		if repetition == 0:
+			expected = actual
+		elif error.is_empty():
+			error = VariantChecks.snapshot_difference(expected, actual)
+		if not error.is_empty():
+			break
+	var detail = VariantChecks.context(gen) + " room=%d allow_one=%s " % [room_index, str(allow_one)] + error
+	gen.get_parent().free()
+	return "" if error.is_empty() else detail
+
+func _test_ut19_commit1_compatibility() -> void:
+	var fixture_path = "res://tests/fixtures/dungeon_commit1_baseline.json"
+	var fixture: Variant = JSON.parse_string(FileAccess.get_file_as_string(fixture_path))
+	if not fixture is Dictionary or fixture.get("schema", "") != "dungeon_commit1_v1":
+		_assert_true(false, "UT-19: Disabled variants match independent Commit 1 baseline", "missing/invalid baseline fixture")
+		return
+	# Engine.get_version_info().string uses "4.7.2-stable (official)", unlike CLI --version.
+	if fixture.get("source_commit", "") != VariantChecks.BASELINE_COMMIT or fixture.get("source_blob", "") != VariantChecks.BASELINE_BLOB or fixture.get("source_sha256", "") != VariantChecks.BASELINE_SHA256 or fixture.get("world_sha256", "") != VariantChecks.BASELINE_WORLD_SHA256 or not fixture.get("godot_version", "").begins_with("4.7.2-") or fixture.get("cases", []).size() != 27:
+		_assert_true(false, "UT-19: Disabled variants match independent Commit 1 baseline", "baseline provenance/case count mismatch")
+		return
+	var gen = _create_variant_generator("BASELINE", 16, 1, false, false)
+	gen.cell_size = fixture.config.cell_size
+	gen.room_min_size = fixture.config.room_min_size
+	gen.room_max_size = fixture.config.room_max_size
+	var error := ""
+	var contexts: Dictionary = {}
+	for test_case in fixture.cases:
+		gen.map_seed = test_case.seed
+		gen.num_rooms = int(test_case.rooms)
+		gen.current_level = int(test_case.floor)
+		gen.generate_dungeon()
+		var context = VariantChecks.context(gen)
+		if contexts.has(context):
+			error = "duplicate baseline case: " + context
+			break
+		contexts[context] = true
+		error = VariantChecks.metadata_error(gen)
+		if error.is_empty():
+			error = VariantChecks.snapshot_difference(test_case.snapshot, VariantChecks.snapshot(gen, false))
+		if not error.is_empty():
+			error = context + " " + error
+			break
+	_assert_true(error.is_empty(), "UT-19: Disabled variants match Commit 1 geometry/traps/spawns/all tile layers/RNG", "27 independent baseline cases (d83caa1)" if error.is_empty() else error)
+	gen.get_parent().free()
+
+func _test_ut20_variant_rng_isolation() -> void:
+	var gen = _create_variant_generator("RNG_ISOLATION", 16, 3, true, false)
+	gen.rng.seed = gen.get_effective_seed_string().hash()
+	gen.build_dungeon_layout()
+	gen._reserve_room_centers_and_entrances()
+	gen.plan_traps()
+	var state: int = gen.rng.state
+	var traps: Array = gen.reserved_trap_positions.duplicate()
+	gen._decorate_combat_room_pillars()
+	gen.scatter_decorations()
+	var error = VariantChecks.pillar_error(gen)
+	_assert_true(error.is_empty() and gen.rng.state == state and gen.reserved_trap_positions == traps, "UT-20: Variant choice, pillars and decoration phase preserve the main RNG and planned traps", VariantChecks.context(gen) + " " + error)
+	gen.get_parent().free()
+
+func _test_ut21_collision_checks_detect_obstructions() -> void:
+	var gen = _create_variant_generator("COLLISION_ORACLE", 8, 1, true, false)
+	gen.room_min_size = 25
+	gen.room_max_size = 25
+	gen.generate_dungeon()
+	var before_error = VariantChecks.safe_paths_error(gen)
+	var room_index: int = gen.room_types.find(gen.RoomType.COMBAT)
+	var room: Rect2i = gen.generated_rooms[room_index]
+	var ring_center := Vector2i(-9999, -9999)
+	for x in range(room.position.x + 3, room.end.x - 3):
+		for y in range(room.position.y + 3, room.end.y - 3):
+			var clear = true
+			for dx in range(-1, 2):
+				for dy in range(-1, 2):
+					var cell = Vector2i(x + dx, y + dy)
+					if gen.corridor_cells.has(cell) or gen.forbidden_decor_cells.has(cell) or gen.get_cell_atlas_coords(gen.LAYER_FLOOR, cell) != gen.FLOOR_COORD:
+						clear = false
+			if clear:
+				ring_center = Vector2i(x, y)
+				break
+		if ring_center != Vector2i(-9999, -9999):
+			break
+	if ring_center != Vector2i(-9999, -9999):
+		for dx in range(-1, 2):
+			for dy in range(-1, 2):
+				if dx != 0 or dy != 0:
+					gen.set_cell(gen.LAYER_FLOOR, ring_center + Vector2i(dx, dy), gen.SOURCE_WALLS, gen.WALL_COORD)
+	var after_error = VariantChecks.safe_paths_error(gen)
+	_assert_true(before_error.is_empty() and ring_center != Vector2i(-9999, -9999) and after_error.contains("disconnected"), "UT-21a: Collision path checks reject an isolated pocket without relying on metadata", "before=%s after=%s" % [before_error, after_error])
+	gen.get_parent().free()
+
+	gen = _create_variant_generator("COLLISION_FOOTPRINT", 8, 1)
+	room_index = gen.room_types.find(gen.RoomType.COMBAT)
+	var center: Vector2i = gen.generated_rooms[room_index].get_center()
+	before_error = VariantChecks.safe_paths_error(gen)
+	gen.set_cell(gen.LAYER_DECOR, center, gen.SOURCE_OBJECTS, Vector2i(1, 2))
+	var collision = VariantChecks.collision_cells(gen)
+	_assert_true(before_error.is_empty() and collision.has(center + Vector2i.RIGHT) and gen.get_cell_source_id(gen.LAYER_DECOR, center + Vector2i.RIGHT) == -1 and not VariantChecks.safe_paths_error(gen).is_empty(), "UT-21b: Actual 32x32 decoration polygon blocks neighboring cells with no TileMap anchor", VariantChecks.context(gen))
+	gen.get_parent().free()
 
