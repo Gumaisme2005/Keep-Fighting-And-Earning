@@ -1,0 +1,417 @@
+{
+  "description": "Measured Commit 4 full run; summary independently recomputed from samples.csv. Raw files remain outside the repository.",
+  "metadata": {
+    "actual_samples": 1080,
+    "baseline_fixture_sha256": "91035fbfb8ef753cf2b0b09e479824e7193c8b1c486ee5d619c67185d297d761",
+    "benchmark_sha256": "10736e1489487af662eff2e09174ce06403bf4bbe4c085ff6fe1958fa2a4116c",
+    "checks_sha256": "12c13b2552465d1649c1151a8e6444c596560e42204e5e5f454300016d00c383",
+    "cpu": "11th Gen Intel(R) Core(TM) i5-11400H @ 2.70GHz",
+    "debug_build": true,
+    "delta": "ON median - OFF median; percent = delta / OFF median * 100; paired deltas also reported",
+    "display_driver": "headless",
+    "expected_samples": 1080,
+    "finished_utc": "2026-11-07T08:40:29",
+    "floors": [
+      1,
+      2,
+      3
+    ],
+    "generator_config": {
+      "cell_size": 40,
+      "room_max_size": 25,
+      "room_min_size": 16
+    },
+    "generator_sha256": "8feecbbc596262e4fb591c0937df757883402ae6ff44e85d2cf233268fec9674",
+    "godot": {
+      "build": "official",
+      "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+      "hex": 263938,
+      "major": 4,
+      "minor": 7,
+      "patch": 2,
+      "status": "stable",
+      "string": "4.7.2-stable (official)",
+      "timestamp": 0
+    },
+    "invalid_samples": "retained in raw data AND statistics; any failure invalidates performance interpretation; no performance budget enforced",
+    "logical_processors": 12,
+    "median": "average of the two middle observations for even n",
+    "os": "Windows",
+    "os_version": "10.0.26200",
+    "output_directory": "C:/Users/ADMIN/AppData/Local/Temp/dungeon-commit4-2c43fb7c07e4450190df44d6a2ade2c7/measurement-appdata/Godot/app_userdata/Keep Fighting And Earning/combat_room_variants_benchmark/full_2026-11-07T08-34-24_9588_1413898",
+    "p95": "nearest rank: sorted[ceil(0.95*n)-1]",
+    "paired_geometry_fields": [
+      "generated_rooms",
+      "room_positions",
+      "room_types",
+      "edges",
+      "boss_grid_pos",
+      "reserved_trap_positions",
+      "corridor_cells",
+      "forbidden_decor_cells"
+    ],
+    "pairing": "same rooms/floor/seed/repetition; first mode alternates with (configuration_index + seed_index + repetition_index) % 2",
+    "repetitions_per_mode": 3,
+    "room_counts": [
+      8,
+      16,
+      32
+    ],
+    "schema": "combat_room_variants_benchmark_v1",
+    "seed_count_per_configuration": 20,
+    "seed_prefix": "CRV_SEED_",
+    "source_branch_provided": "feat/dungeon-combat-room-variants",
+    "source_commit_provided": "7d4b420c34bf1c0cb6c6ae4f1a3e032010310193",
+    "started_utc": "2026-11-07T08:34:24",
+    "status": "PASS",
+    "timing_scope": "Time.get_ticks_usec immediately before/after generate_dungeon(); all other work excluded",
+    "validation": "OFF: legacy structure/graph/spawn/trap rules + 27 independent Commit 1 fixture cases; ON: same plus Commit 3 pillar/collision/path checks",
+    "warmups_per_mode_per_configuration": 3,
+    "world_sha256": "f5af9b3bcf55844f8b6092ea9b2b7fe89152fb06e221fb9c0d430844042fb40f"
+  },
+  "summary": {
+    "configurations": [
+      {
+        "correctness_pass": true,
+        "failed_samples": 0,
+        "floor": 1,
+        "mean_delta_ms": 0.15958333333333,
+        "mean_delta_percent": 0.344310763567995,
+        "median_delta_ms": 0.584499999999998,
+        "median_delta_percent": 1.3037562455389,
+        "off": {
+          "max_ms": 62.355,
+          "mean_ms": 46.3486333333333,
+          "median_ms": 44.832,
+          "min_ms": 41.111,
+          "n": 60,
+          "p95_ms": 56.731
+        },
+        "on": {
+          "max_ms": 72.391,
+          "mean_ms": 46.5082166666667,
+          "median_ms": 45.4165,
+          "min_ms": 38.958,
+          "n": 60,
+          "p95_ms": 61.324
+        },
+        "p95_delta_ms": 4.593,
+        "p95_delta_percent": 8.09610265992138,
+        "paired_delta": {
+          "max_ms": 18.625,
+          "mean_ms": 0.159583333333333,
+          "median_ms": -0.510499999999997,
+          "min_ms": -14.387,
+          "n": 60,
+          "p95_ms": 9.213
+        },
+        "rooms": 8
+      },
+      {
+        "correctness_pass": true,
+        "failed_samples": 0,
+        "floor": 2,
+        "mean_delta_ms": 0.920450000000002,
+        "mean_delta_percent": 1.90900238750602,
+        "median_delta_ms": 1.398,
+        "median_delta_percent": 3.0375456283678,
+        "off": {
+          "max_ms": 65.461,
+          "mean_ms": 48.2162833333333,
+          "median_ms": 46.024,
+          "min_ms": 42.848,
+          "n": 60,
+          "p95_ms": 59.293
+        },
+        "on": {
+          "max_ms": 64.326,
+          "mean_ms": 49.1367333333333,
+          "median_ms": 47.422,
+          "min_ms": 42.236,
+          "n": 60,
+          "p95_ms": 59.929
+        },
+        "p95_delta_ms": 0.636000000000003,
+        "p95_delta_percent": 1.07263926601792,
+        "paired_delta": {
+          "max_ms": 19.765,
+          "mean_ms": 0.92045,
+          "median_ms": 0.426500000000004,
+          "min_ms": -12.622,
+          "n": 60,
+          "p95_ms": 11.123
+        },
+        "rooms": 8
+      },
+      {
+        "correctness_pass": true,
+        "failed_samples": 0,
+        "floor": 3,
+        "mean_delta_ms": 2.39773333333331,
+        "mean_delta_percent": 4.99890545569522,
+        "median_delta_ms": 3.143,
+        "median_delta_percent": 6.78833693304536,
+        "off": {
+          "max_ms": 66.858,
+          "mean_ms": 47.9651666666667,
+          "median_ms": 46.3,
+          "min_ms": 43.454,
+          "n": 60,
+          "p95_ms": 54.129
+        },
+        "on": {
+          "max_ms": 69.445,
+          "mean_ms": 50.3629,
+          "median_ms": 49.443,
+          "min_ms": 43.479,
+          "n": 60,
+          "p95_ms": 59.399
+        },
+        "p95_delta_ms": 5.27,
+        "p95_delta_percent": 9.73600103456558,
+        "paired_delta": {
+          "max_ms": 23.61,
+          "mean_ms": 2.39773333333333,
+          "median_ms": 1.9415,
+          "min_ms": -17.329,
+          "n": 60,
+          "p95_ms": 11.355
+        },
+        "rooms": 8
+      },
+      {
+        "correctness_pass": true,
+        "failed_samples": 0,
+        "floor": 1,
+        "mean_delta_ms": 24.02055,
+        "mean_delta_percent": 26.5860114886129,
+        "median_delta_ms": 24.952,
+        "median_delta_percent": 28.3519680029088,
+        "off": {
+          "max_ms": 137.074,
+          "mean_ms": 90.3503333333333,
+          "median_ms": 88.008,
+          "min_ms": 80.432,
+          "n": 60,
+          "p95_ms": 103.85
+        },
+        "on": {
+          "max_ms": 138.641,
+          "mean_ms": 114.370883333333,
+          "median_ms": 112.96,
+          "min_ms": 97.643,
+          "n": 60,
+          "p95_ms": 132.914
+        },
+        "p95_delta_ms": 29.064,
+        "p95_delta_percent": 27.9865190178142,
+        "paired_delta": {
+          "max_ms": 48.5,
+          "mean_ms": 24.02055,
+          "median_ms": 23.9215,
+          "min_ms": -10.291,
+          "n": 60,
+          "p95_ms": 44.849
+        },
+        "rooms": 16
+      },
+      {
+        "correctness_pass": true,
+        "failed_samples": 0,
+        "floor": 2,
+        "mean_delta_ms": 23.83685,
+        "mean_delta_percent": 25.1389468932846,
+        "median_delta_ms": 22.668,
+        "median_delta_percent": 24.6676859625545,
+        "off": {
+          "max_ms": 133.643,
+          "mean_ms": 94.8204,
+          "median_ms": 91.8935,
+          "min_ms": 81.882,
+          "n": 60,
+          "p95_ms": 118.089
+        },
+        "on": {
+          "max_ms": 181.821,
+          "mean_ms": 118.65725,
+          "median_ms": 114.5615,
+          "min_ms": 100.664,
+          "n": 60,
+          "p95_ms": 146.841
+        },
+        "p95_delta_ms": 28.752,
+        "p95_delta_percent": 24.3477377232426,
+        "paired_delta": {
+          "max_ms": 65.738,
+          "mean_ms": 23.83685,
+          "median_ms": 20.6175,
+          "min_ms": 2.09699999999999,
+          "n": 60,
+          "p95_ms": 44.801
+        },
+        "rooms": 16
+      },
+      {
+        "correctness_pass": true,
+        "failed_samples": 0,
+        "floor": 3,
+        "mean_delta_ms": 24.4183833333334,
+        "mean_delta_percent": 25.3094401375356,
+        "median_delta_ms": 23.197,
+        "median_delta_percent": 25.1797819279136,
+        "off": {
+          "max_ms": 169.37,
+          "mean_ms": 96.47935,
+          "median_ms": 92.1255,
+          "min_ms": 85.191,
+          "n": 60,
+          "p95_ms": 109.919
+        },
+        "on": {
+          "max_ms": 215.443,
+          "mean_ms": 120.897733333333,
+          "median_ms": 115.3225,
+          "min_ms": 100.843,
+          "n": 60,
+          "p95_ms": 142.135
+        },
+        "p95_delta_ms": 32.216,
+        "p95_delta_percent": 29.3088547020988,
+        "paired_delta": {
+          "max_ms": 61.93,
+          "mean_ms": 24.4183833333333,
+          "median_ms": 23.3655,
+          "min_ms": -10.86,
+          "n": 60,
+          "p95_ms": 41.444
+        },
+        "rooms": 16
+      },
+      {
+        "correctness_pass": true,
+        "failed_samples": 0,
+        "floor": 1,
+        "mean_delta_ms": 64.4569833333333,
+        "mean_delta_percent": 33.8884733490382,
+        "median_delta_ms": 64.2015,
+        "median_delta_percent": 33.7406289169354,
+        "off": {
+          "max_ms": 232.635,
+          "mean_ms": 190.203266666667,
+          "median_ms": 190.2795,
+          "min_ms": 167.635,
+          "n": 60,
+          "p95_ms": 213.432
+        },
+        "on": {
+          "max_ms": 289.835,
+          "mean_ms": 254.66025,
+          "median_ms": 254.481,
+          "min_ms": 215.886,
+          "n": 60,
+          "p95_ms": 277.74
+        },
+        "p95_delta_ms": 64.308,
+        "p95_delta_percent": 30.1304396716519,
+        "paired_delta": {
+          "max_ms": 107.808,
+          "mean_ms": 64.4569833333333,
+          "median_ms": 67.441,
+          "min_ms": -8.578,
+          "n": 60,
+          "p95_ms": 95.592
+        },
+        "rooms": 32
+      },
+      {
+        "correctness_pass": true,
+        "failed_samples": 0,
+        "floor": 2,
+        "mean_delta_ms": 70.0798000000001,
+        "mean_delta_percent": 36.7107564272601,
+        "median_delta_ms": 69.352,
+        "median_delta_percent": 36.648805183001,
+        "off": {
+          "max_ms": 227.938,
+          "mean_ms": 190.897183333333,
+          "median_ms": 189.234,
+          "min_ms": 169.503,
+          "n": 60,
+          "p95_ms": 209.356
+        },
+        "on": {
+          "max_ms": 330.004,
+          "mean_ms": 260.976983333333,
+          "median_ms": 258.586,
+          "min_ms": 231.321,
+          "n": 60,
+          "p95_ms": 288.217
+        },
+        "p95_delta_ms": 78.861,
+        "p95_delta_percent": 37.668373488221,
+        "paired_delta": {
+          "max_ms": 137.157,
+          "mean_ms": 70.0798,
+          "median_ms": 69.629,
+          "min_ms": 24.732,
+          "n": 60,
+          "p95_ms": 105.424
+        },
+        "rooms": 32
+      },
+      {
+        "correctness_pass": true,
+        "failed_samples": 0,
+        "floor": 3,
+        "mean_delta_ms": 68.2054333333334,
+        "mean_delta_percent": 35.0177179645066,
+        "median_delta_ms": 68.7545,
+        "median_delta_percent": 36.0707727821206,
+        "off": {
+          "max_ms": 237.222,
+          "mean_ms": 194.774066666667,
+          "median_ms": 190.61,
+          "min_ms": 173.169,
+          "n": 60,
+          "p95_ms": 219.298
+        },
+        "on": {
+          "max_ms": 316.691,
+          "mean_ms": 262.9795,
+          "median_ms": 259.3645,
+          "min_ms": 232.294,
+          "n": 60,
+          "p95_ms": 302.913
+        },
+        "p95_delta_ms": 83.615,
+        "p95_delta_percent": 38.1284827039006,
+        "paired_delta": {
+          "max_ms": 117.256,
+          "mean_ms": 68.2054333333333,
+          "median_ms": 68.555,
+          "min_ms": 21.226,
+          "n": 60,
+          "p95_ms": 97.393
+        },
+        "rooms": 32
+      }
+    ],
+    "correctness_pass": true,
+    "failed_samples": 0,
+    "sample_count": 1080,
+    "schema": "combat_room_variants_benchmark_v1"
+  },
+  "independent_verification": {
+    "status": "PASS",
+    "verified_samples": 1080,
+    "pairs": 540,
+    "configurations": 9,
+    "raw_csv_sha256": "ad80ee71eea0f65f34a16d3c0b415090e9136a6ed56c52303dc0e0f2f2079d50"
+  },
+  "cross_process_verification": {
+    "status": "PASS",
+    "matching_snapshots_across_processes": 54,
+    "smoke_directory": "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\dungeon-commit4-2c43fb7c07e4450190df44d6a2ade2c7\\measurement-appdata\\Godot\\app_userdata\\Keep Fighting And Earning\\combat_room_variants_benchmark\\smoke-final_2026-11-07T08-33-40_22896_1448364",
+    "full_directory": "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\dungeon-commit4-2c43fb7c07e4450190df44d6a2ade2c7\\measurement-appdata\\Godot\\app_userdata\\Keep Fighting And Earning\\combat_room_variants_benchmark\\full_2026-11-07T08-34-24_9588_1413898"
+  }
+}
