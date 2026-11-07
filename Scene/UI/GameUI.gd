@@ -1,6 +1,7 @@
 extends CanvasLayer
 
 const UITheme = preload("res://Scene/UI/UITheme.gd")
+const SettingsModalScript = preload("res://Scene/UI/SettingsModal.gd")
 const SLOT_SCENE = preload("res://Scene/UI/InventorySlot.tscn")
 const HOTBAR_SIZE = 9
 const BAG_SIZE = 16
@@ -57,6 +58,9 @@ var guide_modal: PanelContainer = null
 var guide_title_label: Label = null
 var guide_body_label: Label = null
 var guide_active_tab: String = "controls"
+var guide_tab_buttons: Dictionary = {}
+var settings_modal: Control = null
+var modal_dimmer: ColorRect = null
 var equip_stats_label: Label = null
 var minimap_control: Control = null
 var minimap_panel: PanelContainer = null
@@ -336,7 +340,7 @@ func _build_enhanced_ui() -> void:
 	top_right.anchor_right = 1.0
 	top_right.anchor_top = 0.0
 	top_right.anchor_bottom = 0.0
-	top_right.offset_left = -285.0
+	top_right.offset_left = -340.0
 	top_right.offset_right = -12.0
 	top_right.offset_top = 10.0
 	top_right.offset_bottom = 115.0
@@ -397,6 +401,14 @@ func _build_enhanced_ui() -> void:
 	guide_btn.tooltip_text = "Expedition Manual & Lore (Press H)"
 	guide_btn.pressed.connect(toggle_guide_modal)
 	seed_btn_hbox.add_child(guide_btn)
+
+	var settings_btn := UITheme.create_button("Settings", "gear", Vector2(0, 24), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 10, 5, 4)
+	settings_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	settings_btn.focus_mode = Control.FOCUS_NONE
+	settings_btn.tooltip_text = "Video Settings: FPS & Resolution"
+	settings_btn.pressed.connect(toggle_settings_modal)
+	seed_btn_hbox.add_child(settings_btn)
+
 	mute_btn = UITheme.create_button("Audio", "", Vector2(0, 24), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 11, 5, 4)
 	mute_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	mute_btn.focus_mode = Control.FOCUS_NONE
@@ -609,13 +621,29 @@ func _build_enhanced_ui() -> void:
 	)
 	replay_hbox.add_child(stop_replay_btn)
 
-	# 7. Cửa sổ Hành trang & Trang bị
+	# 7. Modal Dimmer / Click-through Blocker
+	modal_dimmer = ColorRect.new()
+	modal_dimmer.name = "ModalDimmer"
+	modal_dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	modal_dimmer.color = Color(0.02, 0.03, 0.06, 0.72)
+	modal_dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
+	modal_dimmer.visible = false
+	modal_dimmer.gui_input.connect(func(ev: InputEvent):
+		if ev is InputEventMouseButton and ev.pressed:
+			_close_all_in_game_modals()
+	)
+	add_child(modal_dimmer)
+
+	# 8. Cửa sổ Hành trang & Trang bị
 	_build_inventory_modal()
 
-	# 8. Cửa sổ Hướng dẫn Chơi & Cốt truyện (Manual & Lore)
+	# 9. Cửa sổ Hướng dẫn Chơi & Cốt truyện (Manual & Lore)
 	_build_guide_modal()
 
-	# 9. Cửa sổ Chọn Perk Chúc Phúc
+	# 10. Cửa sổ Cấu hình Đồ họa & Hiệu năng (Settings Modal)
+	_build_settings_modal()
+
+	# 11. Cửa sổ Chọn Perk Chúc Phúc
 	perk_modal = PERK_MODAL_SCENE.instantiate()
 	add_child(perk_modal)
 
@@ -782,10 +810,16 @@ func _create_equip_slot(label_txt: String, icon_name: String, item_type: int, pa
 	return slot
 
 func toggle_guide_modal() -> void:
-	if guide_modal != null:
-		guide_modal.visible = not guide_modal.visible
-		if guide_modal.visible:
-			_update_guide_modal_content(guide_active_tab)
+	if guide_modal == null:
+		return
+	var will_open: bool = not guide_modal.visible
+	if will_open:
+		_close_all_in_game_modals()
+		guide_modal.visible = true
+		_update_guide_modal_content(guide_active_tab)
+	else:
+		guide_modal.visible = false
+	_update_modal_dimmer()
 
 func _build_guide_modal() -> void:
 	guide_modal = PanelContainer.new()
@@ -835,6 +869,10 @@ func _build_guide_modal() -> void:
 	tab_lore.pressed.connect(func(): _update_guide_modal_content("lore"))
 	tab_hbox.add_child(tab_lore)
 
+	guide_tab_buttons["controls"] = tab_controls
+	guide_tab_buttons["hero"] = tab_hero
+	guide_tab_buttons["lore"] = tab_lore
+
 	# 3. Content Scroll
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -849,7 +887,52 @@ func _build_guide_modal() -> void:
 
 	_update_guide_modal_content("controls")
 
+func _build_settings_modal() -> void:
+	settings_modal = SettingsModalScript.new()
+	settings_modal.name = "SettingsModal"
+	settings_modal.visible = false
+	settings_modal.closed.connect(func():
+		_update_modal_dimmer()
+	)
+	add_child(settings_modal)
+
+func toggle_settings_modal() -> void:
+	if settings_modal == null:
+		return
+	if settings_modal.visible:
+		settings_modal.hide_modal()
+	else:
+		_close_all_in_game_modals()
+		settings_modal.show_modal()
+	_update_modal_dimmer()
+
+func _close_all_in_game_modals() -> void:
+	if inventory_modal != null:
+		inventory_modal.visible = false
+	if guide_modal != null:
+		guide_modal.visible = false
+	if settings_modal != null and settings_modal.visible:
+		settings_modal.hide_modal()
+	_update_modal_dimmer()
+
+func _update_modal_dimmer() -> void:
+	if modal_dimmer == null:
+		return
+	var any_open: bool = (inventory_modal != null and inventory_modal.visible) \
+		or (guide_modal != null and guide_modal.visible) \
+		or (settings_modal != null and settings_modal.visible)
+	modal_dimmer.visible = any_open
+
 func _update_guide_modal_content(tab: String) -> void:
+	guide_active_tab = tab
+	for tab_key in guide_tab_buttons.keys():
+		var btn: Button = guide_tab_buttons[tab_key]
+		if tab_key == tab:
+			btn.add_theme_stylebox_override("normal", UITheme.make_panel_style(Color(0.24, 0.18, 0.10, 0.98), UITheme.COLOR_GOLD_BORDER_HOVER, 2, 4, 10, 5))
+			btn.add_theme_color_override("font_color", UITheme.COLOR_TEXT_GOLD)
+		else:
+			btn.add_theme_stylebox_override("normal", UITheme.make_panel_style(UITheme.COLOR_BG_DARK, Color(0.25, 0.28, 0.38, 0.8), 1, 4, 10, 5))
+			btn.add_theme_color_override("font_color", UITheme.COLOR_TEXT_MUTED)
 	guide_active_tab = tab
 	if guide_title_label == null or guide_body_label == null:
 		return
@@ -993,8 +1076,16 @@ func _unhandled_input(event: InputEvent) -> void:
 			toggle_guide_modal()
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_ESCAPE:
-			if guide_modal != null and guide_modal.visible:
+			if settings_modal != null and settings_modal.visible:
+				settings_modal.hide_modal()
+				get_viewport().set_input_as_handled()
+			elif guide_modal != null and guide_modal.visible:
 				guide_modal.visible = false
+				_update_modal_dimmer()
+				get_viewport().set_input_as_handled()
+			elif inventory_modal != null and inventory_modal.visible:
+				inventory_modal.visible = false
+				_update_modal_dimmer()
 				get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_G:
 			_quick_drop_item()
@@ -1023,9 +1114,16 @@ func _on_toggle_mute_pressed() -> void:
 		show_toast("Audio Muted" if muted else "Audio Enabled")
 
 func toggle_inventory_modal() -> void:
-	if inventory_modal != null:
-		inventory_modal.visible = not inventory_modal.visible
+	if inventory_modal == null:
+		return
+	var will_open: bool = not inventory_modal.visible
+	if will_open:
+		_close_all_in_game_modals()
+		inventory_modal.visible = true
 		refresh_ui()
+	else:
+		inventory_modal.visible = false
+	_update_modal_dimmer()
 
 func _toggle_minimap_size() -> void:
 	if minimap_control == null:

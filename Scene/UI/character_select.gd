@@ -1,6 +1,7 @@
 extends Control
 
 const UITheme = preload("res://Scene/UI/UITheme.gd")
+const SettingsModalScript = preload("res://Scene/UI/SettingsModal.gd")
 const DUNGEON_BG_TEX: Texture2D = preload("res://Assets/UI/Background/Dungeon.png")
 const ARCHER_PORTRAIT: Texture2D = preload("res://Assets/UI/Button&Character/Human_Archer.png")
 const KNIGHT_PORTRAIT: Texture2D = preload("res://Assets/UI/Button&Character/Human_Knight.png")
@@ -47,6 +48,7 @@ var skill_q_label: Label = null
 var skill_rmb_label: Label = null
 var seed_input: LineEdit = null
 var guide_modal: PanelContainer = null
+var settings_modal: Control = null
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -64,6 +66,13 @@ func _ready() -> void:
 	var root_panel := $PanelContainer as PanelContainer
 	if root_panel != null:
 		root_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.05, 0.06, 0.11, 0.72), Color(0.75, 0.60, 0.28, 0.85), 2, 0, 0, 0))
+
+	var margin_c := get_node_or_null("PanelContainer/MarginContainer") as MarginContainer
+	if margin_c != null:
+		margin_c.add_theme_constant_override("margin_left", 20)
+		margin_c.add_theme_constant_override("margin_right", 20)
+		margin_c.add_theme_constant_override("margin_top", 12)
+		margin_c.add_theme_constant_override("margin_bottom", 12)
 
 	_add_yugi_portrait()
 	_add_doraemon_portrait()
@@ -208,6 +217,13 @@ func _build_hero_details_and_seed_bar() -> void:
 	)
 	header_hbox.add_child(guide_btn)
 
+	var settings_btn := UITheme.create_button("SETTINGS", "gear", Vector2(120, 34), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 12)
+	settings_btn.pressed.connect(func():
+		if settings_modal != null:
+			settings_modal.show_modal()
+	)
+	header_hbox.add_child(settings_btn)
+
 	# 2. Bảng Hồ Sơ Anh Hùng
 	var info_panel := PanelContainer.new()
 	info_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_PANEL, UITheme.COLOR_GOLD_BORDER, 2, 6, 16, 10))
@@ -332,6 +348,13 @@ func _build_hero_details_and_seed_bar() -> void:
 	hero_selection_button.custom_minimum_size = Vector2(320, 44)
 	UITheme.style_button(hero_selection_button, "", UITheme.COLOR_GOLD_BORDER_HOVER, UITheme.COLOR_BG_DARK, 16)
 
+	_build_character_select_settings_modal()
+
+func _build_character_select_settings_modal() -> void:
+	settings_modal = SettingsModalScript.new()
+	settings_modal.visible = false
+	add_child(settings_modal)
+
 func _create_stat_badge(parent: Container, label_prefix: String, color: Color) -> Label:
 	var hbox := HBoxContainer.new()
 	hbox.add_theme_constant_override("separation", 4)
@@ -363,7 +386,10 @@ func _unhandled_input(event: InputEvent) -> void:
 				guide_modal.visible = not guide_modal.visible
 				get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_ESCAPE:
-			if guide_modal != null and guide_modal.visible:
+			if settings_modal != null and settings_modal.visible:
+				settings_modal.hide_modal()
+				get_viewport().set_input_as_handled()
+			elif guide_modal != null and guide_modal.visible:
 				guide_modal.visible = false
 				get_viewport().set_input_as_handled()
 			else:

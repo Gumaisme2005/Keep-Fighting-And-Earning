@@ -1,11 +1,14 @@
 extends Control
 
 const UITheme = preload("res://Scene/UI/UITheme.gd")
+const SettingsModalScript = preload("res://Scene/UI/SettingsModal.gd")
 
 var info_label: Label = null
 var guide_modal: PanelContainer = null
 var guide_title_label: Label = null
 var guide_body_label: Label = null
+var settings_modal: Control = null
+var card_panel: PanelContainer = null
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -16,71 +19,117 @@ func _ready() -> void:
 func _build_extra_pause_controls() -> void:
 	var bg_rect := get_node_or_null("ColorRect") as ColorRect
 	if bg_rect != null:
-		bg_rect.color = Color(0.03, 0.04, 0.08, 0.78)
+		bg_rect.color = Color(0.02, 0.03, 0.06, 0.85)
 
+	# Hide legacy unconstrained top vbox to prevent overlapping title bugs
 	var top_vbox := get_node_or_null("MarginContainer/VBoxContainer") as VBoxContainer
 	if top_vbox != null:
-		top_vbox.add_theme_constant_override("separation", 40)
-
-	var title_lbl := get_node_or_null("MarginContainer/VBoxContainer/Label") as Label
-	if title_lbl != null:
-		title_lbl.text = "EXPEDITION PAUSED"
-		UITheme.style_title_label(title_lbl, 46, Color(1.0, 0.86, 0.35))
+		top_vbox.visible = false
 
 	var vbox := $MarginContainer/HBoxContainer/VBoxContainer as VBoxContainer
 	if vbox == null:
 		return
 	vbox.add_theme_constant_override("separation", 10)
 
+	# Clean legacy separator
+	var sep := vbox.get_node_or_null("Seperater") as Control
+	if sep != null:
+		sep.visible = false
+
+	# Grab original scene buttons before building new card layout
+	var resume_btn := vbox.get_node_or_null("Resume_button") as Button
+	var restart_btn := vbox.get_node_or_null("Restart_button") as Button
+	var exit_btn := vbox.get_node_or_null("Exit_button") as Button
+
+	# Centered Card Panel to contain all pause elements without clipping
+	card_panel = PanelContainer.new()
+	card_panel.custom_minimum_size = Vector2(510, 0)
+	card_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.05, 0.06, 0.11, 0.96), UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
+	vbox.add_child(card_panel)
+
+	var card_vbox := VBoxContainer.new()
+	card_vbox.add_theme_constant_override("separation", 10)
+	card_panel.add_child(card_vbox)
+
+	# 1. Title Label inside Card (Guaranteed Zero Overlap)
+	var title_lbl := Label.new()
+	title_lbl.text = "EXPEDITION PAUSED"
+	title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	UITheme.style_title_label(title_lbl, 32, Color(1.0, 0.86, 0.35))
+	card_vbox.add_child(title_lbl)
+
+	# 2. Status Info Panel (Seed & Floor badge)
 	var info_panel := PanelContainer.new()
-	info_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_PANEL, UITheme.COLOR_GOLD_BORDER, 2, 4, 14, 8))
-	vbox.add_child(info_panel)
-	vbox.move_child(info_panel, 1)
+	info_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_PANEL, UITheme.COLOR_GOLD_BORDER_MUTED, 1, 4, 12, 6))
+	card_vbox.add_child(info_panel)
 
 	var info_hbox := HBoxContainer.new()
 	info_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	info_label = Label.new()
 	info_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	UITheme.style_header_label(info_label, 14, UITheme.COLOR_TEXT_GOLD)
+	UITheme.style_header_label(info_label, 13, UITheme.COLOR_TEXT_GOLD)
 	info_hbox.add_child(info_label)
 	info_panel.add_child(info_hbox)
 
-	var resume_btn := vbox.get_node_or_null("Resume_button") as Button
-	if resume_btn != null:
-		resume_btn.text = "RESUME EXPEDITION"
-		resume_btn.custom_minimum_size = Vector2(260, 38)
-		UITheme.style_button(resume_btn, "", UITheme.COLOR_GOLD_BORDER_HOVER, UITheme.COLOR_BG_DARK, 14)
+	# 3. Two-Column Button Layout
+	var cols_hbox := HBoxContainer.new()
+	cols_hbox.add_theme_constant_override("separation", 14)
+	cols_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	card_vbox.add_child(cols_hbox)
 
-	var controls_btn := UITheme.create_button("CONTROLS & HOW TO PLAY", "question", Vector2(260, 36), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
+	# Column 1: Primary Actions & Settings
+	var col_left := VBoxContainer.new()
+	col_left.add_theme_constant_override("separation", 8)
+	col_left.custom_minimum_size = Vector2(230, 0)
+	cols_hbox.add_child(col_left)
+
+	if resume_btn != null:
+		resume_btn.reparent(col_left)
+		resume_btn.text = "RESUME EXPEDITION"
+		resume_btn.custom_minimum_size = Vector2(230, 36)
+		UITheme.style_button(resume_btn, "", UITheme.COLOR_GOLD_BORDER_HOVER, UITheme.COLOR_BG_DARK, 13)
+
+	var settings_btn := UITheme.create_button("SETTINGS & GRAPHICS", "gear", Vector2(230, 36), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
+	settings_btn.pressed.connect(func():
+		if settings_modal != null:
+			settings_modal.show_modal()
+	)
+	col_left.add_child(settings_btn)
+
+	var controls_btn := UITheme.create_button("CONTROLS & MANUAL", "question", Vector2(230, 36), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
 	controls_btn.pressed.connect(func():
 		_show_pause_guide("controls")
 	)
-	vbox.add_child(controls_btn)
-	vbox.move_child(controls_btn, 2)
+	col_left.add_child(controls_btn)
 
-	var lore_btn := UITheme.create_button("EXPEDITION LORE & STORY", "scroll_gold", Vector2(260, 36), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
+	var lore_btn := UITheme.create_button("EXPEDITION LORE & STORY", "scroll_gold", Vector2(230, 36), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
 	lore_btn.pressed.connect(func():
 		_show_pause_guide("lore")
 	)
-	vbox.add_child(lore_btn)
-	vbox.move_child(lore_btn, 3)
+	col_left.add_child(lore_btn)
 
-	var restart_btn := vbox.get_node_or_null("Restart_button") as Button
+	# Column 2: Run Navigation & Exit
+	var col_right := VBoxContainer.new()
+	col_right.add_theme_constant_override("separation", 8)
+	col_right.custom_minimum_size = Vector2(230, 0)
+	cols_hbox.add_child(col_right)
+
 	if restart_btn != null:
+		restart_btn.reparent(col_right)
 		restart_btn.text = "RETRY CURRENT SEED"
-		restart_btn.custom_minimum_size = Vector2(260, 38)
-		UITheme.style_button(restart_btn, "", UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 14)
+		restart_btn.custom_minimum_size = Vector2(230, 36)
+		UITheme.style_button(restart_btn, "", UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
 
-	var save_seed_btn := UITheme.create_button("RECORD SEED TO CHRONICLES", "", Vector2(260, 36), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
+	var save_seed_btn := UITheme.create_button("RECORD SEED TO CHRONICLES", "", Vector2(230, 36), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 12)
 	save_seed_btn.pressed.connect(func():
 		if get_node_or_null("/root/GameManager") != null:
 			DisplayServer.clipboard_set(GameManager.current_seed)
 			GameManager.save_seed_entry(GameManager.current_seed)
 			info_label.text = "Dungeon seed recorded: " + GameManager.current_seed
 	)
-	vbox.add_child(save_seed_btn)
+	col_right.add_child(save_seed_btn)
 
-	var new_seed_btn := UITheme.create_button("EMBARK ON NEW EXPEDITION", "", Vector2(260, 36), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
+	var new_seed_btn := UITheme.create_button("EMBARK ON NEW EXPEDITION", "", Vector2(230, 36), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 12)
 	new_seed_btn.pressed.connect(func():
 		get_tree().paused = false
 		if get_node_or_null("/root/GameManager") != null:
@@ -89,23 +138,28 @@ func _build_extra_pause_controls() -> void:
 		else:
 			get_tree().reload_current_scene()
 	)
-	vbox.add_child(new_seed_btn)
+	col_right.add_child(new_seed_btn)
 
-	var menu_btn := UITheme.create_button("RETURN TO MAIN MENU", "", Vector2(260, 36), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
+	var menu_btn := UITheme.create_button("RETURN TO MAIN MENU", "", Vector2(230, 36), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
 	menu_btn.pressed.connect(func():
 		get_tree().paused = false
 		get_tree().change_scene_to_file("res://Menu/main menu/main_menu.tscn")
 	)
-	vbox.add_child(menu_btn)
+	col_right.add_child(menu_btn)
 
-	var exit_btn := vbox.get_node_or_null("Exit_button") as Button
 	if exit_btn != null:
-		exit_btn.text = "ABANDON EXPEDITION & QUIT"
-		exit_btn.custom_minimum_size = Vector2(260, 36)
+		exit_btn.reparent(col_right)
+		exit_btn.text = "ABANDON & QUIT"
+		exit_btn.custom_minimum_size = Vector2(230, 36)
 		UITheme.style_danger_button(exit_btn, "", 13)
-		vbox.move_child(exit_btn, vbox.get_child_count() - 1)
 
 	_build_pause_guide_modal()
+	_build_pause_settings_modal()
+
+func _build_pause_settings_modal() -> void:
+	settings_modal = SettingsModalScript.new()
+	settings_modal.visible = false
+	add_child(settings_modal)
 
 func _build_pause_guide_modal() -> void:
 	guide_modal = PanelContainer.new()
@@ -217,6 +271,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if game_over_menu != null and game_over_menu.is_visible_in_tree():
 		return
 	if event.is_action_pressed("esc") and not event.is_echo():
+		if settings_modal != null and settings_modal.visible:
+			settings_modal.hide_modal()
+			get_viewport().set_input_as_handled()
+			return
 		if guide_modal != null and guide_modal.visible:
 			guide_modal.visible = false
 			get_viewport().set_input_as_handled()
@@ -226,7 +284,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		else:
 			pause()
 
+func _close_all_submodals() -> void:
+	if settings_modal != null and settings_modal.visible:
+		settings_modal.hide_modal()
+	if guide_modal != null and guide_modal.visible:
+		guide_modal.visible = false
+
 func resume() -> void:
+	_close_all_submodals()
 	get_tree().paused = false
 	hide()
 

@@ -49,7 +49,7 @@ The roster features 8 distinct heroes, selectable from the character selection s
 | 4 | Yugi / Atem | Pharaoh Summoner | 5 | 1 | 1 | 150.0 | Millennium Puzzle (monsters, guard, room spells) |
 | 5 | Doraemon | 22nd-Century Specialist | 5 | 2 | 1 | 150.0 | 4D Pocket (20 gadgets, 6 assists, 10 supers) |
 | 6 | Hoshimi Miyabi | Frost Swordswoman | 4 | 2 | 1 | 160.0 | Frost combo, dash, charged wave, Frost Bloom and ice spirit |
-| 7 | Lương Thơ | Twin Gunblade Duelist | 5 | 2 | 1 | 155.0 | Three-hit combo, Twin Barrels and White Moon transformation |
+| 7 | Luong Tho | Twin Gunblade Duelist | 5 | 2 | 1 | 155.0 | Three-hit combo, Twin Barrels and White Moon transformation |
 
 ### 2.2 Hero Profiles and Ability Breakdown
 
@@ -93,7 +93,7 @@ The roster features 8 distinct heroes, selectable from the character selection s
 - **Hold/release RMB**: Charged Frost Wave; **Q**: Frost Bloom ice spikes.
 - An ice spirit follows Miyabi and automatically attacks nearby visible enemies.
 
-#### Index 7: Lương Thơ (Twin Gunblade Duelist)
+#### Index 7: Luong Tho (Twin Gunblade Duelist)
 - **LMB**: Stab, twin swing and ground-smash combo; **RMB**: Twin Barrels.
 - **Q**: White Moon transformation grants 12 seconds of invulnerability, stronger and faster attacks, faster movement and piercing bullets.
 
@@ -206,6 +206,7 @@ godot --headless --path . "res://tests/test_miyabi.tscn"
 godot --headless --path . "res://tests/test_luong_tho.tscn"
 godot --headless --path . "res://tests/test_projectile_obstacles.tscn"
 godot --headless --path . "res://tests/test_perk_system.tscn"
+godot --headless --path . "res://tests/test_settings_and_ui.tscn"
 ```
 
 ---
@@ -296,3 +297,47 @@ At the core of Khazad-dum lies an ancient Seeing Stone—a Palantir woven into t
 - **Werewolf Stalkers**: Fast, feral beasts lurking in corridor shadows, telegraphing deadly pounce attacks that must be interrupted or dodged.
 - **The Necromancer of the Lower Depths**: An ancient defiler in Floor 1 summoning undead thralls and homing skull curses.
 - **The Skeleton King**: An undying monarch residing in Floors 3, 6, and 9. Protected by invulnerable Soul Crystals and devastating laser grid volleys, the Skeleton King can only be damaged by systematically shattering his resonant soul anchors.
+
+---
+
+## 9. Graphics, Display, and Performance Configuration
+
+### 9.1 Frame Rate Control (FPS Limiter)
+- **Presets**: 30 FPS, 60 FPS, 120 FPS, 144 FPS, and Unlimited (0 FPS cap).
+- **Custom FPS Limiter**: Continuous range between 20 FPS and 360 FPS controlled via synced horizontal slider and numeric SpinBox.
+- **Engine Throttling**: Direct hardware synchronization via `Engine.max_fps`.
+
+### 9.2 Resolution and Display Modes
+- **Screen Resolution Presets**:
+  - 1280 x 720 (720p HD, standard base viewport)
+  - 1366 x 768 (HD)
+  - 1600 x 900 (900p HD+)
+  - 1920 x 1080 (1080p FHD)
+  - 2560 x 1440 (1440p 2K QHD)
+  - 3840 x 2160 (2160p 4K UHD)
+- **Display Modes**:
+  - Windowed: Floating resizable centered window.
+  - Borderless Fullscreen: Seamless borderless presentation matching the current primary display resolution.
+  - Exclusive Fullscreen: Dedicated hardware fullscreen mode via `DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN`.
+- **Vertical Synchronization (V-Sync)**:
+  - Disabled: Uncapped rendering without monitor sync.
+  - Enabled: Locked to monitor refresh rate.
+  - Adaptive: Tear-free rendering that disables sync when frame rate drops below target.
+
+### 9.3 Audio System Controls
+- **Master, BGM, and SFX Volume**: Independent linear percentage sliders (0% to 100%) converting directly to logarithmic decibel ranges (-30 dB to 0 dB, and -80 dB on complete mute).
+- **Mute Toggle**: Global audio mute toggle updating all active audio stream players immediately.
+
+### 9.4 Configuration Persistence
+- **Storage Location**: Automatically saved to and loaded from `user://settings.cfg` using Godot's `ConfigFile` API.
+- **Fault-Tolerant Defaults**: Automatically restores safe baseline settings (60 FPS, 1280x720, Windowed, VSync Enabled) if the file is missing or corrupted.
+
+### 9.5 Interface Integration and Modal Hierarchy
+- **Universal Availability**: The Settings Modal is accessible from:
+  - Main Menu: Top-right header button and central Graphics & Performance button.
+  - Character Selection: Header action bar.
+  - Pause Menu: Dedicated card action column.
+  - In-Game HUD: Top-right quick access toolbar.
+- **Click-Through and Input Protection**: All modals (Settings, Expedition Guide, and Inventory) feature full-screen dark backdrops that consume background mouse clicks and prevent accidental attacks or character movement while interacting with menus.
+- **Escape Key Routing**: Pressing Escape systematically closes the topmost active modal (Settings -> Guide -> Inventory) before allowing the game to pause, resolving pause menu clipping bugs.
+

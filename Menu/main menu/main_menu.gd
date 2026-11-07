@@ -2,6 +2,7 @@ class_name MainMenu
 extends Control
 
 const UITheme = preload("res://Scene/UI/UITheme.gd")
+const SettingsModalScript = preload("res://Scene/UI/SettingsModal.gd")
 
 @onready var start_button: Button = $MarginContainer/HBoxContainer/VBoxContainer/Start_button as Button
 @onready var exit_button: Button = $MarginContainer/HBoxContainer/VBoxContainer/Exit_button as Button
@@ -14,6 +15,8 @@ var history_list_vbox: VBoxContainer = null
 var seed_modal: PanelContainer = null
 var lore_modal: PanelContainer = null
 var help_modal: PanelContainer = null
+var settings_modal: Control = null
+var modal_backdrop: ColorRect = null
 var history_hdr_label: Label = null
 
 func _ready() -> void:
@@ -33,28 +36,51 @@ func _enhance_main_menu_ui() -> void:
 		bg_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		bg_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 
-	# Nút Bật/Tắt Nhạc nền ở góc trên phải Main Menu
+	# Modal Backdrop Dimmer to prevent click-through bugs
+	modal_backdrop = ColorRect.new()
+	modal_backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	modal_backdrop.color = Color(0.02, 0.03, 0.06, 0.82)
+	modal_backdrop.mouse_filter = Control.MOUSE_FILTER_STOP
+	modal_backdrop.visible = false
+	modal_backdrop.gui_input.connect(func(ev: InputEvent):
+		if ev is InputEventMouseButton and ev.pressed:
+			_close_all_modals()
+	)
+	add_child(modal_backdrop)
+
+	# Top-Right Action Header: Settings + Audio
+	var top_right_hbox := HBoxContainer.new()
+	top_right_hbox.add_theme_constant_override("separation", 8)
+	top_right_hbox.anchor_left = 1.0
+	top_right_hbox.anchor_right = 1.0
+	top_right_hbox.offset_left = -310.0
+	top_right_hbox.offset_right = -20.0
+	top_right_hbox.offset_top = 18.0
+	top_right_hbox.offset_bottom = 52.0
+	add_child(top_right_hbox)
+
+	var settings_top_btn := UITheme.create_button("Settings (FPS/Res)", "gear", Vector2(160, 34), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 12)
+	settings_top_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	settings_top_btn.pressed.connect(func():
+		_open_settings_modal()
+	)
+	top_right_hbox.add_child(settings_top_btn)
+
 	var is_muted_init: bool = (get_node_or_null("/root/AudioManager") != null and AudioManager.is_muted)
 	var audio_btn := UITheme.create_button(
 		"Audio: Off" if is_muted_init else "Audio: On",
 		"",
-		Vector2(120, 34),
+		Vector2(110, 34),
 		UITheme.COLOR_GOLD_BORDER,
 		UITheme.COLOR_BG_DARK,
-		13
+		12
 	)
-	audio_btn.anchor_left = 1.0
-	audio_btn.anchor_right = 1.0
-	audio_btn.offset_left = -140.0
-	audio_btn.offset_right = -20.0
-	audio_btn.offset_top = 18.0
-	audio_btn.offset_bottom = 52.0
 	audio_btn.pressed.connect(func():
 		if get_node_or_null("/root/AudioManager") != null:
 			var m: bool = AudioManager.toggle_mute()
 			audio_btn.text = "Audio: Off" if m else "Audio: On"
 	)
-	add_child(audio_btn)
+	top_right_hbox.add_child(audio_btn)
 
 	var top_vbox := get_node_or_null("MarginContainer/VBoxContainer") as VBoxContainer
 	if top_vbox != null:
@@ -147,38 +173,40 @@ func _enhance_main_menu_ui() -> void:
 	var seed_mgr_btn := UITheme.create_button("SAVED SEEDS & COMBAT REPLAYS", "", Vector2(360, 40), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 14)
 	seed_mgr_btn.pressed.connect(func():
 		_refresh_seed_lists()
-		seed_modal.visible = true
-		lore_modal.visible = false
-		help_modal.visible = false
+		_open_modal(seed_modal)
 	)
 	menu_vbox.add_child(seed_mgr_btn)
 	menu_vbox.move_child(seed_mgr_btn, 2)
 
-	# 4. Info Row: Lore & Controls
+	# 4. Settings & Graphics Configuration Button
+	var settings_menu_btn := UITheme.create_button("GRAPHICS & PERFORMANCE (FPS / RES)", "gear", Vector2(360, 40), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
+	settings_menu_btn.pressed.connect(func():
+		_open_settings_modal()
+	)
+	menu_vbox.add_child(settings_menu_btn)
+	menu_vbox.move_child(settings_menu_btn, 3)
+
+	# 5. Info Row: Lore & Controls
 	var info_row := HBoxContainer.new()
 	info_row.add_theme_constant_override("separation", 8)
 	menu_vbox.add_child(info_row)
-	menu_vbox.move_child(info_row, 3)
+	menu_vbox.move_child(info_row, 4)
 
 	var lore_btn := UITheme.create_button("LORE & CHRONICLES", "", Vector2(176, 38), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
 	lore_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lore_btn.pressed.connect(func():
-		lore_modal.visible = true
-		seed_modal.visible = false
-		help_modal.visible = false
+		_open_modal(lore_modal)
 	)
 	info_row.add_child(lore_btn)
 
 	var help_btn := UITheme.create_button("CONTROLS & MECHANICS", "", Vector2(176, 38), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
 	help_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	help_btn.pressed.connect(func():
-		help_modal.visible = true
-		seed_modal.visible = false
-		lore_modal.visible = false
+		_open_modal(help_modal)
 	)
 	info_row.add_child(help_btn)
 
-	# 5. Quit Game Button
+	# 6. Quit Game Button
 	exit_button.text = "QUIT GAME"
 	exit_button.custom_minimum_size = Vector2(360, 38)
 	UITheme.style_button(exit_button, "", UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 14)
@@ -186,6 +214,7 @@ func _enhance_main_menu_ui() -> void:
 	_build_seed_and_replay_modal()
 	_build_lore_modal()
 	_build_help_modal()
+	_build_settings_modal()
 
 func _set_seed_status(msg: String) -> void:
 	if seed_status_lbl != null:
@@ -220,7 +249,7 @@ func _build_seed_and_replay_modal() -> void:
 	header.add_child(title_lbl)
 
 	var close_btn := UITheme.create_danger_button("Close", "", Vector2(84, 30), 12)
-	close_btn.pressed.connect(func(): seed_modal.visible = false)
+	close_btn.pressed.connect(_close_all_modals)
 	header.add_child(close_btn)
 
 	var cols := HBoxContainer.new()
@@ -397,7 +426,7 @@ func _build_lore_modal() -> void:
 	header.add_child(icon_hdr)
 
 	var close_btn := UITheme.create_danger_button("Close", "", Vector2(84, 30), 12)
-	close_btn.pressed.connect(func(): lore_modal.visible = false)
+	close_btn.pressed.connect(_close_all_modals)
 	header.add_child(close_btn)
 
 	var scroll := ScrollContainer.new()
@@ -536,7 +565,7 @@ func _build_help_modal() -> void:
 	header.add_child(modal_hdr)
 
 	var close_top := UITheme.create_danger_button("Close", "", Vector2(84, 30), 12)
-	close_top.pressed.connect(func(): help_modal.visible = false)
+	close_top.pressed.connect(_close_all_modals)
 	header.add_child(close_top)
 
 	var scroll := ScrollContainer.new()
@@ -657,17 +686,41 @@ func _build_help_modal() -> void:
 • Key ESC: Pause expedition, check seed information, access manual, or retry."""
 	r_vbox.add_child(r_body)
 
+func _build_settings_modal() -> void:
+	settings_modal = SettingsModalScript.new()
+	settings_modal.visible = false
+	settings_modal.closed.connect(_close_all_modals)
+	add_child(settings_modal)
+
+func _open_modal(modal: Control) -> void:
+	_close_all_modals()
+	if modal != null:
+		if modal_backdrop != null:
+			modal_backdrop.visible = true
+			modal_backdrop.move_to_front()
+		modal.visible = true
+		modal.move_to_front()
+
+func _open_settings_modal() -> void:
+	_close_all_modals()
+	if settings_modal != null:
+		if modal_backdrop != null:
+			modal_backdrop.visible = true
+			modal_backdrop.move_to_front()
+		settings_modal.show_modal()
+
+func _close_all_modals() -> void:
+	if seed_modal != null: seed_modal.visible = false
+	if lore_modal != null: lore_modal.visible = false
+	if help_modal != null: help_modal.visible = false
+	if settings_modal != null: settings_modal.visible = false
+	if modal_backdrop != null: modal_backdrop.visible = false
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_ESCAPE:
-			if help_modal != null and help_modal.visible:
-				help_modal.visible = false
-				get_viewport().set_input_as_handled()
-			elif lore_modal != null and lore_modal.visible:
-				lore_modal.visible = false
-				get_viewport().set_input_as_handled()
-			elif seed_modal != null and seed_modal.visible:
-				seed_modal.visible = false
+			if (settings_modal != null and settings_modal.visible) or (help_modal != null and help_modal.visible) or (lore_modal != null and lore_modal.visible) or (seed_modal != null and seed_modal.visible):
+				_close_all_modals()
 				get_viewport().set_input_as_handled()
 
 func on_start_pressed() -> void:
