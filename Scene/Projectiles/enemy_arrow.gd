@@ -19,7 +19,8 @@ func _physics_process(delta: float) -> void:
 	var next_pos: Vector2 = global_position + direction * speed * delta
 	var tmap = get_parent()
 	if tmap != null and tmap.has_method("has_line_of_sight"):
-		if tmap.is_global_pos_wall_or_door(next_pos) or not tmap.has_line_of_sight(global_position, next_pos):
+		var wall_hit: bool = tmap.is_global_pos_wall_or_door(next_pos) if tmap.has_method("is_global_pos_wall_or_door") else false
+		if wall_hit or not tmap.has_line_of_sight(global_position, next_pos):
 			is_broken = true
 			queue_free()
 			return
@@ -33,7 +34,8 @@ func _on_area_entered(area: Area2D) -> void:
 		var tmap = get_parent()
 		if tmap != null and tmap.has_method("has_line_of_sight"):
 			var check_from: Vector2 = global_position - direction * 8.0
-			if tmap.is_global_pos_wall_or_door(global_position) or not tmap.has_line_of_sight(check_from, target.global_position):
+			var wall_hit: bool = tmap.is_global_pos_wall_or_door(global_position) if tmap.has_method("is_global_pos_wall_or_door") else false
+			if wall_hit or not tmap.has_line_of_sight(check_from, target.global_position):
 				is_broken = true
 				queue_free()
 				return

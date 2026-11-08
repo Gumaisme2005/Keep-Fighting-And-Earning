@@ -14,6 +14,10 @@ class MockTileMap extends Node2D:
 	var los_blocked: bool = false
 	func has_line_of_sight(_from: Vector2, _to: Vector2) -> bool:
 		return not los_blocked
+	func is_global_pos_wall_or_door(_pos: Vector2) -> bool:
+		return los_blocked
+	func get_smart_steer_direction(_from: Vector2, desired_dir: Vector2) -> Vector2:
+		return desired_dir
 
 func assert_test(cond: bool, test_name: String) -> void:
 	if cond:
@@ -26,8 +30,9 @@ func assert_test(cond: bool, test_name: String) -> void:
 func _count_arrows(parent: Node) -> int:
 	var count := 0
 	for child in parent.get_children():
-		if child.get_script() == ARROW_SCRIPT or child.name.begins_with("EnemyArrow") or child.name.begins_with("@Area2D"):
-			count += 1
+		if is_instance_valid(child) and not child.is_queued_for_deletion():
+			if child.get_script() == ARROW_SCRIPT or child.name.begins_with("EnemyArrow") or child.name.begins_with("@Area2D"):
+				count += 1
 	return count
 
 func _ready() -> void:
@@ -62,6 +67,7 @@ func _setup_fixture() -> Dictionary:
 	map.add_child(archer)
 	archer.player = p
 	archer.is_active = true
+	archer.set_physics_process(false)
 	archer.can_attack = true
 
 	return {"map": map, "player": p, "archer": archer}
