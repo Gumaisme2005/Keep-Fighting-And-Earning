@@ -1158,6 +1158,12 @@ var _damage_container: Node2D = null
 
 func _exit_tree() -> void:
 	reset_damage_number_pool()
+	for lbl in _damage_label_pool:
+		if is_instance_valid(lbl):
+			_kill_label_tween(lbl)
+	if _damage_container != null and is_instance_valid(_damage_container):
+		_damage_container.queue_free()
+		_damage_container = null
 
 func _kill_label_tween(lbl: Label) -> void:
 	if not is_instance_valid(lbl):
@@ -1166,7 +1172,7 @@ func _kill_label_tween(lbl: Label) -> void:
 		var tw = lbl.get_meta("damage_tween")
 		if tw is Tween and is_instance_valid(tw) and tw.is_valid():
 			tw.kill()
-		lbl.set_meta("damage_tween", null)
+		lbl.remove_meta("damage_tween")
 
 func reset_damage_number_pool() -> void:
 	for lbl in _active_damage_labels:
@@ -1187,9 +1193,12 @@ func reset_damage_pool() -> void:
 	reset_damage_number_pool()
 
 func _get_damage_container() -> Node2D:
-	if not is_inside_tree() or get_tree().current_scene == null:
+	if not is_inside_tree():
 		return null
-	if _damage_container == null or not is_instance_valid(_damage_container) or _damage_container.get_parent() != get_tree().current_scene:
+	var host_scene = get_tree().current_scene if (get_tree() != null and get_tree().current_scene != null) else (get_parent() if get_parent() != null else self)
+	if host_scene == null:
+		return null
+	if _damage_container == null or not is_instance_valid(_damage_container) or _damage_container.get_parent() != host_scene:
 		# Thu dọn danh sách label cũ nếu scene đã chuyển tầng hoặc reload
 		reset_damage_number_pool()
 		_damage_label_pool.clear()
@@ -1197,7 +1206,7 @@ func _get_damage_container() -> Node2D:
 		_damage_container = Node2D.new()
 		_damage_container.name = "DamageNumberPool"
 		_damage_container.z_index = 50
-		get_tree().current_scene.add_child(_damage_container)
+		host_scene.add_child(_damage_container)
 	return _damage_container
 
 func spawn_damage_number(world_pos: Vector2, amount: int, color: Color = Color(1.0, 0.9, 0.3)) -> void:
@@ -1258,6 +1267,7 @@ func _on_damage_label_finished(lbl: Label, expected_gen: int) -> void:
 	if not lbl.has_meta("damage_gen") or int(lbl.get_meta("damage_gen")) != expected_gen:
 		return
 
+	_kill_label_tween(lbl)
 	lbl.visible = false
 	_active_damage_labels.erase(lbl)
 	if _damage_label_pool.size() < MAX_DAMAGE_LABELS and not _damage_label_pool.has(lbl):

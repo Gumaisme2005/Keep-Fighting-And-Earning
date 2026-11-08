@@ -39,7 +39,11 @@ func _ready() -> void:
 		_apply_balance_stats()
 	if animated_sprite != null and animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation("idle"):
 		animated_sprite.play("idle")
-	_ai_tick_timer = randf_range(0.0, _ai_tick_interval)
+	# Khởi tạo độ trễ AI timer một cách tất định (deterministic) để không làm lệch global RNG của replay stream:
+	var seed_val: int = loot_seed if loot_seed != 0 else (int(abs(global_position.x * 73856093)) ^ int(abs(global_position.y * 19349663)))
+	var local_rng := RandomNumberGenerator.new()
+	local_rng.seed = seed_val
+	_ai_tick_timer = local_rng.randf_range(0.0, _ai_tick_interval)
 	_find_player()
 
 func _apply_balance_stats() -> void:
