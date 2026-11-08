@@ -1156,11 +1156,43 @@ var _damage_label_pool: Array[Label] = []
 var _active_damage_labels: Array[Label] = []
 var _damage_container: Node2D = null
 
+func _exit_tree() -> void:
+	reset_damage_number_pool()
+
+func _kill_label_tween(lbl: Label) -> void:
+	if not is_instance_valid(lbl):
+		return
+	var tw = lbl.get_meta("damage_tween", null)
+	if tw != null and is_instance_valid(tw) and tw.is_valid():
+		tw.kill()
+	lbl.set_meta("damage_tween", null)
+	if get_tree():
+		get_tree().kill_tweens_of(lbl)
+
+func reset_damage_number_pool() -> void:
+	for lbl in _active_damage_labels:
+		if is_instance_valid(lbl):
+			_kill_label_tween(lbl)
+			lbl.visible = false
+			if not _damage_label_pool.has(lbl):
+				_damage_label_pool.append(lbl)
+	_active_damage_labels.clear()
+
+	if _damage_container != null and is_instance_valid(_damage_container):
+		for child in _damage_container.get_children():
+			if child is Label:
+				_kill_label_tween(child)
+				child.visible = false
+
+func reset_damage_pool() -> void:
+	reset_damage_number_pool()
+
 func _get_damage_container() -> Node2D:
 	if not is_inside_tree() or get_tree().current_scene == null:
 		return null
 	if _damage_container == null or not is_instance_valid(_damage_container) or _damage_container.get_parent() != get_tree().current_scene:
 		# Thu dọn danh sách label cũ nếu scene đã chuyển tầng hoặc reload
+		reset_damage_number_pool()
 		_damage_label_pool.clear()
 		_active_damage_labels.clear()
 		_damage_container = Node2D.new()
@@ -1195,23 +1227,37 @@ func spawn_damage_number(world_pos: Vector2, amount: int, color: Color = Color(1
 	if not is_instance_valid(lbl):
 		return
 
+	# Hủy triệt để Tween cũ và ngắt mọi callback trước đó của label này
+	_kill_label_tween(lbl)
+
+	# Tăng generation counter để vô hiệu hóa mọi callback cũ nếu có độ trễ
+	var gen: int = int(lbl.get_meta("damage_gen", 0)) + 1
+	lbl.set_meta("damage_gen", gen)
+
 	_active_damage_labels.append(lbl)
 
 	# Thiết lập lại trạng thái hiển thị
 	lbl.visible = true
 	lbl.modulate = Color.WHITE
+	lbl.scale = Vector2.ONE
 	lbl.text = ("+" if color.g > 0.85 and color.r < 0.5 else "-") + str(amount)
 	lbl.global_position = world_pos + Vector2(randf_range(-8.0, 8.0), -10.0)
 	lbl.add_theme_color_override("font_color", color)
 
 	var tw = lbl.create_tween()
+	lbl.set_meta("damage_tween", tw)
 	tw.set_parallel(true)
 	tw.tween_property(lbl, "global_position:y", lbl.global_position.y - 22.0, 0.55).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tw.tween_property(lbl, "modulate:a", 0.0, 0.55)
-	tw.chain().tween_callback(func():
-		if is_instance_valid(lbl):
-			lbl.visible = false
-			_active_damage_labels.erase(lbl)
-			if _damage_label_pool.size() < MAX_DAMAGE_LABELS and not _damage_label_pool.has(lbl):
-				_damage_label_pool.append(lbl)
-	)
+	tw.chain().tween_callback(_on_damage_label_finished.bind(lbl, gen))
+
+func _on_damage_label_finished(lbl: Label, expected_gen: int) -> void:
+	if not is_instance_valid(lbl):
+		return
+	if int(lbl.get_meta("damage_gen", 0)) != expected_gen:
+		return
+
+	lbl.visible = false
+	_active_damage_labels.erase(lbl)
+	if _damage_label_pool.size() < MAX_DAMAGE_LABELS and not _damage_label_pool.has(lbl):
+		_damage_label_pool.append(lbl)

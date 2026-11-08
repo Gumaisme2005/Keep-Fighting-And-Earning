@@ -259,6 +259,10 @@ func next_level() -> void:
 		GameManager.register_level_advance(current_level)
 	print("[PORTAL] Đang dịch chuyển đến Hầm ngục tầng ", current_level, "...")
 
+	# Thu hồi và dọn dẹp sạch sẽ toàn bộ damage popup cũ khi chuyển tầng
+	if get_tree():
+		get_tree().call_group("game_ui", "reset_damage_number_pool")
+
 	for child in get_children():
 		if child != the_player and not child is Camera2D:
 			remove_child(child)
