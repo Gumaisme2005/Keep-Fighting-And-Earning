@@ -405,11 +405,11 @@ func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
 	if pm == null:
 		return final_dmg
 
+	var rng: RandomNumberGenerator = pm.get_combat_rng() if pm.has_method("get_combat_rng") else RandomNumberGenerator.new()
+
 	# 1. Critical Hit (Đòn Đánh Tử Huyệt & Xé Toạc Sinh Mệnh)
 	var crit_chance: float = pm.get_crit_chance()
 	if crit_chance > 0.0:
-		var rng := RandomNumberGenerator.new()
-		rng.randomize()
 		if rng.randf() <= crit_chance:
 			var mult: float = pm.get_crit_multiplier() if pm.has_method("get_crit_multiplier") else 2.0
 			var raw_crit: float = float(in_damage) * mult
@@ -422,9 +422,7 @@ func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
 		for p in pm.get_active_perks():
 			if p.get_modifier("on_hit_burn", false):
 				var chance: float = float(p.get_modifier("burn_chance", 0.35))
-				var b_rng := RandomNumberGenerator.new()
-				b_rng.randomize()
-				if b_rng.randf() <= chance:
+				if rng.randf() <= chance:
 					var burn_amt: int = int(p.get_modifier("burn_damage", 2))
 					if target.has_method("take_damage"):
 						target.call_deferred("take_damage", burn_amt)
@@ -445,9 +443,7 @@ func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
 
 	# 5. Mythic Helmet Effect: Celestial Smite (Thiên Phạt Sấm Sét)
 	if inventory != null and inventory.has_method("has_mythic_helmet") and inventory.has_mythic_helmet():
-		var smite_rng := RandomNumberGenerator.new()
-		smite_rng.randomize()
-		if smite_rng.randf() <= 0.40:
+		if rng.randf() <= 0.40:
 			var smite_dmg := 5
 			if target.has_method("take_damage"):
 				target.call_deferred("take_damage", smite_dmg)

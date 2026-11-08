@@ -52,6 +52,8 @@ var banner_icon: TextureRect = null
 var banner_label: Label = null
 var toast_label: Label = null
 var replay_banner: PanelContainer = null
+var _banner_tween: Tween = null
+var _toast_tween: Tween = null
 
 var inventory_modal: PanelContainer = null
 var equip_stats_label: Label = null
@@ -630,6 +632,7 @@ func _update_active_perks_bar() -> void:
 	if active_perks_bar == null:
 		return
 	for c in active_perks_bar.get_children():
+		active_perks_bar.remove_child(c)
 		c.queue_free()
 
 	if get_node_or_null("/root/PerkManager") == null:
@@ -1034,7 +1037,7 @@ func _on_slot_dropped(source_data: Dictionary, target_slot: Control) -> void:
 		if src_idx >= 0 and target_idx >= 0 and src_idx != target_idx:
 			inventory.swap_slots(src_idx, target_idx)
 			if get_node_or_null("/root/AudioManager") != null:
-				AudioManager.play_sfx("pickup", 1.15, 0.4)
+				AudioManager.play_sfx("pickup", 1.05, 1.15)
 
 	# 2. Kéo từ Balo thả vào ô Trang bị (BAG -> EQUIPMENT): Mặc đồ
 	elif src_kind == InventorySlot.SlotKind.BAG and target_kind == InventorySlot.SlotKind.EQUIPMENT:
@@ -1045,7 +1048,7 @@ func _on_slot_dropped(source_data: Dictionary, target_slot: Control) -> void:
 				if player.has_method("_on_equipment_changed"):
 					player._on_equipment_changed()
 				if get_node_or_null("/root/AudioManager") != null:
-					AudioManager.play_sfx("pickup", 1.25, 0.5)
+					AudioManager.play_sfx("pickup", 1.15, 1.25)
 
 	# 3. Kéo từ ô Trang bị thả vào ô Balo (EQUIPMENT -> BAG): Tháo hoặc hoán đổi vào đúng ô đích
 	elif src_kind == InventorySlot.SlotKind.EQUIPMENT and target_kind == InventorySlot.SlotKind.BAG:
@@ -1068,7 +1071,7 @@ func _on_slot_dropped(source_data: Dictionary, target_slot: Control) -> void:
 				if player.has_method("_on_equipment_changed"):
 					player._on_equipment_changed()
 				if get_node_or_null("/root/AudioManager") != null:
-					AudioManager.play_sfx("pickup", 0.95, 0.5)
+					AudioManager.play_sfx("pickup", 0.95, 1.05)
 
 func refresh_ui() -> void:
 	if inventory == null:
@@ -1127,10 +1130,12 @@ func show_banner(text: String, color: Color = Color.WHITE) -> void:
 			banner_icon.texture = UITheme.get_icon("sword_royal")
 	banner_panel.visible = true
 	banner_panel.modulate.a = 1.0
-	var tw = create_tween()
-	tw.tween_interval(1.8)
-	tw.tween_property(banner_panel, "modulate:a", 0.0, 0.5)
-	tw.tween_callback(func(): banner_panel.visible = false)
+	if _banner_tween != null and _banner_tween.is_valid():
+		_banner_tween.kill()
+	_banner_tween = create_tween()
+	_banner_tween.tween_interval(1.8)
+	_banner_tween.tween_property(banner_panel, "modulate:a", 0.0, 0.5)
+	_banner_tween.tween_callback(func(): banner_panel.visible = false)
 
 func show_toast(text: String) -> void:
 	if toast_label == null:
@@ -1138,10 +1143,12 @@ func show_toast(text: String) -> void:
 	toast_label.text = text
 	toast_label.visible = true
 	toast_label.modulate.a = 1.0
-	var tw = create_tween()
-	tw.tween_interval(1.6)
-	tw.tween_property(toast_label, "modulate:a", 0.0, 0.4)
-	tw.tween_callback(func(): toast_label.visible = false)
+	if _toast_tween != null and _toast_tween.is_valid():
+		_toast_tween.kill()
+	_toast_tween = create_tween()
+	_toast_tween.tween_interval(1.6)
+	_toast_tween.tween_property(toast_label, "modulate:a", 0.0, 0.4)
+	_toast_tween.tween_callback(func(): toast_label.visible = false)
 
 func spawn_damage_number(world_pos: Vector2, amount: int, color: Color = Color(1.0, 0.9, 0.3)) -> void:
 	if not is_inside_tree() or get_tree().current_scene == null:

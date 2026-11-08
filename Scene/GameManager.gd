@@ -166,6 +166,8 @@ func start_new_run(custom_seed: String = "", replay_mode: bool = false, frames_t
 	else:
 		replay_frames.clear()
 		current_recording_frames.clear()
+	if get_node_or_null("/root/PerkManager") != null:
+		PerkManager.seed_combat_rng((current_seed + ":combat").hash())
 	stats_updated.emit(current_level, enemies_killed)
 
 func record_frame_input(frame_data: Dictionary) -> void:
