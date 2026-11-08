@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://bcxpj5ibdhylq"]
+
+[ext_resource type="Texture2D" uid="uid://b2cij0nx32uxj" path="res://Assets/Items/Custom/Item__57.png" id="1_icon"]
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="2_script"]
+
+[resource]
+script = ExtResource("2_script")
+item_name = "Silverplate Guard Armor"
+type = 1
+rarity = 1
+icon = ExtResource("1_icon")
+description = "Burnished silver-steel breastplate forged by smiths of the Iron Hills."
+armor = 3
+max_hp_bonus = 1
+attack_speed_bonus = 0.05
+max_stack = 1

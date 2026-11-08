@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="HeroBalanceData" format=3 uid="uid://dnnlxarcip21b"]
+
+[ext_resource type="Script" uid="uid://b02vqivaicvow" path="res://Scene/Balance/HeroBalanceData.gd" id="1_hero"]
+
+[resource]
+script = ExtResource("1_hero")
+id = "miyabi"
+name = "Hoshimi Miyabi"
+index = 6
+role = "Frost Swordswoman"
+weapon = "Frostbound Blade & Ice Spirit"
+skill_icon = "sword_royal"
+armor = 2
+speed = 160
+attack_cooldown = 0.3
+skill_cooldown = 8
+lore = "A swift swordswoman whose blade leaves frost in its wake. An ice spirit floats at her shoulder and fires spirit bolts at the nearest foe on its own. Left Click: 3-hit frost combo. Shift: dash slash."
+skill_q = "Frost Bloom — Key Q: Drive the blade into the ground; a line of ice spikes erupts in front of her (3x damage + freeze), then shatters (1x). Cooldown: 8s."
+skill_rmb = "Frost Wave — Hold Right Click to charge, release to send a frost wave (1x / 2x / 3x; full charge freezes). Cooldown: 2s."
+custom_stats = {
+"bloom_damage_mult": 3,
+"bloom_freeze": 1.2,
+"dash_cooldown": 1.2,
+"dash_damage_mult": 2,
+"dash_distance": 72.0,
+"rmb_cooldown": 2.0,
+"spirit_cooldown": 2.0
+}

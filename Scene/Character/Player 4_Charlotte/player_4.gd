@@ -15,6 +15,26 @@ func _ready() -> void:
 	rmb_cd_max = right_click_cooldown
 	super._ready()
 
+func get_effective_q_cooldown() -> float:
+	var cdr: float = 0.0
+	if get_node_or_null("/root/PerkManager") != null:
+		cdr = PerkManager.get_cooldown_reduction()
+	return q_skill_cooldown * (1.0 - cdr)
+
+func get_effective_rmb_cooldown() -> float:
+	var cdr: float = 0.0
+	if get_node_or_null("/root/PerkManager") != null:
+		cdr = PerkManager.get_cooldown_reduction()
+	return right_click_cooldown * (1.0 - cdr)
+
+func _process(delta: float) -> void:
+	super._process(delta)
+	if q_cd_remaining <= 0.0 and not is_casting_skill:
+		can_use_q = true
+		can_use_skill = true
+	if rmb_cd_remaining <= 0.0 and not is_casting_skill:
+		can_use_right_click = true
+
 func use_special_skill() -> void:
 	if can_use_q and not is_dead and not is_hurt and not is_casting_skill and not is_attacking:
 		perform_attack_2()
@@ -37,10 +57,7 @@ func _input(event: InputEvent) -> void:
 		pending_rmb_skill = true
 
 func perform_attack_2():
-	can_use_q = false
-	can_use_skill = false
-	q_cd_remaining = q_skill_cooldown
-	skill_cooldown_changed.emit(q_cd_remaining, q_skill_cooldown, rmb_cd_remaining, right_click_cooldown)
+	start_cooldown("q")
 	is_casting_skill = true
 	velocity = Vector2.ZERO
 
@@ -61,12 +78,9 @@ func perform_attack_2():
 		await get_tree().create_timer(0.18).timeout
 
 	_cleanup_skill("attack_2")
-	start_cooldown("q")
 
 func perform_attack_3():
-	can_use_right_click = false
-	rmb_cd_remaining = right_click_cooldown
-	skill_cooldown_changed.emit(q_cd_remaining, q_skill_cooldown, rmb_cd_remaining, right_click_cooldown)
+	start_cooldown("right_click")
 	is_casting_skill = true
 	is_invincible = true
 	animated_sprite.modulate = Color(1.5, 1.5, 2.0)
@@ -103,7 +117,6 @@ func perform_attack_3():
 	animated_sprite.modulate = Color.WHITE
 
 	_cleanup_skill("attack_3")
-	start_cooldown("right_click")
 
 func _cleanup_skill(anim_name: String) -> void:
 	# Luôn luôn giải phóng trạng thái is_casting_skill bất kể đang bị thương hay không để chống kẹt di chuyển
@@ -116,13 +129,24 @@ func _cleanup_skill(anim_name: String) -> void:
 
 func start_cooldown(skill: String) -> void:
 	if skill == "q":
-		await get_tree().create_timer(q_skill_cooldown).timeout
-		can_use_q = true
-		can_use_skill = true
-		q_cd_remaining = 0.0
-		skill_cooldown_changed.emit(0.0, q_skill_cooldown, rmb_cd_remaining, right_click_cooldown)
+		can_use_q = false
+		can_use_skill = false
+		var eff_q := get_effective_q_cooldown()
+		q_cd_remaining = eff_q
+		skill_cooldown_changed.emit(q_cd_remaining, eff_q, rmb_cd_remaining, rmb_cd_max)
+		await get_tree().create_timer(eff_q).timeout
+		if not is_dead:
+			can_use_q = true
+			can_use_skill = true
+			q_cd_remaining = 0.0
+			skill_cooldown_changed.emit(0.0, eff_q, rmb_cd_remaining, rmb_cd_max)
 	elif skill == "right_click":
-		await get_tree().create_timer(right_click_cooldown).timeout
-		can_use_right_click = true
-		rmb_cd_remaining = 0.0
-		skill_cooldown_changed.emit(q_cd_remaining, q_skill_cooldown, 0.0, right_click_cooldown)
+		can_use_right_click = false
+		var eff_rmb := get_effective_rmb_cooldown()
+		rmb_cd_remaining = eff_rmb
+		skill_cooldown_changed.emit(q_cd_remaining, skill_cooldown, rmb_cd_remaining, eff_rmb)
+		await get_tree().create_timer(eff_rmb).timeout
+		if not is_dead:
+			can_use_right_click = true
+			rmb_cd_remaining = 0.0
+			skill_cooldown_changed.emit(q_cd_remaining, skill_cooldown, 0.0, eff_rmb)

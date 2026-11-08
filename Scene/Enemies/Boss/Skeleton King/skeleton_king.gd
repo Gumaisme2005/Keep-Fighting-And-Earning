@@ -537,8 +537,26 @@ func _die() -> void:
 		list.clear()
 	if get_node_or_null("/root/GameManager") != null:
 		GameManager.register_enemy_kill()
+	_drop_boss_loot()
 	shake_left = 0.8
 	_play("death")
+
+func _drop_boss_loot() -> void:
+	var floor_lvl := 1
+	var seed_val := 12345
+	if get_node_or_null("/root/GameManager") != null:
+		floor_lvl = GameManager.current_level
+		seed_val = (GameManager.current_seed + "_skeletonking_loot_" + str(floor_lvl)).hash()
+	var loot_rng := RandomNumberGenerator.new()
+	loot_rng.seed = seed_val
+	var boss_item: ItemData = ItemDatabase.get_random_drop(floor_lvl, true, loot_rng)
+	if boss_item != null:
+		var item_scene = preload("res://Scene/Items/WorldItem/WorldItem.tscn")
+		var item_drop = item_scene.instantiate()
+		item_drop.item_data = boss_item
+		item_drop.global_position = global_position
+		var parent_node = get_parent() if get_parent() != null else get_tree().current_scene
+		parent_node.call_deferred("add_child", item_drop)
 
 func take_damage(_amount: int) -> void:
 	# Invulnerable: only Soul Crystals can wound the King.

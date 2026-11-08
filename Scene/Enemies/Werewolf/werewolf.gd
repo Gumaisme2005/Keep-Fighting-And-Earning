@@ -1,34 +1,15 @@
-extends CharacterBody2D
+extends BaseEnemy
 
-const BalanceData = preload("res://Scene/BalanceConfig.gd")
-
-@export var damage: int = 2
 @export var pounce_damage: int = 3
-@export var speed: float = 95.0
 @export var pounce_speed: float = 175.0
 @export var pounce_distance: float = 95.0
 @export var pounce_windup_time: float = 0.65
-@export var attack_range: float = 24.0
 @export var pounce_min_range: float = 50.0
 @export var pounce_max_range: float = 135.0
 @export var pounce_cooldown: float = 3.5
 
-@export var world_item_scene: PackedScene = preload("res://Scene/Items/WorldItem/WorldItem.tscn")
-@export var loot_table: Array[ItemData] = [
-	preload("res://Scene/Items/health_potion.tres"),
-	preload("res://Scene/Items/big_health_potion.tres"),
-	preload("res://Scene/Items/iron_sword.tres")
-]
-@export var drop_chance: float = 0.35
-var loot_seed: int = 0
-
-var hp: int = 5
-var max_hp: int = 5
-var is_dead: bool = false
-var is_attacking: bool = false
 var is_preparing_pounce: bool = false
 var is_pouncing: bool = false
-var is_active: bool = false
 
 var pounce_timer: float = 0.0
 var pounce_direction: Vector2 = Vector2.ZERO
@@ -36,39 +17,35 @@ var pounce_traveled: float = 0.0
 var show_pounce_warning: bool = false
 var windup_flash_tween: Tween = null
 
-@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var claw_hitbox: Area2D = $ClawHitbox
 @onready var claw_collision: CollisionShape2D = $ClawHitbox/CollisionShape2D
 @onready var pounce_hitbox: Area2D = $PounceHitbox
 @onready var pounce_collision: CollisionShape2D = $PounceHitbox/CollisionShape2D
 
-var player: Node2D = null
+func _init() -> void:
+	loot_table = [
+		preload("res://Scene/Items/Common/health_potion.tres"),
+		preload("res://Scene/Items/Rare/big_health_potion.tres"),
+		preload("res://Scene/Items/Common/iron_sword.tres")
+	]
+	drop_chance = 0.45
 
 func _ready() -> void:
+	enemy_balance_id = "werewolf"
+	super._ready()
 	var cfg: Dictionary = BalanceData.get_enemy_stats("werewolf")
-	hp = int(cfg.get("hp", hp))
-	max_hp = hp
-	damage = int(cfg.get("damage", damage))
 	pounce_damage = int(cfg.get("pounce_damage", pounce_damage))
-	speed = float(cfg.get("speed", speed))
 	pounce_speed = float(cfg.get("pounce_speed", pounce_speed))
 	pounce_distance = float(cfg.get("pounce_distance", pounce_distance))
 	pounce_windup_time = float(cfg.get("pounce_windup_time", pounce_windup_time))
-	attack_range = float(cfg.get("attack_range", attack_range))
 	pounce_min_range = float(cfg.get("pounce_min_range", pounce_min_range))
 	pounce_max_range = float(cfg.get("pounce_max_range", pounce_max_range))
 	pounce_cooldown = float(cfg.get("pounce_cooldown", pounce_cooldown))
-	drop_chance = float(cfg.get("drop_chance", drop_chance))
 
-	animated_sprite.play("idle")
 	claw_collision.disabled = true
 	pounce_collision.disabled = true
 	claw_hitbox.position = Vector2(0, -8)
 	pounce_hitbox.position = Vector2(0, -8)
-
-	var players = get_tree().get_nodes_in_group("player")
-	if players.size() > 0:
-		player = players[0]
 
 func _draw() -> void:
 	if show_pounce_warning:
@@ -88,17 +65,7 @@ func _physics_process(delta: float) -> void:
 	if not is_active:
 		return
 
-	if pounce_timer > 0.0:
-		pounce_timer -= delta
-
-	if player == null or not is_instance_valid(player):
-		var players = get_tree().get_nodes_in_group("player")
-		if players.size() > 0:
-			player = players[0]
-		else:
-			return
-
-	if is_dead or animated_sprite.animation == "hurt":
+	if is_dead or (animated_sprite != null and animated_sprite.animation == "hurt"):
 		return
 
 	# Đang trong pha tụ lực/khựng lại cảnh báo -> đứng yên
@@ -111,6 +78,7 @@ func _physics_process(delta: float) -> void:
 		var remain_dist: float = pounce_distance - pounce_traveled
 		if remain_dist <= 0.0 or is_on_wall():
 			is_pouncing = false
+			pounce_traveled = pounce_distance
 			velocity = Vector2.ZERO
 		else:
 			var current_spd: float = pounce_speed
@@ -119,7 +87,6 @@ func _physics_process(delta: float) -> void:
 
 			var step_dist: float = current_spd * delta
 			if step_dist >= remain_dist:
-				step_dist = remain_dist
 				pounce_traveled = pounce_distance
 				is_pouncing = false
 				velocity = Vector2.ZERO
@@ -129,6 +96,14 @@ func _physics_process(delta: float) -> void:
 
 			move_and_slide()
 		return
+
+	if pounce_timer > 0.0:
+		pounce_timer -= delta
+
+	if player == null or not is_instance_valid(player):
+		_find_player()
+		if player == null:
+			return
 
 	if is_attacking:
 		return
@@ -148,17 +123,24 @@ func _physics_process(delta: float) -> void:
 		pounce_hitbox.rotation = direction.angle()
 
 	var tmap = get_parent()
-	var has_los: bool = (tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position))
+	_ai_tick_timer -= delta
+	if _ai_tick_timer <= 0.0:
+		_ai_tick_timer = _ai_tick_interval
+		_cached_has_los = (tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position))
+		if distance > attack_range or not _cached_has_los:
+			_cached_steer_dir = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
+		else:
+			_cached_steer_dir = direction
 
 	# 1. Cự ly gần -> Đòn cào thường (Claw Slash - Attack01)
-	if distance <= attack_range and has_los:
+	if distance <= attack_range and _cached_has_los:
 		attack_claw(direction)
 	# 2. Cự ly trung bình + có LOS + hết cooldown -> Khựng lại tụ lực chuẩn bị vồ (Pounce - Attack02)
-	elif distance >= pounce_min_range and distance <= pounce_max_range and pounce_timer <= 0.0 and has_los:
+	elif distance >= pounce_min_range and distance <= pounce_max_range and pounce_timer <= 0.0 and _cached_has_los:
 		start_pounce_windup(direction)
 	# 3. Di chuyển truy đuổi bình thường
 	else:
-		var move_dir: Vector2 = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
+		var move_dir: Vector2 = _cached_steer_dir if _cached_steer_dir != Vector2.ZERO else direction
 		velocity = move_dir * speed
 		move_and_slide()
 		animated_sprite.play("walk")
@@ -179,70 +161,62 @@ func start_pounce_windup(dir: Vector2) -> void:
 	pounce_direction = dir.normalized() if dir != Vector2.ZERO else Vector2.RIGHT
 	pounce_timer = pounce_cooldown
 
-	# Xoay hitbox theo hướng đã nhắm
-	pounce_hitbox.rotation = pounce_direction.angle()
-
-	# Hiển thị vệt cảnh báo đỏ
+	animated_sprite.play("idle")
 	show_pounce_warning = true
 	queue_redraw()
 
-	# Hoạt ảnh khựng lại, mắt/người chớp đỏ nhẹ tụ lực
-	animated_sprite.play("idle")
-	_start_windup_flash()
+	_start_flash_windup_effect()
 
-	# Đợi một nhịp tụ lực
-	if get_tree() != null:
-		await get_tree().create_timer(pounce_windup_time).timeout
-
-	if not is_inside_tree() or is_queued_for_deletion():
+	await get_tree().create_timer(pounce_windup_time).timeout
+	if not is_inside_tree() or is_dead:
 		return
 
-	# Tắt cảnh báo đỏ
+	if not is_preparing_pounce:
+		return
+
+	is_preparing_pounce = false
 	show_pounce_warning = false
 	queue_redraw()
-	_stop_windup_flash()
 
-	# Nếu trong lúc tụ lực bị chết hoặc trúng đòn choáng thì hủy cú vồ
-	if not is_preparing_pounce or is_dead or animated_sprite.animation == "hurt":
-		is_preparing_pounce = false
-		is_attacking = false
-		return
+	_stop_flash_effect()
+	launch_pounce()
 
-	# Bắt đầu lao đến
-	is_preparing_pounce = false
-	is_pouncing = true
-	pounce_traveled = 0.0
-	animated_sprite.play("attack_2")
-	pounce_collision.disabled = false
+func _start_flash_windup_effect() -> void:
+	_stop_flash_effect()
+	windup_flash_tween = create_tween()
+	windup_flash_tween.set_loops()
+	windup_flash_tween.tween_property(animated_sprite, "modulate", Color(1.8, 0.4, 0.4), 0.12)
+	windup_flash_tween.tween_property(animated_sprite, "modulate", Color.WHITE, 0.12)
 
-func _start_windup_flash() -> void:
-	if not is_inside_tree():
-		return
-	if windup_flash_tween != null:
-		windup_flash_tween.kill()
-	windup_flash_tween = create_tween().set_loops()
-	windup_flash_tween.tween_property(animated_sprite, "modulate", Color(1.3, 0.45, 0.45), 0.16)
-	windup_flash_tween.tween_property(animated_sprite, "modulate", Color.WHITE, 0.16)
-
-func _stop_windup_flash() -> void:
-	if windup_flash_tween != null:
+func _stop_flash_effect() -> void:
+	if windup_flash_tween != null and windup_flash_tween.is_valid():
 		windup_flash_tween.kill()
 		windup_flash_tween = null
 	if animated_sprite != null:
 		animated_sprite.modulate = Color.WHITE
+
+func launch_pounce() -> void:
+	is_pouncing = true
+	pounce_traveled = 0.0
+	velocity = pounce_direction * pounce_speed
+
+	if pounce_direction != Vector2.ZERO:
+		pounce_hitbox.rotation = pounce_direction.angle()
+
+	animated_sprite.play("attack_2")
+	pounce_collision.disabled = false
 
 func take_damage(damage_amount: int) -> void:
 	if not is_active or is_dead:
 		return
 
 	hp -= damage_amount
-	_spawn_damage_popup(damage_amount)
+	_spawn_damage_popup(damage_amount, Color(1.0, 0.4, 0.4))
 
-	# Bị trúng đòn -> Hủy trạng thái tụ lực và tắt cảnh báo đỏ
 	if is_preparing_pounce:
 		is_preparing_pounce = false
 		show_pounce_warning = false
-		_stop_windup_flash()
+		_stop_flash_effect()
 		queue_redraw()
 
 	if hp > 0:
@@ -252,23 +226,18 @@ func take_damage(damage_amount: int) -> void:
 		claw_collision.set_deferred("disabled", true)
 		pounce_collision.set_deferred("disabled", true)
 	else:
-		is_dead = true
-		is_attacking = false
-		is_pouncing = false
-		var gm = get_node_or_null("/root/GameManager")
-		if gm != null and gm.has_method("register_enemy_kill"):
-			gm.register_enemy_kill()
-		animated_sprite.play("death")
-		$Hurtbox/CollisionShape2D.set_deferred("disabled", true)
-		$CollisionShape2D.set_deferred("disabled", true)
-		claw_collision.set_deferred("disabled", true)
-		pounce_collision.set_deferred("disabled", true)
+		_die()
 
-func _spawn_damage_popup(amount: int) -> void:
-	if get_tree():
-		get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -20), amount, Color(1.0, 0.4, 0.4))
+func _die() -> void:
+	super._die()
+	is_attacking = false
+	is_pouncing = false
+	claw_collision.set_deferred("disabled", true)
+	pounce_collision.set_deferred("disabled", true)
 
 func _on_animated_sprite_2d_animation_finished() -> void:
+	if animated_sprite == null:
+		return
 	if animated_sprite.animation == "death":
 		drop_loot()
 		queue_free()
@@ -302,15 +271,3 @@ func _on_pounce_hitbox_area_entered(area: Area2D) -> void:
 			return
 		if target.has_method("take_damage"):
 			target.take_damage(pounce_damage)
-
-func drop_loot() -> void:
-	if world_item_scene != null and loot_table.size() > 0:
-		var rng := RandomNumberGenerator.new()
-		rng.seed = loot_seed if loot_seed != 0 else (int(global_position.x * 911) ^ int(global_position.y * 3571))
-		if rng.randf() <= drop_chance:
-			var random_item = loot_table[rng.randi() % loot_table.size()]
-			var item_drop = world_item_scene.instantiate()
-			item_drop.item_data = random_item
-			item_drop.global_position = global_position
-			var parent_node = get_parent() if get_parent() != null else get_tree().current_scene
-			parent_node.call_deferred("add_child", item_drop)

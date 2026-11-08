@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ItemData" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Items/Custom/sword24.png" id="1_icon"]
+[ext_resource type="Script" path="res://Scene/Items/ItemData.gd" id="2_script"]
+
+[resource]
+script = ExtResource("2_script")
+item_name = "Bane of the Shadow"
+type = 2
+rarity = 3
+icon = ExtResource("1_icon")
+description = "Ancient elven greatsword shining with incandescent wrath against darkness."
+damage = 7
+armor = 0
+max_hp_bonus = 2
+heal_amount = 0
+attack_speed_bonus = 0.25
+special_effect = ""
+is_stackable = false
+max_stack = 1
+stack_count = 1

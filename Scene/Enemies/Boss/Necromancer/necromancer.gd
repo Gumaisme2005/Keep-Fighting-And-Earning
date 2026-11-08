@@ -154,12 +154,26 @@ func take_damage(damage_amount: int) -> void:
 		is_dead = true
 		if get_node_or_null("/root/GameManager") != null:
 			GameManager.register_enemy_kill()
+		_drop_boss_loot()
 		_cleanup_summoned_minions()
 		anim.modulate = Color.WHITE
 		anim.play("death")
 		$Hurtbox/CollisionShape2D.set_deferred("disabled", true)
 		$CollisionShape2D.set_deferred("disabled", true)
 		scythe_collision.set_deferred("disabled", true)
+
+func _drop_boss_loot() -> void:
+	var floor_lvl := 1
+	if get_node_or_null("/root/GameManager") != null:
+		floor_lvl = GameManager.current_level
+	var boss_item: ItemData = ItemDatabase.get_random_drop(floor_lvl, true, rng)
+	if boss_item != null:
+		var item_scene = preload("res://Scene/Items/WorldItem/WorldItem.tscn")
+		var item_drop = item_scene.instantiate()
+		item_drop.item_data = boss_item
+		item_drop.global_position = global_position
+		var parent_node = get_parent() if get_parent() != null else get_tree().current_scene
+		parent_node.call_deferred("add_child", item_drop)
 
 func _cleanup_summoned_minions() -> void:
 	for minion in summoned_minions:
@@ -181,36 +195,40 @@ func cast_summon_skill():
 
 	await get_tree().create_timer(2.0).timeout
 
-	if is_dead:
-		tween.kill()
+	if not is_inside_tree() or is_dead:
+		if tween != null and tween.is_valid():
+			tween.kill()
 		return
 
-	if summon_enemy_scene != null:
+	var parent_node = get_parent() if get_parent() != null else (get_tree().current_scene if get_tree() != null else null)
+	if summon_enemy_scene != null and parent_node != null:
 		var num_mobs = rng.randi_range(4, 6)
 		for i in range(num_mobs):
 			var minion = summon_enemy_scene.instantiate()
-			get_parent().call_deferred("add_child", minion)
+			parent_node.call_deferred("add_child", minion)
 			var angle = i * (TAU / num_mobs)
 			var spawn_offset = Vector2(cos(angle), sin(angle)) * 55.0
 			minion.global_position = global_position + spawn_offset
 			summoned_minions.append(minion)
 
 			get_tree().create_timer(0.1).timeout.connect(func():
-				if is_instance_valid(minion) and not is_dead:
+				if is_instance_valid(minion) and not is_dead and minion.is_inside_tree():
 					minion.is_active = true
 			)
 
-	if poison_explosion_scene != null:
+	if poison_explosion_scene != null and parent_node != null:
 		for i in range(8):
 			var explosion = poison_explosion_scene.instantiate()
 			explosion.damage = poison_damage
-			get_parent().call_deferred("add_child", explosion)
+			parent_node.call_deferred("add_child", explosion)
 
 			var angle = i * (PI / 4.0)
 			var explosion_offset = Vector2(cos(angle), sin(angle)) * 100.0
 			explosion.global_position = global_position + explosion_offset
 
 	await get_tree().create_timer(0.5).timeout
+	if not is_inside_tree() or is_dead:
+		return
 
 	is_casting_special = false
 	can_attack = true
@@ -232,7 +250,9 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 
 func start_cooldown():
 	await get_tree().create_timer(attack_cooldown).timeout
-	if not is_dead and not is_casting_special:
+	if not is_inside_tree() or is_dead:
+		return
+	if not is_casting_special:
 		can_attack = true
 
 func _on_scythe_hitbox_area_entered(area: Area2D) -> void:

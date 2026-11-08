@@ -2,6 +2,7 @@ extends CanvasLayer
 
 const UITheme = preload("res://Scene/UI/UITheme.gd")
 const SettingsModalScript = preload("res://Scene/UI/SettingsModal.gd")
+const InventorySlot = preload("res://Scene/UI/InventorySlot.gd")
 const SLOT_SCENE = preload("res://Scene/UI/InventorySlot.tscn")
 const HOTBAR_SIZE = 9
 const BAG_SIZE = 16
@@ -52,6 +53,8 @@ var banner_icon: TextureRect = null
 var banner_label: Label = null
 var toast_label: Label = null
 var replay_banner: PanelContainer = null
+var _banner_tween: Tween = null
+var _toast_tween: Tween = null
 
 var inventory_modal: PanelContainer = null
 var guide_modal: PanelContainer = null
@@ -68,7 +71,6 @@ var minimap_expanded: bool = false
 var mute_btn: Button = null
 
 const PERK_MODAL_SCENE = preload("res://Scene/UI/PerkSelectionModal.tscn")
-const PerkData = preload("res://Scene/Perks/PerkData.gd")
 var perk_modal: CanvasLayer = null
 var active_perks_bar: HBoxContainer = null
 
@@ -215,6 +217,7 @@ func _ready() -> void:
 		slot.slot_index = i
 		slot.slot_clicked.connect(_on_slot_clicked)
 		slot.slot_right_clicked.connect(_on_slot_right_clicked)
+		slot.slot_dropped.connect(_on_slot_dropped)
 		hotbar_slots.append(slot)
 
 	_build_enhanced_ui()
@@ -668,6 +671,7 @@ func _update_active_perks_bar() -> void:
 	if active_perks_bar == null:
 		return
 	for c in active_perks_bar.get_children():
+		active_perks_bar.remove_child(c)
 		c.queue_free()
 
 	if get_node_or_null("/root/PerkManager") == null:
@@ -779,6 +783,7 @@ func _build_inventory_modal() -> void:
 		slot.slot_index = i
 		slot.slot_clicked.connect(_on_slot_clicked)
 		slot.slot_right_clicked.connect(_on_slot_right_clicked)
+		slot.slot_dropped.connect(_on_slot_dropped)
 		grid.add_child(slot)
 		bag_slots.append(slot)
 
@@ -800,6 +805,9 @@ func _create_equip_slot(label_txt: String, icon_name: String, item_type: int, pa
 	var slot = SLOT_SCENE.instantiate()
 	slot.custom_minimum_size = Vector2(42, 42)
 	slot.slot_index = -10 - item_type
+	slot.slot_kind = InventorySlot.SlotKind.EQUIPMENT
+	slot.equip_type = item_type
+	slot.slot_dropped.connect(_on_slot_dropped)
 	slot.pressed.connect(func():
 		if inventory != null:
 			inventory.unequip_item(item_type)
@@ -1027,7 +1035,7 @@ Every dungeon expedition is governed by the Seeing Stone. Identical seeds lock a
 Eight legendary heroes from Middle-earth and beyond have answered the call: Pyrois of Gondor, Olaf of Erebor, Miya of Mirkwood, Charlotte of the Dúnedain, Pharaoh Atem, Doraemon of the 22nd Century, Hoshimi Miyabi of Section 6, and Lương Thơ of the Celestial Academy. Together, they march into the abyss to vanquish the Necromancer, the Orc Rider Chieftain, and the ancient Skeleton King.""" % story_txt
 
 func _connect_to_player_and_map() -> void:
-	if get_parent() and get_parent().has_node("Inventory"):
+	if get_parent() and (get_parent().is_in_group("player") or get_parent().has_node("Inventory")):
 		player = get_parent()
 	else:
 		var players = get_tree().get_nodes_in_group("player")
@@ -1048,8 +1056,8 @@ func _connect_to_player_and_map() -> void:
 				inventory.equipment_changed.connect(refresh_ui)
 
 		var rmb_cd: float = float(player.get("rmb_cd_max")) if player.get("rmb_cd_max") != null else 0.0
-		if rmb_cd > 0.0 and skill_rmb_panel != null:
-			skill_rmb_panel.visible = true
+		if skill_rmb_panel != null:
+			skill_rmb_panel.visible = (rmb_cd > 0.0)
 
 		_on_skill_cooldown_changed(0.0, 1.0, 0.0, rmb_cd)
 		update_hud(player.hp, player.max_hp, player.current_armor, player.max_armor)
@@ -1107,13 +1115,15 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 func _quick_drop_item() -> void:
-	if inventory != null and player != null and inventory.bag.size() > 0:
-		var item = inventory.bag[0]
-		var item_name: String = item.item_name if item != null else "Item"
-		var drop_pos: Vector2 = player.global_position + Vector2(16, 0)
-		if inventory.has_method("drop_item"):
-			if inventory.drop_item(0, false, drop_pos):
-				show_toast("Dropped 1x " + item_name)
+	if inventory != null and player != null:
+		var first_idx: int = inventory.get_first_occupied_slot() if inventory.has_method("get_first_occupied_slot") else 0
+		if first_idx >= 0 and first_idx < inventory.bag.size() and inventory.bag[first_idx] != null:
+			var item = inventory.bag[first_idx]
+			var item_name: String = item.item_name
+			var drop_pos: Vector2 = player.global_position + Vector2(16, 0)
+			if inventory.has_method("drop_item"):
+				if inventory.drop_item(first_idx, false, drop_pos):
+					show_toast("Dropped 1x " + item_name)
 
 func _on_toggle_mute_pressed() -> void:
 	if get_node_or_null("/root/AudioManager") != null:
@@ -1175,7 +1185,8 @@ func _on_dungeon_generated() -> void:
 func _on_boss_spawned(boss: Node2D) -> void:
 	if boss == null or not is_instance_valid(boss):
 		return
-	boss_panel.visible = true
+	if boss_panel != null:
+		boss_panel.visible = true
 	var b_name: String = boss.get("BOSS_NAME") if boss.get("BOSS_NAME") != null else boss.name
 	var b_hp: int = boss.get("hp") if boss.get("hp") != null else 30
 	var b_max: int = boss.get("max_hp") if boss.get("max_hp") != null else 30
@@ -1285,11 +1296,63 @@ func _on_slot_clicked(index: int) -> void:
 func _on_slot_right_clicked(index: int) -> void:
 	if inventory != null and player != null and index >= 0 and index < inventory.bag.size():
 		var item = inventory.bag[index]
-		var item_name: String = item.item_name if item != null else "Item"
+		if item == null:
+			return
+		var item_name: String = item.item_name
 		var drop_pos: Vector2 = player.global_position + Vector2(16, 0)
 		if inventory.has_method("drop_item"):
 			if inventory.drop_item(index, false, drop_pos):
 				show_toast("Dropped 1x " + item_name)
+
+func _on_slot_dropped(source_data: Dictionary, target_slot: Control) -> void:
+	if inventory == null or player == null or target_slot == null:
+		return
+
+	var src_kind: int = int(source_data.get("slot_kind", InventorySlot.SlotKind.BAG))
+	var src_idx: int = int(source_data.get("slot_index", -1))
+	var target_kind: int = target_slot.slot_kind
+	var target_idx: int = target_slot.slot_index
+
+	# 1. Kéo giữa 2 ô Balo / Hotbar (BAG -> BAG): Hoán đổi vị trí
+	if src_kind == InventorySlot.SlotKind.BAG and target_kind == InventorySlot.SlotKind.BAG:
+		if src_idx >= 0 and target_idx >= 0 and src_idx != target_idx:
+			inventory.swap_slots(src_idx, target_idx)
+			if get_node_or_null("/root/AudioManager") != null:
+				AudioManager.play_sfx("pickup", 1.05, 1.15)
+
+	# 2. Kéo từ Balo thả vào ô Trang bị (BAG -> EQUIPMENT): Mặc đồ
+	elif src_kind == InventorySlot.SlotKind.BAG and target_kind == InventorySlot.SlotKind.EQUIPMENT:
+		if src_idx >= 0 and src_idx < inventory.bag.size():
+			var bag_item = inventory.bag[src_idx]
+			if bag_item != null and bag_item.type == target_slot.equip_type:
+				inventory.use_or_equip_item(src_idx, player)
+				if player.has_method("_on_equipment_changed"):
+					player._on_equipment_changed()
+				if get_node_or_null("/root/AudioManager") != null:
+					AudioManager.play_sfx("pickup", 1.15, 1.25)
+
+	# 3. Kéo từ ô Trang bị thả vào ô Balo (EQUIPMENT -> BAG): Tháo hoặc hoán đổi vào đúng ô đích
+	elif src_kind == InventorySlot.SlotKind.EQUIPMENT and target_kind == InventorySlot.SlotKind.BAG:
+		var equip_type: int = int(source_data.get("equip_type", -1))
+		if equip_type >= 0 and target_idx >= 0 and target_idx < inventory.bag.size():
+			var equipped_item = inventory.get_equipped_item(equip_type)
+			if equipped_item != null:
+				var target_item = inventory.bag[target_idx]
+				if target_item == null:
+					inventory.bag[target_idx] = equipped_item
+					inventory.equipment[equip_type] = null
+					inventory.equipment_changed.emit()
+					inventory.inventory_changed.emit()
+				elif target_item.type == equip_type:
+					# Swap trực tiếp món ở target_idx lên người, đưa món cũ vào target_idx
+					inventory.bag[target_idx] = equipped_item
+					inventory.equipment[equip_type] = target_item
+					inventory.equipment_changed.emit()
+					inventory.inventory_changed.emit()
+				if player.has_method("_on_equipment_changed"):
+					player._on_equipment_changed()
+				if get_node_or_null("/root/AudioManager") != null:
+					AudioManager.play_sfx("pickup", 0.95, 1.05)
 
 func refresh_ui() -> void:
 	if inventory == null:
@@ -1307,7 +1370,8 @@ func refresh_ui() -> void:
 			bag_slots[i].set_item(null)
 
 	if bag_button != null:
-		bag_button.text = "Backpack: %d / %d [B]" % [inventory.bag.size(), inventory.max_slots]
+		var occupied: int = inventory.get_occupied_slots_count() if inventory.has_method("get_occupied_slots_count") else inventory.bag.size()
+		bag_button.text = "Backpack: %d / %d [B]" % [occupied, inventory.max_slots]
 
 	if equip_helmet_slot != null:
 		equip_helmet_slot.set_item(inventory.equipped_helmet)
@@ -1319,10 +1383,6 @@ func refresh_ui() -> void:
 	if equip_stats_label != null and player != null:
 		var total_dmg = player.get_total_damage() if player.has_method("get_total_damage") else 1
 		var extra_stats: Array[String] = []
-		if inventory.has_method("get_magic_resistance") and inventory.get_magic_resistance() > 0:
-			extra_stats.append("• Magic Resist: +%d" % inventory.get_magic_resistance())
-		if inventory.has_method("get_speed_bonus") and inventory.get_speed_bonus() > 0.0:
-			extra_stats.append("• Move Speed: +%d%%" % int(inventory.get_speed_bonus() * 100))
 		if inventory.has_method("get_attack_speed_bonus") and inventory.get_attack_speed_bonus() > 0.0:
 			extra_stats.append("• Attack Speed: +%d%%" % int(inventory.get_attack_speed_bonus() * 100))
 
@@ -1351,10 +1411,12 @@ func show_banner(text: String, color: Color = Color.WHITE) -> void:
 			banner_icon.texture = UITheme.get_icon("sword_royal")
 	banner_panel.visible = true
 	banner_panel.modulate.a = 1.0
-	var tw = create_tween()
-	tw.tween_interval(1.8)
-	tw.tween_property(banner_panel, "modulate:a", 0.0, 0.5)
-	tw.tween_callback(func(): banner_panel.visible = false)
+	if _banner_tween != null and _banner_tween.is_valid():
+		_banner_tween.kill()
+	_banner_tween = create_tween()
+	_banner_tween.tween_interval(1.8)
+	_banner_tween.tween_property(banner_panel, "modulate:a", 0.0, 0.5)
+	_banner_tween.tween_callback(func(): banner_panel.visible = false)
 
 func show_toast(text: String) -> void:
 	if toast_label == null:
@@ -1362,26 +1424,132 @@ func show_toast(text: String) -> void:
 	toast_label.text = text
 	toast_label.visible = true
 	toast_label.modulate.a = 1.0
-	var tw = create_tween()
-	tw.tween_interval(1.6)
-	tw.tween_property(toast_label, "modulate:a", 0.0, 0.4)
-	tw.tween_callback(func(): toast_label.visible = false)
+	if _toast_tween != null and _toast_tween.is_valid():
+		_toast_tween.kill()
+	_toast_tween = create_tween()
+	_toast_tween.tween_interval(1.6)
+	_toast_tween.tween_property(toast_label, "modulate:a", 0.0, 0.4)
+	_toast_tween.tween_callback(func(): toast_label.visible = false)
+
+# --- OBJECT POOL CHO DAMAGE NUMBERS (TRÁNH PHÂN MẢNH BỘ NHỚ & NODE CHURN) ---
+const MAX_DAMAGE_LABELS: int = 40
+var _damage_label_pool: Array[Label] = []
+var _active_damage_labels: Array[Label] = []
+var _damage_container: Node2D = null
+
+func _exit_tree() -> void:
+	reset_damage_number_pool()
+	for lbl in _damage_label_pool:
+		if is_instance_valid(lbl):
+			_kill_label_tween(lbl)
+	if _damage_container != null and is_instance_valid(_damage_container):
+		_damage_container.queue_free()
+		_damage_container = null
+
+func _kill_label_tween(lbl: Label) -> void:
+	if not is_instance_valid(lbl):
+		return
+	if lbl.has_meta("damage_tween"):
+		var tw = lbl.get_meta("damage_tween")
+		if tw is Tween and is_instance_valid(tw) and tw.is_valid():
+			tw.kill()
+		lbl.remove_meta("damage_tween")
+
+func reset_damage_number_pool() -> void:
+	for lbl in _active_damage_labels:
+		if is_instance_valid(lbl):
+			_kill_label_tween(lbl)
+			lbl.visible = false
+			if not _damage_label_pool.has(lbl):
+				_damage_label_pool.append(lbl)
+	_active_damage_labels.clear()
+
+	if _damage_container != null and is_instance_valid(_damage_container):
+		for child in _damage_container.get_children():
+			if child is Label:
+				_kill_label_tween(child)
+				child.visible = false
+
+func reset_damage_pool() -> void:
+	reset_damage_number_pool()
+
+func _get_damage_container() -> Node2D:
+	if not is_inside_tree():
+		return null
+	var host_scene = get_tree().current_scene if (get_tree() != null and get_tree().current_scene != null) else (get_parent() if get_parent() != null else self)
+	if host_scene == null:
+		return null
+	if _damage_container == null or not is_instance_valid(_damage_container) or _damage_container.get_parent() != host_scene:
+		# Thu dọn danh sách label cũ nếu scene đã chuyển tầng hoặc reload
+		reset_damage_number_pool()
+		_damage_label_pool.clear()
+		_active_damage_labels.clear()
+		_damage_container = Node2D.new()
+		_damage_container.name = "DamageNumberPool"
+		_damage_container.z_index = 50
+		host_scene.add_child(_damage_container)
+	return _damage_container
 
 func spawn_damage_number(world_pos: Vector2, amount: int, color: Color = Color(1.0, 0.9, 0.3)) -> void:
-	if not is_inside_tree() or get_tree().current_scene == null:
+	var container := _get_damage_container()
+	if container == null:
 		return
-	var lbl := Label.new()
+
+	var lbl: Label = null
+	while not _damage_label_pool.is_empty():
+		var candidate = _damage_label_pool.pop_back()
+		if is_instance_valid(candidate) and candidate.get_parent() == container:
+			lbl = candidate
+			break
+
+	if lbl == null:
+		if _active_damage_labels.size() < MAX_DAMAGE_LABELS:
+			lbl = Label.new()
+			lbl.add_theme_font_size_override("font_size", 11)
+			lbl.add_theme_color_override("font_outline_color", Color.BLACK)
+			lbl.add_theme_constant_override("outline_size", 3)
+			container.add_child(lbl)
+		elif not _active_damage_labels.is_empty():
+			# Tái sử dụng label cũ nhất khi số lượng trên màn hình vượt ngưỡng 40
+			lbl = _active_damage_labels.pop_front()
+
+	if not is_instance_valid(lbl):
+		return
+
+	# Hủy triệt để Tween cũ và ngắt mọi callback trước đó của label này
+	_kill_label_tween(lbl)
+
+	# Tăng generation counter để vô hiệu hóa mọi callback cũ nếu có độ trễ
+	var gen: int = 1
+	if lbl.has_meta("damage_gen"):
+		gen = int(lbl.get_meta("damage_gen")) + 1
+	lbl.set_meta("damage_gen", gen)
+
+	_active_damage_labels.append(lbl)
+
+	# Thiết lập lại trạng thái hiển thị
+	lbl.visible = true
+	lbl.modulate = Color.WHITE
+	lbl.scale = Vector2.ONE
 	lbl.text = ("+" if color.g > 0.85 and color.r < 0.5 else "-") + str(amount)
 	lbl.global_position = world_pos + Vector2(randf_range(-8.0, 8.0), -10.0)
-	lbl.z_index = 50
-	lbl.add_theme_font_size_override("font_size", 11)
 	lbl.add_theme_color_override("font_color", color)
-	lbl.add_theme_color_override("font_outline_color", Color.BLACK)
-	lbl.add_theme_constant_override("outline_size", 3)
-	get_tree().current_scene.add_child(lbl)
 
 	var tw = lbl.create_tween()
+	lbl.set_meta("damage_tween", tw)
 	tw.set_parallel(true)
 	tw.tween_property(lbl, "global_position:y", lbl.global_position.y - 22.0, 0.55).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tw.tween_property(lbl, "modulate:a", 0.0, 0.55)
-	tw.chain().tween_callback(lbl.queue_free)
+	tw.chain().tween_callback(_on_damage_label_finished.bind(lbl, gen))
+
+func _on_damage_label_finished(lbl: Label, expected_gen: int) -> void:
+	if not is_instance_valid(lbl):
+		return
+	if not lbl.has_meta("damage_gen") or int(lbl.get_meta("damage_gen")) != expected_gen:
+		return
+
+	_kill_label_tween(lbl)
+	lbl.visible = false
+	_active_damage_labels.erase(lbl)
+	if _damage_label_pool.size() < MAX_DAMAGE_LABELS and not _damage_label_pool.has(lbl):
+		_damage_label_pool.append(lbl)

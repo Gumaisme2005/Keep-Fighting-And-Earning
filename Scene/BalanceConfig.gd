@@ -2,11 +2,19 @@ class_name BalanceConfig
 extends RefCounted
 
 # ==============================================================================
-# TRUNG TÂM CÂN BẰNG CHỈ SỐ (SINGLE SOURCE OF TRUTH CHO BUFF / NERF)
+# TRUNG TÂM CÂN BẰNG CHỈ SỐ — DATA-DRIVEN CUSTOM RESOURCES (.tres)
 # Bối cảnh: CHÚA TỂ CỦA NHỮNG CHIẾC NHẪN (BIÊN NIÊN SỬ TRUNG ĐỊA — HẦM MỎ MORIA)
-# Mọi thay đổi Buff / Nerf cho Nhân vật, Quái vật, Boss chỉ cần sửa tại file này.
-# GameUI, CharacterSelect, GameManager và toàn bộ Scene nhân vật/quái sẽ tự động đồng bộ.
+# Mọi chỉ số của Anh hùng, Quái vật, Boss hiện được lưu trữ dưới dạng Godot Resource (.tres)
+# trong thư mục Scene/Balance/ (Heroes, Enemies, Bosses).
+# Game Designer có thể chỉnh sửa trực tiếp thông số qua Godot Inspector (.tres)
+# hoặc lập trình viên có thể dùng hàm BalanceConfig.set_unit_stat().
+# Bảng Dictionary tĩnh (HERO_STATS, ENEMY_STATS, BOSS_STATS) vẫn được bảo toàn 100%
+# để đảm bảo tương thích ngược tuyệt đối với toàn bộ Scene, UI và hệ thống Test.
 # ==============================================================================
+
+const HeroBalanceDataScript = preload("res://Scene/Balance/HeroBalanceData.gd")
+const EnemyBalanceDataScript = preload("res://Scene/Balance/EnemyBalanceData.gd")
+const BossBalanceDataScript = preload("res://Scene/Balance/BossBalanceData.gd")
 
 const WORLD_LORE: Dictionary = {
 	"title": "CHRONICLES OF MIDDLE-EARTH: MINES OF MORIA",
@@ -35,12 +43,52 @@ The White Council has summoned four champions to form the Fellowship Vanguard, g
 }
 
 # ------------------------------------------------------------------------------
-# 1. CHAMPION ROSTER & COMBAT BALANCE TABLE
+# 1. CHAMPION ROSTER & COMBAT BALANCE (.tres RESOURCES)
 # Order in CharacterSelect: 0 = Miya, 1 = Olaf, 2 = Pyrois, 3 = Charlotte, 4 = Yugi, 5 = Doraemon, 6 = Miyabi, 7 = Lương Thơ
 # ------------------------------------------------------------------------------
 const HERO_ORDER: Array[String] = ["miya", "olaf", "pyrois", "charlotte", "yugi", "doraemon", "miyabi", "luong_tho"]
 
-static var HERO_STATS: Dictionary = {
+static var HERO_RESOURCES: Dictionary = {
+	"miya": preload("res://Scene/Balance/Heroes/miya.tres"),
+	"olaf": preload("res://Scene/Balance/Heroes/olaf.tres"),
+	"pyrois": preload("res://Scene/Balance/Heroes/pyrois.tres"),
+	"charlotte": preload("res://Scene/Balance/Heroes/charlotte.tres"),
+	"yugi": preload("res://Scene/Balance/Heroes/yugi.tres"),
+	"doraemon": preload("res://Scene/Balance/Heroes/doraemon.tres"),
+	"miyabi": preload("res://Scene/Balance/Heroes/miyabi.tres"),
+	"luong_tho": preload("res://Scene/Balance/Heroes/luong_tho.tres"),
+}
+
+static var HERO_STATS: Dictionary = _build_hero_stats()
+
+# ------------------------------------------------------------------------------
+# 2. ENEMY BESTIARY TABLE (.tres RESOURCES)
+# ------------------------------------------------------------------------------
+static var ENEMY_RESOURCES: Dictionary = {
+	"orc": preload("res://Scene/Balance/Enemies/orc.tres"),
+	"armored_orc": preload("res://Scene/Balance/Enemies/armored_orc.tres"),
+	"skeleton": preload("res://Scene/Balance/Enemies/skeleton.tres"),
+	"skeleton_archer": preload("res://Scene/Balance/Enemies/skeleton_archer.tres"),
+	"vampire": preload("res://Scene/Balance/Enemies/vampire.tres"),
+	"werewolf": preload("res://Scene/Balance/Enemies/werewolf.tres"),
+}
+
+static var ENEMY_STATS: Dictionary = _build_enemy_stats()
+
+# ------------------------------------------------------------------------------
+# 3. DUNGEON OVERLORDS (BOSS TABLE .tres RESOURCES)
+# ------------------------------------------------------------------------------
+static var BOSS_RESOURCES: Dictionary = {
+	"necromancer": preload("res://Scene/Balance/Bosses/necromancer.tres"),
+	"orc_rider": preload("res://Scene/Balance/Bosses/orc_rider.tres"),
+	"skeleton_king": preload("res://Scene/Balance/Bosses/skeleton_king.tres"),
+}
+
+static var BOSS_STATS: Dictionary = _build_boss_stats()
+
+# --- INITIALIZATION HELPERS WITH FAIL-SAFE FALLBACKS ---
+static func _build_hero_stats() -> Dictionary:
+	var stats: Dictionary = {
 	"miya": {
 		"index": 0,
 		"id": "miya",
@@ -235,145 +283,174 @@ static var HERO_STATS: Dictionary = {
 		"skill_q": "White Moon — Key Q: Transform into the white-haired form for 12s: immune to all damage, +1 damage on every hit, 25% faster attacks, 20% faster movement, piercing rounds. Cooldown: 20s.",
 		"skill_rmb": "Twin Barrels — Right Click: Fire both barrels along the aim, 2 rounds (hold to keep firing). Cooldown: 0.8s."
 	}
-}
-
-# ------------------------------------------------------------------------------
-# 2. ENEMY BESTIARY TABLE
-# ------------------------------------------------------------------------------
-static var ENEMY_STATS: Dictionary = {
-	"orc": {
-		"name": "Moria Orc",
-		"hp": 4,
-		"damage": 2,
-		"speed": 75.0,
-		"attack_range": 20.0,
-		"drop_chance": 0.30
-	},
-	"armored_orc": {
-		"name": "Armored Uruk-hai",
-		"hp": 5,
-		"armor": 6,
-		"damage": 2,
-		"rage_damage": 4,
-		"speed": 75.0,
-		"attack_range": 20.0,
-		"drop_chance": 0.35
-	},
-	"skeleton": {
-		"name": "Barrow-wight Remains",
-		"hp": 3,
-		"damage": 1,
-		"speed": 110.0,
-		"attack_range": 18.0,
-		"drop_chance": 0.25
-	},
-	"skeleton_archer": {
-		"name": "Minas Morgul Bone Archer",
-		"hp": 5,
-		"damage": 2,
-		"speed": 70.0,
-		"attack_range": 195.0,
-		"retreat_range": 85.0,
-		"attack_cooldown": 1.6,
-		"drop_chance": 0.30
-	},
-	"vampire": {
-		"name": "Angmar Blood Bat",
-		"hp": 5,
-		"damage": 2,
-		"speed": 85.0,
-		"attack_range": 165.0,
-		"retreat_range": 65.0,
-		"attack_cooldown": 1.4,
-		"drop_chance": 0.35
-	},
-	"werewolf": {
-		"name": "Warg-breed Werewolf",
-		"hp": 5,
-		"damage": 2,
-		"pounce_damage": 3,
-		"speed": 95.0,
-		"pounce_speed": 175.0,
-		"pounce_distance": 95.0,
-		"pounce_windup_time": 0.65,
-		"attack_range": 24.0,
-		"pounce_min_range": 50.0,
-		"pounce_max_range": 135.0,
-		"pounce_cooldown": 3.5,
-		"drop_chance": 0.35
 	}
-}
+	for hid in HERO_RESOURCES:
+		var res = HERO_RESOURCES[hid]
+		if res and res.has_method("to_dictionary"):
+			var d: Dictionary = res.to_dictionary()
+			if not d.is_empty():
+				for k in d:
+					var v = d[k]
+					if v is String:
+						if not (v as String).is_empty():
+							stats[hid][k] = v
+					elif v != null:
+						stats[hid][k] = v
+	return stats
 
-# ------------------------------------------------------------------------------
-# 3. DUNGEON OVERLORDS (BOSS TABLE)
-# ------------------------------------------------------------------------------
-static var BOSS_STATS: Dictionary = {
-	"necromancer": {
-		"title": "NECROMANCER OF DOL GULDUR",
-		"hp": 45,
-		"speed": 55.0,
-		"melee_damage": 2,
-		"poison_damage": 3,
-		"melee_range": 65.0,
-		"poison_range": 210.0,
-		"attack_cooldown": 1.3
-	},
-	"orc_rider": {
-		"title": "WARG RIDER CHIEFTAIN",
-		"hp": 50,
-		"speed": 75.0,
-		"damage": 3
-	},
-	# Appears on every 3rd floor (3, 6, 9...). Invulnerable: only shattering
-	# his Soul Crystals hurts him. Values below are for floor 3 and scale per tier.
-	"skeleton_king": {
-		"title": "SKELETON KING OF THE BARROW-DOWNS",
-		"hp": 60,
-		"hp_per_tier": 15,
-		"crystals_to_defeat": 5,
-		"crystal_hp": 6,
-		"crystal_hp_per_tier": 2,
-		"max_crystals": 2,
-		"max_crystals_enraged": 3,
-		"crystal_respawn": 2.5,
-		"crystal_lifetime": 9.0,
-		"crystal_lifetime_enraged": 7.5,
-		"crystal_expire_heal_ratio": 0.5,
-		"laser_damage": 1,
-		"summon_cap": 4,
-		"summon_cap_enraged": 6,
-		"action_cooldown": 2.6,
-		"action_cooldown_enraged": 1.7,
-		"enrage_ratio": 0.5
+static func _build_enemy_stats() -> Dictionary:
+	var stats: Dictionary = {
+		"orc": {
+			"name": "Moria Orc",
+			"hp": 4, "damage": 2, "speed": 75.0, "attack_range": 20.0, "drop_chance": 0.30
+		},
+		"armored_orc": {
+			"name": "Armored Uruk-hai",
+			"hp": 5, "armor": 6, "damage": 2, "rage_damage": 4, "speed": 75.0,
+			"attack_range": 20.0, "drop_chance": 0.35
+		},
+		"skeleton": {
+			"name": "Barrow-wight Remains",
+			"hp": 3, "damage": 1, "speed": 110.0, "attack_range": 18.0, "drop_chance": 0.25
+		},
+		"skeleton_archer": {
+			"name": "Minas Morgul Bone Archer",
+			"hp": 5, "damage": 2, "speed": 70.0, "attack_range": 195.0, "retreat_range": 85.0,
+			"attack_cooldown": 1.6, "drop_chance": 0.30
+		},
+		"vampire": {
+			"name": "Angmar Blood Bat",
+			"hp": 5, "damage": 2, "speed": 85.0, "attack_range": 165.0, "retreat_range": 65.0,
+			"attack_cooldown": 1.4, "drop_chance": 0.35
+		},
+		"werewolf": {
+			"name": "Warg-breed Werewolf",
+			"hp": 5, "damage": 2, "pounce_damage": 3, "speed": 95.0, "pounce_speed": 175.0,
+			"pounce_distance": 95.0, "pounce_windup_time": 0.65, "attack_range": 24.0,
+			"pounce_min_range": 50.0, "pounce_max_range": 135.0, "pounce_cooldown": 3.5, "drop_chance": 0.35
+		}
 	}
-}
+	for eid in ENEMY_RESOURCES:
+		var res = ENEMY_RESOURCES[eid]
+		if res and res.has_method("to_dictionary"):
+			var d: Dictionary = res.to_dictionary()
+			if not d.is_empty():
+				stats[eid] = d
+	return stats
+
+static func _build_boss_stats() -> Dictionary:
+	var stats: Dictionary = {
+		"necromancer": {
+			"title": "NECROMANCER OF DOL GULDUR",
+			"hp": 45, "speed": 55.0, "melee_damage": 2, "poison_damage": 3,
+			"melee_range": 65.0, "poison_range": 210.0, "attack_cooldown": 1.3
+		},
+		"orc_rider": {
+			"title": "WARG RIDER CHIEFTAIN",
+			"hp": 50, "speed": 75.0, "damage": 3
+		},
+		"skeleton_king": {
+			"title": "SKELETON KING OF THE BARROW-DOWNS",
+			"hp": 60, "hp_per_tier": 15, "crystals_to_defeat": 5, "crystal_hp": 6,
+			"crystal_hp_per_tier": 2, "max_crystals": 2, "max_crystals_enraged": 3,
+			"crystal_respawn": 2.5, "crystal_lifetime": 9.0, "crystal_lifetime_enraged": 7.5,
+			"crystal_expire_heal_ratio": 0.5, "laser_damage": 1, "summon_cap": 4,
+			"summon_cap_enraged": 6, "action_cooldown": 2.6, "action_cooldown_enraged": 1.7, "enrage_ratio": 0.5
+		}
+	}
+	for bid in BOSS_RESOURCES:
+		var res = BOSS_RESOURCES[bid]
+		if res and res.has_method("to_dictionary"):
+			var d: Dictionary = res.to_dictionary()
+			if not d.is_empty():
+				stats[bid] = d
+	return stats
+
+# --- RESOURCE GETTERS ---
+static func get_hero_resource(hero_id: String) -> HeroBalanceData:
+	var key := hero_id.to_lower()
+	return HERO_RESOURCES.get(key, HERO_RESOURCES.get("pyrois", null))
+
+static func get_enemy_resource(enemy_id: String) -> EnemyBalanceData:
+	var key := enemy_id.to_lower()
+	return ENEMY_RESOURCES.get(key, ENEMY_RESOURCES.get("orc", null))
+
+static func get_boss_resource(boss_id: String) -> BossBalanceData:
+	var key := boss_id.to_lower()
+	return BOSS_RESOURCES.get(key, BOSS_RESOURCES.get("necromancer", null))
 
 # --- API TRA CỨU & BUFF/NERF ĐỘNG ---
 static func get_hero_stats(hero_id: String) -> Dictionary:
-	return HERO_STATS.get(hero_id.to_lower(), HERO_STATS["pyrois"]).duplicate(true)
+	var key := hero_id.to_lower()
+	if HERO_STATS.has(key):
+		return HERO_STATS[key].duplicate(true)
+	elif HERO_RESOURCES.has(key) and HERO_RESOURCES[key] != null:
+		return HERO_RESOURCES[key].to_dictionary()
+	return HERO_STATS.get("pyrois", {}).duplicate(true)
 
 static func get_hero_list_for_ui() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	for hid in HERO_ORDER:
-		result.append(HERO_STATS[hid].duplicate(true))
+		result.append(get_hero_stats(hid))
 	return result
 
 static func get_enemy_stats(enemy_id: String) -> Dictionary:
-	return ENEMY_STATS.get(enemy_id.to_lower(), ENEMY_STATS["orc"]).duplicate(true)
+	var key := enemy_id.to_lower()
+	if ENEMY_STATS.has(key):
+		return ENEMY_STATS[key].duplicate(true)
+	elif ENEMY_RESOURCES.has(key) and ENEMY_RESOURCES[key] != null:
+		return ENEMY_RESOURCES[key].to_dictionary()
+	return ENEMY_STATS.get("orc", {}).duplicate(true)
 
 static func get_boss_stats(boss_id: String) -> Dictionary:
-	return BOSS_STATS.get(boss_id.to_lower(), BOSS_STATS["necromancer"]).duplicate(true)
+	var key := boss_id.to_lower()
+	if BOSS_STATS.has(key):
+		return BOSS_STATS[key].duplicate(true)
+	elif BOSS_RESOURCES.has(key) and BOSS_RESOURCES[key] != null:
+		return BOSS_RESOURCES[key].to_dictionary()
+	return BOSS_STATS.get("necromancer", {}).duplicate(true)
 
 static func set_unit_stat(category: String, unit_id: String, stat_key: String, new_value: Variant) -> bool:
 	var cat := category.to_lower()
 	var uid := unit_id.to_lower()
-	if cat == "hero" and HERO_STATS.has(uid):
-		HERO_STATS[uid][stat_key] = new_value
-		return true
-	elif cat == "enemy" and ENEMY_STATS.has(uid):
-		ENEMY_STATS[uid][stat_key] = new_value
-		return true
-	elif cat == "boss" and BOSS_STATS.has(uid):
-		BOSS_STATS[uid][stat_key] = new_value
-		return true
-	return false
+	var modified := false
+	if cat == "hero":
+		if HERO_STATS.has(uid):
+			HERO_STATS[uid][stat_key] = new_value
+			modified = true
+		if HERO_RESOURCES.has(uid) and HERO_RESOURCES[uid] != null:
+			HERO_RESOURCES[uid].set_stat(stat_key, new_value)
+			modified = true
+	elif cat == "enemy":
+		if ENEMY_STATS.has(uid):
+			ENEMY_STATS[uid][stat_key] = new_value
+			modified = true
+		if ENEMY_RESOURCES.has(uid) and ENEMY_RESOURCES[uid] != null:
+			ENEMY_RESOURCES[uid].set_stat(stat_key, new_value)
+			modified = true
+	elif cat == "boss":
+		if BOSS_STATS.has(uid):
+			BOSS_STATS[uid][stat_key] = new_value
+			modified = true
+		if BOSS_RESOURCES.has(uid) and BOSS_RESOURCES[uid] != null:
+			BOSS_RESOURCES[uid].set_stat(stat_key, new_value)
+			modified = true
+	return modified
+
+static func save_resource(category: String, unit_id: String) -> Error:
+	var cat := category.to_lower()
+	var uid := unit_id.to_lower()
+	var res: Resource = null
+	var path := ""
+	if cat == "hero" and HERO_RESOURCES.has(uid):
+		res = HERO_RESOURCES[uid]
+		path = "res://Scene/Balance/Heroes/%s.tres" % uid
+	elif cat == "enemy" and ENEMY_RESOURCES.has(uid):
+		res = ENEMY_RESOURCES[uid]
+		path = "res://Scene/Balance/Enemies/%s.tres" % uid
+	elif cat == "boss" and BOSS_RESOURCES.has(uid):
+		res = BOSS_RESOURCES[uid]
+		path = "res://Scene/Balance/Bosses/%s.tres" % uid
+	if res != null and not path.is_empty():
+		return ResourceSaver.save(res, path)
+	return FAILED

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="HeroBalanceData" format=3 uid="uid://b8j756ywtbpb0"]
+
+[ext_resource type="Script" uid="uid://b02vqivaicvow" path="res://Scene/Balance/HeroBalanceData.gd" id="1_hero"]
+
+[resource]
+script = ExtResource("1_hero")
+id = "pyrois"
+name = "Pyrois"
+index = 2
+role = "Knight of the White Tower"
+weapon = "Blade of Andúril & Gondor Aegis"
+skill_icon = "skill_shield"
+attack_cooldown = 0.3
+lore = "Captain of the Minas Tirith Vanguard bearing the proud lineage of the Kings. A steadfast frontline champion protected by a sacred bulwark that regenerates after battle."
+skill_q = "Sovereign Rush — Key Q: Charge forward with invulnerability, striking for 2 bonus damage. Cooldown: 5s."
+skill_rmb = "Gondor Strike — Left Click: Disciplined sword thrust holding the frontline."
+custom_stats = {
+"skill_bonus_damage": 2
+}

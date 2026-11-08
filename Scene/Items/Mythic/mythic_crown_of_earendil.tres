@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://1smnxt8imyt6"]
+
+[ext_resource type="Texture2D" uid="uid://dhgftfi4vleo0" path="res://Assets/Items/Custom/Item_38.png" id="1_rwnmm"]
+[ext_resource type="Script" uid="uid://cfc0cqlwptxu6" path="res://Scene/Items/ItemData.gd" id="2_script"]
+
+[resource]
+script = ExtResource("2_script")
+item_name = "Crown of Earendil, Sovereign of Stars"
+type = 0
+rarity = 4
+icon = ExtResource("1_rwnmm")
+description = "[MYTHIC] Radiant star-crown dispelling despair and smiting the minions of darkness."
+special_effect = "Celestial Smite - 40% ti le don danh giang thien loi 5 sat thuong lan len muc tieu va ke dich lan can."
+damage = 3
+armor = 7
+max_hp_bonus = 8
+attack_speed_bonus = 0.2
+max_stack = 1

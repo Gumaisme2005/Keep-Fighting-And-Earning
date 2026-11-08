@@ -27,6 +27,8 @@ func throw_bomb(start_pos: Vector2, end_pos: Vector2) -> void:
 
 	await tween.finished
 	await get_tree().create_timer(0.5).timeout
+	if not is_instance_valid(self) or not is_inside_tree():
+		return
 	explode()
 
 func explode() -> void:

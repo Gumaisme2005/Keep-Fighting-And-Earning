@@ -1,8 +1,6 @@
 class_name PerkDatabase
 extends RefCounted
 
-const PerkData = preload("res://Scene/Perks/PerkData.gd")
-
 const ICON_PIXEL_DIR := "res://Assets/RpgSkillIcon/icons_pixel/"
 const ICON_FULL_DIR := "res://Assets/RpgSkillIcon/icons_full/"
 

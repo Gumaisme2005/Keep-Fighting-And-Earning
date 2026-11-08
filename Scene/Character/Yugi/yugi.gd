@@ -112,7 +112,7 @@ func _physics_process(delta: float) -> void:
 	if is_hurt:
 		_hurt_timer -= delta
 		if _hurt_timer <= 0: is_hurt = false
-	if int(f.get("slot", -1)) >= 0: inventory.use_or_equip_item(int(f.slot), self)
+	if int(f.get("slot", -1)) >= 0: inventory.use_or_equip_item(int(f.get("slot", -1)), self)
 	_set_guarding(action_left <= 0 and not suppress_guard and shift)
 	if left_hold >= 0: left_hold += delta
 	if right_hold >= 0: right_hold += delta

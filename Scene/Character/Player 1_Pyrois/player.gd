@@ -1,358 +1,84 @@
-extends CharacterBody2D
+extends BasePlayer
 
-signal stats_changed(current_hp, max_hp, current_armor, max_armor)
-signal skill_cooldown_changed(skill_q_left: float, skill_q_max: float, skill_rmb_left: float, skill_rmb_max: float)
+## Player (Pyrois) — Chiến binh Lửa (Hero #1).
+## Kế thừa toàn bộ chỉ số, balo, hồi giáp, perks và record/replay từ BasePlayer.
+## Quản lý hitbox kiếm (SwordHitbox), chiêu thức chém thường (attack_1) và lướt chém đặc biệt (attack_2).
 
-# --- CHỈ SỐ CƠ BẢN ---
-@export var speed: float = 150.0
-@export var max_speed_cap: float = 260.0 # Trần tốc độ chạy tối đa, tránh lỗi va chạm tường và mất kiểm soát
-@export var base_damage: int = 1
-@export var base_max_hp: int = 4
-@export var max_hp: int = 4
-@export var base_armor: int = 4
-@export var armor_regen_delay: float = 4.0
-@export var armor_regen_rate: float = 1.0
-
-# --- KỸ NĂNG ĐẶC BIỆT ---
-@export var skill_cooldown: float = 5.0
-var can_use_skill: bool = true
-var is_casting_skill: bool = false
-var q_cd_remaining: float = 0.0
-var rmb_cd_remaining: float = 0.0
-var rmb_cd_max: float = 0.0
-
-var is_invincible: bool = false
-@export var invincibility_time: float = 0.95
-var hp: int = 4
-var max_armor: int = 4
-var current_armor: int = 4
-
-var is_dead: bool = false
-var is_attacking: bool = false
-var is_hurt: bool = false
-var _hurt_timer: float = 0.0
-var _attack_timer: float = 0.0
-
-var regen_delay_timer: Timer
-var regen_tick_timer: Timer
-
-# --- HỖ TRỢ RECORD & REPLAY RUN ---
-var replay_frame_idx: int = 0
-var pending_hotbar_slot: int = -1
-var pending_q_skill: bool = false
-var pending_rmb_skill: bool = false
-var current_aim_offset: Vector2 = Vector2.RIGHT * 32.0
-
-const BalanceData = preload("res://Scene/BalanceConfig.gd")
-const PerkData = preload("res://Scene/Perks/PerkData.gd")
-@export var hero_balance_id: String = "pyrois"
-
-@onready var animated_sprite = $AnimatedSprite2D
-@onready var sword_hitbox = $SwordHitbox
-@onready var sword_collision = $SwordHitbox/CollisionShape2D
-@onready var inventory = $Inventory
-
-func _apply_balance_config() -> void:
-	var cfg: Dictionary = BalanceData.get_hero_stats(hero_balance_id)
-	speed = float(cfg.get("speed", speed))
-	base_max_hp = int(cfg.get("hp", base_max_hp))
-	base_armor = int(cfg.get("armor", base_armor))
-	base_damage = int(cfg.get("damage", base_damage))
-	skill_cooldown = float(cfg.get("skill_cooldown", skill_cooldown))
+@onready var sword_hitbox: Area2D = get_node_or_null("SwordHitbox")
+@onready var sword_collision: CollisionShape2D = get_node_or_null("SwordHitbox/CollisionShape2D")
 
 func _ready() -> void:
-	name = "Player"
-	z_index = 2
-	add_to_group("player")
-	_apply_balance_config()
+	if hero_balance_id.is_empty():
+		hero_balance_id = "pyrois"
+	super._ready()
+	if sword_collision != null:
+		sword_collision.disabled = true
 
-	sword_collision.disabled = true
-
-	regen_delay_timer = Timer.new()
-	regen_delay_timer.one_shot = true
-	regen_delay_timer.wait_time = armor_regen_delay
-	regen_delay_timer.timeout.connect(_start_armor_regen)
-	add_child(regen_delay_timer)
-
-	regen_tick_timer = Timer.new()
-	regen_tick_timer.wait_time = armor_regen_rate
-	regen_tick_timer.timeout.connect(_regen_one_armor)
-	add_child(regen_tick_timer)
-
-	max_hp = base_max_hp + inventory.get_total_max_hp_bonus()
-	hp = max_hp
-	max_armor = base_armor + inventory.get_total_defense()
-	current_armor = max_armor
-	inventory.equipment_changed.connect(_on_equipment_changed)
-
-	# Trang bị khởi đầu cân bằng: 1 Bình máu nhỏ
-	var starter_potion = preload("res://Scene/Items/health_potion.tres")
-	inventory.add_item(starter_potion)
-
-	# Tự động nạp lại các Perk đang kích hoạt khi chuyển sang tầng mới
-	if get_node_or_null("/root/PerkManager") != null:
-		PerkManager.apply_all_perks_to_player(self)
-
-func get_aim_world_position() -> Vector2:
-	if get_node_or_null("/root/GameManager") != null and GameManager.is_replaying:
-		return global_position + current_aim_offset
-	return get_global_mouse_position()
-
-func _process(delta: float) -> void:
-	var updated := false
-	if q_cd_remaining > 0.0:
-		q_cd_remaining = maxf(0.0, q_cd_remaining - delta)
-		updated = true
-	if rmb_cd_remaining > 0.0:
-		rmb_cd_remaining = maxf(0.0, rmb_cd_remaining - delta)
-		updated = true
-	if updated:
-		skill_cooldown_changed.emit(q_cd_remaining, skill_cooldown, rmb_cd_remaining, rmb_cd_max)
-
-func _physics_process(delta: float) -> void:
-	if is_dead:
-		return
-
-	if is_hurt:
-		_hurt_timer -= delta
-		if _hurt_timer <= 0.0:
-			is_hurt = false
-
-	if is_attacking:
-		_attack_timer -= delta
-		if _attack_timer <= 0.0:
-			is_attacking = false
-			sword_collision.set_deferred("disabled", true)
-
-	var gm = get_node_or_null("/root/GameManager")
-	var replaying: bool = gm != null and gm.is_replaying
-
-	var direction := Vector2.ZERO
-	var want_attack := false
-	var want_q := false
-	var want_rmb := false
-	var hotbar_to_use := -1
-
-	if replaying:
-		if replay_frame_idx < gm.replay_frames.size():
-			var f: Dictionary = gm.replay_frames[replay_frame_idx]
-			replay_frame_idx += 1
-			direction = Vector2(float(f.get("dx", 0.0)), float(f.get("dy", 0.0)))
-			current_aim_offset = Vector2(float(f.get("ax", 32.0)), float(f.get("ay", 0.0)))
-			want_attack = bool(f.get("atk", false))
-			want_q = bool(f.get("q", false))
-			want_rmb = bool(f.get("rmb", false))
-			hotbar_to_use = int(f.get("slot", -1))
+func _update_aim_direction(aim_pos: Vector2) -> void:
+	if sword_hitbox != null:
+		if aim_pos.x < global_position.x:
+			sword_hitbox.scale.x = -1
 		else:
-			# Replay recording concluded
-			gm.is_replaying = false
-			if get_tree():
-				get_tree().call_group("game_ui", "show_banner", "COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6))
-	else:
-		direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-		current_aim_offset = get_global_mouse_position() - global_position
-		want_attack = Input.is_action_just_pressed("attack")
-		want_q = pending_q_skill
-		want_rmb = pending_rmb_skill
-		hotbar_to_use = pending_hotbar_slot
-		pending_q_skill = false
-		pending_rmb_skill = false
-		pending_hotbar_slot = -1
+			sword_hitbox.scale.x = 1
 
-		if gm != null:
-			gm.record_frame_input({
-				"dx": snappedf(direction.x, 0.01),
-				"dy": snappedf(direction.y, 0.01),
-				"ax": snappedf(current_aim_offset.x, 0.5),
-				"ay": snappedf(current_aim_offset.y, 0.5),
-				"atk": want_attack,
-				"q": want_q,
-				"rmb": want_rmb,
-				"slot": hotbar_to_use
-			})
-
-	if hotbar_to_use >= 0:
-		inventory.use_or_equip_item(hotbar_to_use, self)
-
-	var aim_pos = global_position + current_aim_offset
-	if aim_pos.x < global_position.x:
-		animated_sprite.flip_h = true
-		sword_hitbox.scale.x = -1
-	else:
-		animated_sprite.flip_h = false
-		sword_hitbox.scale.x = 1
-
-	# Khi dính sát thương (đang nhấp nháy bất tử), cho phép nhân vật di chuyển thoát vây mượt mà (tăng nhẹ 15% tốc chạy thoát thân)
-	var effective_speed: float = get_effective_speed()
-
-	if want_q and can_use_skill and not is_attacking and not is_casting_skill:
-		use_special_skill()
-		return
-
-	if want_rmb:
-		_on_rmb_skill_triggered()
-
-	if is_casting_skill:
-		move_and_slide()
-		return
-
-	if is_attacking:
-		velocity = direction * (effective_speed * 0.65)
-		move_and_slide()
-		return
-
-	velocity = direction * effective_speed
-	move_and_slide()
-
-	if want_attack:
-		attack()
-		return
-
-	if not is_hurt:
-		if direction != Vector2.ZERO:
-			animated_sprite.play("walk")
-		else:
-			animated_sprite.play("idle")
-
-func _on_rmb_skill_triggered() -> void:
-	pass
+func _on_attack_timer_expired() -> void:
+	if sword_collision != null:
+		sword_collision.set_deferred("disabled", true)
 
 func attack() -> void:
 	is_attacking = true
 	_attack_timer = 0.32
-	animated_sprite.play("attack_1")
-	sword_collision.disabled = false
+	if animated_sprite != null and animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation("attack_1"):
+		animated_sprite.play("attack_1")
+	if sword_collision != null:
+		sword_collision.disabled = false
 	if get_node_or_null("/root/AudioManager") != null:
 		AudioManager.play_sfx("slash")
 
-func take_damage(amount: int) -> void:
-	if is_dead or is_invincible or amount <= 0:
-		return
-
-	if get_node_or_null("/root/AudioManager") != null:
-		AudioManager.play_sfx("hit")
-
-	regen_tick_timer.stop()
-	regen_delay_timer.start()
-
-	var had_armor: bool = current_armor > 0
-	if current_armor >= amount:
-		current_armor -= amount
-		if get_tree():
-			get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -24), amount, Color(0.3, 0.8, 1.0))
-	else:
-		var overflow_damage = amount - current_armor
-		current_armor = 0
-		hp = max(0, hp - overflow_damage)
-		if get_tree():
-			get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -24), overflow_damage, Color(1.0, 0.25, 0.25))
-
-	if had_armor and current_armor == 0 and get_node_or_null("/root/PerkManager") != null:
-		if PerkManager.has_armor_break_blast():
-			_trigger_armor_break_blast()
-
-	stats_changed.emit(hp, max_hp, current_armor, max_armor)
-
-	if hp > 0:
-		is_hurt = true
-		_hurt_timer = 0.18
-		if not is_attacking and not is_casting_skill:
-			animated_sprite.play("hurt")
-		start_invincibility()
-	else:
-		if get_node_or_null("/root/PerkManager") != null and PerkManager.has_second_chance():
-			PerkManager.consume_second_chance()
-			hp = maxi(1, int(max_hp * 0.5))
-			current_armor = max_armor
-			stats_changed.emit(hp, max_hp, current_armor, max_armor)
-			if get_tree():
-				get_tree().call_group("game_ui", "show_banner", "IMMORTAL WILL - REVIVED!", Color(1.0, 0.85, 0.2))
-				get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -32), hp, Color(1.0, 0.85, 0.2))
-			start_invincibility()
-			return
-
-		if not is_dead:
-			is_dead = true
-			regen_delay_timer.stop()
-			regen_tick_timer.stop()
-			animated_sprite.play("death")
-			set_physics_process(false)
-			print("[DEATH] Champion has fallen. Expedition Over.")
-
-			if get_node_or_null("/root/GameManager") != null:
-				GameManager.finish_run("Fallen upon Floor " + str(GameManager.current_level))
-
-			if has_node("PlayerHurtbox/CollisionShape2D"):
-				$PlayerHurtbox/CollisionShape2D.set_deferred("disabled", true)
-
-			await get_tree().create_timer(2.0).timeout
-			get_tree().call_group("game_over_menu", "pause")
-
-func start_invincibility() -> void:
+func use_special_skill() -> void:
+	start_skill_cooldown()
+	is_casting_skill = true
 	is_invincible = true
-	var tween = create_tween()
-	tween.set_loops(5)
-	tween.tween_property(animated_sprite, "modulate:a", 0.3, 0.075)
-	tween.tween_property(animated_sprite, "modulate:a", 1.0, 0.075)
+	if animated_sprite != null:
+		animated_sprite.modulate = Color(1.5, 1.5, 2.0)
 
-	await get_tree().create_timer(invincibility_time).timeout
+	var face_direction = -1 if (animated_sprite != null and animated_sprite.flip_h) else 1
+	velocity.x = face_direction * 150.0
+
+	if animated_sprite != null and animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation("attack_2"):
+		animated_sprite.play("attack_2")
+
+	await get_tree().create_timer(0.3).timeout
+	if not is_inside_tree():
+		return
+
+	velocity.x = 0
+	if sword_collision != null:
+		sword_collision.set_deferred("disabled", false)
+
+	await get_tree().create_timer(0.2).timeout
+	if not is_inside_tree():
+		return
+
+	if sword_collision != null:
+		sword_collision.set_deferred("disabled", true)
+	is_casting_skill = false
 	is_invincible = false
-	animated_sprite.modulate.a = 1.0
+	if animated_sprite != null:
+		animated_sprite.modulate = Color.WHITE
 
-func consume_potion(heal_amount: int, bonus_max_hp: int) -> void:
-	if is_dead:
-		return
-
-	if bonus_max_hp > 0:
-		base_max_hp += bonus_max_hp
-		max_hp += bonus_max_hp
-		hp += bonus_max_hp
-
-	if heal_amount > 0:
-		hp = min(max_hp, hp + heal_amount)
-
-	if get_tree():
-		get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -24), heal_amount + bonus_max_hp, Color(0.3, 1.0, 0.4))
-	stats_changed.emit(hp, max_hp, current_armor, max_armor)
-
-func _on_equipment_changed() -> void:
-	var old_max_hp = max_hp
-	max_hp = base_max_hp + inventory.get_total_max_hp_bonus()
-
-	if max_hp > old_max_hp:
-		hp += (max_hp - old_max_hp)
-	hp = min(hp, max_hp)
-
-	max_armor = base_armor + inventory.get_total_defense()
-	current_armor = min(current_armor, max_armor)
-
-	if current_armor < max_armor and regen_delay_timer.is_stopped() and regen_tick_timer.is_stopped():
-		regen_delay_timer.start()
-
-	stats_changed.emit(hp, max_hp, current_armor, max_armor)
-
-func _start_armor_regen() -> void:
-	if current_armor < max_armor and not is_dead:
-		regen_tick_timer.start()
-
-func _regen_one_armor() -> void:
-	if is_dead:
-		regen_tick_timer.stop()
-		return
-
-	if current_armor < max_armor:
-		current_armor += 1
-		stats_changed.emit(hp, max_hp, current_armor, max_armor)
-
-	if current_armor >= max_armor:
-		regen_tick_timer.stop()
+	if not is_dead and not is_hurt and animated_sprite != null and animated_sprite.animation == "attack_2":
+		animated_sprite.play("idle")
 
 func _on_animated_sprite_2d_animation_finished() -> void:
+	if animated_sprite == null:
+		return
 	var current_anim = animated_sprite.animation
 
 	if current_anim == "attack_1":
 		is_attacking = false
-		sword_collision.set_deferred("disabled", true)
+		if sword_collision != null:
+			sword_collision.set_deferred("disabled", true)
 		if not is_dead and not is_hurt:
 			animated_sprite.play("idle")
 
@@ -360,108 +86,10 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		is_hurt = false
 		is_attacking = false
 		is_casting_skill = false
-		sword_collision.set_deferred("disabled", true)
+		if sword_collision != null:
+			sword_collision.set_deferred("disabled", true)
 		if not is_dead:
 			animated_sprite.play("idle")
-
-func is_spike_immune() -> bool:
-	if get_node_or_null("/root/PerkManager") != null:
-		return PerkManager.is_spike_immune()
-	return false
-
-func get_effective_speed() -> float:
-	var eff: float = speed * 1.15 if is_invincible else speed
-	if get_node_or_null("/root/PerkManager") != null:
-		eff += PerkManager.get_total_speed_bonus()
-		for p in PerkManager.get_active_perks():
-			if p.get_modifier("low_hp_scaling", false):
-				var missing_hp: int = maxi(0, max_hp - hp)
-				eff += missing_hp * float(p.get_modifier("speed_per_missing_hp", 8.0))
-	return minf(eff, max_speed_cap)
-
-func get_raw_damage() -> float:
-	var dmg: float = float(base_damage + inventory.get_weapon_damage())
-	if get_node_or_null("/root/PerkManager") != null:
-		for p in PerkManager.get_active_perks():
-			if p.get_modifier("low_hp_scaling", false):
-				var missing_hp: int = maxi(0, max_hp - hp)
-				dmg *= (1.0 + float(missing_hp) * float(p.get_modifier("dmg_per_missing_hp", 0.15)))
-	return dmg
-
-func get_total_damage() -> int:
-	var raw := get_raw_damage()
-	if get_node_or_null("/root/PerkManager") != null:
-		return PerkManager.resolve_stochastic_damage(raw)
-	return int(round(raw))
-
-func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
-	var final_dmg: int = in_damage
-	var pm = get_node_or_null("/root/PerkManager")
-	if pm == null:
-		return final_dmg
-
-	# 1. Critical Hit (Đòn Đánh Tử Huyệt & Xé Toạc Sinh Mệnh)
-	var crit_chance: float = pm.get_crit_chance()
-	if crit_chance > 0.0:
-		var rng := RandomNumberGenerator.new()
-		rng.randomize()
-		if rng.randf() <= crit_chance:
-			var mult: float = pm.get_crit_multiplier() if pm.has_method("get_crit_multiplier") else 2.0
-			var raw_crit: float = float(in_damage) * mult
-			final_dmg = PerkManager.resolve_stochastic_damage(raw_crit)
-			if get_tree():
-				get_tree().call_group("game_ui", "spawn_damage_number", target.global_position + Vector2(0, -28), final_dmg, Color(1.0, 0.85, 0.1))
-
-	# 2. Burn On Hit (Liệt Hỏa)
-	if pm.has_burn_on_hit():
-		for p in pm.get_active_perks():
-			if p.get_modifier("on_hit_burn", false):
-				var chance: float = float(p.get_modifier("burn_chance", 0.35))
-				var b_rng := RandomNumberGenerator.new()
-				b_rng.randomize()
-				if b_rng.randf() <= chance:
-					var burn_amt: int = int(p.get_modifier("burn_damage", 2))
-					if target.has_method("take_damage"):
-						target.call_deferred("take_damage", burn_amt)
-						if get_tree():
-							get_tree().call_group("game_ui", "spawn_damage_number", target.global_position + Vector2(10, -20), burn_amt, Color(1.0, 0.45, 0.1))
-
-	# 3. Chain Lightning (Lôi Thần Trừng Phạt)
-	if pm.has_lightning_on_hit():
-		_trigger_chain_lightning(target)
-
-	return final_dmg
-
-func _trigger_chain_lightning(primary_target: Node2D) -> void:
-	var enemies = get_tree().get_nodes_in_group("enemies")
-	var chained := 0
-	for e in enemies:
-		if e != primary_target and is_instance_valid(e) and not bool(e.get("is_dead")):
-			var dist = primary_target.global_position.distance_to(e.global_position)
-			if dist <= 95.0:
-				if e.has_method("take_damage"):
-					e.take_damage(2)
-					if get_tree():
-						get_tree().call_group("game_ui", "spawn_damage_number", e.global_position + Vector2(0, -24), 2, Color(0.4, 0.85, 1.0))
-				chained += 1
-				if chained >= 2:
-					break
-
-func _trigger_armor_break_blast() -> void:
-	if get_tree():
-		get_tree().call_group("game_ui", "show_banner", "AEGIS SHATTERED - SHOCKWAVE!", Color(0.6, 0.3, 0.9))
-	var enemies = get_tree().get_nodes_in_group("enemies")
-	for e in enemies:
-		if is_instance_valid(e) and not bool(e.get("is_dead")):
-			var dist = global_position.distance_to(e.global_position)
-			if dist <= 90.0:
-				var push_dir = (e.global_position - global_position).normalized()
-				if e is CharacterBody2D:
-					e.velocity += push_dir * 180.0
-				if e.has_method("take_damage"):
-					e.take_damage(3)
-					if get_tree():
-						get_tree().call_group("game_ui", "spawn_damage_number", e.global_position + Vector2(0, -24), 3, Color(0.7, 0.4, 1.0))
 
 func _on_sword_hitbox_area_entered(area: Area2D) -> void:
 	if area.name == "Hurtbox":
@@ -477,58 +105,7 @@ func _on_sword_hitbox_area_entered(area: Area2D) -> void:
 					return
 
 			var total_dmg = get_total_damage()
-			if animated_sprite.animation == "attack_2":
+			if animated_sprite != null and animated_sprite.animation == "attack_2":
 				total_dmg += 2
 			total_dmg = apply_on_hit_effects(target, total_dmg)
 			target.take_damage(total_dmg)
-
-func _unhandled_input(event: InputEvent) -> void:
-	if is_dead:
-		return
-	if get_node_or_null("/root/GameManager") != null and GameManager.is_replaying:
-		return
-
-	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode >= KEY_1 and event.keycode <= KEY_9:
-			pending_hotbar_slot = event.keycode - KEY_1
-		elif event.keycode == KEY_Q:
-			pending_q_skill = true
-
-func use_special_skill() -> void:
-	start_skill_cooldown()
-	is_casting_skill = true
-	is_invincible = true
-	animated_sprite.modulate = Color(1.5, 1.5, 2.0)
-
-	var face_direction = -1 if animated_sprite.flip_h else 1
-	velocity.x = face_direction * 150.0
-
-	animated_sprite.play("attack_2")
-
-	await get_tree().create_timer(0.3).timeout
-
-	velocity.x = 0
-	sword_collision.set_deferred("disabled", false)
-
-	await get_tree().create_timer(0.2).timeout
-
-	sword_collision.set_deferred("disabled", true)
-	is_casting_skill = false
-	is_invincible = false
-	animated_sprite.modulate = Color.WHITE
-
-	if not is_dead and not is_hurt and animated_sprite.animation == "attack_2":
-		animated_sprite.play("idle")
-
-func start_skill_cooldown() -> void:
-	can_use_skill = false
-	var effective_cd := skill_cooldown
-	if get_node_or_null("/root/PerkManager") != null:
-		effective_cd = skill_cooldown * (1.0 - PerkManager.get_cooldown_reduction())
-	q_cd_remaining = effective_cd
-	skill_cooldown_changed.emit(q_cd_remaining, effective_cd, rmb_cd_remaining, rmb_cd_max)
-	await get_tree().create_timer(effective_cd).timeout
-	if not is_dead:
-		can_use_skill = true
-		q_cd_remaining = 0.0
-		skill_cooldown_changed.emit(0.0, effective_cd, rmb_cd_remaining, rmb_cd_max)

@@ -1,33 +1,46 @@
 extends Node
 
-const PerkData = preload("res://Scene/Perks/PerkData.gd")
-const PerkDatabase = preload("res://Scene/Perks/PerkDatabase.gd")
-
 signal perk_acquired(perk: PerkData)
 signal perks_cleared()
 
 var active_perks: Array[PerkData] = []
 var second_chance_used: bool = false
 
+static var _combat_rng: RandomNumberGenerator = null
+
+static func get_combat_rng() -> RandomNumberGenerator:
+	if _combat_rng == null:
+		_combat_rng = RandomNumberGenerator.new()
+		_combat_rng.randomize()
+	return _combat_rng
+
+static func seed_combat_rng(seed_val: int) -> void:
+	if _combat_rng == null:
+		_combat_rng = RandomNumberGenerator.new()
+	_combat_rng.seed = seed_val
+
 func _ready() -> void:
 	if get_node_or_null("/root/GameManager") != null:
 		GameManager.stats_updated.connect(_on_game_stats_updated)
+		if not GameManager.current_seed.is_empty():
+			seed_combat_rng((GameManager.current_seed + ":combat").hash())
 
 func reset() -> void:
 	active_perks.clear()
 	second_chance_used = false
+	if get_node_or_null("/root/GameManager") != null and not GameManager.current_seed.is_empty():
+		seed_combat_rng((GameManager.current_seed + ":combat").hash())
 	perks_cleared.emit()
 
 func _on_game_stats_updated(level: int, _kills: int) -> void:
-	if level <= 1 and active_perks.size() > 0 and not GameManager.is_replaying:
+	if level <= 1 and active_perks.size() > 0:
 		# Bắt đầu chuyến thám hiểm mới, reset perk
 		reset()
 
 func on_enemy_killed() -> void:
 	var heal_chance: float = get_on_kill_heal_chance()
 	if heal_chance > 0.0:
-		var rng := RandomNumberGenerator.new()
-		rng.randomize()
+		var rng: RandomNumberGenerator = get_combat_rng()
 		if rng.randf() <= heal_chance:
 			var players = get_tree().get_nodes_in_group("player")
 			if not players.is_empty() and is_instance_valid(players[0]):
@@ -280,8 +293,7 @@ static func resolve_stochastic_damage(raw_damage: float) -> int:
 	var base_int: int = int(floor(raw_damage))
 	var fraction: float = raw_damage - float(base_int)
 	if fraction > 0.0001:
-		var rng := RandomNumberGenerator.new()
-		rng.randomize()
+		var rng: RandomNumberGenerator = get_combat_rng()
 		if rng.randf() < fraction:
 			base_int += 1
 	return maxi(1, base_int)

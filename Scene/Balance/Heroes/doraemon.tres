@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="HeroBalanceData" format=3 uid="uid://c078tshvidc16"]
+
+[ext_resource type="Script" uid="uid://b02vqivaicvow" path="res://Scene/Balance/HeroBalanceData.gd" id="1_hero"]
+
+[resource]
+script = ExtResource("1_hero")
+id = "doraemon"
+name = "Doraemon"
+index = 5
+role = "Gadget Cat of the 22nd Century"
+weapon = "4D Pocket — 20 Gadgets, 6 Friends, 10 Supers"
+skill_icon = "coin"
+hp = 5
+armor = 2
+attack_cooldown = 0.3
+skill_cooldown = 8
+lore = "A robot cat from the future fighting with the whole 4D Pocket: Air Cannon, Anywhere Door, Shock Gun, Pencil Missiles, a dango-tamed T-Rex, Mini-Doras, his friends on Take-copters and ten super moves fuelled by a 3-bar power gauge."
+skill_q = "Friends / Super — Key Q: summon the next friend (Nobita, Gian, Shizuka, Dorami, Suneo, Come-come Cat). With a full power bar: the current page's SUPER. F: eat a Dorayaki."
+skill_rmb = "4D Pocket — Mouse Wheel or Z / X: switch gadget page (10 pages). Left / Right Click: use the page's two gadgets."
+custom_stats = {
+"air_shot_range": 190.0,
+"air_shot_speed": 300.0,
+"door_range": 96.0,
+"trex_damage_mult": 3
+}

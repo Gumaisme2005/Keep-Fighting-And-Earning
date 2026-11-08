@@ -3,6 +3,8 @@ extends "res://Scene/Character/Player 1_Pyrois/player.gd"
 @export var buff_duration: float = 5.0
 @export var damage_multiplier: int = 2
 
+var is_berserking: bool = false
+
 func _ready() -> void:
 	hero_balance_id = "olaf"
 	var cfg: Dictionary = BalanceData.get_hero_stats("olaf")
@@ -20,18 +22,27 @@ func use_special_skill() -> void:
 	if get_tree():
 		get_tree().call_group("game_ui", "show_toast", "BERSERK RAGE — Double damage for 5 seconds!")
 
-	var bonus_damage = base_damage * (damage_multiplier - 1)
-	base_damage += bonus_damage
+	is_berserking = true
 	stats_changed.emit(hp, max_hp, current_armor, max_armor)
 
 	await get_tree().create_timer(0.6).timeout
+	if not is_inside_tree():
+		return
 	is_casting_skill = false
 
 	if not is_dead and animated_sprite.animation == "skill":
 		animated_sprite.play("idle")
 
 	await get_tree().create_timer(buff_duration - 0.6).timeout
+	if not is_inside_tree():
+		return
 
-	base_damage -= bonus_damage
+	is_berserking = false
 	if not is_dead:
 		stats_changed.emit(hp, max_hp, current_armor, max_armor)
+
+func get_raw_damage() -> float:
+	var raw: float = super.get_raw_damage()
+	if is_berserking:
+		raw *= float(damage_multiplier)
+	return raw

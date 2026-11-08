@@ -121,11 +121,13 @@ func prep_charge() -> void:
 
 	_start_flash_effect()
 	await get_tree().create_timer(2.0).timeout
+	if not is_inside_tree() or is_dead:
+		return
 
 	show_charge_warning = false
 	queue_redraw()
 
-	if not is_preparing_charge or is_dead:
+	if not is_preparing_charge:
 		return
 
 	is_preparing_charge = false
@@ -136,6 +138,8 @@ func start_charge() -> void:
 	anim.play("walk")
 
 	await get_tree().create_timer(1.2).timeout
+	if not is_inside_tree() or is_dead:
+		return
 	if is_charging:
 		_stop_charge()
 
@@ -150,6 +154,8 @@ func _stop_charge() -> void:
 
 	can_charge = false
 	await get_tree().create_timer(5.0).timeout
+	if not is_inside_tree() or is_dead:
+		return
 	can_charge = true
 
 func prep_spin_attack() -> void:
@@ -161,11 +167,13 @@ func prep_spin_attack() -> void:
 
 	_start_flash_effect()
 	await get_tree().create_timer(2.0).timeout
+	if not is_inside_tree() or is_dead:
+		return
 
 	show_spin_warning = false
 	queue_redraw()
 
-	if not is_preparing_spin or is_dead:
+	if not is_preparing_spin:
 		return
 
 	is_preparing_spin = false
@@ -189,20 +197,24 @@ func perform_attack(type: int) -> void:
 		active_shape = shape_3
 
 	await get_tree().create_timer(0.3).timeout
-	if not is_attacking or is_dead:
+	if not is_inside_tree() or not is_attacking or is_dead:
 		return
 
 	if active_shape:
 		active_shape.set_deferred("disabled", false)
 
 	await get_tree().create_timer(0.2).timeout
+	if not is_inside_tree() or is_dead:
+		return
 
 	if active_shape:
 		active_shape.set_deferred("disabled", true)
-	if not is_attacking or is_dead:
+	if not is_attacking:
 		return
 
 	await get_tree().create_timer(0.6).timeout
+	if not is_inside_tree() or is_dead:
+		return
 
 	if not is_preparing_spin and not is_preparing_charge:
 		is_attacking = false
@@ -233,6 +245,7 @@ func take_damage(amount: int) -> void:
 		is_dead = true
 		if get_node_or_null("/root/GameManager") != null:
 			GameManager.register_enemy_kill()
+		_drop_boss_loot()
 		_cancel_all_actions()
 		$CollisionShape2D.set_deferred("disabled", true)
 		if has_node("Hurtbox/CollisionShape2D"):
@@ -249,6 +262,23 @@ func take_damage(amount: int) -> void:
 	var flash_hit = create_tween()
 	flash_hit.tween_property(anim, "modulate", Color(1.5, 0.4, 0.4), 0.08)
 	flash_hit.tween_property(anim, "modulate", Color.WHITE, 0.08)
+
+func _drop_boss_loot() -> void:
+	var floor_lvl := 1
+	var seed_val := 12345
+	if get_node_or_null("/root/GameManager") != null:
+		floor_lvl = GameManager.current_level
+		seed_val = (GameManager.current_seed + "_orcrider_loot_" + str(floor_lvl)).hash()
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_val
+	var boss_item: ItemData = ItemDatabase.get_random_drop(floor_lvl, true, rng)
+	if boss_item != null:
+		var item_scene = preload("res://Scene/Items/WorldItem/WorldItem.tscn")
+		var item_drop = item_scene.instantiate()
+		item_drop.item_data = boss_item
+		item_drop.global_position = global_position
+		var parent_node = get_parent() if get_parent() != null else get_tree().current_scene
+		parent_node.call_deferred("add_child", item_drop)
 
 func check_phase() -> bool:
 	if current_phase == 1 and hp <= max_hp * 0.66:
