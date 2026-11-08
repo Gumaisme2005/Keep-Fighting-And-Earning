@@ -1162,12 +1162,11 @@ func _exit_tree() -> void:
 func _kill_label_tween(lbl: Label) -> void:
 	if not is_instance_valid(lbl):
 		return
-	var tw = lbl.get_meta("damage_tween", null)
-	if tw != null and is_instance_valid(tw) and tw.is_valid():
-		tw.kill()
-	lbl.set_meta("damage_tween", null)
-	if get_tree():
-		get_tree().kill_tweens_of(lbl)
+	if lbl.has_meta("damage_tween"):
+		var tw = lbl.get_meta("damage_tween")
+		if tw is Tween and is_instance_valid(tw) and tw.is_valid():
+			tw.kill()
+		lbl.set_meta("damage_tween", null)
 
 func reset_damage_number_pool() -> void:
 	for lbl in _active_damage_labels:
@@ -1231,7 +1230,9 @@ func spawn_damage_number(world_pos: Vector2, amount: int, color: Color = Color(1
 	_kill_label_tween(lbl)
 
 	# Tăng generation counter để vô hiệu hóa mọi callback cũ nếu có độ trễ
-	var gen: int = int(lbl.get_meta("damage_gen", 0)) + 1
+	var gen: int = 1
+	if lbl.has_meta("damage_gen"):
+		gen = int(lbl.get_meta("damage_gen")) + 1
 	lbl.set_meta("damage_gen", gen)
 
 	_active_damage_labels.append(lbl)
@@ -1254,7 +1255,7 @@ func spawn_damage_number(world_pos: Vector2, amount: int, color: Color = Color(1
 func _on_damage_label_finished(lbl: Label, expected_gen: int) -> void:
 	if not is_instance_valid(lbl):
 		return
-	if int(lbl.get_meta("damage_gen", 0)) != expected_gen:
+	if not lbl.has_meta("damage_gen") or int(lbl.get_meta("damage_gen")) != expected_gen:
 		return
 
 	lbl.visible = false
