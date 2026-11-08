@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dhjxraoguv48k"]
+
+[ext_resource type="Script" path="res://tests/test_archer_combat_lifecycle.gd" id="1_test_script"]
+
+[node name="ArcherCombatLifecycleTest" type="Node2D"]
+script = ExtResource("1_test_script")

@@ -12,7 +12,7 @@
 atlas = ExtResource("1_khx2i")
 region = Rect2(8, 8, 176, 24)
 
-[node name="GameUi" type="CanvasLayer" unique_id=1680741659]
+[node name="GameUi" type="CanvasLayer" unique_id=1680741659 groups=["game_ui"]]
 script = ExtResource("1_1e3es")
 heart_full = ExtResource("2_viyut")
 heart_empty = ExtResource("3_lkxwh")

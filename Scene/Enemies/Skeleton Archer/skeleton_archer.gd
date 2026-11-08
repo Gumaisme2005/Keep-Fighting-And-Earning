@@ -95,6 +95,8 @@ func _physics_process(delta: float) -> void:
 				strafe_sign = -strafe_sign
 
 func attack() -> void:
+	if not is_inside_tree() or is_dead or is_hurt:
+		return
 	is_attacking = true
 	can_attack = false
 	anim.play("attack")
@@ -103,9 +105,20 @@ func attack() -> void:
 	if not is_inside_tree() or is_dead:
 		return
 
-	shoot_arrow()
+	if not is_hurt and is_instance_valid(player) and arrow_scene != null:
+		var tmap = get_parent()
+		if tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position):
+			shoot_arrow()
 
-	await get_tree().create_timer(attack_cooldown).timeout
+	await get_tree().create_timer(0.35).timeout
+	if not is_inside_tree() or is_dead:
+		return
+	if is_attacking:
+		is_attacking = false
+		if not is_hurt:
+			anim.play("idle")
+
+	await get_tree().create_timer(maxf(0.1, attack_cooldown - 0.75)).timeout
 	if not is_inside_tree() or is_dead:
 		return
 	can_attack = true
@@ -128,6 +141,7 @@ func shoot_arrow() -> void:
 
 func _on_hurt() -> void:
 	is_hurt = true
+	is_attacking = false
 
 func _die() -> void:
 	super._die()
