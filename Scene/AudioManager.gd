@@ -57,7 +57,17 @@ func _load_all_streams() -> void:
 			sfx_streams[k] = st
 
 func _load_wav_stream(res_path: String, loop: bool) -> AudioStreamWAV:
-	# Ưu tiên đọc raw PCM trực tiếp từ file WAV 16-bit 22050Hz để hoạt động ổn định cả khi chạy CI Headless chưa import
+	# 1. Thử tải qua ResourceLoader tiêu chuẩn của Godot nếu asset đã được import
+	if ResourceLoader.exists(res_path):
+		var loaded = ResourceLoader.load(res_path)
+		if loaded is AudioStreamWAV:
+			if loop:
+				loaded.loop_mode = AudioStreamWAV.LOOP_FORWARD
+				loaded.loop_begin = 0
+				loaded.loop_end = int(loaded.data.size() / 2.0)
+			return loaded
+
+	# 2. Fallback: đọc raw PCM trực tiếp từ file WAV 16-bit 22050Hz nếu chạy môi trường CI Headless chưa import
 	if FileAccess.file_exists(res_path):
 		var raw_bytes: PackedByteArray = FileAccess.get_file_as_bytes(res_path)
 		if raw_bytes.size() > 44:
@@ -73,14 +83,6 @@ func _load_wav_stream(res_path: String, loop: bool) -> AudioStreamWAV:
 				wav.loop_end = int(pcm_data.size() / 2.0)
 			return wav
 
-	if ResourceLoader.exists(res_path):
-		var loaded = ResourceLoader.load(res_path)
-		if loaded is AudioStreamWAV:
-			if loop:
-				loaded.loop_mode = AudioStreamWAV.LOOP_FORWARD
-				loaded.loop_begin = 0
-				loaded.loop_end = int(loaded.data.size() / 2.0)
-			return loaded
 	return null
 
 func play_bgm(track_key: String) -> void:
@@ -115,7 +117,9 @@ func play_sfx(sfx_key: String, pitch_min: float = 0.94, pitch_max: float = 1.06)
 	sfx_cursor = (sfx_cursor + 1) % sfx_players.size()
 	p.stream = sfx_streams[sfx_key]
 	p.volume_db = sfx_volume_db
-	p.pitch_scale = randf_range(pitch_min, pitch_max)
+	var p_min: float = minf(pitch_min, pitch_max)
+	var p_max: float = maxf(pitch_min, pitch_max)
+	p.pitch_scale = randf_range(p_min, p_max)
 	p.play()
 
 func toggle_mute() -> bool:

@@ -58,13 +58,13 @@ func attack() -> void:
 		_pending_arrow = true
 		# Timer dự phòng an toàn nếu sự kiện frame_changed bị bỏ qua do giật lag
 		get_tree().create_timer(0.26).timeout.connect(func():
-			if is_instance_valid(self) and _pending_arrow:
+			if is_instance_valid(self) and is_inside_tree() and _pending_arrow:
 				_pending_arrow = false
 				_fire_arrow()
 		)
 
 	get_tree().create_timer(attack_cooldown_time).timeout.connect(func():
-		if is_instance_valid(self):
+		if is_instance_valid(self) and is_inside_tree():
 			_can_shoot_arrow = true
 			if is_attacking:
 				is_attacking = false

@@ -253,9 +253,13 @@ func take_damage(amount: int) -> void:
 
 func _drop_boss_loot() -> void:
 	var floor_lvl := 1
+	var seed_val := 12345
 	if get_node_or_null("/root/GameManager") != null:
 		floor_lvl = GameManager.current_level
-	var boss_item: ItemData = ItemDatabase.get_random_drop(floor_lvl, true)
+		seed_val = (GameManager.current_seed + "_orcrider_loot_" + str(floor_lvl)).hash()
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_val
+	var boss_item: ItemData = ItemDatabase.get_random_drop(floor_lvl, true, rng)
 	if boss_item != null:
 		var item_scene = preload("res://Scene/Items/WorldItem/WorldItem.tscn")
 		var item_drop = item_scene.instantiate()

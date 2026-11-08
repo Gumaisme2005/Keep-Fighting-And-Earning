@@ -12,6 +12,8 @@ func _ready() -> void:
 	
 	# Đếm ngược 2 giây cảnh báo trước khi nổ!
 	await get_tree().create_timer(2.0).timeout
+	if not is_instance_valid(self) or not is_inside_tree():
+		return
 	explode()
 
 func explode():
