@@ -98,7 +98,7 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 echo.
-echo [9/12] Running MOBA HUD, Stacking and Equipment Tests (34 checks)...
+echo [9/12] Running MOBA HUD, Stacking and Equipment Tests (15 groups: drag-and-drop, polymorphic equip dict, tooltip expert, anti-shift, anti-duplicate)...
 "!GODOT_BIN!" --headless --path . "res://tests/test_moba_hud_and_inventory.tscn"
 if !ERRORLEVEL! NEQ 0 (
     echo [FAILED] MOBA HUD and Inventory Tests failed.

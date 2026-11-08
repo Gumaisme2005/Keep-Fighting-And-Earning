@@ -1,6 +1,7 @@
 extends CanvasLayer
 
 const UITheme = preload("res://Scene/UI/UITheme.gd")
+const InventorySlot = preload("res://Scene/UI/InventorySlot.gd")
 const SLOT_SCENE = preload("res://Scene/UI/InventorySlot.tscn")
 const HOTBAR_SIZE = 9
 const BAG_SIZE = 16
@@ -207,6 +208,7 @@ func _ready() -> void:
 		slot.slot_index = i
 		slot.slot_clicked.connect(_on_slot_clicked)
 		slot.slot_right_clicked.connect(_on_slot_right_clicked)
+		slot.slot_dropped.connect(_on_slot_dropped)
 		hotbar_slots.append(slot)
 
 	_build_enhanced_ui()
@@ -739,6 +741,7 @@ func _build_inventory_modal() -> void:
 		slot.slot_index = i
 		slot.slot_clicked.connect(_on_slot_clicked)
 		slot.slot_right_clicked.connect(_on_slot_right_clicked)
+		slot.slot_dropped.connect(_on_slot_dropped)
 		grid.add_child(slot)
 		bag_slots.append(slot)
 
@@ -760,6 +763,9 @@ func _create_equip_slot(label_txt: String, icon_name: String, item_type: int, pa
 	var slot = SLOT_SCENE.instantiate()
 	slot.custom_minimum_size = Vector2(42, 42)
 	slot.slot_index = -10 - item_type
+	slot.slot_kind = InventorySlot.SlotKind.EQUIPMENT
+	slot.equip_type = item_type
+	slot.slot_dropped.connect(_on_slot_dropped)
 	slot.pressed.connect(func():
 		if inventory != null:
 			inventory.unequip_item(item_type)
@@ -833,13 +839,15 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 func _quick_drop_item() -> void:
-	if inventory != null and player != null and inventory.bag.size() > 0:
-		var item = inventory.bag[0]
-		var item_name: String = item.item_name if item != null else "Item"
-		var drop_pos: Vector2 = player.global_position + Vector2(16, 0)
-		if inventory.has_method("drop_item"):
-			if inventory.drop_item(0, false, drop_pos):
-				show_toast("Dropped 1x " + item_name)
+	if inventory != null and player != null:
+		var first_idx: int = inventory.get_first_occupied_slot() if inventory.has_method("get_first_occupied_slot") else 0
+		if first_idx >= 0 and first_idx < inventory.bag.size() and inventory.bag[first_idx] != null:
+			var item = inventory.bag[first_idx]
+			var item_name: String = item.item_name
+			var drop_pos: Vector2 = player.global_position + Vector2(16, 0)
+			if inventory.has_method("drop_item"):
+				if inventory.drop_item(first_idx, false, drop_pos):
+					show_toast("Dropped 1x " + item_name)
 
 func _on_toggle_mute_pressed() -> void:
 	if get_node_or_null("/root/AudioManager") != null:
@@ -1004,11 +1012,63 @@ func _on_slot_clicked(index: int) -> void:
 func _on_slot_right_clicked(index: int) -> void:
 	if inventory != null and player != null and index >= 0 and index < inventory.bag.size():
 		var item = inventory.bag[index]
-		var item_name: String = item.item_name if item != null else "Item"
+		if item == null:
+			return
+		var item_name: String = item.item_name
 		var drop_pos: Vector2 = player.global_position + Vector2(16, 0)
 		if inventory.has_method("drop_item"):
 			if inventory.drop_item(index, false, drop_pos):
 				show_toast("Dropped 1x " + item_name)
+
+func _on_slot_dropped(source_data: Dictionary, target_slot: Control) -> void:
+	if inventory == null or player == null or target_slot == null:
+		return
+
+	var src_kind: int = int(source_data.get("slot_kind", InventorySlot.SlotKind.BAG))
+	var src_idx: int = int(source_data.get("slot_index", -1))
+	var target_kind: int = target_slot.slot_kind
+	var target_idx: int = target_slot.slot_index
+
+	# 1. Kéo giữa 2 ô Balo / Hotbar (BAG -> BAG): Hoán đổi vị trí
+	if src_kind == InventorySlot.SlotKind.BAG and target_kind == InventorySlot.SlotKind.BAG:
+		if src_idx >= 0 and target_idx >= 0 and src_idx != target_idx:
+			inventory.swap_slots(src_idx, target_idx)
+			if get_node_or_null("/root/AudioManager") != null:
+				AudioManager.play_sfx("pickup", 1.15, 0.4)
+
+	# 2. Kéo từ Balo thả vào ô Trang bị (BAG -> EQUIPMENT): Mặc đồ
+	elif src_kind == InventorySlot.SlotKind.BAG and target_kind == InventorySlot.SlotKind.EQUIPMENT:
+		if src_idx >= 0 and src_idx < inventory.bag.size():
+			var bag_item = inventory.bag[src_idx]
+			if bag_item != null and bag_item.type == target_slot.equip_type:
+				inventory.use_or_equip_item(src_idx, player)
+				if player.has_method("_on_equipment_changed"):
+					player._on_equipment_changed()
+				if get_node_or_null("/root/AudioManager") != null:
+					AudioManager.play_sfx("pickup", 1.25, 0.5)
+
+	# 3. Kéo từ ô Trang bị thả vào ô Balo (EQUIPMENT -> BAG): Tháo hoặc hoán đổi vào đúng ô đích
+	elif src_kind == InventorySlot.SlotKind.EQUIPMENT and target_kind == InventorySlot.SlotKind.BAG:
+		var equip_type: int = int(source_data.get("equip_type", -1))
+		if equip_type >= 0 and target_idx >= 0 and target_idx < inventory.bag.size():
+			var equipped_item = inventory.get_equipped_item(equip_type)
+			if equipped_item != null:
+				var target_item = inventory.bag[target_idx]
+				if target_item == null:
+					inventory.bag[target_idx] = equipped_item
+					inventory.equipment[equip_type] = null
+					inventory.equipment_changed.emit()
+					inventory.inventory_changed.emit()
+				elif target_item.type == equip_type:
+					# Swap trực tiếp món ở target_idx lên người, đưa món cũ vào target_idx
+					inventory.bag[target_idx] = equipped_item
+					inventory.equipment[equip_type] = target_item
+					inventory.equipment_changed.emit()
+					inventory.inventory_changed.emit()
+				if player.has_method("_on_equipment_changed"):
+					player._on_equipment_changed()
+				if get_node_or_null("/root/AudioManager") != null:
+					AudioManager.play_sfx("pickup", 0.95, 0.5)
 
 func refresh_ui() -> void:
 	if inventory == null:
@@ -1026,7 +1086,8 @@ func refresh_ui() -> void:
 			bag_slots[i].set_item(null)
 
 	if bag_button != null:
-		bag_button.text = "Backpack: %d / %d [B]" % [inventory.bag.size(), inventory.max_slots]
+		var occupied: int = inventory.get_occupied_slots_count() if inventory.has_method("get_occupied_slots_count") else inventory.bag.size()
+		bag_button.text = "Backpack: %d / %d [B]" % [occupied, inventory.max_slots]
 
 	if equip_helmet_slot != null:
 		equip_helmet_slot.set_item(inventory.equipped_helmet)
