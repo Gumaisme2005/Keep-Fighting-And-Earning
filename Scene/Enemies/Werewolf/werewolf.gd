@@ -65,14 +65,6 @@ func _physics_process(delta: float) -> void:
 	if not is_active:
 		return
 
-	if pounce_timer > 0.0:
-		pounce_timer -= delta
-
-	if player == null or not is_instance_valid(player):
-		_find_player()
-		if player == null:
-			return
-
 	if is_dead or (animated_sprite != null and animated_sprite.animation == "hurt"):
 		return
 
@@ -86,6 +78,7 @@ func _physics_process(delta: float) -> void:
 		var remain_dist: float = pounce_distance - pounce_traveled
 		if remain_dist <= 0.0 or is_on_wall():
 			is_pouncing = false
+			pounce_traveled = pounce_distance
 			velocity = Vector2.ZERO
 		else:
 			var current_spd: float = pounce_speed
@@ -94,7 +87,6 @@ func _physics_process(delta: float) -> void:
 
 			var step_dist: float = current_spd * delta
 			if step_dist >= remain_dist:
-				step_dist = remain_dist
 				pounce_traveled = pounce_distance
 				is_pouncing = false
 				velocity = Vector2.ZERO
@@ -104,6 +96,14 @@ func _physics_process(delta: float) -> void:
 
 			move_and_slide()
 		return
+
+	if pounce_timer > 0.0:
+		pounce_timer -= delta
+
+	if player == null or not is_instance_valid(player):
+		_find_player()
+		if player == null:
+			return
 
 	if is_attacking:
 		return
