@@ -1,29 +1,48 @@
 extends TileMap
 
+## DungeonGenerator — Bộ điều phối sinh hầm ngục theo thủ tục (Procedural Dungeon Coordinator).
+## Chịu trách nhiệm lưu trữ cấu hình, trạng thái dữ liệu bản đồ và điều phối 4 module chuyên biệt:
+## 1. DungeonLayoutPlanner : Tính toán lưới ma trận phòng, đồ thị liên kết và BFS tìm phòng Boss/Rương.
+## 2. DungeonPainter       : Đục nền, khoét hành lang, dựng tường autotile, đặt cột đá và trang trí.
+## 3. DungeonSpawner       : Quy hoạch bẫy, phân bố vị trí quái, khởi tạo Player, Boss, Rương, Cổng dịch chuyển.
+## 4. DungeonNavHelper     : Kiểm tra vật cản, tính toán tầm nhìn raycast LOS và né tường cho AI.
+
 signal dungeon_generated()
 signal boss_spawned(boss_node: Node2D)
 signal room_state_changed()
 
-# 1. ĐỊNH NGHĨA CÁC LOẠI PHÒNG
+# 1. ĐỊNH NGHĨA CÁC ENUM
 enum RoomType { START, COMBAT, TREASURE, BOSS }
 enum CombatRoomVariant { NONE, OPEN_ARENA, COVER_ROOM }
 
+# --- CÁC MODULE CHUYÊN TRÁCH ---
+const LayoutPlanner = preload("res://Scene/Map/DungeonLayoutPlanner.gd")
+const Painter = preload("res://Scene/Map/DungeonPainter.gd")
+const Spawner = preload("res://Scene/Map/DungeonSpawner.gd")
+const NavHelper = preload("res://Scene/Map/DungeonNavHelper.gd")
+
+# --- THIẾT LẬP THỦ TỤC & ĐẶC TÍNH BẢN ĐỒ ---
 @export var map_seed: String = "ALOALO1234"
 @export var num_rooms: int = 16
 @export var cell_size: int = 40
 @export var room_min_size: int = 16
 @export var room_max_size: int = 25
 @export var enable_combat_room_variants: bool = true
+@export var current_level: int = 1
+@export var min_enemies: int = 3
+@export var max_enemies: int = 7
 
-# --- ĐƯỜNG DẪN SCENE ---
+# --- ĐƯỜNG DẪN SCENE & RESOURCE ---
 const PLAYER_SCENE = preload("res://Scene/Character/Player 1_Pyrois/player.tscn")
 const CHEST_SCENE = preload("res://Scene/Items/Chest/chest.tscn")
 const SPIKE_TRAP = preload("res://Scene/Map/SpikeTrap.tscn")
+const PORTAL_SCENE = preload("res://Scene/Map/portal.tscn")
+const ROOM_MANAGER = preload("res://Scene/Map/RoomManager.tscn")
+const DUNGEON_ATMOSPHERE = preload("res://Scene/Map/dungeon_atmosphere.gd")
 
 const RIDER_ORC_SCENE = preload("res://Scene/Enemies/Boss/Orc Rider/orc_rider.tscn")
 const NECROMANCER_SCENE = preload("res://Scene/Enemies/Boss/Necromancer/necromancer.tscn")
 const SKELETON_KING_SCRIPT = preload("res://Scene/Enemies/Boss/Skeleton King/skeleton_king.gd")
-# Fixed arena replacing the random boss room on every 3rd floor (after 2 cleared floors).
 const SKELETON_KING_ROOM_SIZE := Vector2i(32, 18)
 
 var enemy_scenes: Array[PackedScene] = [
@@ -35,17 +54,7 @@ var enemy_scenes: Array[PackedScene] = [
 	preload("res://Scene/Enemies/Werewolf/werewolf.tscn")
 ]
 
-@export var current_level: int = 1
-const PORTAL_SCENE = preload("res://Scene/Map/portal.tscn")
-var the_player: Node2D = null
-
-@export var min_enemies: int = 3
-@export var max_enemies: int = 7
-
-const ROOM_MANAGER = preload("res://Scene/Map/RoomManager.tscn")
-const DUNGEON_ATMOSPHERE = preload("res://Scene/Map/dungeon_atmosphere.gd")
-
-# --- CÀI ĐẶT GẠCH ---
+# --- THIẾT LẬP GẠCH TILEMAP ---
 const LAYER_FLOOR = 0
 const LAYER_DECOR = 1
 const SOURCE_WALLS = 0
@@ -58,6 +67,10 @@ var decor_coords = [
 	Vector2i(1, 2)
 ]
 
+const COMBAT_PILLAR_ATTEMPTS: int = 64
+const COMBAT_PATH_DIRECTIONS = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
+
+# --- DỮ LIỆU BẢN ĐỒ & TRẠNG THÁI RUNTIME ---
 var rng = RandomNumberGenerator.new()
 var room_grid = {}
 var room_positions: Array[Vector2i] = []
@@ -68,23 +81,20 @@ var boss_grid_pos: Vector2i = Vector2i.ZERO
 var generated_rooms: Array[Rect2i] = []
 var room_types: Array = []
 var corridor_cells = {}
-var combat_room_variants: Array[int] = [] # Indexed by generated_rooms; non-COMBAT rooms use NONE.
-var combat_room_pillar_counts: Array[int] = [] # Actual variant pillars; zero when variants are disabled.
-var _combat_room_spawn_cells: Dictionary = {} # room_index -> cells reachable with body clearance.
+var combat_room_variants: Array[int] = []
+var combat_room_pillar_counts: Array[int] = []
+var _combat_room_spawn_cells: Dictionary = {}
 
-const COMBAT_PILLAR_ATTEMPTS: int = 64
-const COMBAT_PATH_DIRECTIONS = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
-
-# --- BIẾN QUẢN LÝ VÙNG CẤM & TRẠNG THÁI PHÒNG ---
 var reserved_trap_positions: Array[Vector2i] = []
 var forbidden_decor_cells = {}
-var planned_enemy_spawns: Array = [] # Lưu vị trí quái đã quy hoạch để hỗ trợ Unit/Property Test
-var room_managers: Dictionary = {}   # room_index -> RoomManager
+var planned_enemy_spawns: Array = []
+var room_managers: Dictionary = {}
 var visited_rooms: Dictionary = {0: true}
 var active_boss: Node2D = null
 var skeleton_king_room_index: int = -1
+var the_player: Node2D = null
 
-func _ready():
+func _ready() -> void:
 	set_layer_z_index(0, -1)
 	if get_layers_count() > 1:
 		set_layer_z_index(1, 0)
@@ -101,7 +111,6 @@ func _ready():
 	generate_dungeon()
 	call_deferred("spawn_entities")
 
-# After every 2 cleared floors, the next floor's boss room is the Skeleton King arena.
 func is_skeleton_king_floor(level: int = -1) -> bool:
 	var lv := current_level if level < 0 else level
 	return lv > 0 and lv % 3 == 0
@@ -111,7 +120,7 @@ func get_effective_seed_string() -> String:
 		return map_seed
 	return map_seed + "_" + str(current_level)
 
-func generate_dungeon():
+func generate_dungeon() -> void:
 	clear()
 	min_enemies = clampi(3 + (current_level - 1), 3, 8)
 	max_enemies = clampi(7 + (current_level - 1) * 2, 7, 14)
@@ -126,669 +135,112 @@ func generate_dungeon():
 
 	build_dungeon_layout()
 	_reserve_room_centers_and_entrances()
-	plan_traps() # Bước 1: Tính toán vị trí bẫy trước
-
-	# Bước 2: Xây gạch và trang trí (Né các vị trí bẫy, tâm phòng và lối vào)
+	plan_traps()
 	_decorate_combat_room_pillars()
 	scatter_decorations()
 	plan_enemy_spawns()
 	dungeon_generated.emit()
 
-# --- HÀM TỰ ĐỘNG XÂY DỰNG TOÀN BỘ KHUNG BẢN ĐỒ ---
-func build_dungeon_layout():
-	combat_room_variants.clear()
-	combat_room_pillar_counts.clear()
-	_combat_room_spawn_cells.clear()
-	room_grid.clear()
-	room_positions.clear()
-	edges.clear()
-	adj_list.clear()
-	bfs_distances.clear()
-	generated_rooms.clear()
-	room_types.clear()
-	corridor_cells.clear()
+# --- ĐIỀU PHỐI LAYOUT ---
+func build_dungeon_layout() -> void:
+	LayoutPlanner.build_layout(self)
 
-	var current_pos = Vector2i(0, 0)
-	room_grid[current_pos] = true
-	room_positions.append(current_pos)
-	var directions = [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]
+func _reserve_room_centers_and_entrances() -> void:
+	LayoutPlanner.reserve_room_centers_and_entrances(self)
 
-	while room_positions.size() < num_rooms:
-		var pick = room_positions[rng.randi() % room_positions.size()]
-		var dir = directions[rng.randi() % directions.size()]
-		var new_pos = pick + dir
+# --- ĐIỀU PHỐI SPAWN THỰC THỂ & BẪY ---
+func plan_traps() -> void:
+	Spawner.plan_traps(self)
 
-		if not room_grid.has(new_pos):
-			room_grid[new_pos] = true
-			room_positions.append(new_pos)
-			edges.append([pick, new_pos])
-
-	# THUẬT TOÁN BFS: TÌM PHÒNG CÁCH XA PHÒNG START NHẤT LÀM BOSS
-	for pos in room_positions:
-		adj_list[pos] = []
-	for edge in edges:
-		adj_list[edge[0]].append(edge[1])
-		adj_list[edge[1]].append(edge[0])
-
-	var queue: Array[Vector2i] = [Vector2i(0, 0)]
-	var visited = {Vector2i(0, 0): true}
-	bfs_distances[Vector2i(0, 0)] = 0
-	boss_grid_pos = Vector2i(0, 0)
-
-	while queue.size() > 0:
-		var current = queue.pop_front()
-		boss_grid_pos = current
-
-		for neighbor in adj_list[current]:
-			if not visited.has(neighbor):
-				visited[neighbor] = true
-				bfs_distances[neighbor] = bfs_distances[current] + 1
-				queue.append(neighbor)
-
-	var available_rooms: Array[Vector2i] = []
-	for pos in room_positions:
-		if pos != Vector2i(0, 0) and pos != boss_grid_pos:
-			available_rooms.append(pos)
-
-	var treasure_positions: Array[Vector2i] = []
-	var num_treasure_rooms = rng.randi_range(2, 3)
-	num_treasure_rooms = min(num_treasure_rooms, available_rooms.size())
-
-	for i in range(num_treasure_rooms):
-		var pick_idx = rng.randi() % available_rooms.size()
-		treasure_positions.append(available_rooms[pick_idx])
-		available_rooms.remove_at(pick_idx)
-
-	var actual_rooms_dict = {}
-
-	for grid_pos in room_positions:
-		var rw = rng.randi_range(room_min_size, room_max_size)
-		var rh = rng.randi_range(room_min_size, room_max_size)
-		if grid_pos == boss_grid_pos and is_skeleton_king_floor():
-			# Random sizes are still drawn above so other rooms keep their layout.
-			rw = SKELETON_KING_ROOM_SIZE.x
-			rh = SKELETON_KING_ROOM_SIZE.y
-			skeleton_king_room_index = generated_rooms.size()
-		var rx = grid_pos.x * cell_size + int((cell_size - rw) / 2.0)
-		var ry = grid_pos.y * cell_size + int((cell_size - rh) / 2.0)
-		var main_rect = Rect2i(rx, ry, rw, rh)
-
-		actual_rooms_dict[grid_pos] = main_rect
-		generated_rooms.append(main_rect)
-
-		if grid_pos == Vector2i(0, 0):
-			room_types.append(RoomType.START)
-		elif grid_pos == boss_grid_pos:
-			room_types.append(RoomType.BOSS)
-		elif grid_pos in treasure_positions:
-			room_types.append(RoomType.TREASURE)
-		else:
-			room_types.append(RoomType.COMBAT)
-
-		carve_room(main_rect)
-
-	for edge in edges:
-		var r1: Rect2i = actual_rooms_dict[edge[0]]
-		var r2: Rect2i = actual_rooms_dict[edge[1]]
-		var c1 = r1.get_center()
-		var c2 = r2.get_center()
-		if edge[0].x == edge[1].x:
-			carve_corridor_v(c1.y, c2.y, c1.x)
-		else:
-			carve_corridor_h(c1.x, c2.x, c1.y)
-
-	build_walls()
-
-func _reserve_room_centers_and_entrances():
-	# Bảo vệ tâm mọi phòng (3x3) để Player, Rương, Boss và Cổng dịch chuyển không bao giờ bị kẹt trong cột đá
-	for i in range(generated_rooms.size()):
-		var room = generated_rooms[i]
-		var center = room.get_center()
-		for dx in range(-2, 3):
-			for dy in range(-2, 3):
-				forbidden_decor_cells[center + Vector2i(dx, dy)] = true
-
-# --- HÀM TẠO VÙNG CẤM CỦA BẪY ---
-func plan_traps():
-	reserved_trap_positions.clear()
-
-	for i in range(1, generated_rooms.size()):
-		if room_types[i] == RoomType.COMBAT:
-			var room = generated_rooms[i]
-			var center = room.get_center()
-			var trap_positions: Array[Vector2i] = []
-			var pattern_type = rng.randi() % 3
-
-			if pattern_type == 0:
-				# Hình chữ thập
-				var offset = 3
-				var length = 4
-				trap_positions.append(center)
-				trap_positions.append(center + Vector2i(0, -length))
-				trap_positions.append(center + Vector2i(0, length))
-				trap_positions.append(center + Vector2i(-offset, 0))
-				trap_positions.append(center + Vector2i(offset, 0))
-
-			elif pattern_type == 1:
-				# 4 góc phòng quanh tâm
-				var offset = 2
-				trap_positions.append(center + Vector2i(-offset, -offset))
-				trap_positions.append(center + Vector2i(offset, -offset))
-				trap_positions.append(center + Vector2i(-offset, offset))
-				trap_positions.append(center + Vector2i(offset, offset))
-
-			elif pattern_type == 2:
-				# Vòng bao quanh tâm (8 điểm)
-				var radius = 3
-				for dir in [
-					Vector2i(-radius, 0), Vector2i(radius, 0),
-					Vector2i(0, -radius), Vector2i(0, radius),
-					Vector2i(-2, -2), Vector2i(2, -2),
-					Vector2i(-2, 2), Vector2i(2, 2)
-				]:
-					trap_positions.append(center + dir)
-
-			for pos in trap_positions:
-				# Chỉ chốt bẫy nếu nó nằm hoàn toàn trên nền sàn
-				if get_cell_atlas_coords(LAYER_FLOOR, pos) == FLOOR_COORD:
-					if not reserved_trap_positions.has(pos):
-						reserved_trap_positions.append(pos)
-					# Đánh dấu vùng 5x5 (-2..+2) xung quanh bẫy thành VÙNG CẤM KHÔNG ĐƯỢC ĐẶT CỘT/ĐỒ VẬT
-					for dx in range(-2, 3):
-						for dy in range(-2, 3):
-							forbidden_decor_cells[pos + Vector2i(dx, dy)] = true
-
-# --- QUY HOẠCH VỊ TRÍ QUÁI TRƯỚC (ĐẢM BẢO HỢP LỆ & DETERMINISTIC) ---
 func is_valid_entity_spawn_cell(cell: Vector2i) -> bool:
-	if get_cell_atlas_coords(LAYER_FLOOR, cell) != FLOOR_COORD:
-		return false
-	if reserved_trap_positions.has(cell):
-		return false
-	# Kiểm tra 3x3 quanh cell không vướng vật trang trí 32x32 hoặc tường/cột đá
-	for dx in range(-1, 2):
-		for dy in range(-1, 2):
-			var check_cell = cell + Vector2i(dx, dy)
-			if get_cell_source_id(LAYER_DECOR, check_cell) != -1:
-				return false
-			if (dx == 0 and dy == 0) and get_cell_atlas_coords(LAYER_FLOOR, check_cell) != FLOOR_COORD:
-				return false
-	return true
+	return Spawner.is_valid_entity_spawn_cell(self, cell)
 
 func _is_valid_combat_spawn_cell(room_index: int, cell: Vector2i) -> bool:
-	if not is_valid_entity_spawn_cell(cell):
-		return false
-	# Keep the public spawn predicate unchanged: Skeleton King also uses it for summons.
-	return not enable_combat_room_variants or _combat_room_spawn_cells.get(room_index, {}).has(cell)
+	return Spawner.is_valid_combat_spawn_cell(self, room_index, cell)
 
-func plan_enemy_spawns():
-	planned_enemy_spawns.clear()
-	for i in range(generated_rooms.size()):
-		if room_types[i] != RoomType.COMBAT:
-			planned_enemy_spawns.append([])
-			continue
+func plan_enemy_spawns() -> void:
+	Spawner.plan_enemy_spawns(self)
 
-		var room = generated_rooms[i]
-		var num_e = rng.randi_range(min_enemies, max_enemies)
-		var room_spawns: Array = []
-		var used_cells: Dictionary = {}
+func spawn_entities() -> void:
+	Spawner.spawn_entities(self)
 
-		for j in range(num_e):
-			var enemy_type_idx = rng.randi() % enemy_scenes.size()
-			var loot_seed = rng.randi()
-			var chosen_cell := Vector2i(-9999, -9999)
+func spawn_portal(pos: Vector2) -> void:
+	Spawner.spawn_portal(self, pos)
 
-			for attempt in range(30):
-				var rx = rng.randi_range(room.position.x + 3, room.end.x - 4)
-				var ry = rng.randi_range(room.position.y + 3, room.end.y - 4)
-				var candidate = Vector2i(rx, ry)
-				if not used_cells.has(candidate) and _is_valid_combat_spawn_cell(i, candidate):
-					chosen_cell = candidate
-					break
+func spawn_boss_chests(center_pos: Vector2) -> void:
+	Spawner.spawn_boss_chests(self, center_pos)
 
-			# Fallback quét tuần tự nếu 30 lần random đều trúng vật cản
-			if chosen_cell == Vector2i(-9999, -9999):
-				for rx in range(room.position.x + 3, room.end.x - 3):
-					for ry in range(room.position.y + 3, room.end.y - 3):
-						var candidate = Vector2i(rx, ry)
-						if not used_cells.has(candidate) and _is_valid_combat_spawn_cell(i, candidate):
-							chosen_cell = candidate
-							break
-					if chosen_cell != Vector2i(-9999, -9999):
-						break
+# --- ĐIỀU PHỐI VẼ GẠCH & TRANG TRÍ ---
+func carve_room(room: Rect2i) -> void:
+	Painter.carve_room(self, room)
 
-			if chosen_cell != Vector2i(-9999, -9999):
-				used_cells[chosen_cell] = true
-				room_spawns.append({
-					"cell": chosen_cell,
-					"enemy_idx": enemy_type_idx,
-					"loot_seed": loot_seed
-				})
+func carve_corridor_h(x1: int, x2: int, y: int) -> void:
+	Painter.carve_corridor_h(self, x1, x2, y)
 
-		planned_enemy_spawns.append(room_spawns)
+func carve_corridor_v(y1: int, y2: int, x: int) -> void:
+	Painter.carve_corridor_v(self, y1, y2, x)
 
-# --- CÁC HÀM XÂY DỰNG TƯỜNG & ĐỒ VẬT ---
-func carve_room(room: Rect2i):
-	for x in range(room.position.x, room.end.x):
-		for y in range(room.position.y, room.end.y):
-			set_cell(LAYER_FLOOR, Vector2i(x, y), SOURCE_WALLS, FLOOR_COORD)
+func build_walls() -> void:
+	Painter.build_walls(self)
 
-func carve_corridor_h(x1: int, x2: int, y: int):
-	for x in range(min(x1, x2), max(x1, x2) + 1):
-		for offset in [-2, -1, 0, 1, 2]:
-			var cell = Vector2i(x, y + offset)
-			set_cell(LAYER_FLOOR, cell, SOURCE_WALLS, FLOOR_COORD)
-			corridor_cells[cell] = true
-
-func carve_corridor_v(y1: int, y2: int, x: int):
-	for y in range(min(y1, y2), max(y1, y2) + 1):
-		for offset in [-2, -1, 0, 1, 2]:
-			var cell = Vector2i(x + offset, y)
-			set_cell(LAYER_FLOOR, cell, SOURCE_WALLS, FLOOR_COORD)
-			corridor_cells[cell] = true
-
-func build_walls():
-	var used_cells = get_used_cells(LAYER_FLOOR)
-	var wall_cells_dict = {}
-	var wall_cells: Array[Vector2i] = []
-
-	for cell in used_cells:
-		for dx in [-1, 0, 1]:
-			for dy in [-1, 0, 1]:
-				if dx == 0 and dy == 0:
-					continue
-				var neighbor = cell + Vector2i(dx, dy)
-				if get_cell_source_id(LAYER_FLOOR, neighbor) == -1:
-					if not wall_cells_dict.has(neighbor):
-						wall_cells_dict[neighbor] = true
-						wall_cells.append(neighbor)
-
-	set_cells_terrain_connect(LAYER_FLOOR, wall_cells, 0, 0)
-
-func _decorate_combat_room_pillars():
-	_plan_combat_room_variants()
-	for i in range(generated_rooms.size()):
-		var type = room_types[i]
-		if i == skeleton_king_room_index or type == RoomType.BOSS:
-			continue # Boss arenas stay clean, open floors without obstructive pillars.
-		if type == RoomType.COMBAT:
-			if enable_combat_room_variants:
-				_decorate_variant_room_pillars(i)
-			else:
-				decorate_pillars(generated_rooms[i])
+func _decorate_combat_room_pillars() -> void:
+	Painter.decorate_combat_room_pillars(self)
 
 func _combat_room_rng(room_index: int, feature: String) -> RandomNumberGenerator:
-	var room_rng = RandomNumberGenerator.new()
-	room_rng.seed = ("%s|combat_room_variants_v1|%d|%s" % [get_effective_seed_string(), room_index, feature]).hash()
-	return room_rng
+	return Painter.combat_room_rng(self, room_index, feature)
 
-func _plan_combat_room_variants():
-	combat_room_variants.resize(generated_rooms.size())
-	combat_room_variants.fill(CombatRoomVariant.NONE)
-	combat_room_pillar_counts.resize(generated_rooms.size())
-	combat_room_pillar_counts.fill(0)
-	_combat_room_spawn_cells.clear()
-	if not enable_combat_room_variants:
-		return
-	for i in range(generated_rooms.size()):
-		if room_types[i] == RoomType.COMBAT and i != skeleton_king_room_index:
-			var variant_rng = _combat_room_rng(i, "variant")
-			combat_room_variants[i] = variant_rng.randi_range(CombatRoomVariant.OPEN_ARENA, CombatRoomVariant.COVER_ROOM)
+func _plan_combat_room_variants() -> void:
+	Painter.plan_combat_room_variants(self)
 
-func _decorate_variant_room_pillars(room_index: int):
-	var room = generated_rooms[room_index]
-	var pillar_rng = _combat_room_rng(room_index, "pillars")
-	var is_cover = combat_room_variants[room_index] == CombatRoomVariant.COVER_ROOM
-	var target_count: int
-	if is_cover:
-		var max_pillars = clampi(floori(room.get_area() / 120.0), 2, 4)
-		target_count = pillar_rng.randi_range(2, max_pillars)
-	else:
-		target_count = pillar_rng.randi_range(0, 1)
-
-	var pillars: Array[Vector2i] = []
-	var empty_room_cells = _get_combat_room_safe_cells(room, pillars)
-	var safe_cells = empty_room_cells
-	# Plan in memory: rejected candidates and fallback never need to undo TileMap writes.
-	for attempt in range(COMBAT_PILLAR_ATTEMPTS):
-		if pillars.size() >= target_count or room.size.x < 8 or room.size.y < 8:
-			break
-		var anchor = Vector2i(
-			pillar_rng.randi_range(room.position.x + 3, room.end.x - 5),
-			pillar_rng.randi_range(room.position.y + 3, room.end.y - 5)
-		)
-		if not _can_place_combat_pillar(room, anchor, pillars):
-			continue
-		pillars.append(anchor)
-		var candidate_cells = _get_combat_room_safe_cells(room, pillars)
-		if candidate_cells.is_empty():
-			pillars.pop_back()
-		else:
-			safe_cells = candidate_cells
-
-	if is_cover and pillars.size() < 2:
-		pillars.clear()
-		safe_cells = empty_room_cells
-		combat_room_variants[room_index] = CombatRoomVariant.OPEN_ARENA
-	combat_room_pillar_counts[room_index] = pillars.size()
-	_combat_room_spawn_cells[room_index] = safe_cells
-	for anchor in pillars:
-		for dx in range(2):
-			for dy in range(2):
-				set_cell(LAYER_FLOOR, anchor + Vector2i(dx, dy), SOURCE_WALLS, WALL_COORD)
+func _decorate_variant_room_pillars(room_index: int) -> void:
+	Painter.decorate_variant_room_pillars(self, room_index)
 
 func _can_place_combat_pillar(room: Rect2i, anchor: Vector2i, pillars: Array[Vector2i]) -> bool:
-	var footprint = Rect2i(anchor, Vector2i(2, 2))
-	# A tile of clearance protects entrances, room centers and the existing trap exclusion zones.
-	var protected_area = footprint.grow(1)
-	for x in range(protected_area.position.x, protected_area.end.x):
-		for y in range(protected_area.position.y, protected_area.end.y):
-			var cell = Vector2i(x, y)
-			if not room.has_point(cell) or corridor_cells.has(cell) or forbidden_decor_cells.has(cell):
-				return false
-			if get_cell_atlas_coords(LAYER_FLOOR, cell) != FLOOR_COORD or get_cell_source_id(LAYER_DECOR, cell) != -1:
-				return false
-	for placed_anchor in pillars:
-		if Rect2i(placed_anchor, Vector2i(2, 2)).grow(2).intersects(footprint):
-			return false
-	return true
+	return Painter.can_place_combat_pillar(self, room, anchor, pillars)
 
 func _get_combat_room_safe_cells(room: Rect2i, pillars: Array[Vector2i]) -> Dictionary:
-	var blocked: Dictionary = {}
-	var clearance_blocked: Dictionary = {}
-	for anchor in pillars:
-		for dx in range(-1, 3):
-			for dy in range(-1, 3):
-				var cell = anchor + Vector2i(dx, dy)
-				clearance_blocked[cell] = true
-				if dx >= 0 and dx < 2 and dy >= 0 and dy < 2:
-					blocked[cell] = true
-
-	var floor_cells: Dictionary = {}
-	var safe_cells: Dictionary = {}
-	var inner_room = room.grow(-1)
-	var spawn_area = room.grow(-3)
-	var spawn_count: int = 0
-	for x in range(room.position.x, room.end.x):
-		for y in range(room.position.y, room.end.y):
-			var cell = Vector2i(x, y)
-			if blocked.has(cell) or get_cell_atlas_coords(LAYER_FLOOR, cell) != FLOOR_COORD:
-				continue
-			floor_cells[cell] = true
-			if inner_room.has_point(cell):
-				if clearance_blocked.has(cell):
-					if corridor_cells.has(cell):
-						return {}
-				else:
-					safe_cells[cell] = true
-					if spawn_area.has_point(cell) and not reserved_trap_positions.has(cell):
-						spawn_count += 1
-
-	# Check inside this room, so a detour through another room cannot hide a sealed area.
-	# Check both tile connectivity and a full 3x3 floor footprint for moving bodies.
-	var center = room.get_center()
-	if not _combat_cells_connected(floor_cells, center) or not _combat_cells_connected(safe_cells, center):
-		return {}
-	if spawn_count < max_enemies:
-		return {}
-	return safe_cells
+	return Painter.get_combat_room_safe_cells(self, room, pillars)
 
 func _combat_cells_connected(cells: Dictionary, start: Vector2i) -> bool:
-	if not cells.has(start):
-		return false
-	var visited: Dictionary = {start: true}
-	var queue: Array[Vector2i] = [start]
-	var head: int = 0
-	while head < queue.size():
-		var cell = queue[head]
-		head += 1
-		for direction in COMBAT_PATH_DIRECTIONS:
-			var neighbor: Vector2i = cell + direction
-			if cells.has(neighbor) and not visited.has(neighbor):
-				visited[neighbor] = true
-				queue.append(neighbor)
-	return visited.size() == cells.size()
+	return Painter.combat_cells_connected(cells, start)
 
-func decorate_pillars(room: Rect2i):
-	var num_pillars = rng.randi_range(2, 5)
-	for i in range(num_pillars):
-		var px = rng.randi_range(room.position.x + 3, room.end.x - 5)
-		var py = rng.randi_range(room.position.y + 3, room.end.y - 5)
+func decorate_pillars(room: Rect2i) -> void:
+	Painter.decorate_pillars(self, room)
 
-		# KIỂM TRA XEM CÓ ĐẠP TRÚNG VÙNG CẤM CỦA BẪY, TÂM PHÒNG HOẶC HÀNH LANG KHÔNG
-		var can_place = true
-		for dx in range(2):
-			for dy in range(2):
-				var check_cell = Vector2i(px + dx, py + dy)
-				if forbidden_decor_cells.has(check_cell) or corridor_cells.has(check_cell):
-					can_place = false
-					break
-			if not can_place:
-				break
+func scatter_decorations() -> void:
+	Painter.scatter_decorations(self)
 
-		if can_place:
-			set_cell(LAYER_FLOOR, Vector2i(px, py), SOURCE_WALLS, WALL_COORD)
-			set_cell(LAYER_FLOOR, Vector2i(px + 1, py), SOURCE_WALLS, WALL_COORD)
-			set_cell(LAYER_FLOOR, Vector2i(px, py + 1), SOURCE_WALLS, WALL_COORD)
-			set_cell(LAYER_FLOOR, Vector2i(px + 1, py + 1), SOURCE_WALLS, WALL_COORD)
+func _scatter_room_decorations(room: Rect2i, decor_patterns: Array) -> void:
+	Painter.scatter_room_decorations(self, room, decor_patterns)
 
-func scatter_decorations():
-	if enable_combat_room_variants:
-		# Variants use the validated 2x2 pillars only. Legacy 32x32 decor collision
-		# extends beyond one map cell and must not invalidate the checked paths.
-		return
-	var decor_patterns = [
-		[[1, 1], [1, 1]], # Vuông 2x2
-		[[1, 0], [1, 1]], # Chữ L
-		[[1, 0, 0], [0, 1, 0], [0, 0, 1]], # Bậc thang
-		[[1, 1, 1], [0, 1, 0]], # Chữ T
-		[[0, 0, 1, 0, 0], [0, 0, 1, 0, 0], [1, 1, 1, 1, 1], [0, 0, 1, 0, 0], [0, 0, 1, 0, 0]], # Cộng 5x5
-		[[1, 1, 0], [0, 1, 0], [0, 1, 1]], # Chữ Z
-		[[1, 1, 1], [1, 1, 1], [1, 1, 1]], # Vuông 3x3
-		[[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]] # Vuông 4x4
-	]
+# --- ĐIỀU PHỐI ĐIỀU HƯỚNG & TẦM NHÌN ---
+func _resolve_player_node() -> Node2D:
+	return NavHelper.resolve_player_node(self)
 
-	for i in range(generated_rooms.size()):
-		var room = generated_rooms[i]
-		if room_types[i] == RoomType.START or room_types[i] == RoomType.TREASURE or room_types[i] == RoomType.BOSS:
-			continue
-		if i == skeleton_king_room_index:
-			continue
+func get_player_room_index() -> int:
+	return NavHelper.get_player_room_index(self)
 
-		_scatter_room_decorations(room, decor_patterns)
+func get_player_exact_grid_position() -> Vector2:
+	return NavHelper.get_player_exact_grid_position(self)
 
-func _scatter_room_decorations(room: Rect2i, decor_patterns: Array):
-	var center = room.get_center()
-	var num_clusters = rng.randi_range(1, 3)
+func _is_cell_wall_or_door(cell: Vector2i) -> bool:
+	return NavHelper.is_cell_wall_or_door(self, cell)
 
-	for c in range(num_clusters):
-		var selected_pattern = decor_patterns[rng.randi() % decor_patterns.size()]
-		var pattern_height = selected_pattern.size()
-		var pattern_width = selected_pattern[0].size()
+func is_global_pos_wall_or_door(world_pos: Vector2) -> bool:
+	return NavHelper.is_global_pos_wall_or_door(self, world_pos)
 
-		var anchor_x = rng.randi_range(room.position.x + 2, room.end.x - pattern_width - 2)
-		var anchor_y = rng.randi_range(room.position.y + 2, room.end.y - pattern_height - 2)
-		var anchor = Vector2i(anchor_x, anchor_y)
+func has_line_of_sight(from_global: Vector2, to_global: Vector2) -> bool:
+	return NavHelper.has_line_of_sight(self, from_global, to_global)
 
-		if Vector2(anchor).distance_to(Vector2(center)) < 4.0:
-			continue
+func get_smart_steer_direction(from_global: Vector2, desired_dir: Vector2) -> Vector2:
+	return NavHelper.get_smart_steer_direction(self, from_global, desired_dir)
 
-		var cluster_decor = decor_coords[rng.randi() % decor_coords.size()]
-
-		var can_place = true
-		for y in range(pattern_height):
-			for x in range(pattern_width):
-				if selected_pattern[y][x] == 1:
-					var check_cell = anchor + Vector2i(x, y)
-					if corridor_cells.has(check_cell) or get_cell_atlas_coords(LAYER_FLOOR, check_cell) != FLOOR_COORD or forbidden_decor_cells.has(check_cell):
-						can_place = false
-						break
-			if not can_place:
-				break
-
-		if can_place:
-			for y in range(pattern_height):
-				for x in range(pattern_width):
-					if selected_pattern[y][x] == 1:
-						var target_cell = anchor + Vector2i(x, y)
-						if get_cell_source_id(LAYER_DECOR, target_cell) == -1:
-							set_cell(LAYER_DECOR, target_cell, SOURCE_OBJECTS, cluster_decor)
-
-# --- THẢ QUÁI / BẪY / RƯƠNG / PLAYER ---
-func spawn_entities():
-	if generated_rooms.is_empty():
-		return
-
-	if the_player == null:
-		var character_to_spawn: PackedScene = PLAYER_SCENE
-		if is_inside_tree() and get_node_or_null("/root/GameManager") != null and GameManager.selected_character_scene != null:
-			character_to_spawn = GameManager.selected_character_scene
-
-		the_player = character_to_spawn.instantiate()
-		the_player.name = "Player"
-		the_player.z_index = 2
-		add_child(the_player)
-
-	the_player.global_position = to_global(map_to_local(generated_rooms[0].get_center()))
-
-	for i in range(1, generated_rooms.size()):
-		var room = generated_rooms[i]
-		var type = room_types[i]
-
-		if type == RoomType.TREASURE:
-			var chest = CHEST_SCENE.instantiate()
-			if "loot_seed" in chest:
-				chest.loot_seed = (get_effective_seed_string() + "_chest_" + str(i)).hash()
-			add_child(chest)
-			chest.global_position = to_global(map_to_local(room.get_center()))
-
-		elif type == RoomType.COMBAT:
-			var manager = ROOM_MANAGER.instantiate()
-			manager.room_index = i
-			manager.room_rect = room
-			manager.tilemap = self
-
-			var shape = RectangleShape2D.new()
-			shape.size = Vector2((room.size.x - 4) * 16, (room.size.y - 4) * 16)
-			manager.get_node("CollisionShape2D").shape = shape
-			manager.global_position = to_global(map_to_local(room.get_center()))
-
-			var entrances = []
-			for x in range(room.position.x - 1, room.end.x + 1):
-				for y in range(room.position.y - 1, room.end.y + 1):
-					if x == room.position.x - 1 or x == room.end.x or y == room.position.y - 1 or y == room.end.y:
-						if get_cell_atlas_coords(LAYER_FLOOR, Vector2i(x, y)) == FLOOR_COORD:
-							entrances.append(Vector2i(x, y))
-
-			manager.entrances = entrances
-			add_child(manager)
-			room_managers[i] = manager
-
-			var spawns: Array = planned_enemy_spawns[i] if i < planned_enemy_spawns.size() else []
-			for spawn_info in spawns:
-				var enemy = enemy_scenes[spawn_info["enemy_idx"]].instantiate()
-				if "loot_seed" in enemy:
-					enemy.loot_seed = spawn_info["loot_seed"]
-				if current_level > 1:
-					var bonus_hp: int = (current_level - 1) * 2
-					if "hp" in enemy:
-						enemy.hp += bonus_hp
-						if "max_hp" in enemy:
-							enemy.max_hp = enemy.hp
-					if "damage" in enemy and current_level >= 3:
-						enemy.damage += 1
-				enemy.z_index = 2
-				enemy.add_to_group("enemies")
-				add_child(enemy)
-				enemy.global_position = to_global(map_to_local(spawn_info["cell"]))
-				manager.enemies.append(enemy)
-
-		elif type == RoomType.BOSS:
-			var manager = ROOM_MANAGER.instantiate()
-			manager.is_boss_room = true
-			manager.room_index = i
-			manager.room_rect = room
-			manager.tilemap = self
-
-			var shape = RectangleShape2D.new()
-			shape.size = Vector2((room.size.x - 4) * 16, (room.size.y - 4) * 16)
-			manager.get_node("CollisionShape2D").shape = shape
-			manager.global_position = to_global(map_to_local(room.get_center()))
-
-			var entrances = []
-			for x in range(room.position.x - 1, room.end.x + 1):
-				for y in range(room.position.y - 1, room.end.y + 1):
-					if x == room.position.x - 1 or x == room.end.x or y == room.position.y - 1 or y == room.end.y:
-						if get_cell_atlas_coords(LAYER_FLOOR, Vector2i(x, y)) == FLOOR_COORD:
-							entrances.append(Vector2i(x, y))
-
-			manager.entrances = entrances
-			add_child(manager)
-			room_managers[i] = manager
-
-			if i == skeleton_king_room_index:
-				var king: Node2D = SKELETON_KING_SCRIPT.new()
-				king.name = "SkeletonKing"
-				king.tilemap = self
-				king.room_rect = room
-				king.room_manager = manager
-				king.level = current_level
-				king.z_index = 1
-				king.add_to_group("enemies")
-				king.add_to_group("boss")
-				# Anchored to the top wall: the King towers over the arena from behind it.
-				king.position = Vector2(room.position.x + room.size.x * 0.5, room.position.y + 1) * 16.0
-				add_child(king)
-				manager.enemies.append(king)
-				active_boss = king
-				print("[BOSS] Tầng ", current_level, " - Boss: Skeleton King xuất hiện!")
-				continue
-
-			var boss_instance: Node2D
-			if current_level % 2 != 0:
-				boss_instance = NECROMANCER_SCENE.instantiate()
-				print("[BOSS] Tầng ", current_level, " - Boss: Necromancer xuất hiện!")
-			else:
-				boss_instance = RIDER_ORC_SCENE.instantiate()
-				print("[BOSS] Tầng ", current_level, " - Boss: Orc Rider xuất hiện!")
-
-			boss_instance.z_index = 2
-			boss_instance.add_to_group("enemies")
-			boss_instance.add_to_group("boss")
-			if current_level > 1:
-				var boss_bonus_hp: int = (current_level - 1) * 20
-				if "hp" in boss_instance:
-					boss_instance.hp += boss_bonus_hp
-					if "max_hp" in boss_instance:
-						boss_instance.max_hp = boss_instance.hp
-				if "melee_damage" in boss_instance:
-					boss_instance.melee_damage += current_level - 1
-				if "damage" in boss_instance:
-					boss_instance.damage += current_level - 1
-			add_child(boss_instance)
-
-			boss_instance.global_position = to_global(map_to_local(room.get_center()))
-			manager.enemies.append(boss_instance)
-			active_boss = boss_instance
-
-	# BƯỚC CUỐI CÙNG: Dựa vào danh sách đã lên ở plan_traps() để thả Bẫy
-	for pos in reserved_trap_positions:
-		var trap = SPIKE_TRAP.instantiate()
-		add_child(trap)
-		trap.global_position = to_global(map_to_local(pos))
-
-	# Thiết lập bầu không khí ngục tối heo hắt: đuốc lửa bập bùng, ánh sáng u tối & những bóng xanh lượn lờ
-	DUNGEON_ATMOSPHERE.setup_dungeon_atmosphere(self, the_player, get_effective_seed_string().hash())
-	if is_inside_tree() and get_node_or_null("/root/AudioManager") != null:
-		AudioManager.play_bgm("dungeon")
-
-	room_state_changed.emit()
-
+# --- SỰ KIỆN PHÒNG & CHUYỂN TẦNG ---
 func notify_room_entered(room_idx: int, is_boss: bool = false) -> void:
 	visited_rooms[room_idx] = true
 	var r_type: int = room_types[room_idx] if room_idx >= 0 and room_idx < room_types.size() else -1
 	if r_type == RoomType.COMBAT or is_boss:
 		if is_inside_tree() and get_node_or_null("/root/AudioManager") != null:
-			# Nhạc giao tranh Combat kịch tính khi cửa phòng đóng sập
 			AudioManager.play_bgm("boss")
 	if is_boss:
 		if is_instance_valid(active_boss):
@@ -798,118 +250,24 @@ func notify_room_entered(room_idx: int, is_boss: bool = false) -> void:
 func notify_room_cleared(room_idx: int) -> void:
 	visited_rooms[room_idx] = true
 	if is_inside_tree() and get_node_or_null("/root/AudioManager") != null:
-		# Khi dọn sạch quái trong phòng hoặc diệt Boss, trả về nhạc nền Dungeon u tối huyền bí
 		AudioManager.play_bgm("dungeon")
 	room_state_changed.emit()
 
-func _resolve_player_node() -> Node2D:
-	if is_instance_valid(the_player) and the_player is CharacterBody2D:
-		return the_player
-	if get_tree() != null:
-		for node in get_tree().get_nodes_in_group("player"):
-			if node is CharacterBody2D and is_instance_valid(node):
-				the_player = node
-				return the_player
-	return the_player
-
-func get_player_room_index() -> int:
-	var p := _resolve_player_node()
-	if not is_instance_valid(p):
-		return 0
-	var local_pos = to_local(p.global_position)
-	var cell = local_to_map(local_pos)
-	for i in range(generated_rooms.size()):
-		if generated_rooms[i].grow(1).has_point(cell):
-			visited_rooms[i] = true
-			return i
-	return -1
-
-func get_player_exact_grid_position() -> Vector2:
-	var p := _resolve_player_node()
-	if not is_instance_valid(p):
-		return Vector2.ZERO
-	var local_pos: Vector2 = to_local(p.global_position)
-	var tile_pos: Vector2 = local_pos / 16.0
-	var c_size: float = maxf(1.0, float(cell_size))
-	return Vector2(
-		(tile_pos.x - c_size * 0.5) / c_size,
-		(tile_pos.y - c_size * 0.5) / c_size
-	)
-
-# --- KIỂM TRA TẦM NHÌN XUYÊN TƯỜNG / CỬA ĐÓNG & ĐIỀU HƯỚNG QUÁI ---
-func is_global_pos_wall_or_door(world_pos: Vector2) -> bool:
-	var cell: Vector2i = local_to_map(to_local(world_pos))
-	if get_cell_atlas_coords(LAYER_FLOOR, cell) != FLOOR_COORD:
-		return true
-	if get_layers_count() > 2 and get_cell_source_id(2, cell) != -1:
-		return true
-	# Solid decorations (wooden crates) live on a separate layer from the floor.
-	# Only collision-bearing tiles block shots; purely visual decor stays transparent.
-	var decor: TileData = get_cell_tile_data(LAYER_DECOR, cell)
-	if decor != null and tile_set != null:
-		for layer in range(tile_set.get_physics_layers_count()):
-			if decor.get_collision_polygons_count(layer) > 0:
-				return true
-	return false
-
-func has_line_of_sight(from_global: Vector2, to_global: Vector2) -> bool:
-	var p0: Vector2 = to_local(from_global)
-	var p1: Vector2 = to_local(to_global)
-	var dist: float = p0.distance_to(p1)
-	if dist < 4.0:
-		return not is_global_pos_wall_or_door(to_global)
-	var steps: int = maxi(2, int(ceil(dist / 4.0)))
-	for s in range(0, steps + 1):
-		var t: float = float(s) / float(steps)
-		var sample_local: Vector2 = p0.lerp(p1, t)
-		if is_global_pos_wall_or_door(to_global(sample_local)):
-			return false
-	return true
-
-func get_smart_steer_direction(from_global: Vector2, desired_dir: Vector2) -> Vector2:
-	if desired_dir == Vector2.ZERO:
-		return Vector2.ZERO
-	var base_dir: Vector2 = desired_dir.normalized()
-	var probe_angles: Array[float] = [0.0, 0.45, -0.45, 0.90, -0.90, 1.35, -1.35]
-	for ang in probe_angles:
-		var cand: Vector2 = base_dir.rotated(ang)
-		var check_pos: Vector2 = from_global + cand * 18.0
-		if not is_global_pos_wall_or_door(check_pos) and has_line_of_sight(from_global, check_pos):
-			return cand
-	return base_dir
-
-# --- CƠ CHẾ QUA MÀN & RƯƠNG BOSS ---
-func spawn_portal(pos: Vector2):
-	print("[VICTORY] Boss đã gục ngã! Triệu hồi Cổng Dịch Chuyển & 2 Rương Kho Báu...")
-	var portal = PORTAL_SCENE.instantiate()
-	add_child(portal)
-	portal.global_position = pos
-
-	# SINH 2 RƯƠNG BÁU PHÒNG BOSS
-	spawn_boss_chests(pos)
-
-func spawn_boss_chests(center_pos: Vector2) -> void:
-	var offsets: Array[Vector2] = [Vector2(-48, 8), Vector2(48, 8)]
-	for i in range(2):
-		var chest = CHEST_SCENE.instantiate()
-		chest.set("is_boss_chest", true)
-		if "loot_seed" in chest:
-			chest.loot_seed = (get_effective_seed_string() + "_boss_chest_" + str(current_level) + "_" + str(i)).hash()
-		add_child(chest)
-		chest.global_position = center_pos + offsets[i]
-
-func next_level():
+func next_level() -> void:
 	current_level += 1
 	if get_node_or_null("/root/GameManager") != null:
 		GameManager.register_level_advance(current_level)
 	print("[PORTAL] Đang dịch chuyển đến Hầm ngục tầng ", current_level, "...")
+
+	# Thu hồi và dọn dẹp sạch sẽ toàn bộ damage popup cũ khi chuyển tầng
+	if get_tree():
+		get_tree().call_group("game_ui", "reset_damage_number_pool")
 
 	for child in get_children():
 		if child != the_player and not child is Camera2D:
 			remove_child(child)
 			child.queue_free()
 
-	# Dọn dẹp các vật phẩm rơi trên mặt đất nếu nằm ở root scene
 	if get_tree() and get_tree().current_scene:
 		for child in get_tree().current_scene.get_children():
 			if child.is_in_group("world_items"):

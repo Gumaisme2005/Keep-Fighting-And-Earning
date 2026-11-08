@@ -1,21 +1,26 @@
 # QUY TRÌNH CÂN BẰNG CHỈ SỐ (BUFF / NERF WORKFLOW)
 
-Dự án áp dụng kiến trúc **Single Source of Truth ( Nguồn Dữ Liệu Tập Trung Duy Nhất )** tại [`Scene/BalanceConfig.gd`](../Scene/BalanceConfig.gd) để quản lý toàn bộ thông số của **4 Anh hùng Đoàn Hộ Nhẫn**, **5 Quái vật Quân đoàn Moria** và **2 Đại Thủ Lĩnh**.
+Dự án áp dụng kiến trúc **Data-Driven Custom Resource (.tres) & Single Source of Truth** tại [`Scene/Balance/`](../Scene/Balance/) và [`Scene/BalanceConfig.gd`](../Scene/BalanceConfig.gd) để quản lý toàn bộ thông số của **8 Anh hùng Đoàn Hộ Nhẫn**, **6 Quái vật Quân đoàn Moria** và **3 Đại Thủ Lĩnh**.
 
 ---
 
-## 1. Kiến trúc đồng bộ tự động (`Scene/BalanceConfig.gd`)
+## 1. Kiến trúc đồng bộ tự động (`Scene/Balance/` & `Scene/BalanceConfig.gd`)
 
 ```
+[ Scene/Balance/*.tres (Custom Resources) ]
+       │
+       ▼
 [ Scene/BalanceConfig.gd ]
        │
        ├──► GameManager.CHARACTER_INFO ──► Màn hình Chọn Tướng (CharacterSelect)
-       ├──► Player 1..4 (_ready)       ──► Máu, Giáp, Sát thương, Tốc chạy, Hồi chiêu
-       ├──► 5 Quái thường (_ready)     ──► HP, Giáp, Sát thương, Tầm đánh, Tỷ lệ rớt đồ
-       └──► 2 Đại Thủ Lĩnh (_ready)    ──► HP Boss, Tốc độ, Sát thương theo Phase
+       ├──► Player 1..8 (_ready)       ──► Máu, Giáp, Sát thương, Tốc chạy, Hồi chiêu
+       ├──► 6 Quái thường (_ready)     ──► HP, Giáp, Sát thương, Tầm đánh, Tỷ lệ rớt đồ
+       └──► 3 Đại Thủ Lĩnh (_ready)    ──► HP Boss, Tốc độ, Sát thương theo Phase
 ```
 
-Khi cần **Buff** (tăng sức mạnh) hoặc **Nerf** (giảm sức mạnh) bất kỳ nhân vật hay quái vật nào, nhà phát triển **chỉ cần sửa duy nhất tại `Scene/BalanceConfig.gd`** (hoặc gọi `BalanceConfig.set_unit_stat(category, unit_id, stat_key, new_value)`).
+Khi cần **Buff** (tăng sức mạnh) hoặc **Nerf** (giảm sức mạnh) bất kỳ nhân vật hay quái vật nào:
+- **Cách 1 (Trực quan qua Inspector):** Mở trực tiếp file `.tres` tương ứng trong thư mục `Scene/Balance/Heroes/`, `Scene/Balance/Enemies/`, hoặc `Scene/Balance/Bosses/` trên Godot Editor để chỉnh sửa trực quan.
+- **Cách 2 (Qua Code / Dynamic Buff):** Gọi `BalanceConfig.set_unit_stat(category, unit_id, stat_key, new_value)`. Hàm này sẽ tự động cập nhật đồng thời cả Resource trong bộ nhớ và Dictionary cache tĩnh.
 
 ---
 
@@ -38,7 +43,7 @@ Khi cần **Buff** (tăng sức mạnh) hoặc **Nerf** (giảm sức mạnh) b�
 
 ## 3. Các bước thực hiện Buff / Nerf chuẩn (4 Bước)
 
-1. **Chỉnh sửa thông số:** Mở [`Scene/BalanceConfig.gd`](../Scene/BalanceConfig.gd), thay đổi giá trị trong `HERO_STATS`, `ENEMY_STATS` hoặc `BOSS_STATS`.
+1. **Chỉnh sửa thông số:** Mở file `.tres` tương ứng trong [`Scene/Balance/`](../Scene/Balance/) bằng Inspector của Godot hoặc gọi `BalanceConfig.set_unit_stat()`.
 2. **Kiểm tra tự động:** Chạy `run_tests.bat` để bài kiểm thử `UT-13` xác minh các thực thể trong game đã nhận đúng thông số mới từ `BalanceConfig`.
 3. **Cập nhật tài liệu:** Cập nhật bảng thông số tương ứng trong [`README.md`](../README.md) và [`CHANGELOG.md`](../CHANGELOG.md).
 4. **Commit chuẩn hóa:** Sử dụng tiền tố `balance(unit): ...` để lưu vết lịch sử cân bằng rõ ràng trên Git.

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EnemyBalanceData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scene/Balance/EnemyBalanceData.gd" id="1_enemy"]
+
+[resource]
+script = ExtResource("1_enemy")
+id = "vampire"
+name = "Angmar Blood Bat"
+hp = 5
+armor = 0
+damage = 2
+speed = 85.0
+attack_range = 165.0
+drop_chance = 0.35
+custom_stats = {"attack_cooldown": 1.4, "retreat_range": 65.0}

@@ -39,7 +39,8 @@ func _init(enemy) -> void:
 func advance_tick() -> void:
 	_tactic_tick += 1
 	if not _enemy.is_active or _enemy.is_dead or _enemy.is_attacking \
-			or _enemy.animated_sprite.animation == &"hurt" or not is_instance_valid(_enemy.player):
+			or _enemy.animated_sprite.animation == &"hurt" or not is_instance_valid(_enemy.player) \
+			or _enemy.player.is_queued_for_deletion():
 		_clear_tactical_observation()
 		intent.suspend()
 

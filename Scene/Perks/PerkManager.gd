@@ -1,8 +1,5 @@
 extends Node
 
-const PerkData = preload("res://Scene/Perks/PerkData.gd")
-const PerkDatabase = preload("res://Scene/Perks/PerkDatabase.gd")
-
 signal perk_acquired(perk: PerkData)
 signal perks_cleared()
 

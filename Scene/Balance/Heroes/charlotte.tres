@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="HeroBalanceData" format=3 uid="uid://bfc5mglwbchwd"]
+
+[ext_resource type="Script" uid="uid://b02vqivaicvow" path="res://Scene/Balance/HeroBalanceData.gd" id="1_hero"]
+
+[resource]
+script = ExtResource("1_hero")
+id = "charlotte"
+name = "Charlotte"
+index = 3
+role = "Dúnedain Shadow Ranger"
+weapon = "Twin Blades of Narsil"
+skill_icon = "skill_stealth"
+hp = 5
+armor = 0
+damage = 2
+speed = 180
+attack_cooldown = 0.28
+skill_cooldown = 3
+lore = "A northern ranger hunting the minions of darkness across the wilderness. Forsaking armor for supreme mobility, she strikes with blinding twin-blade flourishes."
+skill_q = "Triple Flurry — Key Q: Unleash three lightning-fast slashes in place. Cooldown: 3s."
+skill_rmb = "Shadow Step — Right Click: Dash through the shadows with invulnerability then strike four times. Cooldown: 5s."
+custom_stats = {
+"rmb_cooldown": 5.0
+}

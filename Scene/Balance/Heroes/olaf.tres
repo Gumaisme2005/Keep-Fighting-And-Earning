@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="HeroBalanceData" format=3 uid="uid://bo4u4ncrgvyk2"]
+
+[ext_resource type="Script" uid="uid://b02vqivaicvow" path="res://Scene/Balance/HeroBalanceData.gd" id="1_hero"]
+
+[resource]
+script = ExtResource("1_hero")
+id = "olaf"
+name = "Olaf"
+index = 1
+role = "Dwarven Berserker of Erebor"
+weapon = "Greataxe of Khazad-dûm"
+skill_icon = "flame"
+hp = 6
+armor = 1
+damage = 2
+speed = 160
+attack_cooldown = 0.34
+lore = "A fearless warrior of Durin's bloodline from the Lonely Mountain. Endowed with the greatest fortitude in the Fellowship, his axe cleaves through the heaviest Uruk shields."
+skill_q = "Durin's Wrath — Key Q: Roar in dwarven fury, doubling cleave damage for 5 seconds. Cooldown: 5s."
+skill_rmb = "Axe Cleave — Left Click: Heavy sweeping slash decimating all foes ahead."
+custom_stats = {
+"buff_duration": 5.0,
+"damage_multiplier": 2
+}

@@ -1,5 +1,8 @@
 # Tactical AI refactor and PR #68 compatibility
 
+> Historical refactor/rehearsal report. The actual BaseEnemy/development
+> integration is documented in [ENEMY_TACTICAL_AI_DEVELOPMENT_SYNC.md](ENEMY_TACTICAL_AI_DEVELOPMENT_SYNC.md).
+
 This report supersedes the historical Git/PR status in
 `ENEMY_TACTICAL_AI_TESTS.md`. Verified on 2026-11-08 with Godot
 `4.7.2.stable.official.ed1daf0bf` on Windows. PR #68 was **open, not merged**:

@@ -36,6 +36,8 @@ func _ready() -> void:
 	test_potions_and_stacking()
 	test_floor_drop_scaling_and_boss_bonus()
 	test_dual_boss_chests_and_loot()
+	await test_damage_number_pool_and_reset()
+	test_deterministic_rng_isolation()
 
 	print("\n========================================================")
 	print("  TEST RESULTS: ", tests_passed, " PASSED, ", tests_failed, " FAILED")
@@ -395,9 +397,12 @@ func test_drag_and_drop_slot_mechanics() -> void:
 	var blade = ITEM_DATA_SCRIPT.new()
 	blade.item_name = "Shadow Dagger"
 	blade.type = ItemData.ItemType.WEAPON
-	blade.icon = Texture2D.new()
+	blade.icon = ImageTexture.create_from_image(Image.create(1, 1, false, Image.FORMAT_RGBA8))
 	slot_a.set_item(blade)
 
+	# set_drag_preview() is valid only during a real Viewport drag operation.
+	slot_a.force_drag({"fixture": true}, null)
+	assert_test(get_viewport().gui_is_dragging(), "Drag fixture starts an actual Viewport drag")
 	var drag_data = slot_a._get_drag_data(Vector2.ZERO)
 	assert_test(drag_data != null and drag_data is Dictionary, "Slot with item generates valid drag dictionary")
 	assert_test(drag_data.get("type") == "inventory_slot", "Drag data type equals 'inventory_slot'")
@@ -416,7 +421,7 @@ func test_drag_and_drop_slot_mechanics() -> void:
 	var helm = ITEM_DATA_SCRIPT.new()
 	helm.item_name = "Steel Cap"
 	helm.type = ItemData.ItemType.HELMET
-	helm.icon = Texture2D.new()
+	helm.icon = ImageTexture.create_from_image(Image.create(1, 1, false, Image.FORMAT_RGBA8))
 	slot_b.set_item(helm)
 	var helm_drag = slot_b._get_drag_data(Vector2.ZERO)
 
@@ -429,6 +434,8 @@ func test_drag_and_drop_slot_mechanics() -> void:
 	)
 	slot_b._drop_data(Vector2.ZERO, drag_data)
 	assert_test(dropped_signal_received[0], "slot_dropped signal emitted successfully upon drop")
+	get_viewport().gui_cancel_drag()
+	assert_test(not get_viewport().gui_is_dragging(), "Drag fixture cleans up the Viewport drag")
 
 	slot_a.queue_free()
 	slot_b.queue_free()
@@ -576,3 +583,99 @@ func test_dual_boss_chests_and_loot() -> void:
 
 	for c in spawned_chests:
 		c.queue_free()
+
+func test_damage_number_pool_and_reset() -> void:
+	print("\n--- Test Group 12: Damage Number Pool & Floor Transition Safety ---")
+	var ui = GAME_UI_SCENE.instantiate()
+	add_child(ui)
+
+	# 1. Group membership check
+	assert_test(ui.is_in_group("game_ui"), "GameUI belongs to group 'game_ui' (essential for next_level and combat events)")
+
+	# 2. Test spawning over 40 popups (cap is 40)
+	for i in range(50):
+		ui.spawn_damage_number(Vector2(100 + i * 2, 100), i + 1, Color(1.0, 0.9, 0.3))
+
+	assert_test(ui._active_damage_labels.size() == 40, "Active damage labels capped at MAX_DAMAGE_LABELS (40) when 50 hits spawned")
+
+	# 3. Test generation counter & tween safety on reused labels
+	var first_label: Label = ui._active_damage_labels[0]
+	assert_test(first_label != null and is_instance_valid(first_label), "Active labels remain valid instances during rapid reuse")
+	assert_test(first_label.has_meta("damage_gen"), "Labels receive generational metadata")
+	var gen: int = int(first_label.get_meta("damage_gen"))
+	assert_test(gen >= 1, "Labels receive generational counter to prevent zombie callback conflicts")
+	assert_test(first_label.has_meta("damage_tween"), "Active label has registered Tween metadata")
+
+	var active_tw = first_label.get_meta("damage_tween")
+	assert_test(active_tw is Tween and active_tw.is_valid(), "Active Tween is valid and running")
+
+	# 4. Reuse label while Tween is still running -> old Tween is cleanly killed, generation incremented
+	ui.spawn_damage_number(Vector2(200, 200), 999, Color.RED)
+	assert_test(not active_tw.is_valid(), "Old Tween was killed when label was reused during active playback")
+	assert_test(int(first_label.get_meta("damage_gen")) == gen + 1, "Generation counter incremented upon reuse")
+
+	# 5. Wait for tween callback completion (0.55s animation + small margin)
+	var single_lbl_pos = Vector2(300, 300)
+	ui.spawn_damage_number(single_lbl_pos, 77, Color.GREEN)
+	var single_lbl: Label = ui._active_damage_labels[-1]
+	var single_gen: int = int(single_lbl.get_meta("damage_gen"))
+
+	await get_tree().create_timer(0.65).timeout
+
+	assert_test(not single_lbl.visible, "Label visibility turned off upon normal animation completion")
+	assert_test(not ui._active_damage_labels.has(single_lbl), "Finished label removed from active damage labels list")
+	assert_test(ui._damage_label_pool.has(single_lbl), "Finished label safely returned to pool")
+	assert_test(not single_lbl.has_meta("damage_tween"), "Completed label had damage_tween metadata cleanly removed")
+
+	# 6. Test zombie callback rejection (simulate old callback firing for previous generation)
+	single_lbl.set_meta("damage_gen", single_gen + 5)
+	single_lbl.visible = true
+	ui._on_damage_label_finished(single_lbl, single_gen)
+	assert_test(single_lbl.visible, "Zombie callback with outdated generation ignored, preserving active state")
+
+	# 7. Test reset via group call (simulating dungeon_generator.next_level())
+	for i in range(5):
+		ui.spawn_damage_number(Vector2(50 + i * 10, 50), i + 1)
+	assert_test(not ui._active_damage_labels.is_empty(), "Labels active before level advance")
+
+	get_tree().call_group("game_ui", "reset_damage_number_pool")
+	assert_test(ui._active_damage_labels.is_empty(), "All active labels cleared after call_group('game_ui', 'reset_damage_number_pool')")
+
+	# 8. Test UI free / queue_free teardown safety
+	ui.spawn_damage_number(Vector2(50, 50), 10)
+	ui.queue_free()
+	await get_tree().process_frame
+	assert_test(not is_instance_valid(ui), "GameUI freed cleanly without leaking tweens or errors")
+
+func test_deterministic_rng_isolation() -> void:
+	print("\n--- Test Group 13: Deterministic RNG Isolation (BaseEnemy & Replay Safety) ---")
+	seed(54321)
+	var expected_seq: Array[int] = []
+	for i in range(5):
+		expected_seq.append(randi())
+
+	# Reset global RNG to identical seed
+	seed(54321)
+	var first_val: int = randi()
+	assert_test(first_val == expected_seq[0], "Baseline global RNG sequence matched")
+
+	# Instantiate BaseEnemy / Orc / Skeleton Archer instances and invoke _ready()
+	var orc_scene = load("res://Scene/Enemies/Orc/orc.tscn")
+	var archer_scene = load("res://Scene/Enemies/Skeleton Archer/skeleton_archer.tscn")
+
+	var orc = orc_scene.instantiate()
+	orc.position = Vector2(100, 200)
+	add_child(orc)
+
+	var archer = archer_scene.instantiate()
+	archer.position = Vector2(300, 400)
+	add_child(archer)
+
+	# Global RNG state must NOT have been consumed by enemy _ready()
+	var next_val: int = randi()
+	assert_test(next_val == expected_seq[1], "Enemy _ready() does NOT consume global RNG (RNG isolation preserved)")
+
+	orc.queue_free()
+	archer.queue_free()
+
+

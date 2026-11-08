@@ -213,7 +213,9 @@ func _test_archer_coroutine_lifecycle() -> void:
 			var archer = fixture.archer
 			archer.position = Vector2.ZERO
 			archer.is_active = true
+			archer.can_attack = true
 			archer.attack()
+			_check(archer.is_attacking, "Lifecycle fixture starts a real attack before teardown")
 			await get_tree().create_timer(stage).timeout
 			if action == "death":
 				archer.take_damage(archer.hp + 1)
@@ -237,7 +239,9 @@ func _test_archer_queued_scene_teardown() -> void:
 		var fixture := _mixed_room(7)
 		fixture.archer.position = Vector2.ZERO
 		fixture.archer.is_active = true
+		fixture.archer.can_attack = true
 		fixture.archer.attack()
+		_check(fixture.archer.is_attacking, "Queued teardown fixture starts a real attack")
 		await get_tree().create_timer(stage).timeout
 		var archer_ref: WeakRef = weakref(fixture.archer)
 		var target_ref: WeakRef = weakref(fixture.target)

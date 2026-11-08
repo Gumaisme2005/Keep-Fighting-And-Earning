@@ -61,9 +61,15 @@ jobs:
         run: |
           godot --headless "res://tests/test_werewolf.tscn"
 
-      - name: 9. Run MOBA HUD and Inventory Tests
+      - name: 9. Run MOBA HUD, Inventory & Damage Pool Tests
+        timeout-minutes: 5
+        shell: bash
         run: |
-          godot --headless "res://tests/test_moba_hud_and_inventory.tscn"
+          godot --headless "res://tests/test_moba_hud_and_inventory.tscn" 2>&1 | tee "$RUNNER_TEMP/moba_hud.log"
+          if grep -Eq '(SCRIPT ERROR:|The object does not have any .meta. values|kill_tweens_of)' "$RUNNER_TEMP/moba_hud.log"; then
+            echo "::error::Runtime SCRIPT ERROR or invalid metadata/tween call detected in MOBA HUD tests!"
+            exit 1
+          fi
 
       - name: 10. Run Hoshimi Miyabi Hero Tests
         run: |
@@ -76,6 +82,16 @@ jobs:
       - name: 12. Run Projectile Obstacles Tests
         run: |
           godot --headless "res://tests/test_projectile_obstacles.tscn"
+
+      - name: 13. Run Skeleton Archer Combat & Lifecycle Safety Tests
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          godot --headless "res://tests/test_archer_combat_lifecycle.tscn" 2>&1 | tee "$RUNNER_TEMP/archer_combat.log"
+          if grep -Eq '(SCRIPT ERROR:)' "$RUNNER_TEMP/archer_combat.log"; then
+            echo "::error::Runtime SCRIPT ERROR detected in Skeleton Archer tests!"
+            exit 1
+          fi
 
       - name: 13. Run EnemyTactics Foundation Tests
         timeout-minutes: 5
@@ -136,6 +152,15 @@ jobs:
             grep '^\[TRACE\]' "$RUNNER_TEMP/tactical_navigation_${fps}.log" > "$RUNNER_TEMP/tactical_navigation_${fps}.trace"
           done
           diff -u "$RUNNER_TEMP/tactical_navigation_30.trace" "$RUNNER_TEMP/tactical_navigation_144.trace"
+
+      - name: 19. Run Tactical BaseEnemy Integration at 30 and 144 Render FPS
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          for fps in 30 144; do
+            godot --headless --max-fps "$fps" "res://tests/test_tactical_base_enemy_integration.tscn" 2>&1 | tee "$RUNNER_TEMP/tactical_base_enemy_${fps}.log"
+            if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/tactical_base_enemy_${fps}.log"; then exit 1; fi
+          done
 
       - name: Upload Benchmark Evidence Artifact
         uses: actions/upload-artifact@v4
