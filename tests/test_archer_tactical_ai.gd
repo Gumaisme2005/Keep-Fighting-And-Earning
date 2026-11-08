@@ -124,7 +124,7 @@ func _test_profiles_and_legacy() -> void:
 	for fixture in [[1, 0], [3, 1], [5, 2], [7, 3]]:
 		var arena := _arena(fixture[0])
 		var archer = arena.archer
-		_check(archer._tactics.get_config()["tier"] == fixture[1], "Floor %d resolves tier %d" % fixture)
+		_check(archer._tactical_ai._tactics.get_config()["tier"] == fixture[1], "Floor %d resolves tier %d" % fixture)
 		_check(archer.hp == stats.hp and archer.max_hp == stats.hp and archer.damage == stats.damage
 			and archer.speed == stats.speed and archer.attack_range == stats.attack_range
 			and archer.retreat_range == stats.retreat_range and archer.attack_cooldown == stats.attack_cooldown,
@@ -159,15 +159,15 @@ func _test_profiles_and_legacy() -> void:
 		archer._physics_process(1.0 / 60.0)
 		_check(archer.velocity.is_equal_approx(Vector2.RIGHT * archer.speed), "Missing map floor/navigation retains legacy behavior")
 		if not with_floor:
-			_check(not archer._tactics.is_enabled(), "Standalone Archer ignores saved GameManager floor")
+			_check(not archer._tactical_ai._tactics.is_enabled(), "Standalone Archer ignores saved GameManager floor")
 		parent.free()
 	GameManager.current_level = saved_floor
 	var invalid := _arena(0)
-	_check(not invalid.archer._tactics.is_enabled(), "Invalid floor disables tactical behavior")
+	_check(not invalid.archer._tactical_ai._tactics.is_enabled(), "Invalid floor disables tactical behavior")
 	invalid.map.free()
 	var first := _arena(7)
 	var second := _arena(7)
-	_check(first.archer._tactics != second.archer._tactics, "Each Archer owns its EnemyTactics instance")
+	_check(first.archer._tactical_ai._tactics != second.archer._tactical_ai._tactics, "Each Archer owns its EnemyTactics instance")
 	first.map.free()
 	second.map.free()
 
@@ -176,7 +176,7 @@ func _test_hysteresis_and_safety() -> void:
 	for floor_number in [3, 5, 7]:
 		var arena := _arena(floor_number)
 		var archer = arena.archer
-		var margin: float = archer._tactic_limits.range_hysteresis_px
+		var margin: float = archer._tactical_ai._tactic_limits.range_hysteresis_px
 		await _at_distance(arena, archer.retreat_range - 1.0)
 		await _at_distance(arena, archer.retreat_range + margin - 0.1)
 		_check(archer.velocity.x < 0.0, "Floor %d keeps retreat within exit margin" % floor_number)
@@ -187,9 +187,9 @@ func _test_hysteresis_and_safety() -> void:
 		_check(archer.velocity.x > 0.0, "Floor %d keeps approach inside the outer hysteresis band during cooldown" % floor_number)
 		await _at_distance(arena, archer.attack_range - margin)
 		_check(is_zero_approx(archer.velocity.x), "Floor %d returns to strafe after entering firing band" % floor_number)
-		var decision_tick: int = archer._tactics._last_decision_tick
+		var decision_tick: int = archer._tactical_ai._tactics._last_decision_tick
 		await _at_distance(arena, archer.retreat_range - 0.01)
-		_check(archer.velocity.x < 0.0 and archer._tactics._last_decision_tick == decision_tick,
+		_check(archer.velocity.x < 0.0 and archer._tactical_ai._tactics._last_decision_tick == decision_tick,
 			"Floor %d retreats urgently between tactical decisions" % floor_number)
 		arena.map.free()
 	var arena := _arena(3)
@@ -207,7 +207,7 @@ func _test_strafe_and_search() -> void:
 		var arena := _arena(floor_number)
 		await _at_distance(arena, 140)
 		var sign_before: float = arena.archer.strafe_sign
-		var hold_ticks := ceili(float(arena.archer._tactic_config.min_state_duration_seconds) * 60)
+		var hold_ticks := ceili(float(arena.archer._tactical_ai._tactic_config.min_state_duration_seconds) * 60)
 		var blocked_probe: Vector2 = Vector2.RIGHT.orthogonal() * sign_before * 18.0
 		arena.map.set_cell(0, arena.map.local_to_map(blocked_probe), 0, Vector2i(1, 3))
 		var held := true
@@ -221,14 +221,14 @@ func _test_strafe_and_search() -> void:
 		arena = _arena(floor_number)
 		await _at_distance(arena, 140)
 		_door(arena, true)
-		var budget := ceili(float(arena.archer._tactic_limits.lateral_reposition_seconds) * 60)
+		var budget := ceili(float(arena.archer._tactical_ai._tactic_limits.lateral_reposition_seconds) * 60)
 		var bounded := true
 		for tick in range(budget):
 			await _at_distance(arena, 140)
-			bounded = bounded and arena.archer._lateral_search_active() and not arena.archer.is_attacking
+			bounded = bounded and arena.archer._tactical_ai._lateral_search_active() and not arena.archer.is_attacking
 		_check(bounded, "Floor %d attempts lateral LoS search only within the profile budget" % floor_number)
 		await _at_distance(arena, 140)
-		_check(not arena.archer._lateral_search_active() and arena.archer.velocity.x > 0.0,
+		_check(not arena.archer._tactical_ai._lateral_search_active() and arena.archer.velocity.x > 0.0,
 			"Floor %d resumes existing steering at search timeout without waiting for state cooldown" % floor_number)
 		arena.map.free()
 
@@ -239,17 +239,17 @@ func _test_observation_and_hidden_targets() -> void:
 	for tick in range(25):
 		arena.target.position.y += 1.0
 		await _step(arena)
-	_check(arena.archer._prediction_offset.y > 0.0 and arena.archer._prediction_offset.length() <= arena.archer.speed * 0.25 + 0.001,
+	_check(arena.archer._tactical_ai._prediction_offset.y > 0.0 and arena.archer._tactical_ai._prediction_offset.length() <= arena.archer.speed * 0.25 + 0.001,
 		"Tier 3 leads only observed displacement, bounded by 0.25-second profile")
 	_door(arena, true)
 	await _step(arena)
-	_check(arena.archer._prediction_offset == Vector2.ZERO and arena.archer._observed_tick == -1,
+	_check(arena.archer._tactical_ai._prediction_offset == Vector2.ZERO and arena.archer._tactical_ai._observed_tick == -1,
 		"Loss of LoS immediately invalidates prediction between decisions")
 	_door(arena, false)
 	arena.target.position.y += 30.0
 	for tick in range(11):
 		await _step(arena)
-	_check(arena.archer._prediction_offset == Vector2.ZERO, "Reacquisition does not infer hidden target movement")
+	_check(arena.archer._tactical_ai._prediction_offset == Vector2.ZERO, "Reacquisition does not infer hidden target movement")
 	arena.target.free()
 	var replacement := ObservedPlayer.new()
 	replacement.add_to_group("player")
@@ -257,7 +257,7 @@ func _test_observation_and_hidden_targets() -> void:
 	replacement.position = Vector2(150, -30)
 	arena.target = replacement
 	await _step(arena)
-	_check(arena.archer.player == replacement and arena.archer._prediction_offset == Vector2.ZERO,
+	_check(arena.archer.player == replacement and arena.archer._tactical_ai._prediction_offset == Vector2.ZERO,
 		"Freed/replaced player does not retain stale motion")
 	replacement.free()
 	await _step(arena)
@@ -276,7 +276,7 @@ func _motion_selected_side(motion_sign: float) -> float:
 		await _step(arena)
 	var selected_side: float = arena.archer.strafe_sign
 	var selected_probe := Vector2.RIGHT.orthogonal() * selected_side * 18.0
-	var predicted: Vector2 = arena.target.position + arena.archer._prediction_offset
+	var predicted: Vector2 = arena.target.position + arena.archer._tactical_ai._prediction_offset
 	_check(selected_probe.distance_to(predicted) > (-selected_probe).distance_to(predicted),
 		"Observed closing motion selects the safer of the two candidate positions")
 	arena.map.free()
@@ -296,10 +296,10 @@ func _test_activation_and_animation_locks() -> void:
 			archer.is_dead = lock == "death"
 			archer.is_attacking = lock == "attack"
 			var before: Vector2 = archer.global_position
-			var state: StringName = archer._tactics.get_state()
+			var state: StringName = archer._tactical_ai._tactics.get_state()
 			await _step(arena)
-			_check(archer.global_position == before and archer._tactics.get_state() == state
-				and archer._observed_tick == -1, "Floor %d preserves %s lock" % [floor_number, lock])
+			_check(archer.global_position == before and archer._tactical_ai._tactics.get_state() == state
+				and archer._tactical_ai._observed_tick == -1, "Floor %d preserves %s lock" % [floor_number, lock])
 		arena.map.free()
 	var arena := _arena(7)
 	arena.archer.is_active = false
@@ -310,7 +310,7 @@ func _test_activation_and_animation_locks() -> void:
 	manager.set_physics_process(false)
 	manager.lock_room()
 	await _step(arena)
-	_check(arena.archer.is_active and arena.archer._tactics.get_state() != &"basic", "Real RoomManager activation enables tactical AI")
+	_check(arena.archer.is_active and arena.archer._tactical_ai._tactics.get_state() != &"basic", "Real RoomManager activation enables tactical AI")
 	arena.archer.take_damage(1)
 	await _step(arena)
 	_check(arena.archer.is_hurt and arena.archer.anim.animation == &"hurt", "Actual damage retains hurt animation and lock")
@@ -400,7 +400,7 @@ func _trace(hidden_position: Vector2, replaying: bool) -> Array:
 		arena.target.position = hidden_position if tick >= 30 and tick < 80 else Vector2(140, float(tick % 30))
 		await _step(arena)
 		trace.append([arena.archer.global_position, arena.archer.velocity, arena.archer.strafe_sign,
-			arena.archer._tactics.get_state(), arena.archer._prediction_offset])
+			arena.archer._tactical_ai._tactics.get_state(), arena.archer._tactical_ai._prediction_offset])
 	arena.map.free()
 	GameManager.is_replaying = saved_replay
 	return trace

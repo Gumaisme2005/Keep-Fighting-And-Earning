@@ -92,27 +92,27 @@ func _test_floor_profiles_and_fallbacks() -> void:
 		var arena := _arena(fixture[0])
 		var orc = arena.orc
 		await _step(arena)
-		_check(orc._tactics.get_config()["tier"] == fixture[1], "Floor %d resolves tier %d from map" % fixture)
+		_check(orc._tactical_ai._tactics.get_config()["tier"] == fixture[1], "Floor %d resolves tier %d from map" % fixture)
 		_check(orc.hp == stats.hp and orc.max_hp == stats.hp and orc.damage == stats.damage
 			and orc.speed == stats.speed and orc.attack_range == stats.attack_range,
 			"Floor %d leaves combat stats unchanged" % fixture[0])
 		_check(is_equal_approx(orc.velocity.length(), orc.speed), "Floor %d keeps movement speed" % fixture[0])
 		if fixture[0] == 1:
 			_check(orc.velocity.is_equal_approx(Vector2.RIGHT * orc.speed)
-				and orc._tactics.get_state() == &"basic", "Tier 0 preserves direct pursuit")
+				and orc._tactical_ai._tactics.get_state() == &"basic", "Tier 0 preserves direct pursuit")
 		else:
-			_check(orc._tactics.get_state() == &"flank_right" and orc.velocity.y > 0.0,
+			_check(orc._tactical_ai._tactics.get_state() == &"flank_right" and orc.velocity.y > 0.0,
 				"Floor %d uses a seeded approach angle" % fixture[0])
 		arena.map.free()
 	var arena := _arena(3)
 	var first = arena.orc
 	var second = _new_orc(arena.map, Vector2(0, -80), 8)
-	_check(first._tactics != second._tactics, "Each Orc owns a separate EnemyTactics instance")
+	_check(first._tactical_ai._tactics != second._tactical_ai._tactics, "Each Orc owns a separate EnemyTactics instance")
 	second.player = arena.target
 	second.global_position = Vector2.ZERO
 	await get_tree().physics_frame
 	second._physics_process(1.0 / 60.0)
-	_check(second._tactics.get_state() == &"flank_left", "Opposite seed parity chooses the opposite flank")
+	_check(second._tactical_ai._tactics.get_state() == &"flank_left", "Opposite seed parity chooses the opposite flank")
 	arena.map.free()
 	var saved_floor: int = GameManager.current_level
 	GameManager.current_level = 7
@@ -127,13 +127,13 @@ func _test_floor_profiles_and_fallbacks() -> void:
 		await get_tree().physics_frame
 		orc._physics_process(1.0 / 60.0)
 		_check(orc.velocity.is_equal_approx(Vector2.RIGHT * orc.speed)
-			and orc._tactics.get_state() == &"basic", "Missing navigation/floor uses legacy movement")
+			and orc._tactical_ai._tactics.get_state() == &"basic", "Missing navigation/floor uses legacy movement")
 		if not has_floor:
-			_check(orc._tactics.get_config()["tier"] == 0, "Standalone Orc ignores saved GameManager floor")
+			_check(orc._tactical_ai._tactics.get_config()["tier"] == 0, "Standalone Orc ignores saved GameManager floor")
 		parent.free()
 	GameManager.current_level = saved_floor
 	var invalid := _arena(0)
-	_check(not invalid.orc._tactics.is_enabled(), "Invalid floor uses basic AI")
+	_check(not invalid.orc._tactical_ai._tactics.is_enabled(), "Invalid floor uses basic AI")
 	invalid.map.free()
 
 
@@ -141,17 +141,17 @@ func _test_state_cooldowns() -> void:
 	for fixture in [[3, 36], [5, 30], [7, 24]]:
 		var arena := _arena(fixture[0])
 		await _step(arena)
-		var initial_state: StringName = arena.orc._tactics.get_state()
+		var initial_state: StringName = arena.orc._tactical_ai._tactics.get_state()
 		arena.target.position = Vector2(35, 0)
 		var held := true
 		for tick in range(fixture[1] - 1):
 			arena.orc.position = Vector2.ZERO
 			await _step(arena)
-			held = held and arena.orc._tactics.get_state() == initial_state
+			held = held and arena.orc._tactical_ai._tactics.get_state() == initial_state
 		_check(held, "Floor %d honors minimum state duration under changing observations" % fixture[0])
 		arena.orc.position = Vector2.ZERO
 		await _step(arena)
-		_check(arena.orc._tactics.get_state() == &"approach", "Floor %d can change state when the hold expires" % fixture[0])
+		_check(arena.orc._tactical_ai._tactics.get_state() == &"approach", "Floor %d can change state when the hold expires" % fixture[0])
 		arena.map.free()
 
 
@@ -159,7 +159,7 @@ func _test_room_activation() -> void:
 	var arena := _arena(3)
 	arena.orc.is_active = false
 	await _step(arena)
-	_check(arena.orc.position == Vector2.ZERO and arena.orc._tactics.get_state() == &"basic",
+	_check(arena.orc.position == Vector2.ZERO and arena.orc._tactical_ai._tactics.get_state() == &"basic",
 		"Dormant room enemies neither move nor make tactical decisions")
 	var manager = load("res://Scene/Map/room_manager.gd").new()
 	manager.tilemap = arena.map
@@ -168,7 +168,7 @@ func _test_room_activation() -> void:
 	manager.set_physics_process(false)
 	manager.lock_room()
 	await _step(arena)
-	_check(arena.orc.is_active and arena.orc._tactics.get_state() == &"flank_right",
+	_check(arena.orc.is_active and arena.orc._tactical_ai._tactics.get_state() == &"flank_right",
 		"Real RoomManager activation enables the first tactical decision")
 	arena.map.free()
 
@@ -177,7 +177,7 @@ func _test_walls_and_crowds() -> void:
 	var arena := _arena(5)
 	arena.map.set_cell(0, Vector2i(1, 0), 0, Vector2i(1, 3))
 	await _step(arena)
-	_check(arena.orc._tactics.get_state() == &"flank_left" and arena.orc.velocity.y < 0.0,
+	_check(arena.orc._tactical_ai._tactics.get_state() == &"flank_left" and arena.orc.velocity.y < 0.0,
 		"Tier 2 chooses the clear flank around a wall")
 	for tick in range(100):
 		await _step(arena)
@@ -188,7 +188,7 @@ func _test_walls_and_crowds() -> void:
 	arena = _arena(5)
 	_new_orc(arena.map, Vector2(16, 5), 8)
 	await _step(arena)
-	_check(arena.orc._tactics.get_state() == &"flank_left", "Tier 2 avoids an Orc occupying the preferred flank")
+	_check(arena.orc._tactical_ai._tactics.get_state() == &"flank_left", "Tier 2 avoids an Orc occupying the preferred flank")
 	for tick in range(75):
 		await _step(arena)
 	_check(arena.orc.global_position.x > 50.0, "Orc makes progress around another collision body")
@@ -197,11 +197,11 @@ func _test_walls_and_crowds() -> void:
 	var offsets := [Vector2(20, 0), Vector2(16, 8), Vector2(16, -8), Vector2(12, 0), Vector2(0, 12), Vector2(0, -12)]
 	for offset in offsets:
 		_new_orc(arena.map, offset)
-	var forward: Array = arena.orc._sample_nearby_enemies()
+	var forward: Array = arena.orc._tactical_ai._sample_nearby_enemies()
 	for child in arena.map.get_children():
 		if child.is_in_group("enemies") and child != arena.orc:
 			arena.map.move_child(child, 0)
-	_check(forward.size() == 4 and forward == arena.orc._sample_nearby_enemies(),
+	_check(forward.size() == 4 and forward == arena.orc._tactical_ai._sample_nearby_enemies(),
 		"Nearest-neighbor budget and tie ordering are stable across scene order")
 	arena.map.free()
 
@@ -213,22 +213,22 @@ func _test_observed_prediction() -> void:
 	for tick in range(25):
 		arena.target.position.y += 1.0
 		await _step(arena)
-	_check(arena.orc._prediction_offset.y > 0.0
-		and arena.orc._prediction_offset.length() <= arena.orc.speed * 0.2 + 0.001
-		and arena.orc._tactics.get_state() == &"intercept",
+	_check(arena.orc._tactical_ai._prediction_offset.y > 0.0
+		and arena.orc._tactical_ai._prediction_offset.length() <= arena.orc.speed * 0.2 + 0.001
+		and arena.orc._tactical_ai._tactics.get_state() == &"intercept",
 		"Tier 3 predicts bounded observed motion without reading target velocity")
 	# Close a real door across the current sight line between decision ticks.
 	for y in range(-12, 20):
 		arena.map.set_cell(2, Vector2i(5, y), 0, Vector2i(1, 3))
 	await _step(arena)
-	_check(arena.orc._prediction_offset == Vector2.ZERO and arena.orc._observed_tick == -1,
+	_check(arena.orc._tactical_ai._prediction_offset == Vector2.ZERO and arena.orc._tactical_ai._observed_tick == -1,
 		"Losing LoS immediately discards motion prediction")
 	for y in range(-12, 20):
 		arena.map.set_cell(2, Vector2i(5, y), -1)
 	arena.target.position.y += 60.0
 	for tick in range(11):
 		await _step(arena)
-	_check(arena.orc._prediction_offset == Vector2.ZERO, "Reacquiring LoS starts a fresh observation instead of inferring hidden motion")
+	_check(arena.orc._tactical_ai._prediction_offset == Vector2.ZERO, "Reacquiring LoS starts a fresh observation instead of inferring hidden motion")
 	# Free/reacquire a player between decisions, including a previously led target.
 	for tick in range(12):
 		arena.target.position.y += 1.0
@@ -240,7 +240,7 @@ func _test_observed_prediction() -> void:
 	replacement.position = Vector2(150, -40)
 	arena.target = replacement
 	await _step(arena)
-	_check(arena.orc.player == replacement and arena.orc._prediction_offset == Vector2.ZERO,
+	_check(arena.orc.player == replacement and arena.orc._tactical_ai._prediction_offset == Vector2.ZERO,
 		"A freed/replaced target cannot carry stale observed prediction")
 	arena.map.free()
 
@@ -278,13 +278,13 @@ func _test_attack_guards_and_locks() -> void:
 			orc.is_dead = lock == "death"
 			orc.animated_sprite.play("hurt" if lock == "hurt" else "attack" if lock == "attack" else "idle")
 			var before: Vector2 = orc.global_position
-			var state_before: StringName = orc._tactics.get_state()
+			var state_before: StringName = orc._tactical_ai._tactics.get_state()
 			var damage_before: int = arena.target.damage_taken
 			await _step(arena)
 			arena.target.position = orc.position + Vector2(10, 0)
 			orc._on_axe_hitbox_area_entered(arena.hurtbox)
 			var expected_damage: int = damage_before + (orc.damage if lock == "attack" else 0)
-			_check(orc.global_position == before and orc._tactics.get_state() == state_before
+			_check(orc.global_position == before and orc._tactical_ai._tactics.get_state() == state_before
 				and arena.target.damage_taken == expected_damage,
 				"Floor %d respects %s behavior/damage lock" % [floor_number, lock])
 			arena.target.position = Vector2(160, 0)
@@ -294,7 +294,7 @@ func _test_attack_guards_and_locks() -> void:
 	arena.orc.take_damage(1)
 	await _step(arena)
 	_check(arena.orc.animated_sprite.animation == &"hurt" and not arena.orc.is_attacking
-		and arena.orc.axe_collision.disabled and arena.orc._observed_tick == -1,
+		and arena.orc.axe_collision.disabled and arena.orc._tactical_ai._observed_tick == -1,
 		"Actual take_damage interrupts combat and clears stale observations")
 	arena.orc.take_damage(1000)
 	await _step(arena)
@@ -317,7 +317,7 @@ func _trace(replaying: bool, reverse_neighbors: bool) -> Array:
 		arena.target.position = Vector2(160, float(tick % 60))
 		await _step(arena)
 		trace.append([arena.orc.global_position, arena.orc.velocity,
-			arena.orc._tactics.get_state(), arena.orc._prediction_offset])
+			arena.orc._tactical_ai._tactics.get_state(), arena.orc._tactical_ai._prediction_offset])
 	arena.map.free()
 	GameManager.is_replaying = saved_replaying
 	return trace

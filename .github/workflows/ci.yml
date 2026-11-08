@@ -126,6 +126,17 @@ jobs:
           godot --headless "res://tests/test_replay_security.tscn" 2>&1 | tee "$RUNNER_TEMP/enemy_replay.log"
           if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/enemy_replay.log"; then exit 1; fi
 
+      - name: 18. Run Tactical Navigation Contract at 30 and 144 Render FPS
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          for fps in 30 144; do
+            godot --headless --max-fps "$fps" "res://tests/test_tactical_navigation_contract.tscn" 2>&1 | tee "$RUNNER_TEMP/tactical_navigation_${fps}.log"
+            if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/tactical_navigation_${fps}.log"; then exit 1; fi
+            grep '^\[TRACE\]' "$RUNNER_TEMP/tactical_navigation_${fps}.log" > "$RUNNER_TEMP/tactical_navigation_${fps}.trace"
+          done
+          diff -u "$RUNNER_TEMP/tactical_navigation_30.trace" "$RUNNER_TEMP/tactical_navigation_144.trace"
+
       - name: Upload Benchmark Evidence Artifact
         uses: actions/upload-artifact@v4
         with:

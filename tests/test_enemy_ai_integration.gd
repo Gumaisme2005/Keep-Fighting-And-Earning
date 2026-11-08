@@ -130,7 +130,7 @@ func _test_mixed_room_budget_and_activation() -> void:
 	await _step(fixture)
 	var dormant := true
 	for enemy in fixture.members:
-		dormant = dormant and not enemy.is_active and enemy._tactics.get_state() == &"basic"
+		dormant = dormant and not enemy.is_active and enemy._tactical_ai._tactics.get_state() == &"basic"
 	_check(dormant, "Both enemy types remain dormant before room activation")
 	fixture.room.lock_room()
 	var events: Dictionary = {}
@@ -141,10 +141,10 @@ func _test_mixed_room_budget_and_activation() -> void:
 		for index in range(fixture.members.size()):
 			var enemy = fixture.members[index]
 			bounded = bounded and enemy.is_active and enemy.global_position.is_finite()
-			if enemy._tactics._last_decision_tick == enemy._tactic_tick:
+			if enemy._tactical_ai._tactics._last_decision_tick == enemy._tactical_ai._tactic_tick:
 				events[index] = int(events.get(index, 0)) + 1
 			if index % 2 == 0:
-				bounded = bounded and enemy._sample_nearby_enemies().size() <= 4
+				bounded = bounded and enemy._tactical_ai._sample_nearby_enemies().size() <= 4
 		moved = moved or fixture.orc.position != Vector2(-60, 20)
 	for count in events.values():
 		bounded = bounded and int(count) <= 5 # 60 physics ticks / 12-tick interval.
@@ -156,8 +156,8 @@ func _test_mixed_room_budget_and_activation() -> void:
 func _test_new_floor_resets_instances() -> void:
 	for fixture_data in [[-10, 0], [9999, 3]]:
 		var edge := _mixed_room(fixture_data[0])
-		_check(edge.orc._tactics.get_config().tier == fixture_data[1]
-			and edge.archer._tactics.get_config().tier == fixture_data[1],
+		_check(edge.orc._tactical_ai._tactics.get_config().tier == fixture_data[1]
+			and edge.archer._tactical_ai._tactics.get_config().tier == fixture_data[1],
 			"Real mixed spawns resolve floor %d safely" % fixture_data[0])
 		edge.map.free()
 	var old := _mixed_room(5)
@@ -167,9 +167,9 @@ func _test_new_floor_resets_instances() -> void:
 	var next := _mixed_room(7)
 	_check(old_orc.get_ref() == null and old_archer.get_ref() == null,
 		"Replacing a floor releases old enemy instances and observations")
-	_check(next.orc._tactic_tick == 0 and next.archer._tactic_tick == 0
-		and next.orc._tactics.get_state() == &"basic" and next.archer._tactics.get_state() == &"basic"
-		and next.orc._tactics != next.archer._tactics,
+	_check(next.orc._tactical_ai._tactic_tick == 0 and next.archer._tactical_ai._tactic_tick == 0
+		and next.orc._tactical_ai._tactics.get_state() == &"basic" and next.archer._tactical_ai._tactics.get_state() == &"basic"
+		and next.orc._tactical_ai._tactics != next.archer._tactical_ai._tactics,
 		"New-floor enemies start with independent fresh AI clocks/states")
 	_check(get_tree().get_nodes_in_group("enemies").size() == 2, "New floor leaves no stale enemies in the group")
 	next.map.free()
@@ -187,8 +187,8 @@ func _mixed_trace(replaying: bool) -> Array:
 				fixture.map.set_cell(2, Vector2i(3, y), 0 if tick == 24 else -1, Vector2i(1, 3))
 		fixture.target.position = Vector2(130, float(tick % 12))
 		await _step(fixture)
-		trace.append([fixture.orc.position, fixture.orc.velocity, fixture.orc._tactics.get_state(),
-			fixture.archer.position, fixture.archer.velocity, fixture.archer._tactics.get_state()])
+		trace.append([fixture.orc.position, fixture.orc.velocity, fixture.orc._tactical_ai._tactics.get_state(),
+			fixture.archer.position, fixture.archer.velocity, fixture.archer._tactical_ai._tactics.get_state()])
 	fixture.map.free()
 	GameManager.is_replaying = previous_replay
 	return trace
