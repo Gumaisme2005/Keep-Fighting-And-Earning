@@ -303,7 +303,8 @@ func _swing_hit(c: Dictionary) -> void:
 # ------------------------------------------------------------------ Right Click: Twin Barrels
 func _start_shoot() -> void:
 	_fired = false
-	rmb_cd = shoot_cooldown / _rate()
+	var cdr := PerkManager.get_cooldown_reduction() if get_node_or_null("/root/PerkManager") != null else 0.0
+	rmb_cd = (shoot_cooldown * (1.0 - cdr)) / _rate()
 	_face_aim()
 	_begin("shoot", "shoot")
 
@@ -334,7 +335,8 @@ func _fire() -> void:
 
 # ------------------------------------------------------------------ Q: White Moon transformation
 func _start_transform() -> void:
-	q_cd = skill_cooldown
+	var cdr := PerkManager.get_cooldown_reduction() if get_node_or_null("/root/PerkManager") != null else 0.0
+	q_cd = skill_cooldown * (1.0 - cdr)
 	can_use_skill = false
 	_untouchable = true
 	velocity = Vector2.ZERO

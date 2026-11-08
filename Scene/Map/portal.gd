@@ -21,6 +21,8 @@ func _ready() -> void:
 
 	# Safety delay to avoid premature trigger as boss expires
 	await get_tree().create_timer(0.8).timeout
+	if not is_inside_tree():
+		return
 	is_ready = true
 	for body in get_overlapping_bodies():
 		if body.is_in_group("player"):

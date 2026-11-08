@@ -124,19 +124,26 @@ func attack() -> void:
 
 	# Nhịp vỗ cánh phát động ma pháp (bắn chưởng pháp sư)
 	await get_tree().create_timer(0.35).timeout
+	if not is_inside_tree() or is_dead:
+		return
 
-	if not is_dead and animated_sprite.animation != "hurt" and is_instance_valid(player):
+	if animated_sprite.animation != "hurt" and is_instance_valid(player):
 		var tmap = get_parent()
 		if tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position):
 			shoot_magic_spell()
 
 	await get_tree().create_timer(0.35).timeout
-	if is_attacking and not is_dead:
+	if not is_inside_tree() or is_dead:
+		return
+
+	if is_attacking:
 		is_attacking = false
 		bite_collision.disabled = true
 		animated_sprite.play("idle")
 
 	await get_tree().create_timer(maxf(0.1, attack_cooldown - 0.70)).timeout
+	if not is_inside_tree() or is_dead:
+		return
 	can_attack = true
 
 func shoot_magic_spell() -> void:

@@ -779,7 +779,7 @@ func _create_equip_slot(label_txt: String, icon_name: String, item_type: int, pa
 	return slot
 
 func _connect_to_player_and_map() -> void:
-	if get_parent() and get_parent().has_node("Inventory"):
+	if get_parent() and (get_parent().is_in_group("player") or get_parent().has_node("Inventory")):
 		player = get_parent()
 	else:
 		var players = get_tree().get_nodes_in_group("player")
@@ -800,8 +800,8 @@ func _connect_to_player_and_map() -> void:
 				inventory.equipment_changed.connect(refresh_ui)
 
 		var rmb_cd: float = float(player.get("rmb_cd_max")) if player.get("rmb_cd_max") != null else 0.0
-		if rmb_cd > 0.0 and skill_rmb_panel != null:
-			skill_rmb_panel.visible = true
+		if skill_rmb_panel != null:
+			skill_rmb_panel.visible = (rmb_cd > 0.0)
 
 		_on_skill_cooldown_changed(0.0, 1.0, 0.0, rmb_cd)
 		update_hud(player.hp, player.max_hp, player.current_armor, player.max_armor)
@@ -905,7 +905,8 @@ func _on_dungeon_generated() -> void:
 func _on_boss_spawned(boss: Node2D) -> void:
 	if boss == null or not is_instance_valid(boss):
 		return
-	boss_panel.visible = true
+	if boss_panel != null:
+		boss_panel.visible = true
 	var b_name: String = boss.get("BOSS_NAME") if boss.get("BOSS_NAME") != null else boss.name
 	var b_hp: int = boss.get("hp") if boss.get("hp") != null else 30
 	var b_max: int = boss.get("max_hp") if boss.get("max_hp") != null else 30

@@ -104,6 +104,8 @@ func take_damage(damage_amount: int) -> void:
 		sword_collision.set_deferred("disabled", true)
 
 		await get_tree().create_timer(1.0).timeout
+		if not is_inside_tree():
+			return
 		drop_loot()
 		queue_free()
 

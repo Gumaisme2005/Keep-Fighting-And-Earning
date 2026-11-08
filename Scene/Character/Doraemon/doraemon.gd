@@ -265,6 +265,7 @@ func _refresh_ui() -> void:
 	skill_cooldown = FRIEND_COOLDOWN
 	rmb_cd_remaining = float(cooldowns[rmb])
 	rmb_cd_max = float(MOVES[rmb][1])
+	skill_cooldown_changed.emit(q_cd_remaining, skill_cooldown, rmb_cd_remaining, rmb_cd_max)
 	if hud != null:
 		hud.refresh({"page": page, "pages": PAGES.size(), "page_name": pg["name"],
 			"lmb": MOVES[lmb][0], "lmb_cd": cooldowns[lmb], "rmb": MOVES[rmb][0], "rmb_cd": cooldowns[rmb],
@@ -664,7 +665,8 @@ func _on_q() -> void:
 		_cast_aim = current_aim_offset
 		var friend := String(FRIENDS[friend_index])
 		friend_index = (friend_index + 1) % FRIENDS.size()
-		friend_cd = FRIEND_COOLDOWN
+		var cdr := PerkManager.get_cooldown_reduction() if get_node_or_null("/root/PerkManager") != null else 0.0
+		friend_cd = FRIEND_COOLDOWN * (1.0 - cdr)
 		_begin_cast("friend_" + friend, "summon", 0.15, 0.4)
 
 func _friend_from_below(kind: String, t: Node2D, dmg: int, props: Dictionary) -> void:
