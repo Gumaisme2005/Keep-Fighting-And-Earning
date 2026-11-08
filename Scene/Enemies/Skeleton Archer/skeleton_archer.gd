@@ -1,6 +1,8 @@
 extends CharacterBody2D
 
 const BalanceData = preload("res://Scene/BalanceConfig.gd")
+const Tactics = preload("res://Scene/Enemies/AI/EnemyTactics.gd")
+const TACTICAL_PROBE_DISTANCE: float = 18.0
 @export var speed: float = 65.0
 @export var attack_range: float = 195.0
 @export var retreat_range: float = 85.0
@@ -29,6 +31,23 @@ var strafe_timer: float = 0.0
 @onready var anim = $AnimatedSprite2D
 var player: Node2D = null
 
+var _tactics: Tactics
+var _tactic_config: Dictionary = {}
+var _tactic_limits: Dictionary = {}
+var _tactic_tick: int = 0
+var _physics_tick_rate: int = 60
+var _retreat_latched: bool = false
+var _approach_latched: bool = false
+var _lost_los_tick: int = -1
+var _strafe_blocked: bool = false
+var _seen_target: Node2D = null
+var _has_last_seen: bool = false
+var _last_seen_position: Vector2 = Vector2.ZERO
+var _last_seen_direction: Vector2 = Vector2.RIGHT
+var _observed_position: Vector2 = Vector2.ZERO
+var _observed_tick: int = -1
+var _prediction_offset: Vector2 = Vector2.ZERO
+
 func _ready() -> void:
 	var cfg: Dictionary = BalanceData.get_enemy_stats("skeleton_archer")
 	max_hp = int(cfg.get("hp", max_hp))
@@ -42,49 +61,104 @@ func _ready() -> void:
 	strafe_sign = -1.0 if (loot_seed % 2 == 0) else 1.0
 	anim.play("summon")
 	_find_player()
+	# Match the Orc adapter: the dungeon floor is authoritative; standalone tests
+	# must not inherit GameManager's saved floor. Missing navigation uses old AI.
+	var floor_number := 1
+	var map = get_parent()
+	if map != null and "current_level" in map:
+		var map_floor: Variant = map.get("current_level")
+		if map_floor is int and map_floor > 0:
+			floor_number = map_floor
+	_physics_tick_rate = maxi(1, Engine.physics_ticks_per_second)
+	_tactics = Tactics.new("skeleton_archer", floor_number, _physics_tick_rate)
+	_tactic_config = _tactics.get_config()
+	_tactic_limits = _tactic_config["tactics"]
 
 func _find_player() -> void:
+	player = null
 	for node in get_tree().get_nodes_in_group("player"):
 		if node is CharacterBody2D and is_instance_valid(node):
 			player = node
 			return
 
 func _physics_process(delta: float) -> void:
+	_tactic_tick += 1
 	if not is_active or is_dead or is_hurt or is_attacking:
+		_clear_tactical_motion()
 		return
 	if player == null or not is_instance_valid(player):
 		_find_player()
 		if player == null:
+			_clear_tactical_motion()
 			return
 
-	strafe_timer += delta
-	if strafe_timer >= 1.35:
-		strafe_timer = 0.0
-		strafe_sign = -strafe_sign
+	var tmap = get_parent()
+	var tactical: bool = _tactics.is_enabled() and tmap != null and tmap.has_method("has_line_of_sight") and tmap.has_method("get_smart_steer_direction")
+	var advanced: bool = tactical and int(_tactic_config["tier"]) >= Tactics.Tier.ADVANCED
+	# Tier 0/1 retain the original timer/collision strafe. Higher tiers choose the
+	# same strafe_sign through EnemyTactics instead of flipping on every contact.
+	if not advanced:
+		strafe_timer += delta
+		if strafe_timer >= 1.35:
+			strafe_timer = 0.0
+			strafe_sign = -strafe_sign
 
 	var distance: float = global_position.distance_to(player.global_position)
 	var direction: Vector2 = global_position.direction_to(player.global_position)
-	var tmap = get_parent()
 	var has_los: bool = true
 	if tmap != null and tmap.has_method("has_line_of_sight"):
 		has_los = tmap.has_line_of_sight(global_position, player.global_position)
+	if tactical:
+		if not is_instance_valid(_seen_target) or _seen_target != player:
+			_clear_tactical_motion()
+			_has_last_seen = false
+			_seen_target = player
+		if has_los:
+			_last_seen_position = player.global_position
+			_last_seen_direction = direction
+			_has_last_seen = true
+			_lost_los_tick = -1
+		else:
+			_observed_tick = -1
+			_prediction_offset = Vector2.ZERO
+			if _lost_los_tick < 0:
+				_lost_los_tick = _tactic_tick
+			if int(_tactic_config["tier"]) == Tactics.Tier.ADAPTIVE:
+				# The actual target position above is used only for the visibility
+				# query. Navigation while occluded knows only the last seen position.
+				direction = global_position.direction_to(_last_seen_position) if _has_last_seen else Vector2.RIGHT * strafe_sign
+				if direction == Vector2.ZERO:
+					direction = _last_seen_direction
+		if has_los:
+			_update_range_hysteresis(distance)
+		if _tactics.begin_decision(_tactic_tick):
+			_update_tactical_side(tmap, direction, has_los, advanced)
+	else:
+		_clear_tactical_motion()
 
 	anim.flip_h = direction.x < 0
 
 	# Nếu bị tường hoặc cột đá che khuất tầm bắn -> Di chuyển vòng qua vật cản, tuyệt đối không đứng yên bắn vào tường
 	if not has_los:
-		var move_dir: Vector2 = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
+		var desired := direction
+		if advanced and _lateral_search_active():
+			desired = direction.orthogonal() * strafe_sign
+		var move_dir: Vector2 = tmap.get_smart_steer_direction(global_position, desired) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
 		velocity = move_dir * speed
 		anim.play("walk")
 		move_and_slide()
 		return
 
-	if distance > attack_range:
+	# Safety boundaries are evaluated every physics tick, never gated by the
+	# tactical clock. Hysteresis cannot extend firing range or postpone retreat.
+	var retreating: bool = distance < retreat_range or (tactical and _retreat_latched)
+	var approaching: bool = distance > attack_range or (tactical and _approach_latched and not can_attack and not retreating)
+	if approaching:
 		var move_dir: Vector2 = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
 		velocity = move_dir * speed
 		anim.play("walk")
 		move_and_slide()
-	elif distance < retreat_range:
+	elif retreating:
 		var retreat_dir: Vector2 = tmap.get_smart_steer_direction(global_position, -direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else -direction
 		velocity = retreat_dir * (speed * 0.85)
 		anim.play("walk")
@@ -101,8 +175,82 @@ func _physics_process(delta: float) -> void:
 			velocity = strafe_dir * (speed * 0.72)
 			anim.play("walk")
 			move_and_slide()
-			if get_slide_collision_count() > 0:
+			if advanced:
+				_strafe_blocked = _strafe_blocked or get_slide_collision_count() > 0
+			elif get_slide_collision_count() > 0:
 				strafe_sign = -strafe_sign
+
+
+func _clear_tactical_motion() -> void:
+	_observed_tick = -1
+	_prediction_offset = Vector2.ZERO
+	_lost_los_tick = -1
+	_strafe_blocked = false
+
+
+func _update_range_hysteresis(distance: float) -> void:
+	var margin: float = _tactic_limits["range_hysteresis_px"]
+	if distance < retreat_range:
+		_retreat_latched = true
+	elif distance >= retreat_range + margin:
+		_retreat_latched = false
+	if distance > attack_range:
+		_approach_latched = true
+	elif distance <= attack_range - margin:
+		_approach_latched = false
+
+
+func _lateral_search_active() -> bool:
+	var budget := ceili(float(_tactic_limits["lateral_reposition_seconds"]) * _physics_tick_rate)
+	return _lost_los_tick >= 0 and _tactic_tick - _lost_los_tick < budget
+
+
+func _update_tactical_side(map: Node, direction: Vector2, has_los: bool, advanced: bool) -> void:
+	_prediction_offset = Vector2.ZERO
+	if has_los:
+		var horizon: float = _tactic_limits["prediction_seconds"]
+		if horizon > 0.0 and _observed_tick >= 0:
+			var elapsed := float(_tactic_tick - _observed_tick) / _physics_tick_rate
+			var lead := ((player.global_position - _observed_position) * horizon / elapsed).limit_length(speed * horizon)
+			if map.has_line_of_sight(player.global_position, player.global_position + lead):
+				_prediction_offset = lead
+		_observed_position = player.global_position
+		_observed_tick = _tactic_tick
+	if not advanced:
+		return
+	var candidate: StringName = &"left" if strafe_sign < 0.0 else &"right"
+	var best_score := -INF
+	var aim := _last_seen_position + _prediction_offset
+	var margin: float = _tactic_limits["range_hysteresis_px"]
+	# Exactly two local candidate positions, only on decision ticks. No scene scan.
+	for side in [strafe_sign, -strafe_sign]:
+		var state: StringName = &"left" if side < 0.0 else &"right"
+		var probe: Vector2 = global_position + direction.orthogonal() * side * TACTICAL_PROBE_DISTANCE
+		var score := 0.0
+		if state == _tactics.get_state():
+			score += -0.5 if _strafe_blocked else 0.15
+		if not map.has_line_of_sight(global_position, probe):
+			score -= 8.0
+		if _has_last_seen:
+			if map.has_line_of_sight(probe, aim):
+				score += 2.0
+			var predicted_distance := probe.distance_to(aim)
+			var safe_distance := retreat_range + margin
+			if predicted_distance < safe_distance:
+				score -= (safe_distance - predicted_distance) / TACTICAL_PROBE_DISTANCE
+			if predicted_distance > attack_range:
+				score -= (predicted_distance - attack_range) / TACTICAL_PROBE_DISTANCE
+			# Prefer a safe firing position; observed lateral movement breaks ties.
+			score -= absf(predicted_distance - (retreat_range + attack_range) * 0.5) / maxf(1.0, attack_range - retreat_range)
+		if score > best_score:
+			best_score = score
+			candidate = state
+	_strafe_blocked = false
+	_tactics.try_change_state(candidate, _tactic_tick)
+	match _tactics.get_state():
+		&"left": strafe_sign = -1.0
+		&"right": strafe_sign = 1.0
+
 
 func attack() -> void:
 	is_attacking = true
