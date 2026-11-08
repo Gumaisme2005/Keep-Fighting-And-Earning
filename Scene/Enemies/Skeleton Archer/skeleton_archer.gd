@@ -29,6 +29,14 @@ var strafe_timer: float = 0.0
 @onready var anim = $AnimatedSprite2D
 var player: Node2D = null
 
+# --- ĐIỀU HƯỚNG AI & TIẾT KIỆM TÍNH TOÁN RAYCAST ---
+var _ai_tick_timer: float = 0.0
+var _ai_tick_interval: float = 0.1 # Cập nhật tìm đường và tầm nhìn 10 lần/s thay vì 60 lần/s
+var _cached_has_los: bool = true
+var _cached_steer_dir: Vector2 = Vector2.ZERO
+var _cached_retreat_dir: Vector2 = Vector2.ZERO
+var _cached_strafe_dir: Vector2 = Vector2.ZERO
+
 func _ready() -> void:
 	var cfg: Dictionary = BalanceData.get_enemy_stats("skeleton_archer")
 	max_hp = int(cfg.get("hp", max_hp))
@@ -40,6 +48,7 @@ func _ready() -> void:
 	attack_cooldown = float(cfg.get("attack_cooldown", attack_cooldown))
 	drop_chance = float(cfg.get("drop_chance", drop_chance))
 	strafe_sign = -1.0 if (loot_seed % 2 == 0) else 1.0
+	_ai_tick_timer = randf_range(0.0, _ai_tick_interval)
 	anim.play("summon")
 	_find_player()
 
@@ -65,27 +74,36 @@ func _physics_process(delta: float) -> void:
 	var distance: float = global_position.distance_to(player.global_position)
 	var direction: Vector2 = global_position.direction_to(player.global_position)
 	var tmap = get_parent()
-	var has_los: bool = true
-	if tmap != null and tmap.has_method("has_line_of_sight"):
-		has_los = tmap.has_line_of_sight(global_position, player.global_position)
+
+	_ai_tick_timer -= delta
+	if _ai_tick_timer <= 0.0:
+		_ai_tick_timer = _ai_tick_interval
+		_cached_has_los = (tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position))
+		if not _cached_has_los or distance > attack_range:
+			_cached_steer_dir = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
+		elif distance < retreat_range:
+			_cached_retreat_dir = tmap.get_smart_steer_direction(global_position, -direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else -direction
+		else:
+			var lateral: Vector2 = direction.orthogonal() * strafe_sign
+			_cached_strafe_dir = tmap.get_smart_steer_direction(global_position, lateral) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else lateral
 
 	anim.flip_h = direction.x < 0
 
 	# Nếu bị tường hoặc cột đá che khuất tầm bắn -> Di chuyển vòng qua vật cản, tuyệt đối không đứng yên bắn vào tường
-	if not has_los:
-		var move_dir: Vector2 = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
+	if not _cached_has_los:
+		var move_dir: Vector2 = _cached_steer_dir if _cached_steer_dir != Vector2.ZERO else direction
 		velocity = move_dir * speed
 		anim.play("walk")
 		move_and_slide()
 		return
 
 	if distance > attack_range:
-		var move_dir: Vector2 = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
+		var move_dir: Vector2 = _cached_steer_dir if _cached_steer_dir != Vector2.ZERO else direction
 		velocity = move_dir * speed
 		anim.play("walk")
 		move_and_slide()
 	elif distance < retreat_range:
-		var retreat_dir: Vector2 = tmap.get_smart_steer_direction(global_position, -direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else -direction
+		var retreat_dir: Vector2 = _cached_retreat_dir if _cached_retreat_dir != Vector2.ZERO else -direction
 		velocity = retreat_dir * (speed * 0.85)
 		anim.play("walk")
 		anim.flip_h = velocity.x < 0
@@ -96,8 +114,7 @@ func _physics_process(delta: float) -> void:
 			attack()
 		else:
 			# Trong lúc hồi chiêu giữa 2 phát bắn -> Di chuyển đảo ngang (Strafe) thay vì đứng yên một chỗ
-			var lateral: Vector2 = direction.orthogonal() * strafe_sign
-			var strafe_dir: Vector2 = tmap.get_smart_steer_direction(global_position, lateral) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else lateral
+			var strafe_dir: Vector2 = _cached_strafe_dir if _cached_strafe_dir != Vector2.ZERO else (direction.orthogonal() * strafe_sign)
 			velocity = strafe_dir * (speed * 0.72)
 			anim.play("walk")
 			move_and_slide()

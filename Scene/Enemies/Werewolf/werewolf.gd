@@ -65,10 +65,17 @@ func _ready() -> void:
 	pounce_collision.disabled = true
 	claw_hitbox.position = Vector2(0, -8)
 	pounce_hitbox.position = Vector2(0, -8)
+	_ai_tick_timer = randf_range(0.0, _ai_tick_interval)
 
 	var players = get_tree().get_nodes_in_group("player")
 	if players.size() > 0:
 		player = players[0]
+
+# --- ĐIỀU HƯỚNG AI & TIẾT KIỆM TÍNH TOÁN RAYCAST ---
+var _ai_tick_timer: float = 0.0
+var _ai_tick_interval: float = 0.1 # Cập nhật tìm đường và tầm nhìn 10 lần/s thay vì 60 lần/s
+var _cached_steer_dir: Vector2 = Vector2.ZERO
+var _cached_has_los: bool = true
 
 func _draw() -> void:
 	if show_pounce_warning:
@@ -148,17 +155,24 @@ func _physics_process(delta: float) -> void:
 		pounce_hitbox.rotation = direction.angle()
 
 	var tmap = get_parent()
-	var has_los: bool = (tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position))
+	_ai_tick_timer -= delta
+	if _ai_tick_timer <= 0.0:
+		_ai_tick_timer = _ai_tick_interval
+		_cached_has_los = (tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position))
+		if distance > attack_range or not _cached_has_los:
+			_cached_steer_dir = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
+		else:
+			_cached_steer_dir = direction
 
 	# 1. Cự ly gần -> Đòn cào thường (Claw Slash - Attack01)
-	if distance <= attack_range and has_los:
+	if distance <= attack_range and _cached_has_los:
 		attack_claw(direction)
 	# 2. Cự ly trung bình + có LOS + hết cooldown -> Khựng lại tụ lực chuẩn bị vồ (Pounce - Attack02)
-	elif distance >= pounce_min_range and distance <= pounce_max_range and pounce_timer <= 0.0 and has_los:
+	elif distance >= pounce_min_range and distance <= pounce_max_range and pounce_timer <= 0.0 and _cached_has_los:
 		start_pounce_windup(direction)
 	# 3. Di chuyển truy đuổi bình thường
 	else:
-		var move_dir: Vector2 = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
+		var move_dir: Vector2 = _cached_steer_dir if _cached_steer_dir != Vector2.ZERO else direction
 		velocity = move_dir * speed
 		move_and_slide()
 		animated_sprite.play("walk")

@@ -29,6 +29,14 @@ var strafe_sign: float = 1.0
 @onready var bite_collision = $BiteHitbox/CollisionShape2D
 var player: Node2D = null
 
+# --- ĐIỀU HƯỚNG AI & TIẾT KIỆM TÍNH TOÁN RAYCAST ---
+var _ai_tick_timer: float = 0.0
+var _ai_tick_interval: float = 0.1 # Cập nhật tìm đường và tầm nhìn 10 lần/s thay vì 60 lần/s
+var _cached_has_los: bool = true
+var _cached_steer_dir: Vector2 = Vector2.ZERO
+var _cached_retreat_dir: Vector2 = Vector2.ZERO
+var _cached_strafe_dir: Vector2 = Vector2.ZERO
+
 func _ready() -> void:
 	var cfg: Dictionary = BalanceData.get_enemy_stats("vampire")
 	hp = int(cfg.get("hp", hp))
@@ -42,6 +50,7 @@ func _ready() -> void:
 	bite_collision.disabled = true
 	bite_hitbox.position = Vector2(0, -8)
 	bite_hitbox.scale = Vector2.ONE
+	_ai_tick_timer = randf_range(0.0, _ai_tick_interval)
 	var players = get_tree().get_nodes_in_group("player")
 	if players.size() > 0:
 		player = players[0]
@@ -75,11 +84,21 @@ func _physics_process(delta: float) -> void:
 		return
 
 	var tmap = get_parent()
-	var has_los: bool = (tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position))
+	_ai_tick_timer -= delta
+	if _ai_tick_timer <= 0.0:
+		_ai_tick_timer = _ai_tick_interval
+		_cached_has_los = (tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position))
+		if not _cached_has_los or distance > attack_range:
+			_cached_steer_dir = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
+		elif distance < retreat_range:
+			_cached_retreat_dir = tmap.get_smart_steer_direction(global_position, -direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else -direction
+		else:
+			var lateral: Vector2 = direction.orthogonal() * strafe_sign
+			_cached_strafe_dir = tmap.get_smart_steer_direction(global_position, lateral) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else lateral
 
 	# Nếu bị tường đá che khuất -> Lượn vòng qua vật cản tìm góc bắn
-	if not has_los:
-		var move_dir: Vector2 = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
+	if not _cached_has_los:
+		var move_dir: Vector2 = _cached_steer_dir if _cached_steer_dir != Vector2.ZERO else direction
 		velocity = move_dir * speed
 		animated_sprite.play("walk")
 		move_and_slide()
@@ -87,13 +106,13 @@ func _physics_process(delta: float) -> void:
 
 	if distance > attack_range:
 		# Bay áp sát về phía tầm bắn
-		var move_dir: Vector2 = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
+		var move_dir: Vector2 = _cached_steer_dir if _cached_steer_dir != Vector2.ZERO else direction
 		velocity = move_dir * speed
 		animated_sprite.play("walk")
 		move_and_slide()
 	elif distance < retreat_range:
 		# Người chơi áp sát quá gần -> Dơi vỗ cánh lùi lại giữ cự ly bắn chưởng
-		var retreat_dir: Vector2 = tmap.get_smart_steer_direction(global_position, -direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else -direction
+		var retreat_dir: Vector2 = _cached_retreat_dir if _cached_retreat_dir != Vector2.ZERO else -direction
 		velocity = retreat_dir * (speed * 0.9)
 		animated_sprite.play("walk")
 		move_and_slide()
@@ -104,8 +123,7 @@ func _physics_process(delta: float) -> void:
 			attack()
 		else:
 			# Bay lượn đảo cánh (Strafe) né đòn trong thời gian hồi phép
-			var lateral: Vector2 = direction.orthogonal() * strafe_sign
-			var strafe_dir: Vector2 = tmap.get_smart_steer_direction(global_position, lateral) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else lateral
+			var strafe_dir: Vector2 = _cached_strafe_dir if _cached_strafe_dir != Vector2.ZERO else (direction.orthogonal() * strafe_sign)
 			velocity = strafe_dir * (speed * 0.75)
 			animated_sprite.play("walk")
 			move_and_slide()

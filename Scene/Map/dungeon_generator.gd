@@ -837,8 +837,7 @@ func get_player_exact_grid_position() -> Vector2:
 	)
 
 # --- KIỂM TRA TẦM NHÌN XUYÊN TƯỜNG / CỬA ĐÓNG & ĐIỀU HƯỚNG QUÁI ---
-func is_global_pos_wall_or_door(world_pos: Vector2) -> bool:
-	var cell: Vector2i = local_to_map(to_local(world_pos))
+func _is_cell_wall_or_door(cell: Vector2i) -> bool:
 	if get_cell_atlas_coords(LAYER_FLOOR, cell) != FLOOR_COORD:
 		return true
 	if get_layers_count() > 2 and get_cell_source_id(2, cell) != -1:
@@ -852,17 +851,26 @@ func is_global_pos_wall_or_door(world_pos: Vector2) -> bool:
 				return true
 	return false
 
+func is_global_pos_wall_or_door(world_pos: Vector2) -> bool:
+	var cell: Vector2i = local_to_map(to_local(world_pos))
+	return _is_cell_wall_or_door(cell)
+
 func has_line_of_sight(from_global: Vector2, to_global: Vector2) -> bool:
 	var p0: Vector2 = to_local(from_global)
 	var p1: Vector2 = to_local(to_global)
 	var dist: float = p0.distance_to(p1)
 	if dist < 4.0:
-		return not is_global_pos_wall_or_door(to_global)
+		return not _is_cell_wall_or_door(local_to_map(p1))
 	var steps: int = maxi(2, int(ceil(dist / 4.0)))
+	var last_cell := Vector2i(999999, 999999)
 	for s in range(0, steps + 1):
 		var t: float = float(s) / float(steps)
 		var sample_local: Vector2 = p0.lerp(p1, t)
-		if is_global_pos_wall_or_door(to_global(sample_local)):
+		var cell: Vector2i = local_to_map(sample_local)
+		if cell == last_cell:
+			continue
+		last_cell = cell
+		if _is_cell_wall_or_door(cell):
 			return false
 	return true
 
