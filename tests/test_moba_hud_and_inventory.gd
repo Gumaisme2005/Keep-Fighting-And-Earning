@@ -36,6 +36,7 @@ func _ready() -> void:
 	test_potions_and_stacking()
 	test_floor_drop_scaling_and_boss_bonus()
 	test_dual_boss_chests_and_loot()
+	test_damage_number_pool_and_reset()
 
 	print("\n========================================================")
 	print("  TEST RESULTS: ", tests_passed, " PASSED, ", tests_failed, " FAILED")
@@ -576,3 +577,29 @@ func test_dual_boss_chests_and_loot() -> void:
 
 	for c in spawned_chests:
 		c.queue_free()
+
+func test_damage_number_pool_and_reset() -> void:
+	print("\n--- Test Group 12: Damage Number Pool & Floor Transition Safety ---")
+	var ui = GAME_UI_SCENE.instantiate()
+	add_child(ui)
+
+	# 1. Test spawning over 40 popups (cap is 40)
+	for i in range(50):
+		ui.spawn_damage_number(Vector2(100 + i * 2, 100), i + 1, Color(1.0, 0.9, 0.3))
+
+	assert_test(ui._active_damage_labels.size() == 40, "Active damage labels capped at MAX_DAMAGE_LABELS (40) when 50 hits spawned")
+
+	# 2. Test generation counter & tween safety on reused labels
+	var first_label: Label = ui._active_damage_labels[0]
+	assert_test(first_label != null and is_instance_valid(first_label), "Active labels remain valid instances during rapid reuse")
+	var gen = first_label.get_meta("damage_gen", 0)
+	assert_test(int(gen) >= 1, "Labels receive generational counter to prevent zombie callback conflicts")
+
+	# 3. Test reset_damage_number_pool() (used on floor transitions / scene reload)
+	ui.reset_damage_number_pool()
+	assert_test(ui._active_damage_labels.is_empty(), "Active damage labels list emptied after reset_damage_number_pool()")
+	assert_test(not first_label.visible, "Active labels hidden after reset_damage_number_pool()")
+	assert_test(ui._damage_label_pool.has(first_label), "Reclaimed labels returned to pool for zero-allocation reuse")
+
+	ui.queue_free()
+

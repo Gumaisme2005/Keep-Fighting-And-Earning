@@ -1,53 +1,35 @@
-extends CharacterBody2D
+extends BaseEnemy
 
-const BalanceData = preload("res://Scene/BalanceConfig.gd")
-@export var speed: float = 65.0
-@export var attack_range: float = 195.0
 @export var retreat_range: float = 85.0
 @export var attack_cooldown: float = 2.0
-@export var damage: int = 1
-@export var max_hp: int = 4
-
 @export var arrow_scene: PackedScene
-@export var world_item_scene: PackedScene = preload("res://Scene/Items/WorldItem/WorldItem.tscn")
-@export var loot_table: Array[ItemData] = [
-	preload("res://Scene/Items/Common/health_potion.tres"),
-	preload("res://Scene/Items/Common/iron_helmet.tres")
-]
-@export var drop_chance: float = 0.3
-var loot_seed: int = 0
 
-var hp: int = 4
-var is_active: bool = false
-var is_dead: bool = false
-var is_attacking: bool = false
 var is_hurt: bool = false
 var can_attack: bool = true
 var strafe_sign: float = 1.0
 var strafe_timer: float = 0.0
 
-@onready var anim = $AnimatedSprite2D
-var player: Node2D = null
+@onready var anim: AnimatedSprite2D = $AnimatedSprite2D
+
+var _cached_retreat_dir: Vector2 = Vector2.ZERO
+var _cached_strafe_dir: Vector2 = Vector2.ZERO
+
+func _init() -> void:
+	loot_table = [
+		preload("res://Scene/Items/Common/health_potion.tres"),
+		preload("res://Scene/Items/Common/iron_helmet.tres")
+	]
+	drop_chance = 0.35
 
 func _ready() -> void:
+	enemy_balance_id = "skeleton_archer"
+	super._ready()
 	var cfg: Dictionary = BalanceData.get_enemy_stats("skeleton_archer")
-	max_hp = int(cfg.get("hp", max_hp))
-	hp = max_hp
-	damage = int(cfg.get("damage", damage))
-	speed = float(cfg.get("speed", speed))
-	attack_range = float(cfg.get("attack_range", attack_range))
 	retreat_range = float(cfg.get("retreat_range", retreat_range))
 	attack_cooldown = float(cfg.get("attack_cooldown", attack_cooldown))
-	drop_chance = float(cfg.get("drop_chance", drop_chance))
 	strafe_sign = -1.0 if (loot_seed % 2 == 0) else 1.0
-	anim.play("summon")
-	_find_player()
-
-func _find_player() -> void:
-	for node in get_tree().get_nodes_in_group("player"):
-		if node is CharacterBody2D and is_instance_valid(node):
-			player = node
-			return
+	if anim != null:
+		anim.play("summon")
 
 func _physics_process(delta: float) -> void:
 	if not is_active or is_dead or is_hurt or is_attacking:
@@ -65,27 +47,36 @@ func _physics_process(delta: float) -> void:
 	var distance: float = global_position.distance_to(player.global_position)
 	var direction: Vector2 = global_position.direction_to(player.global_position)
 	var tmap = get_parent()
-	var has_los: bool = true
-	if tmap != null and tmap.has_method("has_line_of_sight"):
-		has_los = tmap.has_line_of_sight(global_position, player.global_position)
+
+	_ai_tick_timer -= delta
+	if _ai_tick_timer <= 0.0:
+		_ai_tick_timer = _ai_tick_interval
+		_cached_has_los = (tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position))
+		if not _cached_has_los or distance > attack_range:
+			_cached_steer_dir = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
+		elif distance < retreat_range:
+			_cached_retreat_dir = tmap.get_smart_steer_direction(global_position, -direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else -direction
+		else:
+			var lateral: Vector2 = direction.orthogonal() * strafe_sign
+			_cached_strafe_dir = tmap.get_smart_steer_direction(global_position, lateral) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else lateral
 
 	anim.flip_h = direction.x < 0
 
 	# Nếu bị tường hoặc cột đá che khuất tầm bắn -> Di chuyển vòng qua vật cản, tuyệt đối không đứng yên bắn vào tường
-	if not has_los:
-		var move_dir: Vector2 = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
+	if not _cached_has_los:
+		var move_dir: Vector2 = _cached_steer_dir if _cached_steer_dir != Vector2.ZERO else direction
 		velocity = move_dir * speed
 		anim.play("walk")
 		move_and_slide()
 		return
 
 	if distance > attack_range:
-		var move_dir: Vector2 = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
+		var move_dir: Vector2 = _cached_steer_dir if _cached_steer_dir != Vector2.ZERO else direction
 		velocity = move_dir * speed
 		anim.play("walk")
 		move_and_slide()
 	elif distance < retreat_range:
-		var retreat_dir: Vector2 = tmap.get_smart_steer_direction(global_position, -direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else -direction
+		var retreat_dir: Vector2 = _cached_retreat_dir if _cached_retreat_dir != Vector2.ZERO else -direction
 		velocity = retreat_dir * (speed * 0.85)
 		anim.play("walk")
 		anim.flip_h = velocity.x < 0
@@ -96,8 +87,7 @@ func _physics_process(delta: float) -> void:
 			attack()
 		else:
 			# Trong lúc hồi chiêu giữa 2 phát bắn -> Di chuyển đảo ngang (Strafe) thay vì đứng yên một chỗ
-			var lateral: Vector2 = direction.orthogonal() * strafe_sign
-			var strafe_dir: Vector2 = tmap.get_smart_steer_direction(global_position, lateral) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else lateral
+			var strafe_dir: Vector2 = _cached_strafe_dir if _cached_strafe_dir != Vector2.ZERO else (direction.orthogonal() * strafe_sign)
 			velocity = strafe_dir * (speed * 0.72)
 			anim.play("walk")
 			move_and_slide()
@@ -113,21 +103,9 @@ func attack() -> void:
 	if not is_inside_tree() or is_dead:
 		return
 
-	if not is_hurt and is_instance_valid(player) and arrow_scene != null:
-		var tmap = get_parent()
-		if tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position):
-			shoot_arrow()
+	shoot_arrow()
 
-	await get_tree().create_timer(0.35).timeout
-	if not is_inside_tree() or is_dead:
-		return
-
-	if is_attacking:
-		is_attacking = false
-		if not is_hurt:
-			anim.play("idle")
-
-	await get_tree().create_timer(maxf(0.1, attack_cooldown - 0.75)).timeout
+	await get_tree().create_timer(attack_cooldown).timeout
 	if not is_inside_tree() or is_dead:
 		return
 	can_attack = true
@@ -148,25 +126,11 @@ func shoot_arrow() -> void:
 	get_parent().add_child(arrow)
 	arrow.global_position = spawn_pos
 
-func take_damage(amount: int) -> void:
-	if not is_active or is_dead:
-		return
+func _on_hurt() -> void:
+	is_hurt = true
 
-	hp -= amount
-	if get_tree():
-		get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -20), amount, Color(1.0, 0.9, 0.3))
-	if hp > 0:
-		is_hurt = true
-		is_attacking = false
-		anim.play("hurt")
-	else:
-		is_dead = true
-		if get_node_or_null("/root/GameManager") != null:
-			GameManager.register_enemy_kill()
-		anim.play("death")
-		$CollisionShape2D.set_deferred("disabled", true)
-		if has_node("Hurtbox/CollisionShape2D"):
-			$Hurtbox/CollisionShape2D.set_deferred("disabled", true)
+func _die() -> void:
+	super._die()
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	var current = anim.animation
@@ -184,22 +148,3 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 			anim.play("idle")
 	elif current == "summon":
 		anim.play("idle")
-
-func drop_loot() -> void:
-	var item_scene = world_item_scene if world_item_scene != null else preload("res://Scene/Items/WorldItem/WorldItem.tscn")
-	var rng := RandomNumberGenerator.new()
-	rng.seed = loot_seed if loot_seed != 0 else (int(global_position.x * 911) ^ int(global_position.y * 3571))
-	if rng.randf() <= drop_chance:
-		var floor_lvl := 1
-		if get_node_or_null("/root/GameManager") != null:
-			floor_lvl = GameManager.current_level
-		var random_item: ItemData = ItemDatabase.get_random_drop(floor_lvl, false, rng)
-		if random_item == null and loot_table.size() > 0:
-			random_item = loot_table[rng.randi() % loot_table.size()]
-
-		if random_item != null:
-			var item_drop = item_scene.instantiate()
-			item_drop.item_data = random_item
-			item_drop.global_position = global_position
-			var parent_node = get_parent() if get_parent() != null else get_tree().current_scene
-			parent_node.call_deferred("add_child", item_drop)

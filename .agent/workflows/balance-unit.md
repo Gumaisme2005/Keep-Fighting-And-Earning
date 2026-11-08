@@ -4,24 +4,15 @@ description: Quy trình chuẩn để Buff hoặc Nerf chỉ số của Nhân v�
 
 # Workflow Cân Bằng Chỉ Số (Buff / Nerf Nhân Vật & Quái Vật)
 
-Toàn bộ chỉ số chiến đấu của 4 Anh hùng Đoàn Hộ Nhẫn, 5 loại Quái vật Moria và 2 Đại Thủ Lĩnh được quản lý tập trung tại một nguồn duy nhất (**Single Source of Truth**): [`Scene/BalanceConfig.gd`](../../Scene/BalanceConfig.gd).
+Toàn bộ chỉ số chiến đấu của các Anh hùng Đoàn Hộ Nhẫn, các loại Quái vật Moria và các Đại Thủ Lĩnh được quản lý bằng kiến trúc **Data-Driven Custom Resources (.tres)** trong thư mục `Scene/Balance/` kết nối qua [`Scene/BalanceConfig.gd`](../../Scene/BalanceConfig.gd).
 
-## Bước 1: Chỉnh sửa chỉ số tại `Scene/BalanceConfig.gd`
-Mở file `Scene/BalanceConfig.gd` và điều chỉnh trực tiếp trong các bảng:
-1. **`HERO_STATS`** (`"miya"`, `"olaf"`, `"pyrois"`, `"charlotte"`):
-   - `hp`: Máu tối đa cơ bản
-   - `armor`: Giáp khởi đầu (tự hồi phục sau giao tranh)
-   - `damage`: Sát thương đòn đánh thường
-   - `speed`: Tốc độ di chuyển (px/s)
-   - `attack_cooldown`: Thời gian giãn cách giữa 2 đòn đánh thường (giây)
-   - `skill_cooldown`: Thời gian hồi chiêu `[Q]` (giây)
-   - `rmb_cooldown`: Thời gian hồi chiêu `[Chuột Phải]` (dành cho Charlotte)
-2. **`ENEMY_STATS`** (`"orc"`, `"armored_orc"`, `"skeleton"`, `"skeleton_archer"`, `"vampire"`):
-   - `hp`, `armor`, `damage`, `rage_damage`, `speed`, `attack_range`, `attack_cooldown`, `drop_chance`
-3. **`BOSS_STATS`** (`"necromancer"`, `"orc_rider"`):
-   - `hp`, `speed`, `damage` / `melee_damage`, `poison_damage`, `attack_cooldown`
+## Bước 1: Chỉnh sửa chỉ số tại `Scene/Balance/` hoặc `Scene/BalanceConfig.gd`
+Mở Inspector Godot trên file `.tres` tương ứng hoặc điều chỉnh qua `BalanceConfig.set_unit_stat()`:
+1. **Heroes** (`Scene/Balance/Heroes/`): `miya.tres`, `olaf.tres`, `pyrois.tres`, `charlotte.tres`, `yugi.tres`, `doraemon.tres`, `miyabi.tres`, `luong_tho.tres`
+2. **Enemies** (`Scene/Balance/Enemies/`): `orc.tres`, `armored_orc.tres`, `skeleton.tres`, `skeleton_archer.tres`, `vampire.tres`, `werewolf.tres`
+3. **Bosses** (`Scene/Balance/Bosses/`): `necromancer.tres`, `orc_rider.tres`, `skeleton_king.tres`
 
-> Lưu ý: Không cần sửa từng file `.gd` của nhân vật hay quái vật, vì hàm `_ready()` của toàn bộ 11 thực thể và giao diện `CharacterSelect` / `GameManager` đều tự động nạp dữ liệu từ `BalanceConfig.gd`.
+> Lưu ý: Không cần sửa từng file `.gd` của nhân vật hay quái vật, vì hàm `_ready()` của toàn bộ thực thể và giao diện `CharacterSelect` / `GameManager` đều tự động nạp dữ liệu từ `BalanceConfig.gd` / Custom Resources.
 
 ## Bước 2: Chạy bộ kiểm thử tự động để xác nhận đồng bộ
 // turbo

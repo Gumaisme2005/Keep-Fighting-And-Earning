@@ -63,7 +63,6 @@ var minimap_expanded: bool = false
 var mute_btn: Button = null
 
 const PERK_MODAL_SCENE = preload("res://Scene/UI/PerkSelectionModal.tscn")
-const PerkData = preload("res://Scene/Perks/PerkData.gd")
 var perk_modal: CanvasLayer = null
 var active_perks_bar: HBoxContainer = null
 
@@ -1151,21 +1150,115 @@ func show_toast(text: String) -> void:
 	_toast_tween.tween_property(toast_label, "modulate:a", 0.0, 0.4)
 	_toast_tween.tween_callback(func(): toast_label.visible = false)
 
-func spawn_damage_number(world_pos: Vector2, amount: int, color: Color = Color(1.0, 0.9, 0.3)) -> void:
-	if not is_inside_tree() or get_tree().current_scene == null:
+# --- OBJECT POOL CHO DAMAGE NUMBERS (TRÁNH PHÂN MẢNH BỘ NHỚ & NODE CHURN) ---
+const MAX_DAMAGE_LABELS: int = 40
+var _damage_label_pool: Array[Label] = []
+var _active_damage_labels: Array[Label] = []
+var _damage_container: Node2D = null
+
+func _exit_tree() -> void:
+	reset_damage_number_pool()
+
+func _kill_label_tween(lbl: Label) -> void:
+	if not is_instance_valid(lbl):
 		return
-	var lbl := Label.new()
+	if lbl.has_meta("damage_tween"):
+		var tw = lbl.get_meta("damage_tween")
+		if tw is Tween and is_instance_valid(tw) and tw.is_valid():
+			tw.kill()
+		lbl.set_meta("damage_tween", null)
+
+func reset_damage_number_pool() -> void:
+	for lbl in _active_damage_labels:
+		if is_instance_valid(lbl):
+			_kill_label_tween(lbl)
+			lbl.visible = false
+			if not _damage_label_pool.has(lbl):
+				_damage_label_pool.append(lbl)
+	_active_damage_labels.clear()
+
+	if _damage_container != null and is_instance_valid(_damage_container):
+		for child in _damage_container.get_children():
+			if child is Label:
+				_kill_label_tween(child)
+				child.visible = false
+
+func reset_damage_pool() -> void:
+	reset_damage_number_pool()
+
+func _get_damage_container() -> Node2D:
+	if not is_inside_tree() or get_tree().current_scene == null:
+		return null
+	if _damage_container == null or not is_instance_valid(_damage_container) or _damage_container.get_parent() != get_tree().current_scene:
+		# Thu dọn danh sách label cũ nếu scene đã chuyển tầng hoặc reload
+		reset_damage_number_pool()
+		_damage_label_pool.clear()
+		_active_damage_labels.clear()
+		_damage_container = Node2D.new()
+		_damage_container.name = "DamageNumberPool"
+		_damage_container.z_index = 50
+		get_tree().current_scene.add_child(_damage_container)
+	return _damage_container
+
+func spawn_damage_number(world_pos: Vector2, amount: int, color: Color = Color(1.0, 0.9, 0.3)) -> void:
+	var container := _get_damage_container()
+	if container == null:
+		return
+
+	var lbl: Label = null
+	while not _damage_label_pool.is_empty():
+		var candidate = _damage_label_pool.pop_back()
+		if is_instance_valid(candidate) and candidate.get_parent() == container:
+			lbl = candidate
+			break
+
+	if lbl == null:
+		if _active_damage_labels.size() < MAX_DAMAGE_LABELS:
+			lbl = Label.new()
+			lbl.add_theme_font_size_override("font_size", 11)
+			lbl.add_theme_color_override("font_outline_color", Color.BLACK)
+			lbl.add_theme_constant_override("outline_size", 3)
+			container.add_child(lbl)
+		elif not _active_damage_labels.is_empty():
+			# Tái sử dụng label cũ nhất khi số lượng trên màn hình vượt ngưỡng 40
+			lbl = _active_damage_labels.pop_front()
+
+	if not is_instance_valid(lbl):
+		return
+
+	# Hủy triệt để Tween cũ và ngắt mọi callback trước đó của label này
+	_kill_label_tween(lbl)
+
+	# Tăng generation counter để vô hiệu hóa mọi callback cũ nếu có độ trễ
+	var gen: int = 1
+	if lbl.has_meta("damage_gen"):
+		gen = int(lbl.get_meta("damage_gen")) + 1
+	lbl.set_meta("damage_gen", gen)
+
+	_active_damage_labels.append(lbl)
+
+	# Thiết lập lại trạng thái hiển thị
+	lbl.visible = true
+	lbl.modulate = Color.WHITE
+	lbl.scale = Vector2.ONE
 	lbl.text = ("+" if color.g > 0.85 and color.r < 0.5 else "-") + str(amount)
 	lbl.global_position = world_pos + Vector2(randf_range(-8.0, 8.0), -10.0)
-	lbl.z_index = 50
-	lbl.add_theme_font_size_override("font_size", 11)
 	lbl.add_theme_color_override("font_color", color)
-	lbl.add_theme_color_override("font_outline_color", Color.BLACK)
-	lbl.add_theme_constant_override("outline_size", 3)
-	get_tree().current_scene.add_child(lbl)
 
 	var tw = lbl.create_tween()
+	lbl.set_meta("damage_tween", tw)
 	tw.set_parallel(true)
 	tw.tween_property(lbl, "global_position:y", lbl.global_position.y - 22.0, 0.55).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tw.tween_property(lbl, "modulate:a", 0.0, 0.55)
-	tw.chain().tween_callback(lbl.queue_free)
+	tw.chain().tween_callback(_on_damage_label_finished.bind(lbl, gen))
+
+func _on_damage_label_finished(lbl: Label, expected_gen: int) -> void:
+	if not is_instance_valid(lbl):
+		return
+	if not lbl.has_meta("damage_gen") or int(lbl.get_meta("damage_gen")) != expected_gen:
+		return
+
+	lbl.visible = false
+	_active_damage_labels.erase(lbl)
+	if _damage_label_pool.size() < MAX_DAMAGE_LABELS and not _damage_label_pool.has(lbl):
+		_damage_label_pool.append(lbl)

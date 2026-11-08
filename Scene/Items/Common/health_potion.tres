@@ -10,8 +10,6 @@ region = Rect2(48, 272, 16, 16)
 [resource]
 script = ExtResource("1_ecocj")
 item_name = "Flask of Athelas"
-type = 3
-rarity = 0
 icon = SubResource("AtlasTexture_28578")
 description = "Extract of Kingsfoil that restores vitality and soothes battle wounds."
 heal_amount = 2

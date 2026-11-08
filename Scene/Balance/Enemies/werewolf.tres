@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EnemyBalanceData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scene/Balance/EnemyBalanceData.gd" id="1_enemy"]
+
+[resource]
+script = ExtResource("1_enemy")
+id = "werewolf"
+name = "Warg-breed Werewolf"
+hp = 5
+armor = 0
+damage = 2
+speed = 95.0
+attack_range = 24.0
+drop_chance = 0.35
+custom_stats = {"pounce_cooldown": 3.5, "pounce_damage": 3, "pounce_distance": 95.0, "pounce_max_range": 135.0, "pounce_min_range": 50.0, "pounce_speed": 175.0, "pounce_windup_time": 0.65}

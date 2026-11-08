@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EnemyBalanceData" format=3 uid="uid://dgbbt21j7tvf2"]
+
+[ext_resource type="Script" uid="uid://bjk63nchr1h18" path="res://Scene/Balance/EnemyBalanceData.gd" id="1_enemy"]
+
+[resource]
+script = ExtResource("1_enemy")
+id = "armored_orc"
+name = "Armored Uruk-hai"
+hp = 5
+armor = 6
+drop_chance = 0.35
+custom_stats = {
+"rage_damage": 4
+}
