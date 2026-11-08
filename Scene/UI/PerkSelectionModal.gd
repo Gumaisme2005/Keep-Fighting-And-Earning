@@ -1,6 +1,5 @@
 extends CanvasLayer
 
-const PerkData = preload("res://Scene/Perks/PerkData.gd")
 const UITheme = preload("res://Scene/UI/UITheme.gd")
 
 signal perk_chosen(perk: PerkData)

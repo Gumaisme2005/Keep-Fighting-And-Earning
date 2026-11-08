@@ -1,58 +1,23 @@
-extends CharacterBody2D
+extends BaseEnemy
 
-const BalanceData = preload("res://Scene/BalanceConfig.gd")
-@export var damage: int = 1
-@export var speed: float = 70.0
-@export var attack_range: float = 20.0 # Chạy lại gần khoảng 20 pixel mới vung rìu
-@export var world_item_scene: PackedScene
-@export var loot_table: Array[ItemData] = []
-@export var drop_chance: float = 0.3
-var loot_seed: int = 0
-
-var hp: int = 3
-var max_hp: int = 3
-var is_dead: bool = false
-var is_attacking: bool = false
-var is_active = false
-
-@onready var animated_sprite = $AnimatedSprite2D
 @onready var axe_hitbox = $AxeHitbox
 @onready var axe_collision = $AxeHitbox/CollisionShape2D
-var player: Node2D = null
-
-# --- ĐIỀU HƯỚNG AI & TIẾT KIỆM TÍNH TOÁN RAYCAST ---
-var _ai_tick_timer: float = 0.0
-var _ai_tick_interval: float = 0.1 # Cập nhật tìm đường 10 lần/s thay vì 60 lần/s
-var _cached_steer_dir: Vector2 = Vector2.ZERO
-var _cached_has_los: bool = true
 
 func _ready() -> void:
-	var cfg: Dictionary = BalanceData.get_enemy_stats("orc")
-	hp = int(cfg.get("hp", hp))
-	max_hp = hp
-	damage = int(cfg.get("damage", damage))
-	speed = float(cfg.get("speed", speed))
-	attack_range = float(cfg.get("attack_range", attack_range))
-	drop_chance = float(cfg.get("drop_chance", drop_chance))
-	animated_sprite.play("idle")
+	enemy_balance_id = "orc"
+	super._ready()
 	axe_collision.disabled = true
 	axe_hitbox.position = Vector2(0, -7)
 	axe_hitbox.scale = Vector2.ONE
-	_ai_tick_timer = randf_range(0.0, _ai_tick_interval)
-	var players = get_tree().get_nodes_in_group("player")
-	if players.size() > 0:
-		player = players[0]
 
 func _physics_process(delta: float) -> void:
 	if not is_active:
 		return
 	if player == null or not is_instance_valid(player):
-		var players = get_tree().get_nodes_in_group("player")
-		if players.size() > 0:
-			player = players[0]
-		else:
+		_find_player()
+		if player == null:
 			return
-	if is_dead or animated_sprite.animation == "hurt":
+	if is_dead or (animated_sprite != null and animated_sprite.animation == "hurt"):
 		return
 
 	var distance = global_position.distance_to(player.global_position)
@@ -98,31 +63,16 @@ func attack():
 	animated_sprite.play("attack")
 	axe_collision.disabled = false
 
-func take_damage(damage_amount: int) -> void:
-	if not is_active or is_dead:
-		return
+func _on_hurt() -> void:
+	axe_collision.set_deferred("disabled", true)
 
-	hp -= damage_amount
-	_spawn_damage_popup(damage_amount)
-	if hp > 0:
-		animated_sprite.play("hurt")
-		is_attacking = false
-		axe_collision.set_deferred("disabled", true)
-	else:
-		is_dead = true
-		var gm = get_node_or_null("/root/GameManager")
-		if gm != null and gm.has_method("register_enemy_kill"):
-			gm.register_enemy_kill()
-		animated_sprite.play("death")
-		$Hurtbox/CollisionShape2D.set_deferred("disabled", true)
-		$CollisionShape2D.set_deferred("disabled", true)
-		axe_collision.set_deferred("disabled", true)
-
-func _spawn_damage_popup(amount: int) -> void:
-	if get_tree():
-		get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -20), amount, Color(1.0, 0.9, 0.3))
+func _die() -> void:
+	super._die()
+	axe_collision.set_deferred("disabled", true)
 
 func _on_animated_sprite_2d_animation_finished() -> void:
+	if animated_sprite == null:
+		return
 	if animated_sprite.animation == "death":
 		drop_loot()
 		queue_free()
@@ -142,22 +92,3 @@ func _on_axe_hitbox_area_entered(area: Area2D) -> void:
 			return
 		if target.has_method("take_damage"):
 			target.take_damage(damage)
-
-func drop_loot() -> void:
-	var item_scene = world_item_scene if world_item_scene != null else preload("res://Scene/Items/WorldItem/WorldItem.tscn")
-	var rng := RandomNumberGenerator.new()
-	rng.seed = loot_seed if loot_seed != 0 else (int(global_position.x * 911) ^ int(global_position.y * 3571))
-	if rng.randf() <= drop_chance:
-		var floor_lvl := 1
-		if get_node_or_null("/root/GameManager") != null:
-			floor_lvl = GameManager.current_level
-		var random_item: ItemData = ItemDatabase.get_random_drop(floor_lvl, false, rng)
-		if random_item == null and loot_table.size() > 0:
-			random_item = loot_table[rng.randi() % loot_table.size()]
-
-		if random_item != null:
-			var item_drop = item_scene.instantiate()
-			item_drop.item_data = random_item
-			item_drop.global_position = global_position
-			var parent_node = get_parent() if get_parent() != null else get_tree().current_scene
-			parent_node.call_deferred("add_child", item_drop)

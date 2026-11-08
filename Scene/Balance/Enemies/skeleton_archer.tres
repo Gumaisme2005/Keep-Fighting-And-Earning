@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EnemyBalanceData" format=3 uid="uid://2mqlh65crjl4"]
+
+[ext_resource type="Script" uid="uid://bjk63nchr1h18" path="res://Scene/Balance/EnemyBalanceData.gd" id="1_enemy"]
+
+[resource]
+script = ExtResource("1_enemy")
+id = "skeleton_archer"
+name = "Minas Morgul Bone Archer"
+hp = 5
+speed = 70.0
+attack_range = 195.0
+custom_stats = {
+"attack_cooldown": 1.6,
+"retreat_range": 85.0
+}

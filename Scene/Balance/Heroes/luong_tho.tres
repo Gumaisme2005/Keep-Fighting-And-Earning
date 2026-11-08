@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="HeroBalanceData" format=3 uid="uid://bitbcjs1hix1y"]
+
+[ext_resource type="Script" uid="uid://b02vqivaicvow" path="res://Scene/Balance/HeroBalanceData.gd" id="1_hero"]
+
+[resource]
+script = ExtResource("1_hero")
+id = "luong_tho"
+name = "Lương Thơ"
+index = 7
+role = "Twin Gunblade Duelist"
+weapon = "Twin Tonfa-Gunblades"
+skill_icon = "sword_large"
+hp = 5
+armor = 2
+speed = 155
+attack_cooldown = 0.3
+skill_cooldown = 20
+lore = "A duelist wielding twin tonfa-gunblades - hammer heads, gear boxes and long barrels. She keeps them on her back until the fight starts. Left Click: 3-step combo Stab -> Twin Swing -> Ground Smash (2x + daze)."
+skill_q = "White Moon — Key Q: Transform into the white-haired form for 12s: immune to all damage, +1 damage on every hit, 25% faster attacks, 20% faster movement, piercing rounds. Cooldown: 20s."
+skill_rmb = "Twin Barrels — Right Click: Fire both barrels along the aim, 2 rounds (hold to keep firing). Cooldown: 0.8s."
+custom_stats = {
+"bullet_range": 220.0,
+"bullet_speed": 320.0,
+"rmb_cooldown": 0.8,
+"upgrade_duration": 12.0
+}

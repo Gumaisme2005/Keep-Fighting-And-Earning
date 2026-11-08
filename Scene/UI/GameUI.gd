@@ -63,7 +63,6 @@ var minimap_expanded: bool = false
 var mute_btn: Button = null
 
 const PERK_MODAL_SCENE = preload("res://Scene/UI/PerkSelectionModal.tscn")
-const PerkData = preload("res://Scene/Perks/PerkData.gd")
 var perk_modal: CanvasLayer = null
 var active_perks_bar: HBoxContainer = null
 

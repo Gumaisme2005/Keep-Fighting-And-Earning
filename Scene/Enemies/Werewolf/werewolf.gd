@@ -1,34 +1,15 @@
-extends CharacterBody2D
+extends BaseEnemy
 
-const BalanceData = preload("res://Scene/BalanceConfig.gd")
-
-@export var damage: int = 2
 @export var pounce_damage: int = 3
-@export var speed: float = 95.0
 @export var pounce_speed: float = 175.0
 @export var pounce_distance: float = 95.0
 @export var pounce_windup_time: float = 0.65
-@export var attack_range: float = 24.0
 @export var pounce_min_range: float = 50.0
 @export var pounce_max_range: float = 135.0
 @export var pounce_cooldown: float = 3.5
 
-@export var world_item_scene: PackedScene = preload("res://Scene/Items/WorldItem/WorldItem.tscn")
-@export var loot_table: Array[ItemData] = [
-	preload("res://Scene/Items/Common/health_potion.tres"),
-	preload("res://Scene/Items/Rare/big_health_potion.tres"),
-	preload("res://Scene/Items/Common/iron_sword.tres")
-]
-@export var drop_chance: float = 0.35
-var loot_seed: int = 0
-
-var hp: int = 5
-var max_hp: int = 5
-var is_dead: bool = false
-var is_attacking: bool = false
 var is_preparing_pounce: bool = false
 var is_pouncing: bool = false
-var is_active: bool = false
 
 var pounce_timer: float = 0.0
 var pounce_direction: Vector2 = Vector2.ZERO
@@ -36,46 +17,35 @@ var pounce_traveled: float = 0.0
 var show_pounce_warning: bool = false
 var windup_flash_tween: Tween = null
 
-@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var claw_hitbox: Area2D = $ClawHitbox
 @onready var claw_collision: CollisionShape2D = $ClawHitbox/CollisionShape2D
 @onready var pounce_hitbox: Area2D = $PounceHitbox
 @onready var pounce_collision: CollisionShape2D = $PounceHitbox/CollisionShape2D
 
-var player: Node2D = null
+func _init() -> void:
+	loot_table = [
+		preload("res://Scene/Items/Common/health_potion.tres"),
+		preload("res://Scene/Items/Rare/big_health_potion.tres"),
+		preload("res://Scene/Items/Common/iron_sword.tres")
+	]
+	drop_chance = 0.45
 
 func _ready() -> void:
+	enemy_balance_id = "werewolf"
+	super._ready()
 	var cfg: Dictionary = BalanceData.get_enemy_stats("werewolf")
-	hp = int(cfg.get("hp", hp))
-	max_hp = hp
-	damage = int(cfg.get("damage", damage))
 	pounce_damage = int(cfg.get("pounce_damage", pounce_damage))
-	speed = float(cfg.get("speed", speed))
 	pounce_speed = float(cfg.get("pounce_speed", pounce_speed))
 	pounce_distance = float(cfg.get("pounce_distance", pounce_distance))
 	pounce_windup_time = float(cfg.get("pounce_windup_time", pounce_windup_time))
-	attack_range = float(cfg.get("attack_range", attack_range))
 	pounce_min_range = float(cfg.get("pounce_min_range", pounce_min_range))
 	pounce_max_range = float(cfg.get("pounce_max_range", pounce_max_range))
 	pounce_cooldown = float(cfg.get("pounce_cooldown", pounce_cooldown))
-	drop_chance = float(cfg.get("drop_chance", drop_chance))
 
-	animated_sprite.play("idle")
 	claw_collision.disabled = true
 	pounce_collision.disabled = true
 	claw_hitbox.position = Vector2(0, -8)
 	pounce_hitbox.position = Vector2(0, -8)
-	_ai_tick_timer = randf_range(0.0, _ai_tick_interval)
-
-	var players = get_tree().get_nodes_in_group("player")
-	if players.size() > 0:
-		player = players[0]
-
-# --- ĐIỀU HƯỚNG AI & TIẾT KIỆM TÍNH TOÁN RAYCAST ---
-var _ai_tick_timer: float = 0.0
-var _ai_tick_interval: float = 0.1 # Cập nhật tìm đường và tầm nhìn 10 lần/s thay vì 60 lần/s
-var _cached_steer_dir: Vector2 = Vector2.ZERO
-var _cached_has_los: bool = true
 
 func _draw() -> void:
 	if show_pounce_warning:
@@ -99,13 +69,11 @@ func _physics_process(delta: float) -> void:
 		pounce_timer -= delta
 
 	if player == null or not is_instance_valid(player):
-		var players = get_tree().get_nodes_in_group("player")
-		if players.size() > 0:
-			player = players[0]
-		else:
+		_find_player()
+		if player == null:
 			return
 
-	if is_dead or animated_sprite.animation == "hurt":
+	if is_dead or (animated_sprite != null and animated_sprite.animation == "hurt"):
 		return
 
 	# Đang trong pha tụ lực/khựng lại cảnh báo -> đứng yên
@@ -193,70 +161,62 @@ func start_pounce_windup(dir: Vector2) -> void:
 	pounce_direction = dir.normalized() if dir != Vector2.ZERO else Vector2.RIGHT
 	pounce_timer = pounce_cooldown
 
-	# Xoay hitbox theo hướng đã nhắm
-	pounce_hitbox.rotation = pounce_direction.angle()
-
-	# Hiển thị vệt cảnh báo đỏ
+	animated_sprite.play("idle")
 	show_pounce_warning = true
 	queue_redraw()
 
-	# Hoạt ảnh khựng lại, mắt/người chớp đỏ nhẹ tụ lực
-	animated_sprite.play("idle")
-	_start_windup_flash()
+	_start_flash_windup_effect()
 
-	# Đợi một nhịp tụ lực
-	if get_tree() != null:
-		await get_tree().create_timer(pounce_windup_time).timeout
-
-	if not is_inside_tree() or is_queued_for_deletion():
+	await get_tree().create_timer(pounce_windup_time).timeout
+	if not is_inside_tree() or is_dead:
 		return
 
-	# Tắt cảnh báo đỏ
+	if not is_preparing_pounce:
+		return
+
+	is_preparing_pounce = false
 	show_pounce_warning = false
 	queue_redraw()
-	_stop_windup_flash()
 
-	# Nếu trong lúc tụ lực bị chết hoặc trúng đòn choáng thì hủy cú vồ
-	if not is_preparing_pounce or is_dead or animated_sprite.animation == "hurt":
-		is_preparing_pounce = false
-		is_attacking = false
-		return
+	_stop_flash_effect()
+	launch_pounce()
 
-	# Bắt đầu lao đến
-	is_preparing_pounce = false
-	is_pouncing = true
-	pounce_traveled = 0.0
-	animated_sprite.play("attack_2")
-	pounce_collision.disabled = false
+func _start_flash_windup_effect() -> void:
+	_stop_flash_effect()
+	windup_flash_tween = create_tween()
+	windup_flash_tween.set_loops()
+	windup_flash_tween.tween_property(animated_sprite, "modulate", Color(1.8, 0.4, 0.4), 0.12)
+	windup_flash_tween.tween_property(animated_sprite, "modulate", Color.WHITE, 0.12)
 
-func _start_windup_flash() -> void:
-	if not is_inside_tree():
-		return
-	if windup_flash_tween != null:
-		windup_flash_tween.kill()
-	windup_flash_tween = create_tween().set_loops()
-	windup_flash_tween.tween_property(animated_sprite, "modulate", Color(1.3, 0.45, 0.45), 0.16)
-	windup_flash_tween.tween_property(animated_sprite, "modulate", Color.WHITE, 0.16)
-
-func _stop_windup_flash() -> void:
-	if windup_flash_tween != null:
+func _stop_flash_effect() -> void:
+	if windup_flash_tween != null and windup_flash_tween.is_valid():
 		windup_flash_tween.kill()
 		windup_flash_tween = null
 	if animated_sprite != null:
 		animated_sprite.modulate = Color.WHITE
+
+func launch_pounce() -> void:
+	is_pouncing = true
+	pounce_traveled = 0.0
+	velocity = pounce_direction * pounce_speed
+
+	if pounce_direction != Vector2.ZERO:
+		pounce_hitbox.rotation = pounce_direction.angle()
+
+	animated_sprite.play("attack_2")
+	pounce_collision.disabled = false
 
 func take_damage(damage_amount: int) -> void:
 	if not is_active or is_dead:
 		return
 
 	hp -= damage_amount
-	_spawn_damage_popup(damage_amount)
+	_spawn_damage_popup(damage_amount, Color(1.0, 0.4, 0.4))
 
-	# Bị trúng đòn -> Hủy trạng thái tụ lực và tắt cảnh báo đỏ
 	if is_preparing_pounce:
 		is_preparing_pounce = false
 		show_pounce_warning = false
-		_stop_windup_flash()
+		_stop_flash_effect()
 		queue_redraw()
 
 	if hp > 0:
@@ -266,23 +226,18 @@ func take_damage(damage_amount: int) -> void:
 		claw_collision.set_deferred("disabled", true)
 		pounce_collision.set_deferred("disabled", true)
 	else:
-		is_dead = true
-		is_attacking = false
-		is_pouncing = false
-		var gm = get_node_or_null("/root/GameManager")
-		if gm != null and gm.has_method("register_enemy_kill"):
-			gm.register_enemy_kill()
-		animated_sprite.play("death")
-		$Hurtbox/CollisionShape2D.set_deferred("disabled", true)
-		$CollisionShape2D.set_deferred("disabled", true)
-		claw_collision.set_deferred("disabled", true)
-		pounce_collision.set_deferred("disabled", true)
+		_die()
 
-func _spawn_damage_popup(amount: int) -> void:
-	if get_tree():
-		get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -20), amount, Color(1.0, 0.4, 0.4))
+func _die() -> void:
+	super._die()
+	is_attacking = false
+	is_pouncing = false
+	claw_collision.set_deferred("disabled", true)
+	pounce_collision.set_deferred("disabled", true)
 
 func _on_animated_sprite_2d_animation_finished() -> void:
+	if animated_sprite == null:
+		return
 	if animated_sprite.animation == "death":
 		drop_loot()
 		queue_free()
@@ -316,22 +271,3 @@ func _on_pounce_hitbox_area_entered(area: Area2D) -> void:
 			return
 		if target.has_method("take_damage"):
 			target.take_damage(pounce_damage)
-
-func drop_loot() -> void:
-	var item_scene = world_item_scene if world_item_scene != null else preload("res://Scene/Items/WorldItem/WorldItem.tscn")
-	var rng := RandomNumberGenerator.new()
-	rng.seed = loot_seed if loot_seed != 0 else (int(global_position.x * 911) ^ int(global_position.y * 3571))
-	if rng.randf() <= drop_chance:
-		var floor_lvl := 1
-		if get_node_or_null("/root/GameManager") != null:
-			floor_lvl = GameManager.current_level
-		var random_item: ItemData = ItemDatabase.get_random_drop(floor_lvl, false, rng)
-		if random_item == null and loot_table.size() > 0:
-			random_item = loot_table[rng.randi() % loot_table.size()]
-
-		if random_item != null:
-			var item_drop = item_scene.instantiate()
-			item_drop.item_data = random_item
-			item_drop.global_position = global_position
-			var parent_node = get_parent() if get_parent() != null else get_tree().current_scene
-			parent_node.call_deferred("add_child", item_drop)

@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="HeroBalanceData" format=3 uid="uid://caqh160ohb087"]
+
+[ext_resource type="Script" uid="uid://b02vqivaicvow" path="res://Scene/Balance/HeroBalanceData.gd" id="1_hero"]
+
+[resource]
+script = ExtResource("1_hero")
+id = "miya"
+name = "Miya"
+role = "Mirkwood Elven Archer"
+weapon = "Galadhrim Bow & Orthanc Fire"
+skill_icon = "skill_aim"
+hp = 3
+armor = 1
+speed = 165
+attack_cooldown = 0.46
+skill_cooldown = 6.5
+lore = "An elven scout from the ancient canopies of Mirkwood following the path of Legolas. Striking down adversaries from afar with peerless archery, her slender frame requires deadly precision and distance."
+skill_q = "Orthanc Fire — Key Q: Hurl an alchemical explosive dealing double area damage. Cooldown: 6.5s."
+skill_rmb = "Mirkwood Shot — Left Click: Rapid long-range arrow in targeted direction."
+custom_stats = {
+"arrow_speed": 280.0,
+"bomb_bonus_damage": 1,
+"bomb_damage_mult": 2
+}

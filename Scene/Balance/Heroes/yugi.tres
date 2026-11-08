@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="HeroBalanceData" format=3 uid="uid://bjwo258b7t1u6"]
+
+[ext_resource type="Script" uid="uid://b02vqivaicvow" path="res://Scene/Balance/HeroBalanceData.gd" id="1_hero"]
+
+[resource]
+script = ExtResource("1_hero")
+id = "yugi"
+name = "Yugi / Atem"
+index = 4
+role = "Pharaoh Summoner"
+weapon = "Millennium Puzzle & Duel Deck"
+skill_icon = "crystal"
+hp = 5
+armor = 1
+attack_cooldown = 0.3
+skill_cooldown = 12
+lore = "Atem calls forth monsters from his deck to fight at his side. Hold Shift to guard instantly; release Shift to end it; clicking while guarding cancels the guard to cast a combo summon."
+skill_q = "Special Summon — Key Q: Randomly unleash 1 of 5 room-wide summons (20% each). Cooldown: 12s."
+skill_rmb = "Summon — Left/Right Click: Call a monster; hold 0.65s then release to charge it. Shift + Click: combo summon."
