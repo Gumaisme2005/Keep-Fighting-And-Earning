@@ -2,7 +2,7 @@ name: Godot 4 CI - Tests, Property Checks, Benchmark and Verification
 
 on:
   push:
-    branches: [ main, master, development, develop, "feature/**", "fix/**", "qa/**", "chore/**" ]
+    branches: [ main, master, development, develop, "feature/**", "feat/**", "fix/**", "qa/**", "chore/**" ]
   pull_request:
     branches: [ main, master, development, develop ]
   workflow_dispatch:
@@ -76,6 +76,55 @@ jobs:
       - name: 12. Run Projectile Obstacles Tests
         run: |
           godot --headless "res://tests/test_projectile_obstacles.tscn"
+
+      - name: 13. Run EnemyTactics Foundation Tests
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          godot --headless --script "res://tests/test_enemy_tactics.gd" 2>&1 | tee "$RUNNER_TEMP/enemy_tactics.log"
+          if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/enemy_tactics.log"; then exit 1; fi
+
+      - name: 14. Run Orc Tactical AI at 30 and 144 Render FPS
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          for fps in 30 144; do
+            godot --headless --max-fps "$fps" "res://tests/test_orc_tactical_ai.tscn" 2>&1 | tee "$RUNNER_TEMP/orc_ai_${fps}.log"
+            if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/orc_ai_${fps}.log"; then exit 1; fi
+            grep '^\[TRACE\]' "$RUNNER_TEMP/orc_ai_${fps}.log" > "$RUNNER_TEMP/orc_ai_${fps}.trace"
+          done
+          diff -u "$RUNNER_TEMP/orc_ai_30.trace" "$RUNNER_TEMP/orc_ai_144.trace"
+
+      - name: 15. Run Archer Tactical AI at 30 and 144 Render FPS
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          for fps in 30 144; do
+            godot --headless --max-fps "$fps" "res://tests/test_archer_tactical_ai.tscn" 2>&1 | tee "$RUNNER_TEMP/archer_ai_${fps}.log"
+            if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/archer_ai_${fps}.log"; then exit 1; fi
+            grep '^\[TRACE\]' "$RUNNER_TEMP/archer_ai_${fps}.log" > "$RUNNER_TEMP/archer_ai_${fps}.trace"
+          done
+          diff -u "$RUNNER_TEMP/archer_ai_30.trace" "$RUNNER_TEMP/archer_ai_144.trace"
+
+      - name: 16. Run Mixed Enemy AI and Coroutine Lifecycle Regression
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          for fps in 30 144; do
+            godot --headless --max-fps "$fps" "res://tests/test_enemy_ai_integration.tscn" 2>&1 | tee "$RUNNER_TEMP/mixed_ai_${fps}.log"
+            if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/mixed_ai_${fps}.log"; then exit 1; fi
+            grep '^\[TRACE\]' "$RUNNER_TEMP/mixed_ai_${fps}.log" > "$RUNNER_TEMP/mixed_ai_${fps}.trace"
+          done
+          diff -u "$RUNNER_TEMP/mixed_ai_30.trace" "$RUNNER_TEMP/mixed_ai_144.trace"
+
+      - name: 17. Run Replay Security Tests with Disposable Save Data
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/enemy-ai-replay-data
+        run: |
+          godot --headless "res://tests/test_replay_security.tscn" 2>&1 | tee "$RUNNER_TEMP/enemy_replay.log"
+          if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/enemy_replay.log"; then exit 1; fi
 
       - name: Upload Benchmark Evidence Artifact
         uses: actions/upload-artifact@v4

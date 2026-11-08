@@ -253,24 +253,32 @@ func _update_tactical_side(map: Node, direction: Vector2, has_los: bool, advance
 
 
 func attack() -> void:
+	if not is_inside_tree() or is_dead:
+		return
 	is_attacking = true
 	can_attack = false
 	anim.play("attack")
 
 	await get_tree().create_timer(0.4).timeout
+	if not is_inside_tree() or is_dead:
+		return
 
-	if not is_dead and not is_hurt and is_instance_valid(player) and arrow_scene != null:
+	if not is_hurt and is_instance_valid(player) and arrow_scene != null:
 		var tmap = get_parent()
 		if tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position):
 			shoot_arrow()
 
 	await get_tree().create_timer(0.35).timeout
-	if is_attacking and not is_dead:
+	if not is_inside_tree() or is_dead:
+		return
+	if is_attacking:
 		is_attacking = false
 		if not is_hurt:
 			anim.play("idle")
 
 	await get_tree().create_timer(maxf(0.1, attack_cooldown - 0.75)).timeout
+	if not is_inside_tree() or is_dead:
+		return
 	can_attack = true
 
 func shoot_arrow() -> void:
