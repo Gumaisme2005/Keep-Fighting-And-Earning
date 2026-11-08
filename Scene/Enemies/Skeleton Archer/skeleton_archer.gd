@@ -271,6 +271,7 @@ func attack() -> void:
 	await get_tree().create_timer(0.35).timeout
 	if not is_inside_tree() or is_dead:
 		return
+
 	if is_attacking:
 		is_attacking = false
 		if not is_hurt:

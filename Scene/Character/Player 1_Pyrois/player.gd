@@ -98,16 +98,24 @@ func get_aim_world_position() -> Vector2:
 		return global_position + current_aim_offset
 	return get_global_mouse_position()
 
+func get_effective_q_cooldown() -> float:
+	var cdr: float = 0.0
+	if get_node_or_null("/root/PerkManager") != null:
+		cdr = PerkManager.get_cooldown_reduction()
+	return skill_cooldown * (1.0 - cdr)
+
 func _process(delta: float) -> void:
 	var updated := false
 	if q_cd_remaining > 0.0:
 		q_cd_remaining = maxf(0.0, q_cd_remaining - delta)
+		if q_cd_remaining <= 0.0 and not is_casting_skill:
+			can_use_skill = true
 		updated = true
 	if rmb_cd_remaining > 0.0:
 		rmb_cd_remaining = maxf(0.0, rmb_cd_remaining - delta)
 		updated = true
 	if updated:
-		skill_cooldown_changed.emit(q_cd_remaining, skill_cooldown, rmb_cd_remaining, rmb_cd_max)
+		skill_cooldown_changed.emit(q_cd_remaining, get_effective_q_cooldown(), rmb_cd_remaining, rmb_cd_max)
 
 func _physics_process(delta: float) -> void:
 	if is_dead:
@@ -290,6 +298,8 @@ func take_damage(amount: int) -> void:
 				$PlayerHurtbox/CollisionShape2D.set_deferred("disabled", true)
 
 			await get_tree().create_timer(2.0).timeout
+			if not is_inside_tree():
+				return
 			get_tree().call_group("game_over_menu", "pause")
 
 func start_invincibility() -> void:
@@ -300,6 +310,8 @@ func start_invincibility() -> void:
 	tween.tween_property(animated_sprite, "modulate:a", 1.0, 0.075)
 
 	await get_tree().create_timer(invincibility_time).timeout
+	if not is_inside_tree():
+		return
 	is_invincible = false
 	animated_sprite.modulate.a = 1.0
 
@@ -405,11 +417,11 @@ func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
 	if pm == null:
 		return final_dmg
 
+	var rng: RandomNumberGenerator = pm.get_combat_rng() if pm.has_method("get_combat_rng") else RandomNumberGenerator.new()
+
 	# 1. Critical Hit (Đòn Đánh Tử Huyệt & Xé Toạc Sinh Mệnh)
 	var crit_chance: float = pm.get_crit_chance()
 	if crit_chance > 0.0:
-		var rng := RandomNumberGenerator.new()
-		rng.randomize()
 		if rng.randf() <= crit_chance:
 			var mult: float = pm.get_crit_multiplier() if pm.has_method("get_crit_multiplier") else 2.0
 			var raw_crit: float = float(in_damage) * mult
@@ -422,9 +434,7 @@ func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
 		for p in pm.get_active_perks():
 			if p.get_modifier("on_hit_burn", false):
 				var chance: float = float(p.get_modifier("burn_chance", 0.35))
-				var b_rng := RandomNumberGenerator.new()
-				b_rng.randomize()
-				if b_rng.randf() <= chance:
+				if rng.randf() <= chance:
 					var burn_amt: int = int(p.get_modifier("burn_damage", 2))
 					if target.has_method("take_damage"):
 						target.call_deferred("take_damage", burn_amt)
@@ -445,9 +455,7 @@ func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
 
 	# 5. Mythic Helmet Effect: Celestial Smite (Thiên Phạt Sấm Sét)
 	if inventory != null and inventory.has_method("has_mythic_helmet") and inventory.has_mythic_helmet():
-		var smite_rng := RandomNumberGenerator.new()
-		smite_rng.randomize()
-		if smite_rng.randf() <= 0.40:
+		if rng.randf() <= 0.40:
 			var smite_dmg := 5
 			if target.has_method("take_damage"):
 				target.call_deferred("take_damage", smite_dmg)
@@ -543,11 +551,15 @@ func use_special_skill() -> void:
 	animated_sprite.play("attack_2")
 
 	await get_tree().create_timer(0.3).timeout
+	if not is_inside_tree():
+		return
 
 	velocity.x = 0
 	sword_collision.set_deferred("disabled", false)
 
 	await get_tree().create_timer(0.2).timeout
+	if not is_inside_tree():
+		return
 
 	sword_collision.set_deferred("disabled", true)
 	is_casting_skill = false
@@ -559,13 +571,6 @@ func use_special_skill() -> void:
 
 func start_skill_cooldown() -> void:
 	can_use_skill = false
-	var effective_cd := skill_cooldown
-	if get_node_or_null("/root/PerkManager") != null:
-		effective_cd = skill_cooldown * (1.0 - PerkManager.get_cooldown_reduction())
+	var effective_cd := get_effective_q_cooldown()
 	q_cd_remaining = effective_cd
 	skill_cooldown_changed.emit(q_cd_remaining, effective_cd, rmb_cd_remaining, rmb_cd_max)
-	await get_tree().create_timer(effective_cd).timeout
-	if not is_dead:
-		can_use_skill = true
-		q_cd_remaining = 0.0
-		skill_cooldown_changed.emit(0.0, effective_cd, rmb_cd_remaining, rmb_cd_max)

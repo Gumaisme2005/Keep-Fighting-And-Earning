@@ -352,7 +352,8 @@ func _start_release() -> void:
 	for i in range(WAVE_LEVELS.size()):
 		if charge_time >= float(WAVE_LEVELS[i][0]):
 			wave_level = i
-	rmb_cd = rmb_cooldown
+	var cdr := PerkManager.get_cooldown_reduction() if get_node_or_null("/root/PerkManager") != null else 0.0
+	rmb_cd = rmb_cooldown * (1.0 - cdr)
 	animated_sprite.modulate = Color.WHITE
 	if absf(current_aim_offset.x) > 0.5:
 		_set_facing(current_aim_offset.x)
@@ -384,7 +385,8 @@ func _spawn_wave() -> void:
 
 # ------------------------------------------------------------------ Q: Frost Bloom
 func _start_special() -> void:
-	q_cd = skill_cooldown
+	var cdr := PerkManager.get_cooldown_reduction() if get_node_or_null("/root/PerkManager") != null else 0.0
+	q_cd = skill_cooldown * (1.0 - cdr)
 	can_use_skill = false
 	_set_facing(current_aim_offset.x if absf(current_aim_offset.x) > 0.5 else facing)
 	_untouchable = true

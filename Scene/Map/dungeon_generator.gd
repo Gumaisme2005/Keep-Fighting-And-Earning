@@ -906,12 +906,14 @@ func next_level():
 
 	for child in get_children():
 		if child != the_player and not child is Camera2D:
+			remove_child(child)
 			child.queue_free()
 
 	# Dọn dẹp các vật phẩm rơi trên mặt đất nếu nằm ở root scene
 	if get_tree() and get_tree().current_scene:
 		for child in get_tree().current_scene.get_children():
 			if child.is_in_group("world_items"):
+				get_tree().current_scene.remove_child(child)
 				child.queue_free()
 
 	generate_dungeon()

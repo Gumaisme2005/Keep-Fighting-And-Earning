@@ -1,7 +1,13 @@
+class_name InventorySlot
 extends TextureButton
 
 signal slot_clicked(slot_index: int)
 signal slot_right_clicked(slot_index: int)
+signal slot_dropped(source_data: Dictionary, target_slot: Control)
+
+enum SlotKind { BAG, EQUIPMENT }
+var slot_kind: SlotKind = SlotKind.BAG
+var equip_type: ItemData.ItemType = ItemData.ItemType.WEAPON
 
 @onready var item_icon: TextureRect = $ItemIcon
 var slot_index: int = -1
@@ -49,6 +55,62 @@ func _ready() -> void:
 
 	_update_key_badge()
 
+# ==============================================================================
+# HỆ THỐNG KÉO - THẢ VẬT PHẨM (DRAG & DROP) CHUẨN GODOT 4
+# ==============================================================================
+func _get_drag_data(_at_position: Vector2) -> Variant:
+	if current_item == null or current_item.icon == null:
+		return null
+
+	var preview := TextureRect.new()
+	preview.texture = current_item.icon
+	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	var preview_size: Vector2 = size if size.x > 0 and size.y > 0 else Vector2(36, 36)
+	preview.custom_minimum_size = preview_size
+	preview.size = preview_size
+	preview.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	preview.modulate = Color(1.2, 1.2, 1.2, 0.88)
+
+	# Đặt tâm icon bay theo con trỏ chuột
+	var preview_box := Control.new()
+	preview.position = -preview_size * 0.5
+	preview_box.add_child(preview)
+	set_drag_preview(preview_box)
+
+	return {
+		"type": "inventory_slot",
+		"slot_kind": slot_kind,
+		"slot_index": slot_index,
+		"equip_type": equip_type,
+		"item": current_item,
+		"origin_slot": self
+	}
+
+func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
+	if not (data is Dictionary and data.get("type") == "inventory_slot"):
+		return false
+
+	var src_kind: int = int(data.get("slot_kind", SlotKind.BAG))
+	var src_index: int = int(data.get("slot_index", -1))
+	var src_item: ItemData = data.get("item", null)
+
+	# Không cho thả vào chính nó
+	if src_kind == slot_kind and src_index == slot_index:
+		return false
+
+	# Nếu ô đích là ô Trang bị (EQUIPMENT): Chỉ nhận đúng loại trang bị (Mũ vào Mũ, Giáp vào Giáp...)
+	if slot_kind == SlotKind.EQUIPMENT:
+		return src_item != null and src_item.type == equip_type
+
+	# Nếu ô đích là ô Balo (BAG): Chấp nhận mọi vật phẩm từ ô Balo khác hoặc từ ô Trang bị thả về
+	return true
+
+func _drop_data(_at_position: Vector2, data: Variant) -> void:
+	if not _can_drop_data(_at_position, data):
+		return
+
+	slot_dropped.emit(data, self)
+
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and not event.is_echo():
 		if event.button_index == MOUSE_BUTTON_RIGHT:
@@ -78,32 +140,7 @@ func set_item(item: ItemData) -> void:
 				count_label.text = ""
 				count_label.visible = false
 
-		var stats_lines: Array[String] = []
-		if item.damage > 0:
-			stats_lines.append("• Attack Power: +%d" % item.damage)
-		if item.armor > 0:
-			stats_lines.append("• Physical Armor: +%d" % item.armor)
-		if item.max_hp_bonus > 0:
-			stats_lines.append("• Max Health: +%d" % item.max_hp_bonus)
-		if item.heal_amount > 0:
-			stats_lines.append("• Restores Health: +%d" % item.heal_amount)
-		if item.attack_speed_bonus > 0.0:
-			stats_lines.append("• Attack Speed: +%d%%" % int(item.attack_speed_bonus * 100))
-		if not item.special_effect.is_empty():
-			stats_lines.append("★ Mythic Effect: %s" % item.special_effect)
-
-		var stats_text := "\n".join(stats_lines)
-		var stack_info := " (x%d)" % item.stack_count if item.stack_count > 1 else ""
-		var rarity_tag: String = ""
-		if item.has_method("get_rarity_name"):
-			rarity_tag = "[%s] " % item.get_rarity_name()
-		tooltip_text = "%s%s%s\n%s%s\nLeft-click: Use / Equip\nRight-click: Drop 1 onto floor" % [
-			rarity_tag,
-			item.item_name,
-			stack_info,
-			(stats_text + "\n") if not stats_text.is_empty() else "",
-			item.description
-		]
+		tooltip_text = item.get_tooltip_text() if item.has_method("get_tooltip_text") else item.item_name
 	else:
 		item_icon.texture = null
 		item_icon.visible = false

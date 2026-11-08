@@ -58,13 +58,13 @@ func attack() -> void:
 		_pending_arrow = true
 		# Timer dự phòng an toàn nếu sự kiện frame_changed bị bỏ qua do giật lag
 		get_tree().create_timer(0.26).timeout.connect(func():
-			if is_instance_valid(self) and _pending_arrow:
+			if is_instance_valid(self) and is_inside_tree() and _pending_arrow:
 				_pending_arrow = false
 				_fire_arrow()
 		)
 
 	get_tree().create_timer(attack_cooldown_time).timeout.connect(func():
-		if is_instance_valid(self):
+		if is_instance_valid(self) and is_inside_tree():
 			_can_shoot_arrow = true
 			if is_attacking:
 				is_attacking = false
@@ -125,13 +125,17 @@ func use_special_skill() -> void:
 	animated_sprite.play("skill")
 
 	if bomb_scene != null:
-		var bomb = bomb_scene.instantiate()
-		get_parent().add_child(bomb)
-		bomb.damage = get_total_damage() * bomb_damage_mult + bomb_bonus_damage
-		var aim_pos = get_aim_world_position()
-		bomb.throw_bomb(global_position, aim_pos)
+		var parent_node = get_parent() if get_parent() != null else (get_tree().current_scene if get_tree() != null else null)
+		if parent_node != null:
+			var bomb = bomb_scene.instantiate()
+			parent_node.add_child(bomb)
+			bomb.damage = get_total_damage() * bomb_damage_mult + bomb_bonus_damage
+			var aim_pos = get_aim_world_position()
+			bomb.throw_bomb(global_position, aim_pos)
 
 	await get_tree().create_timer(0.45).timeout
+	if not is_inside_tree():
+		return
 
 	is_casting_skill = false
 	if not is_dead and not is_hurt and animated_sprite.animation == "skill":
