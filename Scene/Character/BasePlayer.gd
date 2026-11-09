@@ -15,8 +15,8 @@ signal skill_cooldown_changed(skill_q_left: float, skill_q_max: float, skill_rmb
 @export var base_max_hp: int = 4
 @export var max_hp: int = 4
 @export var base_armor: int = 4
-@export var armor_regen_delay: float = 4.0
-@export var armor_regen_rate: float = 1.0
+@export var armor_regen_delay: float = 5.0
+@export var armor_regen_rate: float = 1.5
 
 # --- KỸ NĂNG ĐẶC BIỆT ---
 @export var skill_cooldown: float = 5.0
@@ -29,8 +29,14 @@ var rmb_cd_max: float = 0.0
 var is_invincible: bool = false
 @export var invincibility_time: float = 0.95
 var hp: int = 4
-var max_armor: int = 4
-var current_armor: int = 4
+const MAX_ARMOR: int = 12
+var max_armor: int = 4:
+	set(value):
+		max_armor = clampi(value, 0, MAX_ARMOR)
+		current_armor = mini(current_armor, max_armor)
+var current_armor: int = 4:
+	set(value):
+		current_armor = clampi(value, 0, max_armor)
 
 const POTION_MAX_HP_CAP: int = 4
 const POTION_COOLDOWN: float = 8.0
@@ -44,6 +50,7 @@ const THORNS_MAX_TARGETS: int = 2
 const THORNS_COOLDOWN: float = 2.0
 var thorns_cooldown_remaining: float = 0.0
 var armor_break_cooldown_remaining: float = 0.0
+var lightning_cooldown_remaining: float = 0.0
 var _defensive_effect_generation: int = 0
 
 var is_dead: bool = false
@@ -89,6 +96,7 @@ func _ready() -> void:
 		potion_cooldown_remaining = gm.potion_cooldown_remaining
 		thorns_cooldown_remaining = gm.thorns_cooldown_remaining
 		armor_break_cooldown_remaining = gm.armor_break_cooldown_remaining
+		lightning_cooldown_remaining = gm.lightning_cooldown_remaining
 	# Physics-frame signal also covers heroes that override _physics_process().
 	get_tree().physics_frame.connect(_tick_potion_cooldown)
 	get_tree().physics_frame.connect(_tick_defensive_cooldowns)
@@ -450,12 +458,17 @@ func is_spike_immune() -> bool:
 func get_effective_speed() -> float:
 	var eff: float = speed * 1.15 if is_invincible else speed
 	if get_node_or_null("/root/PerkManager") != null:
-		eff += PerkManager.get_total_speed_bonus()
-		for p in PerkManager.get_active_perks():
-			if p.get_modifier("low_hp_scaling", false):
-				var missing_hp: int = maxi(0, max_hp - hp)
-				eff += missing_hp * float(p.get_modifier("speed_per_missing_hp", 8.0))
+		# Flat speed is already applied to speed, just as flat damage is to base_damage.
+		eff += PerkManager.get_berserk_bonuses(get_missing_hp_ratio()).speed
 	return minf(eff, max_speed_cap)
+
+func get_missing_hp_ratio() -> float:
+	return clampf(float(max_hp - hp) / float(max_hp), 0.0, 1.0) if max_hp > 0 else 0.0
+
+func get_attack_speed_multiplier() -> float:
+	# Aggregate equipment once; callers scale only their attack timing, not physics time.
+	var bonus: float = inventory.get_attack_speed_bonus() if inventory != null else 0.0
+	return maxf(0.01, 1.0 + bonus)
 
 func get_raw_damage() -> float:
 	var wep_dmg := 0
@@ -464,10 +477,7 @@ func get_raw_damage() -> float:
 	var dmg: float = float(base_damage + wep_dmg)
 	if get_node_or_null("/root/PerkManager") != null:
 		# Flat perk damage is already applied to base_damage by PerkManager.
-		for p in PerkManager.get_active_perks():
-			if p.get_modifier("low_hp_scaling", false):
-				var missing_hp: int = maxi(0, max_hp - hp)
-				dmg *= (1.0 + float(missing_hp) * float(p.get_modifier("dmg_per_missing_hp", 0.15)))
+		dmg *= 1.0 + float(PerkManager.get_berserk_bonuses(get_missing_hp_ratio()).damage)
 	return dmg
 
 func get_total_damage() -> int:
@@ -476,8 +486,11 @@ func get_total_damage() -> int:
 		return PerkManager.resolve_stochastic_damage(raw)
 	return int(round(raw))
 
-func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
+func apply_on_hit_effects(target: Variant, in_damage: int) -> int:
 	var final_dmg: int = in_damage
+	# A typed Node2D argument rejects freed objects before validity checks can run.
+	if not is_instance_valid(target) or not target is Node2D or is_dead or not is_inside_tree() or not can_process() or not _is_defensive_target_valid(target) or in_damage <= 0:
+		return final_dmg
 	var pm = get_node_or_null("/root/PerkManager")
 	if pm == null:
 		return final_dmg
@@ -487,7 +500,7 @@ func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
 	# 1. Critical Hit
 	var crit_chance: float = pm.get_crit_chance()
 	if crit_chance > 0.0:
-		if rng.randf() <= crit_chance:
+		if rng.randf() < crit_chance:
 			var mult: float = pm.get_crit_multiplier() if pm.has_method("get_crit_multiplier") else 2.0
 			var raw_crit: float = float(in_damage) * mult
 			final_dmg = PerkManager.resolve_stochastic_damage(raw_crit)
@@ -502,30 +515,20 @@ func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
 				if rng.randf() <= chance:
 					var burn_amt: int = int(p.get_modifier("burn_damage", 2))
 					if target.has_method("take_damage"):
-						target.call_deferred("take_damage", burn_amt)
-						if get_tree():
-							get_tree().call_group("game_ui", "spawn_damage_number", target.global_position + Vector2(10, -20), burn_amt, Color(1.0, 0.45, 0.1))
+						_queue_defensive_damage(target, burn_amt)
 
 	# 3. Chain Lightning
 	if pm.has_lightning_on_hit():
 		_trigger_chain_lightning(target)
 
 	# 4. Mythic Weapon Effect: Solar Ignite
-	if inventory != null and inventory.has_method("has_mythic_weapon") and inventory.has_mythic_weapon():
-		var burn_amt := 4
-		if target.has_method("take_damage"):
-			target.call_deferred("take_damage", burn_amt)
-			if get_tree():
-				get_tree().call_group("game_ui", "spawn_damage_number", target.global_position + Vector2(12, -26), burn_amt, Color(1.0, 0.45, 0.1))
+	if inventory != null and inventory.has_mythic_effect(ItemData.ItemType.WEAPON, &"solar_ignite") and rng.randf() < 0.25:
+		_queue_defensive_damage(target, 2)
 
 	# 5. Mythic Helmet Effect: Celestial Smite
-	if inventory != null and inventory.has_method("has_mythic_helmet") and inventory.has_mythic_helmet():
-		if rng.randf() <= 0.40:
-			var smite_dmg := 5
-			if target.has_method("take_damage"):
-				target.call_deferred("take_damage", smite_dmg)
-				if get_tree():
-					get_tree().call_group("game_ui", "spawn_damage_number", target.global_position + Vector2(-12, -26), smite_dmg, Color(0.35, 0.9, 1.0))
+	if inventory != null and inventory.has_mythic_effect(ItemData.ItemType.HELMET, &"celestial_smite"):
+		if rng.randf() < 0.25:
+			_queue_defensive_damage(target, 3)
 			_trigger_chain_lightning(target)
 
 	return final_dmg
@@ -535,24 +538,29 @@ func _sync_defensive_run_state() -> void:
 	if gm != null:
 		gm.thorns_cooldown_remaining = thorns_cooldown_remaining
 		gm.armor_break_cooldown_remaining = armor_break_cooldown_remaining
+		gm.lightning_cooldown_remaining = lightning_cooldown_remaining
 
 func _tick_defensive_cooldowns() -> void:
 	if not can_process() or is_dead or is_queued_for_deletion():
 		return
-	if thorns_cooldown_remaining <= 0.0 and armor_break_cooldown_remaining <= 0.0:
+	if thorns_cooldown_remaining <= 0.0 and armor_break_cooldown_remaining <= 0.0 and lightning_cooldown_remaining <= 0.0:
 		return
 	var delta := get_physics_process_delta_time()
 	thorns_cooldown_remaining = maxf(0.0, thorns_cooldown_remaining - delta)
 	armor_break_cooldown_remaining = maxf(0.0, armor_break_cooldown_remaining - delta)
+	lightning_cooldown_remaining = maxf(0.0, lightning_cooldown_remaining - delta)
 	if thorns_cooldown_remaining < 0.000001:
 		thorns_cooldown_remaining = 0.0
 	if armor_break_cooldown_remaining < 0.000001:
 		armor_break_cooldown_remaining = 0.0
+	if lightning_cooldown_remaining < 0.000001:
+		lightning_cooldown_remaining = 0.0
 	_sync_defensive_run_state()
 
 func reset_defensive_effects() -> void:
 	thorns_cooldown_remaining = 0.0
 	armor_break_cooldown_remaining = 0.0
+	lightning_cooldown_remaining = 0.0
 	_defensive_effect_generation += 1
 	_sync_defensive_run_state()
 
@@ -638,19 +646,22 @@ func _trigger_mythic_thorns(actual_hp_lost: int) -> void:
 		_queue_defensive_damage(target, amount)
 
 func _trigger_chain_lightning(primary_target: Node2D) -> void:
-	var enemies = get_tree().get_nodes_in_group("enemies")
-	var chained := 0
-	for e in enemies:
-		if e != primary_target and is_instance_valid(e) and not bool(e.get("is_dead")):
-			var dist = primary_target.global_position.distance_to(e.global_position)
-			if dist <= 95.0:
-				if e.has_method("take_damage"):
-					e.take_damage(2)
-					if get_tree():
-						get_tree().call_group("game_ui", "spawn_damage_number", e.global_position + Vector2(0, -24), 2, Color(0.4, 0.85, 1.0))
-				chained += 1
-				if chained >= 2:
-					break
+	if lightning_cooldown_remaining > 0.0 or not _is_defensive_target_valid(primary_target):
+		return
+	var candidates: Array[Node2D] = []
+	for target in get_tree().get_nodes_in_group("enemies"):
+		if target != primary_target and _is_defensive_target_valid(target) and primary_target.global_position.distance_squared_to(target.global_position) <= 95.0 * 95.0:
+			candidates.append(target)
+	if candidates.is_empty():
+		return
+	# Reuse the stable identity tie-break, but measure distance from the primary hit.
+	candidates.sort_custom(func(a: Node2D, b: Node2D) -> bool:
+		var da := primary_target.global_position.distance_squared_to(a.global_position)
+		var db := primary_target.global_position.distance_squared_to(b.global_position)
+		return da < db if da != db else _defensive_target_less(a, b))
+	lightning_cooldown_remaining = 0.5
+	_sync_defensive_run_state()
+	_queue_defensive_damage(candidates[0], 1)
 
 func _trigger_armor_break_blast() -> void:
 	if armor_break_cooldown_remaining > 0.0:

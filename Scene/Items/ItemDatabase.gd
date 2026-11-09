@@ -11,6 +11,12 @@ extends RefCounted
 
 const ITEM_DIR := "res://Scene/Items/"
 
+# Percentages in COMMON..MYTHIC order; floor bands are 1-2, 3-4, 5-6, 7+.
+const ENEMY_RARITY_WEIGHTS = [[75, 22, 3, 0, 0], [50, 36, 12, 2, 0], [30, 38, 24, 8, 0], [15, 28, 32, 24, 1]]
+const BOSS_RARITY_WEIGHTS = [[0, 60, 35, 5, 0], [0, 40, 45, 15, 0], [0, 20, 45, 31, 4], [0, 5, 30, 55, 10]]
+# Preserve Commit 1's potion tier thresholds and its single rarity RNG draw.
+const POTION_RARITY_WEIGHTS = [[70, 25, 5, 0, 0], [40, 35, 18, 7, 0], [20, 30, 30, 20, 0], [10, 20, 30, 40, 0]]
+
 static var _catalog: Dictionary = {}
 static var _catalog_initialized: bool = false
 
@@ -121,71 +127,36 @@ static func get_equipment_by_rarity(rarity: ItemData.Rarity) -> Array[ItemData]:
 	return equipment
 
 static func get_random_potion(floor_level: int, rng: RandomNumberGenerator) -> ItemData:
-	# Reuse floor rarity weights, mapping Mythic to the highest registered potion tier.
-	# This RNG is independent of equipment selection.
-	var rarity := mini(roll_rarity_for_floor(floor_level, false, rng), ItemData.Rarity.LEGENDARY)
+	var rarity := rarity_from_roll(POTION_RARITY_WEIGHTS[_floor_band(floor_level)], rng.randf())
 	var ids := ["common_potion_green", "rare_potion_red", "heroic_potion_purple", "legendary_potion_blue"]
 	return get_item(ids[rarity])
 
 ## Thuật toán tính độ hiếm dựa trên Tầng hầm ngục (Floor Scaling Loot Algorithm)
 ## Tầng càng cao thì tỉ lệ xuất hiện đồ Heroic, Legendary, Mythic càng lớn.
 ## Rương Boss nhận thêm Bonus Matrix (đảm bảo ít nhất Rare và tăng vọt tỉ lệ Mythic).
+static func _floor_band(floor_level: int) -> int:
+	return clampi((maxi(1, floor_level) - 1) / 2, 0, 3)
+
+static func get_rarity_weights(floor_level: int, is_boss: bool = false) -> Array:
+	var rows: Array = BOSS_RARITY_WEIGHTS if is_boss else ENEMY_RARITY_WEIGHTS
+	return rows[_floor_band(floor_level)].duplicate()
+
+static func rarity_from_roll(weights: Array, roll: float) -> ItemData.Rarity:
+	var cumulative := 0
+	var last_nonzero := ItemData.Rarity.COMMON
+	for rarity in range(weights.size()):
+		if int(weights[rarity]) <= 0:
+			continue
+		last_nonzero = rarity
+		cumulative += int(weights[rarity])
+		if roll < float(cumulative) / 100.0:
+			return rarity as ItemData.Rarity
+	# randf() can return 1.0: never select a zero-weight trailing rarity.
+	return last_nonzero as ItemData.Rarity
+
 static func roll_rarity_for_floor(floor_level: int, is_boss: bool = false, rng: RandomNumberGenerator = null) -> ItemData.Rarity:
 	var roll: float = rng.randf() if rng != null else randf()
-	var f := clampi(floor_level, 1, 99)
-
-	if is_boss:
-		# BẢNG TỈ LỆ RƯƠNG BOSS (Đảm bảo tối thiểu từ Rare trở lên)
-		if f <= 2:
-			# Boss Tầng 1-2: Rare 60%, Heroic 35%, Legendary 5%, Mythic 0%
-			if roll < 0.60: return ItemData.Rarity.RARE
-			elif roll < 0.95: return ItemData.Rarity.HEROIC
-			else: return ItemData.Rarity.LEGENDARY
-		elif f <= 4:
-			# Boss Tầng 3-4: Rare 30%, Heroic 45%, Legendary 20%, Mythic 5%
-			if roll < 0.30: return ItemData.Rarity.RARE
-			elif roll < 0.75: return ItemData.Rarity.HEROIC
-			elif roll < 0.95: return ItemData.Rarity.LEGENDARY
-			else: return ItemData.Rarity.MYTHIC
-		elif f <= 6:
-			# Boss Tầng 5-6: Rare 15%, Heroic 40%, Legendary 33%, Mythic 12%
-			if roll < 0.15: return ItemData.Rarity.RARE
-			elif roll < 0.55: return ItemData.Rarity.HEROIC
-			elif roll < 0.88: return ItemData.Rarity.LEGENDARY
-			else: return ItemData.Rarity.MYTHIC
-		else:
-			# Boss Tầng 7+: Rare 5%, Heroic 30%, Legendary 45%, Mythic 20%
-			if roll < 0.05: return ItemData.Rarity.RARE
-			elif roll < 0.35: return ItemData.Rarity.HEROIC
-			elif roll < 0.80: return ItemData.Rarity.LEGENDARY
-			else: return ItemData.Rarity.MYTHIC
-	else:
-		# BẢNG TỈ LỆ QUÁI THƯỜNG THEO TẦNG
-		if f <= 2:
-			# Tầng 1-2: Common 70%, Rare 25%, Heroic 5%, Legendary 0%, Mythic 0%
-			if roll < 0.70: return ItemData.Rarity.COMMON
-			elif roll < 0.95: return ItemData.Rarity.RARE
-			else: return ItemData.Rarity.HEROIC
-		elif f <= 4:
-			# Tầng 3-4: Common 40%, Rare 35%, Heroic 18%, Legendary 7%, Mythic 0%
-			if roll < 0.40: return ItemData.Rarity.COMMON
-			elif roll < 0.75: return ItemData.Rarity.RARE
-			elif roll < 0.93: return ItemData.Rarity.HEROIC
-			else: return ItemData.Rarity.LEGENDARY
-		elif f <= 6:
-			# Tầng 5-6: Common 20%, Rare 30%, Heroic 30%, Legendary 16%, Mythic 4%
-			if roll < 0.20: return ItemData.Rarity.COMMON
-			elif roll < 0.50: return ItemData.Rarity.RARE
-			elif roll < 0.80: return ItemData.Rarity.HEROIC
-			elif roll < 0.96: return ItemData.Rarity.LEGENDARY
-			else: return ItemData.Rarity.MYTHIC
-		else:
-			# Tầng 7+: Common 10%, Rare 20%, Heroic 30%, Legendary 25%, Mythic 15%
-			if roll < 0.10: return ItemData.Rarity.COMMON
-			elif roll < 0.30: return ItemData.Rarity.RARE
-			elif roll < 0.60: return ItemData.Rarity.HEROIC
-			elif roll < 0.85: return ItemData.Rarity.LEGENDARY
-			else: return ItemData.Rarity.MYTHIC
+	return rarity_from_roll(get_rarity_weights(floor_level, is_boss), roll)
 
 ## Lấy ngẫu nhiên 1 vật phẩm chuẩn theo độ hiếm và tầng
 static func get_random_drop(floor_level: int, is_boss: bool = false, rng: RandomNumberGenerator = null) -> ItemData:
@@ -194,7 +165,13 @@ static func get_random_drop(floor_level: int, is_boss: bool = false, rng: Random
 	var pool := get_equipment_by_rarity(target_rarity)
 
 	if pool.is_empty():
-		pool = get_equipment_by_rarity(ItemData.Rarity.COMMON)
+		# Missing resources must not grant a rarity forbidden for this source/floor.
+		var weights := get_rarity_weights(floor_level, is_boss)
+		for rarity in range(weights.size()):
+			if int(weights[rarity]) > 0:
+				pool = get_equipment_by_rarity(rarity)
+				if not pool.is_empty():
+					break
 
 	if pool.is_empty():
 		return null

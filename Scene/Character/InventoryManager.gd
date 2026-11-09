@@ -264,6 +264,10 @@ func has_mythic_item(type: ItemData.ItemType) -> bool:
 func has_mythic_weapon() -> bool:
 	return has_mythic_item(ItemData.ItemType.WEAPON)
 
+func has_mythic_effect(type: ItemData.ItemType, effect: StringName) -> bool:
+	var item: ItemData = equipment.get(type, null)
+	return item != null and item.rarity == ItemData.Rarity.MYTHIC and item.combat_effect == effect
+
 func has_mythic_armor() -> bool:
 	return has_mythic_item(ItemData.ItemType.ARMOR)
 

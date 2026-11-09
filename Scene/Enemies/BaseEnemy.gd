@@ -13,7 +13,7 @@ const BalanceData = preload("res://Scene/BalanceConfig.gd")
 @export var attack_range: float = 20.0
 @export var world_item_scene: PackedScene
 @export var loot_table: Array[ItemData] = []
-@export var drop_chance: float = 0.3
+@export var drop_chance: float = 0.05
 var loot_seed: int = 0
 var defensive_spawn_order: int = -1
 var _equipment_loot_generated: bool = false
@@ -120,15 +120,16 @@ func drop_loot() -> void:
 	var item_scene = world_item_scene if world_item_scene != null else preload("res://Scene/Items/WorldItem/WorldItem.tscn")
 	var rng := RandomNumberGenerator.new()
 	rng.seed = loot_seed if loot_seed != 0 else (int(global_position.x * 911) ^ int(global_position.y * 3571))
-	if rng.randf() <= drop_chance:
+	if rng.randf() < drop_chance:
 		var floor_lvl := 1
 		if get_node_or_null("/root/GameManager") != null:
 			floor_lvl = GameManager.current_level
 		var random_item: ItemData = ItemDatabase.get_random_drop(floor_lvl, false, rng)
 		if random_item == null and loot_table.size() > 0:
 			var equipment_pool: Array[ItemData] = []
+			var weights := ItemDatabase.get_rarity_weights(floor_lvl)
 			for item in loot_table:
-				if item != null and item.type != ItemData.ItemType.POTION:
+				if item != null and item.type != ItemData.ItemType.POTION and int(weights[item.rarity]) > 0:
 					equipment_pool.append(item)
 			if not equipment_pool.is_empty():
 				random_item = equipment_pool[rng.randi() % equipment_pool.size()].duplicate()

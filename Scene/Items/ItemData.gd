@@ -10,6 +10,7 @@ enum Rarity { COMMON, RARE, HEROIC, LEGENDARY, MYTHIC }
 @export var icon: Texture2D
 @export_multiline var description: String = "A mysterious artifact from the Elder Days."
 @export var special_effect: String = ""     # Hiệu ứng đặc biệt (dành cho đồ Mythic / Cổ vật)
+@export var combat_effect: StringName = &"" # Stable effect identity survives resource duplication.
 
 @export_group("Chỉ số cộng thêm (Stats)")
 @export var damage: int = 0                 # Sát thương vật lý (Vũ khí/Cung)

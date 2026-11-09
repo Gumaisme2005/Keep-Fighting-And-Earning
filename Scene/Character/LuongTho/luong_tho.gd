@@ -94,7 +94,7 @@ func _world() -> Node:
 	return get_parent()
 
 func _rate() -> float:
-	return UPGRADED_ATTACK_RATE if form == "upgraded" else 1.0
+	return (UPGRADED_ATTACK_RATE if form == "upgraded" else 1.0) * get_attack_speed_multiplier()
 
 ## Damage of one hit: weapon damage, +1 in the white-haired form.
 func hit_damage(mult: int = 1) -> int:
@@ -110,7 +110,7 @@ func _play(anim: String) -> void:
 func _set_form(f: String) -> void:
 	form = f
 	animated_sprite.sprite_frames = Sprites.character_frames(f)
-	animated_sprite.speed_scale = _rate()
+	animated_sprite.speed_scale = UPGRADED_ATTACK_RATE if form == "upgraded" else 1.0
 
 # ------------------------------------------------------------------ main loop
 func _process(_delta: float) -> void:
@@ -237,7 +237,7 @@ func _begin(m: String, anim: String) -> void:
 	is_casting_skill = true
 	stance = "combat"
 	stance_t = 0.0
-	animated_sprite.play(anim)
+	animated_sprite.play(anim, get_attack_speed_multiplier() if m in ["combo", "shoot"] else 1.0)
 
 func _end_move() -> void:
 	move = ""

@@ -250,8 +250,8 @@ func test_character_combat_hooks_and_revive() -> void:
 	player.hp = 1 # Đang còn 1 máu
 	var missing: int = player.max_hp - player.hp
 	var raw_berserk_dmg: float = player.get_raw_damage()
-	var expected_raw: float = float(player.base_damage) * (1.0 + float(missing) * 0.15)
-	_assert_test(abs(raw_berserk_dmg - expected_raw) < 0.01, "Berserk Frenzy raw damage scales +15%% per missing HP (Expected: %.2f, Got: %.2f)" % [expected_raw, raw_berserk_dmg])
+	var expected_raw: float = float(player.base_damage) * (1.0 + float(missing) / float(player.max_hp))
+	_assert_test(abs(raw_berserk_dmg - expected_raw) < 0.01, "Berserk Frenzy raw damage scales +100%% per missing-HP ratio (Expected: %.2f, Got: %.2f)" % [expected_raw, raw_berserk_dmg])
 
 	# 6. Kiểm tra trần tốc độ chạy tối đa (max_speed_cap)
 	player.speed = 999.0

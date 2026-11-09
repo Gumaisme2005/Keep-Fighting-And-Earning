@@ -26,6 +26,8 @@ func _ready() -> void:
 			seed_combat_rng((GameManager.current_seed + ":combat").hash())
 
 func reset() -> void:
+	for player in get_tree().get_nodes_in_group("player"):
+		_remove_applied_perks(player)
 	active_perks.clear()
 	second_chance_used = false
 	if get_node_or_null("/root/GameManager") != null and not GameManager.current_seed.is_empty():
@@ -154,6 +156,13 @@ func apply_all_perks_to_player(player: Node2D) -> void:
 		_apply_perk_to_player(perk, player)
 
 func _apply_perk_to_player(perk: PerkData, player: Node2D) -> void:
+	var applied: Array = player.get_meta("applied_perks", [])
+	if applied.count(perk) >= active_perks.count(perk):
+		return
+	if not player.has_meta("perk_regen_baseline"):
+		player.set_meta("perk_regen_baseline", player.armor_regen_delay)
+	applied.append(perk)
+	player.set_meta("applied_perks", applied)
 	var mods := perk.modifiers
 
 	if mods.has("bonus_hp"):
@@ -187,6 +196,35 @@ func _apply_perk_to_player(perk: PerkData, player: Node2D) -> void:
 	# Thông báo cập nhật HUD
 	if player.has_signal("stats_changed"):
 		player.stats_changed.emit(player.hp, player.max_hp, player.current_armor, player.max_armor)
+
+func _remove_applied_perks(player: Node2D) -> void:
+	var applied: Array = player.get_meta("applied_perks", [])
+	for perk in applied:
+		player.base_max_hp -= int(perk.get_modifier("bonus_hp", 0))
+		player.max_hp -= int(perk.get_modifier("bonus_hp", 0))
+		player.hp = mini(player.hp, player.max_hp)
+		player.base_armor -= int(perk.get_modifier("bonus_armor", 0))
+		player.speed -= float(perk.get_modifier("speed_bonus", 0.0))
+		player.base_damage -= int(perk.get_modifier("bonus_damage", 0))
+	if player.has_meta("perk_regen_baseline"):
+		player.armor_regen_delay = player.get_meta("perk_regen_baseline")
+		if player.regen_delay_timer != null:
+			player.regen_delay_timer.wait_time = player.armor_regen_delay
+		player.remove_meta("perk_regen_baseline")
+	if player.has_meta("applied_perks"):
+		player.remove_meta("applied_perks")
+	if not applied.is_empty() and player.has_method("_on_equipment_changed"):
+		player._on_equipment_changed()
+
+func get_berserk_bonuses(missing_hp_ratio: float) -> Dictionary:
+	var damage := 0.0
+	var speed_bonus := 0.0
+	for perk in active_perks:
+		if perk.get_modifier("low_hp_scaling", false):
+			damage += float(perk.get_modifier("dmg_per_missing_hp_ratio", 1.0))
+			speed_bonus += float(perk.get_modifier("speed_per_missing_hp_ratio", 40.0))
+	var ratio := clampf(missing_hp_ratio, 0.0, 1.0)
+	return {"damage": clampf(damage, 0.0, 1.0) * ratio, "speed": clampf(speed_bonus, 0.0, 40.0) * ratio}
 
 # -----------------------------------------------------------------------------
 # 3. TRUY VẤN CHỈ SỐ VÀ HIỆU ỨNG CHIẾN ĐẤU (QUERY HOOKS)
@@ -234,7 +272,7 @@ func get_crit_chance() -> float:
 	var crit := 0.0
 	for p in active_perks:
 		crit += float(p.get_modifier("crit_chance", 0.0))
-	return crit
+	return clampf(crit, 0.0, 0.50)
 
 func get_crit_multiplier() -> float:
 	var mult := 2.0
@@ -242,7 +280,7 @@ func get_crit_multiplier() -> float:
 		var m := float(p.get_modifier("crit_multiplier", 0.0))
 		if m > mult:
 			mult = m
-	return mult
+	return minf(mult, 2.5)
 
 func has_burn_on_hit() -> bool:
 	for p in active_perks:

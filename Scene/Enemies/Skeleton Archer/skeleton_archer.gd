@@ -24,7 +24,7 @@ func _init() -> void:
 		preload("res://Scene/Items/Common/health_potion.tres"),
 		preload("res://Scene/Items/Common/iron_helmet.tres")
 	]
-	drop_chance = 0.35
+	drop_chance = 0.05
 
 
 func _ready() -> void:

@@ -56,6 +56,7 @@ var potion_kills_without_drop: int = 0
 var _recorded_potion_cooldown_active: bool = false
 var thorns_cooldown_remaining: float = 0.0
 var armor_break_cooldown_remaining: float = 0.0
+var lightning_cooldown_remaining: float = 0.0
 var _recorded_defensive_cooldown_active: bool = false
 var _next_defensive_spawn_order: int = 0
 
@@ -207,6 +208,7 @@ func start_new_run(custom_seed: String = "", replay_mode: bool = false, frames_t
 	_recorded_potion_cooldown_active = false
 	thorns_cooldown_remaining = 0.0
 	armor_break_cooldown_remaining = 0.0
+	lightning_cooldown_remaining = 0.0
 	_recorded_defensive_cooldown_active = false
 	_next_defensive_spawn_order = 0
 	get_tree().call_group("player", "reset_potion_progression")
@@ -232,7 +234,7 @@ func record_frame_input(frame_data: Dictionary) -> void:
 	# Otherwise idle-frame compression makes the replay's next potion arrive too early.
 	var keep_potion_tick := potion_cooldown_remaining > 0.0 or _recorded_potion_cooldown_active
 	_recorded_potion_cooldown_active = potion_cooldown_remaining > 0.0
-	var defensive_active := thorns_cooldown_remaining > 0.0 or armor_break_cooldown_remaining > 0.0
+	var defensive_active := thorns_cooldown_remaining > 0.0 or armor_break_cooldown_remaining > 0.0 or lightning_cooldown_remaining > 0.0
 	var keep_defensive_tick := defensive_active or _recorded_defensive_cooldown_active
 	_recorded_defensive_cooldown_active = defensive_active
 

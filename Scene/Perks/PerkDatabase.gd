@@ -272,10 +272,10 @@ static func _init_catalog() -> void:
 	_register(_build_perk(
 		"chain_lightning",
 		"Lôi Thần Trừng Phạt",
-		"Đòn đánh trúng mục tiêu phóng tia sét lan sang 2 kẻ địch kế bên gây 2 sát thương điện.",
+		"Đòn đánh trúng phóng sét sang 1 kẻ địch gần nhất trong 95px, gây 1 sát thương. Hồi chiêu chung: 0.5 giây.",
 		PerkData.Rarity.LEGENDARY,
 		"26.png",
-		{"on_hit_lightning": true, "lightning_damage": 2, "lightning_chain_count": 2, "lightning_range": 95.0}
+		{"on_hit_lightning": true, "lightning_damage": 1, "lightning_chain_count": 1, "lightning_range": 95.0, "lightning_cooldown": 0.5}
 	))
 
 	_register(_build_perk(
@@ -290,10 +290,10 @@ static func _init_catalog() -> void:
 	_register(_build_perk(
 		"berserk_frenzy",
 		"Cuồng Chiến Đồ Đao",
-		"Càng ít Máu càng mạnh: Mỗi 1 điểm Máu bị mất tăng thêm +15% Sát thương và +8 Tốc độ chạy.",
+		"Theo tỉ lệ Máu đã mất: tăng tối đa +100% Sát thương và +40 Tốc độ chạy khi mất toàn bộ Máu.",
 		PerkData.Rarity.LEGENDARY,
 		"103.png",
-		{"low_hp_scaling": true, "dmg_per_missing_hp": 0.15, "speed_per_missing_hp": 8.0}
+		{"low_hp_scaling": true, "dmg_per_missing_hp_ratio": 1.0, "speed_per_missing_hp_ratio": 40.0}
 	))
 
 	_register(_build_perk(

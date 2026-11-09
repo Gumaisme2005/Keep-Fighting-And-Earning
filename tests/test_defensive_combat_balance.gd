@@ -129,6 +129,8 @@ func flush() -> void:
 func test_core_defects() -> void:
 	var f := fixture()
 	var e := enemy(f, Vector2(20, 0))
+	# Supply a legal ten-armor fixture under Commit 3's lower equipment budgets.
+	f.p.max_armor = 12
 	f.p.current_armor = 10
 	f.p.take_damage(5)
 	await flush()

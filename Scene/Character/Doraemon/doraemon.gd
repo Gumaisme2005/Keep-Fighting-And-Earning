@@ -389,17 +389,19 @@ func _use(move: String) -> void:
 		_:
 			_begin_cast(move, String(info[2]), float(info[3]), float(info[4]))
 	power -= float(info[5])
-	cooldowns[move] = float(info[1])
+	var attack_rate := 1.0 if move in ["door", "hustle_screw", "hirari_mantle"] else get_attack_speed_multiplier()
+	cooldowns[move] = float(info[1]) / attack_rate
 
 func _begin_cast(move: String, pose: String, release: float, lock: float) -> void:
 	_cast_move = move
 	_cast_t = 0.0
 	_cast_fired = false
-	_cast_release = release
-	_cast_lock = maxf(lock, release + 0.02)
+	var attack_rate := get_attack_speed_multiplier() if MOVES.has(move) else 1.0
+	_cast_release = release / attack_rate
+	_cast_lock = maxf(lock, release + 0.02) / attack_rate
 	is_casting_skill = true
 	_set_flip(_cast_aim.x < 0.0)
-	animated_sprite.play(pose)
+	animated_sprite.play(pose, attack_rate)
 	_sync_anchor()
 
 func _step_cast(delta: float) -> void:
