@@ -20,6 +20,7 @@ const LayoutPlanner = preload("res://Scene/Map/DungeonLayoutPlanner.gd")
 const Painter = preload("res://Scene/Map/DungeonPainter.gd")
 const Spawner = preload("res://Scene/Map/DungeonSpawner.gd")
 const NavHelper = preload("res://Scene/Map/DungeonNavHelper.gd")
+const FloorBalance = preload("res://Scene/Balance/EnemyFloorBalance.gd")
 
 # --- THIẾT LẬP THỦ TỤC & ĐẶC TÍNH BẢN ĐỒ ---
 @export var map_seed: String = "ALOALO1234"
@@ -88,6 +89,7 @@ var _combat_room_spawn_cells: Dictionary = {}
 var reserved_trap_positions: Array[Vector2i] = []
 var forbidden_decor_cells = {}
 var planned_enemy_spawns: Array = []
+var enemy_spawn_shortfalls: Array[Dictionary] = []
 var room_managers: Dictionary = {}
 var visited_rooms: Dictionary = {0: true}
 var active_boss: Node2D = null
@@ -122,8 +124,7 @@ func get_effective_seed_string() -> String:
 
 func generate_dungeon() -> void:
 	clear()
-	min_enemies = clampi(3 + (current_level - 1), 3, 8)
-	max_enemies = clampi(7 + (current_level - 1) * 2, 7, 14)
+	_configure_enemy_density()
 	rng.seed = get_effective_seed_string().hash()
 	reserved_trap_positions.clear()
 	forbidden_decor_cells.clear()
@@ -140,6 +141,10 @@ func generate_dungeon() -> void:
 	scatter_decorations()
 	plan_enemy_spawns()
 	dungeon_generated.emit()
+
+func _configure_enemy_density() -> void:
+	min_enemies = FloorBalance.minimum_enemies(current_level)
+	max_enemies = FloorBalance.maximum_enemies(current_level)
 
 # --- ĐIỀU PHỐI LAYOUT ---
 func build_dungeon_layout() -> void:

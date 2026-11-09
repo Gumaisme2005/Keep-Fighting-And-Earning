@@ -6,6 +6,9 @@ class_name BaseEnemy
 ## và bộ đệm điều hướng AI (Throttled Raycast Steer).
 
 const BalanceData = preload("res://Scene/BalanceConfig.gd")
+const FloorBalance = preload("res://Scene/Balance/EnemyFloorBalance.gd")
+var combat_floor: int = 1
+var armor_piercing: float = 0.0
 
 # --- CHỈ SỐ CƠ BẢN (DATA-DRIVEN) ---
 @export var damage: int = 1
@@ -55,9 +58,10 @@ func _ready() -> void:
 func _apply_balance_stats() -> void:
 	var cfg: Dictionary = BalanceData.get_enemy_stats(enemy_balance_id)
 	if not cfg.is_empty():
-		hp = int(cfg.get("hp", hp))
+		hp = FloorBalance.health(int(cfg.get("hp", hp)), combat_floor)
 		max_hp = hp
-		damage = int(cfg.get("damage", damage))
+		damage = int(cfg.get("damage", damage)) + FloorBalance.damage_bonus(combat_floor)
+		armor_piercing = FloorBalance.penetration(combat_floor)
 		speed = float(cfg.get("speed", speed))
 		attack_range = float(cfg.get("attack_range", attack_range))
 		drop_chance = float(cfg.get("drop_chance", drop_chance))

@@ -410,11 +410,11 @@ func _step_special() -> void:
 		_end_move()
 
 # ------------------------------------------------------------------ damage
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	if _untouchable:
 		return
 	var before := hp + current_armor
-	super.take_damage(amount)
+	super.take_damage(amount, armor_piercing)
 	if hp + current_armor >= before:
 		return
 	if is_dead:

@@ -16,8 +16,8 @@ func _ready() -> void:
 	var cfg: Dictionary = BalanceData.get_enemy_stats("armored_orc")
 	max_armor = int(cfg.get("armor", max_armor))
 	current_armor = max_armor
-	normal_damage = int(cfg.get("damage", normal_damage))
-	rage_damage = int(cfg.get("rage_damage", rage_damage))
+	normal_damage = damage
+	rage_damage = int(cfg.get("rage_damage", rage_damage)) + FloorBalance.damage_bonus(combat_floor)
 	axe_collision.disabled = true
 	rage_collision.disabled = true
 	axe_hitbox.position = Vector2(0, -8)
@@ -138,7 +138,7 @@ func _on_axe_hitbox_area_entered(area: Area2D) -> void:
 		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
 			return
 		if target.has_method("take_damage"):
-			target.take_damage(normal_damage)
+			FloorBalance.hit(target, normal_damage, armor_piercing)
 
 func _on_rage_hitbox_area_entered(area: Area2D) -> void:
 	if area.name == "PlayerHurtbox":
@@ -147,4 +147,4 @@ func _on_rage_hitbox_area_entered(area: Area2D) -> void:
 		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
 			return
 		if target.has_method("take_damage"):
-			target.take_damage(rage_damage)
+			FloorBalance.hit(target, rage_damage, armor_piercing)

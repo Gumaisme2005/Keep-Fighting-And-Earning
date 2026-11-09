@@ -113,9 +113,9 @@ func _fire_arrow() -> void:
 		get_parent().add_child(arrow)
 		arrow.global_position = spawn_pos
 
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	_pending_arrow = false
-	super.take_damage(amount)
+	super.take_damage(amount, armor_piercing)
 
 func use_special_skill() -> void:
 	if not can_use_skill:

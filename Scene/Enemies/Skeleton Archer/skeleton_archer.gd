@@ -143,6 +143,7 @@ func _spawn_arrow() -> void:
 	arrow.direction = shoot_dir
 	arrow.rotation = shoot_dir.angle()
 	arrow.damage = damage
+	arrow.armor_piercing = armor_piercing
 	get_parent().add_child(arrow)
 	arrow.global_position = spawn_pos
 

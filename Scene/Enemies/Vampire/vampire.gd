@@ -152,6 +152,7 @@ func shoot_magic_spell() -> void:
 	spell.direction = shoot_dir
 	spell.rotation = shoot_dir.angle()
 	spell.damage = damage
+	spell.armor_piercing = armor_piercing
 	get_parent().add_child(spell)
 	spell.global_position = spawn_pos
 
@@ -183,4 +184,4 @@ func _on_bite_hitbox_area_entered(area: Area2D) -> void:
 		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
 			return
 		if target.has_method("take_damage"):
-			target.take_damage(damage)
+			FloorBalance.hit(target, damage, armor_piercing)

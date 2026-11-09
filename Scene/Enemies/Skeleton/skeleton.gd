@@ -98,4 +98,4 @@ func _on_sword_hitbox_area_entered(area: Area2D) -> void:
 		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
 			return
 		if target.has_method("take_damage"):
-			target.take_damage(damage)
+			FloorBalance.hit(target, damage, armor_piercing)

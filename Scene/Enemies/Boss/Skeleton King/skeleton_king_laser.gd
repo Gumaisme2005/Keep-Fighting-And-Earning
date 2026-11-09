@@ -1,4 +1,7 @@
 extends Node2D
+
+const FloorBalance = preload("res://Scene/Balance/EnemyFloorBalance.gd")
+var armor_piercing: float = 0.0
 ## One Skeleton King laser volley: a set of straight beams (vertical / horizontal),
 ## each with its own start delay. A beam first shows a charging warning line,
 ## then fires for a short time and damages the player standing on it.
@@ -44,7 +47,7 @@ func _physics_process(delta: float) -> void:
 		var p := to_local(player.global_position)
 		for beam in beams:
 			if is_beam_active(beam) and _point_on_beam(beam, p):
-				player.take_damage(damage)
+				FloorBalance.hit(player, damage, armor_piercing)
 				player_hits += 1
 				hit_cooldown = PLAYER_HIT_COOLDOWN
 				break

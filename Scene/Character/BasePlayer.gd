@@ -284,7 +284,7 @@ func attack() -> void:
 func use_special_skill() -> void:
 	pass
 
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	if is_dead or is_invincible or amount <= 0 or not is_inside_tree() or not can_process() or is_queued_for_deletion():
 		return
 
@@ -296,18 +296,21 @@ func take_damage(amount: int) -> void:
 
 	var had_armor: bool = current_armor > 0
 	var hp_before := hp
-	var actual_hp_lost: int = 0
-	if current_armor >= amount:
-		current_armor -= amount
-		if get_tree():
-			get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -24), amount, Color(0.3, 0.8, 1.0))
-	else:
-		var overflow_damage = amount - current_armor
-		current_armor = 0
-		hp = max(0, hp - overflow_damage)
-		actual_hp_lost = clampi(hp_before - hp, 0, maxi(0, hp_before))
-		if get_tree():
-			get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -24), overflow_damage, Color(1.0, 0.25, 0.25))
+	# Floor positive fractional damage, like thorns; active penetration has a
+	# minimum of one. Split the original hit before absorption, never add damage.
+	var piercing := 0
+	if is_finite(armor_piercing) and armor_piercing > 0.0:
+		piercing = clampi(maxi(1, floori(amount * clampf(armor_piercing, 0.0, 1.0))), 0, amount)
+	var absorbed := mini(current_armor, amount - piercing)
+	current_armor -= absorbed
+	hp = maxi(0, hp - (amount - absorbed))
+	var actual_hp_lost := clampi(hp_before - hp, 0, maxi(0, hp_before))
+	# Retain the legacy single popup for a non-piercing overflow hit. A piercing
+	# hit can lose HP while retaining armor, so show both real components there.
+	if absorbed > 0 and (piercing > 0 or actual_hp_lost == 0):
+		get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -24), absorbed, Color(0.3, 0.8, 1.0))
+	if actual_hp_lost > 0:
+		get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -24), actual_hp_lost, Color(1.0, 0.25, 0.25))
 
 	if had_armor and current_armor == 0:
 		_trigger_armor_break_blast()

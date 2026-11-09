@@ -277,9 +277,9 @@ func _right_click_summon_position(aim_direction: Vector2) -> Vector2:
 		return candidate
 	return global_position
 
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	if guarding or intro_active: return
-	super.take_damage(amount)
+	super.take_damage(amount, armor_piercing)
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if intro_active and animated_sprite.animation == "intro":

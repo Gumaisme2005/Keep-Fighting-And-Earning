@@ -181,6 +181,21 @@ jobs:
           done
           diff -u "$RUNNER_TEMP/equipment_30.trace" "$RUNNER_TEMP/equipment_144.trace"
 
+      - name: Run Enemy Floor Balance at 30 and 144 Render FPS
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/enemy-floor-balance-data
+        run: |
+          set -euo pipefail
+          for fps in 30 144; do
+            godot --headless --max-fps "$fps" "res://tests/test_enemy_floor_balance.tscn" 2>&1 | tee "$RUNNER_TEMP/enemy_floor_${fps}.log"
+            if grep -Eq '^(SCRIPT ERROR:|ERROR:|\[FAIL\]|\[RUNTIME\])' "$RUNNER_TEMP/enemy_floor_${fps}.log"; then exit 1; fi
+            grep -Eq '^ENEMY FLOOR RESULTS: [0-9]+ PASSED, 0 FAILED$' "$RUNNER_TEMP/enemy_floor_${fps}.log"
+            grep '^\[TRACE\]' "$RUNNER_TEMP/enemy_floor_${fps}.log" > "$RUNNER_TEMP/enemy_floor_${fps}.trace"
+          done
+          diff -u "$RUNNER_TEMP/enemy_floor_30.trace" "$RUNNER_TEMP/enemy_floor_144.trace"
+
       - name: 18. Run Tactical Navigation Contract at 30 and 144 Render FPS
         timeout-minutes: 5
         shell: bash

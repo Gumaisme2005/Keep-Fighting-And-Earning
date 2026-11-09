@@ -937,14 +937,14 @@ func _step_mode(delta: float, direction: Vector2) -> void:
 
 const INVULNERABLE_MODES := ["door", "screw", "sl", "uradora_dash", "uradora_tf", "uradora_kick", "punch"]
 
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	if INVULNERABLE_MODES.has(_mode):
 		return
 	if _mode == "mantle" and amount > 0 and not is_dead:
 		_mantle_counter(amount)
 		return
 	var before := hp + current_armor
-	super.take_damage(amount)
+	super.take_damage(amount, armor_piercing)
 	if hp + current_armor < before:
 		add_power(10)
 		if hp > 0 and _cast_move == "" and _mode == "":

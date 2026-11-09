@@ -381,7 +381,7 @@ func _flash_block() -> void:
 func is_immune() -> bool:
 	return _untouchable or form == "upgraded"
 
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	if is_dead:
 		return
 	if is_immune():
@@ -389,7 +389,7 @@ func take_damage(amount: int) -> void:
 			_flash_block()
 		return
 	var before := hp + current_armor
-	super.take_damage(amount)
+	super.take_damage(amount, armor_piercing)
 	if is_dead:
 		move = ""
 		is_casting_skill = false
