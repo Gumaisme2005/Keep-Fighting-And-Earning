@@ -29,6 +29,7 @@ var rmb_cd_max: float = 0.0
 var is_invincible: bool = false
 @export var invincibility_time: float = 0.95
 var hp: int = 4
+var floor_vitality_applied: int = 0
 const MAX_ARMOR: int = 12
 var max_armor: int = 4:
 	set(value):
@@ -92,6 +93,7 @@ func _ready() -> void:
 	_apply_balance_config()
 	var gm = get_node_or_null("/root/GameManager")
 	if gm != null:
+		floor_vitality_applied = gm.floor_vitality_gained
 		potion_max_hp_gained = gm.potion_max_hp_gained
 		potion_cooldown_remaining = gm.potion_cooldown_remaining
 		thorns_cooldown_remaining = gm.thorns_cooldown_remaining
@@ -118,7 +120,7 @@ func _ready() -> void:
 		bonus_hp = inventory.get_total_max_hp_bonus() if inventory.has_method("get_total_max_hp_bonus") else 0
 		bonus_def = inventory.get_total_defense() if inventory.has_method("get_total_defense") else 0
 
-	max_hp = base_max_hp + bonus_hp + potion_max_hp_gained
+	max_hp = base_max_hp + bonus_hp + potion_max_hp_gained + floor_vitality_applied
 	hp = max_hp
 	max_armor = base_armor + bonus_def
 	current_armor = max_armor
@@ -423,7 +425,7 @@ func _on_equipment_changed() -> void:
 	if inventory == null:
 		return
 	var old_max_hp = max_hp
-	max_hp = base_max_hp + inventory.get_total_max_hp_bonus() + potion_max_hp_gained
+	max_hp = base_max_hp + inventory.get_total_max_hp_bonus() + potion_max_hp_gained + floor_vitality_applied
 
 	if max_hp > old_max_hp:
 		hp += (max_hp - old_max_hp)
@@ -435,6 +437,18 @@ func _on_equipment_changed() -> void:
 	if current_armor < max_armor and regen_delay_timer.is_stopped() and regen_tick_timer.is_stopped():
 		regen_delay_timer.start()
 
+	stats_changed.emit(hp, max_hp, current_armor, max_armor)
+
+func sync_floor_vitality() -> void:
+	var gm = get_node_or_null("/root/GameManager")
+	var earned: int = gm.floor_vitality_gained if gm != null else 0
+	var delta := earned - floor_vitality_applied
+	if delta == 0:
+		return
+	floor_vitality_applied = earned
+	max_hp = maxi(1, max_hp + delta)
+	# Fill only newly earned capacity; never revive a dead character.
+	hp = 0 if is_dead else clampi(hp + maxi(0, delta), 0, max_hp)
 	stats_changed.emit(hp, max_hp, current_armor, max_armor)
 
 func _start_armor_regen() -> void:
@@ -471,6 +485,10 @@ func get_missing_hp_ratio() -> float:
 func get_attack_speed_multiplier() -> float:
 	# Aggregate equipment once; callers scale only their attack timing, not physics time.
 	var bonus: float = inventory.get_attack_speed_bonus() if inventory != null else 0.0
+	var pm = get_node_or_null("/root/PerkManager")
+	if pm != null:
+		for perk in pm.get_active_perks():
+			bonus += float(perk.get_modifier("attack_speed_bonus", 0.0))
 	return maxf(0.01, 1.0 + bonus)
 
 func get_raw_damage() -> float:

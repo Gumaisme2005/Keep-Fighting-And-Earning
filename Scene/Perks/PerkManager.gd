@@ -46,8 +46,11 @@ func on_enemy_killed() -> void:
 		var rng: RandomNumberGenerator = get_combat_rng()
 		if rng.randf() <= heal_chance:
 			var players = get_tree().get_nodes_in_group("player")
-			if not players.is_empty() and is_instance_valid(players[0]):
-				var p = players[0]
+			for p in players:
+				# Authored sword hitboxes also belong to "player". They are not
+				# health owners, and can appear first after a reparent/group change.
+				if not is_instance_valid(p) or p.is_queued_for_deletion() or p.get("hp") == null or p.get("max_hp") == null:
+					continue
 				# Deferred retaliation may kill an enemy after its owner has died.
 				if p.get("is_dead") != true and p.hp < p.max_hp:
 					p.hp = mini(p.max_hp, p.hp + 1)
@@ -55,6 +58,7 @@ func on_enemy_killed() -> void:
 						p.stats_changed.emit(p.hp, p.max_hp, p.current_armor, p.max_armor)
 					if get_tree():
 						get_tree().call_group("game_ui", "spawn_damage_number", p.global_position + Vector2(0, -24), 1, Color(0.2, 1.0, 0.4))
+				break
 
 # -----------------------------------------------------------------------------
 # 1. RÚT THẺ PERK TẤT ĐỊNH (DETERMINISTIC PERK ROLLING)

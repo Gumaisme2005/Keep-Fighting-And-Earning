@@ -45,6 +45,19 @@ var current_level: int = 1
 var enemies_killed: int = 0
 var run_start_time_msec: int = 0
 
+# Earned only by clearing a boss room and descending, once per first five floors.
+# Separate from hero/perk/equipment HP and the unchanged +4 potion allowance.
+const FLOOR_VITALITY_PER_CLEAR: int = 2
+const FLOOR_VITALITY_MAX_CLEARS: int = 5
+var floor_vitality_gained: int = 0
+var _vitality_floor_clears: Dictionary = {}
+
+func register_floor_clear(floor_number: int) -> bool:
+	if floor_number != current_level or floor_number < 1 or floor_number > FLOOR_VITALITY_MAX_CLEARS or _vitality_floor_clears.has(floor_number):
+		return false
+	_vitality_floor_clears[floor_number] = false
+	return true
+
 # Potion progression belongs to the run, including when a player node is recreated.
 const POTION_BASE_DROP_CHANCE: float = 0.02
 const POTION_LOW_HP_BONUS: float = 0.02
@@ -202,6 +215,9 @@ func start_new_run(custom_seed: String = "", replay_mode: bool = false, frames_t
 		current_seed = safe_curr if not safe_curr.is_empty() else generate_random_seed()
 	current_level = 1
 	enemies_killed = 0
+	floor_vitality_gained = 0
+	_vitality_floor_clears.clear()
+	get_tree().call_group("player", "sync_floor_vitality")
 	potion_max_hp_gained = 0
 	potion_cooldown_remaining = 0.0
 	potion_kills_without_drop = 0
@@ -275,6 +291,11 @@ func register_enemy_kill() -> void:
 		pm.on_enemy_killed()
 
 func register_level_advance(new_level: int) -> void:
+	var previous := current_level
+	if new_level == previous + 1 and _vitality_floor_clears.has(previous) and not _vitality_floor_clears[previous]:
+		_vitality_floor_clears[previous] = true
+		floor_vitality_gained = mini(FLOOR_VITALITY_PER_CLEAR * FLOOR_VITALITY_MAX_CLEARS, floor_vitality_gained + FLOOR_VITALITY_PER_CLEAR)
+		get_tree().call_group("player", "sync_floor_vitality")
 	current_level = maxi(1, new_level)
 	stats_updated.emit(current_level, enemies_killed)
 

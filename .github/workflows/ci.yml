@@ -196,6 +196,21 @@ jobs:
           done
           diff -u "$RUNNER_TEMP/enemy_floor_30.trace" "$RUNNER_TEMP/enemy_floor_144.trace"
 
+      - name: Run Issue 75 Progression Distributions at 30 and 144 Render FPS
+        timeout-minutes: 20
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/issue75-progression-data
+        run: |
+          set -euo pipefail
+          for fps in 30 144; do
+            godot --headless --max-fps "$fps" "res://tests/test_issue75_progression_balance.tscn" 2>&1 | tee "$RUNNER_TEMP/progression_${fps}.log"
+            if grep -Eq '^(SCRIPT ERROR:|ERROR:|\[FAIL\]|\[RUNTIME\])' "$RUNNER_TEMP/progression_${fps}.log"; then exit 1; fi
+            grep -Eq '^PROGRESSION RESULTS: [0-9]+ PASSED, 0 FAILED$' "$RUNNER_TEMP/progression_${fps}.log"
+            grep '^\[TRACE\]' "$RUNNER_TEMP/progression_${fps}.log" > "$RUNNER_TEMP/progression_${fps}.trace"
+          done
+          diff -u "$RUNNER_TEMP/progression_30.trace" "$RUNNER_TEMP/progression_144.trace"
+
       - name: 18. Run Tactical Navigation Contract at 30 and 144 Render FPS
         timeout-minutes: 5
         shell: bash

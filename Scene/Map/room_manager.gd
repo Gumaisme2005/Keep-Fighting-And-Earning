@@ -78,6 +78,7 @@ func _try_activate_or_clear_room(player_body: Node2D) -> void:
 		lock_room()
 	else:
 		is_cleared = true
+		_credit_boss_clear()
 		if tilemap and tilemap.has_method("notify_room_cleared"):
 			tilemap.notify_room_cleared(room_index)
 		if is_boss_room and tilemap and tilemap.has_method("spawn_portal"):
@@ -117,8 +118,11 @@ func _on_enemy_died() -> void:
 		unlock_room()
 
 func unlock_room() -> void:
+	if is_cleared:
+		return
 	is_cleared = true
 	is_locked = false
+	_credit_boss_clear()
 	if is_inside_tree() and get_node_or_null("/root/AudioManager") != null:
 		AudioManager.play_sfx("portal", 1.05, 1.15)
 
@@ -136,3 +140,11 @@ func unlock_room() -> void:
 
 	if is_boss_room and tilemap and tilemap.has_method("spawn_portal"):
 		tilemap.spawn_portal(global_position)
+
+func _credit_boss_clear() -> void:
+	if not is_boss_room or not is_instance_valid(tilemap) or get_node_or_null("/root/GameManager") == null:
+		return
+	for enemy in enemies:
+		if is_instance_valid(enemy) and not enemy.is_queued_for_deletion() and enemy.get("is_dead") != true:
+			return
+	GameManager.register_floor_clear(tilemap.current_level)

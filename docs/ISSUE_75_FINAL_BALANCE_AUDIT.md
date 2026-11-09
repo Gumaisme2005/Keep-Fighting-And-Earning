@@ -1,3 +1,197 @@
+# Issue #75: corrective progression implementation and current audit
+
+**PASS WITH LIMITATIONS.** Bounded, earned HP progression and confirmed reward/perk defects are corrected. Mandatory numerical rules are preserved. The normal-policy HP median now meets every floor-completion target, with explicitly reported weak/strong outliers. Armor and some damage distribution targets remain missed; the total-spawned-potion target conflicts with fixed rules. No interactive full run or remote CI on this local corrective commit is claimed.
+
+## Verified causes and production corrections
+
+1. **HP growth had no floor reward.** Existing equipment, unique health perks and the +4 potion allowance were applied correctly in normal floor transitions. There was no lost floor-health reward to restore. Ordinary progression commonly ended around 12-15 HP in the original three-seed model. The correction adds +2 maximum HP when descending after an earned boss-room clear, once for each of the first five floors: **0/2/4/6/8/10 earned HP at floor entries 1-6**, capped at +10 per run. Only the new capacity is filled. This is a shared hero rule, not a Miyabi base-stat change.
+
+2. **Reward generation could be repeated.** `RoomManager.unlock_room()` lacked an already-cleared guard. Repeated direct/unlock callbacks could spawn another portal and chest pair. It now completes once. Chest instance `_rewards_generated` protection remains unchanged.
+
+3. **Quick Reflexes was ignored.** Its existing +15% attack-speed modifier was never included in `get_attack_speed_multiplier()`. The shared calculation now sums active perk bonuses once, alongside equipment. Duplicate application/removal is tested on all eight real hero scenes. No modifier value or cap changed.
+
+4. **On-kill healing assumed the first player-group member owned HP.** Authored sword hitboxes also belong to that group; after a group/reparent change an Area2D could be first, causing invalid HP access. Healing now skips invalid/queued/non-health members and retains the first valid health owner. Chance, heal amount, dead-player protection and RNG draws are unchanged.
+
+5. **Early strength is largely acquisition and measurement, not duplicate stats.** Floor entry and fully looted exit differ materially. Two boss chests plus a boss equipment roll provide several equipment opportunities. Ordinary treasure chests retain an authored pool containing a Legendary `Bane of Morgul` sword: an 80% gate times 1/6 selection is about 13.3% per opened treasure chest. This intentionally authored path is separate from the exact enemy/boss rarity tables. Original trace item names show that the previous audit attribution of early Legendary swords solely to 5% boss-chest rolls was incorrect. Equipment/perk bonuses are not duplicated; the existing explicit legacy-treasure regression is preserved.
+
+6. **Potion totals include more than the 2% roll.** Forced pity, low-HP bonuses, the existing Treasure Favor multiplier, ordinary treasure-chest potions and two guaranteed Rare boss-chest potions all contribute. The new source accounting counts each unit once and separates pickups, rejection, consumption and ground remainder.
+
+Changed production files:
+
+| File | Actual behavior change |
+|---|---|
+| `Scene/GameManager.gd` | Owns bounded boss-clear credits and claimed vitality; redeems only on a one-floor descent; clears state on a new run/replay |
+| `Scene/Character/BasePlayer.gd` | Includes earned HP in initialization/recalculation; synchronizes only the unapplied delta without reviving dead heroes; includes authored attack-speed perks once |
+| `Scene/Map/room_manager.gd` | Credits a completed boss room only after enemies are gone/dead; makes room completion/reward generation idempotent |
+| `Scene/Perks/PerkManager.gd` | Finds a valid health owner for on-kill healing instead of assuming group index zero |
+
+The live-run ledger is owned by GameManager like potion progression. Normal descent retains the player/current HP; recreation restores earned maximum HP from the ledger. Existing recreation initializes a fresh player at full HP; no active-run disk-resume feature is invented. Existing disk saves store history/replays, not a live player snapshot, so the disk format is unchanged and no HP persists between runs. Claim state is recorded before callbacks, protecting reentrant grants. Equipment recalculation, perk removal, death/revival and new-run resets preserve component ownership.
+
+## Before/after HP and measurement boundaries
+
+These are controlled production-system event scenarios, **not played or autonomous runs**. Thirty distinct seeds are used for each of three policies. Entry is before current-floor rewards; exit is after boss/chest rewards but before that floor's portal perk and descent HP. No HP, armor capacity or damage is assigned to reach targets. Enemy reward-only instances use real BaseEnemy configuration/death/drop code; boss clears are assumed terminal events, not full AI fights. Potion/regen time advances production callbacks under the explicit scenario clock.
+
+The paired 30-seed counterfactual holds all other fixes/policies constant and disables only the new boss-health credit through a test subclass. It isolates the HP design change; it is not represented as an execution of the old Git commit. Original actual three-seed data remains untouched in `issue75_progression_samples.json`; the complete original audit is archived below.
+
+Normal-policy floor-exit HP; new distributions are minimum / median / maximum:
+
+| Floor | Target | Original actual three-seed range | Paired baseline 30-seed range/median | Corrected 30-seed range/median | Inside target | Weak / strong |
+|---|---|---|---|---|---|---|
+| 1 | [5, 7] | 5-7 | 5/6/8 | 5/6/8 | 27/30 (90%) | 0 / 3 |
+| 2 | [8, 10] | 6-8 | 6/8/10 | 8/10/12 | 20/30 (67%) | 0 / 10 |
+| 3 | [11, 14] | 8-9 | 7/9/11 | 11/13/15 | 29/30 (97%) | 0 / 1 |
+| 4 | [15, 19] | 10-11 | 7/10/12 | 13/16/18 | 26/30 (87%) | 4 / 0 |
+| 5 | [19, 25] | 10-12 | 9/12/17 | 17/20/23 | 23/30 (77%) | 7 / 0 |
+| 6 | [23, 30] | 12-15 | 10/14/17 | 20/23.5/27 | 20/30 (67%) | 10 / 0 |
+
+For every policy, floor, entry/exit metric, target coverage and outlier count, see [the complete distribution tables](ISSUE_75_PROGRESSION_DISTRIBUTIONS.md) and [machine-readable statistics](issue75_progression_statistics.json). Exact per-run stats, gear catalog/legacy IDs, rarities, active perks, HP/armor, potion sources and combat observations are in `issue75_progression_distribution_before.json` and `issue75_progression_distribution_after.json`. The reproducible manifest and policy/clock assumptions are in `issue75_progression_seed_manifest.json`.
+
+Normal-policy medians (entry / exit) make the measurement distinction explicit:
+
+| Floor | Maximum HP entry / exit | Armor entry / exit | Effective damage entry / exit |
+|---|---|---|---|
+| 1 | 4 / 6 | 2 / 5 | 1 / 3.5 |
+| 2 | 9 / 10 | 5.5 / 7 | 4 / 6 |
+| 3 | 12.5 / 13 | 7 / 8 | 6 / 6 |
+| 4 | 15 / 16 | 9 / 9 | 7 / 7 |
+| 5 | 18 / 20 | 10 / 10 | 7 / 7 |
+| 6 | 22 / 23.5 | 11 / 12 | 7 / 7.5 |
+
+Configured Miyabi still enters floor one at **4 HP / 2 armor / 1 damage**. Thus a 5-7 HP target cannot simultaneously describe the unmodified starting scene; floor-completion HP is the primary like-for-like comparison to the original simulation. Both interpretations remain visible in the data.
+
+## Potion economy and requirement conflict
+
+Per six-floor run, minimum / median / maximum; the starter potion is excluded from generated rewards:
+
+| Policy | Random enemy | Forced pity | Boss guarantees | Other chests | Total spawned | Pickups | Consumed | Capacity rejected | Ground left | Exit inventory | Emergency uses |
+|---|---|---|---|---|---|---|---|---|---|---|
+| normal | 4/7/11 | 2/4/7 | 12/12/12 | 0/3/8 | 24/26/35 | 6/8/10 | 3/5/7 | 15/18/27 | 15/18/27 | 3/4/4 | 0/0/0 |
+| optimized | 5/9.5/13 | 2/6/8 | 12/12/12 | 0/4/8 | 28/31/38 | 7/10/12 | 4/7.5/11 | 17/21/29 | 17/21/29 | 1/4/4 | 0/0/0 |
+| conservative | 1/5/8 | 1/3/4 | 12/12/12 | 0/2/5 | 18/22/26 | 6/7.5/10 | 3/5/7 | 10/13.5/19 | 10/13.5/19 | 3/4/4 | 0/0/0 |
+
+**SPECIFICATION CONFLICT:** opening both boss chests across six floors creates **12 guaranteed Rare potions before any enemy or treasure drops**. Any additional spawned potion exceeds a 10-12 total-spawn target. Pity alone requires at least `floor(eligible_kills / 45)` drops. At constant 2% chance, the mathematical mean waiting time with the 45-kill guarantee is about **29.86 kills**, rather than 50 without pity; low HP and Treasure Favor can increase supply further. This is an analytical estimate, separate from observed source counts above.
+
+No guaranteed potion was removed, no chest was removed, no drop rate or pity threshold changed. Tester approval is needed to revise the approximate total-spawn target, define it as collected/consumed supply, or explicitly change a hard reward rule. Merely reducing the guarantee to one per encounter would still leave enemy/pity/treasure drops and would not by itself ensure 10-12.
+
+Successful pickups, consumption and ground units are distinct. Each item is offered once in the modeled route, avoiding duplicate rejection counts. Actual HP restored and emergency uses are recorded; an emergency use means the next controlled accepted Orc hit would otherwise be lethal. These counts describe the explicit event model, not potion requirements in a full interactive fight.
+
+## Gameplay safety and all heroes
+
+All eight real hero scenes pass initialization, earned HP, duplicate clear/descent, revisit, recreation, equipment recalculation, health-perk application/removal, potion cap, death/revival and reset tests. All receive the same bounded +10 allowance, retaining original base-stat differences. Quick Reflexes is read through the shared attack-speed path used by all eight heroes.
+
+The live nine-Orc safety fixture equips actual earned vitality, Godplate and Epic Armor Break at floor six. The idle player dies while all nine real scaled Orcs remain alive; deferred retaliation is allowed to execute between accepted hits. This guards against a passive room-clear strategy in that fixture. Distribution idle probes are isolated accepted-hit sequences with deferred retaliation excluded, not survival seconds. Existing defensive and enemy-floor suites preserve Thorns two-target/two-second limits, blast six-second limits, piercing, bosses and scaled attacks. Automated checks do not establish that the game is fun or universally fair.
+
+Manual checklist: play the published seeds with each policy; record entry and exit stats and every pickup; test a crowded cover room without attacking, then with movement/skills; test Necromancer summons/poison, Rider warning/spin, and Skeleton King crystal/laser phases; verify no invulnerability from regen; sample potion use under sustained damage; reload/recreate a player and revisit a completed floor; confirm all eight heroes' Q/RMB/normal attacks; compare actual six-floor survivability to this event model.
+
+## Regression execution
+
+Engine **4.7.2.stable.official.ed1daf0bf**, Windows headless, isolated save profile `Keep Fighting Potion Regression Isolated`. Actual exit codes, completion markers, parser/runtime/freed-node errors and bounded timeouts were checked. The new suite has a 600-second in-process deadline and 660-second external bound; existing suites retain 180-second external bounds.
+
+New full progression suite: **34762 PASS / 0 FAIL at 144 FPS; 34762 PASS / 0 FAIL at 30 FPS**. Matched baseline: **34762 PASS / 0 FAIL**. The two corrected FPS traces are identical: `35011947e6a6ab8cb9dbd17bb1715ae000531644f3e22e89677d251c85423269`. All 540 corrected raw records match across rates.
+
+| Existing suite | Final result |
+|---|---|
+| Potion | 124 / 0 |
+| Defensive combat | 232 / 0 at 30 and 144 FPS |
+| Equipment/loot/perks | 319 / 0 at 30 and 144 FPS |
+| Enemy floor balance | 1,053 / 0 |
+| Perk system | 41 / 0 |
+| HUD/inventory | 159 / 0 |
+| Replay security | 39 / 0 |
+| Miyabi / Luong Tho / Doraemon | 18 / 0; 15 / 0; 49 / 0 |
+| Yugi | `YUGI TESTS PASSED`; no aggregate count emitted |
+| Skeleton King / Orc combat | 22 / 0; 5 / 0 |
+| EnemyTactics foundation / mixed AI / tactical BaseEnemy | 94 / 0; 48 / 0; 49 / 0 |
+| Orc / Archer tactics; tactical navigation | 82 / 0; 120 / 0; 49 / 0 |
+| Werewolf / Archer lifecycle / projectile obstacles | 50 / 0; 12 / 0; 11 PASS messages and 0 failures |
+| Dungeon unit / properties | 28 / 0; 11/11 properties across 100 original seeds plus 100 variant cases |
+| Dungeon benchmark | 125 runs across all five room scales, exit 0 |
+
+Exact native command pattern, used by the isolated PowerShell runner:
+
+```powershell
+$Godot = 'C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe'
+& $Godot --headless --path . --max-fps 144 res://tests/test_issue75_progression_balance.tscn
+& $Godot --headless --path . --max-fps 30 res://tests/test_issue75_progression_balance.tscn
+$env:ISSUE75_BASELINE='1' # test-only matched counterfactual; never set in CI/gameplay
+& $Godot --headless --path . --max-fps 144 res://tests/test_issue75_progression_balance.tscn
+Remove-Item Env:ISSUE75_BASELINE
+$suites = @('test_potion_system','test_defensive_combat_balance','test_equipment_loot_perk_balance','test_enemy_floor_balance','test_perk_system','test_moba_hud_and_inventory','test_replay_security','test_miyabi','test_luong_tho','test_doraemon','test_yugi','test_skeleton_king','test_orc_battle','test_enemy_tactics','test_enemy_ai_integration','test_tactical_base_enemy_integration','test_orc_tactical_ai','test_archer_tactical_ai','test_tactical_navigation_contract','test_werewolf','test_archer_combat_lifecycle','test_projectile_obstacles','test_dungeon_generator_unit','test_dungeon_properties','benchmark_dungeon_generator')
+foreach ($suite in $suites) {
+  if (Test-Path ('tests/' + $suite + '.tscn')) {
+    & $Godot --headless --path . --max-fps 144 ('res://tests/' + $suite + '.tscn')
+  } else {
+    & $Godot --headless --path . --max-fps 144 --script ('res://tests/' + $suite + '.gd')
+  }
+  if ($LASTEXITCODE -ne 0) { throw ('Failed: ' + $suite) }
+}
+& $Godot --headless --path . --max-fps 30 res://tests/test_defensive_combat_balance.tscn
+& $Godot --headless --path . --max-fps 30 res://tests/test_equipment_loot_perk_balance.tscn
+& $Godot --headless --path . --editor --import --quit
+& py -3 tests/summarize_issue75_progression.py
+```
+
+Final headless editor import completed with exit 0 and no parser/runtime errors. The only pre-existing warning is the duplicate Archer test scene/script UID. No existing tests were removed or weakened. The new CI step retains every existing gate, runs both FPS settings with isolated XDG data, checks exact zero-failure completion and logged errors, and compares traces. Remote CI for this unpushed corrective commit remains unverified.
+
+Current benchmark means were 99.39 / 178.18 / 289.80 / 448.90 / 700.56 ms for 10 / 16 / 25 / 36 / 50 rooms (25 runs each). The previous report means were 74.93 / 157.29 / 242.16 / 372.24 / 535.99 ms. These separate-in-time measurements are not a controlled A/B regression result; the corrective code does not change generation algorithms, and interactive combat frame time remains unmeasured. The slower observed timings remain visible rather than being called a performance pass.
+
+## Remaining progression compliance
+
+PASS below means a representative median meets a target, not that every RNG seed does. All exact potion/equipment/perk/armor/enemy numeric rules remain covered by the unchanged suites.
+
+| Remaining target | Expected | Observed | Status |
+|---|---|---|---|
+| Maximum HP, floor 1 exit | 5-7 | 5/6/8; 27/30 (90%) | PASS |
+| Maximum HP, floor 2 exit | 8-10 | 8/10/12; 20/30 (67%) | PASS |
+| Maximum HP, floor 3 exit | 11-14 | 11/13/15; 29/30 (97%) | PASS |
+| Maximum HP, floor 4 exit | 15-19 | 13/16/18; 26/30 (87%) | PASS |
+| Maximum HP, floor 5 exit | 19-25 | 17/20/23; 23/30 (77%) | PASS |
+| Maximum HP, floor 6 exit | 23-30 | 20/23.5/27; 20/30 (67%) | PASS |
+| Armor, floor 1 exit | 2-3 | 4/5/8; 0/30 (0%) | FAIL |
+| Armor, floor 2 exit | 3-4 | 5/7/9; 0/30 (0%) | FAIL |
+| Armor, floor 3 exit | 4-6 | 6/8/10; 1/30 (3%) | FAIL |
+| Armor, floor 4 exit | 5-7 | 6/9/11; 3/30 (10%) | FAIL |
+| Armor, floor 5 exit | 7-9 | 8/10/12; 8/30 (27%) | FAIL |
+| Armor, floor 6 exit | 8-10 | 9/12/12; 9/30 (30%) | FAIL |
+| Damage, floor 1 exit | 1-2 | 1/3.5/6; 7/30 (23%) | FAIL |
+| Damage, floor 2 exit | 2-3 | 3/6/7; 3/30 (10%) | FAIL |
+| Damage, floor 3 exit | 3-5 | 4/6/8; 8/30 (27%) | FAIL |
+| Damage, floor 4 exit | 5-7 | 4/7/8; 22/30 (73%) | PASS |
+| Damage, floor 5 exit | 7-9 | 5/7/9; 26/30 (87%) | PASS |
+| Damage, floor 6 exit | 8-10 | 6/7.5/10; 15/30 (50%) | FAIL |
+| Orc primary hits, floor 1 exit | 2-4 | 1/1.5/4; 15/30 (50%) | FAIL |
+| Orc primary hits, floor 2 exit | 3-4 | 1/2/3; 2/30 (7%) | FAIL |
+| Orc primary hits, floor 3 exit | 3-4 | 1/2/3; 5/30 (17%) | FAIL |
+| Orc primary hits, floor 4 exit | 3-3 | 1/3/4; 21/30 (70%) | PASS |
+| Orc primary hits, floor 5 exit | 3-3 | 1/3/4; 17/30 (57%) | PASS |
+| Orc primary hits, floor 6 exit | 3-3 | 2/3/4; 8/30 (27%) | PASS |
+| Total spawned potions through floor six | About 10-12 | Twelve boss guarantees already exhaust the upper bound before other required drops | SPECIFICATION CONFLICT |
+| Entry/exit measurement equivalence | Explicit phase | Both phases recorded; base floor-one HP remains 4 | PASS |
+| Interactive fairness, potion need and boss playability | Representative played runs | Controlled event checks only; manual checklist supplied | NOT VERIFIED |
+| Remote CI on corrective commit | Green after push | Intentionally unpushed | NOT VERIFIED |
+
+Armor remains high even under equivalent later entry measurements; several early damage distributions also exceed targets. These are retained authored reward/gear outcomes, not evidence of duplicated application. Reducing mandatory budgets, boss rewards, or overriding explicit legacy treasure behavior merely to force target ranges is not included. The tester must clarify whether to revise those statistical targets or authorize a separate acquisition change. No claim of complete Issue #75 compliance is made.
+
+## Git and review readiness
+
+Branch `fix/issue-75-game-balance`; starting HEAD `34a30a46f0c61fb775c5459cbdc2189bdee92819`; original development baseline `56e97e1b5c621774423b9e06aede4b8b6bcc0b08`. All five original commits are preserved:
+
+- `29a0febeab12c2cd1cf9c2e3eb5f6f9bef6a3336`
+- `90ecbb1e1b56896aec27c164f1b96ca3fb93f406`
+- `c16ae34afcc8717327d50ea0e5bdb595176503e1`
+- `ea2dcb4dad2ed44eb4b972f501dca04108e41729`
+- `34a30a46f0c61fb775c5459cbdc2189bdee92819`
+
+One separate local commit is created with `balance(progression): refine health growth and reward economy`; its SHA and final clean-tree verification are given in the delivery message. No push, PR, merge, rebase or history rewrite is performed.
+
+The branch is ready for independent code/PR review after user-controlled pushing and remote CI, with **open balance decisions** about potion-total semantics, entry versus completion targets, and retained early armor/damage acquisition. It is not ready to close Issue #75 or to claim interactive fairness.
+
+## Preserved historical Commit 4 audit
+
+The following is historical evidence, not the current status. Its three-seed measurements are preserved; the early-Legendary source attribution is corrected above.
+
+<details><summary>Original Commit 4 audit and measurements</summary>
+
 # Issue #75: final enemy balance implementation and audit
 
 ## Result and scope
@@ -322,3 +516,6 @@ Evidence abbreviations: **P** = `test_potion_system`; **D** = `test_defensive_co
 ## Review readiness and outstanding risks
 
 Review the implementation and progression evidence independently before pushing. Remote Linux CI must verify the new commit; local Windows success cannot establish that result. Manual play should cover multiple full Miyabi runs, crowded cover rooms, boss warning/dodge timing, potion scarcity under damage, and all heroes' skill interactions. The modeled early gear strength, later HP shortfall and potion-found-versus-consumed difference warrant review; they are not silently corrected by retuning prior commits. Performance evidence covers generation, not interactive combat frame time. No claim of issue closure is made.
+
+
+</details>
