@@ -57,6 +57,7 @@ func _apply_balance_stats() -> void:
 		drop_chance = float(cfg.get("drop_chance", drop_chance))
 
 func _find_player() -> void:
+	player = null
 	var players = get_tree().get_nodes_in_group("player")
 	for p in players:
 		if is_instance_valid(p) and not p.is_queued_for_deletion():

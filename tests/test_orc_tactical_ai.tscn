@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://tests/test_orc_tactical_ai.gd" id="1_test"]
+
+[node name="TestOrcTacticalAI" type="Node2D"]
+script = ExtResource("1_test")

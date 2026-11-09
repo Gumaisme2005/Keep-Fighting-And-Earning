@@ -397,9 +397,12 @@ func test_drag_and_drop_slot_mechanics() -> void:
 	var blade = ITEM_DATA_SCRIPT.new()
 	blade.item_name = "Shadow Dagger"
 	blade.type = ItemData.ItemType.WEAPON
-	blade.icon = Texture2D.new()
+	blade.icon = ImageTexture.create_from_image(Image.create(1, 1, false, Image.FORMAT_RGBA8))
 	slot_a.set_item(blade)
 
+	# set_drag_preview() is valid only during a real Viewport drag operation.
+	slot_a.force_drag({"fixture": true}, null)
+	assert_test(get_viewport().gui_is_dragging(), "Drag fixture starts an actual Viewport drag")
 	var drag_data = slot_a._get_drag_data(Vector2.ZERO)
 	assert_test(drag_data != null and drag_data is Dictionary, "Slot with item generates valid drag dictionary")
 	assert_test(drag_data.get("type") == "inventory_slot", "Drag data type equals 'inventory_slot'")
@@ -418,7 +421,7 @@ func test_drag_and_drop_slot_mechanics() -> void:
 	var helm = ITEM_DATA_SCRIPT.new()
 	helm.item_name = "Steel Cap"
 	helm.type = ItemData.ItemType.HELMET
-	helm.icon = Texture2D.new()
+	helm.icon = ImageTexture.create_from_image(Image.create(1, 1, false, Image.FORMAT_RGBA8))
 	slot_b.set_item(helm)
 	var helm_drag = slot_b._get_drag_data(Vector2.ZERO)
 
@@ -431,6 +434,8 @@ func test_drag_and_drop_slot_mechanics() -> void:
 	)
 	slot_b._drop_data(Vector2.ZERO, drag_data)
 	assert_test(dropped_signal_received[0], "slot_dropped signal emitted successfully upon drop")
+	get_viewport().gui_cancel_drag()
+	assert_test(not get_viewport().gui_is_dragging(), "Drag fixture cleans up the Viewport drag")
 
 	slot_a.queue_free()
 	slot_b.queue_free()

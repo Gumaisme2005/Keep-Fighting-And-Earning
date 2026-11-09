@@ -1,0 +1,4 @@
+[gd_scene load_steps=2 format=3]
+[ext_resource type="Script" path="res://tests/test_tactical_base_enemy_integration.gd" id="1"]
+[node name="TacticalBaseEnemyIntegration" type="Node2D"]
+script = ExtResource("1")
