@@ -102,14 +102,17 @@ func _ready() -> void:
 		set_layer_z_index(2, 0)
 	if get_node_or_null("/root/GameManager") != null:
 		if not GameManager.current_seed.strip_edges().is_empty():
-			map_seed = GameManager.current_seed
+			if map_seed == "ALOALO1234" or map_seed.is_empty():
+				map_seed = GameManager.current_seed
 		else:
 			GameManager.current_seed = map_seed
-		current_level = max(1, GameManager.current_level)
+		if current_level <= 1:
+			current_level = max(1, GameManager.current_level)
 	if get_node_or_null("/root/AudioManager") != null:
 		AudioManager.play_bgm("dungeon")
-	generate_dungeon()
-	call_deferred("spawn_entities")
+	if generated_rooms.is_empty():
+		generate_dungeon()
+		call_deferred("spawn_entities")
 
 func is_skeleton_king_floor(level: int = -1) -> bool:
 	var lv := current_level if level < 0 else level

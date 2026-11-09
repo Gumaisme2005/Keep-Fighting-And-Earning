@@ -626,6 +626,12 @@ func _test_ut21_collision_checks_detect_obstructions() -> void:
 	gen.get_parent().free()
 
 func _test_ut22_enemy_and_boss_floor_scaling() -> void:
+	var old_gm_level: int = 1
+	var gm = get_node_or_null("/root/GameManager")
+	if gm != null:
+		old_gm_level = gm.current_level
+		gm.current_level = 1
+
 	# Level 1 generator: verify baseline stats
 	var gen1 = _create_generator("SCALING_TEST_SEED", 8, 1)
 	add_child(gen1.get_parent())
@@ -643,6 +649,9 @@ func _test_ut22_enemy_and_boss_floor_scaling() -> void:
 	var base_dmg: int = lvl1_enemy.damage if lvl1_enemy != null else 1
 	var base_boss_hp: int = lvl1_boss.max_hp if lvl1_boss != null else 30
 	gen1.get_parent().free()
+
+	if gm != null:
+		gm.current_level = 3
 
 	# Level 3 generator: verify floor scaling (+4 HP, +1 dmg for enemy; +40 HP for boss)
 	var gen3 = _create_generator("SCALING_TEST_SEED", 8, 3)
@@ -688,6 +697,8 @@ func _test_ut22_enemy_and_boss_floor_scaling() -> void:
 		]
 	)
 	gen3.get_parent().free()
+	if gm != null:
+		gm.current_level = old_gm_level
 
 func _test_ut23_pause_menu_modal_unpause_guard() -> void:
 	var pause_scene := load("res://Menu/pause menu/pause_menu.tscn") as PackedScene
