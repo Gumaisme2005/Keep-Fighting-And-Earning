@@ -34,6 +34,7 @@ func _ready() -> void:
 	_test_ut19_commit1_compatibility()
 	_test_ut20_variant_rng_isolation()
 	_test_ut21_collision_checks_detect_obstructions()
+	_test_ut22_enemy_and_boss_floor_scaling()
 
 	print("------------------------------------------------------------------")
 	print("[SUMMARY] UNIT TESTS: %d PASSED | %d FAILED" % [passed_count, failed_count])
@@ -619,4 +620,68 @@ func _test_ut21_collision_checks_detect_obstructions() -> void:
 	var collision = VariantChecks.collision_cells(gen)
 	_assert_true(before_error.is_empty() and collision.has(center + Vector2i.RIGHT) and gen.get_cell_source_id(gen.LAYER_DECOR, center + Vector2i.RIGHT) == -1 and not VariantChecks.safe_paths_error(gen).is_empty(), "UT-21b: Actual 32x32 decoration polygon blocks neighboring cells with no TileMap anchor", VariantChecks.context(gen))
 	gen.get_parent().free()
+
+func _test_ut22_enemy_and_boss_floor_scaling() -> void:
+	# Level 1 generator: verify baseline stats
+	var gen1 = _create_generator("SCALING_TEST_SEED", 8, 1)
+	add_child(gen1.get_parent())
+	gen1.spawn_entities()
+
+	var lvl1_enemy: BaseEnemy = null
+	var lvl1_boss = null
+	for child in gen1.get_children():
+		if child is BaseEnemy and lvl1_enemy == null:
+			lvl1_enemy = child
+		if child.is_in_group("boss") and lvl1_boss == null:
+			lvl1_boss = child
+
+	var base_hp: int = lvl1_enemy.max_hp if lvl1_enemy != null else 3
+	var base_dmg: int = lvl1_enemy.damage if lvl1_enemy != null else 1
+	var base_boss_hp: int = lvl1_boss.max_hp if lvl1_boss != null else 30
+	gen1.get_parent().free()
+
+	# Level 3 generator: verify floor scaling (+4 HP, +1 dmg for enemy; +40 HP for boss)
+	var gen3 = _create_generator("SCALING_TEST_SEED", 8, 3)
+	add_child(gen3.get_parent())
+	gen3.spawn_entities()
+
+	var lvl3_enemy: BaseEnemy = null
+	var lvl3_boss = null
+	for child in gen3.get_children():
+		if child is BaseEnemy and lvl3_enemy == null:
+			lvl3_enemy = child
+		if child.is_in_group("boss") and lvl3_boss == null:
+			lvl3_boss = child
+
+	var expected_enemy_hp: int = base_hp + (3 - 1) * 2
+	var expected_enemy_dmg: int = base_dmg + 1
+	var enemy_scaled: bool = (
+		lvl3_enemy != null
+		and lvl3_enemy.hp == expected_enemy_hp
+		and lvl3_enemy.max_hp == expected_enemy_hp
+		and lvl3_enemy.damage == expected_enemy_dmg
+	)
+	_assert_true(
+		enemy_scaled,
+		"UT-22a: Dungeon floor scaling adds +2 HP/floor and +1 damage at floor >= 3 without being overwritten by _apply_balance_stats",
+		"lvl3_hp=%d (expected %d), lvl3_dmg=%d (expected %d)" % [
+			lvl3_enemy.hp if lvl3_enemy else -1, expected_enemy_hp,
+			lvl3_enemy.damage if lvl3_enemy else -1, expected_enemy_dmg
+		]
+	)
+
+	var expected_boss_hp: int = base_boss_hp + (3 - 1) * 20
+	var boss_scaled: bool = (
+		lvl3_boss != null
+		and lvl3_boss.hp == expected_boss_hp
+		and lvl3_boss.max_hp == expected_boss_hp
+	)
+	_assert_true(
+		boss_scaled,
+		"UT-22b: Boss floor scaling adds +20 HP/floor without being overwritten by Boss _ready BalanceData",
+		"lvl3_boss_hp=%d (expected %d)" % [
+			lvl3_boss.hp if lvl3_boss else -1, expected_boss_hp
+		]
+	)
+	gen3.get_parent().free()
 

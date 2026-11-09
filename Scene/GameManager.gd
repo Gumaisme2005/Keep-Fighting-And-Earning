@@ -122,7 +122,9 @@ static func _sanitize_replay_frames(raw_frames: Variant, max_count: int) -> Arra
 			"result": clampi(int(item.get("result", 0)), 0, 5) if item.get("result", 0) is int else 0,
 			# Doraemon's 4D pocket: gadget page switch (-n..n) and Dorayaki key
 			"pg": clampi(int(item.get("pg", 0)), -10, 10) if (item.get("pg", 0) is int or item.get("pg", 0) is float) else 0,
-			"eat": item.get("eat", false) == true
+			"eat": item.get("eat", false) == true,
+			# Số tick nén cho frame tĩnh (anti-desync replay timeline)
+			"rep": clampi(int(item.get("rep", 1)), 1, 1000000) if (item.get("rep") is int or item.get("rep") is float) else 1
 		})
 	return safe_frames
 
@@ -201,9 +203,13 @@ func record_frame_input(frame_data: Dictionary) -> void:
 			and absf(float(last_f.get("ay", 0.0)) - float(frame_data.get("ay", 0.0))) < 1.0
 		)
 		if is_idle and last_idle:
+			current_recording_frames[-1]["rep"] = int(current_recording_frames[-1].get("rep", 1)) + 1
 			return
 
-	current_recording_frames.append(frame_data)
+	var record_entry: Dictionary = frame_data.duplicate()
+	if not record_entry.has("rep"):
+		record_entry["rep"] = 1
+	current_recording_frames.append(record_entry)
 
 func register_enemy_kill() -> void:
 	enemies_killed += 1

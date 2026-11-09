@@ -21,6 +21,7 @@ func _ready() -> void:
 	test_replay_manual_deletion()
 	test_clear_all_replays()
 	test_idle_frame_recording_deduplication()
+	test_replay_playback_timeline_sync()
 
 	print("\n========================================================")
 	print("  TEST RESULTS: ", passed_count, " PASSED, ", failed_count, " FAILED")
@@ -105,10 +106,73 @@ func test_idle_frame_recording_deduplication() -> void:
 	# Should not record 100 frames; duplicate consecutive idle frames must be skipped
 	var recorded_cnt: int = GameManager.current_recording_frames.size()
 	assert_test(recorded_cnt == 1, "100 consecutive identical idle frames compressed into 1 frame (count=%d)" % recorded_cnt)
+	assert_test(int(GameManager.current_recording_frames[0].get("rep", 1)) == 100,
+		"Compressed idle frame stores repeat count of 100 ticks (rep=%d)" % int(GameManager.current_recording_frames[0].get("rep", 1)))
 
 	# Active input frame must still be recorded immediately
 	var active_frame := idle_frame.duplicate()
 	active_frame["atk"] = true
 	GameManager.record_frame_input(active_frame)
 	assert_test(GameManager.current_recording_frames.size() == 2, "Active input frame is immediately recorded")
+	assert_test(int(GameManager.current_recording_frames[1].get("rep", 1)) == 1,
+		"New active input frame initializes with rep=1")
+
+func test_replay_playback_timeline_sync() -> void:
+	print("\n--- Test Group 6: Replay Playback Timeline Synchronization ---")
+	var player = BasePlayer.new()
+
+	# 1. Test repeat frame holding
+	GameManager.is_replaying = true
+	GameManager.replay_frames = [
+		{"dx": 0.0, "dy": 0.0, "ax": 32.0, "ay": 0.0, "rep": 3},
+		{"dx": 1.0, "dy": 0.0, "ax": 50.0, "ay": 0.0, "atk": true, "rep": 1}
+	]
+	player.replay_frame_idx = 0
+
+	# Tick 1: should return frame 0, replay_frame_idx remains 0
+	var f1: Dictionary = player._read_replay_frame(GameManager)
+	assert_test(float(f1.get("dx", 0.0)) == 0.0 and player.replay_frame_idx == 0,
+		"Tick 1: holds compressed idle frame (idx=0)")
+
+	# Tick 2: should return frame 0, replay_frame_idx remains 0
+	var f2: Dictionary = player._read_replay_frame(GameManager)
+	assert_test(float(f2.get("dx", 0.0)) == 0.0 and player.replay_frame_idx == 0,
+		"Tick 2: holds compressed idle frame (idx=0)")
+
+	# Tick 3: should return frame 0, replay_frame_idx advances to 1
+	var f3: Dictionary = player._read_replay_frame(GameManager)
+	assert_test(float(f3.get("dx", 0.0)) == 0.0 and player.replay_frame_idx == 1,
+		"Tick 3: completes 3-tick hold and advances to next frame (idx=1)")
+
+	# Tick 4: should return frame 1 (rep=1), advances to 2
+	var f4: Dictionary = player._read_replay_frame(GameManager)
+	assert_test(float(f4.get("dx", 0.0)) == 1.0 and bool(f4.get("atk", false)) == true and player.replay_frame_idx == 2,
+		"Tick 4: processes active frame and advances to end (idx=2)")
+
+	# Tick 5: replay ends
+	var f5: Dictionary = player._read_replay_frame(GameManager)
+	assert_test(f5.is_empty() and GameManager.is_replaying == false,
+		"Tick 5: replay properly concludes (is_replaying=false)")
+
+	# 2. Test backward compatibility for replays without 'rep' field
+	GameManager.is_replaying = true
+	GameManager.replay_frames = [
+		{"dx": 0.5, "dy": 0.0},
+		{"dx": -0.5, "dy": 0.0}
+	]
+	player.replay_frame_idx = 0
+	var legacy_f1: Dictionary = player._read_replay_frame(GameManager)
+	assert_test(float(legacy_f1.get("dx", 0.0)) == 0.5 and player.replay_frame_idx == 1,
+		"Legacy replay frame without 'rep' defaults to 1 tick hold")
+	var legacy_f2: Dictionary = player._read_replay_frame(GameManager)
+	assert_test(float(legacy_f2.get("dx", 0.0)) == -0.5 and player.replay_frame_idx == 2,
+		"Legacy replay frame 2 advances normally")
+
+	# 3. Test sanitize preserves 'rep'
+	var raw_san := [{"dx": 0.0, "dy": 0.0, "rep": 120}, {"dx": 1.0, "dy": 0.0, "rep": -5}]
+	var san := GameManager._sanitize_replay_frames(raw_san, 10)
+	assert_test(san.size() == 2 and int(san[0].get("rep", 0)) == 120, "Sanitizer preserves valid rep value (120)")
+	assert_test(int(san[1].get("rep", 0)) == 1, "Sanitizer clamps invalid negative rep to 1")
+
+	player.free()
 

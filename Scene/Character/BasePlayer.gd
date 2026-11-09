@@ -42,7 +42,11 @@ var regen_delay_timer: Timer
 var regen_tick_timer: Timer
 
 # --- HỖ TRỢ RECORD & REPLAY RUN ---
-var replay_frame_idx: int = 0
+var _replay_hold_ticks: int = 0
+var replay_frame_idx: int = 0:
+	set(val):
+		replay_frame_idx = val
+		_replay_hold_ticks = 0
 var pending_hotbar_slot: int = -1
 var pending_q_skill: bool = false
 var pending_rmb_skill: bool = false
@@ -129,6 +133,21 @@ func _process(delta: float) -> void:
 	if updated:
 		skill_cooldown_changed.emit(q_cd_remaining, get_effective_q_cooldown(), rmb_cd_remaining, rmb_cd_max)
 
+func _read_replay_frame(gm) -> Dictionary:
+	if gm == null or replay_frame_idx >= gm.replay_frames.size():
+		if gm != null and gm.is_replaying:
+			gm.is_replaying = false
+			if get_tree():
+				get_tree().call_group("game_ui", "show_banner", "COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6))
+		return {}
+
+	var f: Dictionary = gm.replay_frames[replay_frame_idx]
+	var rep: int = maxi(1, int(f.get("rep", 1)))
+	_replay_hold_ticks += 1
+	if _replay_hold_ticks >= rep:
+		replay_frame_idx += 1
+	return f
+
 func _physics_process(delta: float) -> void:
 	if is_dead:
 		return
@@ -154,20 +173,14 @@ func _physics_process(delta: float) -> void:
 	var hotbar_to_use := -1
 
 	if replaying:
-		if replay_frame_idx < gm.replay_frames.size():
-			var f: Dictionary = gm.replay_frames[replay_frame_idx]
-			replay_frame_idx += 1
+		var f: Dictionary = _read_replay_frame(gm)
+		if not f.is_empty():
 			direction = Vector2(float(f.get("dx", 0.0)), float(f.get("dy", 0.0)))
 			current_aim_offset = Vector2(float(f.get("ax", 32.0)), float(f.get("ay", 0.0)))
 			want_attack = bool(f.get("atk", false))
 			want_q = bool(f.get("q", false))
 			want_rmb = bool(f.get("rmb", false))
 			hotbar_to_use = int(f.get("slot", -1))
-		else:
-			# Replay recording concluded
-			gm.is_replaying = false
-			if get_tree():
-				get_tree().call_group("game_ui", "show_banner", "COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6))
 	else:
 		direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 		current_aim_offset = get_global_mouse_position() - global_position

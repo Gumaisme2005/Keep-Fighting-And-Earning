@@ -2,6 +2,7 @@ extends Node2D
 
 const PerkData = preload("res://Scene/Perks/PerkData.gd")
 const PerkDatabase = preload("res://Scene/Perks/PerkDatabase.gd")
+const PerkManagerScript = preload("res://Scene/Perks/PerkManager.gd")
 
 class MockPlayerForPerks extends Node2D:
 	signal stats_changed(hp, max_hp, armor, max_armor)
@@ -111,13 +112,13 @@ func test_perk_database_integrity() -> void:
 
 func test_deterministic_perk_rolling() -> void:
 	print("\n[TEST 3] Testing Deterministic Perk Rolling...")
-	var manager := PerkManager.new()
+	var manager = PerkManagerScript.new()
 	add_child(manager)
 	manager.reset()
 
 	var seed_test := "TEST_HERO_SEED_2026"
-	var roll_1 := manager.roll_perks(3, seed_test, 1)
-	var roll_2 := manager.roll_perks(3, seed_test, 1)
+	var roll_1: Array[PerkData] = manager.roll_perks(3, seed_test, 1)
+	var roll_2: Array[PerkData] = manager.roll_perks(3, seed_test, 1)
 
 	_assert_test(roll_1.size() == 3, "Roll returned exactly 3 perks")
 
@@ -129,22 +130,22 @@ func test_deterministic_perk_rolling() -> void:
 	_assert_test(same_order, "Roll with identical seed and floor is 100% deterministic")
 
 	# Roll tầng khác nhau phải cho kết quả khác
-	var roll_floor_2 := manager.roll_perks(3, seed_test, 2)
-	var diff_floor := (roll_1[0].id != roll_floor_2[0].id or roll_1[1].id != roll_floor_2[1].id)
+	var roll_floor_2: Array[PerkData] = manager.roll_perks(3, seed_test, 2)
+	var diff_floor: bool = (roll_1[0].id != roll_floor_2[0].id or roll_1[1].id != roll_floor_2[1].id)
 	_assert_test(diff_floor, "Different floor produces distinct roll combination")
 
 	manager.queue_free()
 
 func test_unique_perk_filtering() -> void:
 	print("\n[TEST 4] Testing Unique Perk Filtering...")
-	var manager := PerkManager.new()
+	var manager = PerkManagerScript.new()
 	add_child(manager)
 	manager.reset()
 
 	var p1 := PerkDatabase.get_perk_by_id("iron_sinew")
 	manager.add_perk(p1, null)
 
-	var rolled := manager.roll_perks(3, "TEST_SEED", 1)
+	var rolled: Array[PerkData] = manager.roll_perks(3, "TEST_SEED", 1)
 	var contains_owned := false
 	for p in rolled:
 		if p.id == "iron_sinew":
@@ -155,7 +156,7 @@ func test_unique_perk_filtering() -> void:
 
 func test_apply_perk_to_mock_player() -> void:
 	print("\n[TEST 5] Testing Applying Perks to Player...")
-	var manager := PerkManager.new()
+	var manager = PerkManagerScript.new()
 	add_child(manager)
 	manager.reset()
 
@@ -184,7 +185,7 @@ func test_apply_perk_to_mock_player() -> void:
 
 func test_perk_manager_query_helpers() -> void:
 	print("\n[TEST 6] Testing PerkManager Query Helpers...")
-	var manager := PerkManager.new()
+	var manager = PerkManagerScript.new()
 	add_child(manager)
 	manager.reset()
 
@@ -203,7 +204,7 @@ func test_perk_manager_query_helpers() -> void:
 	_assert_test(manager.get_cooldown_reduction() == 0.25, "get_cooldown_reduction() == 0.25")
 	_assert_test(manager.has_second_chance() == true, "has_second_chance() is true")
 
-	var consumed := manager.consume_second_chance()
+	var consumed: bool = manager.consume_second_chance()
 	_assert_test(consumed == true and manager.has_second_chance() == false, "Second chance consumed successfully")
 
 	manager.reset()

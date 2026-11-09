@@ -77,11 +77,10 @@ func _physics_process(delta: float) -> void:
 	if is_dead: return
 	var f: Dictionary
 	if GameManager.is_replaying:
-		if replay_frame_idx >= GameManager.replay_frames.size():
+		f = _read_replay_frame(GameManager)
+		if f.is_empty():
 			velocity = Vector2.ZERO
 			return
-		f = GameManager.replay_frames[replay_frame_idx]
-		replay_frame_idx += 1
 	else:
 		var input_direction := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 		var aim := get_global_mouse_position() - global_position

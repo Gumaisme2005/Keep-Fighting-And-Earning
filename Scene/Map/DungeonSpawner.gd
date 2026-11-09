@@ -163,6 +163,10 @@ static func spawn_entities(gen: TileMap) -> void:
 				var enemy = gen.enemy_scenes[spawn_info["enemy_idx"]].instantiate()
 				if "loot_seed" in enemy:
 					enemy.loot_seed = spawn_info["loot_seed"]
+				enemy.z_index = 2
+				enemy.add_to_group("enemies")
+				gen.add_child(enemy)
+				# Tăng tiến chỉ số quái theo tầng (chỉ kích hoạt sau add_child để không bị _ready/_apply_balance_stats ghi đè)
 				if gen.current_level > 1:
 					var bonus_hp: int = (gen.current_level - 1) * 2
 					if "hp" in enemy:
@@ -171,9 +175,6 @@ static func spawn_entities(gen: TileMap) -> void:
 							enemy.max_hp = enemy.hp
 					if "damage" in enemy and gen.current_level >= 3:
 						enemy.damage += 1
-				enemy.z_index = 2
-				enemy.add_to_group("enemies")
-				gen.add_child(enemy)
 				enemy.global_position = gen.to_global(gen.map_to_local(spawn_info["cell"]))
 				manager.enemies.append(enemy)
 
@@ -228,6 +229,8 @@ static func spawn_entities(gen: TileMap) -> void:
 			boss_instance.z_index = 2
 			boss_instance.add_to_group("enemies")
 			boss_instance.add_to_group("boss")
+			gen.add_child(boss_instance)
+			# Tăng tiến chỉ số Boss theo tầng (kích hoạt sau add_child để không bị Boss _ready ghi đè chỉ số BalanceData)
 			if gen.current_level > 1:
 				var boss_bonus_hp: int = (gen.current_level - 1) * 20
 				if "hp" in boss_instance:
@@ -238,7 +241,6 @@ static func spawn_entities(gen: TileMap) -> void:
 					boss_instance.melee_damage += gen.current_level - 1
 				if "damage" in boss_instance:
 					boss_instance.damage += gen.current_level - 1
-			gen.add_child(boss_instance)
 
 			boss_instance.global_position = gen.to_global(gen.map_to_local(room.get_center()))
 			manager.enemies.append(boss_instance)

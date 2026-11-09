@@ -138,13 +138,7 @@ func _physics_process(delta: float) -> void:
 	var replaying: bool = gm != null and gm.is_replaying
 	var f: Dictionary = {}
 	if replaying:
-		if replay_frame_idx < gm.replay_frames.size():
-			f = gm.replay_frames[replay_frame_idx]
-			replay_frame_idx += 1
-		else:
-			gm.is_replaying = false
-			if get_tree():
-				get_tree().call_group("game_ui", "show_banner", "COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6))
+		f = _read_replay_frame(gm)
 	else:
 		var dir_in := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 		var aim := get_global_mouse_position() - global_position
