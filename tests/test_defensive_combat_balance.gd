@@ -31,6 +31,28 @@ class UIProbe extends Node:
 	func show_banner(message: String, _color: Color = Color.WHITE) -> void:
 		banners.append(message)
 
+class PhysicsCooldownProbe extends RefCounted:
+	var callbacks := 0
+	var active_ticks := 0
+	var elapsed := 0.0
+	var rate_correct := true
+	var positive_before_expiry := false
+	var expired_on_boundary := false
+	func sample(player: BasePlayer) -> void:
+		callbacks += 1
+		if not player.can_process():
+			return
+		active_ticks += 1
+		elapsed += player.get_physics_process_delta_time()
+		var expected := maxf(0.0, 2.0 - elapsed)
+		if expected < 0.000001: expected = 0.0
+		rate_correct = rate_correct and is_equal_approx(player.thorns_cooldown_remaining, expected)
+		var expiry_tick := Engine.physics_ticks_per_second * 2
+		if active_ticks == expiry_tick - 1:
+			positive_before_expiry = player.thorns_cooldown_remaining > 0.0
+		if active_ticks == expiry_tick:
+			expired_on_boundary = player.thorns_cooldown_remaining == 0.0
+
 class RuntimeErrors extends Logger:
 	var messages: Array[String] = []
 	func _log_error(_function: String, file: String, line: int, code: String, rationale: String,
@@ -124,6 +146,14 @@ func enemy(f: Dictionary, at: Vector2, label: String = "Enemy", boss: bool = fal
 
 func flush() -> void:
 	await get_tree().process_frame
+	await get_tree().process_frame
+
+func after_physics_frame() -> void:
+	# A render flush need not contain physics at high render FPS. The following
+	# process phase also lets every physics_frame listener finish, regardless of
+	# where this awaiting coroutine appears in the signal's connection order.
+	# The suite's existing 90-second timeout bounds a missing physics signal.
+	await get_tree().physics_frame
 	await get_tree().process_frame
 
 func test_core_defects() -> void:
@@ -501,6 +531,7 @@ func test_retaliation_kill_healing() -> void:
 func test_all_heroes() -> void:
 	for scene in GameManager.CHARACTER_SCENES:
 		GameManager.start_new_run("HERO-DEFENSE")
+		var baseline_connections := get_tree().physics_frame.get_connections().size()
 		var room := Node2D.new()
 		add_child(room)
 		var p = scene.instantiate()
@@ -517,11 +548,58 @@ func test_all_heroes() -> void:
 		p.current_armor = 0
 		p.is_invincible = false
 		var e := enemy({"room": room}, p.position + Vector2(20, 0))
-		p.take_damage(10)
+		var connections := get_tree().physics_frame.get_connections().filter(func(connection):
+			return connection.callable == p._tick_defensive_cooldowns)
+		check(connections.size() == 1 and not p.is_physics_processing() and p.can_process(), "Hero has one shared cooldown callback with custom physics disabled: " + p.hero_balance_id)
+		p.current_armor = 1
+		p.take_damage(1)
 		await flush()
+		check(p.hp == 100 and e.hits.is_empty() and p.thorns_cooldown_remaining == 0.0, "Hero armor-only hit never starts thorns: " + p.hero_balance_id)
+		p.is_invincible = false
+		p.take_damage(10)
+		check(p.thorns_cooldown_remaining == 2.0, "Hero thorns begins at exactly two seconds: " + p.hero_balance_id)
+		# Connect after _ready's production listener so each sample observes its
+		# completed decrement; this observer never changes the player's cooldown.
+		var probe := PhysicsCooldownProbe.new()
+		var sample := probe.sample.bind(p)
+		get_tree().physics_frame.connect(sample)
+		await flush()
+		await after_physics_frame()
+		check(probe.active_ticks > 0, "Hero timing assertion observes real physics progression: " + p.hero_balance_id)
 		check(p.hp == 90 and e.hits == [3], "Hero inherits real-HP thorns behavior: " + p.hero_balance_id)
 		check(p.thorns_cooldown_remaining > 0.0 and p.thorns_cooldown_remaining < 2.0, "Hero inherits physics cooldown despite custom loops: " + p.hero_balance_id)
+		p.is_invincible = false
+		p.take_damage(10)
+		await flush()
+		check(p.hp == 80 and e.hits == [3], "Hero repeated accepted hit cannot bypass cooldown: " + p.hero_balance_id)
+		var cooldown: float = p.thorns_cooldown_remaining
+		var active_ticks := probe.active_ticks
+		var callbacks := probe.callbacks
+		get_tree().paused = true
+		await after_physics_frame()
+		get_tree().paused = false
+		check(probe.callbacks > callbacks and probe.active_ticks == active_ticks and p.thorns_cooldown_remaining == cooldown, "Hero cooldown freezes across paused physics frames: " + p.hero_balance_id)
+		await after_physics_frame()
+		check(probe.active_ticks > active_ticks and p.thorns_cooldown_remaining < cooldown, "Hero cooldown resumes with physics: " + p.hero_balance_id)
+		cooldown = p.thorns_cooldown_remaining
+		GameManager.register_level_advance(2)
+		check(p.thorns_cooldown_remaining == cooldown and GameManager.thorns_cooldown_remaining == cooldown, "Hero floor advance preserves run cooldown: " + p.hero_balance_id)
+		# Exercise the actual signal through expiry, not direct tick() calls. The
+		# bounded count and suite timeout reject missing/stalled callback execution.
+		while probe.active_ticks < Engine.physics_ticks_per_second * 2 and probe.callbacks < Engine.physics_ticks_per_second * 3:
+			await after_physics_frame()
+		check(probe.rate_correct, "Hero cooldown advances exactly once per active physics tick: " + p.hero_balance_id)
+		check(probe.positive_before_expiry and probe.expired_on_boundary and p.thorns_cooldown_remaining == 0.0, "Hero cooldown expires at exactly two physics seconds: " + p.hero_balance_id)
+		get_tree().physics_frame.disconnect(sample)
+		p.is_invincible = false
+		p.take_damage(10)
+		await flush()
+		check(e.hits == [3, 3], "Hero can retaliate again after real cooldown expiry: " + p.hero_balance_id)
+		trace.append(["hero_cooldown", p.hero_balance_id, 2.0, probe.expired_on_boundary, e.hits.duplicate()])
+		GameManager.start_new_run("HERO-RESET")
+		check(p.thorns_cooldown_remaining == 0.0 and GameManager.thorns_cooldown_remaining == 0.0, "Hero new run resets cooldown: " + p.hero_balance_id)
 		room.free()
+		check(get_tree().physics_frame.get_connections().size() == baseline_connections, "Hero removal leaves no shared cooldown or probe connections")
 
 func test_potion_compatibility() -> void:
 	var f := fixture(true, "armor_burst")
