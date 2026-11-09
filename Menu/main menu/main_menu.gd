@@ -411,7 +411,7 @@ func _build_lore_modal() -> void:
 	lore_modal.offset_right = 430.0
 	lore_modal.offset_top = -250.0
 	lore_modal.offset_bottom = 250.0
-	lore_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_PANEL, UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
+	lore_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.04, 0.05, 0.09, 0.98), UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
 	lore_modal.visible = false
 	add_child(lore_modal)
 
@@ -430,13 +430,24 @@ func _build_lore_modal() -> void:
 	header.add_child(close_btn)
 
 	var scroll := ScrollContainer.new()
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	vbox.add_child(scroll)
 
 	var content_vbox := VBoxContainer.new()
 	content_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content_vbox.custom_minimum_size = Vector2(820, 0)
 	content_vbox.add_theme_constant_override("separation", 12)
 	scroll.add_child(content_vbox)
+
+	scroll.resized.connect(func():
+		var scrollbar_w: float = 14.0
+		if scroll.get_v_scroll_bar() != null and scroll.get_v_scroll_bar().visible:
+			scrollbar_w = scroll.get_v_scroll_bar().size.x
+		content_vbox.custom_minimum_size.x = maxf(400.0, scroll.size.x - scrollbar_w - 12.0)
+	)
 
 	# 1. Prologue & World Story
 	var prologue_box := PanelContainer.new()
@@ -550,7 +561,7 @@ func _build_help_modal() -> void:
 	help_modal.offset_right = 430.0
 	help_modal.offset_top = -250.0
 	help_modal.offset_bottom = 250.0
-	help_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_PANEL, UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
+	help_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.04, 0.05, 0.09, 0.98), UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
 	help_modal.visible = false
 	add_child(help_modal)
 
@@ -569,13 +580,24 @@ func _build_help_modal() -> void:
 	header.add_child(close_top)
 
 	var scroll := ScrollContainer.new()
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	vbox.add_child(scroll)
 
 	var content_vbox := VBoxContainer.new()
 	content_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content_vbox.custom_minimum_size = Vector2(820, 0)
 	content_vbox.add_theme_constant_override("separation", 12)
 	scroll.add_child(content_vbox)
+
+	scroll.resized.connect(func():
+		var scrollbar_w: float = 14.0
+		if scroll.get_v_scroll_bar() != null and scroll.get_v_scroll_bar().visible:
+			scrollbar_w = scroll.get_v_scroll_bar().size.x
+		content_vbox.custom_minimum_size.x = maxf(400.0, scroll.size.x - scrollbar_w - 12.0)
+	)
 
 	# Section 1: Movement & Mouse Aiming
 	var move_card := PanelContainer.new()

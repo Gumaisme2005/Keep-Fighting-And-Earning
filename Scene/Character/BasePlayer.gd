@@ -409,7 +409,6 @@ func get_raw_damage() -> float:
 		wep_dmg = inventory.get_weapon_damage()
 	var dmg: float = float(base_damage + wep_dmg)
 	if get_node_or_null("/root/PerkManager") != null:
-		dmg += float(PerkManager.get_total_bonus_damage())
 		for p in PerkManager.get_active_perks():
 			if p.get_modifier("low_hp_scaling", false):
 				var missing_hp: int = maxi(0, max_hp - hp)

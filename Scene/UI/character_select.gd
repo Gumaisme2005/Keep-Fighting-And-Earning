@@ -284,6 +284,13 @@ func _build_hero_details_and_seed_bar() -> void:
 	scroll_content.add_theme_constant_override("separation", 6)
 	dossier_scroll.add_child(scroll_content)
 
+	dossier_scroll.resized.connect(func():
+		var scrollbar_w: float = 12.0
+		if dossier_scroll.get_v_scroll_bar() != null and dossier_scroll.get_v_scroll_bar().visible:
+			scrollbar_w = dossier_scroll.get_v_scroll_bar().size.x
+		scroll_content.custom_minimum_size.x = maxf(300.0, dossier_scroll.size.x - scrollbar_w - 8.0)
+	)
+
 	# Xuất thân & Động lực (Origin & Motivation)
 	hero_origin_label = Label.new()
 	hero_origin_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -466,7 +473,7 @@ func _build_character_select_guide_modal() -> void:
 	guide_modal.offset_right = 420.0
 	guide_modal.offset_top = -240.0
 	guide_modal.offset_bottom = 240.0
-	guide_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_PANEL, UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
+	guide_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.04, 0.05, 0.09, 0.98), UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
 	guide_modal.visible = false
 	add_child(guide_modal)
 
@@ -499,10 +506,20 @@ func _build_character_select_guide_modal() -> void:
 
 	var guide_txt := Label.new()
 	guide_txt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	guide_txt.custom_minimum_size = Vector2(760, 0)
 	guide_txt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	guide_txt.add_theme_font_override("font", UITheme.FONT_BODY)
 	guide_txt.add_theme_font_size_override("font_size", 12)
 	guide_txt.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
+
+	scroll.resized.connect(func():
+		var scrollbar_w: float = 14.0
+		if scroll.get_v_scroll_bar() != null and scroll.get_v_scroll_bar().visible:
+			scrollbar_w = scroll.get_v_scroll_bar().size.x
+		var avail_w: float = maxf(400.0, scroll.size.x - scrollbar_w - 12.0)
+		content_vbox.custom_minimum_size.x = avail_w
+		guide_txt.custom_minimum_size.x = avail_w
+	)
 	guide_txt.text = """• BASIC CONTROLS & MOUSE AIMING:
   - W, A, S, D / Arrow Keys: Move champion across 4 directions.
   - Mouse Cursor: 360-degree precision aim. Attacks and projectile directions track your cursor position.
