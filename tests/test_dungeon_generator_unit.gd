@@ -37,6 +37,8 @@ func _ready() -> void:
 	_test_ut22_enemy_and_boss_floor_scaling()
 	_test_ut23_pause_menu_modal_unpause_guard()
 	_test_ut24_perk_stat_double_dipping_prevention()
+	_test_ut25_enemy_player_reference_safety()
+	_test_ut26_vampire_coroutine_cancellation_on_hurt()
 
 	print("------------------------------------------------------------------")
 	print("[SUMMARY] UNIT TESTS: %d PASSED | %d FAILED" % [passed_count, failed_count])
@@ -744,4 +746,119 @@ func _test_ut24_perk_stat_double_dipping_prevention() -> void:
 
 	player.free()
 	PerkManager.reset()
+
+func _test_ut25_enemy_player_reference_safety() -> void:
+	var enemy = BaseEnemy.new()
+	add_child(enemy)
+	enemy._find_player()
+	var initial_null_ok: bool = enemy.player == null
+
+	var dummy_player = Node2D.new()
+	dummy_player.add_to_group("player")
+	add_child(dummy_player)
+
+	enemy._find_player()
+	var player_found_ok: bool = enemy.player == dummy_player
+
+	dummy_player.queue_free()
+	enemy._find_player()
+	var queued_filtered_ok: bool = enemy.player == null
+
+	enemy.free()
+
+	var necro_scene := load("res://Scene/Enemies/Boss/Necromancer/necromancer.tscn") as PackedScene
+	var orc_rider_scene := load("res://Scene/Enemies/Boss/Orc Rider/orc_rider.tscn") as PackedScene
+
+	var necro = necro_scene.instantiate()
+	add_child(necro)
+	necro._find_player()
+	var necro_null_ok: bool = necro.player == null
+
+	var dummy_player2 = Node2D.new()
+	dummy_player2.add_to_group("player")
+	add_child(dummy_player2)
+
+	necro._find_player()
+	var necro_found_ok: bool = necro.player == dummy_player2
+	dummy_player2.queue_free()
+	necro._find_player()
+	var necro_freed_ok: bool = necro.player == null
+	necro.free()
+
+	var orc_rider = orc_rider_scene.instantiate()
+	add_child(orc_rider)
+	orc_rider._find_player()
+	var orc_rider_null_ok: bool = orc_rider.player == null
+	orc_rider.free()
+
+	var all_safe: bool = (
+		initial_null_ok
+		and player_found_ok
+		and queued_filtered_ok
+		and necro_null_ok
+		and necro_found_ok
+		and necro_freed_ok
+		and orc_rider_null_ok
+	)
+	_assert_true(
+		all_safe,
+		"UT-25: _find_player() safely filters queued_for_deletion nodes and resets player to null without dangling pointers",
+		"init_null=%s found=%s queued_null=%s necro_null=%s necro_found=%s necro_freed=%s orc_null=%s" % [
+			str(initial_null_ok), str(player_found_ok), str(queued_filtered_ok),
+			str(necro_null_ok), str(necro_found_ok), str(necro_freed_ok), str(orc_rider_null_ok)
+		]
+	)
+
+func _test_ut26_vampire_coroutine_cancellation_on_hurt() -> void:
+	var vampire_scene := load("res://Scene/Enemies/Vampire/vampire.tscn") as PackedScene
+	var vampire = vampire_scene.instantiate()
+	add_child(vampire)
+	vampire.is_active = true
+
+	var dummy_player = Node2D.new()
+	dummy_player.add_to_group("player")
+	add_child(dummy_player)
+	vampire.player = dummy_player
+
+	# 1. Trigger attack
+	vampire.attack()
+	var gen_1: int = vampire._attack_generation
+	var attack_started: bool = vampire.is_attacking and not vampire.can_attack and gen_1 > 0
+
+	# 2. Vampire receives damage during windup
+	vampire.take_damage(1)
+	var hurt_handled: bool = (
+		vampire.is_hurt
+		and vampire._shot_cancelled
+		and not vampire.is_attacking
+		and vampire._attack_generation > gen_1
+	)
+
+	# 3. Hurt animation finishes -> recovery
+	vampire.animated_sprite.animation = "hurt"
+	vampire._on_animated_sprite_2d_animation_finished()
+	var recovered: bool = not vampire.is_hurt and vampire.can_attack
+
+	# 4. Dying cancels attack coroutine completely
+	vampire.attack()
+	var gen_2: int = vampire._attack_generation
+	vampire.take_damage(vampire.hp) # Fatal damage
+	var death_cancelled: bool = (
+		vampire.is_dead
+		and vampire._shot_cancelled
+		and not vampire.is_attacking
+		and vampire._attack_generation > gen_2
+	)
+
+	dummy_player.free()
+	vampire.free()
+
+	var passed: bool = attack_started and hurt_handled and recovered and death_cancelled
+	_assert_true(
+		passed,
+		"UT-26: Vampire attack cancels gracefully on hurt and death without ghost spells or coroutine leaks",
+		"started=%s hurt=%s recovered=%s death=%s" % [
+			str(attack_started), str(hurt_handled), str(recovered), str(death_cancelled)
+		]
+	)
 

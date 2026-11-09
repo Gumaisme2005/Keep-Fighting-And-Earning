@@ -51,18 +51,24 @@ func _ready() -> void:
 		rng.seed = 123456
 	anim.play("idle")
 	scythe_collision.disabled = true
+	_find_player()
+
+func _find_player() -> void:
+	player = null
+	if not is_inside_tree() or get_tree() == null:
+		return
 	var players = get_tree().get_nodes_in_group("player")
-	if players.size() > 0:
-		player = players[0]
+	for p in players:
+		if is_instance_valid(p) and not p.is_queued_for_deletion():
+			player = p
+			return
 
 func _physics_process(_delta: float) -> void:
 	if not is_active:
 		return
-	if player == null or not is_instance_valid(player):
-		var players = get_tree().get_nodes_in_group("player")
-		if players.size() > 0:
-			player = players[0]
-		else:
+	if player == null or not is_instance_valid(player) or player.is_queued_for_deletion():
+		_find_player()
+		if player == null:
 			return
 	if is_dead or anim.animation == "hurt" or is_casting_special:
 		return

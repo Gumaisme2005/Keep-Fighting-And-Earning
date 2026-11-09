@@ -58,6 +58,8 @@ func _apply_balance_stats() -> void:
 
 func _find_player() -> void:
 	player = null
+	if not is_inside_tree() or get_tree() == null:
+		return
 	var players = get_tree().get_nodes_in_group("player")
 	for p in players:
 		if is_instance_valid(p) and not p.is_queued_for_deletion():

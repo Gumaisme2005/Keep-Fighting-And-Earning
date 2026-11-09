@@ -5,6 +5,9 @@ extends BaseEnemy
 @export var magic_spell_scene: PackedScene = preload("res://Scene/Projectiles/magic_spell.tscn")
 
 var can_attack: bool = true
+var is_hurt: bool = false
+var _attack_generation: int = 0
+var _shot_cancelled: bool = false
 var strafe_timer: float = 0.0
 var strafe_sign: float = 1.0
 
@@ -39,7 +42,7 @@ func _physics_process(delta: float) -> void:
 		_find_player()
 		if player == null:
 			return
-	if is_dead or (animated_sprite != null and animated_sprite.animation == "hurt"):
+	if is_dead or is_hurt or (animated_sprite != null and animated_sprite.animation == "hurt"):
 		return
 
 	strafe_timer += delta
@@ -105,7 +108,15 @@ func _physics_process(delta: float) -> void:
 			if get_slide_collision_count() > 0:
 				strafe_sign = -strafe_sign
 
+func _attack_is_current(generation: int) -> bool:
+	return is_inside_tree() and not is_queued_for_deletion() and not is_dead and generation == _attack_generation
+
 func attack() -> void:
+	if not is_inside_tree() or is_dead or is_hurt or not can_attack:
+		return
+	_attack_generation += 1
+	var generation := _attack_generation
+	_shot_cancelled = false
 	is_attacking = true
 	can_attack = false
 	if player != null and is_instance_valid(player):
@@ -117,30 +128,31 @@ func attack() -> void:
 
 	# Nhịp vỗ cánh phát động ma pháp (bắn chưởng pháp sư)
 	await get_tree().create_timer(0.35).timeout
-	if not is_inside_tree() or is_dead:
+	if not _attack_is_current(generation) or _shot_cancelled:
 		return
 
-	if player != null and is_instance_valid(player):
+	if is_attacking and player != null and is_instance_valid(player) and not player.is_queued_for_deletion():
 		var tmap = get_parent()
 		if tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position):
 			shoot_magic_spell()
 
 	await get_tree().create_timer(0.35).timeout
-	if not is_inside_tree() or is_dead:
+	if not _attack_is_current(generation) or _shot_cancelled:
 		return
 
 	if is_attacking:
 		is_attacking = false
 		bite_collision.disabled = true
-		animated_sprite.play("idle")
+		if not is_hurt:
+			animated_sprite.play("idle")
 
 	await get_tree().create_timer(maxf(0.1, attack_cooldown - 0.70)).timeout
-	if not is_inside_tree() or is_dead:
+	if not _attack_is_current(generation):
 		return
 	can_attack = true
 
 func shoot_magic_spell() -> void:
-	if magic_spell_scene == null or get_parent() == null or not is_instance_valid(player):
+	if magic_spell_scene == null or get_parent() == null or not is_instance_valid(player) or player.is_queued_for_deletion():
 		return
 	var spell = magic_spell_scene.instantiate()
 	var shoot_dir: Vector2 = global_position.direction_to(player.global_position).normalized()
@@ -156,25 +168,36 @@ func shoot_magic_spell() -> void:
 	spell.global_position = spawn_pos
 
 func _on_hurt() -> void:
+	is_hurt = true
+	_shot_cancelled = true
+	_attack_generation += 1
+	is_attacking = false
 	bite_collision.set_deferred("disabled", true)
 
 func _die() -> void:
-	super._die()
+	_shot_cancelled = true
+	_attack_generation += 1
+	is_attacking = false
 	bite_collision.set_deferred("disabled", true)
+	super._die()
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if animated_sprite == null:
 		return
-	if animated_sprite.animation == "death":
+	var current = animated_sprite.animation
+	if current == "death":
 		drop_loot()
 		queue_free()
-	elif animated_sprite.animation == "hurt":
+	elif current == "hurt":
+		is_hurt = false
 		if not is_dead:
 			animated_sprite.play("idle")
-	elif animated_sprite.animation == "attack":
+			can_attack = true
+	elif current == "attack":
 		is_attacking = false
 		bite_collision.disabled = true
-		animated_sprite.play("idle")
+		if not is_dead and not is_hurt:
+			animated_sprite.play("idle")
 
 func _on_bite_hitbox_area_entered(area: Area2D) -> void:
 	if area.name == "PlayerHurtbox":

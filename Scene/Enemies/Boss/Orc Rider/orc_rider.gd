@@ -48,11 +48,18 @@ func _ready() -> void:
 	active_damage = base_damage
 
 	_disable_all_hitboxes()
-
-	var players = get_tree().get_nodes_in_group("player")
-	if players.size() > 0:
-		player = players[0]
+	_find_player()
 	anim.play("idle")
+
+func _find_player() -> void:
+	player = null
+	if not is_inside_tree() or get_tree() == null:
+		return
+	var players = get_tree().get_nodes_in_group("player")
+	for p in players:
+		if is_instance_valid(p) and not p.is_queued_for_deletion():
+			player = p
+			return
 
 func _draw() -> void:
 	if show_charge_warning:
@@ -65,11 +72,9 @@ func _draw() -> void:
 func _physics_process(_delta: float) -> void:
 	if not is_active or is_dead or is_hurt:
 		return
-	if player == null or not is_instance_valid(player):
-		var players = get_tree().get_nodes_in_group("player")
-		if players.size() > 0:
-			player = players[0]
-		else:
+	if player == null or not is_instance_valid(player) or player.is_queued_for_deletion():
+		_find_player()
+		if player == null:
 			return
 
 	var distance = global_position.distance_to(player.global_position)
@@ -114,7 +119,8 @@ func _physics_process(_delta: float) -> void:
 func prep_charge() -> void:
 	is_preparing_charge = true
 	anim.play("idle")
-	charge_dir = global_position.direction_to(player.global_position)
+	if is_instance_valid(player) and not player.is_queued_for_deletion():
+		charge_dir = global_position.direction_to(player.global_position)
 
 	show_charge_warning = true
 	queue_redraw()
