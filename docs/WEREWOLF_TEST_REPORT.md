@@ -1,10 +1,10 @@
-# 🐺 Werewolf Functional & Integration Test Report
+# Werewolf Functional & Integration Test Report
 
 Báo cáo kiểm thử tự động, đánh giá chất lượng và bằng chứng nghiệm thu cho quái vật mới **Werewolf (Warg-breed Werewolf)** trong dự án **Keep Fighting And Earning**.
 
 ---
 
-## 📌 1. Thông Tin Tổng Quan
+## 1. Thông Tin Tổng Quan
 
 - **Đối tượng kiểm thử:** Quái vật mới `Werewolf` (`Scene/Enemies/Werewolf/werewolf.tscn` và `werewolf.gd`).
 - **Môi trường chạy:** Godot Engine 4.7.2 Headless.
@@ -14,7 +14,7 @@ Báo cáo kiểm thử tự động, đánh giá chất lượng và bằng ch�
 
 ---
 
-## 🧪 2. Chi Tiết Các Nhóm Kiểm Thử (Test Cases)
+## 2. Chi Tiết Các Nhóm Kiểm Thử (Test Cases)
 
 ### Nhóm 1: Cấu hình Chỉ số (Configuration & Stats)
 *Kiểm tra tính đồng bộ giữa `Scene/BalanceConfig.gd` và thực thể khởi tạo trong Scene.*
@@ -78,7 +78,7 @@ Báo cáo kiểm thử tự động, đánh giá chất lượng và bằng ch�
 
 ---
 
-## 🔍 3. Bằng Chứng Bắt Lỗi & Xử Lý (Defect Evidence & Resolution)
+## 3. Bằng Chứng Bắt Lỗi & Xử Lý (Defect Evidence & Resolution)
 
 | ID Lỗi | Hiện tượng | Nguyên nhân gốc rễ | Giải pháp đã áp dụng | Trạng thái |
 |---|---|---|---|---|
@@ -87,17 +87,17 @@ Báo cáo kiểm thử tự động, đánh giá chất lượng và bằng ch�
 
 ---
 
-## 💻 4. Lệnh Chạy Lại Kiểm Thử (Reproduce Command)
+## 4. Lệnh Chạy Lại Kiểm Thử (Reproduce Command)
 
-Bất kỳ lúc nào cần kiểm tra lại trên máy, cậu có thể mở PowerShell và chạy:
+Bất kỳ lúc nào cần kiểm tra lại trên máy, có thể mở terminal và chạy:
 
 ```powershell
-& "C:\Users\Admin\OneDrive\Máy tính\Godot_v4.7.2-stable_win64.exe" --headless --path . "res://test_werewolf.tscn"
+godot --headless --path . "res://tests/test_werewolf.tscn"
 ```
 
 ---
 
-## 📜 5. Log Bằng Chứng Thực Tế (Raw Console Output)
+## 5. Log Bằng Chứng Thực Tế (Raw Console Output)
 
 ```text
 Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org

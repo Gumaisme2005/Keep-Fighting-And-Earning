@@ -1,4 +1,4 @@
-# ⚡ Báo Cáo Benchmark Hiệu Năng Bộ Sinh Hầm Ngục (`dungeon_generator.gd`)
+# Báo Cáo Benchmark Hiệu Năng Bộ Sinh Hầm Ngục (`dungeon_generator.gd`)
 
 Báo cáo này ghi lại kết quả đo đạc hiệu năng thực tế của thuật toán sinh hầm ngục **Graph + Grid Spanning Tree + BFS + Autotile Terrain** trên **Godot Engine v4.7.2-stable (Headless CLI)**.
 
