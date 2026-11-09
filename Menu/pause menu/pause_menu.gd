@@ -92,10 +92,13 @@ func _unhandled_input(event: InputEvent) -> void:
 	var game_over_menu := get_tree().get_first_node_in_group("game_over_menu")
 	if game_over_menu != null and game_over_menu.is_visible_in_tree():
 		return
+	var perk_modal = get_tree().get_first_node_in_group("perk_selection_modal")
+	if perk_modal != null and bool(perk_modal.get("visible")):
+		return
 	if event.is_action_pressed("esc") and not event.is_echo():
-		if get_tree().paused:
+		if visible:
 			resume()
-		else:
+		elif not get_tree().paused:
 			pause()
 
 func resume() -> void:

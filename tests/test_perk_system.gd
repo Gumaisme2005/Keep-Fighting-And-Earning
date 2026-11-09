@@ -169,16 +169,17 @@ func test_apply_perk_to_mock_player() -> void:
 	_assert_test(player.max_hp == 5 and player.hp == 5, "Bonus HP applied (+1 HP -> 5)")
 	_assert_test(player.max_armor == 3 and player.current_armor == 3, "Bonus Armor applied (+1 Armor -> 3)")
 
-	# 2. Thêm Bộ Pháp Tật Phong (+15 Tốc độ sau khi người dùng tinh chỉnh)
+	# 2. Thêm Bộ Pháp Tật Phong (+15 Tốc độ)
 	var perk_speed := PerkDatabase.get_perk_by_id("swift_stride")
 	manager.add_perk(perk_speed, player)
-	var expected_spd = 150.0 + float(perk_speed.get_modifier("speed_bonus", 15.0))
-	_assert_test(player.speed == expected_spd, "Speed bonus applied (+%d -> %d)" % [int(perk_speed.get_modifier("speed_bonus", 15.0)), int(expected_spd)])
+	_assert_test(manager.get_total_speed_bonus() == 15.0, "Speed bonus tracked dynamically in PerkManager (+15.0)")
+	_assert_test(player.speed == 150.0, "Player base speed remains clean baseline without double-dipping")
 
 	# 3. Thêm Lưỡi Kiếm Tôi Rèn (+1 Sát thương)
 	var perk_dmg := PerkDatabase.get_perk_by_id("sharpened_edge")
 	manager.add_perk(perk_dmg, player)
-	_assert_test(player.base_damage == 2, "Base damage applied (+1 -> 2)")
+	_assert_test(manager.get_total_bonus_damage() == 1, "Bonus damage tracked dynamically in PerkManager (+1)")
+	_assert_test(player.base_damage == 1, "Player base damage remains clean baseline without double-dipping")
 
 	player.queue_free()
 	manager.queue_free()
@@ -222,11 +223,20 @@ func test_character_combat_hooks_and_revive() -> void:
 	var base_dmg = player.get_total_damage()
 	_assert_test(base_dmg >= 1, "Player initial total damage >= 1")
 
-	# 2. Thêm Perk sát thương và kiểm tra get_total_damage() tự động tăng
+	# 2. Thêm Perk sát thương và kiểm tra get_total_damage() tự động tăng chính xác +1 (không double-dipping)
 	var p_edge = PerkDatabase.get_perk_by_id("sharpened_edge")
 	PerkManager.add_perk(p_edge, player)
 	var new_dmg = player.get_total_damage()
-	_assert_test(new_dmg == base_dmg + 1, "Player get_total_damage() increased by perk bonus")
+	_assert_test(new_dmg == base_dmg + 1, "Player get_total_damage() increased by exact perk bonus (+1)")
+	_assert_test(player.base_damage == 1, "Player base_damage baseline remains clean (1)")
+
+	# 2b. Thêm Perk tốc độ chạy và kiểm tra get_effective_speed() tăng chính xác +15 (không double-dipping)
+	var base_spd: float = player.get_effective_speed()
+	var p_stride = PerkDatabase.get_perk_by_id("swift_stride")
+	PerkManager.add_perk(p_stride, player)
+	var new_spd: float = player.get_effective_speed()
+	_assert_test(absf(new_spd - (base_spd + 15.0)) < 0.01, "Player get_effective_speed() increased by exact perk bonus (+15.0)")
+	_assert_test(player.speed == 150.0, "Player base speed baseline remains clean (150.0)")
 
 	# 3. Thêm Perk miễn nhiễm bẫy chông
 	var p_stone = PerkDatabase.get_perk_by_id("stone_bastion")
@@ -276,7 +286,7 @@ func test_stochastic_damage_resolution() -> void:
 	_assert_test(avg >= 2.4 and avg <= 2.6, "Stochastic average of 2.5 dmg across 1000 hits is ~ 2.5 (Observed: %.3f)" % avg)
 
 func test_perk_selection_modal() -> void:
-	print("\n[TEST 9] Testing PerkSelectionModal UI Component...")
+	print("\n[TEST 9] Testing PerkSelectionModal UI Component & Pause Immunity...")
 	var modal_scene = preload("res://Scene/UI/PerkSelectionModal.tscn")
 	var modal = modal_scene.instantiate()
 	add_child(modal)
@@ -287,6 +297,21 @@ func test_perk_selection_modal() -> void:
 	)
 
 	_assert_test(modal.visible == true, "PerkSelectionModal is visible when shown")
+	_assert_test(get_tree().paused == true, "Game is paused while PerkSelectionModal is visible")
+
+	# Test Issue 4: Simulate pressing ESC while PerkSelectionModal is visible
+	var pause_scene = preload("res://Menu/pause menu/pause_menu.tscn")
+	var pause_menu = pause_scene.instantiate()
+	add_child(pause_menu)
+
+	var esc_ev = InputEventAction.new()
+	esc_ev.action = "esc"
+	esc_ev.pressed = true
+	pause_menu._unhandled_input(esc_ev)
+
+	_assert_test(get_tree().paused == true, "ESC is blocked: game remains paused during perk selection")
+	_assert_test(pause_menu.visible == false, "ESC is blocked: pause menu does not open or unpause game")
+
 	var cards_node = modal._cards_container
 	_assert_test(cards_node != null and cards_node.get_child_count() == 3, "Modal generated 3 Perk Cards")
 
@@ -295,8 +320,10 @@ func test_perk_selection_modal() -> void:
 	modal._on_perk_card_selected(first_perk)
 
 	_assert_test(modal.visible == false, "Modal hidden after selection")
+	_assert_test(get_tree().paused == false, "Game unpaused after perk selection complete")
 	_assert_test(callback_called == true, "Completion callback invoked upon perk selection")
 	_assert_test(PerkManager.has_perk("iron_sinew") == true, "Perk acquired into PerkManager")
 
+	pause_menu.queue_free()
 	modal.queue_free()
 	PerkManager.reset()

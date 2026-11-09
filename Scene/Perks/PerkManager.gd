@@ -166,11 +166,9 @@ func _apply_perk_to_player(perk: PerkData, player: Node2D) -> void:
 		player.max_armor += armor_bonus
 		player.current_armor += armor_bonus
 
-	if mods.has("speed_bonus"):
-		player.speed += float(mods["speed_bonus"])
-
-	if mods.has("bonus_damage"):
-		player.base_damage += int(mods["bonus_damage"])
+	# Lưu ý: speed_bonus và bonus_damage không cộng trực tiếp vào player.speed / player.base_damage
+	# để tránh lỗi nhân đôi chỉ số (double-dipping). BasePlayer đã tự động cộng động từ
+	# PerkManager.get_total_speed_bonus() và PerkManager.get_total_bonus_damage().
 
 	if mods.has("heal_instant"):
 		var heal: int = int(mods["heal_instant"])

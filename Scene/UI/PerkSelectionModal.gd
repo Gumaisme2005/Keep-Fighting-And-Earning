@@ -14,6 +14,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 100
 	visible = false
+	add_to_group("perk_selection_modal")
 	_build_ui()
 
 func _build_ui() -> void:

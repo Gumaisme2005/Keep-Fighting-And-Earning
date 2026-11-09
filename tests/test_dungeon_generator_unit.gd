@@ -35,6 +35,8 @@ func _ready() -> void:
 	_test_ut20_variant_rng_isolation()
 	_test_ut21_collision_checks_detect_obstructions()
 	_test_ut22_enemy_and_boss_floor_scaling()
+	_test_ut23_pause_menu_modal_unpause_guard()
+	_test_ut24_perk_stat_double_dipping_prevention()
 
 	print("------------------------------------------------------------------")
 	print("[SUMMARY] UNIT TESTS: %d PASSED | %d FAILED" % [passed_count, failed_count])
@@ -684,4 +686,62 @@ func _test_ut22_enemy_and_boss_floor_scaling() -> void:
 		]
 	)
 	gen3.get_parent().free()
+
+func _test_ut23_pause_menu_modal_unpause_guard() -> void:
+	var pause_scene := load("res://Menu/pause menu/pause_menu.tscn") as PackedScene
+	var modal_scene := load("res://Scene/UI/PerkSelectionModal.tscn") as PackedScene
+
+	var pause_menu := pause_scene.instantiate()
+	var modal := modal_scene.instantiate()
+	add_child(pause_menu)
+	add_child(modal)
+
+	modal.show_selection(null, Callable())
+	var esc_ev := InputEventAction.new()
+	esc_ev.action = "esc"
+	esc_ev.pressed = true
+
+	pause_menu._unhandled_input(esc_ev)
+	var guard_ok: bool = get_tree().paused == true and pause_menu.visible == false
+	_assert_true(
+		guard_ok,
+		"UT-23: Pause menu ignores ESC unpause while PerkSelectionModal is visible (Modal Unpause Exploit Guard)"
+	)
+
+	modal._on_perk_card_selected(PerkDatabase.get_perk_by_id("iron_sinew"))
+	get_tree().paused = false
+	pause_menu.free()
+	modal.free()
+
+func _test_ut24_perk_stat_double_dipping_prevention() -> void:
+	var player_scene := load("res://Scene/Character/Player 1_Pyrois/player.tscn") as PackedScene
+	var player = player_scene.instantiate()
+	add_child(player)
+	PerkManager.reset()
+
+	var base_dmg: int = player.get_total_damage()
+	var base_spd: float = player.get_effective_speed()
+
+	var p_dmg = PerkDatabase.get_perk_by_id("sharpened_edge") # +1 dmg
+	var p_spd = PerkDatabase.get_perk_by_id("swift_stride")   # +15 spd
+	PerkManager.add_perk(p_dmg, player)
+	PerkManager.add_perk(p_spd, player)
+
+	var new_dmg: int = player.get_total_damage()
+	var new_spd: float = player.get_effective_speed()
+
+	var no_double_dip: bool = (
+		new_dmg == base_dmg + 1
+		and absf(new_spd - (base_spd + 15.0)) < 0.01
+		and player.base_damage == 1
+		and absf(player.speed - 150.0) < 0.01
+	)
+	_assert_true(
+		no_double_dip,
+		"UT-24: Perks calculate dynamic speed and damage without mutating base stats or double-dipping",
+		"dmg=%d (expected %d), spd=%.1f (expected %.1f)" % [new_dmg, base_dmg + 1, new_spd, base_spd + 15.0]
+	)
+
+	player.free()
+	PerkManager.reset()
 
