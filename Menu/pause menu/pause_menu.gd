@@ -7,6 +7,7 @@ var info_label: Label = null
 var guide_modal: PanelContainer = null
 var guide_title_label: Label = null
 var guide_body_label: Label = null
+var guide_scroll: ScrollContainer = null
 var guide_backdrop: ColorRect = null
 var settings_modal: Control = null
 var card_panel: PanelContainer = null
@@ -86,13 +87,17 @@ func _build_extra_pause_controls() -> void:
 
 	if resume_btn != null:
 		resume_btn.reparent(col_left)
+		resume_btn.remove_theme_font_override("font")
 		resume_btn.text = "RESUME EXPEDITION"
 		resume_btn.custom_minimum_size = Vector2(230, 36)
 		UITheme.style_button(resume_btn, "", UITheme.COLOR_GOLD_BORDER_HOVER, UITheme.COLOR_BG_DARK, 13)
 
 	var settings_btn := UITheme.create_button("SETTINGS & GRAPHICS", "gear", Vector2(230, 36), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
 	settings_btn.pressed.connect(func():
+		_close_all_submodals()
 		if settings_modal != null:
+			if card_panel != null:
+				card_panel.visible = false
 			settings_modal.show_modal()
 	)
 	col_left.add_child(settings_btn)
@@ -117,6 +122,7 @@ func _build_extra_pause_controls() -> void:
 
 	if restart_btn != null:
 		restart_btn.reparent(col_right)
+		restart_btn.remove_theme_font_override("font")
 		restart_btn.text = "RETRY CURRENT SEED"
 		restart_btn.custom_minimum_size = Vector2(230, 36)
 		UITheme.style_button(restart_btn, "", UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 13)
@@ -150,6 +156,7 @@ func _build_extra_pause_controls() -> void:
 
 	if exit_btn != null:
 		exit_btn.reparent(col_right)
+		exit_btn.remove_theme_font_override("font")
 		exit_btn.text = "ABANDON & QUIT"
 		exit_btn.custom_minimum_size = Vector2(230, 36)
 		UITheme.style_danger_button(exit_btn, "", 13)
@@ -160,12 +167,16 @@ func _build_extra_pause_controls() -> void:
 func _build_pause_settings_modal() -> void:
 	settings_modal = SettingsModalScript.new()
 	settings_modal.visible = false
+	settings_modal.closed.connect(func():
+		if card_panel != null:
+			card_panel.visible = true
+	)
 	add_child(settings_modal)
 
 func _build_pause_guide_modal() -> void:
 	guide_backdrop = ColorRect.new()
 	guide_backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	guide_backdrop.color = Color(0.02, 0.03, 0.06, 0.88)
+	guide_backdrop.color = Color(0.02, 0.03, 0.06, 0.95)
 	guide_backdrop.mouse_filter = Control.MOUSE_FILTER_STOP
 	guide_backdrop.visible = false
 	guide_backdrop.gui_input.connect(func(ev: InputEvent):
@@ -183,7 +194,7 @@ func _build_pause_guide_modal() -> void:
 	guide_modal.offset_right = 390.0
 	guide_modal.offset_top = -225.0
 	guide_modal.offset_bottom = 225.0
-	guide_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.04, 0.05, 0.09, 0.98), UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
+	guide_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.04, 0.05, 0.09, 1.0), UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
 	guide_modal.visible = false
 	add_child(guide_modal)
 
@@ -203,18 +214,18 @@ func _build_pause_guide_modal() -> void:
 	close_btn.pressed.connect(_close_all_submodals)
 	header.add_child(close_btn)
 
-	var scroll := ScrollContainer.new()
-	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-	vbox.add_child(scroll)
+	guide_scroll = ScrollContainer.new()
+	guide_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	guide_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	guide_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	guide_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	vbox.add_child(guide_scroll)
 
 	var content_vbox := VBoxContainer.new()
 	content_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content_vbox.custom_minimum_size = Vector2(720, 0)
 	content_vbox.add_theme_constant_override("separation", 8)
-	scroll.add_child(content_vbox)
+	guide_scroll.add_child(content_vbox)
 
 	guide_body_label = Label.new()
 	guide_body_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -225,11 +236,11 @@ func _build_pause_guide_modal() -> void:
 	guide_body_label.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
 	content_vbox.add_child(guide_body_label)
 
-	scroll.resized.connect(func():
+	guide_scroll.resized.connect(func():
 		var scrollbar_w: float = 14.0
-		if scroll.get_v_scroll_bar() != null and scroll.get_v_scroll_bar().visible:
-			scrollbar_w = scroll.get_v_scroll_bar().size.x
-		var avail_w: float = maxf(400.0, scroll.size.x - scrollbar_w - 12.0)
+		if guide_scroll.get_v_scroll_bar() != null and guide_scroll.get_v_scroll_bar().visible:
+			scrollbar_w = guide_scroll.get_v_scroll_bar().size.x
+		var avail_w: float = maxf(400.0, guide_scroll.size.x - scrollbar_w - 12.0)
 		content_vbox.custom_minimum_size.x = avail_w
 		guide_body_label.custom_minimum_size.x = avail_w
 	)
@@ -296,11 +307,15 @@ func _show_pause_guide(mode: String) -> void:
 			String(hero_info.get("quote", ""))
 		]
 
+	if card_panel != null:
+		card_panel.visible = false
 	if guide_backdrop != null:
 		guide_backdrop.visible = true
 		guide_backdrop.move_to_front()
 	guide_modal.visible = true
 	guide_modal.move_to_front()
+	if guide_scroll != null:
+		guide_scroll.scroll_vertical = 0
 
 func _unhandled_input(event: InputEvent) -> void:
 	var game_over_menu := get_tree().get_first_node_in_group("game_over_menu")
@@ -327,6 +342,8 @@ func _close_all_submodals() -> void:
 		guide_modal.visible = false
 	if guide_backdrop != null:
 		guide_backdrop.visible = false
+	if card_panel != null:
+		card_panel.visible = true
 
 func resume() -> void:
 	_close_all_submodals()

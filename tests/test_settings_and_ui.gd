@@ -255,10 +255,13 @@ func test_pause_menu_layout_and_settings() -> void:
 	pause._show_pause_guide("lore")
 	_assert_test(pause.guide_modal.visible == true, "PauseMenu lore modal opens cleanly")
 	_assert_test(pause.guide_backdrop.visible == true, "PauseMenu lore modal darkens backdrop")
+	_assert_test(pause.card_panel.visible == false, "PauseMenu hides underlying pause card to eliminate button ghosting")
 	_assert_test(pause.guide_body_label.autowrap_mode == TextServer.AUTOWRAP_WORD_SMART, "PauseMenu lore text has word smart wrap enabled")
+	_assert_test(pause.guide_body_label.custom_minimum_size.x >= 400.0, "PauseMenu lore text width constrained to prevent 1-letter collapse")
 
 	pause._close_all_submodals()
 	_assert_test(pause.guide_modal.visible == false and pause.guide_backdrop.visible == false, "PauseMenu lore modal closes cleanly")
+	_assert_test(pause.card_panel.visible == true, "PauseMenu restores pause card on modal close")
 
 	pause.queue_free()
 

@@ -281,6 +281,7 @@ func _build_hero_details_and_seed_bar() -> void:
 
 	var scroll_content := VBoxContainer.new()
 	scroll_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll_content.custom_minimum_size = Vector2(600, 0)
 	scroll_content.add_theme_constant_override("separation", 6)
 	dossier_scroll.add_child(scroll_content)
 
@@ -473,7 +474,7 @@ func _build_character_select_guide_modal() -> void:
 	guide_modal.offset_right = 420.0
 	guide_modal.offset_top = -240.0
 	guide_modal.offset_bottom = 240.0
-	guide_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.04, 0.05, 0.09, 0.98), UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
+	guide_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.04, 0.05, 0.09, 1.0), UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
 	guide_modal.visible = false
 	add_child(guide_modal)
 

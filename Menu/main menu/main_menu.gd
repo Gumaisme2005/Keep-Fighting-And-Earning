@@ -411,7 +411,7 @@ func _build_lore_modal() -> void:
 	lore_modal.offset_right = 430.0
 	lore_modal.offset_top = -250.0
 	lore_modal.offset_bottom = 250.0
-	lore_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.04, 0.05, 0.09, 0.98), UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
+	lore_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.04, 0.05, 0.09, 1.0), UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
 	lore_modal.visible = false
 	add_child(lore_modal)
 
@@ -561,7 +561,7 @@ func _build_help_modal() -> void:
 	help_modal.offset_right = 430.0
 	help_modal.offset_top = -250.0
 	help_modal.offset_bottom = 250.0
-	help_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.04, 0.05, 0.09, 0.98), UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
+	help_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.04, 0.05, 0.09, 1.0), UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
 	help_modal.visible = false
 	add_child(help_modal)
 
