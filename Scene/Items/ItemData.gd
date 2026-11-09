@@ -41,6 +41,8 @@ func get_stats_description() -> String:
 		stats_lines.append("• Physical Armor: +%d" % armor)
 	if max_hp_bonus > 0:
 		stats_lines.append("• Max Health: +%d" % max_hp_bonus)
+	if type == ItemType.POTION:
+		stats_lines.append("• Potion max HP: +4 per run cap; shared cooldown: 8s; carry limit: 4 total")
 	if heal_amount > 0:
 		stats_lines.append("• Restores Health: +%d" % heal_amount)
 	if attack_speed_bonus > 0.0:

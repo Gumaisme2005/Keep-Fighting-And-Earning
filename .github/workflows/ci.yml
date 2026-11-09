@@ -142,6 +142,15 @@ jobs:
           godot --headless "res://tests/test_replay_security.tscn" 2>&1 | tee "$RUNNER_TEMP/enemy_replay.log"
           if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/enemy_replay.log"; then exit 1; fi
 
+      - name: Run Potion Economy Regression Tests
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/potion-regression-data
+        run: |
+          godot --headless "res://tests/test_potion_system.tscn" 2>&1 | tee "$RUNNER_TEMP/potion_system.log"
+          if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/potion_system.log"; then exit 1; fi
+
       - name: 18. Run Tactical Navigation Contract at 30 and 144 Render FPS
         timeout-minutes: 5
         shell: bash

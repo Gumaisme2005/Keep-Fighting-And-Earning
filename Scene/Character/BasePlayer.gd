@@ -32,6 +32,11 @@ var hp: int = 4
 var max_armor: int = 4
 var current_armor: int = 4
 
+const POTION_MAX_HP_CAP: int = 4
+const POTION_COOLDOWN: float = 8.0
+var potion_max_hp_gained: int = 0
+var potion_cooldown_remaining: float = 0.0
+
 var is_dead: bool = false
 var is_attacking: bool = false
 var is_hurt: bool = false
@@ -69,6 +74,12 @@ func _ready() -> void:
 	z_index = 2
 	add_to_group("player")
 	_apply_balance_config()
+	var gm = get_node_or_null("/root/GameManager")
+	if gm != null:
+		potion_max_hp_gained = gm.potion_max_hp_gained
+		potion_cooldown_remaining = gm.potion_cooldown_remaining
+	# Physics-frame signal also covers heroes that override _physics_process().
+	get_tree().physics_frame.connect(_tick_potion_cooldown)
 
 	regen_delay_timer = Timer.new()
 	regen_delay_timer.one_shot = true
@@ -87,7 +98,7 @@ func _ready() -> void:
 		bonus_hp = inventory.get_total_max_hp_bonus() if inventory.has_method("get_total_max_hp_bonus") else 0
 		bonus_def = inventory.get_total_defense() if inventory.has_method("get_total_defense") else 0
 
-	max_hp = base_max_hp + bonus_hp
+	max_hp = base_max_hp + bonus_hp + potion_max_hp_gained
 	hp = max_hp
 	max_armor = base_armor + bonus_def
 	current_armor = max_armor
@@ -97,7 +108,7 @@ func _ready() -> void:
 		inventory.equipment_changed.connect(_on_equipment_changed)
 
 	# Trang bị khởi đầu cân bằng: 1 Bình máu nhỏ
-	var starter_potion = preload("res://Scene/Items/Common/health_potion.tres")
+	var starter_potion = preload("res://Scene/Items/Common/health_potion.tres").duplicate()
 	if inventory != null and inventory.has_method("add_item"):
 		inventory.add_item(starter_potion)
 
@@ -338,27 +349,56 @@ func start_invincibility() -> void:
 	if animated_sprite != null:
 		animated_sprite.modulate.a = 1.0
 
-func consume_potion(heal_amount: int, bonus_max_hp: int) -> void:
+func _sync_potion_run_state() -> void:
+	var gm = get_node_or_null("/root/GameManager")
+	if gm != null:
+		gm.potion_max_hp_gained = potion_max_hp_gained
+		gm.potion_cooldown_remaining = potion_cooldown_remaining
+
+func _tick_potion_cooldown() -> void:
+	if not can_process() or is_dead or is_queued_for_deletion():
+		return
+	potion_cooldown_remaining = maxf(0.0, potion_cooldown_remaining - get_physics_process_delta_time())
+	if potion_cooldown_remaining < 0.000001:
+		potion_cooldown_remaining = 0.0
+	_sync_potion_run_state()
+
+func reset_potion_progression() -> void:
+	max_hp = maxi(1, max_hp - potion_max_hp_gained)
+	hp = clampi(hp, 0, max_hp)
+	potion_max_hp_gained = 0
+	potion_cooldown_remaining = 0.0
+	_sync_potion_run_state()
+	stats_changed.emit(hp, max_hp, current_armor, max_armor)
+
+# Skill healing (e.g. Doraemon's food) is independent of potion inventory/cooldown.
+func restore_health(amount: int) -> void:
 	if is_dead:
 		return
-
-	if bonus_max_hp > 0:
-		base_max_hp += bonus_max_hp
-		max_hp += bonus_max_hp
-		hp += bonus_max_hp
-
-	if heal_amount > 0:
-		hp = min(max_hp, hp + heal_amount)
-
-	if get_tree():
-		get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -24), heal_amount + bonus_max_hp, Color(0.3, 1.0, 0.4))
+	var old_hp := hp
+	hp = clampi(hp + maxi(0, amount), 0, max_hp)
+	if get_tree() and hp > old_hp:
+		get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -24), hp - old_hp, Color(0.3, 1.0, 0.4))
 	stats_changed.emit(hp, max_hp, current_armor, max_armor)
+
+func consume_potion(heal_amount: int, bonus_max_hp: int) -> bool:
+	if is_dead or potion_cooldown_remaining > 0.0 or (is_inside_tree() and not can_process()):
+		return false
+	var granted_bonus := clampi(bonus_max_hp, 0, maxi(0, POTION_MAX_HP_CAP - potion_max_hp_gained))
+	if granted_bonus == 0 and (heal_amount <= 0 or hp >= max_hp):
+		return false
+	potion_max_hp_gained += granted_bonus
+	max_hp += granted_bonus
+	potion_cooldown_remaining = POTION_COOLDOWN
+	_sync_potion_run_state()
+	restore_health(maxi(0, heal_amount) + granted_bonus)
+	return true
 
 func _on_equipment_changed() -> void:
 	if inventory == null:
 		return
 	var old_max_hp = max_hp
-	max_hp = base_max_hp + inventory.get_total_max_hp_bonus()
+	max_hp = base_max_hp + inventory.get_total_max_hp_bonus() + potion_max_hp_gained
 
 	if max_hp > old_max_hp:
 		hp += (max_hp - old_max_hp)
@@ -409,7 +449,7 @@ func get_raw_damage() -> float:
 		wep_dmg = inventory.get_weapon_damage()
 	var dmg: float = float(base_damage + wep_dmg)
 	if get_node_or_null("/root/PerkManager") != null:
-		dmg += float(PerkManager.get_total_bonus_damage())
+		# Flat perk damage is already applied to base_damage by PerkManager.
 		for p in PerkManager.get_active_perks():
 			if p.get_modifier("low_hp_scaling", false):
 				var missing_hp: int = maxi(0, max_hp - hp)

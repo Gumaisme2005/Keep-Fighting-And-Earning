@@ -749,7 +749,7 @@ func _do_super_dorami_balloon() -> void:
 	_proj("dorami_balloon", global_position + Vector2(0, -20), _aim_dir() * 90.0, _dmg() * 8,
 		{"mode": "homing", "target": t, "turn_rate": 3.0, "life": 3.5, "radius": 12.0, "rotate_sprite": false,
 		"explode_radius": 60.0, "explode_damage": _dmg() * 8, "explode_scale": 1.4})
-	consume_potion(1, 0)
+	restore_health(1)
 
 func _do_super_gian_recital() -> void:
 	var at := Util.safe_point(_world(), global_position, _aim_dir(), 30.0, 8.0)
@@ -856,7 +856,7 @@ func _step_mode(delta: float, direction: Vector2) -> void:
 		"eat":
 			if not bool(_mode_data["fed"]) and _mode_t >= 0.4:
 				_mode_data["fed"] = true
-				consume_potion(1, 0)
+				restore_health(1)
 				add_power(40)
 			if _mode_t >= Sprites.duration("eat"):
 				_end_mode()

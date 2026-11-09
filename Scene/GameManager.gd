@@ -45,6 +45,39 @@ var current_level: int = 1
 var enemies_killed: int = 0
 var run_start_time_msec: int = 0
 
+# Potion progression belongs to the run, including when a player node is recreated.
+const POTION_BASE_DROP_CHANCE: float = 0.02
+const POTION_LOW_HP_BONUS: float = 0.02
+const POTION_LOW_HP_THRESHOLD: float = 0.4
+const POTION_PITY_KILLS: int = 45
+var potion_max_hp_gained: int = 0
+var potion_cooldown_remaining: float = 0.0
+var potion_kills_without_drop: int = 0
+var _recorded_potion_cooldown_active: bool = false
+
+func get_potion_drop_chance(player: Node2D = null) -> float:
+	var chance := POTION_BASE_DROP_CHANCE
+	if is_instance_valid(player) and player.get("max_hp") != null and player.get("hp") != null:
+		if player.max_hp > 0 and float(player.hp) / float(player.max_hp) < POTION_LOW_HP_THRESHOLD:
+			chance += POTION_LOW_HP_BONUS
+	# Apply the strongest existing perk multiplier AFTER the low-HP bonus; pity overrides both.
+	var pm = get_node_or_null("/root/PerkManager")
+	if pm != null:
+		chance *= pm.get_potion_drop_multiplier()
+	return clampf(chance, 0.0, 1.0)
+
+func roll_enemy_potion(rng: RandomNumberGenerator, player: Node2D = null) -> ItemData:
+	if rng == null:
+		return null
+	var roll := rng.randf()
+	if potion_kills_without_drop + 1 < POTION_PITY_KILLS and roll >= get_potion_drop_chance(player):
+		potion_kills_without_drop += 1
+		return null
+	var potion := ItemDatabase.get_random_potion(current_level, rng)
+	if potion != null:
+		potion_kills_without_drop = 0
+	return potion
+
 # --- DỮ LIỆU LƯU SEED & LỊCH SỬ RUN ---
 var saved_seeds: Array = []   # [{ "seed": String, "note": String, "hero_idx": int, "date": String }]
 var run_history: Array = []   # [{ "seed": String, "hero_idx": int, "hero_name": String, "floor": int, "kills": int, "date": String, "frames": Array }]
@@ -158,6 +191,11 @@ func start_new_run(custom_seed: String = "", replay_mode: bool = false, frames_t
 		current_seed = safe_curr if not safe_curr.is_empty() else generate_random_seed()
 	current_level = 1
 	enemies_killed = 0
+	potion_max_hp_gained = 0
+	potion_cooldown_remaining = 0.0
+	potion_kills_without_drop = 0
+	_recorded_potion_cooldown_active = false
+	get_tree().call_group("player", "reset_potion_progression")
 	run_start_time_msec = Time.get_ticks_msec()
 	is_replaying = replay_mode
 	if replay_mode:
@@ -175,6 +213,10 @@ func record_frame_input(frame_data: Dictionary) -> void:
 		return
 	if current_recording_frames.size() >= MAX_REPLAY_FRAMES:
 		return
+	# Keep idle physics ticks while a potion cools down, including its final tick.
+	# Otherwise idle-frame compression makes the replay's next potion arrive too early.
+	var keep_potion_tick := potion_cooldown_remaining > 0.0 or _recorded_potion_cooldown_active
+	_recorded_potion_cooldown_active = potion_cooldown_remaining > 0.0
 
 	# Nén/khử trùng lặp trạng thái đứng yên (anti-DoS / memory ballooning):
 	# Nếu nhân vật không thao tác và hướng chuột không đổi, không lặp lại frame tĩnh
@@ -200,7 +242,7 @@ func record_frame_input(frame_data: Dictionary) -> void:
 			and absf(float(last_f.get("ax", 0.0)) - float(frame_data.get("ax", 0.0))) < 1.0
 			and absf(float(last_f.get("ay", 0.0)) - float(frame_data.get("ay", 0.0))) < 1.0
 		)
-		if is_idle and last_idle:
+		if is_idle and last_idle and not keep_potion_tick:
 			return
 
 	current_recording_frames.append(frame_data)

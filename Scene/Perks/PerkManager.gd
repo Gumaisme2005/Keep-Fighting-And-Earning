@@ -32,8 +32,9 @@ func reset() -> void:
 		seed_combat_rng((GameManager.current_seed + ":combat").hash())
 	perks_cleared.emit()
 
-func _on_game_stats_updated(level: int, _kills: int) -> void:
-	if level <= 1 and active_perks.size() > 0:
+func _on_game_stats_updated(level: int, kills: int) -> void:
+	# Floor-one kills also emit stats_updated; keep potion-drop perks until a new run.
+	if level <= 1 and kills == 0 and active_perks.size() > 0:
 		# Bắt đầu chuyến thám hiểm mới, reset perk
 		reset()
 

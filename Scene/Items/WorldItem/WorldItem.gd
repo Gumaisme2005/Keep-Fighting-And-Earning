@@ -9,6 +9,8 @@ var prompt_label: Label = null
 
 func _ready() -> void:
 	add_to_group("world_items")
+	if item_data != null:
+		item_data = item_data.duplicate()
 	if item_data != null and item_data.icon != null:
 		sprite.texture = item_data.icon
 
@@ -62,7 +64,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			_pickup_item()
 
 func _pickup_item() -> void:
-	if player_node != null and player_node.has_node("Inventory") and item_data != null:
+	if is_queued_for_deletion():
+		return
+	if is_instance_valid(player_node) and player_node.has_node("Inventory") and item_data != null and item_data.stack_count > 0:
 		var inventory = player_node.get_node("Inventory")
 		var initial_count: int = item_data.stack_count if item_data.stack_count > 0 else 1
 		var fully_added: bool = inventory.add_item(item_data, initial_count)
@@ -82,9 +86,10 @@ func _pickup_item() -> void:
 				if get_node_or_null("/root/AudioManager") != null:
 					AudioManager.play_sfx("pickup")
 				if get_tree():
-					get_tree().call_group("game_ui", "show_toast", "Acquired x%d %s (Backpack full!)" % [taken, item_data.item_name])
+					get_tree().call_group("game_ui", "show_toast", "Acquired x%d %s (Carry limit reached)" % [taken, item_data.item_name])
 				if prompt_label != null:
 					prompt_label.text = _get_prompt_text()
 			else:
 				if get_tree():
-					get_tree().call_group("game_ui", "show_toast", "Backpack full: 16 / 16 items!")
+					var message := "Potion limit: 4 total!" if item_data.type == ItemData.ItemType.POTION and inventory.get_potion_count() >= inventory.MAX_POTION_UNITS else "Backpack full: 16 / 16 items!"
+					get_tree().call_group("game_ui", "show_toast", message)

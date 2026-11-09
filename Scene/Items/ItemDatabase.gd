@@ -113,6 +113,20 @@ static func get_item_count() -> int:
 	_init_catalog()
 	return _catalog.size()
 
+static func get_equipment_by_rarity(rarity: ItemData.Rarity) -> Array[ItemData]:
+	var equipment: Array[ItemData] = []
+	for item in get_items_by_rarity(rarity):
+		if item.type != ItemData.ItemType.POTION:
+			equipment.append(item)
+	return equipment
+
+static func get_random_potion(floor_level: int, rng: RandomNumberGenerator) -> ItemData:
+	# Reuse floor rarity weights, mapping Mythic to the highest registered potion tier.
+	# This RNG is independent of equipment selection.
+	var rarity := mini(roll_rarity_for_floor(floor_level, false, rng), ItemData.Rarity.LEGENDARY)
+	var ids := ["common_potion_green", "rare_potion_red", "heroic_potion_purple", "legendary_potion_blue"]
+	return get_item(ids[rarity])
+
 ## Thuật toán tính độ hiếm dựa trên Tầng hầm ngục (Floor Scaling Loot Algorithm)
 ## Tầng càng cao thì tỉ lệ xuất hiện đồ Heroic, Legendary, Mythic càng lớn.
 ## Rương Boss nhận thêm Bonus Matrix (đảm bảo ít nhất Rare và tăng vọt tỉ lệ Mythic).
@@ -177,10 +191,10 @@ static func roll_rarity_for_floor(floor_level: int, is_boss: bool = false, rng: 
 static func get_random_drop(floor_level: int, is_boss: bool = false, rng: RandomNumberGenerator = null) -> ItemData:
 	_init_catalog()
 	var target_rarity := roll_rarity_for_floor(floor_level, is_boss, rng)
-	var pool := get_items_by_rarity(target_rarity)
+	var pool := get_equipment_by_rarity(target_rarity)
 
 	if pool.is_empty():
-		pool = get_items_by_rarity(ItemData.Rarity.COMMON)
+		pool = get_equipment_by_rarity(ItemData.Rarity.COMMON)
 
 	if pool.is_empty():
 		return null
