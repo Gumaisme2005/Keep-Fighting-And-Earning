@@ -6,7 +6,6 @@
 
 Nhánh lưu toàn bộ tài liệu kiểm thử của dự án **Keep Fighting And Earning** (game roguelite Godot 2D): bộ test case, bằng chứng lỗi (video/ảnh), bản xuất lỗi từ Jira và nhật ký kiểm thử.
 
-Để test game, hãy clone `main` hoặc `development` vào một thư mục riêng, chạy bằng Godot, rồi ghi kết quả vào các file trong nhánh này.
 
 ---
 
