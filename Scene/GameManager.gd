@@ -54,6 +54,16 @@ var potion_max_hp_gained: int = 0
 var potion_cooldown_remaining: float = 0.0
 var potion_kills_without_drop: int = 0
 var _recorded_potion_cooldown_active: bool = false
+var thorns_cooldown_remaining: float = 0.0
+var armor_break_cooldown_remaining: float = 0.0
+var _recorded_defensive_cooldown_active: bool = false
+var _next_defensive_spawn_order: int = 0
+
+func allocate_defensive_spawn_order() -> int:
+	# Run-local spawn order is reproducible and consumes neither RNG nor Object IDs.
+	var order := _next_defensive_spawn_order
+	_next_defensive_spawn_order += 1
+	return order
 
 func get_potion_drop_chance(player: Node2D = null) -> float:
 	var chance := POTION_BASE_DROP_CHANCE
@@ -195,7 +205,12 @@ func start_new_run(custom_seed: String = "", replay_mode: bool = false, frames_t
 	potion_cooldown_remaining = 0.0
 	potion_kills_without_drop = 0
 	_recorded_potion_cooldown_active = false
+	thorns_cooldown_remaining = 0.0
+	armor_break_cooldown_remaining = 0.0
+	_recorded_defensive_cooldown_active = false
+	_next_defensive_spawn_order = 0
 	get_tree().call_group("player", "reset_potion_progression")
+	get_tree().call_group("player", "reset_defensive_effects")
 	run_start_time_msec = Time.get_ticks_msec()
 	is_replaying = replay_mode
 	if replay_mode:
@@ -217,6 +232,9 @@ func record_frame_input(frame_data: Dictionary) -> void:
 	# Otherwise idle-frame compression makes the replay's next potion arrive too early.
 	var keep_potion_tick := potion_cooldown_remaining > 0.0 or _recorded_potion_cooldown_active
 	_recorded_potion_cooldown_active = potion_cooldown_remaining > 0.0
+	var defensive_active := thorns_cooldown_remaining > 0.0 or armor_break_cooldown_remaining > 0.0
+	var keep_defensive_tick := defensive_active or _recorded_defensive_cooldown_active
+	_recorded_defensive_cooldown_active = defensive_active
 
 	# Nén/khử trùng lặp trạng thái đứng yên (anti-DoS / memory ballooning):
 	# Nếu nhân vật không thao tác và hướng chuột không đổi, không lặp lại frame tĩnh
@@ -242,7 +260,7 @@ func record_frame_input(frame_data: Dictionary) -> void:
 			and absf(float(last_f.get("ax", 0.0)) - float(frame_data.get("ax", 0.0))) < 1.0
 			and absf(float(last_f.get("ay", 0.0)) - float(frame_data.get("ay", 0.0))) < 1.0
 		)
-		if is_idle and last_idle and not keep_potion_tick:
+		if is_idle and last_idle and not keep_potion_tick and not keep_defensive_tick:
 			return
 
 	current_recording_frames.append(frame_data)

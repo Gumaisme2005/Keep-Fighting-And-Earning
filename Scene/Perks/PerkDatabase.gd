@@ -224,10 +224,10 @@ static func _init_catalog() -> void:
 	_register(_build_perk(
 		"armor_burst",
 		"Phản Chấn Khiên Kính",
-		"Khi Giáp bị vỡ hoàn toàn, phát nổ một làn sóng xung kích đẩy lùi kẻ thù và gây 3 sát thương.",
+		"Khi Giáp bị vỡ hoàn toàn, gây 1 sát thương và đẩy lùi kẻ thù trong 70px. Hồi chiêu chung: 6 giây.",
 		PerkData.Rarity.EPIC,
 		"24.png",
-		{"armor_break_blast": true, "blast_damage": 3, "blast_radius": 90.0}
+		{"armor_break_blast": true, "blast_damage": 1, "blast_radius": 70.0, "blast_cooldown": 6.0}
 	))
 
 	_register(_build_perk(
@@ -308,10 +308,10 @@ static func _init_catalog() -> void:
 	_register(_build_perk(
 		"celestial_barrier",
 		"Thiên Cầu Hộ Mệnh",
-		"Kết giới thần thánh: +4 Giáp tối đa, thời gian chờ hồi giáp giảm cực nhanh (-1.5s), và nổ chấn động gây 4 sát thương đẩy lùi khi vỡ giáp.",
+		"Kết giới thần thánh: +4 Giáp tối đa, giảm 1.5s chờ hồi giáp. Khi vỡ giáp, gây 2 sát thương và đẩy lùi kẻ thù trong 80px. Hồi chiêu chung: 6 giây; ưu tiên hơn Phản Chấn Khiên Kính.",
 		PerkData.Rarity.LEGENDARY,
 		"46.png",
-		{"bonus_armor": 4, "armor_regen_delay_reduction": 1.5, "armor_break_blast": true, "blast_damage": 4, "blast_radius": 110.0}
+		{"bonus_armor": 4, "armor_regen_delay_reduction": 1.5, "armor_break_blast": true, "blast_damage": 2, "blast_radius": 80.0, "blast_cooldown": 6.0}
 	))
 
 	_catalog_initialized = true

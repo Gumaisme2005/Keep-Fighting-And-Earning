@@ -151,6 +151,21 @@ jobs:
           godot --headless "res://tests/test_potion_system.tscn" 2>&1 | tee "$RUNNER_TEMP/potion_system.log"
           if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/potion_system.log"; then exit 1; fi
 
+      - name: Run Defensive Combat Balance at 30 and 144 Render FPS
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/defensive-combat-data
+        run: |
+          set -euo pipefail
+          for fps in 30 144; do
+            godot --headless --max-fps "$fps" "res://tests/test_defensive_combat_balance.tscn" 2>&1 | tee "$RUNNER_TEMP/defensive_${fps}.log"
+            if grep -Eq '^(SCRIPT ERROR:|ERROR:|\[FAIL\])' "$RUNNER_TEMP/defensive_${fps}.log"; then exit 1; fi
+            grep -Eq '^DEFENSIVE RESULTS: [0-9]+ PASSED, 0 FAILED$' "$RUNNER_TEMP/defensive_${fps}.log"
+            grep '^\[TRACE\]' "$RUNNER_TEMP/defensive_${fps}.log" > "$RUNNER_TEMP/defensive_${fps}.trace"
+          done
+          diff -u "$RUNNER_TEMP/defensive_30.trace" "$RUNNER_TEMP/defensive_144.trace"
+
       - name: 18. Run Tactical Navigation Contract at 30 and 144 Render FPS
         timeout-minutes: 5
         shell: bash

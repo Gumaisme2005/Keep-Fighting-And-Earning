@@ -15,6 +15,7 @@ const BalanceData = preload("res://Scene/BalanceConfig.gd")
 @export var loot_table: Array[ItemData] = []
 @export var drop_chance: float = 0.3
 var loot_seed: int = 0
+var defensive_spawn_order: int = -1
 var _equipment_loot_generated: bool = false
 var _potion_loot_generated: bool = false
 
@@ -37,6 +38,9 @@ var player: Node2D = null
 var enemy_balance_id: String = ""
 
 func _ready() -> void:
+	var gm = get_node_or_null("/root/GameManager")
+	if gm != null and defensive_spawn_order < 0:
+		defensive_spawn_order = gm.allocate_defensive_spawn_order()
 	if not enemy_balance_id.is_empty():
 		_apply_balance_stats()
 	if animated_sprite != null and animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation("idle"):

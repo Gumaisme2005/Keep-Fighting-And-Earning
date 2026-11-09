@@ -46,7 +46,8 @@ func on_enemy_killed() -> void:
 			var players = get_tree().get_nodes_in_group("player")
 			if not players.is_empty() and is_instance_valid(players[0]):
 				var p = players[0]
-				if p.hp < p.max_hp:
+				# Deferred retaliation may kill an enemy after its owner has died.
+				if p.get("is_dead") != true and p.hp < p.max_hp:
 					p.hp = mini(p.max_hp, p.hp + 1)
 					if p.has_signal("stats_changed"):
 						p.stats_changed.emit(p.hp, p.max_hp, p.current_armor, p.max_armor)
@@ -256,10 +257,22 @@ func has_lightning_on_hit() -> bool:
 	return false
 
 func has_armor_break_blast() -> bool:
+	return not get_armor_break_blast_config().is_empty()
+
+func get_armor_break_blast_config() -> Dictionary:
+	# One effect per break: damage first, then radius. Never sum both perks.
+	var strongest: Dictionary = {}
 	for p in active_perks:
-		if bool(p.get_modifier("armor_break_blast", false)):
-			return true
-	return false
+		if p == null or not bool(p.get_modifier("armor_break_blast", false)):
+			continue
+		var damage := int(p.get_modifier("blast_damage", 1))
+		var radius := float(p.get_modifier("blast_radius", 70.0))
+		var cooldown := float(p.get_modifier("blast_cooldown", 6.0))
+		if damage <= 0 or radius <= 0.0 or cooldown <= 0.0:
+			continue
+		if strongest.is_empty() or damage > int(strongest.damage) or (damage == int(strongest.damage) and radius > float(strongest.radius)):
+			strongest = {"damage": damage, "radius": radius, "cooldown": cooldown}
+	return strongest
 
 func has_second_chance() -> bool:
 	if second_chance_used:

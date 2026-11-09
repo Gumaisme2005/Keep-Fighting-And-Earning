@@ -37,6 +37,15 @@ const POTION_COOLDOWN: float = 8.0
 var potion_max_hp_gained: int = 0
 var potion_cooldown_remaining: float = 0.0
 
+const THORNS_DAMAGE_RATIO: float = 0.30
+const THORNS_BOSS_RATIO: float = 0.50
+const THORNS_RADIUS: float = 70.0
+const THORNS_MAX_TARGETS: int = 2
+const THORNS_COOLDOWN: float = 2.0
+var thorns_cooldown_remaining: float = 0.0
+var armor_break_cooldown_remaining: float = 0.0
+var _defensive_effect_generation: int = 0
+
 var is_dead: bool = false
 var is_attacking: bool = false
 var is_hurt: bool = false
@@ -78,8 +87,11 @@ func _ready() -> void:
 	if gm != null:
 		potion_max_hp_gained = gm.potion_max_hp_gained
 		potion_cooldown_remaining = gm.potion_cooldown_remaining
+		thorns_cooldown_remaining = gm.thorns_cooldown_remaining
+		armor_break_cooldown_remaining = gm.armor_break_cooldown_remaining
 	# Physics-frame signal also covers heroes that override _physics_process().
 	get_tree().physics_frame.connect(_tick_potion_cooldown)
+	get_tree().physics_frame.connect(_tick_defensive_cooldowns)
 
 	regen_delay_timer = Timer.new()
 	regen_delay_timer.one_shot = true
@@ -265,7 +277,7 @@ func use_special_skill() -> void:
 	pass
 
 func take_damage(amount: int) -> void:
-	if is_dead or is_invincible or amount <= 0:
+	if is_dead or is_invincible or amount <= 0 or not is_inside_tree() or not can_process() or is_queued_for_deletion():
 		return
 
 	if get_node_or_null("/root/AudioManager") != null:
@@ -275,6 +287,8 @@ func take_damage(amount: int) -> void:
 	regen_delay_timer.start()
 
 	var had_armor: bool = current_armor > 0
+	var hp_before := hp
+	var actual_hp_lost: int = 0
 	if current_armor >= amount:
 		current_armor -= amount
 		if get_tree():
@@ -283,16 +297,16 @@ func take_damage(amount: int) -> void:
 		var overflow_damage = amount - current_armor
 		current_armor = 0
 		hp = max(0, hp - overflow_damage)
+		actual_hp_lost = clampi(hp_before - hp, 0, maxi(0, hp_before))
 		if get_tree():
 			get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -24), overflow_damage, Color(1.0, 0.25, 0.25))
 
-	if had_armor and current_armor == 0 and get_node_or_null("/root/PerkManager") != null:
-		if PerkManager.has_armor_break_blast():
-			_trigger_armor_break_blast()
+	if had_armor and current_armor == 0:
+		_trigger_armor_break_blast()
 
 	# HIỆU ỨNG ĐẶC BIỆT CỦA GIÁP MYTHIC: DIVINE RETALIATION (PHẢN ĐÒN)
-	if inventory != null and inventory.has_method("has_mythic_armor") and inventory.has_mythic_armor():
-		_trigger_mythic_thorns(amount)
+	if actual_hp_lost > 0 and inventory != null and inventory.has_method("has_mythic_armor") and inventory.has_mythic_armor():
+		_trigger_mythic_thorns(actual_hp_lost)
 
 	stats_changed.emit(hp, max_hp, current_armor, max_armor)
 
@@ -516,17 +530,112 @@ func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
 
 	return final_dmg
 
-func _trigger_mythic_thorns(incoming_damage: int) -> void:
-	var reflect_dmg: int = maxi(3, int(incoming_damage * 0.75))
-	var enemies = get_tree().get_nodes_in_group("enemies")
-	for e in enemies:
-		if is_instance_valid(e) and not bool(e.get("is_dead")):
-			var dist = global_position.distance_to(e.global_position)
-			if dist <= 95.0:
-				if e.has_method("take_damage"):
-					e.call_deferred("take_damage", reflect_dmg)
-					if get_tree():
-						get_tree().call_group("game_ui", "spawn_damage_number", e.global_position + Vector2(0, -22), reflect_dmg, Color(1.0, 0.3, 0.35))
+func _sync_defensive_run_state() -> void:
+	var gm = get_node_or_null("/root/GameManager")
+	if gm != null:
+		gm.thorns_cooldown_remaining = thorns_cooldown_remaining
+		gm.armor_break_cooldown_remaining = armor_break_cooldown_remaining
+
+func _tick_defensive_cooldowns() -> void:
+	if not can_process() or is_dead or is_queued_for_deletion():
+		return
+	if thorns_cooldown_remaining <= 0.0 and armor_break_cooldown_remaining <= 0.0:
+		return
+	var delta := get_physics_process_delta_time()
+	thorns_cooldown_remaining = maxf(0.0, thorns_cooldown_remaining - delta)
+	armor_break_cooldown_remaining = maxf(0.0, armor_break_cooldown_remaining - delta)
+	if thorns_cooldown_remaining < 0.000001:
+		thorns_cooldown_remaining = 0.0
+	if armor_break_cooldown_remaining < 0.000001:
+		armor_break_cooldown_remaining = 0.0
+	_sync_defensive_run_state()
+
+func reset_defensive_effects() -> void:
+	thorns_cooldown_remaining = 0.0
+	armor_break_cooldown_remaining = 0.0
+	_defensive_effect_generation += 1
+	_sync_defensive_run_state()
+
+func _exit_tree() -> void:
+	_defensive_effect_generation += 1
+
+func _is_defensive_target_valid(target: Node) -> bool:
+	return is_instance_valid(target) and target is Node2D and target != self \
+		and target.is_inside_tree() and not target.is_queued_for_deletion() \
+		and not target.is_in_group("player") and target.get("is_dead") != true \
+		and target.get("is_active") != false and target.has_method("take_damage")
+
+func _defensive_target_less(a: Node2D, b: Node2D) -> bool:
+	var distance_a := global_position.distance_squared_to(a.global_position)
+	var distance_b := global_position.distance_squared_to(b.global_position)
+	if distance_a != distance_b:
+		return distance_a < distance_b
+	# Equal-distance ties: world coordinates, seeded identity, then deterministic
+	# run-local spawn order. Never use group iteration order or Object instance IDs.
+	if a.global_position.x != b.global_position.x:
+		return a.global_position.x < b.global_position.x
+	if a.global_position.y != b.global_position.y:
+		return a.global_position.y < b.global_position.y
+	var seed_a: int = int(a.get("loot_seed")) if a.get("loot_seed") != null else 0
+	var seed_b: int = int(b.get("loot_seed")) if b.get("loot_seed") != null else 0
+	if seed_a != seed_b:
+		return seed_a < seed_b
+	var order_a: int = int(a.get("defensive_spawn_order")) if a.get("defensive_spawn_order") != null else -1
+	var order_b: int = int(b.get("defensive_spawn_order")) if b.get("defensive_spawn_order") != null else -1
+	if order_a != order_b:
+		return order_a < order_b
+	# Bosses do not inherit BaseEnemy; their script paths identify boss types.
+	var script_a: Script = a.get_script()
+	var script_b: Script = b.get_script()
+	var key_a := script_a.resource_path if script_a != null else a.scene_file_path
+	var key_b := script_b.resource_path if script_b != null else b.scene_file_path
+	if key_a != key_b:
+		return key_a < key_b
+	# Authored names cover hand-placed targets; ignore auto-generated runtime names.
+	var name_a := "" if String(a.name).begins_with("@") else String(a.name)
+	var name_b := "" if String(b.name).begins_with("@") else String(b.name)
+	return name_a < name_b
+
+func _get_defensive_targets(radius: float) -> Array[Node2D]:
+	var targets: Array[Node2D] = []
+	for target in get_tree().get_nodes_in_group("enemies"):
+		if _is_defensive_target_valid(target) and global_position.distance_squared_to(target.global_position) <= radius * radius:
+			targets.append(target)
+	targets.sort_custom(_defensive_target_less)
+	return targets
+
+func _queue_defensive_damage(target: Node2D, amount: int, push: Vector2 = Vector2.ZERO) -> void:
+	var gm = get_node_or_null("/root/GameManager")
+	var floor_level: int = gm.current_level if gm != null else 0
+	_apply_defensive_damage.call_deferred(weakref(target), weakref(target.get_parent()), amount, push, _defensive_effect_generation, floor_level)
+
+func _apply_defensive_damage(target_ref: WeakRef, parent_ref: WeakRef, amount: int, push: Vector2, generation: int, floor_level: int) -> void:
+	if not is_inside_tree() or is_queued_for_deletion() or generation != _defensive_effect_generation:
+		return
+	var gm = get_node_or_null("/root/GameManager")
+	if gm != null and gm.current_level != floor_level:
+		return
+	var target: Node2D = target_ref.get_ref()
+	if not _is_defensive_target_valid(target) or target.get_parent() != parent_ref.get_ref():
+		return
+	if target is CharacterBody2D:
+		target.velocity += push
+	# Target APIs own their popups and death/phase logic. Do not emit a duplicate number.
+	# A legitimate lethal hit may still retaliate, even though its owner has since died.
+	target.take_damage(amount)
+
+func _trigger_mythic_thorns(actual_hp_lost: int) -> void:
+	if actual_hp_lost <= 0 or thorns_cooldown_remaining > 0.0:
+		return
+	thorns_cooldown_remaining = THORNS_COOLDOWN
+	_sync_defensive_run_state()
+	# Floor each percentage step independently, then clamp to the one-damage minimum.
+	var reflected := maxi(1, floori(actual_hp_lost * THORNS_DAMAGE_RATIO))
+	var targets := _get_defensive_targets(THORNS_RADIUS)
+	for i in range(mini(THORNS_MAX_TARGETS, targets.size())):
+		var target := targets[i]
+		var amount := maxi(1, floori(reflected * THORNS_BOSS_RATIO)) if target.is_in_group("boss") else reflected
+		_queue_defensive_damage(target, amount)
 
 func _trigger_chain_lightning(primary_target: Node2D) -> void:
 	var enemies = get_tree().get_nodes_in_group("enemies")
@@ -544,20 +653,20 @@ func _trigger_chain_lightning(primary_target: Node2D) -> void:
 					break
 
 func _trigger_armor_break_blast() -> void:
-	if get_tree():
-		get_tree().call_group("game_ui", "show_banner", "AEGIS SHATTERED - SHOCKWAVE!", Color(0.6, 0.3, 0.9))
-	var enemies = get_tree().get_nodes_in_group("enemies")
-	for e in enemies:
-		if is_instance_valid(e) and not bool(e.get("is_dead")):
-			var dist = global_position.distance_to(e.global_position)
-			if dist <= 90.0:
-				var push_dir = (e.global_position - global_position).normalized()
-				if e is CharacterBody2D:
-					e.velocity += push_dir * 180.0
-				if e.has_method("take_damage"):
-					e.take_damage(3)
-					if get_tree():
-						get_tree().call_group("game_ui", "spawn_damage_number", e.global_position + Vector2(0, -24), 3, Color(0.7, 0.4, 1.0))
+	if armor_break_cooldown_remaining > 0.0:
+		return
+	var pm = get_node_or_null("/root/PerkManager")
+	if pm == null:
+		return
+	var config: Dictionary = pm.get_armor_break_blast_config()
+	if config.is_empty():
+		return
+	armor_break_cooldown_remaining = float(config.cooldown)
+	_sync_defensive_run_state()
+	get_tree().call_group("game_ui", "show_banner", "AEGIS SHATTERED - SHOCKWAVE!", Color(0.6, 0.3, 0.9))
+	for target in _get_defensive_targets(float(config.radius)):
+		var push := (target.global_position - global_position).normalized() * 180.0
+		_queue_defensive_damage(target, int(config.damage), push)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if is_dead:
