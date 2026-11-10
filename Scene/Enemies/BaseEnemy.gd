@@ -70,7 +70,8 @@ func _find_player() -> void:
 	player = null
 	var players = get_tree().get_nodes_in_group("player")
 	for p in players:
-		if is_instance_valid(p) and not p.is_queued_for_deletion():
+		# Sword hitboxes also use this group; AI and low-HP loot need the hero.
+		if is_instance_valid(p) and not p.is_queued_for_deletion() and p is Node2D and not p is Area2D:
 			player = p
 			return
 

@@ -1,3 +1,247 @@
+# Issue #75: seventh corrective commit acceptance
+
+**PASS WITH LIMITATIONS for the compatible correctness fixes. Full gameplay balance acceptance remains FAIL.** Numerical progression has not been tuned: actual starting-commit and corrected results match across all 540 phase-matched rows. Mandatory rules and earned +2 HP descents are preserved. Interactive floor-1-to-floor-6 fairness and remote CI on this unpushed commit remain NOT VERIFIED.
+
+## Confirmed defects and production changes
+
+| Production file | Reproduced defect | Corrected gameplay behavior |
+|---|---|---|
+| `Scene/Enemies/BaseEnemy.gd` | Group order can select a sword Area2D as the player. AI targets the hitbox and the 4% low-HP potion rate becomes 2%, because the hitbox owns no health. | Skip Area2D group members, preserving the existing spatial-target interface. A real wounded hero is selected. No RNG draws or rates changed. |
+| `Scene/Character/Miyabi/miyabi_util.gd` | On-hit resolution only checks player group index zero. Reparented hitboxes can suppress critical/burn/Mythic effects. The static enemy cache is keyed only by physics frame, so two worlds queried within one frame share targets. | Find the actual effect owner in the supplied world once. Key the cache by frame and weak world identity. No damage budgets, proc values, crit caps or attack multipliers changed. |
+
+Four focused assertions failed on original production and all 61 pass after correction. No extra equipment/stat duplication was found. These fixes address incorrect target ownership and missed effects; they do **not** explain or repair high early median armor/damage. Under previously correct group ordering, before/after numerical progression and combat samples are identical. Late progression is therefore unchanged in this model.
+
+## Equipment and combat root causes
+
+Ordinary enemies use their separate 5% equipment gate and the exact enemy rarity matrix. Bosses use the exact boss matrix for one direct equipment roll. Each victory spawns two chests, each retaining the authored 80% gate for two equipment items, plus one guaranteed Rare potion independent of that gate. Ordinary treasure chests retain all six legacy entries and their 80% gate. No enemy matrix was incorrectly applied to that authored legacy pool: the Issue explicitly preserves treasure rewards.
+
+The legacy sword is genuinely Legendary, +5 damage and +0.15 attack speed; it is not a mislabeled Common or a duplicated catalog item. Its probability is 0.8/6 = 13.33% per opened ordinary chest. Normal-policy equipped legacy-sword counts at exits 1–6 are **4/12/16/18/18/18 of 30**. Floor one still has 19 of 30 high-damage outcomes without that sword. Boss equipment is a major independent contributor: base 2 armor plus Rare armor 2 plus Rare helmet 1 gives 5, with no repeated bonus. Even two Common armor pieces bring base armor 2 to 4, already above the floor-one exit target 2–3.
+
+Damage later plateaus because a Legendary weapon remains +5 while ordinary floors 5–6 forbid Mythic equipment; boss Mythics remain rare. Base damage and authored flat perks add once. Berserk uses the bounded missing-HP ratio. Skills, combo finishers and spirit bolts are separate damage events, not duplicated primary damage. Equipment swaps recalculate three independent slots; perk and earned/potion HP contributions remain independent. All exact item resources and temporary hero ability values are unchanged.
+
+Every equipped item now records its original reward source, acquisition floor, actual rarity, catalog/legacy identity, base damage/armor/HP and active perk modifiers in the new raw JSON. Source metadata lives only in the scenario harness and survives real WorldItem pickup, inventory duplication and equipment swaps. No gameplay telemetry or new item format was introduced.
+
+## Phase-matched normal-policy progression
+
+Medians below compare floor exit after boss/chest rewards and before the portal perk/descent HP. Entry and exit minimum/median/maximum, target coverage, missing/outlier seeds, exact source attribution and proposal results for every policy are in `ISSUE_75_PROGRESSION_DISTRIBUTIONS.md` and `issue75_acceptance_statistics.json`. Null coverage means no target was specified, not a fabricated PASS.
+
+| Floor | HP before → after | Armor before → after | Damage before → after | Orc primary hits before → after |
+|---:|---|---|---|---|
+| 1 | 6 → 6 | 5 → 5 | 3.5 → 3.5 | 1.5 → 1.5 |
+| 2 | 10 → 10 | 7 → 7 | 6 → 6 | 2 → 2 |
+| 3 | 13 → 13 | 8 → 8 | 6 → 6 | 2 → 2 |
+| 4 | 16 → 16 | 9 → 9 | 7 → 7 | 3 → 3 |
+| 5 | 20 → 20 | 10 → 10 | 7 → 7 | 3 → 3 |
+| 6 | 23.5 → 23.5 | 12 → 12 | 7.5 → 7.5 | 3 → 3 |
+
+All 90 controlled reward routes reach and complete floor six; this is **not** a 100% gameplay survival estimate. Boss success is assumed and each combat-room event receives one accepted hit followed by 20 simulated seconds of rest. The starting Miyabi scene remains 4 HP / 2 armor / 1 damage; floor-one entry cannot simultaneously satisfy a 5–7 HP target without changing that definition.
+
+## Proposed specification change, not enabled
+
+The test-only alternative replaces only the Legendary sword entry on floors 1–4 with existing Common/Rare/Heroic/Heroic weapons. It preserves six equally weighted entries, the gate, all seeds/RNG draws, chest counts/visuals, potions and all boss rewards. Enable only in the scenario harness with `ISSUE75_TREASURE_PROPOSAL=1`; no production switch or difficulty mode exists.
+
+Normal-policy exit damage medians become **3/4/5/6/7/7** versus **3.5/6/6/7/7/7.5**. Orc hit medians become **2/2/2.5/3/3/4** versus **1.5/2/2/3/3/3**. Armor remains unchanged. The proposal affects damage in 4/12/15/14/8/3 seeds by floor. It improves some early outcomes but still misses early targets and worsens the floor-six median. It is not recommended as a complete balance solution and is not silently applied as a bug fix. Revisions to treasure eligibility or protected boss acquisition need an explicit tester decision.
+
+## Potion economy
+
+Exact normal-policy totals across 30 six-floor scenarios follow. Available means distinct units supplied across a complete route; per-floor available also includes carried inventory and is reported separately in the statistics. The starter potion is excluded from generated reward totals. After identical potions merge, consumption provenance uses FIFO within the same item name; sources are mechanically interchangeable. Ground units abandoned on descent are discarded once; rejected pickup attempts do not create inventory.
+
+| Source | Generated reward units | Collected | Consumed | Discarded | Floor-six inventory |
+|---|---:|---:|---:|---:|---:|
+| ordinary | 220 | 65 | 37 | 155 | 28 |
+| pity | 127 | 34 | 18 | 93 | 16 |
+| boss_guaranteed | 360 | 119 | 76 | 241 | 43 |
+| other_chest | 89 | 21 | 12 | 68 | 9 |
+
+Totals: **796 generated, 239 collected, 143 consumed, 557 discarded, 96 reward units still carried**. Separately, 30 starter units yield 7 consumed and 23 carried. All per-seed ledgers conserve units. All policies and each source's minimum/median/maximum appear in the new JSON and distributions. The original normal-policy median remains 26 generated / 8 collected / 5 consumed per route. Much supply remains unused; four-unit capacity and eight-second cooldown limit immediately usable healing. This model does not establish the potion needs of active boss combat.
+
+**SPECIFICATION CONFLICT:** two guaranteed boss potions times six floors already supply 12. Required 2% enemy drops, low-HP bonus, 45-kill pity and retained treasure potions make 10–12 total generated units infeasible as a general six-floor acceptance target. No mandatory reward is omitted from reporting. Potion rolls, independent RNG, new-run/floor resets, rejected/partial/repeated pickup behavior, four-unit capacity and +4 HP cap remain covered by exact assertions in the potion, equipment and progression suites; source conservation adds new checks.
+
+## Actual combat-path scenarios and limitations
+
+`test_issue75_acceptance` uses the real Miyabi and Orc scenes, one replay input click and actual animation-event dispatch, not direct damage assignment. It repeats the animation callback to verify one primary hit, and records requested primary damage, bounded HP reduction, deferred proc reduction, critical events, true HP reduction, input count, accepted versus attempted enemy attacks, effective armor and player HP loss. It also checks starter/Common/Rare gear, a legitimate Legendary outlier, six representative normal-policy earned loadouts and crit/burn perks. Damage totals conserve actual Orc HP.
+
+Starter/Common-only/Rare-only floor-one Orc kills require **4/2/2 input attacks**. The authored Legendary requires one, an expected rare acquisition outlier. Crit/burn floor-three combat uses three inputs, including two crits and two actual extra burn HP lost. Representative earned floor-1-to-6 loadouts require **2/2/2/3/4/4** inputs in these chosen fixtures. These fixtures exclude spirit shots and skill/finisher multipliers; existing hero suites separately cover normal combos, skills, spirit, forms and buffs. They are scripted interactions, not a moving interactive six-floor run.
+
+Idle nine-Orc fixtures at floors five and six use earned vitality, Godplate Thorns and Epic Armor Break. Players lose 17 and 19 HP respectively and die after six accepted enemy attacks, while all nine Orcs survive. Deferred retaliation executes between attacks. Existing defensive/enemy-floor assertions cover penetration, armor regeneration, boss reduction, phase progression, normal/special/projectile sources, terminal rewards and invalid-object safety. No passive room-clear, duplicate kill reward or combat deadlock occurs in these fixtures. Boss/AI regression success does not prove interactive fairness.
+
+## Regression execution and reproducibility
+
+Godot **4.7.2.stable.official.ed1daf0bf**, Windows headless. Runs use a copied project under `.godot/issue75_acceptance/project` and disposable APPDATA/LOCALAPPDATA/XDG profiles, preserving real user saves. Exit codes, logged failures, parser/runtime errors, completion markers, bounded timeouts and traces were checked. Existing CI gates remain; one additional 30/144 FPS acceptance gate checks zero failures and identical traces.
+
+`issue75_acceptance_regressions.json` contains exact native argument arrays, counts, completion evidence, durations, normalized trace SHA-256 and full-log SHA-256. Normalized trace hashes join `[TRACE]` lines with LF and no trailing newline. This differs from hashing the JSON samples alone. Logs remain locally under `.godot/issue75_acceptance`.
+
+| Suite | FPS | Reported PASS / FAIL or completion |
+|---|---:|---|
+| test_issue75_progression_balance | 144 | 35842 / 0 |
+| test_issue75_acceptance | 144 | 61 / 0 |
+| test_potion_system | 144 | 124 / 0 |
+| test_defensive_combat_balance | 144 | 232 / 0 |
+| test_equipment_loot_perk_balance | 144 | 319 / 0 |
+| test_enemy_floor_balance | 144 | 1053 / 0 |
+| test_perk_system | 144 | 41 / 0 |
+| test_moba_hud_and_inventory | 144 | 159 / 0 |
+| test_replay_security | 144 | 39 / 0 |
+| test_miyabi | 144 | 18 / 0 |
+| test_luong_tho | 144 | 15 / 0 |
+| test_doraemon | 144 | 49 / 0 |
+| test_yugi | 144 | exit 0; completion marker verified |
+| test_skeleton_king | 144 | exit 0; completion marker verified |
+| test_orc_battle | 144 | 5 / 0 |
+| test_enemy_tactics | 144 | 94 / 0 |
+| test_enemy_ai_integration | 144 | 48 / 0 |
+| test_tactical_base_enemy_integration | 144 | 49 / 0 |
+| test_orc_tactical_ai | 144 | 82 / 0 |
+| test_archer_tactical_ai | 144 | 120 / 0 |
+| test_tactical_navigation_contract | 144 | 49 / 0 |
+| test_werewolf | 144 | 50 / 0 |
+| test_archer_combat_lifecycle | 144 | 12 / 0 |
+| test_projectile_obstacles | 144 | exit 0; completion marker verified |
+| test_dungeon_generator_unit | 144 | 28 / 0 |
+| test_dungeon_properties | 144 | exit 0; completion marker verified |
+| benchmark_dungeon_generator | 144 | 125 benchmark generations / exit 0 |
+| test_defensive_combat_balance | 30 | 232 / 0 |
+| test_equipment_loot_perk_balance | 30 | 319 / 0 |
+| test_enemy_floor_balance | 30 | 1053 / 0 |
+| test_issue75_acceptance | 30 | 61 / 0 |
+| test_issue75_progression_balance | 30 | 35842 / 0 |
+| test_orc_tactical_ai | 30 | 82 / 0 |
+| test_archer_tactical_ai | 30 | 120 / 0 |
+| test_enemy_ai_integration | 30 | 48 / 0 |
+| test_tactical_navigation_contract | 30 | 49 / 0 |
+| test_tactical_base_enemy_integration | 30 | 49 / 0 |
+| test_werewolf | 30 | 50 / 0 |
+| import | 144 | exit 0; completion marker verified |
+
+Matched 30/144 FPS normalized trace hashes:
+
+| Suite | SHA-256 |
+|---|---|
+| test_defensive_combat_balance | `12aefdf81e913cfd897a98b4bffa35eb543b3264d0480334d9bfb4a50111d292` |
+| test_equipment_loot_perk_balance | `a518c20d051ac82b711342e96d8d7fe1281e576144e8087ac88081d6e458eceb` |
+| test_enemy_floor_balance | `cf155464abe09b00e8de3770917c5fa4606dab4a8f17af89974b43aa9a325821` |
+| test_issue75_acceptance | `f537b792584ed557193ebeadd83161317c715ee9ef00983338c0de71e523ab1f` |
+| test_issue75_progression_balance | `ed9e8a989ef4c300a8804ec9e832dea9394f8dc2df3338d0010c1d4a4a3e08cc` |
+| test_orc_tactical_ai | `137b64474c7f16217a46272ae9d57d91fdad1d04a913c4f1db2eb16cb7c5f81c` |
+| test_archer_tactical_ai | `79f7df575fea9675bb7b80e60720d3fed5b280456723f05e280affe51fae78b4` |
+| test_enemy_ai_integration | `c554d0f6f6b8d44d030054c9ace5a4a6d6040db532163082c1b4aab1b71da407` |
+| test_tactical_navigation_contract | `72c8689737ddda84b36bcec5c6b485630719a0da5efdefae7097ba2c57aafb38` |
+
+The full progression suite passes **35,842 / 0 at each FPS**, with all 540 raw rows identical. The new focused suite passes **61 / 0 at each FPS**. Actual starting production passes **34,762 / 0** and matches the preserved sixth-commit samples exactly. Proposed treasure policy passes invariants but is never labeled balance acceptance PASS.
+
+Initial sandbox runs failed certificate/settings access; execution was retried outside the sandbox with disposable profiles. During development, a test-only variable type error and an overly strict player filter caused failures. The variable and production filter were corrected; all affected suites were rerun successfully, with no weakened/removed assertions. Superseded failed attempts remain identified in the regression evidence. Final results exclude those failed revisions explicitly.
+
+Final benchmark means: **65.41/121.16/205.15/320.33/459.66 ms** for 10/16/25/36/50 rooms, 25 runs each. This is execution evidence, not a controlled performance improvement claim. The pre-existing duplicate Archer scene/script UID warning remains; final import has exit 0 and no parser/runtime errors. Interactive playtesting is unavailable in this session. Remote CI for the new local commit is NOT VERIFIED.
+
+Reproduce the runner (Python 3.12; use your local engine path):
+
+```powershell
+$Godot = 'C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe'
+python tests/run_issue75_acceptance.py --godot $Godot --prepare --import-project --label final --fps 144
+python tests/run_issue75_acceptance.py --godot $Godot --label final-progression --fps 144 --suites test_issue75_progression_balance
+python tests/run_issue75_acceptance.py --godot $Godot --label comparison --fps 30 --suites test_defensive_combat_balance test_equipment_loot_perk_balance test_enemy_floor_balance test_issue75_acceptance test_issue75_progression_balance test_orc_tactical_ai test_archer_tactical_ai test_enemy_ai_integration test_tactical_navigation_contract test_tactical_base_enemy_integration
+python tests/run_issue75_acceptance.py --godot $Godot --label proposal --treasure-proposal --fps 144 --suites test_issue75_progression_balance
+python tests/summarize_issue75_acceptance.py
+```
+
+The complete 144 FPS suite list and each exact engine command are recorded in the regression JSON. The original historical `ISSUE75_BASELINE=1` counterfactual is still supported, but is never used for this actual starting-commit comparison. Prior baselines, distributions, manifests and original tests remain intact. New artifacts have separate `issue75_acceptance_*` names and their hashes are in the acceptance manifest.
+
+## Requirement-by-requirement acceptance matrix
+
+For unchanged numerical rules, the preserved matrix below was revalidated with the same exact resource, boundary, event and timing assertions in the freshly executed suites: **P** potion, **D** defense, **E** equipment, **F** enemy-floor, **U** dungeon properties, **K** Skeleton King. PASS describes the asserted rule/event, never merely a successful process exit. Statistical targets are judged separately using normal-policy exit medians, with per-seed misses disclosed above and in the distributions.
+
+
+Evidence abbreviations: **P** = `test_potion_system`; **D** = `test_defensive_combat_balance`; **E** = `test_equipment_loot_perk_balance`; **F** = `test_enemy_floor_balance`; **U** = dungeon unit/property suites; **K** = Skeleton King suite. The exact final execution totals appear above. PASS here describes a code rule or tested event, not interactive playability.
+
+| Requirement | Expected | Verified actual | Evidence | Status |
+|---|---|---|---|---|
+| Potion: Common | Heal 3, no maximum HP | Resource and consumption match | P resources/healing | PASS |
+| Potion: Rare | Heal 5, no maximum HP | Resource and consumption match | P resources/healing | PASS |
+| Potion: Heroic | Heal 8, +1 maximum HP | Matches, bounded by run cap | P resources/healing | PASS |
+| Potion: Legendary | Heal 12, +2 maximum HP | Matches, bounded by run cap | P resources/healing | PASS |
+| Potion maximum HP | +4 per run, retained across floors, reset on new run | Matches | P lifecycle; F samples | PASS |
+| Potion cooldown | Shared 8 seconds | Matches; physics callback covers all heroes | P; D hero timing; F simulated consumption | PASS |
+| Potion inventory | Four units total, partial pickups safe | Matches | P inventory/pickups; F caps | PASS |
+| Separate potion roll | 2% baseline, independent equipment stream | Matches | P drop rules; E actual enemy loot | PASS |
+| Low HP bonus | +2 percentage points strictly below 40% | 4% before existing perk multiplier | P boundaries; GameManager audit | PASS |
+| Potion pity | Guaranteed by 45th eligible kill without drop | Matches, run reset retained | P pity/lifecycle | PASS |
+| Boss chest potion | One guaranteed Rare per chest | Matches; two victory chests retain two equipment rolls each | P chests; F room completion | PASS |
+| Thorns condition | Only actual bounded HP loss | Absorption does not proc; penetration with armor does | D core; F piercing interaction | PASS |
+| Thorns amount | Floor 30%, minimum 1 | Matches | D rounding; BasePlayer audit | PASS |
+| Thorns reach/count | 70 px, nearest two maximum | Matches, deterministic ties | D target selection | PASS |
+| Thorns cooldown | 2 seconds, pause/floor/reset safe | Matches at 30/144 FPS | D physics observer and trace | PASS |
+| Thorns boss reduction | Half reflection, minimum 1 | Matches, boss API immunity respected | D bosses | PASS |
+| Epic Armor Break | 1 damage / 70 px / 6 seconds | Matches | D blast configuration/events | PASS |
+| Legendary Armor Break | 2 damage / 80 px / 6 seconds | Matches; strongest effect only | D blast configuration/events | PASS |
+| Armor Break trigger | Positive armor to zero only | Penetration alone does not proc | D; F real damage interaction | PASS |
+| Common equipment | Weapon +1; armor 1/0 HP; helmet 1/0 HP | Matches all registered and legacy resources | E resource audit | PASS |
+| Rare equipment | Weapon +2; armor 2/1 HP; helmet 1/1 HP | Matches | E resource audit | PASS |
+| Heroic equipment | Weapon +3; armor 3/2 HP; helmet 2/1 HP | Matches | E resource audit | PASS |
+| Legendary equipment | Weapon +5; armor 4/3 HP; helmet 3/2 HP | Matches | E resource audit | PASS |
+| Mythic equipment | Weapon +6; armor 5/5 HP; helmet 4/3 HP | Matches, with authored Excalibur exception | E resource audit | PASS |
+| Attack speed equipment | Legendary +0.15; Mythic +0.20 | Matches; all eight attack implementations apply once | E hero attack rates | PASS |
+| Excalibur | 6 damage / 2 armor / 2 HP, 25% extra 2 | Matches | E mythic resources/procs | PASS |
+| Godplate | 5 armor / 5 HP, bounded Thorns | Matches | E; D | PASS |
+| Earendil | 4 armor / 3 HP, 25% extra 3 | Matches | E mythic resources/procs | PASS |
+| Ordinary equipment drop | 5%, equipment only | Matches | E actual drops; BaseEnemy/config audit | PASS |
+| Ordinary rarity, C/R/H/L/M | 75/22/3/0/0; 50/36/12/2/0; 30/38/24/8/0; 15/28/32/24/1 | Exact bands 1â€“2, 3â€“4, 5â€“6, 7+ | E boundaries and sampling | PASS |
+| Boss rarity, R/H/L/M | 60/35/5/0; 40/45/15/0; 20/45/31/4; 5/30/55/10 | Exact bands, no Common | E boundaries and sampling | PASS |
+| Independent loot RNG | Potion draws do not perturb equipment rolls | Independent seeded streams retained | P; E deterministic drop fixtures | PASS |
+| Ordinary HP | Required exponential +3-per-floor formula | Every class/floor matches initialized HP table | F actual scenes/spawner | PASS |
+| Boss HP | Required exponential +20-per-floor formula | Five examples exact; King crystal budget remains functional | F; K | PASS |
+| Enemy damage | Bonuses 0/1/1/2/2/3, applied once | Melee/projectile/special/minion paths match | F source events and stat tables | PASS |
+| Enemy penetration | 0/0/0/30/30/40%, minimum 1 | Conserved damage, real sources, no global-floor inference | F accounting/sources/all heroes | PASS |
+| Enemy density | 3â€“7, 3â€“8, 4â€“9, 4â€“10, 5â€“11, 5â€“11; 6â€“11 afterward | Exact effective generation/planning; safe shortage policy | F; U | PASS |
+| Runtime initialization | Scaling survives ready/subclass/activation/new generation | Matches, resources immutable and no compounding | F real spawner and repeated initialization | PASS |
+| Boss compatibility | Phases, immunity, UI, summons, death/rewards/room completion | Preserved; rotation unchanged | F; K | PASS |
+| Berserk ratio | Missing HP / maximum HP | Bounded ratio query | E; PerkManager/BasePlayer audit | PASS |
+| Berserk damage/speed caps | +100% damage / +40 speed | Matches | E caps | PASS |
+| Critical caps | 50% chance / 2.5 multiplier | Matches | E caps and seeded combat | PASS |
+| Chain Lightning | One secondary / 1 damage / 0.5 seconds | Matches, shared perk/Mythic cooldown | E lightning lifecycle | PASS |
+| Maximum armor | 12 | Setter clamps max/current; raw perk state retained | E caps; F samples | PASS |
+| Armor regeneration delay | Baseline 5 seconds after damage | Matches; existing reduction perks remain applicable | E timing; F piercing interruption | PASS |
+| Armor regeneration rate | One armor each 1.5 seconds | Matches | E real timer tests | PASS |
+| Earned vitality | +2 on eligible descent, at most +10 | Lifecycle assertions for all eight heroes, repeat/revisit/recreation/reset/death/perk/potion separation | Progression lifecycle | PASS |
+| Player identity | Hero, not sword hitbox | Reproduced failure becomes correct AI/low-HP/on-hit owner | Acceptance identity | PASS |
+| World identity | Enemy cache cannot cross worlds in one physics frame | Separate real Orc worlds return their own targets | Acceptance cache | PASS |
+| Reward uniqueness | No repeated chest/room/enemy grants | Existing terminal guards, duplicate-call and pickup assertions, exact source conservation | P/E/F/progression | PASS |
+| HP, floor 1 exit | [5, 7] | median 6; 90.0% inside; 3/30 outliers | Paired 30-seed normal policy | PASS |
+| Armor, floor 1 exit | [2, 3] | median 5; 0.0% inside; 30/30 outliers | Paired 30-seed normal policy | FAIL |
+| Damage, floor 1 exit | [1, 2] | median 3.5; 23.3% inside; 23/30 outliers | Paired 30-seed normal policy | FAIL |
+| Orc hits, floor 1 exit | [2, 4] | median 1.5; 50.0% inside; 15/30 outliers | Paired 30-seed normal policy | FAIL |
+| HP, floor 2 exit | [8, 10] | median 10; 66.7% inside; 10/30 outliers | Paired 30-seed normal policy | PASS |
+| Armor, floor 2 exit | [3, 4] | median 7; 0.0% inside; 30/30 outliers | Paired 30-seed normal policy | FAIL |
+| Damage, floor 2 exit | [2, 3] | median 6; 10.0% inside; 27/30 outliers | Paired 30-seed normal policy | FAIL |
+| Orc hits, floor 2 exit | [3, 4] | median 2; 6.7% inside; 28/30 outliers | Paired 30-seed normal policy | FAIL |
+| HP, floor 3 exit | [11, 14] | median 13; 96.7% inside; 1/30 outliers | Paired 30-seed normal policy | PASS |
+| Armor, floor 3 exit | [4, 6] | median 8; 3.3% inside; 29/30 outliers | Paired 30-seed normal policy | FAIL |
+| Damage, floor 3 exit | [3, 5] | median 6; 26.7% inside; 22/30 outliers | Paired 30-seed normal policy | FAIL |
+| Orc hits, floor 3 exit | [3, 4] | median 2; 16.7% inside; 25/30 outliers | Paired 30-seed normal policy | FAIL |
+| HP, floor 4 exit | [15, 19] | median 16; 86.7% inside; 4/30 outliers | Paired 30-seed normal policy | PASS |
+| Armor, floor 4 exit | [5, 7] | median 9; 10.0% inside; 27/30 outliers | Paired 30-seed normal policy | FAIL |
+| Damage, floor 4 exit | [5, 7] | median 7; 73.3% inside; 8/30 outliers | Paired 30-seed normal policy | PASS |
+| Orc hits, floor 4 exit | [3, 3] | median 3; 70.0% inside; 9/30 outliers | Paired 30-seed normal policy | PASS |
+| HP, floor 5 exit | [19, 25] | median 20; 76.7% inside; 7/30 outliers | Paired 30-seed normal policy | PASS |
+| Armor, floor 5 exit | [7, 9] | median 10; 26.7% inside; 22/30 outliers | Paired 30-seed normal policy | FAIL |
+| Damage, floor 5 exit | [7, 9] | median 7; 86.7% inside; 4/30 outliers | Paired 30-seed normal policy | PASS |
+| Orc hits, floor 5 exit | [3, 3] | median 3; 56.7% inside; 13/30 outliers | Paired 30-seed normal policy | PASS |
+| HP, floor 6 exit | [23, 30] | median 23.5; 66.7% inside; 10/30 outliers | Paired 30-seed normal policy | PASS |
+| Armor, floor 6 exit | [8, 10] | median 12; 30.0% inside; 21/30 outliers | Paired 30-seed normal policy | FAIL |
+| Damage, floor 6 exit | [8, 10] | median 7.5; 50.0% inside; 15/30 outliers | Paired 30-seed normal policy | FAIL |
+| Orc hits, floor 6 exit | [3, 3] | median 3; 26.7% inside; 22/30 outliers | Paired 30-seed normal policy | PASS |
+| Total generated potions | About 10–12 through six floors | 12 boss guarantees plus compulsory enemy/pity and preserved treasure sources | Exact source ledger | SPECIFICATION CONFLICT |
+| Floor-one entry HP | 5–7 if target interpreted as entry | Authored Miyabi starts at 4; exits median 6 | Actual scene + both phases | SPECIFICATION CONFLICT |
+| Proposed treasure eligibility | Preserve treasure rewards | Changing only sword eligibility is still a reward specification change | Isolated counterfactual only | SPECIFICATION CONFLICT |
+| Interactive six-floor fairness | Played representative runs | Scripted event/attack scenarios only | Session limitation | NOT VERIFIED |
+| New remote CI | Green on corrective commit | No push authorized/performed | Local execution only | NOT VERIFIED |
+
+## Git verification and review readiness
+
+Active branch **fix/issue-75-game-balance**; clean starting HEAD **2d8ffe5d808087d63b5499da976efd249dd60740**. All six original commits remain ancestors: `29a0feb`, `90ecbb1`, `c16ae34`, `ea2dcb4`, `34a30a4`, `2d8ffe5`. Exactly one additional local commit is intended with `balance(gameplay): refine early progression and reward pacing`; its final SHA and clean-tree status are reported after commit, outside its own content. No push, PR, merge, rebase, amend, development/main modification or issue closure is performed.
+
+Ready for independent correctness review, with unresolved balance acceptance. Tester decisions remain: clarify target phase, reconcile preserved acquisition with early armor/damage targets, assess late damage pacing and define potion target as spawned/collected/consumed supply. The measured treasure alternative does not solve all targets and should not be adopted without redesign/review. No claim of perfect balance or full Issue #75 acceptance is made.
+
+<!-- PRESERVED SIXTH-COMMIT AUDIT -->
 # Issue #75: corrective progression implementation and current audit
 
 **PASS WITH LIMITATIONS.** Bounded, earned HP progression and confirmed reward/perk defects are corrected. Mandatory numerical rules are preserved. The normal-policy HP median now meets every floor-completion target, with explicitly reported weak/strong outliers. Armor and some damage distribution targets remain missed; the total-spawned-potion target conflicts with fixed rules. No interactive full run or remote CI on this local corrective commit is claimed.

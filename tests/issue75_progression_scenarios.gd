@@ -30,6 +30,18 @@ var host: Node
 var layouts: Dictionary = {}
 var records: Array = []
 var historical := false
+var treasure_proposal := false # Explicit test-only specification alternative.
+var potion_lots: Array = []
+
+func source_counts() -> Dictionary:
+	return {"starter": 0, "ordinary": 0, "pity": 0, "other_chest": 0, "boss_guaranteed": 0}
+
+func mark_rewards(gen, source: String, floor_number: int, potion_sources: Array = []) -> void:
+	for item in gen.get_children():
+		if not item.is_in_group("world_items") or item.has_meta("scenario_seen") or item.item_data.has_meta("reward_source"): continue
+		var actual_source: String = potion_sources.pop_front() if item.item_data.type == ItemData.ItemType.POTION and not potion_sources.is_empty() else source
+		item.item_data.set_meta("reward_source", actual_source)
+		item.item_data.set_meta("acquired_floor", floor_number)
 
 func _init(owner_node: Node, baseline: bool = false) -> void:
 	host = owner_node
@@ -112,9 +124,17 @@ func use_potion(p, stats: Dictionary, survival: bool) -> void:
 		var rate: float = RULES.penetration(GameManager.current_level)
 		var bypass := maxi(1, floori(incoming * rate)) if rate > 0.0 else 0
 		var next_hp_damage := incoming - mini(p.current_armor, incoming - bypass)
+		var item_name: String = p.inventory.bag[best].item_name
 		p.inventory.use_or_equip_item(best, p)
 		var used: int = before - p.inventory.get_potion_count()
 		stats.consumed += used
+		if used > 0:
+			for lot in potion_lots:
+				if lot.name == item_name:
+					if lot.count > 0:
+						lot.count -= 1
+						stats.consumed_by_source[lot.source] += 1
+						break
 		if used > 0:
 			stats.healing_restored += maxi(0, p.hp - hp_before - (p.max_hp - maximum_before))
 			stats.hp_granted += p.max_hp - maximum_before
@@ -131,6 +151,10 @@ func collect(gen, p, stats: Dictionary) -> void:
 			item._pickup_item()
 			var accepted: int = p.inventory.get_potion_count() - before
 			stats.picked_up += accepted
+			var source: String = data.get_meta("reward_source", "unattributed")
+			if accepted > 0:
+				potion_lots.append({"name": data.item_name, "source": source, "count": accepted})
+				stats.collected_by_source[source] += accepted
 			stats.capacity_rejected += maxi(0, 1 - accepted)
 		else:
 			stats.equipment += 1
@@ -156,10 +180,13 @@ func snapshot(p) -> Dictionary:
 		if id == "unregistered":
 			for path in ["Common/iron_sword.tres", "Common/iron_helmet.tres", "Rare/iron_armor.tres", "Legendary/mystic_sword.tres"]:
 				if load("res://Scene/Items/" + path).item_name == item.item_name: id = "legacy:" + path
-		gear.append({"id": id, "rarity": item.rarity})
+		gear.append({"id": id, "rarity": item.rarity, "source": item.get_meta("reward_source", "unattributed"),
+			"acquired_floor": item.get_meta("acquired_floor", 0), "catalog": not id.begins_with("legacy:"),
+			"damage": item.damage, "armor": item.armor, "hp": item.max_hp_bonus})
 	return {"max_hp": p.max_hp, "hp": p.hp, "armor": p.max_armor, "current_armor": p.current_armor,
 		"base_damage": p.base_damage, "effective_damage": p.get_raw_damage(), "gear": gear,
 		"perks": PerkManager.active_perks.map(func(perk): return perk.id), "potions": p.inventory.get_potion_count(),
+		"perk_modifiers": PerkManager.active_perks.map(func(perk): return {"id": perk.id, "modifiers": perk.modifiers.duplicate()}),
 		"potion_hp": p.potion_max_hp_gained, "floor_hp": p.floor_vitality_applied}
 
 func choose_perk(p, seed_text: String, floor_number: int, style: String) -> void:
@@ -240,6 +267,7 @@ func run() -> Array:
 			gen.map_seed = seed_text
 			host.add_child(gen)
 			var p = player(gen)
+			potion_lots = [{"name": p.inventory.bag.filter(func(item): return item != null and item.type == ItemData.ItemType.POTION)[0].item_name, "source": "starter", "count": 1}]
 			gen.the_player = p
 			for floor_number in range(1, 7):
 				if p.is_dead:
@@ -251,6 +279,9 @@ func run() -> Array:
 				var tally = {"ordinary": 0, "pity": 0, "boss_guaranteed": 0, "other_chest": 0,
 					"picked_up": 0, "capacity_rejected": 0, "consumed": 0, "ground": 0, "equipment": 0, "boss_equipment": 0, "boss_chests": 0,
 					"healing_restored": 0, "hp_granted": 0, "emergency_uses": 0, "hp_lost": 0, "equipment_collected": 0}
+				tally.collected_by_source = source_counts()
+				tally.consumed_by_source = source_counts()
+				tally.discarded_by_source = source_counts()
 				var spawned := 0
 				var defeated := 0
 				var planned := 0
@@ -265,6 +296,7 @@ func run() -> Array:
 						for prerequisite in plan.paths[index]: visited[prerequisite] = true
 				for room_index in range(plan.types.size()):
 					if not visited.has(room_index): continue
+					var potion_sources: Array = []
 					if plan.types[room_index] == 1:
 						for spawn in plan.spawns[room_index]:
 							var enemy := BaseEnemy.new()
@@ -281,6 +313,7 @@ func run() -> Array:
 							enemy.take_damage(enemy.hp)
 							if GameManager.potion_kills_without_drop == 0:
 								tally["pity" if forced else "ordinary"] += 1
+								potion_sources.append("pity" if forced else "ordinary")
 							host.check(GameManager.potion_kills_without_drop <= counter + 1, "Eligible defeat advances pity at most once")
 							enemy.drop_loot()
 							enemy.free()
@@ -288,11 +321,20 @@ func run() -> Array:
 							defeated += 1
 					elif plan.types[room_index] == 2:
 						var chest = OLD.DUNGEON.CHEST_SCENE.instantiate()
+						if treasure_proposal and floor_number <= 4:
+							# Proposal only: replace the legacy Legendary sword entry, keeping
+							# all six weights, the gate, counts, potion entries and seed draws.
+							chest.loot_table = chest.loot_table.duplicate()
+							var replacement: String = ["common_sword_1", "rare_sword", "heroic_sword", "heroic_sword"][floor_number - 1]
+							for index in range(chest.loot_table.size()):
+								if chest.loot_table[index].rarity == ItemData.Rarity.LEGENDARY:
+									chest.loot_table[index] = ItemDatabase.get_item(replacement)
 						chest.loot_seed = (plan.seed + "_chest_" + str(room_index)).hash()
 						gen.add_child(chest)
 						chest.spawn_loot()
 						chest.free()
 					await host.get_tree().process_frame
+					mark_rewards(gen, "other_chest" if plan.types[room_index] == 2 else "ordinary", floor_number, potion_sources)
 					if plan.types[room_index] == 2:
 						for item in gen.get_children():
 							if item.is_in_group("world_items") and not item.has_meta("scenario_seen") and item.item_data.type == ItemData.ItemType.POTION:
@@ -318,6 +360,8 @@ func run() -> Array:
 					rng.seed = (seed_text + "_necro").hash() if boss_id == "necro" else (seed_text + "_" + boss_id + "_loot_" + str(floor_number)).hash()
 					var drop = preload("res://Scene/Items/WorldItem/WorldItem.tscn").instantiate()
 					drop.item_data = ItemDatabase.get_random_drop(floor_number, true, rng)
+					drop.item_data.set_meta("reward_source", "boss_drop")
+					drop.item_data.set_meta("acquired_floor", floor_number)
 					gen.add_child(drop)
 					var manager = HistoricalRoom.new() if historical else ROOM.new()
 					manager.is_boss_room = true
@@ -332,6 +376,10 @@ func run() -> Array:
 						chest.spawn_loot()
 						chest.spawn_loot()
 					await host.get_tree().process_frame
+					mark_rewards(gen, "boss_guaranteed", floor_number)
+					for item in gen.get_children():
+						if item.is_in_group("world_items") and item.item_data.get_meta("reward_source", "") == "boss_guaranteed" and item.item_data.type != ItemData.ItemType.POTION:
+							item.item_data.set_meta("reward_source", "boss_chest")
 					for item in gen.get_children():
 						if not item.is_in_group("world_items") or item.has_meta("scenario_seen"): continue
 						if item.item_data.type == ItemData.ItemType.POTION: tally.boss_guaranteed += 1
@@ -340,9 +388,15 @@ func run() -> Array:
 					use_potion(p, tally, style == "conservative")
 				var ground := 0
 				for item in gen.get_children():
-					if item.is_in_group("world_items") and not item.is_queued_for_deletion() and item.item_data.type == ItemData.ItemType.POTION: ground += item.item_data.stack_count
+					if item.is_in_group("world_items") and not item.is_queued_for_deletion() and item.item_data.type == ItemData.ItemType.POTION:
+						ground += item.item_data.stack_count
+						tally.discarded_by_source[item.item_data.get_meta("reward_source")] += item.item_data.stack_count
+				tally.inventory_by_source = source_counts()
+				for lot in potion_lots: tally.inventory_by_source[lot.source] += lot.count
+				host.check(tally.inventory_by_source.values().reduce(func(a, b): return a + b, 0) == p.inventory.get_potion_count(), "Potion source ledger matches actual inventory after stacking")
 				tally.ground = ground
 				var exit = snapshot(p)
+				host.check(exit.gear.all(func(item): return item.source in ["ordinary", "other_chest", "boss_chest", "boss_drop"] and item.acquired_floor > 0), "Every equipped item retains its original reward source and acquisition floor")
 				host.check(exit.gear.all(func(item): return item.id != "unregistered"), "Every equipped reward has a stable catalog or legacy identity")
 				var result = {"seed": seed_text, "style": style, "floor": floor_number, "reached": true, "entry": entry, "exit": exit,
 					"potions": tally, "planned_enemies": planned, "spawned_enemies": spawned, "defeated_enemies": defeated, "completed": completed}

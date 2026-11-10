@@ -17,9 +17,10 @@ func run() -> void:
 	await on_kill_health_owner()
 	var baseline := OS.get_environment("ISSUE75_BASELINE") == "1"
 	var scenarios = SCENARIOS.new(self, baseline)
+	scenarios.treasure_proposal = OS.get_environment("ISSUE75_TREASURE_PROPOSAL") == "1"
 	var samples: Array = await scenarios.run()
 	check(samples.size() == 30 * 3 * 6, "All 30 deterministic seeds, three policies and six floors recorded")
-	var data = {"schema": "issue75_distribution_v2", "historical_counterfactual": baseline,
+	var data = {"schema": "issue75_distribution_v3", "historical_counterfactual": baseline, "specification_proposal": scenarios.treasure_proposal,
 		"classification": "Controlled production-system event scenarios; not autonomous or interactive playthroughs",
 		"seeds": range(30).map(func(i): return "ISSUE75-DISTRIBUTION-%02d" % i), "samples": samples}
 	var path := "user://issue75_progression_%s.json" % ("before" if baseline else "after")
