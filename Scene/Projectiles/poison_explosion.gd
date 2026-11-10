@@ -1,5 +1,8 @@
 extends Area2D
 
+const FloorBalance = preload("res://Scene/Balance/EnemyFloorBalance.gd")
+var armor_piercing: float = 0.0
+
 var damage: int = 2
 var is_exploding: bool = false
 
@@ -34,7 +37,7 @@ func _on_area_entered(area: Area2D) -> void:
 	if area.name == "PlayerHurtbox":
 		var target = area.get_parent()
 		if target.has_method("take_damage"):
-			target.take_damage(damage)
+			FloorBalance.hit(target, damage, armor_piercing)
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if anim.animation == "explode":

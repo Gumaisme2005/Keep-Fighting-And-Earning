@@ -132,7 +132,7 @@ func _physics_process(delta: float) -> void:
 			_cast("hold&release-right-click" if right_hold >= CHARGE_SECONDS else "right-click", 3 if right_hold >= CHARGE_SECONDS else 1, 0.8)
 	if bool(f.get("lr", false)): left_hold = -1
 	if bool(f.get("rr", false)): right_hold = -1
-	velocity = move * speed * (0.25 if guarding else 0.65 if action_left > 0 else 1.0)
+	velocity = move * get_effective_speed() * (0.25 if guarding else 0.65 if action_left > 0 else 1.0)
 	move_and_slide()
 	if action_left <= 0 and not is_hurt:
 		if not guarding:
@@ -172,8 +172,9 @@ func _cast(move: String, multiplier: int, duration: float) -> void:
 	suppress_guard = true
 	left_hold = -1
 	right_hold = -1
-	action_left = duration
-	animated_sprite.play("skill" if move.begins_with("result") else "attack_1" if move == "left-click" else move)
+	var attack_rate := 1.0 if move.begins_with("result") else get_attack_speed_multiplier()
+	action_left = duration / attack_rate
+	animated_sprite.play("skill" if move.begins_with("result") else "attack_1" if move == "left-click" else move, attack_rate)
 	if move == "result-5":
 		var fire := RoomFire.new()
 		fire.caster = self
@@ -276,9 +277,9 @@ func _right_click_summon_position(aim_direction: Vector2) -> Vector2:
 		return candidate
 	return global_position
 
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	if guarding or intro_active: return
-	super.take_damage(amount)
+	super.take_damage(amount, armor_piercing)
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if intro_active and animated_sprite.animation == "intro":

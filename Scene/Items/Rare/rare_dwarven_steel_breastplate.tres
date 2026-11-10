@@ -11,5 +11,5 @@ rarity = 1
 icon = ExtResource("1_todmr")
 description = "Fine interlocking dwarven chain and plate protecting vital organs."
 armor = 2
-max_hp_bonus = 2
+max_hp_bonus = 1
 max_stack = 1

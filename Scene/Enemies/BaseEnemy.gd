@@ -6,6 +6,9 @@ class_name BaseEnemy
 ## và bộ đệm điều hướng AI (Throttled Raycast Steer).
 
 const BalanceData = preload("res://Scene/BalanceConfig.gd")
+const FloorBalance = preload("res://Scene/Balance/EnemyFloorBalance.gd")
+var combat_floor: int = 1
+var armor_piercing: float = 0.0
 
 # --- CHỈ SỐ CƠ BẢN (DATA-DRIVEN) ---
 @export var damage: int = 1
@@ -13,8 +16,11 @@ const BalanceData = preload("res://Scene/BalanceConfig.gd")
 @export var attack_range: float = 20.0
 @export var world_item_scene: PackedScene
 @export var loot_table: Array[ItemData] = []
-@export var drop_chance: float = 0.3
+@export var drop_chance: float = 0.05
 var loot_seed: int = 0
+var defensive_spawn_order: int = -1
+var _equipment_loot_generated: bool = false
+var _potion_loot_generated: bool = false
 
 var hp: int = 3
 var max_hp: int = 3
@@ -35,6 +41,9 @@ var player: Node2D = null
 var enemy_balance_id: String = ""
 
 func _ready() -> void:
+	var gm = get_node_or_null("/root/GameManager")
+	if gm != null and defensive_spawn_order < 0:
+		defensive_spawn_order = gm.allocate_defensive_spawn_order()
 	if not enemy_balance_id.is_empty():
 		_apply_balance_stats()
 	if animated_sprite != null and animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation("idle"):
@@ -49,9 +58,10 @@ func _ready() -> void:
 func _apply_balance_stats() -> void:
 	var cfg: Dictionary = BalanceData.get_enemy_stats(enemy_balance_id)
 	if not cfg.is_empty():
-		hp = int(cfg.get("hp", hp))
+		hp = FloorBalance.health(int(cfg.get("hp", hp)), combat_floor)
 		max_hp = hp
-		damage = int(cfg.get("damage", damage))
+		damage = int(cfg.get("damage", damage)) + FloorBalance.damage_bonus(combat_floor)
+		armor_piercing = FloorBalance.penetration(combat_floor)
 		speed = float(cfg.get("speed", speed))
 		attack_range = float(cfg.get("attack_range", attack_range))
 		drop_chance = float(cfg.get("drop_chance", drop_chance))
@@ -60,7 +70,8 @@ func _find_player() -> void:
 	player = null
 	var players = get_tree().get_nodes_in_group("player")
 	for p in players:
-		if is_instance_valid(p) and not p.is_queued_for_deletion():
+		# Sword hitboxes also use this group; AI and low-HP loot need the hero.
+		if is_instance_valid(p) and not p.is_queued_for_deletion() and p is Node2D and not p is Area2D:
 			player = p
 			return
 
@@ -87,7 +98,11 @@ func _on_hurt() -> void:
 	pass
 
 func _die() -> void:
+	if is_dead:
+		return
 	is_dead = true
+	# Count eligible defeats at death, rather than animation completion order.
+	_drop_potion_loot()
 	var gm = get_node_or_null("/root/GameManager")
 	if gm != null and gm.has_method("register_enemy_kill"):
 		gm.register_enemy_kill()
@@ -104,16 +119,25 @@ func _disable_all_collisions() -> void:
 		main_col.set_deferred("disabled", true)
 
 func drop_loot() -> void:
+	if not is_dead or _equipment_loot_generated:
+		return
+	_equipment_loot_generated = true
 	var item_scene = world_item_scene if world_item_scene != null else preload("res://Scene/Items/WorldItem/WorldItem.tscn")
 	var rng := RandomNumberGenerator.new()
 	rng.seed = loot_seed if loot_seed != 0 else (int(global_position.x * 911) ^ int(global_position.y * 3571))
-	if rng.randf() <= drop_chance:
+	if rng.randf() < drop_chance:
 		var floor_lvl := 1
 		if get_node_or_null("/root/GameManager") != null:
 			floor_lvl = GameManager.current_level
 		var random_item: ItemData = ItemDatabase.get_random_drop(floor_lvl, false, rng)
 		if random_item == null and loot_table.size() > 0:
-			random_item = loot_table[rng.randi() % loot_table.size()]
+			var equipment_pool: Array[ItemData] = []
+			var weights := ItemDatabase.get_rarity_weights(floor_lvl)
+			for item in loot_table:
+				if item != null and item.type != ItemData.ItemType.POTION and int(weights[item.rarity]) > 0:
+					equipment_pool.append(item)
+			if not equipment_pool.is_empty():
+				random_item = equipment_pool[rng.randi() % equipment_pool.size()].duplicate()
 
 		if random_item != null:
 			var item_drop = item_scene.instantiate()
@@ -122,3 +146,27 @@ func drop_loot() -> void:
 			var parent_node = get_parent() if get_parent() != null else get_tree().current_scene
 			if parent_node != null:
 				parent_node.call_deferred("add_child", item_drop)
+			else:
+				item_drop.free()
+
+func _drop_potion_loot() -> void:
+	if _potion_loot_generated or is_in_group("boss"):
+		return
+	_potion_loot_generated = true
+	var gm = get_node_or_null("/root/GameManager")
+	var parent_node = get_parent()
+	if gm == null or parent_node == null:
+		return
+	if not is_instance_valid(player) or player.is_queued_for_deletion():
+		_find_player()
+	var rng := RandomNumberGenerator.new()
+	var source_seed := loot_seed if loot_seed != 0 else (int(global_position.x * 911) ^ int(global_position.y * 3571))
+	rng.seed = (str(source_seed) + ":potion").hash()
+	var potion: ItemData = gm.roll_enemy_potion(rng, player)
+	if potion == null:
+		return
+	var item_scene = world_item_scene if world_item_scene != null else preload("res://Scene/Items/WorldItem/WorldItem.tscn")
+	var item_drop = item_scene.instantiate()
+	item_drop.item_data = potion
+	item_drop.global_position = global_position + Vector2(0, 8)
+	parent_node.call_deferred("add_child", item_drop)

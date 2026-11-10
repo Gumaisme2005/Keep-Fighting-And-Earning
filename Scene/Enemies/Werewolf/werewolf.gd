@@ -28,13 +28,13 @@ func _init() -> void:
 		preload("res://Scene/Items/Rare/big_health_potion.tres"),
 		preload("res://Scene/Items/Common/iron_sword.tres")
 	]
-	drop_chance = 0.45
+	drop_chance = 0.05
 
 func _ready() -> void:
 	enemy_balance_id = "werewolf"
 	super._ready()
 	var cfg: Dictionary = BalanceData.get_enemy_stats("werewolf")
-	pounce_damage = int(cfg.get("pounce_damage", pounce_damage))
+	pounce_damage = int(cfg.get("pounce_damage", pounce_damage)) + FloorBalance.damage_bonus(combat_floor)
 	pounce_speed = float(cfg.get("pounce_speed", pounce_speed))
 	pounce_distance = float(cfg.get("pounce_distance", pounce_distance))
 	pounce_windup_time = float(cfg.get("pounce_windup_time", pounce_windup_time))
@@ -261,7 +261,7 @@ func _on_claw_hitbox_area_entered(area: Area2D) -> void:
 		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
 			return
 		if target.has_method("take_damage"):
-			target.take_damage(damage)
+			FloorBalance.hit(target, damage, armor_piercing)
 
 func _on_pounce_hitbox_area_entered(area: Area2D) -> void:
 	if area.name == "PlayerHurtbox":
@@ -270,4 +270,4 @@ func _on_pounce_hitbox_area_entered(area: Area2D) -> void:
 		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
 			return
 		if target.has_method("take_damage"):
-			target.take_damage(pounce_damage)
+			FloorBalance.hit(target, pounce_damage, armor_piercing)

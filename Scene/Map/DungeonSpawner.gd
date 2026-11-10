@@ -66,6 +66,7 @@ static func is_valid_combat_spawn_cell(gen: TileMap, room_index: int, cell: Vect
 
 static func plan_enemy_spawns(gen: TileMap) -> void:
 	gen.planned_enemy_spawns.clear()
+	gen.enemy_spawn_shortfalls.clear()
 	for i in range(gen.generated_rooms.size()):
 		if gen.room_types[i] != gen.RoomType.COMBAT:
 			gen.planned_enemy_spawns.append([])
@@ -107,6 +108,10 @@ static func plan_enemy_spawns(gen: TileMap) -> void:
 					"loot_seed": loot_seed
 				})
 
+		# Exhaustive fallback above uses no extra random draws. If the room has
+		# insufficient safe cells, record the deficit instead of placing unsafely.
+		if room_spawns.size() < num_e:
+			gen.enemy_spawn_shortfalls.append({"room": i, "requested": num_e, "placed": room_spawns.size()})
 		gen.planned_enemy_spawns.append(room_spawns)
 
 static func spawn_entities(gen: TileMap) -> void:
@@ -163,14 +168,7 @@ static func spawn_entities(gen: TileMap) -> void:
 				var enemy = gen.enemy_scenes[spawn_info["enemy_idx"]].instantiate()
 				if "loot_seed" in enemy:
 					enemy.loot_seed = spawn_info["loot_seed"]
-				if gen.current_level > 1:
-					var bonus_hp: int = (gen.current_level - 1) * 2
-					if "hp" in enemy:
-						enemy.hp += bonus_hp
-						if "max_hp" in enemy:
-							enemy.max_hp = enemy.hp
-					if "damage" in enemy and gen.current_level >= 3:
-						enemy.damage += 1
+				enemy.combat_floor = gen.current_level
 				enemy.z_index = 2
 				enemy.add_to_group("enemies")
 				gen.add_child(enemy)
@@ -228,16 +226,7 @@ static func spawn_entities(gen: TileMap) -> void:
 			boss_instance.z_index = 2
 			boss_instance.add_to_group("enemies")
 			boss_instance.add_to_group("boss")
-			if gen.current_level > 1:
-				var boss_bonus_hp: int = (gen.current_level - 1) * 20
-				if "hp" in boss_instance:
-					boss_instance.hp += boss_bonus_hp
-					if "max_hp" in boss_instance:
-						boss_instance.max_hp = boss_instance.hp
-				if "melee_damage" in boss_instance:
-					boss_instance.melee_damage += gen.current_level - 1
-				if "damage" in boss_instance:
-					boss_instance.damage += gen.current_level - 1
+			boss_instance.combat_floor = gen.current_level
 			gen.add_child(boss_instance)
 
 			boss_instance.global_position = gen.to_global(gen.map_to_local(room.get_center()))

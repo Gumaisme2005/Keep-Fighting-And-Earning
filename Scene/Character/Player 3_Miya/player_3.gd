@@ -47,8 +47,9 @@ func attack() -> void:
 		return
 	_can_shoot_arrow = false
 	is_attacking = true
-	_attack_timer = attack_cooldown_time
-	animated_sprite.play("attack_1")
+	var attack_rate := get_attack_speed_multiplier()
+	_attack_timer = attack_cooldown_time / attack_rate
+	animated_sprite.play("attack_1", attack_rate)
 
 	# Trong chế độ headless (chạy test CI/CD tự động), sinh mũi tên ngay lập tức để đồng bộ với UT-12
 	if DisplayServer.get_name() == "headless":
@@ -57,13 +58,13 @@ func attack() -> void:
 	else:
 		_pending_arrow = true
 		# Timer dự phòng an toàn nếu sự kiện frame_changed bị bỏ qua do giật lag
-		get_tree().create_timer(0.26).timeout.connect(func():
+		get_tree().create_timer(0.26 / attack_rate).timeout.connect(func():
 			if is_instance_valid(self) and is_inside_tree() and _pending_arrow:
 				_pending_arrow = false
 				_fire_arrow()
 		)
 
-	get_tree().create_timer(attack_cooldown_time).timeout.connect(func():
+	get_tree().create_timer(attack_cooldown_time / attack_rate).timeout.connect(func():
 		if is_instance_valid(self) and is_inside_tree():
 			_can_shoot_arrow = true
 			if is_attacking:
@@ -112,9 +113,9 @@ func _fire_arrow() -> void:
 		get_parent().add_child(arrow)
 		arrow.global_position = spawn_pos
 
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	_pending_arrow = false
-	super.take_damage(amount)
+	super.take_damage(amount, armor_piercing)
 
 func use_special_skill() -> void:
 	if not can_use_skill:

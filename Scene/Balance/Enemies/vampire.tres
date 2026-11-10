@@ -11,5 +11,5 @@ armor = 0
 damage = 2
 speed = 85.0
 attack_range = 165.0
-drop_chance = 0.35
+drop_chance = 0.05
 custom_stats = {"attack_cooldown": 1.4, "retreat_range": 65.0}

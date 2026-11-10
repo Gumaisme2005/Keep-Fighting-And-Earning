@@ -9,6 +9,7 @@ const ENEMY_RADIUS := 8.0
 const HEAVY_FREEZE_SCALE := 0.35   # bosses shrug off most of a freeze
 
 static var _frame_cache: int = -1
+static var _cached_world: WeakRef
 static var _cached: Array = []
 
 ## Living enemies in the dungeon (scanned once per physics frame).
@@ -16,7 +17,7 @@ static func enemies(world: Node) -> Array:
 	if world == null:
 		return []
 	var frame := Engine.get_physics_frames()
-	if frame != _frame_cache:
+	if frame != _frame_cache or _cached_world == null or _cached_world.get_ref() != world:
 		_cached.clear()
 		for hb in world.find_children("Hurtbox", "Area2D", true, false):
 			var t = hb.get_parent()
@@ -28,6 +29,7 @@ static func enemies(world: Node) -> Array:
 				continue
 			_cached.append(t)
 		_frame_cache = frame
+		_cached_world = weakref(world)
 	var alive: Array = []
 	for t in _cached:
 		if is_instance_valid(t) and not t.is_queued_for_deletion() and t.get("is_dead") != true:
@@ -74,8 +76,11 @@ static func hit(world: Node, target: Node, amount: int, freeze_time: float = 0.0
 	var final_amt := amount
 	if world != null and world.get_tree() != null:
 		var players = world.get_tree().get_nodes_in_group("player")
-		if not players.is_empty() and players[0].has_method("apply_on_hit_effects"):
-			final_amt = players[0].apply_on_hit_effects(target as Node2D, amount)
+		for player in players:
+			# Group order can put a sword Area2D first after reparenting.
+			if is_instance_valid(player) and not player.is_queued_for_deletion() and world.is_ancestor_of(player) and player.has_method("apply_on_hit_effects"):
+				final_amt = player.apply_on_hit_effects(target as Node2D, amount)
+				break
 	target.take_damage(final_amt)
 	Fx.spawn(world, "frost_hit", at)
 	if freeze_time > 0.0:

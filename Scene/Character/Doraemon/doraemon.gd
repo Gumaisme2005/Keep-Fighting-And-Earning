@@ -389,17 +389,19 @@ func _use(move: String) -> void:
 		_:
 			_begin_cast(move, String(info[2]), float(info[3]), float(info[4]))
 	power -= float(info[5])
-	cooldowns[move] = float(info[1])
+	var attack_rate := 1.0 if move in ["door", "hustle_screw", "hirari_mantle"] else get_attack_speed_multiplier()
+	cooldowns[move] = float(info[1]) / attack_rate
 
 func _begin_cast(move: String, pose: String, release: float, lock: float) -> void:
 	_cast_move = move
 	_cast_t = 0.0
 	_cast_fired = false
-	_cast_release = release
-	_cast_lock = maxf(lock, release + 0.02)
+	var attack_rate := get_attack_speed_multiplier() if MOVES.has(move) else 1.0
+	_cast_release = release / attack_rate
+	_cast_lock = maxf(lock, release + 0.02) / attack_rate
 	is_casting_skill = true
 	_set_flip(_cast_aim.x < 0.0)
-	animated_sprite.play(pose)
+	animated_sprite.play(pose, attack_rate)
 	_sync_anchor()
 
 func _step_cast(delta: float) -> void:
@@ -749,7 +751,7 @@ func _do_super_dorami_balloon() -> void:
 	_proj("dorami_balloon", global_position + Vector2(0, -20), _aim_dir() * 90.0, _dmg() * 8,
 		{"mode": "homing", "target": t, "turn_rate": 3.0, "life": 3.5, "radius": 12.0, "rotate_sprite": false,
 		"explode_radius": 60.0, "explode_damage": _dmg() * 8, "explode_scale": 1.4})
-	consume_potion(1, 0)
+	restore_health(1)
 
 func _do_super_gian_recital() -> void:
 	var at := Util.safe_point(_world(), global_position, _aim_dir(), 30.0, 8.0)
@@ -856,7 +858,7 @@ func _step_mode(delta: float, direction: Vector2) -> void:
 		"eat":
 			if not bool(_mode_data["fed"]) and _mode_t >= 0.4:
 				_mode_data["fed"] = true
-				consume_potion(1, 0)
+				restore_health(1)
 				add_power(40)
 			if _mode_t >= Sprites.duration("eat"):
 				_end_mode()
@@ -935,14 +937,14 @@ func _step_mode(delta: float, direction: Vector2) -> void:
 
 const INVULNERABLE_MODES := ["door", "screw", "sl", "uradora_dash", "uradora_tf", "uradora_kick", "punch"]
 
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	if INVULNERABLE_MODES.has(_mode):
 		return
 	if _mode == "mantle" and amount > 0 and not is_dead:
 		_mantle_counter(amount)
 		return
 	var before := hp + current_armor
-	super.take_damage(amount)
+	super.take_damage(amount, armor_piercing)
 	if hp + current_armor < before:
 		add_power(10)
 		if hp > 0 and _cast_move == "" and _mode == "":

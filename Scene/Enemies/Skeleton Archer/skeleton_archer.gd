@@ -24,7 +24,7 @@ func _init() -> void:
 		preload("res://Scene/Items/Common/health_potion.tres"),
 		preload("res://Scene/Items/Common/iron_helmet.tres")
 	]
-	drop_chance = 0.35
+	drop_chance = 0.05
 
 
 func _ready() -> void:
@@ -143,6 +143,7 @@ func _spawn_arrow() -> void:
 	arrow.direction = shoot_dir
 	arrow.rotation = shoot_dir.angle()
 	arrow.damage = damage
+	arrow.armor_piercing = armor_piercing
 	get_parent().add_child(arrow)
 	arrow.global_position = spawn_pos
 

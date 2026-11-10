@@ -210,7 +210,7 @@ func _physics_process(delta: float) -> void:
 		_play("walk" if direction != Vector2.ZERO else "idle")
 
 func _step_move(delta: float, direction: Vector2, input: Dictionary) -> void:
-	move_t += delta
+	move_t += delta * (get_attack_speed_multiplier() if move == "combo" else 1.0)
 	match move:
 		"combo":
 			_step_swing(direction, input)
@@ -228,7 +228,7 @@ func _begin(m: String, anim: String) -> void:
 	move_t = 0.0
 	_event_done = false
 	is_casting_skill = true
-	animated_sprite.play(anim)
+	animated_sprite.play(anim, get_attack_speed_multiplier() if m == "combo" else 1.0)
 
 func _end_move() -> void:
 	move = ""
@@ -256,7 +256,8 @@ func _step_swing(direction: Vector2, input: Dictionary) -> void:
 		_combo_queued = true
 	var v := direction * speed * 0.35
 	if float(c[4]) > 0.0 and move_t <= hit_t:
-		v += Vector2(facing, 0.0) * float(c[4]) / hit_t
+		# Faster swings retain the authored lunge distance over their shorter windup.
+		v += Vector2(facing, 0.0) * float(c[4]) * get_attack_speed_multiplier() / hit_t
 	velocity = v
 	move_and_slide()
 	if not _event_done and move_t >= hit_t:
@@ -409,11 +410,11 @@ func _step_special() -> void:
 		_end_move()
 
 # ------------------------------------------------------------------ damage
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	if _untouchable:
 		return
 	var before := hp + current_armor
-	super.take_damage(amount)
+	super.take_damage(amount, armor_piercing)
 	if hp + current_armor >= before:
 		return
 	if is_dead:

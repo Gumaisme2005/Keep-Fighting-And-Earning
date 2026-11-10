@@ -81,26 +81,26 @@ func test_minecraft_item_stacking() -> void:
 	potion.heal_amount = 2
 	potion.max_stack = 16
 
-	# Add 8 health potions
+	# Only four of eight units fit; rejected units remain on the source stack.
 	var ok1 = inv.add_item(potion, 8)
-	assert_test(ok1, "Adding 8 potions succeeded")
+	assert_test(not ok1 and potion.stack_count == 4, "Adding 8 potions accepts 4 and retains 4")
 	assert_test(inv.bag.size() == 16, "Inventory maintains fixed 16 slots invariant")
-	assert_test(inv.get_occupied_slots_count() == 1, "8 potions occupy exactly 1 inventory slot (Minecraft-style)")
-	assert_test(inv.bag[0] != null and inv.bag[0].stack_count == 8, "Slot 0 stack_count equals 8")
+	assert_test(inv.get_occupied_slots_count() == 1, "4 potions occupy exactly 1 inventory slot")
+	assert_test(inv.bag[0] != null and inv.bag[0].stack_count == 4, "Slot 0 stack_count equals 4")
 
-	# Add 5 more health potions -> total 13
+	# Additional potions remain outside the full four-unit allowance.
 	var ok2 = inv.add_item(potion, 5)
-	assert_test(ok2, "Adding 5 more potions succeeded")
+	assert_test(not ok2 and potion.stack_count == 5, "Adding 5 more potions fails without losing any")
 	assert_test(inv.get_occupied_slots_count() == 1, "Still occupies exactly 1 slot")
-	assert_test(inv.bag[0].stack_count == 13, "Slot 0 stack_count merged to 13")
+	assert_test(inv.bag[0].stack_count == 4, "Potion total remains capped at 4")
 
-	# Add 5 more health potions -> total 18 (should cap slot 0 at 16, create slot 1 with 2)
+	# Repeating the pickup must not overflow into another slot.
 	var ok3 = inv.add_item(potion, 5)
-	assert_test(ok3, "Adding 5 more potions (exceeding max_stack 16) succeeded")
+	assert_test(not ok3, "Repeated addition cannot bypass potion capacity")
 	assert_test(inv.bag.size() == 16, "Inventory size remains fixed at 16")
-	assert_test(inv.get_occupied_slots_count() == 2, "Overflow created exactly 2nd slot")
-	assert_test(inv.bag[0].stack_count == 16, "First slot capped at max_stack 16")
-	assert_test(inv.bag[1] != null and inv.bag[1].stack_count == 2, "Second slot contains remainder 2")
+	assert_test(inv.get_occupied_slots_count() == 1, "Capacity does not overflow into a second slot")
+	assert_test(inv.bag[0].stack_count == 4, "First slot remains at 4")
+	assert_test(inv.bag[1] == null, "Second slot remains available for equipment")
 
 	inv.queue_free()
 
@@ -282,13 +282,13 @@ func test_anti_duplicate_partial_pickup() -> void:
 		junk.stack_count = 1
 		inv.bag[i] = junk
 
-	# 2. Slot 15 đặt 14 bình Health Potion (max stack = 16, chỉ còn chứa thêm được 2 bình)
+	# 2. Slot 15 has two potions; the global four-unit limit leaves room for two more.
 	var pot_slot = ITEM_DATA_SCRIPT.new()
 	pot_slot.item_name = "Health Potion"
 	pot_slot.type = ItemData.ItemType.POTION
 	pot_slot.heal_amount = 2
 	pot_slot.max_stack = 16
-	pot_slot.stack_count = 14
+	pot_slot.stack_count = 2
 	inv.bag[15] = pot_slot
 
 	assert_test(inv.get_occupied_slots_count() == 16, "All 16 slots are occupied")
@@ -305,9 +305,9 @@ func test_anti_duplicate_partial_pickup() -> void:
 	# 4. Nhặt đồ: Chỉ nhặt được 2 bình vào slot 15, còn dư 3 bình trên sàn
 	var fully_added = inv.add_item(floor_drop, floor_drop.stack_count)
 	assert_test(not fully_added, "add_item returned false due to partial capacity")
-	assert_test(inv.bag[15].stack_count == 16, "Slot 15 stack filled to exactly max_stack 16 (took 2 potions)")
+	assert_test(inv.bag[15].stack_count == 4, "Slot 15 reached total potion cap 4 (took 2 potions)")
 	assert_test(floor_drop.stack_count == 3, "Floor item stack_count reduced strictly to remainder 3 (Anti-Duplicate Guard)")
-	assert_test((inv.bag[15].stack_count - 14) + floor_drop.stack_count == 5, "Total item quantity strictly conserved (2 in bag + 3 on floor == 5)")
+	assert_test((inv.bag[15].stack_count - 2) + floor_drop.stack_count == 5, "Total item quantity strictly conserved (2 in bag + 3 on floor == 5)")
 
 	# 5. Khi balo đầy 100% không còn ô nào và không thể gộp thêm:
 	var sword = ITEM_DATA_SCRIPT.new()
@@ -499,24 +499,24 @@ func test_mythic_secondary_stats() -> void:
 	print("\n--- Test Group 8: Mythic Special Effects & Secondary Stats Verification ---")
 	var mythic_w := ItemDatabase.get_item("mythic_weapon")
 	assert_test(mythic_w != null, "Mythic weapon exists")
-	assert_test(mythic_w.damage == 12, "Mythic weapon has primary DMG = 12")
-	assert_test(mythic_w.attack_speed_bonus > 0.0, "Mythic weapon secondary stat: Attack Speed = +%d%%" % int(mythic_w.attack_speed_bonus * 100))
-	assert_test(mythic_w.armor > 0, "Mythic weapon secondary stat: Physical Armor = +%d" % mythic_w.armor)
-	assert_test(mythic_w.max_hp_bonus > 0, "Mythic weapon secondary stat: Max HP = +%d" % mythic_w.max_hp_bonus)
+	assert_test(mythic_w.damage == 6, "Mythic weapon has primary DMG = 6")
+	assert_test(mythic_w.attack_speed_bonus == 0.20, "Mythic weapon secondary stat: Attack Speed = +20%")
+	assert_test(mythic_w.armor == 2, "Mythic weapon secondary stat: Physical Armor = +2")
+	assert_test(mythic_w.max_hp_bonus == 2, "Mythic weapon secondary stat: Max HP = +2")
 	assert_test(mythic_w.special_effect.contains("Solar Ignite"), "Mythic weapon has special effect: Solar Ignite")
 
 	var mythic_a := ItemDatabase.get_item("mythic_armor")
 	assert_test(mythic_a != null, "Mythic armor exists")
-	assert_test(mythic_a.armor == 10, "Mythic armor primary Armor = 10")
-	assert_test(mythic_a.max_hp_bonus >= 10, "Mythic armor secondary stat: Max HP = +%d" % mythic_a.max_hp_bonus)
-	assert_test(mythic_a.damage >= 2, "Mythic armor secondary stat: Attack Damage = +%d" % mythic_a.damage)
+	assert_test(mythic_a.armor == 5, "Mythic armor primary Armor = 5")
+	assert_test(mythic_a.max_hp_bonus == 5, "Mythic armor secondary stat: Max HP = +5")
+	assert_test(mythic_a.damage == 0, "Mythic armor has no off-role attack damage")
 	assert_test(mythic_a.special_effect.contains("Divine Retaliation"), "Mythic armor has special effect: Divine Retaliation")
 
 	var mythic_h := ItemDatabase.get_item("mythic_helm")
 	assert_test(mythic_h != null, "Mythic helm exists")
-	assert_test(mythic_h.armor == 7, "Mythic helm primary Armor = 7")
-	assert_test(mythic_h.damage >= 3, "Mythic helm secondary stat: Attack Damage = +%d" % mythic_h.damage)
-	assert_test(mythic_h.max_hp_bonus >= 8, "Mythic helm secondary stat: Max HP = +%d" % mythic_h.max_hp_bonus)
+	assert_test(mythic_h.armor == 4, "Mythic helm primary Armor = 4")
+	assert_test(mythic_h.damage == 0, "Mythic helm has no off-role attack damage")
+	assert_test(mythic_h.max_hp_bonus == 3, "Mythic helm secondary stat: Max HP = +3")
 	assert_test(mythic_h.special_effect.contains("Celestial Smite"), "Mythic helm has special effect: Celestial Smite")
 
 func test_potions_and_stacking() -> void:
@@ -526,11 +526,11 @@ func test_potions_and_stacking() -> void:
 	var purple_pot := ItemDatabase.get_item("heroic_potion_purple")
 	var blue_pot := ItemDatabase.get_item("legendary_potion_blue")
 
-	assert_test(red_pot != null and red_pot.heal_amount == 4, "Red potion heals 4 HP")
-	assert_test(green_pot != null and green_pot.max_hp_bonus == 1, "Green tonic fortifies 1 Max HP")
-	assert_test(purple_pot != null and purple_pot.heal_amount == 6 and purple_pot.max_hp_bonus == 3, "Purple draught grants 6 HP + 3 Max HP")
-	assert_test(blue_pot != null and blue_pot.heal_amount == 10 and blue_pot.max_hp_bonus >= 4, "Blue phial grants 10 HP + 5 Max HP")
-	assert_test(red_pot.get_is_stackable() and red_pot.max_stack == 16, "Potions are Minecraft-style stackable up to 16")
+	assert_test(red_pot != null and red_pot.heal_amount == 5 and red_pot.max_hp_bonus == 0, "Red potion heals 5 HP with no Max HP bonus")
+	assert_test(green_pot != null and green_pot.heal_amount == 3 and green_pot.max_hp_bonus == 0, "Green tonic heals 3 HP with no Max HP bonus")
+	assert_test(purple_pot != null and purple_pot.heal_amount == 8 and purple_pot.max_hp_bonus == 1, "Purple draught grants 8 HP + 1 Max HP")
+	assert_test(blue_pot != null and blue_pot.heal_amount == 12 and blue_pot.max_hp_bonus == 2, "Blue phial grants 12 HP + 2 Max HP")
+	assert_test(red_pot.get_is_stackable() and red_pot.max_stack == 4, "Potion resource stack limit is 4; global limit is enforced by inventory")
 
 func test_floor_drop_scaling_and_boss_bonus() -> void:
 	print("\n--- Test Group 10: Floor Drop Scaling & Boss Chest Guarantee ---")

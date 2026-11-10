@@ -27,9 +27,9 @@ func _on_attack_timer_expired() -> void:
 
 func attack() -> void:
 	is_attacking = true
-	_attack_timer = 0.32
+	_attack_timer = 0.32 / get_attack_speed_multiplier()
 	if animated_sprite != null and animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation("attack_1"):
-		animated_sprite.play("attack_1")
+		animated_sprite.play("attack_1", get_attack_speed_multiplier())
 	if sword_collision != null:
 		sword_collision.disabled = false
 	if get_node_or_null("/root/AudioManager") != null:

@@ -8,7 +8,7 @@ func _init() -> void:
 		preload("res://Scene/Items/Common/health_potion.tres"),
 		preload("res://Scene/Items/Common/iron_sword.tres")
 	]
-	drop_chance = 0.25
+	drop_chance = 0.05
 
 func _ready() -> void:
 	enemy_balance_id = "skeleton"
@@ -98,4 +98,4 @@ func _on_sword_hitbox_area_entered(area: Area2D) -> void:
 		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
 			return
 		if target.has_method("take_damage"):
-			target.take_damage(damage)
+			FloorBalance.hit(target, damage, armor_piercing)

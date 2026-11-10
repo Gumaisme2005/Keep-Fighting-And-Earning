@@ -4,6 +4,7 @@ signal inventory_changed
 signal equipment_changed
 
 const WORLD_ITEM_SCENE = preload("res://Scene/Items/WorldItem/WorldItem.tscn")
+const MAX_POTION_UNITS: int = 4
 
 @export var max_slots: int = 16 # Cố định 16 ô (4x4) trong giao diện Balo, chống dồn phím tắt
 var bag: Array[ItemData] = []
@@ -91,52 +92,54 @@ func swap_slots(from_index: int, to_index: int) -> bool:
 	return true
 
 # 1. NHẶT ĐỒ VÀO TÚI (CƠ CHẾ MINECRAFT STACKING & CỐ ĐỊNH Ô, CHỐNG DUPLICATE)
-func add_item(item: ItemData, count: int = -1) -> bool:
-	if item == null:
-		return false
+func get_potion_count() -> int:
+	var count := 0
+	for item in bag:
+		if item != null and item.type == ItemData.ItemType.POTION:
+			count += maxi(0, item.stack_count)
+	return count
 
-	var total_count: int = count if count > 0 else (item.stack_count if item.stack_count > 0 else 1)
+# Runtime input stacks are transfer objects: stack_count becomes the unaccepted remainder.
+# File-backed definitions are templates and must never have their quantity mutated.
+func add_item(item: ItemData, count: int = -1) -> bool:
+	if item == null or bag.has(item) or equipment.values().has(item):
+		return false
+	if not item.resource_path.is_empty():
+		item = item.duplicate()
+	var total_count: int = count if count >= 0 else item.stack_count
 	if total_count <= 0:
 		return false
-
 	_ensure_bag_size()
-	var remaining_count: int = total_count
+	var allowed_count := total_count
+	if item.type == ItemData.ItemType.POTION:
+		allowed_count = mini(total_count, maxi(0, MAX_POTION_UNITS - get_potion_count()))
+	var remaining_count := allowed_count
 	var is_stackable: bool = item.get_is_stackable()
-	var max_stack: int = item.max_stack if is_stackable else 1
-
-	# Bước 1: Nếu vật phẩm có thể gộp, quét các ô hiện có trong túi cùng tên
+	var max_stack: int = maxi(1, item.max_stack) if is_stackable else 1
 	if is_stackable:
 		for i in range(max_slots):
 			var slot_item: ItemData = bag[i]
-			if slot_item != null and slot_item.item_name == item.item_name and slot_item.stack_count < max_stack:
+			if slot_item != null and slot_item.item_name == item.item_name and slot_item.type == item.type and slot_item.rarity == item.rarity and slot_item.stack_count < max_stack:
 				var available_space: int = max_stack - slot_item.stack_count
 				var added: int = mini(remaining_count, available_space)
 				slot_item.stack_count += added
 				remaining_count -= added
 				if remaining_count <= 0:
-					item.stack_count = 0
-					inventory_changed.emit()
-					return true
-
-	# Bước 2: Với số lượng còn lại, tìm các ô trống (null) để tạo stack mới
+					break
 	while remaining_count > 0:
 		var empty_idx: int = get_first_empty_slot()
 		if empty_idx == -1:
-			print("[INVENTORY] Backpack is full! Cannot add more ", item.item_name)
-			item.stack_count = remaining_count
-			if remaining_count < total_count:
-				inventory_changed.emit()
-			return false
-
+			break
 		var new_item: ItemData = item.duplicate()
 		var stack_amt: int = mini(remaining_count, max_stack)
 		new_item.stack_count = stack_amt
 		bag[empty_idx] = new_item
 		remaining_count -= stack_amt
-
-	item.stack_count = 0
-	inventory_changed.emit()
-	return true
+	var accepted := allowed_count - remaining_count
+	item.stack_count = total_count - accepted
+	if accepted > 0:
+		inventory_changed.emit()
+	return item.stack_count == 0
 
 # 2. SỬ DỤNG HOẶC TRANG BỊ VẬT PHẨM (SWAP CHUẨN, KHÔNG DỒN LỆCH Ô)
 func use_or_equip_item(index: int, player: Node2D) -> void:
@@ -151,8 +154,10 @@ func use_or_equip_item(index: int, player: Node2D) -> void:
 		return
 
 	if item.type == ItemData.ItemType.POTION:
-		if player.has_method("consume_potion"):
-			player.consume_potion(item.heal_amount, item.max_hp_bonus)
+		if not is_instance_valid(player) or not player.has_method("consume_potion"):
+			return
+		if not player.consume_potion(item.heal_amount, item.max_hp_bonus):
+			return
 		item.stack_count -= 1
 		if item.stack_count <= 0:
 			bag[index] = null
@@ -258,6 +263,10 @@ func has_mythic_item(type: ItemData.ItemType) -> bool:
 
 func has_mythic_weapon() -> bool:
 	return has_mythic_item(ItemData.ItemType.WEAPON)
+
+func has_mythic_effect(type: ItemData.ItemType, effect: StringName) -> bool:
+	var item: ItemData = equipment.get(type, null)
+	return item != null and item.rarity == ItemData.Rarity.MYTHIC and item.combat_effect == effect
 
 func has_mythic_armor() -> bool:
 	return has_mythic_item(ItemData.ItemType.ARMOR)

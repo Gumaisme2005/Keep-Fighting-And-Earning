@@ -156,32 +156,32 @@ static func _build_enemy_stats() -> Dictionary:
 	var stats: Dictionary = {
 		"orc": {
 			"name": "Moria Orc",
-			"hp": 4, "damage": 2, "speed": 75.0, "attack_range": 20.0, "drop_chance": 0.30
+			"hp": 4, "damage": 2, "speed": 75.0, "attack_range": 20.0, "drop_chance": 0.05
 		},
 		"armored_orc": {
 			"name": "Armored Uruk-hai",
 			"hp": 5, "armor": 6, "damage": 2, "rage_damage": 4, "speed": 75.0,
-			"attack_range": 20.0, "drop_chance": 0.35
+			"attack_range": 20.0, "drop_chance": 0.05
 		},
 		"skeleton": {
 			"name": "Barrow-wight Remains",
-			"hp": 3, "damage": 1, "speed": 110.0, "attack_range": 18.0, "drop_chance": 0.25
+			"hp": 3, "damage": 1, "speed": 110.0, "attack_range": 18.0, "drop_chance": 0.05
 		},
 		"skeleton_archer": {
 			"name": "Minas Morgul Bone Archer",
 			"hp": 5, "damage": 2, "speed": 70.0, "attack_range": 195.0, "retreat_range": 85.0,
-			"attack_cooldown": 1.6, "drop_chance": 0.30
+			"attack_cooldown": 1.6, "drop_chance": 0.05
 		},
 		"vampire": {
 			"name": "Angmar Blood Bat",
 			"hp": 5, "damage": 2, "speed": 85.0, "attack_range": 165.0, "retreat_range": 65.0,
-			"attack_cooldown": 1.4, "drop_chance": 0.35
+			"attack_cooldown": 1.4, "drop_chance": 0.05
 		},
 		"werewolf": {
 			"name": "Warg-breed Werewolf",
 			"hp": 5, "damage": 2, "pounce_damage": 3, "speed": 95.0, "pounce_speed": 175.0,
 			"pounce_distance": 95.0, "pounce_windup_time": 0.65, "attack_range": 24.0,
-			"pounce_min_range": 50.0, "pounce_max_range": 135.0, "pounce_cooldown": 3.5, "drop_chance": 0.35
+			"pounce_min_range": 50.0, "pounce_max_range": 135.0, "pounce_cooldown": 3.5, "drop_chance": 0.05
 		}
 	}
 	for eid in ENEMY_RESOURCES:

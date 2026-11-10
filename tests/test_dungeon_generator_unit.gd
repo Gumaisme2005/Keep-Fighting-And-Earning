@@ -5,6 +5,13 @@ const BalanceConfig = preload("res://Scene/BalanceConfig.gd")
 const WORLD_SCENE = preload("res://world.tscn")
 const VariantChecks = preload("res://tests/dungeon_variant_test_support.gd")
 
+class HistoricalDensity extends "res://Scene/Map/dungeon_generator.gd":
+	# Keep the independent historical fixture's complete geometry/spawn/RNG
+	# oracle under its original density. Current density is tested separately.
+	func _configure_enemy_density() -> void:
+		min_enemies = clampi(3 + (current_level - 1), 3, 8)
+		max_enemies = clampi(7 + (current_level - 1) * 2, 7, 14)
+
 var passed_count: int = 0
 var failed_count: int = 0
 
@@ -542,6 +549,8 @@ func _test_ut19_commit1_compatibility() -> void:
 		_assert_true(false, "UT-19: Disabled variants match independent Commit 1 baseline", "baseline provenance/case count mismatch")
 		return
 	var gen = _create_variant_generator("BASELINE", 16, 1, false, false)
+	gen.set_script(HistoricalDensity)
+	gen.enable_combat_room_variants = false
 	gen.cell_size = fixture.config.cell_size
 	gen.room_min_size = fixture.config.room_min_size
 	gen.room_max_size = fixture.config.room_max_size

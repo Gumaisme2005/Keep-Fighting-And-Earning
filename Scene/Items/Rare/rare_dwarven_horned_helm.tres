@@ -10,6 +10,6 @@ type = 0
 rarity = 1
 icon = ExtResource("1_1mw1g")
 description = "Reinforced steel helmet adorned with short dwarven horns, providing stout guard."
-armor = 2
+armor = 1
 max_hp_bonus = 1
 max_stack = 1

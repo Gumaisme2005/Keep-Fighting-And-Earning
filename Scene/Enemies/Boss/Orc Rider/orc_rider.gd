@@ -2,6 +2,10 @@ extends CharacterBody2D
 
 signal boss_hp_changed(current_hp: int, max_hp: int, phase: int, boss_name: String)
 
+const FloorBalance = preload("res://Scene/Balance/EnemyFloorBalance.gd")
+var combat_floor: int = 1
+var armor_piercing: float = 0.0
+
 const BalanceData = preload("res://Scene/BalanceConfig.gd")
 const BOSS_NAME: String = "WARG RIDER CHIEFTAIN — WARLORD OF MORIA"
 
@@ -40,9 +44,10 @@ var player: Node2D = null
 
 func _ready() -> void:
 	var cfg: Dictionary = BalanceData.get_boss_stats("orc_rider")
-	max_hp = int(cfg.get("hp", max_hp))
+	max_hp = FloorBalance.health(int(cfg.get("hp", max_hp)), combat_floor, true)
+	armor_piercing = FloorBalance.penetration(combat_floor)
 	base_speed = float(cfg.get("speed", base_speed))
-	base_damage = int(cfg.get("damage", base_damage))
+	base_damage = int(cfg.get("damage", base_damage)) + FloorBalance.damage_bonus(combat_floor)
 	hp = max_hp
 	current_speed = base_speed
 	active_damage = base_damage
@@ -321,7 +326,7 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 	if area.name == "PlayerHurtbox":
 		var target = area.get_parent()
 		if target.has_method("take_damage"):
-			target.take_damage(active_damage)
+			FloorBalance.hit(target, active_damage, armor_piercing)
 
 func _disable_all_hitboxes() -> void:
 	shape_1.set_deferred("disabled", true)

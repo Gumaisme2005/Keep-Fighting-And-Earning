@@ -16,3 +16,4 @@ icon = SubResource("AtlasTexture_ip484")
 description = "Heavy chain mail forged in the halls of Erebor to deflect deadly strikes."
 armor = 2
 metadata/_custom_type_script = "uid://cfc0cqlwptxu6"
+max_hp_bonus = 1

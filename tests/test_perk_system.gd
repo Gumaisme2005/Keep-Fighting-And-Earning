@@ -2,6 +2,7 @@ extends Node2D
 
 const PerkData = preload("res://Scene/Perks/PerkData.gd")
 const PerkDatabase = preload("res://Scene/Perks/PerkDatabase.gd")
+const PERK_MANAGER_SCRIPT = preload("res://Scene/Perks/PerkManager.gd")
 
 class MockPlayerForPerks extends Node2D:
 	signal stats_changed(hp, max_hp, armor, max_armor)
@@ -46,6 +47,7 @@ func _ready() -> void:
 	test_apply_perk_to_mock_player()
 	test_perk_manager_query_helpers()
 	test_character_combat_hooks_and_revive()
+	test_flat_damage_application_once()
 	test_stochastic_damage_resolution()
 	test_perk_selection_modal()
 
@@ -111,7 +113,7 @@ func test_perk_database_integrity() -> void:
 
 func test_deterministic_perk_rolling() -> void:
 	print("\n[TEST 3] Testing Deterministic Perk Rolling...")
-	var manager := PerkManager.new()
+	var manager := PERK_MANAGER_SCRIPT.new()
 	add_child(manager)
 	manager.reset()
 
@@ -137,7 +139,7 @@ func test_deterministic_perk_rolling() -> void:
 
 func test_unique_perk_filtering() -> void:
 	print("\n[TEST 4] Testing Unique Perk Filtering...")
-	var manager := PerkManager.new()
+	var manager := PERK_MANAGER_SCRIPT.new()
 	add_child(manager)
 	manager.reset()
 
@@ -155,7 +157,7 @@ func test_unique_perk_filtering() -> void:
 
 func test_apply_perk_to_mock_player() -> void:
 	print("\n[TEST 5] Testing Applying Perks to Player...")
-	var manager := PerkManager.new()
+	var manager := PERK_MANAGER_SCRIPT.new()
 	add_child(manager)
 	manager.reset()
 
@@ -184,7 +186,7 @@ func test_apply_perk_to_mock_player() -> void:
 
 func test_perk_manager_query_helpers() -> void:
 	print("\n[TEST 6] Testing PerkManager Query Helpers...")
-	var manager := PerkManager.new()
+	var manager := PERK_MANAGER_SCRIPT.new()
 	add_child(manager)
 	manager.reset()
 
@@ -223,6 +225,7 @@ func test_character_combat_hooks_and_revive() -> void:
 
 	# 2. Thêm Perk sát thương và kiểm tra get_total_damage() tự động tăng
 	var p_edge = PerkDatabase.get_perk_by_id("sharpened_edge")
+	# Match the production perk-selection path, including application to the real hero.
 	PerkManager.add_perk(p_edge, player)
 	var new_dmg = player.get_total_damage()
 	_assert_test(new_dmg == base_dmg + 1, "Player get_total_damage() increased by perk bonus")
@@ -247,14 +250,39 @@ func test_character_combat_hooks_and_revive() -> void:
 	player.hp = 1 # Đang còn 1 máu
 	var missing: int = player.max_hp - player.hp
 	var raw_berserk_dmg: float = player.get_raw_damage()
-	var expected_raw: float = float(player.base_damage) * (1.0 + float(missing) * 0.15)
-	_assert_test(abs(raw_berserk_dmg - expected_raw) < 0.01, "Berserk Frenzy raw damage scales +15% per missing HP (Expected: %.2f, Got: %.2f)" % [expected_raw, raw_berserk_dmg])
+	var expected_raw: float = float(player.base_damage) * (1.0 + float(missing) / float(player.max_hp))
+	_assert_test(abs(raw_berserk_dmg - expected_raw) < 0.01, "Berserk Frenzy raw damage scales +100%% per missing-HP ratio (Expected: %.2f, Got: %.2f)" % [expected_raw, raw_berserk_dmg])
 
 	# 6. Kiểm tra trần tốc độ chạy tối đa (max_speed_cap)
 	player.speed = 999.0
 	_assert_test(player.get_effective_speed() == player.max_speed_cap, "Movement speed is capped at max_speed_cap (%.1f)" % player.max_speed_cap)
 
 	player.queue_free()
+	PerkManager.reset()
+
+func test_flat_damage_application_once() -> void:
+	PerkManager.reset()
+	var scene = preload("res://Scene/Character/Player 1_Pyrois/player.tscn")
+	var player = scene.instantiate()
+	add_child(player)
+	var original_base: int = player.base_damage
+	PerkManager.add_perk(PerkDatabase.get_perk_by_id("sharpened_edge"), player)
+	_assert_test(player.base_damage == original_base + 1 and player.get_raw_damage() == original_base + 1, "Real perk selection applies +1 flat damage exactly once")
+	var extra := PerkData.new()
+	extra.id = "flat_damage_regression"
+	extra.modifiers = {"bonus_damage": 2}
+	PerkManager.add_perk(extra, player)
+	_assert_test(player.get_raw_damage() == original_base + 3, "Multiple flat damage perks stack once each")
+	var weapon := ItemDatabase.get_item("common_sword_1")
+	var slot: int = player.inventory.get_first_empty_slot()
+	player.inventory.add_item(weapon)
+	player.inventory.use_or_equip_item(slot, player)
+	_assert_test(player.get_raw_damage() == original_base + 3 + weapon.damage, "Weapon damage remains independent of applied perk damage")
+	var replacement = scene.instantiate()
+	add_child(replacement)
+	_assert_test(replacement.base_damage == original_base + 3 and replacement.get_raw_damage() == original_base + 3, "Recreated hero reapplies active flat damage perks once")
+	player.free()
+	replacement.free()
 	PerkManager.reset()
 
 func test_stochastic_damage_resolution() -> void:
@@ -280,9 +308,10 @@ func test_perk_selection_modal() -> void:
 	var modal = modal_scene.instantiate()
 	add_child(modal)
 
-	var callback_called := false
+	# GDScript lambdas capture scalar values by copy; use a shared reference for the assertion.
+	var callback_state := {"called": false}
 	modal.show_selection(null, func():
-		callback_called = true
+		callback_state.called = true
 	)
 
 	_assert_test(modal.visible == true, "PerkSelectionModal is visible when shown")
@@ -294,7 +323,7 @@ func test_perk_selection_modal() -> void:
 	modal._on_perk_card_selected(first_perk)
 
 	_assert_test(modal.visible == false, "Modal hidden after selection")
-	_assert_test(callback_called == true, "Completion callback invoked upon perk selection")
+	_assert_test(callback_state.called == true, "Completion callback invoked upon perk selection")
 	_assert_test(PerkManager.has_perk("iron_sinew") == true, "Perk acquired into PerkManager")
 
 	modal.queue_free()

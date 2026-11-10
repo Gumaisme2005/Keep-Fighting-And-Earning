@@ -142,6 +142,90 @@ jobs:
           godot --headless "res://tests/test_replay_security.tscn" 2>&1 | tee "$RUNNER_TEMP/enemy_replay.log"
           if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/enemy_replay.log"; then exit 1; fi
 
+      - name: Run Potion Economy Regression Tests
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/potion-regression-data
+        run: |
+          godot --headless "res://tests/test_potion_system.tscn" 2>&1 | tee "$RUNNER_TEMP/potion_system.log"
+          if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/potion_system.log"; then exit 1; fi
+
+      - name: Run Defensive Combat Balance at 30 and 144 Render FPS
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/defensive-combat-data
+        run: |
+          set -euo pipefail
+          for fps in 30 144; do
+            godot --headless --max-fps "$fps" "res://tests/test_defensive_combat_balance.tscn" 2>&1 | tee "$RUNNER_TEMP/defensive_${fps}.log"
+            if grep -Eq '^(SCRIPT ERROR:|ERROR:|\[FAIL\])' "$RUNNER_TEMP/defensive_${fps}.log"; then exit 1; fi
+            grep -Eq '^DEFENSIVE RESULTS: [0-9]+ PASSED, 0 FAILED$' "$RUNNER_TEMP/defensive_${fps}.log"
+            grep '^\[TRACE\]' "$RUNNER_TEMP/defensive_${fps}.log" > "$RUNNER_TEMP/defensive_${fps}.trace"
+          done
+          diff -u "$RUNNER_TEMP/defensive_30.trace" "$RUNNER_TEMP/defensive_144.trace"
+
+      - name: Run Equipment Loot and Perk Balance at 30 and 144 Render FPS
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/equipment-balance-data
+        run: |
+          set -euo pipefail
+          for fps in 30 144; do
+            godot --headless --max-fps "$fps" "res://tests/test_equipment_loot_perk_balance.tscn" 2>&1 | tee "$RUNNER_TEMP/equipment_${fps}.log"
+            if grep -Eq '^(SCRIPT ERROR:|ERROR:|\[FAIL\]|\[RUNTIME\])' "$RUNNER_TEMP/equipment_${fps}.log"; then exit 1; fi
+            grep -Eq '^EQUIPMENT RESULTS: [0-9]+ PASSED, 0 FAILED$' "$RUNNER_TEMP/equipment_${fps}.log"
+            grep '^\[TRACE\]' "$RUNNER_TEMP/equipment_${fps}.log" > "$RUNNER_TEMP/equipment_${fps}.trace"
+          done
+          diff -u "$RUNNER_TEMP/equipment_30.trace" "$RUNNER_TEMP/equipment_144.trace"
+
+      - name: Run Enemy Floor Balance at 30 and 144 Render FPS
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/enemy-floor-balance-data
+        run: |
+          set -euo pipefail
+          for fps in 30 144; do
+            godot --headless --max-fps "$fps" "res://tests/test_enemy_floor_balance.tscn" 2>&1 | tee "$RUNNER_TEMP/enemy_floor_${fps}.log"
+            if grep -Eq '^(SCRIPT ERROR:|ERROR:|\[FAIL\]|\[RUNTIME\])' "$RUNNER_TEMP/enemy_floor_${fps}.log"; then exit 1; fi
+            grep -Eq '^ENEMY FLOOR RESULTS: [0-9]+ PASSED, 0 FAILED$' "$RUNNER_TEMP/enemy_floor_${fps}.log"
+            grep '^\[TRACE\]' "$RUNNER_TEMP/enemy_floor_${fps}.log" > "$RUNNER_TEMP/enemy_floor_${fps}.trace"
+          done
+          diff -u "$RUNNER_TEMP/enemy_floor_30.trace" "$RUNNER_TEMP/enemy_floor_144.trace"
+
+      - name: Run Issue 75 Progression Distributions at 30 and 144 Render FPS
+        timeout-minutes: 20
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/issue75-progression-data
+        run: |
+          set -euo pipefail
+          for fps in 30 144; do
+            godot --headless --max-fps "$fps" "res://tests/test_issue75_progression_balance.tscn" 2>&1 | tee "$RUNNER_TEMP/progression_${fps}.log"
+            if grep -Eq '^(SCRIPT ERROR:|ERROR:|\[FAIL\]|\[RUNTIME\])' "$RUNNER_TEMP/progression_${fps}.log"; then exit 1; fi
+            grep -Eq '^PROGRESSION RESULTS: [0-9]+ PASSED, 0 FAILED$' "$RUNNER_TEMP/progression_${fps}.log"
+            grep '^\[TRACE\]' "$RUNNER_TEMP/progression_${fps}.log" > "$RUNNER_TEMP/progression_${fps}.trace"
+          done
+          diff -u "$RUNNER_TEMP/progression_30.trace" "$RUNNER_TEMP/progression_144.trace"
+
+      - name: Run Issue 75 Gameplay Acceptance at 30 and 144 Render FPS
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/issue75-acceptance-data
+        run: |
+          set -euo pipefail
+          for fps in 30 144; do
+            godot --headless --max-fps "$fps" "res://tests/test_issue75_acceptance.tscn" 2>&1 | tee "$RUNNER_TEMP/acceptance_${fps}.log"
+            if grep -Eq '^(SCRIPT ERROR:|ERROR:|\[FAIL\]|\[RUNTIME\])' "$RUNNER_TEMP/acceptance_${fps}.log"; then exit 1; fi
+            grep -Eq '^ACCEPTANCE RESULTS: [0-9]+ PASSED, 0 FAILED$' "$RUNNER_TEMP/acceptance_${fps}.log"
+            grep '^\[TRACE\]' "$RUNNER_TEMP/acceptance_${fps}.log" > "$RUNNER_TEMP/acceptance_${fps}.trace"
+          done
+          diff -u "$RUNNER_TEMP/acceptance_30.trace" "$RUNNER_TEMP/acceptance_144.trace"
+
       - name: 18. Run Tactical Navigation Contract at 30 and 144 Render FPS
         timeout-minutes: 5
         shell: bash

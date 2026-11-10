@@ -13,6 +13,9 @@ extends Node2D
 
 signal boss_hp_changed(current_hp: int, max_hp: int, phase: int, boss_name: String)
 
+const FloorBalance = preload("res://Scene/Balance/EnemyFloorBalance.gd")
+var armor_piercing: float = 0.0
+
 const BalanceData = preload("res://Scene/BalanceConfig.gd")
 const Crystal = preload("res://Scene/Enemies/Boss/Skeleton King/skeleton_king_crystal.gd")
 const LaserVolley = preload("res://Scene/Enemies/Boss/Skeleton King/skeleton_king_laser.gd")
@@ -118,7 +121,8 @@ static func build_sprite_frames() -> SpriteFrames:
 func _ready() -> void:
 	var cfg: Dictionary = BalanceData.get_boss_stats("skeleton_king")
 	var tier := maxi(1, int(level / 3.0))
-	max_hp = int(cfg.get("hp", 60)) + (tier - 1) * int(cfg.get("hp_per_tier", 15))
+	max_hp = FloorBalance.health(int(cfg.get("hp", 60)), level, true)
+	armor_piercing = FloorBalance.penetration(level)
 	hp = max_hp
 	crystals_to_defeat = int(cfg.get("crystals_to_defeat", 5)) + (tier - 1)
 	crystal_damage = ceili(float(max_hp) / float(crystals_to_defeat))
@@ -129,7 +133,7 @@ func _ready() -> void:
 	crystal_lifetime = float(cfg.get("crystal_lifetime", 9.0))
 	crystal_lifetime_enraged = float(cfg.get("crystal_lifetime_enraged", 7.5))
 	crystal_expire_heal_ratio = float(cfg.get("crystal_expire_heal_ratio", 0.5))
-	laser_damage = int(cfg.get("laser_damage", 1)) + (tier - 1)
+	laser_damage = int(cfg.get("laser_damage", 1)) + FloorBalance.damage_bonus(level)
 	summon_cap = int(cfg.get("summon_cap", 4))
 	summon_cap_enraged = int(cfg.get("summon_cap_enraged", 6))
 	action_cooldown = float(cfg.get("action_cooldown", 2.6))
@@ -310,6 +314,7 @@ func _new_volley() -> Node2D:
 	var volley: Node2D = LaserVolley.new()
 	volley.tilemap = tilemap
 	volley.damage = laser_damage
+	volley.armor_piercing = armor_piercing
 	volleys.append(volley)
 	return volley
 
@@ -404,12 +409,7 @@ func _summon_minions() -> void:
 		var enemy: Node2D = scene.instantiate()
 		if "loot_seed" in enemy:
 			enemy.loot_seed = rng.randi()
-		if level > 1 and "hp" in enemy:
-			enemy.hp += (level - 1) * 2
-			if "max_hp" in enemy:
-				enemy.max_hp = enemy.hp
-		if level >= 3 and "damage" in enemy:
-			enemy.damage += 1
+		enemy.combat_floor = level
 		enemy.z_index = 2
 		enemy.add_to_group("enemies")
 		enemy.add_to_group("skeleton_king_minions")

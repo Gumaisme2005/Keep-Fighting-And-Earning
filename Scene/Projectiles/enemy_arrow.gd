@@ -1,5 +1,8 @@
 extends Area2D
 
+const FloorBalance = preload("res://Scene/Balance/EnemyFloorBalance.gd")
+var armor_piercing: float = 0.0
+
 var speed: float = 200.0
 var damage: int = 1
 var direction: Vector2 = Vector2.ZERO
@@ -41,7 +44,7 @@ func _on_area_entered(area: Area2D) -> void:
 				return
 		if target.has_method("take_damage"):
 			is_broken = true
-			target.take_damage(damage)
+			FloorBalance.hit(target, damage, armor_piercing)
 		queue_free()
 
 func _on_body_entered(body: Node2D) -> void:
