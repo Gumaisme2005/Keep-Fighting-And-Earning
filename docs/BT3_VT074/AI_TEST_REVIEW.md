@@ -38,3 +38,15 @@ Ngày ghi nhận: 12/11/2026 (Asia/Saigon). Nguồn: tin nhắn trực tiếp c�
 > - **TR-02: MODIFY – Chấp nhận bản sửa v1.** Cần kiểm tra test isolation bằng cách chạy từng nhóm độc lập, forward/reverse và shuffle có seed tái lập, đồng thời giữ nguyên regression assertions.
 
 Hai revisions đã được áp dụng vào rows VT74-03/VT74-11 của TEST_CASES.md, giữ đủ precondition/input/oracle/priority/cleanup/status; bản gốc và lý do sửa giữ ở TR-01/TR-02 phía trên. Đây là **human-approved design revisions**, không phải hai automated tests đã chạy. Test RED VT74-02 và first-completion control VT74-01 giữ nguyên; không cần API mới để tái hiện duplicate. Trạng thái Commit 2 và evidence thực tế ở [COMMIT_2_REPORT.md](COMMIT_2_REPORT.md).
+
+## Commit 6 — Human Direct Test Edits đã được xác minh
+
+Đây là cập nhật sau lịch sử Commit 2 phía trên, không viết lại trạng thái lúc đó. Sinh viên trực tiếp xác nhận đã chỉnh/thay thế và lưu hai files trong VS Code. AI đã đọc diff thật so với HEAD `becb7117eaf3c705e37946f556cc4dbe21d28c13`, kiểm mọi original source line còn nguyên theo thứ tự và chạy test trên saved source. Proposal snippets do AI hỗ trợ; thao tác sửa/lưu được sinh viên xác nhận. Không nhận AI tự sửa hai test hoặc sinh viên tự nghĩ ra snippets độc lập.
+
+- **HT-01 / VT74-03:** sinh viên thêm deep-copy `_envelope` trước globals mutation và một assertion trực tiếp sau 10 retries. Không thay CG-04/05 hoặc bất kỳ assertion cũ. Actual **41 contract assertions PASS**, gồm đủ CG-01…CG-40 và HT-01, engine exit 0.
+- **HT-02 / VT74-11:** sinh viên thêm `_create_replays(count)` override trong AI-generated wrapper, gọi parent rồi kiểm exact history/replay counts trước manual-delete/clear. Original replay file không đổi. Actual wrapper **31 PASS mỗi forward/reverse/shuffle**, nhóm riêng **3/14/7/5/2 PASS**, tất cả exit 0; original replay vẫn **29 PASS mỗi full order**, nhóm riêng 3/14/6/4/2.
+- Có hai assertion call sites mới; HT-02 thực thi hai lần trong full wrapper. Diff còn thêm snapshot/helper và một dòng trống đầu mỗi file, không có deletion/replacement của original lines. Exact labels/outcomes và end-state cùng group khớp qua mọi configuration, không chỉ counts.
+
+**Requirement sinh viên trực tiếp sửa ít nhất hai AI-generated tests: SATISFIED tại C6.** Không nâng các case chỉ thiết kế/pairwise rows thành executed PASS, không sửa historical RED/GREEN/mutation/performance hoặc lời human review gốc.
+
+Before/after, lý do và trách nhiệm: [HUMAN_TEST_EDIT_REVIEW.md](HUMAN_TEST_EDIT_REVIEW.md). Diff: [commit6_human_edits.patch](evidence/commit6_human_edits.patch); static preservation: [JSON](evidence/commit6_human_edits_diff.json); actual commands/probes/stdout/stderr/exits: [C6-all](evidence/commit6_369f4ec56761_all.json). C6-all có 30 suite invocations PASS, runner exit 0, save cá nhân/hash source giữ nguyên trong lúc thực thi.

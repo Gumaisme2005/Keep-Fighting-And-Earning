@@ -1,0 +1,35 @@
+# VT-074 — Traceability theo evidence thực tế
+
+HEAD C6: `becb7117eaf3c705e37946f556cc4dbe21d28c13` cộng working diff HT-01/HT-02 và runner/docs; **chưa có SHA Commit 6**. Các SHA viết tắt dưới đây được đối chiếu Git history:
+
+- C1 `be8e39d`; C2 `25026e3`; C3 `2c71195`; C4 `001785e`; C5 `65516e6`; CI fix `becb711`.
+- Production runtime giữ nguyên từ C3. New C6 test results gắn HEAD + working diff, không gán ngược vào commit đã có.
+- C2 catalog 22 cases và covering-array design là tài liệu lịch sử; các dòng PASS dưới đây dành cho **witnesses thực thi được nêu**, không nâng mọi subcondition của 22 cases thành PASS.
+
+`C6-all` là [commit6_369f4ec56761_all.json](evidence/commit6_369f4ec56761_all.json); source test paths tính từ repository root.
+
+| Requirement / Risk | Test ID | Test file | Commit SHA | Result | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| AC-01 — first completion | VT74-01/02 subset; CG-03/37; IT-08 | `tests/test_run_completion_idempotency.gd`, `tests/test_run_completion_contract.gd`, `tests/test_vt074_integration.gd` | C2→C3; C4; C6 working diff | RED duplicate ở C2 → GREEN; một result/receipt/signal và UI history row trong witnesses | [red.log](evidence/red.log), [green.log](evidence/green.log), C6-all |
+| AC-02 — duplicate/frozen retry | VT74-03/17; HT-01; CG-04…08/17; IT-02/03/06/07 | Contract, integration, `tests/vt074/test_flaky_time.gd` | C3/C4/C5; C6 working diff | PASS: receipt/snapshot/disk/counters, frozen envelope mới được so trực tiếp; không resurrect | C6-all, [human diff](evidence/commit6_human_edits.patch), [flaky_time.log](evidence/flaky_time.log) |
+| AC-03 — IDs khác, cùng seed/date | VT74-06/13/21; CG-18…20/39; IT-05/08 | Contract và integration | C3/C4; C6 rerun | PASS witnesses: hai IDs/results, delete B giữ A; replay/fallback cấp identity mới | C6-all, [integration.log](evidence/integration.log) |
+| AC-04 — invalid/unknown/conflict | VT74-04/05/15/16/18; CG-07…12/15/40; IT-01/02 | Contract và integration | C3/C4; C6 rerun | PASS: status đúng và zero side effects; 8 ID +19 payload variants, 7 canonical conflict fields | C6-all |
+| AC-05 — persistence/retry | VT74-07/08/19/20; CG-13…17/24…36; IT-03/04/06/07 | Contract/integration, `tests/vt074/fixtures/integration_store.gd` | C3/C4; C6 rerun | PASS cho fresh reload, legacy, real open/replace failure và controlled read-back uncertainty/reconcile | C6-all; [C4 report §D](COMMIT_4_REPORT.md#d-failure-path) |
+| AC-05 — FIFO retention | VT74-09/10; boundary N=127/128/129 | `tests/vt074/test_boundary_mutation.gd` | C5; C6 rerun | PASS: exact membership/order, oldest không active/không trong history, status và disk đúng | C6-all; [C6 mutation](evidence/commit6_6244dca6df9e_mutation.json) |
+| NFR-01 — isolation/order | VT74-11; HT-02; F-02 | `tests/vt074/test_flaky_order.gd`, inherited `tests/test_replay_security.gd` | C3/C5; C6 working diff | C6 PASS: wrapper 31 mỗi full order; independent 3/14/7/5/2; exact assertions/state khớp. HT-02 xác nhận fixture trước delete/clear | C6-all `order_comparison`; [human diff review](evidence/commit6_human_edits_diff.json) |
+| NFR-01 — time risk | VT74-13; F-01 | `tests/vt074/test_flaky_time.gd` | C5; C6 rerun | PASS 20 iterations/340 assertions, clock tiến/lùi và globals đổi; không suy hết flaky | C6-all; [C5 TIME raw](evidence/flaky_time.log) |
+| NFR-02 — 40 tasks/p95 | VT74-14; primary/secondary ×2/3600 | `tests/vt074/performance_harness.gd` | C5; C6 benchmark mới được ghi riêng | 2 frames PASS, 3600 FAIL trong cả C5/C6. C6 heavy p95 5086,830/3773,023 ms; 40 overlap, main-thread serialized; không overall NFR PASS | [C5 CSV](evidence/performance_40.csv), [C5 batches](evidence/performance_batches.json), [C5 summary](evidence/performance_summary.md), [C6 benchmark](evidence/commit6_77e74cc6c89b_benchmark.json) |
+| NFR-03 — save/replay compatibility | VT74-06/07/17/20/21; IT-03/04/07/08; replay | Integration và replay regression | C3/C4; C6 rerun | PASS witnesses: legacy không backfill/dedup, migration/reload, caps/history15/replay10, identity deletion/fallback | C6-all |
+| Pairwise/combinatorial | PW-01…PW-14 → 8 mapped catalog IDs | `tests/vt074/pairwise_cases.csv`, `pairwise.py` | C2; C6 check-only runner diff | Design verifier PASS 49/49 feasible pairs; **engine rows 0/14, NOT RUN** | [C6 check](evidence/commit6_pairwise_check.json), [PAIRWISE](PAIRWISE.md) |
+| Mutation >→>= | Boundary 128 | `tests/vt074/test_boundary_mutation.gd` | C5; C6 isolated mutation rerun | ORIGINAL 27 PASS → MUTANT 19 PASS/8 behavioral FAIL → RESTORED 27 PASS; exits 0/1/0 | [C5 original](evidence/mutation_original.log), [mutant](evidence/mutation_bug.log), [restored](evidence/mutation_restored.log), C6 mutation JSON |
+| Flaky ORDER repeated | F-02; 20 rounds | Wrapper và inherited replay | C5 | PASS 160 invocations/2320 assertions; không đổi thành 31-assertion results sau human edit | [flaky_order.log](evidence/flaky_order.log), [quality_verification.json](evidence/quality_verification.json) |
+| Negative tests | VT74-04/05/15/16; IT-01/02 | Integration | C4; C6 rerun | PASS status + before/after hashes/counters, không chỉ no-crash | C6-all |
+| Failure-path | VT74-08/19; IT-06 | Integration/store fixture | C4; C6 rerun | PASS definite failure/retry và uncertain old/candidate/read-unresolved; OS disk-full/crash/power-loss matrix NOT VERIFIED | C6-all, [C4 report](COMMIT_4_REPORT.md) |
+| Integration/headless E2E | VT74-12; IT-08 | `tests/test_vt074_integration.gd` | C4; C6 rerun | PASS actual scene flow; toàn IT forward/reverse/independent có 1335 assertion executions, không phải 1335 cases | C6-all |
+| Manual visual/gameplay E2E | VT74-12 manual portion | Chưa có executable/manual signoff mới | — | **NOT RUN**: pixels/input thật/death timer/full interactive restart flow | [C4 §F](COMMIT_4_REPORT.md#f-e2e-verification), [student reflection](REFLECTION.md) |
+| Exact writer byte cap/crash variants | VT74-22 đầy đủ | Chỉ oversized loader witness trong IT-04 | C4 | **NOT FULLY RUN**; không lấy 3600 frames hoặc loader size test thay exact writer 2097152/2097153 boundary | [risk gaps](COVERAGE_AND_RISKS.md) |
+| Line/branch coverage | Risk mapping | Không có measured instrumentation | C5 | **NOT MEASURED**, không có % line/branch | [COVERAGE_AND_RISKS](COVERAGE_AND_RISKS.md) |
+| Perk regression | Ba assertions kế thừa | `tests/test_perk_system.gd` | C3 A/B; C4/C5 reruns | 34/37, 3 **KNOWN BASELINE FAILURES**, engine 1; không rerun trong C6 | [perk_ab.json](evidence/perk_ab.json), [C5 raw](evidence/commit5_regression_perk.log) |
+| CI resource import | Raw benchmark CSV | `docs/BT3_VT074/evidence/.gdignore` | CI fix `becb711` | Linux workflow đã PASS sau fix; native allocator root cause vẫn không có backtrace chứng minh | [Actions 43241670891](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/43241670891), [investigation](CI_IMPORT_INVESTIGATION.md) |
+
+Các giới hạn vẫn còn nguyên: single writer/process, finite retention, token/digest collision, pending chỉ ở RAM, chưa chứng minh fsync/power-loss durability hoặc external writers. P-01 bị REJECT; mọi production bytes vẫn là baseline đã GREEN.

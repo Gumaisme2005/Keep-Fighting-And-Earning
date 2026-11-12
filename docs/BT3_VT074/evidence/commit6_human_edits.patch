@@ -1,0 +1,28 @@
+diff --git a/tests/test_run_completion_contract.gd b/tests/test_run_completion_contract.gd
+index ede0c64..940606c 100644
+--- a/tests/test_run_completion_contract.gd
++++ b/tests/test_run_completion_contract.gd
+@@ -0,0 +1 @@
++
+@@ -96,0 +98 @@ func test_lifecycle_and_frozen_retry() -> void:
++	var frozen_before: Dictionary = gm._envelope.duplicate(true)
+@@ -102,0 +105,4 @@ func test_lifecycle_and_frozen_retry() -> void:
++	check(
++		not frozen_before.is_empty() and gm._envelope == frozen_before,
++		"HT-01 VT74-03 frozen envelope unchanged after retries"
++	)
+diff --git a/tests/vt074/test_flaky_order.gd b/tests/vt074/test_flaky_order.gd
+index db54b9b..54b70b4 100644
+--- a/tests/vt074/test_flaky_order.gd
++++ b/tests/vt074/test_flaky_order.gd
+@@ -0,0 +1 @@
++
+@@ -34,0 +36,8 @@ func assert_test(cond: bool, test_name: String) -> void:
++func _create_replays(count: int) -> void:
++	super._create_replays(count)
++	assert_test(
++		GameManager.run_history.size() == count
++		and GameManager.get_saved_replays_count() == count,
++		"HT-02 VT74-11 fixture contains %d replays before delete/clear" % count
++	)
++

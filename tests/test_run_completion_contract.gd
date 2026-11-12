@@ -1,3 +1,4 @@
+
 extends Node
 ## Focused C3 patch witnesses, not the full C4 integration/failure matrix.
 const Manager = preload("res://Scene/GameManager.gd")
@@ -94,12 +95,17 @@ func test_lifecycle_and_frozen_retry() -> void:
 	var before := state(gm)
 	var disk := FileAccess.get_sha256(gm.completion_store.path)
 	var writes: int = gm.completion_store.commits
+	var frozen_before: Dictionary = gm._envelope.duplicate(true)
 	gm.enemies_killed = 999
 	gm.current_recording_frames.clear()
 	var retries_ok := true
 	for i in range(10):
 		var retry: Dictionary = gm.finish_run("Complete")
 		retries_ok = retries_ok and retry.status == "DUPLICATE" and retry.receipt == first.receipt
+	check(
+		not frozen_before.is_empty() and gm._envelope == frozen_before,
+		"HT-01 VT74-03 frozen envelope unchanged after retries"
+	)
 	check(retries_ok and state(gm) == before and FileAccess.get_sha256(gm.completion_store.path) == disk, "CG-04 VT74-03 core: frozen envelope/receipt/history/disk unchanged after 10 retries")
 	check(gm.completion_store.commits == writes and events[gm.get_instance_id()] == 1, "CG-05 duplicate causes zero writer/signal/FIFO/frame side effects")
 	first.receipt.fingerprint = "caller mutation"

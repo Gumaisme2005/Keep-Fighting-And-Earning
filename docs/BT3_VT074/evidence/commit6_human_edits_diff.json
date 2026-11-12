@@ -1,0 +1,76 @@
+{
+  "at": "2026-11-12T15:40:02.178684+00:00",
+  "baseline": "becb7117eaf3c705e37946f556cc4dbe21d28c13",
+  "authorship": "Student explicitly confirmed direct VS Code edits; AI proposed snippets and now verifies saved files. No claim of independent student invention or keystroke observation.",
+  "files": [
+    {
+      "file": "tests/test_run_completion_contract.gd",
+      "baseline_Git_blob_sha256": "2056d5c97991deed47ecc7f91002d913242b6e83edfce1a3402219778b298b8c",
+      "working_sha256": "3f101b24593670ae0da2a99a83d4251b374992cff3dd34a9006e28f27d772204",
+      "all_original_lines_preserved_in_order": true,
+      "insertions": [
+        {
+          "before_line": 1,
+          "added_lines": [
+            ""
+          ]
+        },
+        {
+          "before_line": 97,
+          "added_lines": [
+            "\tvar frozen_before: Dictionary = gm._envelope.duplicate(true)"
+          ]
+        },
+        {
+          "before_line": 103,
+          "added_lines": [
+            "\tcheck(",
+            "\t\tnot frozen_before.is_empty() and gm._envelope == frozen_before,",
+            "\t\t\"HT-01 VT74-03 frozen envelope unchanged after retries\"",
+            "\t)"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/vt074/test_flaky_order.gd",
+      "baseline_Git_blob_sha256": "d432d4e97d6bb9f0d31c0ff85533476b9fd5adf93bd260ab32d3c8afe460b8b0",
+      "working_sha256": "586b4bdc39c74b6fd19aa49c52619482ca4b17e9e8c6f7d19663ffbaf1da6caa",
+      "all_original_lines_preserved_in_order": true,
+      "insertions": [
+        {
+          "before_line": 1,
+          "added_lines": [
+            ""
+          ]
+        },
+        {
+          "before_line": 35,
+          "added_lines": [
+            "func _create_replays(count: int) -> void:",
+            "\tsuper._create_replays(count)",
+            "\tassert_test(",
+            "\t\tGameManager.run_history.size() == count",
+            "\t\tand GameManager.get_saved_replays_count() == count,",
+            "\t\t\"HT-02 VT74-11 fixture contains %d replays before delete/clear\" % count",
+            "\t)",
+            ""
+          ]
+        }
+      ]
+    }
+  ],
+  "original_replay_test_unchanged": true,
+  "assessment": "SATISFIED: original lines/assertions preserved; actual contract 41, wrapper 31 in each full order and independent groups 3/14/7/5/2, all engine exits 0. AI proposed; student confirmed direct edits; AI verified saved diff and execution.",
+  "execution_evidence": "docs/BT3_VT074/evidence/commit6_369f4ec56761_all.json",
+  "diff_command": [
+    "git",
+    "diff",
+    "--no-ext-diff",
+    "--unified=0",
+    "--",
+    "tests/test_run_completion_contract.gd",
+    "tests/vt074/test_flaky_order.gd"
+  ],
+  "patch_format": "Zero-context unified diff directly from Git; all added lines retained. Avoids whitespace-only blank context prefixes in a new patch artifact."
+}

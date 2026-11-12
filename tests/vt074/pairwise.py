@@ -104,7 +104,10 @@ def verify(rows):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--generate", action="store_true")
+    parser.add_argument("--check-only", action="store_true", help="Verify without rewriting historical evidence")
     args = parser.parse_args()
+    if args.check_only and args.generate:
+        parser.error("--check-only cannot generate or modify the CSV")
     path = HERE / "pairwise_cases.csv"
     if args.generate:
         remaining = [row for row in product(*FACTORS.values()) if feasible(row)]
@@ -133,8 +136,9 @@ def main():
     if len({item["row_id"] for item in rows}) != len(rows) or not rows:
         raise ValueError("Missing or duplicate row IDs")
     report = verify(rows)
-    EVIDENCE.mkdir(parents=True, exist_ok=True)
-    (EVIDENCE / "pairwise_verification.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    if not args.check_only:
+        EVIDENCE.mkdir(parents=True, exist_ok=True)
+        (EVIDENCE / "pairwise_verification.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, indent=2))
     return 0 if report["verified"] else 1
 

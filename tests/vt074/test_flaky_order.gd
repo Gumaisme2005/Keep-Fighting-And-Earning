@@ -1,3 +1,4 @@
+
 extends "res://tests/test_replay_security.gd"
 ## Inherit every original regression assertion; only deterministic fixture seams
 ## and observations differ. Each invocation has a fresh child user-data root.
@@ -31,6 +32,14 @@ func _setup_group(group: String) -> void:
 func assert_test(cond: bool, test_name: String) -> void:
 	super.assert_test(cond, test_name)
 	print("[ORDER_ASSERT] ", JSON.stringify({"group": group_name, "label": test_name, "expected": true, "actual": cond}))
+
+func _create_replays(count: int) -> void:
+	super._create_replays(count)
+	assert_test(
+		GameManager.run_history.size() == count
+		and GameManager.get_saved_replays_count() == count,
+		"HT-02 VT74-11 fixture contains %d replays before delete/clear" % count
+	)
 
 func group_state() -> void:
 	var path: String = GameManager.completion_store.path
