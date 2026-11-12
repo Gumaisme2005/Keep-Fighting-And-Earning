@@ -1,0 +1,98 @@
+{
+  "executed_at": "2026-11-12T18:03:52.188991+07:00",
+  "branch": "feat/bt3-vt074-idempotent-run",
+  "baseline": "001785ee52589094f2b096161a0be99d5e3c4003",
+  "godot_version": "4.7.2.stable.official.ed1daf0bf",
+  "name": "regression_perk",
+  "command": "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe --headless --path C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c5\\f345dff8fc9e4b7dbf806b8192a5b59b\\project --log-file C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c5\\f345dff8fc9e4b7dbf806b8192a5b59b\\regression_perk.log res://tests/test_perk_system.tscn",
+  "exit_code": 1,
+  "user_dir": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c5\\f345dff8fc9e4b7dbf806b8192a5b59b\\userdata\\regression_perk\\roaming\\Godot\\app_userdata\\Keep Fighting And Earning",
+  "metadata": {}
+}
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+==================================================================
+  TEST SUITE: COMPLETE PERK SYSTEM VERIFICATION (STEPS 1 - 4)
+==================================================================
+
+[TEST 1] Testing PerkData Model & Modifiers...
+  [PASS] PerkData ID initialized
+  [PASS] PerkData Rarity Name
+  [PASS] PerkData Modifier speed_bonus
+  [PASS] PerkData Modifier default fallback
+
+[TEST 2] Testing PerkDatabase Catalog & Icons...
+  [PASS] PerkDatabase contains exactly 30 perks (Found: 30)
+  [PASS] All perk icon files exist on disk
+  [PASS] Catalog contains all 4 rarities
+
+[TEST 3] Testing Deterministic Perk Rolling...
+  [PASS] Roll returned exactly 3 perks
+  [PASS] Roll with identical seed and floor is 100% deterministic
+  [PASS] Different floor produces distinct roll combination
+
+[TEST 4] Testing Unique Perk Filtering...
+[PERK] Acquired: Gân Cốt Thiết Giáp (Thường (Common))
+  [PASS] Owned unique perk is not offered in subsequent rolls
+
+[TEST 5] Testing Applying Perks to Player...
+[PERK] Acquired: Gân Cốt Thiết Giáp (Thường (Common))
+  [PASS] Bonus HP applied (+1 HP -> 5)
+  [PASS] Bonus Armor applied (+1 Armor -> 3)
+[PERK] Acquired: Bộ Pháp Tật Phong (Thường (Common))
+  [PASS] Speed bonus applied (+15 -> 165)
+[PERK] Acquired: Lưỡi Kiếm Tôi Rèn (Thường (Common))
+  [PASS] Base damage applied (+1 -> 2)
+
+[TEST 6] Testing PerkManager Query Helpers...
+[PERK] Acquired: Lôi Thần Trừng Phạt (Huyền Thoại (Legendary))
+[PERK] Acquired: Bàn Thạch Hộ Thể (Sử Thi (Epic))
+[PERK] Acquired: Ý Chí Bất Diệt (Huyền Thoại (Legendary))
+[PERK] Acquired: Đồng Hồ Cát Cổ (Hiếm (Rare))
+  [PASS] has_lightning_on_hit() is true
+  [PASS] is_spike_immune() is true
+  [PASS] get_cooldown_reduction() == 0.25
+  [PASS] has_second_chance() is true
+[PERK] Second Chance (Immortal Will) consumed!
+  [PASS] Second chance consumed successfully
+  [PASS] manager.reset() cleared all perks
+
+[TEST 7] Testing Player Class Combat Hooks & Revive...
+  [PASS] Player initial total damage >= 1
+[PERK] Acquired: Lưỡi Kiếm Tôi Rèn (Thường (Common))
+  [FAIL] Player get_total_damage() increased by perk bonus - 
+[PERK] Acquired: Bàn Thạch Hộ Thể (Sử Thi (Epic))
+  [PASS] Player is_spike_immune() returns true
+[PERK] Acquired: Ý Chí Bất Diệt (Huyền Thoại (Legendary))
+[PERK] Second Chance (Immortal Will) consumed!
+  [PASS] Player survived fatal hit via Immortal Will
+  [PASS] Player HP restored to at least 50% upon revive
+[PERK] Acquired: Cuồng Chiến Đồ Đao (Huyền Thoại (Legendary))
+  [FAIL] Berserk Frenzy raw damage scales +15% per missing HP (Expected: %.2f, Got: %.2f) - 
+  [PASS] Movement speed is capped at max_speed_cap (260.0)
+
+[TEST 8] Testing Stochastic Damage Resolution (Way 1)...
+  [PASS] Integer damage 3.0 resolves exactly to 3
+  [PASS] Zero damage resolves to 0
+  [PASS] 2.5 damage resolves to either 2 or 3
+  [PASS] Stochastic average of 2.5 dmg across 1000 hits is ~ 2.5 (Observed: 2.498)
+
+[TEST 9] Testing PerkSelectionModal UI Component...
+  [PASS] PerkSelectionModal is visible when shown
+  [PASS] Modal generated 3 Perk Cards
+[PERK] Acquired: Gân Cốt Thiết Giáp (Thường (Common))
+  [PASS] Modal hidden after selection
+  [FAIL] Completion callback invoked upon perk selection - 
+  [PASS] Perk acquired into PerkManager
+
+------------------------------------------------------------------
+RESULT: 34/37 PASSED (3 FAILED)
+==================================================================
+
+STDERR:
+ERROR: String formatting error: unsupported format character.
+   at: validated_evaluate (core/variant/variant_op.h:770)
+   GDScript backtrace (most recent call first):
+       [0] test_character_combat_hooks_and_revive (res://tests/test_perk_system.gd:252)
+       [1] _ready (res://tests/test_perk_system.gd:49)

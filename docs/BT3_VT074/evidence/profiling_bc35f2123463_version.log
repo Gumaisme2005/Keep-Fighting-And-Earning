@@ -1,0 +1,13 @@
+{
+  "executed_at": "2026-11-12T19:54:25.114890+07:00",
+  "head": "001785ee52589094f2b096161a0be99d5e3c4003",
+  "branch": "feat/bt3-vt074-idempotent-run",
+  "name": "version",
+  "command": "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe --headless --version",
+  "exit_code": 0,
+  "user_dir": null
+}
+STDOUT:
+4.7.2.stable.official.ed1daf0bf
+
+STDERR:

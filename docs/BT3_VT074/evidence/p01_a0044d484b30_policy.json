@@ -1,0 +1,20 @@
+{
+  "executed_at": "2026-11-12T20:23:14.953681+07:00",
+  "policy": {
+    "minimum_heavy_pooled_p95_reduction_pct": 10,
+    "minimum_heavy_mean_service_reduction_pct": 10,
+    "both_matched_pairs_heavy_p95_must_improve": true,
+    "maximum_two_frame_p95_increase_ms": 5,
+    "no_new_regressions_or_equivalence_failures": true,
+    "note": "Declared before trial. ABBA limits drift but does not eliminate workstation noise. No full NFR PASS while heavy exceeds1500ms."
+  },
+  "order": [
+    "BEFORE_A",
+    "AFTER_A",
+    "AFTER_B",
+    "BEFORE_B"
+  ],
+  "warmup_per_workload_per_run": 5,
+  "measured_per_workload_per_run": 30,
+  "tasks_per_batch": 40
+}
