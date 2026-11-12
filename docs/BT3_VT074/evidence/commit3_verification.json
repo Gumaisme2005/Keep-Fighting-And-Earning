@@ -1,0 +1,547 @@
+{
+  "executed_at": "2026-11-12T13:00:44.099397+07:00",
+  "commands": [
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe status --short --untracked-files=all",
+      "exit_code": 0,
+      "stdout": " M Scene/GameManager.gd\n M Scene/UI/character_select.gd\n M tests/test_perk_system.gd\n M tests/test_replay_security.gd\n?? Scene/RunCompletionStore.gd\n?? docs/BT3_VT074/COMMIT_3_PATCH_PLAN.md\n?? docs/BT3_VT074/COMMIT_3_REPORT.md\n?? docs/BT3_VT074/evidence/commit3_prompt.txt\n?? docs/BT3_VT074/evidence/commit3_verification.json\n?? docs/BT3_VT074/evidence/green.log\n?? docs/BT3_VT074/evidence/green_attempt_2866fbd345ef424487da4732ada9fca3.json\n?? docs/BT3_VT074/evidence/green_attempt_89994ee5535c4c678be125a520a3358d.json\n?? docs/BT3_VT074/evidence/green_attempt_94472f1d456c40179d949e1c0e3c1c91.json\n?? docs/BT3_VT074/evidence/perk_ab.json\n?? docs/BT3_VT074/evidence/perk_ab.log\n?? docs/BT3_VT074/evidence/perk_baseline.json\n?? docs/BT3_VT074/evidence/production.patch\n?? docs/BT3_VT074/evidence/regression.log\n?? tests/test_run_completion_contract.gd\n?? tests/test_run_completion_contract.tscn\n?? tests/vt074/audit_commit3.py\n?? tests/vt074/run_green.py\n?? tests/vt074/run_perk_baseline.py\n?? tests/vt074/verify_green.py\n",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff --check",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff --stat",
+      "exit_code": 0,
+      "stdout": " Scene/GameManager.gd          | 543 +++++++++++++++++++++++++++++++++---------\n Scene/UI/character_select.gd  |   7 +-\n tests/test_perk_system.gd     |   9 +-\n tests/test_replay_security.gd |  50 +++-\n 4 files changed, 485 insertions(+), 124 deletions(-)\n",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff --name-only",
+      "exit_code": 0,
+      "stdout": "Scene/GameManager.gd\nScene/UI/character_select.gd\ntests/test_perk_system.gd\ntests/test_replay_security.gd\n",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff --cached --name-only",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe branch --show-current",
+      "exit_code": 0,
+      "stdout": "feat/bt3-vt074-idempotent-run\n",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe rev-parse HEAD",
+      "exit_code": 0,
+      "stdout": "25026e34b0fc3514e2ae813f017774cf694e5375\n",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe remote -v",
+      "exit_code": 0,
+      "stdout": "origin\thttps://github.com/Gumaisme2005/Keep-Fighting-And-Earning.git (fetch)\norigin\thttps://github.com/Gumaisme2005/Keep-Fighting-And-Earning.git (push)\n",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff -- Scene/GameManager.gd Scene/UI/character_select.gd",
+      "exit_code": 0,
+      "stdout": "diff --git a/Scene/GameManager.gd b/Scene/GameManager.gd\nindex 77b8f7e..8087c4e 100644\n--- a/Scene/GameManager.gd\n+++ b/Scene/GameManager.gd\n@@ -18,6 +18,8 @@ const MAX_SAVE_FILE_BYTES: int = 2097152 # 2 MB chống DoS / Memory Exhaustion\n const ALLOWED_SEED_CHARS: String = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_\"\n \n const BalanceData = preload(\"res://Scene/BalanceConfig.gd\")\n+const CompletionStore = preload(\"res://Scene/RunCompletionStore.gd\")\n+const MAX_PROCESSED_RECEIPTS := 128\n \n const CHARACTER_SCENES: Array[PackedScene] = [\n \tpreload(\"res://Scene/Character/Player 3_Miya/player_3.tscn\"),\n@@ -55,9 +57,28 @@ var replay_frames: Array = []\n var current_recording_frames: Array = []\n var last_recorded_run: Dictionary = {}\n \n+# Identity belongs to the lifecycle, never to seed/time. Providers are optional\n+# deterministic seams; the normal generator uses 128 cryptographic random bits.\n+var current_run_id: String = \"\"\n+var processed_ledger: Array = [] # FIFO oldest -> newest, independent of history/replays.\n+var last_completion_result: Dictionary = {}\n+var storage_state: String = \"READY\"\n+var run_id_provider: Callable\n+var completion_clock: Callable\n+var completion_store = CompletionStore.new(SAVE_FILE_PATH)\n+var _active_state: String = \"CLOSED\"\n+var _session_mode: String = \"live\"\n+var _envelope: Dictionary = {}\n+var _completion_date: String = \"\"\n+var _pending_snapshot: Dictionary = {}\n+var _uncertain_snapshot: Dictionary = {}\n+var _uncertain_completion: bool = false\n+var _uncertain_clear_frames: bool = false\n+var _writing: bool = false\n+\n func _ready() -> void:\n \tload_save_data()\n-\tif saved_seeds.is_empty():\n+\tif storage_state == \"READY\" and saved_seeds.is_empty():\n \t\tsave_seed_entry(\"ALOALO1234\", \"Khazad-dum Vanguard Expedition\", 2)\n \t\tsave_seed_entry(\"SOUL_KNIGHT_2026\", \"Labyrinthine Caverns of Moria\", 0)\n \t\tsave_seed_entry(\"BOSS_HUNT_777\", \"Chieftain Hunt Route\", 3)\n@@ -149,7 +170,28 @@ func generate_random_seed() -> String:\n \t\tresult += chars[rng.randi() % chars.length()]\n \treturn result\n \n-func start_new_run(custom_seed: String = \"\", replay_mode: bool = false, frames_to_replay: Array = []) -> void:\n+func can_start_new_run() -> bool:\n+\treturn storage_state == \"READY\" and not _writing and _active_state != \"PENDING\"\n+\n+func start_new_run(custom_seed: String = \"\", replay_mode: bool = false, frames_to_replay: Array = []) -> bool:\n+\tif not can_start_new_run():\n+\t\t_outcome(\"SAVE_PENDING\" if _active_state == \"PENDING\" or _writing else storage_state)\n+\t\treturn false\n+\tvar token := \"\"\n+\tfor attempt in range(16):\n+\t\tvar generated: Variant = run_id_provider.call() if run_id_provider.is_valid() else Crypto.new().generate_random_bytes(16).hex_encode()\n+\t\tif _valid_id(generated) and generated != current_run_id and _receipt_for(generated).is_empty():\n+\t\t\ttoken = generated\n+\t\t\tbreak\n+\tif token.is_empty():\n+\t\t_outcome(\"ID_GENERATION_FAILED\")\n+\t\treturn false\n+\tcurrent_run_id = token\n+\t_active_state = \"OPEN\"\n+\t_session_mode = \"action_replay\" if replay_mode else \"live\"\n+\t_envelope.clear()\n+\t_pending_snapshot.clear()\n+\t_completion_date = \"\"\n \tvar safe_custom := sanitize_seed(custom_seed)\n \tif not safe_custom.is_empty():\n \t\tcurrent_seed = safe_custom\n@@ -169,6 +211,7 @@ func start_new_run(custom_seed: String = \"\", replay_mode: bool = false, frames_t\n \tif get_node_or_null(\"/root/PerkManager\") != null:\n \t\tPerkManager.seed_combat_rng((current_seed + \":combat\").hash())\n \tstats_updated.emit(current_level, enemies_killed)\n+\treturn true\n \n func record_frame_input(frame_data: Dictionary) -> void:\n \tif is_replaying:\n@@ -216,79 +259,212 @@ func register_level_advance(new_level: int) -> void:\n \tcurrent_level = maxi(1, new_level)\n \tstats_updated.emit(current_level, enemies_killed)\n \n-func finish_run(reason: String = \"Game Over\") -> void:\n-\tvar hero_info := get_selected_character_info()\n-\tvar timestamp := Time.get_datetime_string_from_system(false, true)\n-\tvar entry := {\n-\t\t\"seed\": current_seed,\n-\t\t\"hero_idx\": selected_character_index,\n-\t\t\"hero_name\": String(hero_info.get(\"name\", \"Hero\")),\n-\t\t\"floor\": current_level,\n-\t\t\"kills\": enemies_killed,\n-\t\t\"reason\": sanitize_note(reason),\n-\t\t\"date\": timestamp\n-\t}\n-\tif not is_replaying and not current_recording_frames.is_empty():\n-\t\tlast_recorded_run = entry.duplicate(true)\n-\t\tlast_recorded_run[\"frames\"] = current_recording_frames.duplicate(true)\n-\t\tentry[\"has_replay\"] = true\n-\t\tentry[\"frames\"] = current_recording_frames.slice(0, mini(current_recording_frames.size(), MAX_DISK_REPLAY_FRAMES))\n-\telse:\n-\t\tentry[\"has_replay\"] = false\n-\t\tentry[\"frames\"] = []\n+func finish_run(reason: String = \"Game Over\") -> Dictionary:\n+\tif not _envelope.is_empty():\n+\t\tif sanitize_note(reason) != _envelope.reason:\n+\t\t\treturn _outcome(\"CONFLICT\")\n+\t\treturn complete_run_request(current_run_id, _envelope)\n+\treturn complete_run_request(current_run_id, {\n+\t\t\"seed\": current_seed, \"hero_idx\": selected_character_index,\n+\t\t\"floor\": current_level, \"kills\": enemies_killed, \"reason\": reason,\n+\t\t\"session_mode\": _session_mode,\n+\t\t\"frames\": current_recording_frames if not is_replaying else []\n+\t})\n+\n+func _outcome(status: String, receipt: Dictionary = {}) -> Dictionary:\n+\tlast_completion_result = {\"status\": status}\n+\tif not receipt.is_empty():\n+\t\tlast_completion_result[\"receipt\"] = receipt.duplicate(true)\n+\treturn last_completion_result.duplicate(true)\n+\n+static func _valid_id(value: Variant, length: int = 32) -> bool:\n+\tif not (value is String) or value.length() != length:\n+\t\treturn false\n+\tfor character in value:\n+\t\tif not \"0123456789abcdef\".contains(character):\n+\t\t\treturn false\n+\treturn true\n \n-\trun_history.push_front(entry)\n-\tenforce_replay_limits()\n-\tif run_history.size() > MAX_RUN_HISTORY:\n-\t\trun_history.resize(MAX_RUN_HISTORY)\n-\tsave_data_to_disk()\n-\tsaved_data_changed.emit()\n+static func _whole(value: Variant, low: int, high: int) -> bool:\n+\treturn ((value is int or value is float) and is_finite(float(value))\n+\t\tand float(value) == floor(float(value)) and value >= low and value <= high)\n+\n+func canonical_payload(raw: Variant) -> Dictionary:\n+\tif not (raw is Dictionary):\n+\t\treturn {}\n+\tfor key in [\"seed\", \"hero_idx\", \"floor\", \"kills\", \"reason\", \"session_mode\", \"frames\"]:\n+\t\tif not raw.has(key):\n+\t\t\treturn {}\n+\tif not (raw.seed is String) or sanitize_seed(raw.seed).is_empty() or not (raw.reason is String):\n+\t\treturn {}\n+\tif not _whole(raw.hero_idx, 0, CHARACTER_SCENES.size() - 1) or not _whole(raw.floor, 1, 9999) or not _whole(raw.kills, 0, 999999):\n+\t\treturn {}\n+\tif not (raw.session_mode is String) or raw.session_mode not in [\"live\", \"action_replay\"] or not (raw.frames is Array):\n+\t\treturn {}\n+\tvar frames: Array = []\n+\tfor frame in raw.frames.slice(0, MAX_REPLAY_FRAMES):\n+\t\tif not (frame is Dictionary):\n+\t\t\treturn {}\n+\t\tvar normalized: Dictionary = frame.duplicate(true)\n+\t\tfor key in [\"dx\", \"dy\", \"ax\", \"ay\", \"slot\", \"result\", \"pg\"]:\n+\t\t\tif frame.has(key):\n+\t\t\t\tvar number: Variant = frame[key]\n+\t\t\t\tif not (number is int or number is float) or not is_finite(float(number)):\n+\t\t\t\t\treturn {}\n+\t\t\t\tif key in [\"slot\", \"result\", \"pg\"]:\n+\t\t\t\t\tif float(number) != floor(float(number)):\n+\t\t\t\t\t\treturn {}\n+\t\t\t\t\tnormalized[key] = int(clampf(float(number), -1000000.0, 1000000.0))\n+\t\tfor key in [\"atk\", \"q\", \"rmb\", \"shift\", \"lp\", \"lr\", \"rp\", \"rr\", \"eat\"]:\n+\t\t\tif frame.has(key) and not (frame[key] is bool):\n+\t\t\t\treturn {}\n+\t\tframes.append(normalized)\n+\treturn {\"seed\": sanitize_seed(raw.seed), \"hero_idx\": int(raw.hero_idx),\n+\t\t\"floor\": int(raw.floor), \"kills\": int(raw.kills), \"reason\": sanitize_note(raw.reason),\n+\t\t\"session_mode\": raw.session_mode, \"frames\": _sanitize_replay_frames(frames, MAX_REPLAY_FRAMES)}\n+\n+func payload_fingerprint(payload: Dictionary) -> String:\n+\tvar frames: Array = []\n+\tfor frame in payload.frames:\n+\t\tvar tuple: Array = []\n+\t\tfor key in [\"dx\", \"dy\", \"ax\", \"ay\", \"atk\", \"q\", \"rmb\", \"slot\", \"shift\", \"lp\", \"lr\", \"rp\", \"rr\", \"result\", \"pg\", \"eat\"]:\n+\t\t\ttuple.append(frame[key])\n+\t\tframes.append(tuple)\n+\treturn JSON.stringify([1, payload.seed, payload.hero_idx, payload.floor, payload.kills,\n+\t\tpayload.reason, payload.session_mode, frames]).sha256_text()\n+\n+func _receipt_for(token: String) -> Dictionary:\n+\tfor receipt in processed_ledger:\n+\t\tif receipt.run_id == token:\n+\t\t\treturn receipt\n+\treturn {}\n+\n+func complete_run_request(token: Variant, raw_payload: Variant) -> Dictionary:\n+\tif not _valid_id(token):\n+\t\treturn _outcome(\"INVALID_REQUEST\")\n+\tvar payload := canonical_payload(raw_payload)\n+\tif payload.is_empty():\n+\t\treturn _outcome(\"INVALID_REQUEST\")\n+\tif storage_state != \"READY\" or _writing:\n+\t\treturn _outcome(storage_state if storage_state != \"READY\" else \"SAVE_PENDING\")\n+\tvar fingerprint := payload_fingerprint(payload)\n+\tvar prior := _receipt_for(token)\n+\tif not prior.is_empty():\n+\t\treturn _outcome(\"DUPLICATE\", prior) if prior.fingerprint == fingerprint else _outcome(\"CONFLICT\")\n+\tif token != current_run_id or _active_state == \"CLOSED\":\n+\t\treturn _outcome(\"UNKNOWN_RUN\")\n+\tif _envelope.is_empty() and payload.session_mode != _session_mode:\n+\t\treturn _outcome(\"INVALID_REQUEST\")\n+\tif not _envelope.is_empty() and payload_fingerprint(_envelope) != fingerprint:\n+\t\treturn _outcome(\"CONFLICT\")\n+\tif _envelope.is_empty():\n+\t\t_envelope = payload.duplicate(true)\n+\t\t_completion_date = String(completion_clock.call()) if completion_clock.is_valid() else Time.get_datetime_string_from_system(false, true)\n+\t\t_active_state = \"PENDING\"\n+\t\tvar candidate := _snapshot()\n+\t\tvar entry: Dictionary = payload.duplicate(true)\n+\t\tentry[\"run_id\"] = token\n+\t\tentry[\"date\"] = _completion_date\n+\t\tentry[\"hero_name\"] = String(CHARACTER_INFO[payload.hero_idx].get(\"name\", \"Hero\"))\n+\t\tentry[\"has_replay\"] = not payload.frames.is_empty()\n+\t\tif entry.has_replay:\n+\t\t\tcandidate.last_recorded_run = entry.duplicate(true)\n+\t\tentry.frames = entry.frames.slice(0, MAX_DISK_REPLAY_FRAMES)\n+\t\tcandidate.run_history.push_front(entry)\n+\t\t_limit_history(candidate.run_history)\n+\t\tvar summary := payload.duplicate(true)\n+\t\tsummary.erase(\"frames\")\n+\t\tcandidate.processed_ledger.append({\"run_id\": token, \"fingerprint\": fingerprint,\n+\t\t\t\"date\": _completion_date, \"summary\": summary})\n+\t\tif candidate.processed_ledger.size() > MAX_PROCESSED_RECEIPTS:\n+\t\t\tcandidate.processed_ledger.pop_front()\n+\t\t_pending_snapshot = candidate\n+\tvar receipt: Dictionary = _pending_snapshot.processed_ledger[-1].duplicate(true)\n+\tvar result := _write_snapshot(_pending_snapshot, true)\n+\treturn _outcome(result.status, receipt if result.status == \"COMMITTED\" else {})\n \n # --- CƠ CHẾ GIỚI HẠN & GIẢI PHÓNG BỘ NHỚ REPLAY (ANTI-MEMORY LEAK / MULTIPLAYER READY) ---\n func enforce_replay_limits() -> void:\n+\t_limit_history(run_history)\n+\n+static func _limit_history(history: Array) -> void:\n \tvar replay_count := 0\n-\tfor item in run_history:\n+\tfor item in history:\n \t\tif bool(item.get(\"has_replay\", false)) and item.has(\"frames\") and not item[\"frames\"].is_empty():\n \t\t\treplay_count += 1\n \t\t\tif replay_count > MAX_SAVED_REPLAYS:\n \t\t\t\t# Thu hồi vùng nhớ các mảng frame của các replay cũ vượt quá giới hạn 10\n \t\t\t\titem[\"frames\"].clear()\n \t\t\t\titem[\"has_replay\"] = false\n+\tif history.size() > MAX_RUN_HISTORY:\n+\t\thistory.resize(MAX_RUN_HISTORY)\n \n func delete_replay(run_entry: Dictionary) -> bool:\n-\tfor entry in run_history:\n-\t\tif entry == run_entry or (entry.get(\"date\") == run_entry.get(\"date\") and entry.get(\"seed\") == run_entry.get(\"seed\")):\n-\t\t\tif entry.has(\"frames\") and entry[\"frames\"] is Array:\n-\t\t\t\tentry[\"frames\"].clear()\n-\t\t\tentry[\"has_replay\"] = false\n-\t\t\tif last_recorded_run.get(\"date\") == entry.get(\"date\"):\n-\t\t\t\tlast_recorded_run.clear()\n-\t\t\tsave_data_to_disk()\n-\t\t\tsaved_data_changed.emit()\n-\t\t\treturn true\n-\treturn false\n+\tif not _can_edit():\n+\t\treturn false\n+\tvar index := -1\n+\tvar matches: Array[int] = []\n+\tfor i in range(run_history.size()):\n+\t\tif is_same(run_history[i], run_entry):\n+\t\t\tindex = i\n+\t\t\tbreak\n+\t\tif _same_saved_run(run_history[i], run_entry) and (run_entry.has(\"run_id\") or run_history[i] == run_entry):\n+\t\t\tmatches.append(i)\n+\tif index < 0 and matches.size() == 1:\n+\t\tindex = matches[0]\n+\tif index < 0:\n+\t\treturn false\n+\tvar original: Dictionary = run_history[index]\n+\tvar candidate := _snapshot()\n+\tcandidate.run_history[index].frames = []\n+\tcandidate.run_history[index].has_replay = false\n+\tif _last_matches(original):\n+\t\tcandidate.last_recorded_run = {}\n+\tif _write_snapshot(candidate).status != \"COMMITTED\":\n+\t\treturn false\n+\t# Preserve the existing API's observable dictionary reference after commit.\n+\toriginal[\"frames\"] = []\n+\toriginal[\"has_replay\"] = false\n+\treturn true\n \n func delete_run_history_entry(index: int) -> bool:\n-\tif index >= 0 and index < run_history.size():\n-\t\tvar entry = run_history[index]\n-\t\tif entry.has(\"frames\") and entry[\"frames\"] is Array:\n-\t\t\tentry[\"frames\"].clear()\n-\t\trun_history.remove_at(index)\n-\t\tsave_data_to_disk()\n-\t\tsaved_data_changed.emit()\n-\t\treturn true\n-\treturn false\n+\tif not _can_edit() or index < 0 or index >= run_history.size():\n+\t\treturn false\n+\tvar candidate := _snapshot()\n+\tif _last_matches(run_history[index]):\n+\t\tcandidate.last_recorded_run = {}\n+\tcandidate.run_history.remove_at(index)\n+\treturn _write_snapshot(candidate).status == \"COMMITTED\"\n \n func clear_all_replays() -> void:\n-\tfor entry in run_history:\n+\tif not _can_edit():\n+\t\treturn\n+\tvar candidate := _snapshot()\n+\tfor entry in candidate.run_history:\n \t\tif entry.has(\"frames\") and entry[\"frames\"] is Array:\n \t\t\tentry[\"frames\"].clear()\n \t\tentry[\"has_replay\"] = false\n-\tlast_recorded_run.clear()\n-\treplay_frames.clear()\n-\tcurrent_recording_frames.clear()\n-\tsave_data_to_disk()\n-\tsaved_data_changed.emit()\n+\tcandidate.last_recorded_run = {}\n+\t_write_snapshot(candidate, false, true)\n+\n+static func _same_saved_run(a: Dictionary, b: Dictionary) -> bool:\n+\tif a.has(\"run_id\") or b.has(\"run_id\"):\n+\t\treturn a.has(\"run_id\") and b.has(\"run_id\") and a.run_id == b.run_id\n+\tfor key in [\"seed\", \"date\", \"hero_idx\", \"floor\", \"kills\", \"reason\"]:\n+\t\tif not a.has(key) or not b.has(key) or a[key] != b[key]:\n+\t\t\treturn false\n+\treturn true\n+\n+func _last_matches(entry: Dictionary) -> bool:\n+\tif not _same_saved_run(entry, last_recorded_run):\n+\t\treturn false\n+\tif entry.has(\"run_id\"):\n+\t\treturn true\n+\tvar count := 0\n+\tfor item in run_history:\n+\t\tif _same_saved_run(item, entry):\n+\t\t\tcount += 1\n+\treturn count == 1\n \n func get_saved_replays_count() -> int:\n \tvar count := 0\n@@ -298,15 +474,18 @@ func get_saved_replays_count() -> int:\n \treturn count\n \n func save_seed_entry(seed_str: String, note: String = \"\", hero_idx: int = -1) -> void:\n+\tif not _can_edit():\n+\t\treturn\n \tvar clean_seed := sanitize_seed(seed_str)\n \tif clean_seed.is_empty():\n \t\treturn\n \tif hero_idx < 0:\n \t\thero_idx = selected_character_index\n \thero_idx = clampi(hero_idx, 0, CHARACTER_SCENES.size() - 1)\n-\tfor i in range(saved_seeds.size()):\n-\t\tif saved_seeds[i].get(\"seed\", \"\") == clean_seed:\n-\t\t\tsaved_seeds.remove_at(i)\n+\tvar candidate := _snapshot()\n+\tfor i in range(candidate.saved_seeds.size()):\n+\t\tif candidate.saved_seeds[i].get(\"seed\", \"\") == clean_seed:\n+\t\t\tcandidate.saved_seeds.remove_at(i)\n \t\t\tbreak\n \tvar safe_note := sanitize_note(note)\n \tvar entry := {\n@@ -315,101 +494,183 @@ func save_seed_entry(seed_str: String, note: String = \"\", hero_idx: int = -1) ->\n \t\t\"hero_idx\": hero_idx,\n \t\t\"date\": Time.get_datetime_string_from_system(false, true)\n \t}\n-\tsaved_seeds.push_front(entry)\n-\tif saved_seeds.size() > MAX_SAVED_SEEDS:\n-\t\tsaved_seeds.resize(MAX_SAVED_SEEDS)\n-\tsave_data_to_disk()\n-\tsaved_data_changed.emit()\n+\tcandidate.saved_seeds.push_front(entry)\n+\tif candidate.saved_seeds.size() > MAX_SAVED_SEEDS:\n+\t\tcandidate.saved_seeds.resize(MAX_SAVED_SEEDS)\n+\t_write_snapshot(candidate)\n \n func remove_saved_seed(seed_str: String) -> void:\n+\tif not _can_edit():\n+\t\treturn\n \tvar clean_seed := sanitize_seed(seed_str)\n-\tfor i in range(saved_seeds.size()):\n-\t\tif saved_seeds[i].get(\"seed\", \"\") == clean_seed or saved_seeds[i].get(\"seed\", \"\") == seed_str:\n-\t\t\tsaved_seeds.remove_at(i)\n+\tvar candidate := _snapshot()\n+\tfor i in range(candidate.saved_seeds.size()):\n+\t\tif candidate.saved_seeds[i].get(\"seed\", \"\") == clean_seed or candidate.saved_seeds[i].get(\"seed\", \"\") == seed_str:\n+\t\t\tcandidate.saved_seeds.remove_at(i)\n \t\t\tbreak\n-\tsave_data_to_disk()\n-\tsaved_data_changed.emit()\n+\t_write_snapshot(candidate)\n \n-func replay_seed_run(seed_str: String, hero_idx: int = -1) -> void:\n+func replay_seed_run(seed_str: String, hero_idx: int = -1) -> bool:\n+\tif not can_start_new_run():\n+\t\treturn false\n+\tif not start_new_run(seed_str, false, []):\n+\t\treturn false\n \tif hero_idx >= 0:\n \t\tset_character_by_index(hero_idx)\n-\tstart_new_run(seed_str, false, [])\n \tget_tree().paused = false\n-\tget_tree().change_scene_to_file(\"res://world.tscn\")\n+\treturn get_tree().change_scene_to_file(\"res://world.tscn\") == OK\n \n func start_action_replay(run_entry: Dictionary = {}) -> bool:\n+\tif not can_start_new_run():\n+\t\treturn false\n \tvar target := run_entry if not run_entry.is_empty() else last_recorded_run\n \tif target.is_empty() or target.get(\"frames\", []).is_empty():\n \t\tif not String(target.get(\"seed\", \"\")).is_empty():\n-\t\t\treplay_seed_run(String(target.get(\"seed\", current_seed)), int(target.get(\"hero_idx\", selected_character_index)))\n-\t\t\treturn true\n+\t\t\treturn replay_seed_run(String(target.get(\"seed\", current_seed)), int(target.get(\"hero_idx\", selected_character_index)))\n \t\treturn false\n \tvar hero_idx := clampi(int(target.get(\"hero_idx\", selected_character_index)), 0, CHARACTER_SCENES.size() - 1)\n \tvar seed_str := sanitize_seed(String(target.get(\"seed\", current_seed)))\n \tvar frames: Array = _sanitize_replay_frames(target.get(\"frames\", []), MAX_REPLAY_FRAMES)\n+\tif not start_new_run(seed_str, true, frames):\n+\t\treturn false\n \tset_character_by_index(hero_idx)\n-\tstart_new_run(seed_str, true, frames)\n \tget_tree().paused = false\n-\tget_tree().change_scene_to_file(\"res://world.tscn\")\n-\treturn true\n+\treturn get_tree().change_scene_to_file(\"res://world.tscn\") == OK\n \n-func save_data_to_disk() -> void:\n-\tvar data := {\n+func _snapshot() -> Dictionary:\n+\treturn {\n+\t\t\"schema_version\": 2, \"processed_ledger\": processed_ledger.duplicate(true),\n \t\t\"current_seed\": current_seed,\n \t\t\"selected_character_index\": selected_character_index,\n-\t\t\"saved_seeds\": saved_seeds,\n-\t\t\"run_history\": run_history,\n-\t\t\"last_recorded_run\": last_recorded_run\n+\t\t\"saved_seeds\": saved_seeds.duplicate(true),\n+\t\t\"run_history\": run_history.duplicate(true),\n+\t\t\"last_recorded_run\": last_recorded_run.duplicate(true)\n \t}\n-\tvar file := FileAccess.open(SAVE_FILE_PATH, FileAccess.WRITE)\n-\tif file != null:\n-\t\tfile.store_string(JSON.stringify(data, \"\\t\"))\n-\t\tfile.close()\n \n-func load_save_data() -> void:\n-\tif not FileAccess.file_exists(SAVE_FILE_PATH):\n-\t\treturn\n-\tvar file := FileAccess.open(SAVE_FILE_PATH, FileAccess.READ)\n-\tif file == null:\n-\t\treturn\n-\tif file.get_length() > MAX_SAVE_FILE_BYTES:\n-\t\tpush_warning(\"Save file exceeds security limit (2MB); skipping load.\")\n-\t\tfile.close()\n-\t\treturn\n-\tvar content := file.get_as_text()\n-\tfile.close()\n-\tvar parsed = JSON.parse_string(content)\n-\tif not (parsed is Dictionary):\n-\t\treturn\n+func _can_edit() -> bool:\n+\treturn storage_state == \"READY\" and not _writing and _active_state != \"PENDING\"\n+\n+func _publish_snapshot(data: Dictionary) -> void:\n+\tcurrent_seed = data.current_seed\n+\tset_character_by_index(int(data.selected_character_index))\n+\tsaved_seeds = data.saved_seeds\n+\trun_history = data.run_history\n+\tlast_recorded_run = data.last_recorded_run\n+\tprocessed_ledger = data.processed_ledger\n+\n+func _write_snapshot(candidate: Dictionary, completion: bool = false, clear_frames: bool = false) -> Dictionary:\n+\tif _writing or storage_state != \"READY\":\n+\t\treturn {\"status\": \"STORAGE_UNCERTAIN\" if storage_state == \"STORAGE_UNCERTAIN\" else \"SAVE_FAILED\"}\n+\tif not _valid_v2_snapshot(candidate):\n+\t\treturn {\"status\": \"SAVE_FAILED\"}\n+\t_writing = true\n+\tvar result: Dictionary = completion_store.commit(candidate)\n+\tif result.status == \"COMMITTED\":\n+\t\t_publish_snapshot(candidate)\n+\t\tif clear_frames:\n+\t\t\treplay_frames.clear()\n+\t\t\tcurrent_recording_frames.clear()\n+\t\tif completion:\n+\t\t\t_active_state = \"CLOSED\"\n+\t\t\t_pending_snapshot = {}\n+\telif result.status == \"STORAGE_UNCERTAIN\":\n+\t\tstorage_state = \"STORAGE_UNCERTAIN\"\n+\t\t_uncertain_snapshot = candidate\n+\t\t_uncertain_completion = completion\n+\t\t_uncertain_clear_frames = clear_frames\n+\t_writing = false\n+\t# Close/publish before observers can synchronously retry or start a new run.\n+\tif result.status == \"COMMITTED\":\n+\t\tsaved_data_changed.emit()\n+\treturn result\n+\n+func reconcile_storage() -> Dictionary:\n+\tif storage_state != \"STORAGE_UNCERTAIN\" or _writing:\n+\t\treturn _outcome(\"NOT_PENDING\")\n+\tvar result: Dictionary = completion_store.reconcile()\n+\tif result.status == \"STORAGE_UNCERTAIN\":\n+\t\treturn _outcome(result.status)\n+\tstorage_state = \"READY\"\n+\tvar receipt: Dictionary = {}\n+\tif result.status == \"COMMITTED\":\n+\t\t_publish_snapshot(_uncertain_snapshot)\n+\t\tif _uncertain_clear_frames:\n+\t\t\treplay_frames.clear()\n+\t\t\tcurrent_recording_frames.clear()\n+\t\tif _uncertain_completion:\n+\t\t\t_active_state = \"CLOSED\"\n+\t\t\t_pending_snapshot = {}\n+\t\t\treceipt = _receipt_for(current_run_id).duplicate(true)\n+\t_uncertain_snapshot = {}\n+\t_uncertain_completion = false\n+\t_uncertain_clear_frames = false\n+\tif result.status == \"COMMITTED\":\n+\t\tsaved_data_changed.emit()\n+\treturn _outcome(result.status, receipt)\n+\n+func save_data_to_disk() -> Dictionary:\n+\tif not _can_edit():\n+\t\treturn {\"status\": \"SAVE_PENDING\" if _active_state == \"PENDING\" or _writing else storage_state}\n+\treturn _write_snapshot(_snapshot())\n+\n+func load_save_data() -> bool:\n+\tif _writing or _active_state == \"PENDING\" or storage_state == \"STORAGE_UNCERTAIN\":\n+\t\treturn false\n+\tvar source: Dictionary = completion_store.read_bytes(completion_store.path)\n+\tif source.status != \"OK\":\n+\t\tstorage_state = \"LOAD_ERROR\"\n+\t\treturn false\n+\tif not source.exists:\n+\t\treturn storage_state == \"READY\"\n+\tvar parsed: Variant = JSON.parse_string(source.bytes.get_string_from_utf8())\n+\tif not (parsed is Dictionary) or (parsed.has(\"schema_version\") and not _valid_v2_snapshot(parsed)) or (not parsed.has(\"schema_version\") and parsed.has(\"processed_ledger\")):\n+\t\tstorage_state = \"LOAD_ERROR\"\n+\t\treturn false\n+\tvar candidate := _decode_snapshot(parsed)\n+\t_publish_snapshot(candidate)\n+\tcurrent_run_id = \"\" # Loading receipts does not resume an uncommitted session.\n+\t_active_state = \"CLOSED\"\n+\t_envelope = {}\n+\t_pending_snapshot = {}\n+\tstorage_state = \"READY\"\n+\treturn true\n+\n+func _decode_snapshot(parsed: Dictionary) -> Dictionary:\n+\tvar data := {\"schema_version\": 2, \"current_seed\": \"ALOALO1234\", \"selected_character_index\": 2,\n+\t\t\"saved_seeds\": [], \"run_history\": [], \"last_recorded_run\": {},\n+\t\t\"processed_ledger\": parsed.get(\"processed_ledger\", []).duplicate(true)}\n+\tfor receipt in data.processed_ledger:\n+\t\tvar summary: Dictionary = receipt.summary.duplicate(true)\n+\t\tsummary[\"frames\"] = []\n+\t\treceipt.summary = canonical_payload(summary)\n+\t\treceipt.summary.erase(\"frames\")\n \tif parsed.has(\"current_seed\"):\n \t\tvar s := sanitize_seed(String(parsed[\"current_seed\"]))\n \t\tif not s.is_empty():\n-\t\t\tcurrent_seed = s\n+\t\t\tdata.current_seed = s\n \tif parsed.has(\"selected_character_index\"):\n-\t\tset_character_by_index(int(parsed[\"selected_character_index\"]))\n+\t\tdata.selected_character_index = clampi(int(parsed[\"selected_character_index\"]), 0, CHARACTER_SCENES.size() - 1)\n \tif parsed.has(\"saved_seeds\") and parsed[\"saved_seeds\"] is Array:\n-\t\tsaved_seeds.clear()\n \t\tvar raw_seeds: Array = parsed[\"saved_seeds\"]\n \t\tfor i in range(mini(raw_seeds.size(), MAX_SAVED_SEEDS)):\n \t\t\tvar item = raw_seeds[i]\n \t\t\tif item is Dictionary:\n \t\t\t\tvar s_val := sanitize_seed(String(item.get(\"seed\", \"\")))\n \t\t\t\tif not s_val.is_empty():\n-\t\t\t\t\tsaved_seeds.append({\n+\t\t\t\t\tdata.saved_seeds.append({\n \t\t\t\t\t\t\"seed\": s_val,\n \t\t\t\t\t\t\"note\": sanitize_note(String(item.get(\"note\", \"\"))),\n \t\t\t\t\t\t\"hero_idx\": clampi(int(item.get(\"hero_idx\", 2)), 0, CHARACTER_SCENES.size() - 1),\n \t\t\t\t\t\t\"date\": sanitize_note(String(item.get(\"date\", \"\")))\n \t\t\t\t\t})\n \tif parsed.has(\"run_history\") and parsed[\"run_history\"] is Array:\n-\t\trun_history.clear()\n \t\tvar raw_hist: Array = parsed[\"run_history\"]\n \t\tfor i in range(mini(raw_hist.size(), MAX_RUN_HISTORY)):\n \t\t\tvar r = raw_hist[i]\n \t\t\tif r is Dictionary:\n \t\t\t\tvar s_val := sanitize_seed(String(r.get(\"seed\", \"ALOALO1234\")))\n \t\t\t\tvar safe_frames := _sanitize_replay_frames(r.get(\"frames\", []), MAX_DISK_REPLAY_FRAMES)\n-\t\t\t\trun_history.append({\n+\t\t\t\tvar entry := {\n \t\t\t\t\t\"seed\": s_val if not s_val.is_empty() else \"ALOALO1234\",\n \t\t\t\t\t\"hero_idx\": clampi(int(r.get(\"hero_idx\", 2)), 0, CHARACTER_SCENES.size() - 1),\n \t\t\t\t\t\"hero_name\": sanitize_note(String(r.get(\"hero_name\", \"Hero\"))),\n@@ -419,16 +680,74 @@ func load_save_data() -> void:\n \t\t\t\t\t\"date\": sanitize_note(String(r.get(\"date\", \"\"))),\n \t\t\t\t\t\"has_replay\": bool(r.get(\"has_replay\", false)) and not safe_frames.is_empty(),\n \t\t\t\t\t\"frames\": safe_frames\n-\t\t\t\t})\n-\t\tenforce_replay_limits()\n+\t\t\t\t}\n+\t\t\t\t_restore_identity(r, entry, parsed.has(\"schema_version\"))\n+\t\t\t\tdata.run_history.append(entry)\n+\t\t_limit_history(data.run_history)\n \tif parsed.has(\"last_recorded_run\") and parsed[\"last_recorded_run\"] is Dictionary:\n \t\tvar lr: Dictionary = parsed[\"last_recorded_run\"]\n \t\tvar lr_frames := _sanitize_replay_frames(lr.get(\"frames\", []), MAX_REPLAY_FRAMES)\n-\t\tlast_recorded_run = {\n-\t\t\t\"seed\": sanitize_seed(String(lr.get(\"seed\", current_seed))),\n-\t\t\t\"hero_idx\": clampi(int(lr.get(\"hero_idx\", selected_character_index)), 0, CHARACTER_SCENES.size() - 1),\n+\t\tdata.last_recorded_run = {\n+\t\t\t\"seed\": sanitize_seed(String(lr.get(\"seed\", data.current_seed))),\n+\t\t\t\"hero_idx\": clampi(int(lr.get(\"hero_idx\", data.selected_character_index)), 0, CHARACTER_SCENES.size() - 1),\n \t\t\t\"hero_name\": sanitize_note(String(lr.get(\"hero_name\", \"Hero\"))),\n \t\t\t\"floor\": clampi(int(lr.get(\"floor\", 1)), 1, 9999),\n \t\t\t\"kills\": clampi(int(lr.get(\"kills\", 0)), 0, 999999),\n-\t\t\t\"frames\": lr_frames\n+\t\t\t\"reason\": sanitize_note(String(lr.get(\"reason\", \"Game Over\"))),\n+\t\t\t\"date\": sanitize_note(String(lr.get(\"date\", \"\"))),\n+\t\t\t\"has_replay\": not lr_frames.is_empty(), \"frames\": lr_frames\n \t\t}\n+\t\tif lr.is_empty():\n+\t\t\tdata.last_recorded_run = {}\n+\t\telse:\n+\t\t\t_restore_identity(lr, data.last_recorded_run, parsed.has(\"schema_version\"))\n+\treturn data\n+\n+static func _restore_identity(raw: Dictionary, entry: Dictionary, versioned: bool) -> void:\n+\tif versioned and raw.has(\"run_id\"):\n+\t\tentry[\"run_id\"] = raw.run_id\n+\t\tentry[\"session_mode\"] = raw.session_mode\n+\n+func _valid_v2_snapshot(data: Dictionary) -> bool:\n+\tif not _whole(data.get(\"schema_version\"), 2, 2):\n+\t\treturn false\n+\tif not (data.get(\"current_seed\") is String) or sanitize_seed(data.current_seed) != data.current_seed or data.current_seed.is_empty() or not _whole(data.get(\"selected_character_index\"), 0, CHARACTER_SCENES.size() - 1):\n+\t\treturn false\n+\tfor key in [\"processed_ledger\", \"run_history\", \"saved_seeds\"]:\n+\t\tif not (data.get(key) is Array):\n+\t\t\treturn false\n+\tif data.processed_ledger.size() > MAX_PROCESSED_RECEIPTS or data.run_history.size() > MAX_RUN_HISTORY or data.saved_seeds.size() > MAX_SAVED_SEEDS or not (data.get(\"last_recorded_run\") is Dictionary):\n+\t\treturn false\n+\tvar receipts: Dictionary = {}\n+\tfor receipt in data.processed_ledger:\n+\t\tif not (receipt is Dictionary) or not _valid_id(receipt.get(\"run_id\")) or not _valid_id(receipt.get(\"fingerprint\"), 64) or receipts.has(receipt.run_id) or not (receipt.get(\"date\") is String) or not (receipt.get(\"summary\") is Dictionary):\n+\t\t\treturn false\n+\t\tvar payload: Dictionary = receipt.summary.duplicate(true)\n+\t\tpayload[\"frames\"] = []\n+\t\tif canonical_payload(payload).is_empty():\n+\t\t\treturn false\n+\t\treceipts[receipt.run_id] = receipt\n+\tvar ids: Dictionary = {}\n+\tfor entry in data.run_history:\n+\t\tif not (entry is Dictionary) or not _valid_saved_entry(entry):\n+\t\t\treturn false\n+\t\tif entry.has(\"run_id\"):\n+\t\t\tif ids.has(entry.run_id) or not receipts.has(entry.run_id):\n+\t\t\t\treturn false\n+\t\t\tids[entry.run_id] = true\n+\t\t\tfor key in [\"seed\", \"hero_idx\", \"floor\", \"kills\", \"reason\", \"session_mode\"]:\n+\t\t\t\tif entry.get(key) != receipts[entry.run_id].summary.get(key):\n+\t\t\t\t\treturn false\n+\tif not data.last_recorded_run.is_empty() and not _valid_saved_entry(data.last_recorded_run):\n+\t\treturn false\n+\tfor entry in data.saved_seeds:\n+\t\tif not (entry is Dictionary) or not (entry.get(\"seed\") is String) or sanitize_seed(entry.seed).is_empty() or not _whole(entry.get(\"hero_idx\"), 0, CHARACTER_SCENES.size() - 1) or not (entry.get(\"note\") is String) or not (entry.get(\"date\") is String):\n+\t\t\treturn false\n+\treturn true\n+\n+func _valid_saved_entry(entry: Dictionary) -> bool:\n+\tif not entry.has(\"run_id\"):\n+\t\treturn true # Legacy entries keep baseline sanitizer behavior, without IDs.\n+\tif not _valid_id(entry.run_id) or not (entry.get(\"date\") is String) or not (entry.get(\"hero_name\") is String) or not (entry.get(\"has_replay\") is bool):\n+\t\treturn false\n+\treturn not canonical_payload(entry).is_empty()\ndiff --git a/Scene/UI/character_select.gd b/Scene/UI/character_select.gd\nindex 08c56c5..77726c4 100644\n--- a/Scene/UI/character_select.gd\n+++ b/Scene/UI/character_select.gd\n@@ -415,9 +415,12 @@ func _on_hero_selection_button_pressed() -> void:\n \tif hero_selection_button.disabled:\n \t\treturn\n \tif get_node_or_null(\"/root/GameManager\") != null:\n-\t\tGameManager.set_character_by_index(selected_index)\n+\t\tif not GameManager.can_start_new_run():\n+\t\t\treturn\n \t\tvar chosen_seed: String = seed_input.text if seed_input != null else GameManager.current_seed\n-\t\tGameManager.start_new_run(chosen_seed, false, [])\n+\t\tif not GameManager.start_new_run(chosen_seed, false, []):\n+\t\t\treturn\n+\t\tGameManager.set_character_by_index(selected_index)\n \tvar error := get_tree().change_scene_to_file(game_world_path)\n \tif error != OK:\n \t\tpush_error(\"Could not open game world: %s — error code %s\" % [game_world_path, error])\n",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff --no-index -- /dev/null Scene/RunCompletionStore.gd",
+      "exit_code": 1,
+      "stdout": "diff --git a/Scene/RunCompletionStore.gd b/Scene/RunCompletionStore.gd\nnew file mode 100644\nindex 0000000..19d8f3c\n--- /dev/null\n+++ b/Scene/RunCompletionStore.gd\n@@ -0,0 +1,76 @@\n+extends RefCounted\n+## Single-process snapshot writer. Read-back confirms bytes, not power-loss durability.\n+## Hooks are narrow storage operations, allowing real IO failures in isolated tests.\n+\n+const MAX_BYTES := 2097152\n+var path: String\n+var _uncertain: Dictionary = {}\n+\n+func _init(save_path: String = \"user://roguelike_save_data.json\") -> void:\n+\tpath = save_path\n+\n+func read_bytes(source: String) -> Dictionary:\n+\tif not FileAccess.file_exists(source):\n+\t\treturn {\"status\": \"OK\", \"exists\": false, \"bytes\": PackedByteArray()}\n+\tvar file := FileAccess.open(source, FileAccess.READ)\n+\tif file == null or file.get_length() > MAX_BYTES:\n+\t\treturn {\"status\": \"READ_FAILED\"}\n+\tvar count := file.get_length()\n+\tvar bytes := file.get_buffer(count)\n+\tvar error := file.get_error()\n+\tfile.close()\n+\tif bytes.size() != count or error != OK:\n+\t\treturn {\"status\": \"READ_FAILED\"}\n+\treturn {\"status\": \"OK\", \"exists\": true, \"bytes\": bytes}\n+\n+func _write_temp(target: String, bytes: PackedByteArray) -> bool:\n+\tvar file := FileAccess.open(target, FileAccess.WRITE)\n+\tif file == null:\n+\t\treturn false\n+\tvar written := file.store_buffer(bytes)\n+\tfile.flush()\n+\tvar error := file.get_error()\n+\tfile.close()\n+\treturn written and error == OK\n+\n+func _replace(source: String, target: String) -> Error:\n+\treturn DirAccess.rename_absolute(ProjectSettings.globalize_path(source), ProjectSettings.globalize_path(target))\n+\n+func commit(snapshot: Dictionary) -> Dictionary:\n+\tif not _uncertain.is_empty():\n+\t\treturn {\"status\": \"STORAGE_UNCERTAIN\"}\n+\tvar bytes := JSON.stringify(snapshot).to_utf8_buffer()\n+\tif bytes.size() > MAX_BYTES:\n+\t\treturn {\"status\": \"SAVE_FAILED\"}\n+\tvar previous := read_bytes(path)\n+\tif previous.status != \"OK\":\n+\t\treturn {\"status\": \"SAVE_FAILED\"}\n+\tvar temp := path + \".\" + Crypto.new().generate_random_bytes(8).hex_encode() + \".tmp\"\n+\tif not _write_temp(temp, bytes):\n+\t\treturn {\"status\": \"SAVE_FAILED\"}\n+\tvar checked := read_bytes(temp)\n+\tif checked.status != \"OK\" or checked.get(\"bytes\") != bytes:\n+\t\treturn {\"status\": \"SAVE_FAILED\"}\n+\t# Capture both possible snapshots before replace. A failed syscall alone is\n+\t# insufficient to prove which snapshot is currently at the destination.\n+\t_uncertain = {\"previous\": previous, \"candidate\": bytes}\n+\tvar replace_error := _replace(temp, path)\n+\tvar result := reconcile()\n+\tif result.status == \"SAVE_FAILED\" and replace_error != OK:\n+\t\tDirAccess.remove_absolute(ProjectSettings.globalize_path(temp))\n+\treturn result\n+\n+func reconcile() -> Dictionary:\n+\tif _uncertain.is_empty():\n+\t\treturn {\"status\": \"NOT_PENDING\"}\n+\tvar actual := read_bytes(path)\n+\tif actual.status != \"OK\":\n+\t\treturn {\"status\": \"STORAGE_UNCERTAIN\"}\n+\tif actual.exists and actual.bytes == _uncertain.candidate:\n+\t\t_uncertain.clear()\n+\t\treturn {\"status\": \"COMMITTED\"}\n+\tvar previous: Dictionary = _uncertain.previous\n+\tif actual.exists == previous.exists and actual.bytes == previous.bytes:\n+\t\t_uncertain.clear()\n+\t\treturn {\"status\": \"SAVE_FAILED\"}\n+\treturn {\"status\": \"STORAGE_UNCERTAIN\"}\n",
+      "stderr": ""
+    }
+  ],
+  "checks": {
+    "expected_branch_head": true,
+    "git_diff_check": true,
+    "index_unchanged_empty": true,
+    "tracked_scope": true,
+    "production_diff_complete": true,
+    "source_identical_to_tested_copy": true,
+    "personal_save_unchanged": true,
+    "all_C2_artifact_Git_blobs_preserved": true,
+    "C2_RED_raw_hashes_preserved": true,
+    "regression_assertions_preserved": true,
+    "retention_uses_strict_greater_than_128": true,
+    "contract_40_actual_assertions": true,
+    "perk_exact_baseline_names_values_context_errors_exits": true,
+    "pristine_setup_separate_from_behavioral_failures": true,
+    "AB_source_matches_pristine_A_and_current_B": true,
+    "AB_Godot_472_equivalent_and_save_unchanged": true,
+    "VT074_and_all_other_regressions_pass_only_proven_perk_exception": true,
+    "changed_files_read_UTF8_scope_whitespace_links": true,
+    "no_detected_save_payload_or_credentials_in_C3_logs": true,
+    "Python_compile": true
+  },
+  "all_checks_passed": true,
+  "errors": [],
+  "verifier_exit_code": 0,
+  "C2_comparisons": {
+    "docs/BT3_VT074/AI_IMPLEMENTATION_PLAN.md": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": true
+    },
+    "docs/BT3_VT074/AI_PLAN_REVIEW.md": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": true
+    },
+    "docs/BT3_VT074/AI_TEST_REVIEW.md": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": true
+    },
+    "docs/BT3_VT074/COMMIT_2_REPORT.md": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": true
+    },
+    "docs/BT3_VT074/PAIRWISE.md": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": true
+    },
+    "docs/BT3_VT074/SPECIFICATION.md": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": true
+    },
+    "docs/BT3_VT074/TEST_CASES.md": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": true
+    },
+    "docs/BT3_VT074/TEST_STRATEGY.md": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": true
+    },
+    "docs/BT3_VT074/evidence/pairwise_verification.json": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": false
+    },
+    "docs/BT3_VT074/evidence/red.log": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": false
+    },
+    "docs/BT3_VT074/evidence/red_run.json": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": false
+    },
+    "docs/BT3_VT074/evidence/setup_import_attempt.log": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": false
+    },
+    "docs/BT3_VT074/evidence/setup_probe_attempt.log": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": false
+    },
+    "docs/BT3_VT074/evidence/verification.log": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": false
+    },
+    "tests/test_run_completion_idempotency.gd": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": true
+    },
+    "tests/test_run_completion_idempotency.tscn": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": true
+    },
+    "tests/vt074/pairwise.py": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": true
+    },
+    "tests/vt074/pairwise_cases.csv": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": true
+    },
+    "tests/vt074/run_red.py": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": true
+    },
+    "tests/vt074/verify_commit2.py": {
+      "Git_blob_unchanged": true,
+      "raw_bytes_equal_to_Git_blob": true
+    }
+  },
+  "assertion_preservation": {
+    "tests/test_replay_security.gd": {
+      "original_calls": 16,
+      "all_original_calls_preserved": true
+    },
+    "tests/test_perk_system.gd": {
+      "original_calls": 38,
+      "all_original_calls_preserved": true
+    }
+  },
+  "tested_run": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_green\\94472f1d456c40179d949e1c0e3c1c91",
+  "suites": [
+    {
+      "name": "VT74-02",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": []
+    },
+    {
+      "name": "contract",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "[CONTRACT RESULTS] 40 PASSED, 0 FAILED"
+      ]
+    },
+    {
+      "name": "replay-forward",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "  TEST RESULTS: 29 PASSED, 0 FAILED"
+      ]
+    },
+    {
+      "name": "replay-reverse",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "  TEST RESULTS: 29 PASSED, 0 FAILED"
+      ]
+    },
+    {
+      "name": "replay-shuffle",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "  TEST RESULTS: 29 PASSED, 0 FAILED"
+      ]
+    },
+    {
+      "name": "replay-bounds",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "  TEST RESULTS: 3 PASSED, 0 FAILED"
+      ]
+    },
+    {
+      "name": "replay-fifo",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "  TEST RESULTS: 14 PASSED, 0 FAILED"
+      ]
+    },
+    {
+      "name": "replay-manual",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "  TEST RESULTS: 6 PASSED, 0 FAILED"
+      ]
+    },
+    {
+      "name": "replay-clear",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "  TEST RESULTS: 4 PASSED, 0 FAILED"
+      ]
+    },
+    {
+      "name": "replay-idle",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "  TEST RESULTS: 2 PASSED, 0 FAILED"
+      ]
+    },
+    {
+      "name": "test_dungeon_generator_unit",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "[SUMMARY] UNIT TESTS: 28 PASSED | 0 FAILED"
+      ]
+    },
+    {
+      "name": "test_dungeon_properties",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "[SUMMARY] PROPERTY TESTS: 11/11 PROPERTIES PASSED (original 100 seeds + 100 variant matrix cases)"
+      ]
+    },
+    {
+      "name": "test_perk_system",
+      "passed": false,
+      "exit_code": 1,
+      "summary_lines": [
+        "RESULT: 34/37 PASSED (3 FAILED)"
+      ]
+    },
+    {
+      "name": "test_orc_battle",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": []
+    },
+    {
+      "name": "test_doraemon",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "[SUMMARY] DORAEMON: 49 PASSED | 0 FAILED"
+      ]
+    },
+    {
+      "name": "test_yugi",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "YUGI TESTS PASSED"
+      ]
+    },
+    {
+      "name": "test_miyabi",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "[SUMMARY] MIYABI: 18 PASSED | 0 FAILED"
+      ]
+    },
+    {
+      "name": "test_luong_tho",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "[SUMMARY] LUONG THO: 15 PASSED | 0 FAILED"
+      ]
+    },
+    {
+      "name": "test_moba_hud_and_inventory",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "  TEST RESULTS: 159 PASSED, 0 FAILED"
+      ]
+    },
+    {
+      "name": "test_archer_combat_lifecycle",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "  TEST RESULTS: 12 PASSED, 0 FAILED"
+      ]
+    },
+    {
+      "name": "test_tactical_navigation_contract",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "[SUMMARY] Tactical navigation contract: 49 passed, 0 failed; 0 runtime errors"
+      ]
+    },
+    {
+      "name": "test_tactical_base_enemy_integration",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "[SUMMARY] Tactical BaseEnemy integration: 49 passed, 0 failed; 0 runtime errors"
+      ]
+    },
+    {
+      "name": "test_projectile_obstacles",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "[SUMMARY] Projectile obstacle failures: 0"
+      ]
+    },
+    {
+      "name": "test_skeleton_king",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "[SUMMARY] SKELETON KING: 22 PASSED | 0 FAILED"
+      ]
+    },
+    {
+      "name": "test_werewolf",
+      "passed": true,
+      "exit_code": 0,
+      "summary_lines": [
+        "  TEST RESULTS: 50 PASSED, 0 FAILED"
+      ]
+    }
+  ],
+  "privacy_findings": [],
+  "files_read": [
+    {
+      "path": "Scene/GameManager.gd",
+      "bytes": 31930,
+      "sha256": "ea3a61d88fba5c6374e8e7db30c80633e9b48fbbd2fcad453cbb0b21c6079bfe"
+    },
+    {
+      "path": "Scene/UI/character_select.gd",
+      "bytes": 18497,
+      "sha256": "af52c81e99e2fc198ef0554b250d7ffc7b6e83eaf63d9b4c3b56fe87e80f3f62"
+    },
+    {
+      "path": "tests/test_perk_system.gd",
+      "bytes": 11981,
+      "sha256": "c51e532c45742a01639cf7b50e3f0608131c6aa8e2e3df6c702dc71bc20259bb"
+    },
+    {
+      "path": "tests/test_replay_security.gd",
+      "bytes": 6538,
+      "sha256": "5250be030db80c7e177bccfd49fa81dc77949818ab1f3656cde99f7f1a7b7e10"
+    },
+    {
+      "path": "Scene/RunCompletionStore.gd",
+      "bytes": 2937,
+      "sha256": "17afb0c4fb566cc741e4c2b78854d3e2c935b3044d5ea08813009b37fd14eab9"
+    },
+    {
+      "path": "docs/BT3_VT074/COMMIT_3_PATCH_PLAN.md",
+      "bytes": 4082,
+      "sha256": "e4bed5d716bb685d72855694b25a1d3d53572e3d6f44b14154dd39183e9810b3"
+    },
+    {
+      "path": "docs/BT3_VT074/COMMIT_3_REPORT.md",
+      "bytes": 29325,
+      "sha256": "bfb37ba283f08764d57c3fa9dadef3391842a2f47dc5676f9f48883f7279bbfe"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/commit3_prompt.txt",
+      "bytes": 13382,
+      "sha256": "b489c9ecdd0305ab753a810b0446d4c3094f76f54f3a68c16b2b57782a5fc776"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/commit3_verification.json",
+      "bytes": 54122,
+      "sha256": "605892788b07a2670b68d5eadbc553a0c8b2cbc13e05c9e36fb24feebeeaa68a"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/green.log",
+      "bytes": 113993,
+      "sha256": "fb07248d7fd01fd9913919d8fddf374fa79a8d8efac81a77065b057e4158c26a"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/green_attempt_2866fbd345ef424487da4732ada9fca3.json",
+      "bytes": 215665,
+      "sha256": "c9e9c8090f6f05acfcfd6bf8080109ba07e7f51ad74babfea96d946dd2e051dc"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/green_attempt_89994ee5535c4c678be125a520a3358d.json",
+      "bytes": 151423,
+      "sha256": "9177688b5c37f109e36145a6ee319d0e33ae7bf228d5b8a12aebdde551128640"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/green_attempt_94472f1d456c40179d949e1c0e3c1c91.json",
+      "bytes": 219363,
+      "sha256": "4d19f773db6ae183b6fdfc35c2334b69a8f02d440d50fccd4620b30fe8d9eb69"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/perk_ab.json",
+      "bytes": 149894,
+      "sha256": "304acd3cceb22fcd6bdce6f06950d31afa46af5b33900e6b897c8ff31fbefc58"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/perk_ab.log",
+      "bytes": 120431,
+      "sha256": "a4c4ab8d06f31eb609d0e9f56189ce96bc9665587e065e00a984ea233e178c96"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/perk_baseline.json",
+      "bytes": 128590,
+      "sha256": "42e8ab96ad6b691904e9ddc346305dc74f0c7ef5bfd4939384018ce9eac96189"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/production.patch",
+      "bytes": 32996,
+      "sha256": "612ef772a3ee8053e89cb350b36f4c84571252cc370c523f49bc469136160abb"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/regression.log",
+      "bytes": 186453,
+      "sha256": "5fbcb928c60f764872a777585c0708ec64c760bb79dfba4c4def39fe3d1c03a2"
+    },
+    {
+      "path": "tests/test_run_completion_contract.gd",
+      "bytes": 14238,
+      "sha256": "2056d5c97991deed47ecc7f91002d913242b6e83edfce1a3402219778b298b8c"
+    },
+    {
+      "path": "tests/test_run_completion_contract.tscn",
+      "bytes": 206,
+      "sha256": "d962bebd0bf494f74f6fcae03e3eb69cb6e1dccfeefa3c00c6092a787672d5ab"
+    },
+    {
+      "path": "tests/vt074/audit_commit3.py",
+      "bytes": 13793,
+      "sha256": "9fd896994c0acd2af1eb4bbafa91c9ca9e0ef2b82adc4265ed425e6f05a61e47"
+    },
+    {
+      "path": "tests/vt074/run_green.py",
+      "bytes": 9948,
+      "sha256": "2a96a5adb9452e460170bba60fb91acd9f0913986b5f40aee71f3757793074a0"
+    },
+    {
+      "path": "tests/vt074/run_perk_baseline.py",
+      "bytes": 4510,
+      "sha256": "baa448f43374543f14a52cf89cee391df08682caf625b1a4febbec251836c89e"
+    },
+    {
+      "path": "tests/vt074/verify_green.py",
+      "bytes": 12942,
+      "sha256": "ff6d99bc114cb9a51d429bea6d065306246e0cd5a91adcfb8b8b6ee8d1a370dd"
+    }
+  ],
+  "regression_result": {
+    "entire_suite_passed": false,
+    "suite_invocations": 25,
+    "passed_invocations": 24,
+    "failed_suites": [
+      "test_perk_system"
+    ],
+    "full_runner_exit_code": 1,
+    "classification": "KNOWN BASELINE FAILURES",
+    "baseline_comparison": "perk_ab.json",
+    "failing_assertions": [
+      "Player get_total_damage() increased by perk bonus",
+      "Berserk Frenzy raw damage scales +15% per missing HP (Expected: %.2f, Got: %.2f)",
+      "Completion callback invoked upon perk selection"
+    ],
+    "observations": [
+      {
+        "actual": 3,
+        "base_before": 1,
+        "expected": 2,
+        "id": "damage",
+        "perk_bonus": 1,
+        "player_base_after": 2
+      },
+      {
+        "actual": 4.35,
+        "expected": 2.9,
+        "id": "berserk",
+        "missing_hp": 3,
+        "perk_bonus": 1,
+        "player_base": 2,
+        "weapon_damage": 0
+      },
+      {
+        "actual": false,
+        "callback_entered": true,
+        "expected": true,
+        "id": "callback"
+      }
+    ]
+  },
+  "readiness_policy": "User final-triage request permits ONLY conclusively identical inherited perk failures; all other gates remain required. Readiness is not full-suite PASS.",
+  "note": "Self-output hash is pre-write. C3 core witnesses do not claim full C4/C5 matrix, concurrency, CI, perf, or human code review."
+}

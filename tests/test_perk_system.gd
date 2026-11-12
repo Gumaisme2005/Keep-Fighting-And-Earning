@@ -2,6 +2,7 @@ extends Node2D
 
 const PerkData = preload("res://Scene/Perks/PerkData.gd")
 const PerkDatabase = preload("res://Scene/Perks/PerkDatabase.gd")
+const PerkManagerScript = preload("res://Scene/Perks/PerkManager.gd")
 
 class MockPlayerForPerks extends Node2D:
 	signal stats_changed(hp, max_hp, armor, max_armor)
@@ -111,7 +112,7 @@ func test_perk_database_integrity() -> void:
 
 func test_deterministic_perk_rolling() -> void:
 	print("\n[TEST 3] Testing Deterministic Perk Rolling...")
-	var manager := PerkManager.new()
+	var manager := PerkManagerScript.new()
 	add_child(manager)
 	manager.reset()
 
@@ -137,7 +138,7 @@ func test_deterministic_perk_rolling() -> void:
 
 func test_unique_perk_filtering() -> void:
 	print("\n[TEST 4] Testing Unique Perk Filtering...")
-	var manager := PerkManager.new()
+	var manager := PerkManagerScript.new()
 	add_child(manager)
 	manager.reset()
 
@@ -155,7 +156,7 @@ func test_unique_perk_filtering() -> void:
 
 func test_apply_perk_to_mock_player() -> void:
 	print("\n[TEST 5] Testing Applying Perks to Player...")
-	var manager := PerkManager.new()
+	var manager := PerkManagerScript.new()
 	add_child(manager)
 	manager.reset()
 
@@ -184,7 +185,7 @@ func test_apply_perk_to_mock_player() -> void:
 
 func test_perk_manager_query_helpers() -> void:
 	print("\n[TEST 6] Testing PerkManager Query Helpers...")
-	var manager := PerkManager.new()
+	var manager := PerkManagerScript.new()
 	add_child(manager)
 	manager.reset()
 
