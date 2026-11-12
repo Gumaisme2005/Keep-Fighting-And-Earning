@@ -1,0 +1,538 @@
+{
+  "at": "2026-11-12T14:47:10.815339+00:00",
+  "scope": "CI import mitigation; Linux corrected run not executed",
+  "checks": [
+    {
+      "command": [
+        "git",
+        "status",
+        "--short",
+        "--untracked-files=all"
+      ],
+      "exit_code": 0,
+      "stdout": "?? docs/BT3_VT074/CI_IMPORT_INVESTIGATION.md\n?? docs/BT3_VT074/evidence/.gdignore\n?? docs/BT3_VT074/evidence/ci_import_8d491b7567ac_imports.json\n?? docs/BT3_VT074/evidence/ci_import_8d491b7567ac_python_access.json\n?? docs/BT3_VT074/evidence/ci_import_8d491b7567ac_regressions.json\n?? docs/BT3_VT074/evidence/ci_import_remote_C4.json\n?? docs/BT3_VT074/evidence/ci_import_remote_C5.json\n?? tests/vt074/run_ci_import_audit.py\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "HEAD",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "HEAD",
+        "--",
+        "Scene",
+        "project.godot",
+        ".github/workflows/ci.yml",
+        "tests"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "65516e65bba8d81e252318f9b2bab724d231be94\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "stdout": "feat/bt3-vt074-idempotent-run\n",
+      "stderr": ""
+    }
+  ],
+  "historical_tracked_files_changed": [],
+  "archived_evidence_comparison": {
+    "C5_original": {
+      "files": 97,
+      "changed": []
+    },
+    "C5_gdignore": {
+      "files": 97,
+      "changed": []
+    }
+  },
+  "gdignore_empty": true,
+  "resource_dependency_scan": {
+    "files": 251,
+    "pattern": "docs[/\\]|BT3_VT074|evidence[/\\]|\"docs\"|\"evidence\"",
+    "matches": []
+  },
+  "csv_files": [
+    {
+      "file": "docs/BT3_VT074/evidence/p01_a0044d484b30_AFTER_A_performance_40.csv",
+      "sha256": "27c2a1cb94bed4e3e551bc87d6ed56f5b7af7ec182629ad622e3006d686d680e",
+      "rows": 4800,
+      "batches": 120,
+      "all_40_tasks_per_batch": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/p01_a0044d484b30_AFTER_A_performance_warmup.csv",
+      "sha256": "d2acd6980f022db2acab723cddfc56c1a63277d650d3f587652cb6d1eadbd5a5",
+      "rows": 800,
+      "batches": 20,
+      "all_40_tasks_per_batch": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/p01_a0044d484b30_AFTER_B_performance_40.csv",
+      "sha256": "46214854a0c2ebe90450bb196a48be84efe2462389a1d0dfd04d1391d37d95bf",
+      "rows": 4800,
+      "batches": 120,
+      "all_40_tasks_per_batch": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/p01_a0044d484b30_AFTER_B_performance_warmup.csv",
+      "sha256": "2980ef0b93c68d02ff6490c182adcf8ce492c246c17890982f3c67c435d2b251",
+      "rows": 800,
+      "batches": 20,
+      "all_40_tasks_per_batch": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/p01_a0044d484b30_BEFORE_A_performance_40.csv",
+      "sha256": "4a7e66b5025f4ddb9957906837d4dd07c666862e8991e07ba76f811011bd6170",
+      "rows": 4800,
+      "batches": 120,
+      "all_40_tasks_per_batch": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/p01_a0044d484b30_BEFORE_A_performance_warmup.csv",
+      "sha256": "3cf5aca94135e3406ee0aa01bd91b63077b613700c9157768e5f24851d1942f6",
+      "rows": 800,
+      "batches": 20,
+      "all_40_tasks_per_batch": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/p01_a0044d484b30_BEFORE_B_performance_40.csv",
+      "sha256": "4fff929fb50c4d850d7d6856eb94b2eb462f8f89924e4a8bd17136dbf44b347c",
+      "rows": 4800,
+      "batches": 120,
+      "all_40_tasks_per_batch": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/p01_a0044d484b30_BEFORE_B_performance_warmup.csv",
+      "sha256": "9d8fa34f0c183d3f1a2bc4ca49b6649826335422ee80b31b924e1a367f5979c9",
+      "rows": 800,
+      "batches": 20,
+      "all_40_tasks_per_batch": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/performance_40.csv",
+      "sha256": "441dbb1df96d42721d8ff357a27555f6a5fed9aa695e443e17a73a8e11ffe33b",
+      "rows": 4800,
+      "batches": 120,
+      "all_40_tasks_per_batch": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/performance_warmup.csv",
+      "sha256": "cf4b702420903fcfca38ea606a53694cea92c906c0c2aa1a04937b8c71bdfa68",
+      "rows": 800,
+      "batches": 20,
+      "all_40_tasks_per_batch": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/profiling_bc35f2123463_before_performance_40.csv",
+      "sha256": "de234bee55ab0765371f32c6245400e9b0853dd7b42c8203cb41205dd2275065",
+      "rows": 4800,
+      "batches": 120,
+      "all_40_tasks_per_batch": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/profiling_bc35f2123463_before_performance_warmup.csv",
+      "sha256": "33f4f0a22875e8d856fc626af86bf786f9cb5798473cef05381b2f377c394bf4",
+      "rows": 800,
+      "batches": 20,
+      "all_40_tasks_per_batch": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/profiling_bc35f2123463_instrumented_performance_40.csv",
+      "sha256": "1e08b7c95e804a4fb39a4283d51559a9b9e83dd7d0118a90b384daca96a3d2ee",
+      "rows": 4800,
+      "batches": 120,
+      "all_40_tasks_per_batch": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/profiling_bc35f2123463_instrumented_performance_warmup.csv",
+      "sha256": "9024fe77043e1e8084e351e91082e72d9207a76b5767e409a488923ff251cf44",
+      "rows": 800,
+      "batches": 20,
+      "all_40_tasks_per_batch": true
+    }
+  ],
+  "regression_runs": [
+    {
+      "name": "test_dungeon_generator_unit",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_dungeon_properties",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_orc_battle",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "benchmark_dungeon_generator",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_skeleton_king",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_doraemon",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_yugi",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_werewolf",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_moba_hud_and_inventory",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_miyabi",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_luong_tho",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_projectile_obstacles",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_archer_combat_lifecycle",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_enemy_tactics",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_replay_security",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_orc_tactical_ai_30",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_orc_tactical_ai_144",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_archer_tactical_ai_30",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_archer_tactical_ai_144",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_enemy_ai_integration_30",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_enemy_ai_integration_144",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_tactical_navigation_contract_30",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_tactical_navigation_contract_144",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_tactical_base_enemy_integration_30",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_tactical_base_enemy_integration_144",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_run_completion_idempotency",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_run_completion_contract",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    },
+    {
+      "name": "test_vt074_integration",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": [
+        "ERROR: Parse JSON failed. Error at line 0: Expected key"
+      ]
+    },
+    {
+      "name": "boundary",
+      "exit_code": 0,
+      "passed": true,
+      "expected_diagnostics": []
+    }
+  ],
+  "trace_pairs": {
+    "test_archer_tactical_ai": {
+      "equal": true,
+      "trace_lines": 1
+    },
+    "test_enemy_ai_integration": {
+      "equal": true,
+      "trace_lines": 1
+    },
+    "test_orc_tactical_ai": {
+      "equal": true,
+      "trace_lines": 1
+    },
+    "test_tactical_navigation_contract": {
+      "equal": true,
+      "trace_lines": 1
+    }
+  },
+  "python_verifier_exits": [
+    0,
+    0
+  ],
+  "CI_additional_moba_diagnostic_check": true,
+  "personal_save_sha256": "2b86ed7cd91bd182f87988eaf87f6a377aceff32c0520e00dc73382dbfe89a26",
+  "personal_save_unchanged": true,
+  "runner_AST": "PASS",
+  "new_files_whitespace": [
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        "docs/BT3_VT074/CI_IMPORT_INVESTIGATION.md"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "",
+      "file": "docs/BT3_VT074/CI_IMPORT_INVESTIGATION.md",
+      "passed": true
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        "docs/BT3_VT074/evidence/.gdignore"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "",
+      "file": "docs/BT3_VT074/evidence/.gdignore",
+      "passed": true
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        "docs/BT3_VT074/evidence/ci_import_8d491b7567ac_imports.json"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "warning: in the working copy of 'docs/BT3_VT074/evidence/ci_import_8d491b7567ac_imports.json', CRLF will be replaced by LF the next time Git touches it\n",
+      "file": "docs/BT3_VT074/evidence/ci_import_8d491b7567ac_imports.json",
+      "passed": true
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        "docs/BT3_VT074/evidence/ci_import_8d491b7567ac_python_access.json"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "warning: in the working copy of 'docs/BT3_VT074/evidence/ci_import_8d491b7567ac_python_access.json', CRLF will be replaced by LF the next time Git touches it\n",
+      "file": "docs/BT3_VT074/evidence/ci_import_8d491b7567ac_python_access.json",
+      "passed": true
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        "docs/BT3_VT074/evidence/ci_import_8d491b7567ac_regressions.json"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "warning: in the working copy of 'docs/BT3_VT074/evidence/ci_import_8d491b7567ac_regressions.json', CRLF will be replaced by LF the next time Git touches it\n",
+      "file": "docs/BT3_VT074/evidence/ci_import_8d491b7567ac_regressions.json",
+      "passed": true
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        "docs/BT3_VT074/evidence/ci_import_remote_C4.json"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "",
+      "file": "docs/BT3_VT074/evidence/ci_import_remote_C4.json",
+      "passed": true
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        "docs/BT3_VT074/evidence/ci_import_remote_C5.json"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "",
+      "file": "docs/BT3_VT074/evidence/ci_import_remote_C5.json",
+      "passed": true
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        "tests/vt074/run_ci_import_audit.py"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "",
+      "file": "tests/vt074/run_ci_import_audit.py",
+      "passed": true
+    }
+  ],
+  "no_index_exit_note": "Exit 1 is the no-index content/addition difference, not a whitespace error; whitespace errors print diagnostics and yield exit 3. Any stdout diagnostic is rejected.",
+  "all_checks_passed": true,
+  "runner_exit_code": 0
+}
