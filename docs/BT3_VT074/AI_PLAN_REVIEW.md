@@ -103,3 +103,20 @@ Revised implementation plan chi tiết và phân công file/commit nằm tại [
 Verification đã thực hiện: `git diff --check` exit 0; `git diff -- docs/BT3_VT074/` rỗng vì cả ba file còn untracked; đọc lại file trực tiếp và kiểm tra riêng encoding, trailing whitespace, local Markdown links, đúng 5 AC/3 NFR, 18 source anchors đều PASS. `git diff --no-index --check -- /dev/null <file>` không in lỗi whitespace; exit 1 là khác biệt nội dung new-file so với file rỗng, không phải feature test failure. Hash original giữ nguyên, prompt so sánh nguyên văn với attachment khớp. Các kiểm tra này là document verification, không phải kết quả test Godot.
 
 Status chỉ có ba file `?? docs/BT3_VT074/{AI_IMPLEMENTATION_PLAN,AI_PLAN_REVIEW,SPECIFICATION}.md`; diff tracked và cached rỗng, HEAD vẫn baseline. Không có blocker quan trọng cho **READY FOR COMMIT 1**; các runtime gates/OQ ở §6 vẫn thuộc commit sau. Không stage/commit/push/tạo PR. PR cá nhân ở giai đoạn sau phải đợi nhóm review trước merge. Commit message đề xuất: `docs(vt074): specify idempotent completion and review AI plan`.
+
+## 8. Human Review – Student Verification
+
+Ngày xác nhận: 12/11/2026 (Asia/Saigon). Nguồn: phản hồi trực tiếp của sinh viên trong phiên Commit 2, sau khi xem R-01/R-02 và source evidence. Đây là xác nhận của người dùng, không phải AI tự thực hiện human review. Nội dung quyết định được chép nguyên văn:
+
+> Tôi đã xem xét hai điểm R-01 và R-02 cùng các bằng chứng source code được cung cấp.
+>
+> **Tôi xác nhận:**
+>
+> - **R-01: MODIFY** – Chấp nhận sửa fixture để các test độc lập, không phụ thuộc execution order hoặc shared state. Phải giữ nguyên các regression assertions hiện có.
+> - **R-02: MODIFY** – Chấp nhận bổ sung cơ chế khôi phục `run_id`, processed ledger, fingerprint và metadata khi load dữ liệu. Không được làm hỏng save file cũ.
+>
+> Đây là hai quyết định review của tôi đối với AI Implementation Plan.
+
+Traceability: R-01 → E-10, `tests/test_replay_security.gd:37–86` và `Scene/GameManager.gd:152–171`; R-02 → E-07, `Scene/GameManager.gd:404–434`. Chi tiết original, lý do MODIFY và revised proposal giữ nguyên ở §4. Original AI Implementation Plan không thay đổi.
+
+Phạm vi thực hiện hiện tại: Commit 2 chỉ bổ sung strategy/test/data/evidence; xác nhận R-02 không có nghĩa loader đã được sửa. Production patch thuộc Commit 3, chưa được thực hiện. Việc sinh viên review/sửa hai test AI-generated là gate riêng, chưa được xác nhận bởi quyết định R-01/R-02 này.

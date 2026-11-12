@@ -1,0 +1,42 @@
+BT3 VT-074 Commit 2 actual execution evidence
+{
+  "executed_at": "2026-11-12T09:46:41.233403+07:00",
+  "branch": "feat/bt3-vt074-idempotent-run",
+  "head": "be8e39d3e5d8b3bdce9f815ab93966e3bcf51fde",
+  "working_tree": "M docs/BT3_VT074/AI_PLAN_REVIEW.md\n?? tests/test_run_completion_idempotency.gd\n?? tests/test_run_completion_idempotency.tscn\n?? tests/vt074/",
+  "last_commit": "be8e39d docs(vt074): specify idempotent completion and review AI plan",
+  "personal_save": "C:\\Users\\ADMIN\\AppData\\Roaming\\Godot\\app_userdata\\Keep Fighting And Earning\\roguelike_save_data.json",
+  "personal_before_sha256": "2b86ed7cd91bd182f87988eaf87f6a377aceff32c0520e00dc73382dbfe89a26",
+  "run_root": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_red\\4f57c6432a7d4659a9ea424d88d6bfa5",
+  "method": "fresh copied project + child-only APPDATA/LOCALAPPDATA/TEMP/TMP; autoload-free probe first",
+  "expected_user_dir": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_red\\4f57c6432a7d4659a9ea424d88d6bfa5\\appdata\\Godot\\app_userdata\\Keep Fighting And Earning",
+  "godot_version": "4.7.2.stable.official.ed1daf0bf",
+  "blocker": "Unsafe isolation: no autoload/completion launched",
+  "personal_after_sha256": "2b86ed7cd91bd182f87988eaf87f6a377aceff32c0520e00dc73382dbfe89a26",
+  "personal_save_unchanged": true,
+  "launcher_exit_code": 2
+}
+
+STEP: version
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --version
+Exit code: 0
+STDOUT:
+4.7.2.stable.official.ed1daf0bf
+
+STDERR:
+
+
+STEP: isolation_probe_1
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_red\4f57c6432a7d4659a9ea424d88d6bfa5\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_red\4f57c6432a7d4659a9ea424d88d6bfa5\probe-engine.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_red/4f57c6432a7d4659a9ea424d88d6bfa5/appdata/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_SAVE] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_red/4f57c6432a7d4659a9ea424d88d6bfa5/appdata/Godot/app_userdata/Keep Fighting And Earning/roguelike_save_data.json
+[PROBE_ISOLATION] VERIFIED
+
+STDERR:
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+

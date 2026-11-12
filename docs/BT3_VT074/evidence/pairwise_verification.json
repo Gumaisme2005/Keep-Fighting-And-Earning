@@ -1,0 +1,84 @@
+{
+  "algorithm": "deterministic greedy maximum uncovered pairs; Cartesian-order tie break; reverse redundant-row removal",
+  "strength": 2,
+  "factors": {
+    "identity": [
+      "active_new",
+      "retained",
+      "invalid",
+      "unknown_unissued",
+      "unknown_expired"
+    ],
+    "payload": [
+      "same",
+      "different"
+    ],
+    "storage": [
+      "in_memory",
+      "after_reload"
+    ],
+    "ledger": [
+      "below",
+      "at_128",
+      "overflow_129"
+    ]
+  },
+  "cartesian_rows": 60,
+  "feasible_full_rows": 52,
+  "infeasible_full_rows": 8,
+  "array_rows": 14,
+  "all_pair_count": 51,
+  "feasible_pair_count": 49,
+  "covered_feasible_pairs": 49,
+  "missing_pairs": [],
+  "catalog_case_count": 22,
+  "mapped_case_ids": [
+    "VT74-01",
+    "VT74-02",
+    "VT74-04",
+    "VT74-05",
+    "VT74-07",
+    "VT74-09",
+    "VT74-10",
+    "VT74-15"
+  ],
+  "directed_case_ids_not_in_matrix": [
+    "VT74-03",
+    "VT74-06",
+    "VT74-08",
+    "VT74-11",
+    "VT74-12",
+    "VT74-13",
+    "VT74-14",
+    "VT74-16",
+    "VT74-17",
+    "VT74-18",
+    "VT74-19",
+    "VT74-20",
+    "VT74-21",
+    "VT74-22"
+  ],
+  "engine_rows_executed": 0,
+  "excluded_pairs": [
+    {
+      "pair": [
+        "identity",
+        "unknown_expired",
+        "ledger",
+        "at_128"
+      ],
+      "reason": "Expired receipt requires overflow at the 129th successful completion; below/at-128 has not evicted oldest."
+    },
+    {
+      "pair": [
+        "identity",
+        "unknown_expired",
+        "ledger",
+        "below"
+      ],
+      "reason": "Expired receipt requires overflow at the 129th successful completion; below/at-128 has not evicted oldest."
+    }
+  ],
+  "errors": [],
+  "verified": true
+}

@@ -1,0 +1,15 @@
+row_id,identity,payload,storage,ledger,expected_status,test_cases,execution_status
+PW-01,active_new,same,in_memory,below,COMMITTED,VT74-01,PLANNED AFTER PATCH
+PW-02,active_new,different,after_reload,at_128,COMMITTED,VT74-01;VT74-07;VT74-09,PLANNED AFTER PATCH
+PW-03,retained,same,after_reload,overflow_129,DUPLICATE,VT74-02;VT74-07;VT74-10,PLANNED AFTER PATCH
+PW-04,invalid,different,in_memory,overflow_129,INVALID_REQUEST,VT74-05;VT74-10,PLANNED AFTER PATCH
+PW-05,unknown_unissued,same,in_memory,at_128,UNKNOWN_RUN,VT74-15;VT74-09,PLANNED AFTER PATCH
+PW-06,unknown_unissued,different,after_reload,below,UNKNOWN_RUN,VT74-15;VT74-07,PLANNED AFTER PATCH
+PW-07,retained,different,in_memory,below,CONFLICT,VT74-04,PLANNED AFTER PATCH
+PW-08,invalid,same,after_reload,below,INVALID_REQUEST,VT74-05;VT74-07,PLANNED AFTER PATCH
+PW-09,unknown_expired,same,in_memory,overflow_129,UNKNOWN_RUN,VT74-10,PLANNED AFTER PATCH
+PW-10,unknown_expired,different,after_reload,overflow_129,UNKNOWN_RUN,VT74-10;VT74-07,PLANNED AFTER PATCH
+PW-11,active_new,same,in_memory,overflow_129,COMMITTED,VT74-01;VT74-10,PLANNED AFTER PATCH
+PW-12,retained,same,in_memory,at_128,DUPLICATE,VT74-02;VT74-09,PLANNED AFTER PATCH
+PW-13,invalid,same,in_memory,at_128,INVALID_REQUEST,VT74-05;VT74-09,PLANNED AFTER PATCH
+PW-14,unknown_unissued,same,in_memory,overflow_129,UNKNOWN_RUN,VT74-15;VT74-10,PLANNED AFTER PATCH
