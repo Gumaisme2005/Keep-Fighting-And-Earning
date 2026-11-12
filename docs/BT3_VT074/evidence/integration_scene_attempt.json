@@ -1,0 +1,8 @@
+﻿{
+    "reason":  "Test harness pressed launch during the real selection scroll tween; button still disabled. Fixture timing failure, not an idempotency defect. Raw assertion/log preserved.",
+    "work":  "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c4\\015e87a341594e19b6487e742d06f6bc",
+    "processes":  [
+
+                  ],
+    "aborted":  false
+}

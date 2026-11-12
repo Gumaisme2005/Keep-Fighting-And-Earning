@@ -1,0 +1,12 @@
+﻿{
+    "reason":  "SETUP ERROR: cannot infer Variant equality type for ok; aborted invalid attempt, no behavioral PASS claimed",
+    "work":  "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c4\\4a24577b180a49f689cf9df9b2d71385",
+    "interrupted":  true,
+    "processes":  [
+                      {
+                          "ProcessId":  26788,
+                          "ParentProcessId":  23632,
+                          "CommandLine":  "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe --headless --path C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c4\\4a24577b180a49f689cf9df9b2d71385\\project --log-file C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c4\\4a24577b180a49f689cf9df9b2d71385\\IT-03-independent.log res://tests/test_vt074_integration.tscn -- --case=IT-03"
+                      }
+                  ]
+}

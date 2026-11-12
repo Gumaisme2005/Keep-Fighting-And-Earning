@@ -1,0 +1,10 @@
+{
+  "current_seed": "  LEGACY seed!  ",
+  "selected_character_index": 2,
+  "saved_seeds": [{"seed": "LEGACY", "hero_idx": 2, "note": "<synthetic> legacy", "date": "same"}],
+  "run_history": [
+    {"seed": "LEGACY", "hero_idx": 2, "hero_name": "Synthetic", "floor": 2, "kills": 7, "reason": "Legacy", "date": "same", "has_replay": true, "frames": [{"dx": 1, "dy": 0, "atk": true}]},
+    {"seed": "LEGACY", "hero_idx": 2, "hero_name": "Synthetic", "floor": 2, "kills": 7, "reason": "Legacy", "date": "same", "has_replay": true, "frames": [{"dx": 1, "dy": 0, "atk": true}]},
+    {"seed": " bad seed! ", "hero_idx": 999, "hero_name": "<Test>", "floor": 0, "kills": -1, "reason": "<synthetic>", "date": "same", "has_replay": true, "frames": [{"dx": 12, "dy": -12, "slot": 30, "q": true}]}
+  ]
+}
