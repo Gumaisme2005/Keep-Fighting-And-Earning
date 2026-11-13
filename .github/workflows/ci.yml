@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Godot 4 Headless
         uses: chickensoft-games/setup-godot@v2
@@ -32,6 +34,12 @@ jobs:
       - name: 1. Run Dungeon Generator Unit Tests (UT-01 .. UT-13)
         run: |
           godot --headless "res://tests/test_dungeon_generator_unit.tscn"
+
+      - name: VT-074 Smoke (GREEN, Contract, Integration, Replay HT-02)
+        timeout-minutes: 10
+        shell: bash
+        run: |
+          python3 tests/vt074/run_ci_import_audit.py --godot "$(command -v godot)" --mode review --suite smoke
 
       - name: 2. Run Property-Based Tests (100 Seeds x 5 Invariants)
         run: |

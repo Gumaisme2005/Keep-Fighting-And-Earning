@@ -1,0 +1,345 @@
+{
+  "executed_at": "2026-11-14T01:38:41.455635+07:00",
+  "head": "8db06a56720d7f2bbe359c908eb55950b8d208c8",
+  "branch": "feat/bt3-vt074-idempotent-run",
+  "production_sha256": "097cfb2cfb99135759a18bd0a4f0bee6b2b1201d8eb1b8bc406934583198e2a7",
+  "exact_approved_C1_applied": true,
+  "production_numstat": "29 additions, 0 deletions",
+  "authorized_preexisting_files_changed": [
+    "Scene/GameManager.gd",
+    "docs/BT3_VT074/README.md",
+    "docs/BT3_VT074/evidence/.gitignore"
+  ],
+  "other_preexisting_files_unchanged": true,
+  "all_historical_evidence_bytes_retained": true,
+  "no_historical_data_deleted_or_rewritten": true,
+  "CI_files_unchanged_since_approval": true,
+  "all_old_CI_steps_preserved": true,
+  "index_unchanged": true,
+  "personal_save_unchanged": true,
+  "personal_save_sha256": "2b86ed7cd91bd182f87988eaf87f6a377aceff32c0520e00dc73382dbfe89a26",
+  "root_pass_invocations": 39,
+  "assertion_counts": {
+    "canonical": 284,
+    "differential": 1051,
+    "ownership": 56,
+    "pairwise": 261,
+    "contract": 82,
+    "integration": 1780,
+    "replay": 145,
+    "ORDER": 155,
+    "boundary": 27,
+    "TIME": 340
+  },
+  "total_counted_assertions_pass": 4181,
+  "VT7402_oracles": 2,
+  "smoke_invocations_pass": 5,
+  "isolated_mutation_invocations_pass": 3,
+  "mutation_assertions_pass": 73,
+  "mutation_expected_fail": 8,
+  "perk_known_baseline_fail": 3,
+  "root_invocations_unique_user_directories": 40,
+  "benchmark_workloads": [
+    {
+      "workload": "primary",
+      "frames": 2,
+      "n": 1200,
+      "min_ms": 3.321,
+      "mean_ms": 7.519018333333333,
+      "median_ms": 9.1985,
+      "p95_ms": 10.415,
+      "p95_zero_based_index": 1139,
+      "max_ms": 10.74,
+      "statuses": {
+        "COMMITTED": 30,
+        "DUPLICATE": 1170
+      },
+      "unique_committed_run_ids": 30,
+      "mean_queue_ms": 7.329173333333333,
+      "mean_service_ms": 0.189845,
+      "batch_p95_failures": 0,
+      "threshold_result": "PASS",
+      "service_by_status": {
+        "COMMITTED": {
+          "n": 30,
+          "min_ms": 3.173,
+          "mean_ms": 7.137833333333333,
+          "median_ms": 8.8375,
+          "p95_ms": 9.921,
+          "p95_zero_based_index": 28,
+          "max_ms": 10.096
+        },
+        "DUPLICATE": {
+          "n": 1170,
+          "min_ms": 0.01,
+          "mean_ms": 0.01169145299145299,
+          "median_ms": 0.011,
+          "p95_ms": 0.017,
+          "p95_zero_based_index": 1111,
+          "max_ms": 0.046
+        }
+      },
+      "batch_wall": {
+        "n": 30,
+        "min_ms": 3.88,
+        "mean_ms": 7.875666666666667,
+        "median_ms": 9.605,
+        "p95_ms": 10.826,
+        "p95_zero_based_index": 28,
+        "max_ms": 10.895
+      },
+      "first_committed_service": {
+        "n": 30,
+        "min_ms": 3.173,
+        "mean_ms": 7.137833333333333,
+        "median_ms": 8.8375,
+        "p95_ms": 9.921,
+        "p95_zero_based_index": 28,
+        "max_ms": 10.096
+      },
+      "first_committed_latency": {
+        "n": 30,
+        "min_ms": 3.321,
+        "mean_ms": 7.288166666666667,
+        "median_ms": 8.986,
+        "p95_ms": 10.071,
+        "p95_zero_based_index": 28,
+        "max_ms": 10.249
+      }
+    },
+    {
+      "workload": "primary",
+      "frames": 3600,
+      "n": 1200,
+      "min_ms": 280.912,
+      "mean_ms": 348.05100416666664,
+      "median_ms": 347.5625,
+      "p95_ms": 403.425,
+      "p95_zero_based_index": 1139,
+      "max_ms": 473.789,
+      "statuses": {
+        "COMMITTED": 30,
+        "DUPLICATE": 1170
+      },
+      "unique_committed_run_ids": 30,
+      "mean_queue_ms": 337.94290666666666,
+      "mean_service_ms": 10.1080975,
+      "batch_p95_failures": 0,
+      "threshold_result": "PASS",
+      "service_by_status": {
+        "COMMITTED": {
+          "n": 30,
+          "min_ms": 280.732,
+          "mean_ms": 289.30333333333334,
+          "median_ms": 287.4715,
+          "p95_ms": 307.078,
+          "p95_zero_based_index": 28,
+          "max_ms": 309.493
+        },
+        "DUPLICATE": {
+          "n": 1170,
+          "min_ms": 2.328,
+          "mean_ms": 2.949245299145299,
+          "median_ms": 2.817,
+          "p95_ms": 3.778,
+          "p95_zero_based_index": 1111,
+          "max_ms": 9.287
+        }
+      },
+      "batch_wall": {
+        "n": 30,
+        "min_ms": 388.296,
+        "mean_ms": 405.07696666666664,
+        "median_ms": 400.33450000000005,
+        "p95_ms": 426.236,
+        "p95_zero_based_index": 28,
+        "max_ms": 474.074
+      },
+      "first_committed_service": {
+        "n": 30,
+        "min_ms": 280.732,
+        "mean_ms": 289.30333333333334,
+        "median_ms": 287.4715,
+        "p95_ms": 307.078,
+        "p95_zero_based_index": 28,
+        "max_ms": 309.493
+      },
+      "first_committed_latency": {
+        "n": 30,
+        "min_ms": 280.912,
+        "mean_ms": 289.56533333333334,
+        "median_ms": 287.7175,
+        "p95_ms": 307.298,
+        "p95_zero_based_index": 28,
+        "max_ms": 309.725
+      }
+    },
+    {
+      "workload": "secondary",
+      "frames": 2,
+      "n": 1200,
+      "min_ms": 0.172,
+      "mean_ms": 0.6145308333333334,
+      "median_ms": 0.406,
+      "p95_ms": 1.162,
+      "p95_zero_based_index": 1139,
+      "max_ms": 1.235,
+      "statuses": {
+        "DUPLICATE": 600,
+        "CONFLICT": 300,
+        "INVALID_REQUEST": 300
+      },
+      "unique_committed_run_ids": 0,
+      "mean_queue_ms": 0.5885825,
+      "mean_service_ms": 0.025948333333333334,
+      "batch_p95_failures": 0,
+      "threshold_result": "PASS",
+      "service_by_status": {
+        "CONFLICT": {
+          "n": 300,
+          "min_ms": 0.071,
+          "mean_ms": 0.07898666666666666,
+          "median_ms": 0.076,
+          "p95_ms": 0.096,
+          "p95_zero_based_index": 284,
+          "max_ms": 0.166
+        },
+        "DUPLICATE": {
+          "n": 600,
+          "min_ms": 0.01,
+          "mean_ms": 0.011465,
+          "median_ms": 0.011,
+          "p95_ms": 0.021,
+          "p95_zero_based_index": 569,
+          "max_ms": 0.03
+        },
+        "INVALID_REQUEST": {
+          "n": 300,
+          "min_ms": 0.001,
+          "mean_ms": 0.0018766666666666667,
+          "median_ms": 0.002,
+          "p95_ms": 0.003,
+          "p95_zero_based_index": 284,
+          "max_ms": 0.013
+        }
+      },
+      "batch_wall": {
+        "n": 30,
+        "min_ms": 1.228,
+        "mean_ms": 1.2922333333333333,
+        "median_ms": 1.2835,
+        "p95_ms": 1.359,
+        "p95_zero_based_index": 28,
+        "max_ms": 1.392
+      }
+    },
+    {
+      "workload": "secondary",
+      "frames": 3600,
+      "n": 1200,
+      "min_ms": 3.256,
+      "mean_ms": 322.52706083333334,
+      "median_ms": 98.6945,
+      "p95_ms": 782.408,
+      "p95_zero_based_index": 1139,
+      "max_ms": 812.072,
+      "statuses": {
+        "DUPLICATE": 600,
+        "CONFLICT": 300,
+        "INVALID_REQUEST": 300
+      },
+      "unique_committed_run_ids": 0,
+      "mean_queue_ms": 303.155375,
+      "mean_service_ms": 19.371685833333334,
+      "batch_p95_failures": 0,
+      "threshold_result": "PASS",
+      "service_by_status": {
+        "CONFLICT": {
+          "n": 300,
+          "min_ms": 69.383,
+          "mean_ms": 71.74605,
+          "median_ms": 70.6405,
+          "p95_ms": 77.121,
+          "p95_zero_based_index": 284,
+          "max_ms": 87.517
+        },
+        "DUPLICATE": {
+          "n": 600,
+          "min_ms": 2.337,
+          "mean_ms": 2.868615,
+          "median_ms": 2.809,
+          "p95_ms": 3.471,
+          "p95_zero_based_index": 569,
+          "max_ms": 4.638
+        },
+        "INVALID_REQUEST": {
+          "n": 300,
+          "min_ms": 0.001,
+          "mean_ms": 0.0034633333333333335,
+          "median_ms": 0.002,
+          "p95_ms": 0.012,
+          "p95_zero_based_index": 284,
+          "max_ms": 0.034
+        }
+      },
+      "batch_wall": {
+        "n": 30,
+        "min_ms": 759.528,
+        "mean_ms": 775.5663666666667,
+        "median_ms": 774.701,
+        "p95_ms": 796.687,
+        "p95_zero_based_index": 28,
+        "max_ms": 812.258
+      }
+    }
+  ],
+  "benchmark_requirement": "PASS",
+  "acceptance_criteria_changed": false,
+  "approved_first_commit_tradeoff_ms": 7.637,
+  "approved_first_commit_tradeoff_percent": 2.49,
+  "checks": [
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe",
+        "apply",
+        "--reverse",
+        "--check",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\docs\\BT3_VT074\\evidence\\heavy_tradeoff_144f3df0463e_candidate.patch"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "source_and_document_whitespace": "PASS",
+  "selection_count": 90,
+  "excluded_duplicates_count": 11,
+  "selection_manifest": "docs/BT3_VT074/evidence/heavy_c1_production_a1b80b4f3c6b_commit_manifest.json",
+  "selection_manifest_sha256": "0d390ef742bec47adedeff5605f0b721ac4f0cf232ab79249485abeeb338c4f9",
+  "selected_pack_verification": {
+    "command": [
+      "C:\\Users\\ADMIN\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c1_production\\selected_pack_66dbc700\\tests\\vt074\\run_c1_production.py",
+      "--phase",
+      "verify",
+      "--run",
+      "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c1_production\\selected_pack_66dbc700\\docs\\BT3_VT074\\evidence\\heavy_c1_production_a1b80b4f3c6b_benchmark.json"
+    ],
+    "exit_code": 0,
+    "datasets_recalculated": 11,
+    "records_recalculated": 61600,
+    "original_archives_absent": true,
+    "normalized_to_Git_LF": true,
+    "matches_stored_verification": true
+  },
+  "git_status": " M .github/workflows/ci.yml\n M Scene/GameManager.gd\n M docs/BT3_VT074/README.md\n M tests/vt074/run_ci_import_audit.py\n?? docs/BT3_VT074/C1_PRODUCTION_APPLIED_REPORT.md\n?? docs/BT3_VT074/FINAL_CODE_TEST_REPORT.md\n?? docs/BT3_VT074/FINAL_PERFORMANCE_TRADEOFF_REVIEW.md\n?? docs/BT3_VT074/evidence/.gitignore\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_AFTER_A_performance_40.csv\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_AFTER_A_performance_batches.json\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_AFTER_A_performance_warmup.csv\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_AFTER_B_performance_40.csv\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_AFTER_B_performance_batches.json\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_AFTER_B_performance_warmup.csv\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_BEFORE_A_performance_40.csv\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_BEFORE_A_performance_batches.json\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_BEFORE_A_performance_warmup.csv\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_BEFORE_B_performance_40.csv\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_BEFORE_B_performance_batches.json\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_BEFORE_B_performance_warmup.csv\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_benchmark.json\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_candidate.patch\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_compare.json\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_regression.json\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_validate.json\n?? docs/BT3_VT074/evidence/heavy_1a3b68d5d730_verification.json\n?? docs/BT3_VT074/evidence/heavy_4992759f992a_compare.json\n?? docs/BT3_VT074/evidence/heavy_4992759f992a_validate.json\n?? docs/BT3_VT074/evidence/heavy_4992759f992a_validate_attempt2.json\n?? docs/BT3_VT074/evidence/heavy_c1_production_a1b80b4f3c6b_benchmark.json\n?? docs/BT3_VT074/evidence/heavy_c1_production_a1b80b4f3c6b_commit_manifest.json\n?? docs/BT3_VT074/evidence/heavy_c1_production_a1b80b4f3c6b_final_checks.json\n?? docs/BT3_VT074/evidence/heavy_c1_production_a1b80b4f3c6b_performance_40.csv\n?? docs/BT3_VT074/evidence/heavy_c1_production_a1b80b4f3c6b_performance_batches.json\n?? docs/BT3_VT074/evidence/heavy_c1_production_a1b80b4f3c6b_performance_warmup.csv\n?? docs/BT3_VT074/evidence/heavy_c1_production_a1b80b4f3c6b_snapshots.zip\n?? docs/BT3_VT074/evidence/heavy_c1_production_a1b80b4f3c6b_tests.json\n?? docs/BT3_VT074/evidence/heavy_c1_production_a1b80b4f3c6b_verification.json\n?? docs/BT3_VT074/evidence/heavy_ddd21c5696b8_compare.json\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_COPY_A_performance_40.csv\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_COPY_A_performance_batches.json\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_COPY_A_performance_warmup.csv\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_COPY_B_performance_40.csv\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_COPY_B_performance_batches.json\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_COPY_B_performance_warmup.csv\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_ORIGINAL_A_performance_40.csv\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_ORIGINAL_A_performance_batches.json\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_ORIGINAL_A_performance_warmup.csv\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_ORIGINAL_B_performance_40.csv\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_ORIGINAL_B_performance_batches.json\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_ORIGINAL_B_performance_warmup.csv\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_OWNED_A_performance_40.csv\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_OWNED_A_performance_batches.json\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_OWNED_A_performance_warmup.csv\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_OWNED_B_performance_40.csv\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_OWNED_B_performance_batches.json\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_OWNED_B_performance_warmup.csv\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_benchmark.json\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_candidate.patch\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_existing48_inventory.json\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_final_checks.json\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_instrumentation_attempt1.patch\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_ownership.patch\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_profile.json\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_regression.json\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_scopes_attempt1.json\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_sources.json\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_validate.json\n?? docs/BT3_VT074/evidence/heavy_tradeoff_144f3df0463e_verification.json\n?? docs/BT3_VT074/evidence/vt074_final_0084cf203d62_smoke.json\n?? docs/BT3_VT074/evidence/vt074_final_25f705a64d37_pairwise.json\n?? docs/BT3_VT074/evidence/vt074_final_315966019bc5_all.json\n?? docs/BT3_VT074/evidence/vt074_final_43b00db1e9d0_pairwise.json\n?? docs/BT3_VT074/evidence/vt074_final_942e400cf5a4_all.json\n?? docs/BT3_VT074/evidence/vt074_final_9f75c585fc5c_smoke.json\n?? docs/BT3_VT074/evidence/vt074_final_c1prod_a1b80b4f3c6b_mutation.json\n?? docs/BT3_VT074/evidence/vt074_final_checks.json\n?? docs/BT3_VT074/evidence/vt074_final_d76dba213bfa_pairwise.json\n?? docs/BT3_VT074/evidence/vt074_final_e8bf00df8fd7_pairwise.json\n?? docs/BT3_VT074/evidence/vt074_final_pairwise.log\n?? docs/BT3_VT074/evidence/vt074_resume_final_checks.json\n?? tests/vt074/run_c1_production.py\n?? tests/vt074/run_heavy_tradeoff.py\n?? tests/vt074/run_heavy_trial.py\n?? tests/vt074/test_heavy_comparison.gd\n?? tests/vt074/test_heavy_equivalence.gd\n?? tests/vt074/test_heavy_tradeoff_ownership.gd\n?? tests/vt074/test_heavy_tradeoff_profile.gd\n?? tests/vt074/test_pairwise.gd\n?? tests/vt074/verify_heavy_trial.py",
+  "readiness": "READY FOR FINAL COMMIT within approved BT3 scope",
+  "no_stage_commit_push_merge_PR": true,
+  "self_hash_omitted": true
+}

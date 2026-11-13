@@ -75,6 +75,11 @@ var _uncertain_snapshot: Dictionary = {}
 var _uncertain_completion: bool = false
 var _uncertain_clear_frames: bool = false
 var _writing: bool = false
+# One owner-local canonical payload, independent of callers, history and envelope.
+# All containers are read-only; never persisted or reconstructed after reload.
+var _duplicate_payload: Dictionary = {}
+var _duplicate_token: String = ""
+var _duplicate_fingerprint: String = ""
 
 func _ready() -> void:
 	load_save_data()
@@ -187,6 +192,9 @@ func start_new_run(custom_seed: String = "", replay_mode: bool = false, frames_t
 		_outcome("ID_GENERATION_FAILED")
 		return false
 	current_run_id = token
+	_duplicate_payload = {}
+	_duplicate_token = ""
+	_duplicate_fingerprint = ""
 	_active_state = "OPEN"
 	_session_mode = "action_replay" if replay_mode else "live"
 	_envelope.clear()
@@ -339,9 +347,26 @@ func _receipt_for(token: String) -> Dictionary:
 			return receipt
 	return {}
 
+func _remember_validated_payload(token: String, payload: Dictionary, fingerprint: String) -> void:
+	_duplicate_payload = payload
+	for frame in _duplicate_payload.frames:
+		frame.make_read_only()
+	_duplicate_payload.frames.make_read_only()
+	_duplicate_payload.make_read_only()
+	_duplicate_token = token
+	_duplicate_fingerprint = fingerprint
+
 func complete_run_request(token: Variant, raw_payload: Variant) -> Dictionary:
 	if not _valid_id(token):
 		return _outcome("INVALID_REQUEST")
+	# Exact structural equality to validated canonical values is sufficient,
+	# never required. Noncanonical/invalid/conflicting inputs use the old path.
+	if (storage_state == "READY" and not _writing and _active_state == "CLOSED"
+			and token == current_run_id and token == _duplicate_token):
+		var committed := _receipt_for(token)
+		if (not committed.is_empty() and committed.fingerprint == _duplicate_fingerprint
+				and raw_payload is Dictionary and raw_payload == _duplicate_payload):
+			return _outcome("DUPLICATE", committed)
 	var payload := canonical_payload(raw_payload)
 	if payload.is_empty():
 		return _outcome("INVALID_REQUEST")
@@ -359,6 +384,7 @@ func complete_run_request(token: Variant, raw_payload: Variant) -> Dictionary:
 		return _outcome("CONFLICT")
 	if _envelope.is_empty():
 		_envelope = payload.duplicate(true)
+		_remember_validated_payload(token, payload, fingerprint)
 		_completion_date = String(completion_clock.call()) if completion_clock.is_valid() else Time.get_datetime_string_from_system(false, true)
 		_active_state = "PENDING"
 		var candidate := _snapshot()
@@ -629,6 +655,9 @@ func load_save_data() -> bool:
 	var candidate := _decode_snapshot(parsed)
 	_publish_snapshot(candidate)
 	current_run_id = "" # Loading receipts does not resume an uncommitted session.
+	_duplicate_payload = {}
+	_duplicate_token = ""
+	_duplicate_fingerprint = ""
 	_active_state = "CLOSED"
 	_envelope = {}
 	_pending_snapshot = {}

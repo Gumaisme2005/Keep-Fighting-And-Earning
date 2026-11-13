@@ -10,6 +10,7 @@ Works on Windows/Linux; results apply only to the recorded host platform.
 
 import argparse
 from collections import Counter
+import csv
 from datetime import datetime, timezone
 import difflib
 import hashlib
@@ -105,6 +106,22 @@ def review_project(project, suite, godot, environment, record, report, prefix):
         elif kind == "time":
             summaries = markers(result, "[TIME RESULTS]")
             result["passed"] &= summaries == [{"failed": 0, "iterations": 20, "passed": 340}]
+        elif kind == "pairwise":
+            assertions = markers(result, "[PW_ASSERT]")
+            rows = markers(result, "[PW_ROW_RESULT]")
+            summaries = markers(result, "[PAIRWISE RESULTS]")
+            with (project / "tests/vt074/pairwise_cases.csv").open(newline="", encoding="utf-8") as stream:
+                expected_rows = list(csv.DictReader(stream))
+            result["pairwise_rows"] = rows
+            result["passed"] &= len(rows) == len(expected_rows) == 14
+            result["passed"] &= [r["row_id"] for r in rows] == [f"PW-{n:02d}" for n in range(1, 15)]
+            for actual, expected_row in zip(rows, expected_rows):
+                result["passed"] &= all(actual[k] == expected_row[k] for k in ["row_id", "identity", "payload", "storage", "ledger"])
+                result["passed"] &= actual["actual"] == actual["expected"] == expected_row["expected_status"]
+                row_assertions = [a for a in assertions if a["row_id"] == actual["row_id"] and a["label"] != "unique ordered row ID"]
+                result["passed"] &= actual["failed"] == 0 and actual["passed"] == len(row_assertions) >= 10 and actual["result"] == "PASS"
+            result["passed"] &= bool(assertions) and all(a["result"] == "PASS" and a["actual"] == a["expected"] for a in assertions)
+            result["passed"] &= len(summaries) == 1 and summaries[0] == {"rows": 14, "passed": len(assertions), "failed": 0}
         record(name, result)
         if not result["passed"]:
             raise RuntimeError("Review oracle failed: " + name)
@@ -114,6 +131,8 @@ def review_project(project, suite, godot, environment, record, report, prefix):
     def quality(name, file, options=(), kind="normal", expected=0):
         return scene(name, entry, ["--suite=res://tests/vt074/" + file, *options], kind, expected)
 
+    if suite in {"all", "pairwise"}:
+        quality("pairwise", "test_pairwise.gd", kind="pairwise")
     if suite == "mutation":
         target = project / "Scene/GameManager.gd"
         original = target.read_bytes()
@@ -187,7 +206,7 @@ def main():
     p.add_argument("--git", default=shutil.which("git") or
                    r"C:\Users\ADMIN\AppData\Local\GitHubDesktop\app-3.6.10\resources\app\git\cmd\git.exe")
     p.add_argument("--mode", choices=["imports", "regressions", "review"], required=True)
-    p.add_argument("--suite", choices=["all", "smoke", "contract", "integration", "replay", "time", "boundary", "mutation", "benchmark"], default="all")
+    p.add_argument("--suite", choices=["all", "smoke", "pairwise", "contract", "integration", "replay", "time", "boundary", "mutation", "benchmark"], default="all")
     p.add_argument("--work", type=Path)
     args = p.parse_args()
     godot = str(args.godot.resolve())
@@ -214,7 +233,7 @@ def main():
     if not work.is_relative_to(base) or work == base:
         raise RuntimeError("Work directory must be a child of the isolated audit directory")
     work.mkdir(parents=True, exist_ok=True)
-    prefix = f"commit6_{work.name}_{args.suite}" if args.mode == "review" else f"ci_import_{work.name}_{args.mode}"
+    prefix = f"vt074_final_{work.name}_{args.suite}" if args.mode == "review" else f"ci_import_{work.name}_{args.mode}"
     output = EVIDENCE / (prefix + ".json")
     if output.exists():
         raise RuntimeError("Refusing to overwrite evidence; use a new attempt")
@@ -251,8 +270,14 @@ def main():
     try:
         record("version", execute([godot, "--version"], work, os.environ.copy()))
         if args.mode == "review":
+            if report["steps"][0]["exit_code"] != 0 or not report["steps"][0]["stdout"].startswith("4.7.2."):
+                raise RuntimeError("Godot 4.7.2 required")
             project = work / "project"
-            for name in tracked:
+            # Include new VT-074 tests before staging; ignored caches stay excluded.
+            new_tests = git("ls-files", "--others", "--exclude-standard", "-z", "--", "tests/vt074").split("\0")
+            source_files = sorted(set(tracked) | set(filter(None, new_tests)))
+            report["copied_source_sha256"] = {name: sha(ROOT / name) for name in source_files}
+            for name in source_files:
                 target = project / name
                 if not target.resolve().is_relative_to(project.resolve()):
                     raise RuntimeError("Unsafe source path")
@@ -270,8 +295,6 @@ def main():
                        "ERROR: Error loading custom project font 'res://Assets/Fonts/BeVietnamPro-Medium.ttf'"]
             if imported["exit_code"] != 0 or (errors and errors != allowed):
                 raise RuntimeError("Clean import failed or unexpected diagnostic")
-            if not report["steps"][0]["stdout"].startswith("4.7.2."):
-                raise RuntimeError("Godot 4.7.2 required")
             code = 0 if review_project(project, args.suite, godot, environment, record, report, prefix) else 1
         elif args.mode == "imports":
             changes = git("diff", "--name-status", C4, C5).splitlines()
@@ -373,7 +396,8 @@ def main():
         report["personal_save_after_sha256"] = sha(personal)
         report["personal_save_unchanged"] = before == sha(personal)
         report["historical_tracked_files_changed"] = [name for name, value in immutable.items() if sha(ROOT / name) != value]
-        if not report["personal_save_unchanged"] or report["historical_tracked_files_changed"]:
+        report["copied_source_files_changed"] = [name for name, value in report.get("copied_source_sha256", {}).items() if sha(ROOT / name) != value]
+        if not report["personal_save_unchanged"] or report["historical_tracked_files_changed"] or report["copied_source_files_changed"]:
             code = 2
         report["runner_exit_code"] = code
         output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

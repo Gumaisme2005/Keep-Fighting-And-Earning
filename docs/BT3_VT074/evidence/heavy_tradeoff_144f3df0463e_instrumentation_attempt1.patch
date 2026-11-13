@@ -1,0 +1,657 @@
+--- original.gd
++++ profile_original.gd
+@@ -1,4 +1,5 @@
+ extends Node
++const VT074Trace = preload("res://tests/vt074/profile_trace.gd")
+ 
+ signal seed_changed(new_seed: String)
+ signal stats_updated(level: int, kills: int)
+@@ -108,6 +109,12 @@
+ 	return cleaned
+ 
+ static func _sanitize_replay_frames(raw_frames: Variant, max_count: int) -> Array:
++	VT074Trace.enter("replay_sanitize")
++	var _profile_result = _vt074_original_sanitize_replay_frames(raw_frames, max_count)
++	VT074Trace.leave()
++	return _profile_result
++
++static func _vt074_original_sanitize_replay_frames(raw_frames: Variant, max_count: int) -> Array:
+ 	var safe_frames: Array = []
+ 	if not (raw_frames is Array):
+ 		return safe_frames
+@@ -278,6 +285,12 @@
+ 	return last_completion_result.duplicate(true)
+ 
+ static func _valid_id(value: Variant, length: int = 32) -> bool:
++	VT074Trace.enter("id_validation")
++	var _profile_result = _vt074_original_valid_id(value, length)
++	VT074Trace.leave()
++	return _profile_result
++
++static func _vt074_original_valid_id(value: Variant, length: int = 32) -> bool:
+ 	if not (value is String) or value.length() != length:
+ 		return false
+ 	for character in value:
+@@ -290,6 +303,12 @@
+ 		and float(value) == floor(float(value)) and value >= low and value <= high)
+ 
+ func canonical_payload(raw: Variant) -> Dictionary:
++	VT074Trace.enter("canonical")
++	var _profile_result = _vt074_original_canonical_payload(raw)
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_canonical_payload(raw: Variant) -> Dictionary:
+ 	if not (raw is Dictionary):
+ 		return {}
+ 	for key in ["seed", "hero_idx", "floor", "kills", "reason", "session_mode", "frames"]:
+@@ -301,11 +320,15 @@
+ 		return {}
+ 	if not (raw.session_mode is String) or raw.session_mode not in ["live", "action_replay"] or not (raw.frames is Array):
+ 		return {}
++	VT074Trace.enter("frame_validation_copy_loop")
++	var _profile_copy_us := 0
+ 	var frames: Array = []
+ 	for frame in raw.frames.slice(0, MAX_REPLAY_FRAMES):
+ 		if not (frame is Dictionary):
+ 			return {}
++		var _profile_copy_start := Time.get_ticks_usec()
+ 		var normalized: Dictionary = frame.duplicate(true)
++		_profile_copy_us += Time.get_ticks_usec() - _profile_copy_start
+ 		for key in ["dx", "dy", "ax", "ay", "slot", "result", "pg"]:
+ 			if frame.has(key):
+ 				var number: Variant = frame[key]
+@@ -319,21 +342,43 @@
+ 			if frame.has(key) and not (frame[key] is bool):
+ 				return {}
+ 		frames.append(normalized)
++	VT074Trace.leaf("frame_deep_copy", _profile_copy_us)
++	VT074Trace.leave()
+ 	return {"seed": sanitize_seed(raw.seed), "hero_idx": int(raw.hero_idx),
+ 		"floor": int(raw.floor), "kills": int(raw.kills), "reason": sanitize_note(raw.reason),
+ 		"session_mode": raw.session_mode, "frames": _sanitize_replay_frames(frames, MAX_REPLAY_FRAMES)}
+ 
+ func payload_fingerprint(payload: Dictionary) -> String:
++	VT074Trace.enter("fingerprint")
++	var _profile_result = _vt074_original_payload_fingerprint(payload)
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_payload_fingerprint(payload: Dictionary) -> String:
++	VT074Trace.enter("fingerprint_tuple_build")
+ 	var frames: Array = []
+ 	for frame in payload.frames:
+ 		var tuple: Array = []
+ 		for key in ["dx", "dy", "ax", "ay", "atk", "q", "rmb", "slot", "shift", "lp", "lr", "rp", "rr", "result", "pg", "eat"]:
+ 			tuple.append(frame[key])
+ 		frames.append(tuple)
+-	return JSON.stringify([1, payload.seed, payload.hero_idx, payload.floor, payload.kills,
+-		payload.reason, payload.session_mode, frames]).sha256_text()
++	VT074Trace.leave()
++	VT074Trace.enter("fingerprint_json")
++	var _profile_encoded := JSON.stringify([1, payload.seed, payload.hero_idx, payload.floor, payload.kills,
++		payload.reason, payload.session_mode, frames])
++	VT074Trace.leave()
++	VT074Trace.enter("fingerprint_sha256")
++	var _profile_digest := _profile_encoded.sha256_text()
++	VT074Trace.leave()
++	return _profile_digest
+ 
+ func _receipt_for(token: String) -> Dictionary:
++	VT074Trace.enter("ledger_lookup")
++	var _profile_result = _vt074_original_receipt_for(token)
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_receipt_for(token: String) -> Dictionary:
+ 	for receipt in processed_ledger:
+ 		if receipt.run_id == token:
+ 			return receipt
+@@ -358,27 +403,31 @@
+ 	if not _envelope.is_empty() and payload_fingerprint(_envelope) != fingerprint:
+ 		return _outcome("CONFLICT")
+ 	if _envelope.is_empty():
+-		_envelope = payload.duplicate(true)
++		VT074Trace.enter("candidate_build")
++		_envelope = VT074Trace.copy_dict(payload, "envelope_copy")
+ 		_completion_date = String(completion_clock.call()) if completion_clock.is_valid() else Time.get_datetime_string_from_system(false, true)
+ 		_active_state = "PENDING"
+ 		var candidate := _snapshot()
+-		var entry: Dictionary = payload.duplicate(true)
++		var entry: Dictionary = VT074Trace.copy_dict(payload, "entry_copy")
+ 		entry["run_id"] = token
+ 		entry["date"] = _completion_date
+ 		entry["hero_name"] = String(CHARACTER_INFO[payload.hero_idx].get("name", "Hero"))
+ 		entry["has_replay"] = not payload.frames.is_empty()
+ 		if entry.has_replay:
+-			candidate.last_recorded_run = entry.duplicate(true)
++			candidate.last_recorded_run = VT074Trace.copy_dict(entry, "last_recorded_copy")
++		VT074Trace.enter("history_ledger_update")
+ 		entry.frames = entry.frames.slice(0, MAX_DISK_REPLAY_FRAMES)
+ 		candidate.run_history.push_front(entry)
+ 		_limit_history(candidate.run_history)
+-		var summary := payload.duplicate(true)
++		var summary := VT074Trace.copy_dict(payload, "summary_copy")
+ 		summary.erase("frames")
+ 		candidate.processed_ledger.append({"run_id": token, "fingerprint": fingerprint,
+ 			"date": _completion_date, "summary": summary})
+ 		if candidate.processed_ledger.size() > MAX_PROCESSED_RECEIPTS:
+ 			candidate.processed_ledger.pop_front()
+ 		_pending_snapshot = candidate
++		VT074Trace.leave()
++		VT074Trace.leave()
+ 	var receipt: Dictionary = _pending_snapshot.processed_ledger[-1].duplicate(true)
+ 	var result := _write_snapshot(_pending_snapshot, true)
+ 	return _outcome(result.status, receipt if result.status == "COMMITTED" else {})
+@@ -538,6 +587,12 @@
+ 	return get_tree().change_scene_to_file("res://world.tscn") == OK
+ 
+ func _snapshot() -> Dictionary:
++	VT074Trace.enter("snapshot_copy")
++	var _profile_result = _vt074_original_snapshot()
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_snapshot() -> Dictionary:
+ 	return {
+ 		"schema_version": 2, "processed_ledger": processed_ledger.duplicate(true),
+ 		"current_seed": current_seed,
+@@ -551,6 +606,11 @@
+ 	return storage_state == "READY" and not _writing and _active_state != "PENDING"
+ 
+ func _publish_snapshot(data: Dictionary) -> void:
++	VT074Trace.enter("state_publish")
++	_vt074_original_publish_snapshot(data)
++	VT074Trace.leave()
++
++func _vt074_original_publish_snapshot(data: Dictionary) -> void:
+ 	current_seed = data.current_seed
+ 	set_character_by_index(int(data.selected_character_index))
+ 	saved_seeds = data.saved_seeds
+@@ -709,6 +769,12 @@
+ 		entry["session_mode"] = raw.session_mode
+ 
+ func _valid_v2_snapshot(data: Dictionary) -> bool:
++	VT074Trace.enter("snapshot_validation")
++	var _profile_result = _vt074_original_valid_v2_snapshot(data)
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_valid_v2_snapshot(data: Dictionary) -> bool:
+ 	if not _whole(data.get("schema_version"), 2, 2):
+ 		return false
+ 	if not (data.get("current_seed") is String) or sanitize_seed(data.current_seed) != data.current_seed or data.current_seed.is_empty() or not _whole(data.get("selected_character_index"), 0, CHARACTER_SCENES.size() - 1):
+--- cached_copy.gd
++++ profile_cached_copy.gd
+@@ -1,4 +1,5 @@
+ extends Node
++const VT074Trace = preload("res://tests/vt074/profile_trace.gd")
+ 
+ signal seed_changed(new_seed: String)
+ signal stats_updated(level: int, kills: int)
+@@ -113,6 +114,12 @@
+ 	return cleaned
+ 
+ static func _sanitize_replay_frames(raw_frames: Variant, max_count: int) -> Array:
++	VT074Trace.enter("replay_sanitize")
++	var _profile_result = _vt074_original_sanitize_replay_frames(raw_frames, max_count)
++	VT074Trace.leave()
++	return _profile_result
++
++static func _vt074_original_sanitize_replay_frames(raw_frames: Variant, max_count: int) -> Array:
+ 	var safe_frames: Array = []
+ 	if not (raw_frames is Array):
+ 		return safe_frames
+@@ -286,6 +293,12 @@
+ 	return last_completion_result.duplicate(true)
+ 
+ static func _valid_id(value: Variant, length: int = 32) -> bool:
++	VT074Trace.enter("id_validation")
++	var _profile_result = _vt074_original_valid_id(value, length)
++	VT074Trace.leave()
++	return _profile_result
++
++static func _vt074_original_valid_id(value: Variant, length: int = 32) -> bool:
+ 	if not (value is String) or value.length() != length:
+ 		return false
+ 	for character in value:
+@@ -298,6 +311,12 @@
+ 		and float(value) == floor(float(value)) and value >= low and value <= high)
+ 
+ func canonical_payload(raw: Variant) -> Dictionary:
++	VT074Trace.enter("canonical")
++	var _profile_result = _vt074_original_canonical_payload(raw)
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_canonical_payload(raw: Variant) -> Dictionary:
+ 	if not (raw is Dictionary):
+ 		return {}
+ 	for key in ["seed", "hero_idx", "floor", "kills", "reason", "session_mode", "frames"]:
+@@ -309,11 +328,15 @@
+ 		return {}
+ 	if not (raw.session_mode is String) or raw.session_mode not in ["live", "action_replay"] or not (raw.frames is Array):
+ 		return {}
++	VT074Trace.enter("frame_validation_copy_loop")
++	var _profile_copy_us := 0
+ 	var frames: Array = []
+ 	for frame in raw.frames.slice(0, MAX_REPLAY_FRAMES):
+ 		if not (frame is Dictionary):
+ 			return {}
++		var _profile_copy_start := Time.get_ticks_usec()
+ 		var normalized: Dictionary = frame.duplicate(true)
++		_profile_copy_us += Time.get_ticks_usec() - _profile_copy_start
+ 		for key in ["dx", "dy", "ax", "ay", "slot", "result", "pg"]:
+ 			if frame.has(key):
+ 				var number: Variant = frame[key]
+@@ -327,32 +350,63 @@
+ 			if frame.has(key) and not (frame[key] is bool):
+ 				return {}
+ 		frames.append(normalized)
++	VT074Trace.leaf("frame_deep_copy", _profile_copy_us)
++	VT074Trace.leave()
+ 	return {"seed": sanitize_seed(raw.seed), "hero_idx": int(raw.hero_idx),
+ 		"floor": int(raw.floor), "kills": int(raw.kills), "reason": sanitize_note(raw.reason),
+ 		"session_mode": raw.session_mode, "frames": _sanitize_replay_frames(frames, MAX_REPLAY_FRAMES)}
+ 
+ func payload_fingerprint(payload: Dictionary) -> String:
++	VT074Trace.enter("fingerprint")
++	var _profile_result = _vt074_original_payload_fingerprint(payload)
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_payload_fingerprint(payload: Dictionary) -> String:
++	VT074Trace.enter("fingerprint_tuple_build")
+ 	var frames: Array = []
+ 	for frame in payload.frames:
+ 		var tuple: Array = []
+ 		for key in ["dx", "dy", "ax", "ay", "atk", "q", "rmb", "slot", "shift", "lp", "lr", "rp", "rr", "result", "pg", "eat"]:
+ 			tuple.append(frame[key])
+ 		frames.append(tuple)
+-	return JSON.stringify([1, payload.seed, payload.hero_idx, payload.floor, payload.kills,
+-		payload.reason, payload.session_mode, frames]).sha256_text()
++	VT074Trace.leave()
++	VT074Trace.enter("fingerprint_json")
++	var _profile_encoded := JSON.stringify([1, payload.seed, payload.hero_idx, payload.floor, payload.kills,
++		payload.reason, payload.session_mode, frames])
++	VT074Trace.leave()
++	VT074Trace.enter("fingerprint_sha256")
++	var _profile_digest := _profile_encoded.sha256_text()
++	VT074Trace.leave()
++	return _profile_digest
+ 
+ func _receipt_for(token: String) -> Dictionary:
++	VT074Trace.enter("ledger_lookup")
++	var _profile_result = _vt074_original_receipt_for(token)
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_receipt_for(token: String) -> Dictionary:
+ 	for receipt in processed_ledger:
+ 		if receipt.run_id == token:
+ 			return receipt
+ 	return {}
+ 
+ func _remember_validated_payload(token: String, payload: Dictionary, fingerprint: String) -> void:
++	VT074Trace.enter("cache_construct")
++	_vt074_original_remember_validated_payload(token, payload, fingerprint)
++	VT074Trace.leave()
++
++func _vt074_original_remember_validated_payload(token: String, payload: Dictionary, fingerprint: String) -> void:
++	VT074Trace.enter("cache_deep_copy")
+ 	_duplicate_payload = payload.duplicate(true)
++	VT074Trace.leave()
++	VT074Trace.enter("cache_read_only")
+ 	for frame in _duplicate_payload.frames:
+ 		frame.make_read_only()
+ 	_duplicate_payload.frames.make_read_only()
+ 	_duplicate_payload.make_read_only()
++	VT074Trace.leave()
+ 	_duplicate_token = token
+ 	_duplicate_fingerprint = fingerprint
+ 
+@@ -383,28 +437,32 @@
+ 	if not _envelope.is_empty() and payload_fingerprint(_envelope) != fingerprint:
+ 		return _outcome("CONFLICT")
+ 	if _envelope.is_empty():
+-		_envelope = payload.duplicate(true)
++		VT074Trace.enter("candidate_build")
++		_envelope = VT074Trace.copy_dict(payload, "envelope_copy")
+ 		_remember_validated_payload(token, payload, fingerprint)
+ 		_completion_date = String(completion_clock.call()) if completion_clock.is_valid() else Time.get_datetime_string_from_system(false, true)
+ 		_active_state = "PENDING"
+ 		var candidate := _snapshot()
+-		var entry: Dictionary = payload.duplicate(true)
++		var entry: Dictionary = VT074Trace.copy_dict(payload, "entry_copy")
+ 		entry["run_id"] = token
+ 		entry["date"] = _completion_date
+ 		entry["hero_name"] = String(CHARACTER_INFO[payload.hero_idx].get("name", "Hero"))
+ 		entry["has_replay"] = not payload.frames.is_empty()
+ 		if entry.has_replay:
+-			candidate.last_recorded_run = entry.duplicate(true)
++			candidate.last_recorded_run = VT074Trace.copy_dict(entry, "last_recorded_copy")
++		VT074Trace.enter("history_ledger_update")
+ 		entry.frames = entry.frames.slice(0, MAX_DISK_REPLAY_FRAMES)
+ 		candidate.run_history.push_front(entry)
+ 		_limit_history(candidate.run_history)
+-		var summary := payload.duplicate(true)
++		var summary := VT074Trace.copy_dict(payload, "summary_copy")
+ 		summary.erase("frames")
+ 		candidate.processed_ledger.append({"run_id": token, "fingerprint": fingerprint,
+ 			"date": _completion_date, "summary": summary})
+ 		if candidate.processed_ledger.size() > MAX_PROCESSED_RECEIPTS:
+ 			candidate.processed_ledger.pop_front()
+ 		_pending_snapshot = candidate
++		VT074Trace.leave()
++		VT074Trace.leave()
+ 	var receipt: Dictionary = _pending_snapshot.processed_ledger[-1].duplicate(true)
+ 	var result := _write_snapshot(_pending_snapshot, true)
+ 	return _outcome(result.status, receipt if result.status == "COMMITTED" else {})
+@@ -564,6 +622,12 @@
+ 	return get_tree().change_scene_to_file("res://world.tscn") == OK
+ 
+ func _snapshot() -> Dictionary:
++	VT074Trace.enter("snapshot_copy")
++	var _profile_result = _vt074_original_snapshot()
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_snapshot() -> Dictionary:
+ 	return {
+ 		"schema_version": 2, "processed_ledger": processed_ledger.duplicate(true),
+ 		"current_seed": current_seed,
+@@ -577,6 +641,11 @@
+ 	return storage_state == "READY" and not _writing and _active_state != "PENDING"
+ 
+ func _publish_snapshot(data: Dictionary) -> void:
++	VT074Trace.enter("state_publish")
++	_vt074_original_publish_snapshot(data)
++	VT074Trace.leave()
++
++func _vt074_original_publish_snapshot(data: Dictionary) -> void:
+ 	current_seed = data.current_seed
+ 	set_character_by_index(int(data.selected_character_index))
+ 	saved_seeds = data.saved_seeds
+@@ -738,6 +807,12 @@
+ 		entry["session_mode"] = raw.session_mode
+ 
+ func _valid_v2_snapshot(data: Dictionary) -> bool:
++	VT074Trace.enter("snapshot_validation")
++	var _profile_result = _vt074_original_valid_v2_snapshot(data)
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_valid_v2_snapshot(data: Dictionary) -> bool:
+ 	if not _whole(data.get("schema_version"), 2, 2):
+ 		return false
+ 	if not (data.get("current_seed") is String) or sanitize_seed(data.current_seed) != data.current_seed or data.current_seed.is_empty() or not _whole(data.get("selected_character_index"), 0, CHARACTER_SCENES.size() - 1):
+--- cached_owned.gd
++++ profile_cached_owned.gd
+@@ -1,4 +1,5 @@
+ extends Node
++const VT074Trace = preload("res://tests/vt074/profile_trace.gd")
+ 
+ signal seed_changed(new_seed: String)
+ signal stats_updated(level: int, kills: int)
+@@ -113,6 +114,12 @@
+ 	return cleaned
+ 
+ static func _sanitize_replay_frames(raw_frames: Variant, max_count: int) -> Array:
++	VT074Trace.enter("replay_sanitize")
++	var _profile_result = _vt074_original_sanitize_replay_frames(raw_frames, max_count)
++	VT074Trace.leave()
++	return _profile_result
++
++static func _vt074_original_sanitize_replay_frames(raw_frames: Variant, max_count: int) -> Array:
+ 	var safe_frames: Array = []
+ 	if not (raw_frames is Array):
+ 		return safe_frames
+@@ -286,6 +293,12 @@
+ 	return last_completion_result.duplicate(true)
+ 
+ static func _valid_id(value: Variant, length: int = 32) -> bool:
++	VT074Trace.enter("id_validation")
++	var _profile_result = _vt074_original_valid_id(value, length)
++	VT074Trace.leave()
++	return _profile_result
++
++static func _vt074_original_valid_id(value: Variant, length: int = 32) -> bool:
+ 	if not (value is String) or value.length() != length:
+ 		return false
+ 	for character in value:
+@@ -298,6 +311,12 @@
+ 		and float(value) == floor(float(value)) and value >= low and value <= high)
+ 
+ func canonical_payload(raw: Variant) -> Dictionary:
++	VT074Trace.enter("canonical")
++	var _profile_result = _vt074_original_canonical_payload(raw)
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_canonical_payload(raw: Variant) -> Dictionary:
+ 	if not (raw is Dictionary):
+ 		return {}
+ 	for key in ["seed", "hero_idx", "floor", "kills", "reason", "session_mode", "frames"]:
+@@ -309,11 +328,15 @@
+ 		return {}
+ 	if not (raw.session_mode is String) or raw.session_mode not in ["live", "action_replay"] or not (raw.frames is Array):
+ 		return {}
++	VT074Trace.enter("frame_validation_copy_loop")
++	var _profile_copy_us := 0
+ 	var frames: Array = []
+ 	for frame in raw.frames.slice(0, MAX_REPLAY_FRAMES):
+ 		if not (frame is Dictionary):
+ 			return {}
++		var _profile_copy_start := Time.get_ticks_usec()
+ 		var normalized: Dictionary = frame.duplicate(true)
++		_profile_copy_us += Time.get_ticks_usec() - _profile_copy_start
+ 		for key in ["dx", "dy", "ax", "ay", "slot", "result", "pg"]:
+ 			if frame.has(key):
+ 				var number: Variant = frame[key]
+@@ -327,32 +350,63 @@
+ 			if frame.has(key) and not (frame[key] is bool):
+ 				return {}
+ 		frames.append(normalized)
++	VT074Trace.leaf("frame_deep_copy", _profile_copy_us)
++	VT074Trace.leave()
+ 	return {"seed": sanitize_seed(raw.seed), "hero_idx": int(raw.hero_idx),
+ 		"floor": int(raw.floor), "kills": int(raw.kills), "reason": sanitize_note(raw.reason),
+ 		"session_mode": raw.session_mode, "frames": _sanitize_replay_frames(frames, MAX_REPLAY_FRAMES)}
+ 
+ func payload_fingerprint(payload: Dictionary) -> String:
++	VT074Trace.enter("fingerprint")
++	var _profile_result = _vt074_original_payload_fingerprint(payload)
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_payload_fingerprint(payload: Dictionary) -> String:
++	VT074Trace.enter("fingerprint_tuple_build")
+ 	var frames: Array = []
+ 	for frame in payload.frames:
+ 		var tuple: Array = []
+ 		for key in ["dx", "dy", "ax", "ay", "atk", "q", "rmb", "slot", "shift", "lp", "lr", "rp", "rr", "result", "pg", "eat"]:
+ 			tuple.append(frame[key])
+ 		frames.append(tuple)
+-	return JSON.stringify([1, payload.seed, payload.hero_idx, payload.floor, payload.kills,
+-		payload.reason, payload.session_mode, frames]).sha256_text()
++	VT074Trace.leave()
++	VT074Trace.enter("fingerprint_json")
++	var _profile_encoded := JSON.stringify([1, payload.seed, payload.hero_idx, payload.floor, payload.kills,
++		payload.reason, payload.session_mode, frames])
++	VT074Trace.leave()
++	VT074Trace.enter("fingerprint_sha256")
++	var _profile_digest := _profile_encoded.sha256_text()
++	VT074Trace.leave()
++	return _profile_digest
+ 
+ func _receipt_for(token: String) -> Dictionary:
++	VT074Trace.enter("ledger_lookup")
++	var _profile_result = _vt074_original_receipt_for(token)
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_receipt_for(token: String) -> Dictionary:
+ 	for receipt in processed_ledger:
+ 		if receipt.run_id == token:
+ 			return receipt
+ 	return {}
+ 
+ func _remember_validated_payload(token: String, payload: Dictionary, fingerprint: String) -> void:
++	VT074Trace.enter("cache_construct")
++	_vt074_original_remember_validated_payload(token, payload, fingerprint)
++	VT074Trace.leave()
++
++func _vt074_original_remember_validated_payload(token: String, payload: Dictionary, fingerprint: String) -> void:
++	VT074Trace.enter("cache_adopt_owned")
+ 	_duplicate_payload = payload
++	VT074Trace.leave()
++	VT074Trace.enter("cache_read_only")
+ 	for frame in _duplicate_payload.frames:
+ 		frame.make_read_only()
+ 	_duplicate_payload.frames.make_read_only()
+ 	_duplicate_payload.make_read_only()
++	VT074Trace.leave()
+ 	_duplicate_token = token
+ 	_duplicate_fingerprint = fingerprint
+ 
+@@ -383,28 +437,32 @@
+ 	if not _envelope.is_empty() and payload_fingerprint(_envelope) != fingerprint:
+ 		return _outcome("CONFLICT")
+ 	if _envelope.is_empty():
+-		_envelope = payload.duplicate(true)
++		VT074Trace.enter("candidate_build")
++		_envelope = VT074Trace.copy_dict(payload, "envelope_copy")
+ 		_remember_validated_payload(token, payload, fingerprint)
+ 		_completion_date = String(completion_clock.call()) if completion_clock.is_valid() else Time.get_datetime_string_from_system(false, true)
+ 		_active_state = "PENDING"
+ 		var candidate := _snapshot()
+-		var entry: Dictionary = payload.duplicate(true)
++		var entry: Dictionary = VT074Trace.copy_dict(payload, "entry_copy")
+ 		entry["run_id"] = token
+ 		entry["date"] = _completion_date
+ 		entry["hero_name"] = String(CHARACTER_INFO[payload.hero_idx].get("name", "Hero"))
+ 		entry["has_replay"] = not payload.frames.is_empty()
+ 		if entry.has_replay:
+-			candidate.last_recorded_run = entry.duplicate(true)
++			candidate.last_recorded_run = VT074Trace.copy_dict(entry, "last_recorded_copy")
++		VT074Trace.enter("history_ledger_update")
+ 		entry.frames = entry.frames.slice(0, MAX_DISK_REPLAY_FRAMES)
+ 		candidate.run_history.push_front(entry)
+ 		_limit_history(candidate.run_history)
+-		var summary := payload.duplicate(true)
++		var summary := VT074Trace.copy_dict(payload, "summary_copy")
+ 		summary.erase("frames")
+ 		candidate.processed_ledger.append({"run_id": token, "fingerprint": fingerprint,
+ 			"date": _completion_date, "summary": summary})
+ 		if candidate.processed_ledger.size() > MAX_PROCESSED_RECEIPTS:
+ 			candidate.processed_ledger.pop_front()
+ 		_pending_snapshot = candidate
++		VT074Trace.leave()
++		VT074Trace.leave()
+ 	var receipt: Dictionary = _pending_snapshot.processed_ledger[-1].duplicate(true)
+ 	var result := _write_snapshot(_pending_snapshot, true)
+ 	return _outcome(result.status, receipt if result.status == "COMMITTED" else {})
+@@ -564,6 +622,12 @@
+ 	return get_tree().change_scene_to_file("res://world.tscn") == OK
+ 
+ func _snapshot() -> Dictionary:
++	VT074Trace.enter("snapshot_copy")
++	var _profile_result = _vt074_original_snapshot()
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_snapshot() -> Dictionary:
+ 	return {
+ 		"schema_version": 2, "processed_ledger": processed_ledger.duplicate(true),
+ 		"current_seed": current_seed,
+@@ -577,6 +641,11 @@
+ 	return storage_state == "READY" and not _writing and _active_state != "PENDING"
+ 
+ func _publish_snapshot(data: Dictionary) -> void:
++	VT074Trace.enter("state_publish")
++	_vt074_original_publish_snapshot(data)
++	VT074Trace.leave()
++
++func _vt074_original_publish_snapshot(data: Dictionary) -> void:
+ 	current_seed = data.current_seed
+ 	set_character_by_index(int(data.selected_character_index))
+ 	saved_seeds = data.saved_seeds
+@@ -738,6 +807,12 @@
+ 		entry["session_mode"] = raw.session_mode
+ 
+ func _valid_v2_snapshot(data: Dictionary) -> bool:
++	VT074Trace.enter("snapshot_validation")
++	var _profile_result = _vt074_original_valid_v2_snapshot(data)
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_valid_v2_snapshot(data: Dictionary) -> bool:
+ 	if not _whole(data.get("schema_version"), 2, 2):
+ 		return false
+ 	if not (data.get("current_seed") is String) or sanitize_seed(data.current_seed) != data.current_seed or data.current_seed.is_empty() or not _whole(data.get("selected_character_index"), 0, CHARACTER_SCENES.size() - 1):
+--- original/RunCompletionStore.gd
++++ profile/RunCompletionStore.gd
+@@ -1,4 +1,5 @@
+ extends RefCounted
++const VT074Trace = preload("res://tests/vt074/profile_trace.gd")
+ ## Single-process snapshot writer. Read-back confirms bytes, not power-loss durability.
+ ## Hooks are narrow storage operations, allowing real IO failures in isolated tests.
+ 
+@@ -10,6 +11,12 @@
+ 	path = save_path
+ 
+ func read_bytes(source: String) -> Dictionary:
++	VT074Trace.enter("fs_read_bytes")
++	var _profile_result = _vt074_original_read_bytes(source)
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_read_bytes(source: String) -> Dictionary:
+ 	if not FileAccess.file_exists(source):
+ 		return {"status": "OK", "exists": false, "bytes": PackedByteArray()}
+ 	var file := FileAccess.open(source, FileAccess.READ)
+@@ -24,22 +31,44 @@
+ 	return {"status": "OK", "exists": true, "bytes": bytes}
+ 
+ func _write_temp(target: String, bytes: PackedByteArray) -> bool:
++	VT074Trace.enter("fs_write_temp")
++	var _profile_result = _vt074_original_write_temp(target, bytes)
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_write_temp(target: String, bytes: PackedByteArray) -> bool:
+ 	var file := FileAccess.open(target, FileAccess.WRITE)
+ 	if file == null:
+ 		return false
+ 	var written := file.store_buffer(bytes)
++	VT074Trace.enter("fs_flush")
+ 	file.flush()
++	VT074Trace.leave()
+ 	var error := file.get_error()
+ 	file.close()
+ 	return written and error == OK
+ 
+ func _replace(source: String, target: String) -> Error:
++	VT074Trace.enter("fs_replace")
++	var _profile_result = _vt074_original_replace(source, target)
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_replace(source: String, target: String) -> Error:
+ 	return DirAccess.rename_absolute(ProjectSettings.globalize_path(source), ProjectSettings.globalize_path(target))
+ 
+ func commit(snapshot: Dictionary) -> Dictionary:
++	VT074Trace.enter("store_commit")
++	var _profile_result = _vt074_original_commit(snapshot)
++	VT074Trace.leave()
++	return _profile_result
++
++func _vt074_original_commit(snapshot: Dictionary) -> Dictionary:
+ 	if not _uncertain.is_empty():
+ 		return {"status": "STORAGE_UNCERTAIN"}
++	VT074Trace.enter("snapshot_json_utf8")
+ 	var bytes := JSON.stringify(snapshot).to_utf8_buffer()
++	VT074Trace.leave()
+ 	if bytes.size() > MAX_BYTES:
+ 		return {"status": "SAVE_FAILED"}
+ 	var previous := read_bytes(path)

@@ -1,0 +1,18 @@
+# Portable real-save witnesses for the isolated heavy ABBA trial.
+!heavy_*_snapshots.zip
+
+# Historical copies stay on disk. The post-apply verifier uses one canonical
+# archive and validates the same 140 snapshot hashes against all 11 datasets.
+heavy_1a3b68d5d730_BEFORE_A_snapshots.zip
+heavy_1a3b68d5d730_AFTER_A_snapshots.zip
+heavy_1a3b68d5d730_AFTER_B_snapshots.zip
+heavy_1a3b68d5d730_BEFORE_B_snapshots.zip
+heavy_tradeoff_144f3df0463e_ORIGINAL_A_snapshots.zip
+heavy_tradeoff_144f3df0463e_COPY_A_snapshots.zip
+heavy_tradeoff_144f3df0463e_OWNED_A_snapshots.zip
+heavy_tradeoff_144f3df0463e_OWNED_B_snapshots.zip
+heavy_tradeoff_144f3df0463e_COPY_B_snapshots.zip
+heavy_tradeoff_144f3df0463e_ORIGINAL_B_snapshots.zip
+
+# Byte-identical to heavy_1a3b68d5d730_candidate.patch; retained locally for audit.
+heavy_4992759f992a_candidate.patch
