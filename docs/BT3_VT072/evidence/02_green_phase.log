@@ -1,0 +1,19 @@
+﻿
+==================================================================
+  RUNNING GREEN SUITE: VT-072 11 TEST CASES & PROPERTY-BASED TESTS
+==================================================================
+  [PASS] TC-01: Transient Error Retry (503 x2 -> 200 on 3rd attempt)
+  [PASS] TC-02: Retry Exhaustion after 3 attempts on 504 Gateway Timeout
+  [PASS] TC-03: Fatal 400 Bad Request stops immediately with 1 attempt (Negative Test 1)
+  [PASS] TC-04: Property-Based Test: 100 seeds x arbitrary retries -> ExecCount(SideEffect) == 1
+  [PASS] TC-05: Duplicate Request Rejection: 2nd sync returns cached state, 0 duplicate side effects
+  [PASS] TC-06: Partial Failure Path: Socket reset after server commit -> Retry with same key reconciles cleanly
+  [PASS] TC-07: Persistence Failure Rejection: save_with_status() strictly returns False on disk error (Negative Test 2)
+  [PASS] TC-08: Corrupted Save Recovery: Malformed JSON handled gracefully without crash (Negative Test 3)
+  [PASS] TC-09: Deterministic Key Invariance: 100 random tuples yield deterministic collision-free keys
+  [PASS] TC-10: Concurrency 200 Tasks: p95 = 0.0141s <= 5.0s (Total duration: 0.03s)
+  [PASS] TC-11: Outbox FIFO Memory Bound: 25 pushes bounded strictly to 20 entries with clean eviction
+==================================================================
+  GREEN RESULTS: 11 PASSED, 0 FAILED
+==================================================================
+

@@ -1,0 +1,12 @@
+﻿
+==================================================================
+  RUNNING MUTATION TESTING: 'TRẢ SUCCESS DÙ PERSISTENCE THẤT BẠI' 
+==================================================================
+[INFO] Injecting deliberate mutation: persistence returns success=True on disk error...
+  [OBSERVED MUTANT BEHAVIOR] record_run() returned: {'success': True, 'record': {'idempotency_key': '0468c125c1e097b104228c7f9803c69c', 'seed': 'MUTANT_SEED', 'floor': 1, 'kills': 0, 'hero_idx': 0, 'timestamp': '2026-11-13 10:20:00', 'sync_status': 'PENDING'}}
+  [ALERT] Deliberate bug detected! System returned SUCCESS despite failure=True!
+  [MUTANT KILLED BY TC-07] Assertion `rec_res['success'] == False` caught the mutation!
+==================================================================
+  MUTATION TEST PASSED: MUTANT DETECTED & KILLED BY TC-07
+==================================================================
+
