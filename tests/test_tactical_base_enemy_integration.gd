@@ -82,7 +82,7 @@ func _test_many_enemy_navigation_budget() -> void:
 		for index in range(fixture.members.size()):
 			fixture.members[index].position = starts[index]
 		await _step(fixture)
-	_check(fixture.map.steering_calls < 12 * 120 / 2,
+	_check(fixture.map.steering_calls < 12 * 120 * 0.5,
 		"Twelve enemies use fewer than half the per-physics-tick steering calls")
 	print("[BUDGET] 12 enemies / 120 ticks: steering=", fixture.map.steering_calls,
 		" LOS=", fixture.map.los_calls)

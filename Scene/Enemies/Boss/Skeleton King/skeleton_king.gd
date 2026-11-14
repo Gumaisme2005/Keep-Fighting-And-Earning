@@ -109,6 +109,7 @@ static func build_sprite_frames() -> SpriteFrames:
 		for i in range(int(info[1])):
 			var atlas := AtlasTexture.new()
 			atlas.atlas = tex
+			@warning_ignore("integer_division")
 			atlas.region = Rect2(Vector2(i % int(info[2]), i / int(info[2])) * FRAME_SIZE, FRAME_SIZE)
 			atlas.filter_clip = true
 			frames.add_frame(anim, atlas)
@@ -340,9 +341,11 @@ func _fire_shockwave(force_pattern: String = "") -> void:
 	else:
 		# Vertical beams, 3 columns apart, rippling out from the centre to both walls.
 		var step := 0.15 if enraged else 0.2
+		@warning_ignore("integer_division")
 		var center := room_rect.position.x + room_rect.size.x / 2
 		for col in get_parallel_lines(true, 3, (center - room_rect.position.x) % 3):
 			var line := _vertical(col)
+			@warning_ignore("integer_division")
 			volley.add_line(line[0], line[1], absi(col - center) / 3 * step, warn, active)
 	_add_volley(volley)
 
@@ -413,6 +416,7 @@ func _summon_minions() -> void:
 		enemy.z_index = 2
 		enemy.add_to_group("enemies")
 		enemy.add_to_group("skeleton_king_minions")
+		enemy.set_meta("summoned", true)
 		tilemap.add_child(enemy)
 		enemy.position = tilemap.map_to_local(cell)
 		enemy.is_active = true
@@ -536,7 +540,7 @@ func _die() -> void:
 				node.queue_free()
 		list.clear()
 	if get_node_or_null("/root/GameManager") != null:
-		GameManager.register_enemy_kill()
+		GameManager.register_enemy_kill(self, "skeleton_king")
 	_drop_boss_loot()
 	shake_left = 0.8
 	_play("death")

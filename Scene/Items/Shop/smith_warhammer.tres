@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ItemData" format=3]
+
+[ext_resource type="Script" path="res://Scene/Items/ItemData.gd" id="1_item"]
+[ext_resource type="Texture2D" path="res://Assets/Items/Shop/shop_icons.png" id="2_icons"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2_icons")
+region = Rect2(32, 0, 16, 16)
+
+[resource]
+script = ExtResource("1_item")
+item_name = "Smith's Warhammer"
+rarity = 1
+type = 2
+icon = SubResource("AtlasTexture_icon")
+description = "A heavy forging hammer rebalanced for battle. Cracks bone and steel alike."
+damage = 2

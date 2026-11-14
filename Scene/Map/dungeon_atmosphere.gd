@@ -270,6 +270,7 @@ static func _find_wall_torch_mounts(tilemap: TileMap, room: Rect2i) -> Array[Dic
 
 	# 2. Một ngọn đuốc đính lên Tường Tây (x = room.position.x - 1)
 	var left_x: int = room.position.x - 1
+	@warning_ignore("integer_division")
 	var mid_y: int = room.position.y + int(room.size.y / 2)
 	for dy in [-3, 3, -4, 4, -2, 2, 0]:
 		var ty: int = clampi(mid_y + dy, room.position.y + 2, room.end.y - 3)
