@@ -39,3 +39,10 @@ Log này tổng hợp artifacts và quyết định có thể kiểm chứng. Kh
 - Hai lần trước user xác nhận đã sửa nhưng files trên ổ đĩa còn nguyên: AI giữ gate OPEN. Chỉ sau khi có diff thật và chạy test mới ghi SATISFIED. Không xem lời xác nhận đơn lẻ thay cho diff/execution evidence.
 - Chỉ prompt C1 và C3 được trỏ đến bản nguyên văn đã lưu trong repo ở bảng trên. Prompt C2/C4/C5/C6 và các lời review có trong cuộc hội thoại/attachments, nhưng không giả tạo bản transcript mới trong repo. Những trích dẫn human decisions đã có trong AI_PLAN_REVIEW/AI_TEST_REVIEW được giữ nguyên.
 - Không tuyên line/branch coverage, manual UI E2E, mọi workload p95 hoặc toàn regression PASS khi chưa có evidence tương ứng. C6 không tự stage/commit/push/PR/PDF.
+### Student Review – Persistence Fix (14/11/2026)
+
+**Decision: ACCEPT**
+
+Tôi đồng ý với cách AI xử lý lỗi `SAVE_FAILED` bằng nén dữ liệu không mất mát, vì giải pháp này giữ nguyên thông tin replay và không cần tăng giới hạn file. Các bài test đã PASS và tôi đã chơi thử, xác nhận dữ liệu vẫn còn sau khi khởi động lại game.
+
+Tuy nhiên, tôi lưu ý trường hợp chơi rất dài chưa được kiểm tra lại thủ công. Tôi chấp nhận giải pháp hiện tại với giới hạn này.
