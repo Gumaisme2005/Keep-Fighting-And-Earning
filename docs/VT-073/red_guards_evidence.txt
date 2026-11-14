@@ -1,0 +1,20 @@
+Assignment: GAME-2D-02 - VT-073
+Student: 23001832
+Phase: RED
+Baseline commit: 777d9d9fbcfffe61ea421071d3d891a3dd7bd788
+Godot: 4.7.2.stable.official.ed1daf0bf
+
+Test file: tests/vt073/test_replay_guards.gd
+Exit code: 1
+
+TC-04: FAIL - Empty dictionary bypasses validation.
+TC-05: FAIL - Copied dictionary bypasses validation.
+TC-07: FAIL - Authorization API not implemented.
+
+Evidence:
+docs/VT-073/red_guards_stdout.log
+docs/VT-073/red_guards_stderr.log
+
+Conclusion:
+Tests detect expected baseline defects before implementation.
+No production code was modified.

@@ -1,0 +1,7 @@
+FAIL TC-04: delete_replay() must return false
+FAIL TC-04: rejected deletion mutated replay/save state
+FAIL TC-04: rejected deletion emitted saved_data_changed
+FAIL TC-05: delete_replay() must return false
+FAIL TC-05: rejected deletion mutated replay/save state
+FAIL TC-05: rejected deletion emitted saved_data_changed
+FAIL TC-07: set_replay_permission_mode() is not implemented
