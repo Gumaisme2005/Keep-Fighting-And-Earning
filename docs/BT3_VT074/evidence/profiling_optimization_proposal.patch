@@ -1,0 +1,37 @@
+--- a/Scene/GameManager.gd
++++ b/Scene/GameManager.gd
+@@ -305,7 +305,8 @@
+ 	for frame in raw.frames.slice(0, MAX_REPLAY_FRAMES):
+ 		if not (frame is Dictionary):
+ 			return {}
+-		var normalized: Dictionary = frame.duplicate(true)
++		# The sanitizer consumes scalar fields and creates fresh output frames.
++		var normalized: Dictionary = frame.duplicate(false)
+ 		for key in ["dx", "dy", "ax", "ay", "slot", "result", "pg"]:
+ 			if frame.has(key):
+ 				var number: Variant = frame[key]
+@@ -326,10 +327,10 @@
+ func payload_fingerprint(payload: Dictionary) -> String:
+ 	var frames: Array = []
+ 	for frame in payload.frames:
+-		var tuple: Array = []
+-		for key in ["dx", "dy", "ax", "ay", "atk", "q", "rmb", "slot", "shift", "lp", "lr", "rp", "rr", "result", "pg", "eat"]:
+-			tuple.append(frame[key])
+-		frames.append(tuple)
++		frames.append([frame["dx"], frame["dy"], frame["ax"], frame["ay"],
++			frame["atk"], frame["q"], frame["rmb"], frame["slot"], frame["shift"],
++			frame["lp"], frame["lr"], frame["rp"], frame["rr"], frame["result"],
++			frame["pg"], frame["eat"]])
+ 	return JSON.stringify([1, payload.seed, payload.hero_idx, payload.floor, payload.kills,
+ 		payload.reason, payload.session_mode, frames]).sha256_text()
+ 
+@@ -372,7 +373,8 @@
+ 		entry.frames = entry.frames.slice(0, MAX_DISK_REPLAY_FRAMES)
+ 		candidate.run_history.push_front(entry)
+ 		_limit_history(candidate.run_history)
+-		var summary := payload.duplicate(true)
++		# A fresh dictionary is sufficient: retained summary fields are scalars.
++		var summary := payload.duplicate(false)
+ 		summary.erase("frames")
+ 		candidate.processed_ledger.append({"run_id": token, "fingerprint": fingerprint,
+ 			"date": _completion_date, "summary": summary})

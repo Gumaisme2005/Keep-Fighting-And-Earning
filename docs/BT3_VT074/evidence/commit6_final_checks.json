@@ -1,0 +1,610 @@
+{
+  "at": "2026-11-12T16:10:45.229700+00:00",
+  "head": "becb7117eaf3c705e37946f556cc4dbe21d28c13",
+  "branch": "feat/bt3-vt074-idempotent-run",
+  "checks": {
+    "expected_head_branch": true,
+    "git_diff_check": true,
+    "empty_index_and_production_workflow_diff": true,
+    "only_five_expected_tracked_modifications": true,
+    "historical_evidence_working_bytes_unchanged": true,
+    "other_prior_documents_sources_unchanged": true,
+    "AI_TEST_REVIEW_append_only": true,
+    "tests/test_run_completion_contract.gd_all_original_lines_preserved": true,
+    "tests/vt074/test_flaky_order.gd_all_original_lines_preserved": true,
+    "original_replay_source_unchanged": true,
+    "human_patch_matches_real_diff": true,
+    "all_actual_pass_counts": true,
+    "all_runtime_GDScript_matches_delivered": true,
+    "smoke_actual_pass_counts": true,
+    "smoke_runtime_GDScript_matches_delivered": true,
+    "same_group_assertions_state_equal": true,
+    "mutation_actual_0_1_0_and_restored": true,
+    "benchmark_engine_success_threshold_failure_honest": true,
+    "benchmark_2frames_PASS_3600_FAIL": true,
+    "all_eight_raw_datasets_40_tasks_nearest_rank": true,
+    "new_140_persisted_snapshots_byte_equal_historical": true,
+    "all_source_and_save_unchanged_during_run": true,
+    "mutation_source_and_save_unchanged_during_run": true,
+    "benchmark_source_and_save_unchanged_during_run": true,
+    "smoke_source_and_save_unchanged_during_run": true,
+    "personal_save_unchanged_at_final": true,
+    "student_reflection_250_350": true,
+    "traceability_all_AC_NFR": true,
+    "AI_usage_at_least_two_concrete_limitations": true,
+    "pairwise_verified_design_only": true,
+    "actual_CI_fix_success_with_C6_gap": true,
+    "final_runner_AST_matches_smoke_except_docstring": true,
+    "new_file_whitespace_clean": true,
+    "local_links_exist": true,
+    "no_credential_patterns_in_new_artifacts": true,
+    "only_C6_scoped_untracked_files": true
+  },
+  "commands": [
+    {
+      "command": [
+        "git",
+        "status",
+        "--short",
+        "--untracked-files=all"
+      ],
+      "exit_code": 0,
+      "stdout": " M docs/BT3_VT074/AI_TEST_REVIEW.md\n M tests/test_run_completion_contract.gd\n M tests/vt074/pairwise.py\n M tests/vt074/run_ci_import_audit.py\n M tests/vt074/test_flaky_order.gd\n?? docs/BT3_VT074/AI_USAGE_LOG.md\n?? docs/BT3_VT074/COMMIT_6_REPORT.md\n?? docs/BT3_VT074/HUMAN_TEST_EDIT_REVIEW.md\n?? docs/BT3_VT074/README.md\n?? docs/BT3_VT074/REFLECTION.md\n?? docs/BT3_VT074/TRACEABILITY.md\n?? docs/BT3_VT074/evidence/commit6_369f4ec56761_all.json\n?? docs/BT3_VT074/evidence/commit6_55e9555814cf_smoke.json\n?? docs/BT3_VT074/evidence/commit6_6244dca6df9e_mutation.json\n?? docs/BT3_VT074/evidence/commit6_77e74cc6c89b_benchmark.json\n?? docs/BT3_VT074/evidence/commit6_77e74cc6c89b_benchmark_performance_40.csv\n?? docs/BT3_VT074/evidence/commit6_77e74cc6c89b_benchmark_performance_batches.json\n?? docs/BT3_VT074/evidence/commit6_77e74cc6c89b_benchmark_performance_warmup.csv\n?? docs/BT3_VT074/evidence/commit6_ci_check.json\n?? docs/BT3_VT074/evidence/commit6_human_edits.patch\n?? docs/BT3_VT074/evidence/commit6_human_edits_diff.json\n?? docs/BT3_VT074/evidence/commit6_pairwise_check.json\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "HEAD",
+        "--",
+        "Scene",
+        "project.godot",
+        ".github/workflows/ci.yml"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "001785ee52589094f2b096161a0be99d5e3c4003",
+        "HEAD",
+        "--",
+        "Scene"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "prior_audit_attempt": {
+    "exit_code": 1,
+    "kind": "verification script error, not a Godot failure",
+    "diagnostic": "IndexError: list index out of range at Unicode reflection heading split in a PowerShell-piped Python script",
+    "correction": "Use ASCII heading delimiter; do not change student reflection or tests",
+    "evidence_written_by_failed_attempt": false
+  },
+  "historical_evidence_files_checked": 104,
+  "raw_CSV_verification": [
+    {
+      "dataset": "commit6_77e74cc6c89b_benchmark_",
+      "valid": true,
+      "batches": 140,
+      "rows": 5600,
+      "metrics": [
+        {
+          "workload": "primary",
+          "frames": 2,
+          "n": 1200,
+          "p95_ms": 20.64
+        },
+        {
+          "workload": "primary",
+          "frames": 3600,
+          "n": 1200,
+          "p95_ms": 5086.83
+        },
+        {
+          "workload": "secondary",
+          "frames": 2,
+          "n": 1200,
+          "p95_ms": 4.081
+        },
+        {
+          "workload": "secondary",
+          "frames": 3600,
+          "n": 1200,
+          "p95_ms": 3773.023
+        }
+      ]
+    },
+    {
+      "dataset": "p01_a0044d484b30_AFTER_A_",
+      "valid": true,
+      "batches": 140,
+      "rows": 5600,
+      "metrics": [
+        {
+          "workload": "primary",
+          "frames": 2,
+          "n": 1200,
+          "p95_ms": 7.196
+        },
+        {
+          "workload": "primary",
+          "frames": 3600,
+          "n": 1200,
+          "p95_ms": 2965.942
+        },
+        {
+          "workload": "secondary",
+          "frames": 2,
+          "n": 1200,
+          "p95_ms": 3.481
+        },
+        {
+          "workload": "secondary",
+          "frames": 3600,
+          "n": 1200,
+          "p95_ms": 2059.463
+        }
+      ]
+    },
+    {
+      "dataset": "p01_a0044d484b30_AFTER_B_",
+      "valid": true,
+      "batches": 140,
+      "rows": 5600,
+      "metrics": [
+        {
+          "workload": "primary",
+          "frames": 2,
+          "n": 1200,
+          "p95_ms": 6.706
+        },
+        {
+          "workload": "primary",
+          "frames": 3600,
+          "n": 1200,
+          "p95_ms": 2775.39
+        },
+        {
+          "workload": "secondary",
+          "frames": 2,
+          "n": 1200,
+          "p95_ms": 2.402
+        },
+        {
+          "workload": "secondary",
+          "frames": 3600,
+          "n": 1200,
+          "p95_ms": 2012.189
+        }
+      ]
+    },
+    {
+      "dataset": "p01_a0044d484b30_BEFORE_A_",
+      "valid": true,
+      "batches": 140,
+      "rows": 5600,
+      "metrics": [
+        {
+          "workload": "primary",
+          "frames": 2,
+          "n": 1200,
+          "p95_ms": 13.174
+        },
+        {
+          "workload": "primary",
+          "frames": 3600,
+          "n": 1200,
+          "p95_ms": 3044.039
+        },
+        {
+          "workload": "secondary",
+          "frames": 2,
+          "n": 1200,
+          "p95_ms": 2.504
+        },
+        {
+          "workload": "secondary",
+          "frames": 3600,
+          "n": 1200,
+          "p95_ms": 2202.158
+        }
+      ]
+    },
+    {
+      "dataset": "p01_a0044d484b30_BEFORE_B_",
+      "valid": true,
+      "batches": 140,
+      "rows": 5600,
+      "metrics": [
+        {
+          "workload": "primary",
+          "frames": 2,
+          "n": 1200,
+          "p95_ms": 7.567
+        },
+        {
+          "workload": "primary",
+          "frames": 3600,
+          "n": 1200,
+          "p95_ms": 3155.282
+        },
+        {
+          "workload": "secondary",
+          "frames": 2,
+          "n": 1200,
+          "p95_ms": 2.551
+        },
+        {
+          "workload": "secondary",
+          "frames": 3600,
+          "n": 1200,
+          "p95_ms": 3225.971
+        }
+      ]
+    },
+    {
+      "dataset": "C5_original",
+      "valid": true,
+      "batches": 140,
+      "rows": 5600,
+      "metrics": [
+        {
+          "workload": "primary",
+          "frames": 2,
+          "n": 1200,
+          "p95_ms": 54.713
+        },
+        {
+          "workload": "primary",
+          "frames": 3600,
+          "n": 1200,
+          "p95_ms": 7235.233
+        },
+        {
+          "workload": "secondary",
+          "frames": 2,
+          "n": 1200,
+          "p95_ms": 10.626
+        },
+        {
+          "workload": "secondary",
+          "frames": 3600,
+          "n": 1200,
+          "p95_ms": 4406.804
+        }
+      ]
+    },
+    {
+      "dataset": "profiling_bc35f2123463_before_",
+      "valid": true,
+      "batches": 140,
+      "rows": 5600,
+      "metrics": [
+        {
+          "workload": "primary",
+          "frames": 2,
+          "n": 1200,
+          "p95_ms": 12.114
+        },
+        {
+          "workload": "primary",
+          "frames": 3600,
+          "n": 1200,
+          "p95_ms": 3760.964
+        },
+        {
+          "workload": "secondary",
+          "frames": 2,
+          "n": 1200,
+          "p95_ms": 2.441
+        },
+        {
+          "workload": "secondary",
+          "frames": 3600,
+          "n": 1200,
+          "p95_ms": 2983.606
+        }
+      ]
+    },
+    {
+      "dataset": "profiling_bc35f2123463_instrumented_",
+      "valid": true,
+      "batches": 140,
+      "rows": 5600,
+      "metrics": [
+        {
+          "workload": "primary",
+          "frames": 2,
+          "n": 1200,
+          "p95_ms": 9.308
+        },
+        {
+          "workload": "primary",
+          "frames": 3600,
+          "n": 1200,
+          "p95_ms": 3876.54
+        },
+        {
+          "workload": "secondary",
+          "frames": 2,
+          "n": 1200,
+          "p95_ms": 3.823
+        },
+        {
+          "workload": "secondary",
+          "frames": 3600,
+          "n": 1200,
+          "p95_ms": 2911.953
+        }
+      ]
+    }
+  ],
+  "personal_save_sha256": "2b86ed7cd91bd182f87988eaf87f6a377aceff32c0520e00dc73382dbfe89a26",
+  "reflection": {
+    "author": "Student chat response; saved verbatim body by AI",
+    "method": "whitespace split; title/provenance excluded",
+    "words": 343,
+    "body_sha256": "57a9004407cd6e446944a62b61f15d614d4f73720a2c8b1c17b84d09f51e0981"
+  },
+  "new_file_whitespace": [
+    {
+      "file": "docs/BT3_VT074/AI_USAGE_LOG.md",
+      "raw_exit": 1,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "file": "docs/BT3_VT074/COMMIT_6_REPORT.md",
+      "raw_exit": 1,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "file": "docs/BT3_VT074/HUMAN_TEST_EDIT_REVIEW.md",
+      "raw_exit": 1,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "file": "docs/BT3_VT074/README.md",
+      "raw_exit": 1,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "file": "docs/BT3_VT074/REFLECTION.md",
+      "raw_exit": 1,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "file": "docs/BT3_VT074/TRACEABILITY.md",
+      "raw_exit": 1,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/commit6_369f4ec56761_all.json",
+      "raw_exit": 1,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/commit6_55e9555814cf_smoke.json",
+      "raw_exit": 1,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/commit6_6244dca6df9e_mutation.json",
+      "raw_exit": 1,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/commit6_77e74cc6c89b_benchmark.json",
+      "raw_exit": 1,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/commit6_77e74cc6c89b_benchmark_performance_40.csv",
+      "raw_exit": 1,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/commit6_77e74cc6c89b_benchmark_performance_batches.json",
+      "raw_exit": 1,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/commit6_77e74cc6c89b_benchmark_performance_warmup.csv",
+      "raw_exit": 1,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/commit6_ci_check.json",
+      "raw_exit": 1,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/commit6_human_edits.patch",
+      "raw_exit": 1,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/commit6_human_edits_diff.json",
+      "raw_exit": 1,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "file": "docs/BT3_VT074/evidence/commit6_pairwise_check.json",
+      "raw_exit": 1,
+      "stdout": "",
+      "passed": true
+    }
+  ],
+  "broken_local_links": [],
+  "credential_pattern_findings": [],
+  "files": [
+    {
+      "status": "M",
+      "file": "docs/BT3_VT074/AI_TEST_REVIEW.md",
+      "sha256": "594b1c2a36db72e0f29020bfdbdcc54ad7525a980327aefbb8efb9f16535192d"
+    },
+    {
+      "status": "M",
+      "file": "tests/test_run_completion_contract.gd",
+      "sha256": "3f101b24593670ae0da2a99a83d4251b374992cff3dd34a9006e28f27d772204"
+    },
+    {
+      "status": "M",
+      "file": "tests/vt074/pairwise.py",
+      "sha256": "902521675fd0cc4bce167af0eb5aa1350ffab6091713b06c8ba6fc9f993d8168"
+    },
+    {
+      "status": "M",
+      "file": "tests/vt074/run_ci_import_audit.py",
+      "sha256": "a1377bcaaab967c888b1a986df68e7263209ffa477486ca0d87749659c07327a"
+    },
+    {
+      "status": "M",
+      "file": "tests/vt074/test_flaky_order.gd",
+      "sha256": "586b4bdc39c74b6fd19aa49c52619482ca4b17e9e8c6f7d19663ffbaf1da6caa"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/AI_USAGE_LOG.md",
+      "sha256": "880ca35c32394928e5075b9193c5efbd98d402c00ff5982996a5b595e4103e79"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/COMMIT_6_REPORT.md",
+      "sha256": "f48a81b62fceed512ff60bfc27a72d64c7a64ec34fc285054f7dbf9a81ebf45f"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/HUMAN_TEST_EDIT_REVIEW.md",
+      "sha256": "430133f95017e17f81a99f8336f3893802adfb4931be01382e0fba5a1ab578a3"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/README.md",
+      "sha256": "37aa70b8ae9724089e09f562d4210a24e620e9a05ffebf2d15e370e6fc50ccc2"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/REFLECTION.md",
+      "sha256": "f0e1e362cb401de249ecad8bbcbb19cc9c08e1c80e2dbb6a198755b8319870dc"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/TRACEABILITY.md",
+      "sha256": "ba98d5a8215f50692ccb116114b1bc899397210085b168dc9797c0819f675800"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/evidence/commit6_369f4ec56761_all.json",
+      "sha256": "673d30fc6219f08ff8379773917086fdf2a561a822de7d33d040b595610b3892"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/evidence/commit6_55e9555814cf_smoke.json",
+      "sha256": "054be08bfa68c4d70a986a8c48c39a2420fa334ad9ebede65b1889ce1394dbbb"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/evidence/commit6_6244dca6df9e_mutation.json",
+      "sha256": "2c0c1a0d8c1cf69e40ae446ede025fe659749b3ee4ba10f68519fded729ea3e2"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/evidence/commit6_77e74cc6c89b_benchmark.json",
+      "sha256": "e586e50ac8966f83e9ab43886f3378bf853909163355b105c18e19b9228afa8f"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/evidence/commit6_77e74cc6c89b_benchmark_performance_40.csv",
+      "sha256": "d0af664d901b74798612300271a353242f1106cb1d772404ae8a219bbb4f4e24"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/evidence/commit6_77e74cc6c89b_benchmark_performance_batches.json",
+      "sha256": "259bb7cb9abe02dee1112a3d68b4caf91ebf0680ce8aceeec75f6b11c8491fcd"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/evidence/commit6_77e74cc6c89b_benchmark_performance_warmup.csv",
+      "sha256": "7aa53f2af4fe92a4d199f014d1d94f9b7e6c0761de22585edbfbaa0bff498450"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/evidence/commit6_ci_check.json",
+      "sha256": "c3ffa88951479a5c868da40a8075f99c6ae8b0e32df35c686540cd17b7641e20"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/evidence/commit6_human_edits.patch",
+      "sha256": "9da7fcd9621371f80a5343e06a7947eff1153194df83f8b7502181e6a184f403"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/evidence/commit6_human_edits_diff.json",
+      "sha256": "34ab99d902966bafec381af2cb32d379e13e673e3a3a1bb1855bc757aa8036f1"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/evidence/commit6_pairwise_check.json",
+      "sha256": "e82c55e13b01626805a38ca055b94fe348f19d15760b0284533f4b8098947daa"
+    },
+    {
+      "status": "A",
+      "file": "docs/BT3_VT074/evidence/commit6_final_checks.json",
+      "sha256": "SELF: deliberately excluded"
+    }
+  ],
+  "file_count": 23,
+  "all_checks_passed": true,
+  "known_failures": {
+    "NFR02": "3600-frame historical and C6 latency FAIL; C6 engine0/runner1",
+    "perk": "Historical 34/37, 3 KNOWN BASELINE FAILURES; not rerun in C6",
+    "not_run": "C6 Linux smoke/Actions, manual visual E2E, full catalog/pairwise engine rows",
+    "not_measured": "line/branch coverage"
+  },
+  "readiness": "READY FOR COMMIT 6",
+  "verifier_exit_code": 0
+}

@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://tests/test_vt074_integration.gd" id="1"]
+[ext_resource type="Script" path="res://tests/vt074/fixtures/integration_entry.gd" id="2"]
+
+[node name="VT074Integration" type="Node"]
+script = ExtResource("2")
+
+[node name="Runner" type="Node" parent="."]
+script = ExtResource("1")

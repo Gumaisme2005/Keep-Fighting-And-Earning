@@ -1,0 +1,26 @@
+{
+  "executed_at": "2026-11-12T18:03:52.188991+07:00",
+  "branch": "feat/bt3-vt074-idempotent-run",
+  "baseline": "001785ee52589094f2b096161a0be99d5e3c4003",
+  "godot_version": "4.7.2.stable.official.ed1daf0bf",
+  "name": "regression_VT74-02",
+  "command": "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe --headless --path C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c5\\f345dff8fc9e4b7dbf806b8192a5b59b\\project --log-file C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c5\\f345dff8fc9e4b7dbf806b8192a5b59b\\regression_VT74-02.log res://tests/test_run_completion_idempotency.tscn",
+  "exit_code": 0,
+  "user_dir": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c5\\f345dff8fc9e4b7dbf806b8192a5b59b\\userdata\\regression_VT74-02\\roaming\\Godot\\app_userdata\\Keep Fighting And Earning",
+  "metadata": {}
+}
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[ISOLATION] user_data_dir=C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_c5/f345dff8fc9e4b7dbf806b8192a5b59b/userdata/regression_VT74-02/roaming/Godot/app_userdata/Keep Fighting And Earning
+[ISOLATION] save=C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_c5/f345dff8fc9e4b7dbf806b8192a5b59b/userdata/regression_VT74-02/roaming/Godot/app_userdata/Keep Fighting And Earning/roguelike_save_data.json
+[CASE VT74-01 baseline subset] first completion
+[CONTROL] first completion: history=1 signals=1 fixture fields verified
+[CASE VT74-02 baseline adapter] same run, identical reason, second callback
+Expected: 1 committed history entry
+Actual:   1 history entries
+Expected completion signals: 1; actual: 1
+Expected persisted history entries: 1; actual: 1
+[PASS VT74-02 baseline adapter subset] one completion after retry
+
+STDERR:

@@ -1,0 +1,16 @@
+{
+  "executed_at": "2026-11-12T19:54:25.114890+07:00",
+  "head": "001785ee52589094f2b096161a0be99d5e3c4003",
+  "branch": "feat/bt3-vt074-idempotent-run",
+  "name": "before_probe",
+  "command": "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe --headless --path C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_profile\\bc35f21234634f28897f447ad61d26a3\\probe --log-file C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_profile\\bc35f21234634f28897f447ad61d26a3\\before-probe.log --script res://probe.gd",
+  "exit_code": 0,
+  "user_dir": null
+}
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_profile/bc35f21234634f28897f447ad61d26a3/userdata/before/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:

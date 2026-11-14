@@ -1,0 +1,11 @@
+--- a/Scene/GameManager.gd
++++ b/Scene/GameManager.gd
+@@ -348,7 +348,7 @@
+ 	return {}
+ 
+ func _remember_validated_payload(token: String, payload: Dictionary, fingerprint: String) -> void:
+-	_duplicate_payload = payload.duplicate(true)
++	_duplicate_payload = payload
+ 	for frame in _duplicate_payload.frames:
+ 		frame.make_read_only()
+ 	_duplicate_payload.frames.make_read_only()

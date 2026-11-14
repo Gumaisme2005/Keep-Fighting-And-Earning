@@ -1,0 +1,321 @@
+# CODEX TASK — BT3 VT-074 — COMMIT 3: IDEMPOTENT RUN COMPLETION (GREEN)
+
+Bạn là Senior Godot 4 Engineer và Software Testing Engineer, hỗ trợ bài tập cá nhân 3 môn Software Engineering.
+
+**NHIỆM VỤ DUY NHẤT:** Triển khai tính năng Idempotent Run Completion bằng một bản sửa code có phạm vi nhỏ, có thể review, chuyển behavioral RED của Commit 2 thành GREEN, đồng thời giữ nguyên các chức năng replay/history/save hiện có.
+
+Chỉ thực hiện **Commit 3**. Không làm Commit 4–6.
+
+## 1. Thông tin dự án
+
+- Repository: `Gumaisme2005/Keep-Fighting-And-Earning`
+- Branch: `feat/bt3-vt074-idempotent-run`
+- Base: `development`
+- Engine: Godot 4.7.2 / GDScript
+- Project: GAME-2D-02
+- Team: SE2026-T19
+- Student ID: 23001833
+- Variant: VT-074
+
+Các commit đã hoàn thành:
+
+- Commit 1: `be8e39d3e5d8b3bdce9f815ab93966e3bcf51fde`
+- Commit 2: `25026e34b0fc3514e2ae813f017774cf694e5375`
+
+**Change Request:** Khi cùng một yêu cầu hoàn tất lượt chơi được gửi lại, hệ thống không được tạo thêm bản ghi lịch sử, replay hoặc side effects trùng lặp.
+
+## 2. Quy tắc bắt buộc
+
+1. Kiểm tra đúng repository, branch và HEAD trước khi sửa.
+2. Không checkout, reset, merge, rebase hoặc force push.
+3. Không tự stage, commit, push hoặc tạo PR.
+4. Không sửa những tính năng không liên quan như Enemy AI, Dungeon Generator, Equipment, Game Balance hoặc giao diện.
+5. Không xóa, bỏ qua hoặc làm yếu test chỉ để đạt GREEN.
+6. Không viết lại hoặc xóa bằng chứng RED của Commit 2.
+7. Không thay đổi Original AI Implementation Plan.
+8. Không bịa kết quả PASS, coverage, CI hoặc số liệu performance.
+9. Mọi thay đổi phải có lý do, gắn với AC-01 đến AC-05.
+10. Nếu gặp blocker thực sự, báo rõ thay vì bỏ yêu cầu một cách âm thầm.
+
+**Quan trọng:** Đây là small AI-assisted patch. Ưu tiên thay đổi tối thiểu, giữ kiến trúc và API đang được gameplay sử dụng.
+
+## 3. PHASE 1 — Audit trước khi code
+
+Chạy:
+
+```bash
+git status --short
+git branch --show-current
+git rev-parse HEAD
+git log -1 --oneline
+```
+
+HEAD dự kiến: `25026e34b0fc3514e2ae813f017774cf694e5375`.
+
+Nếu branch sai hoặc có thay đổi chưa commit không liên quan, không được ghi đè.
+
+Đọc kỹ:
+
+- `docs/BT3_VT074/SPECIFICATION.md`
+- `docs/BT3_VT074/AI_IMPLEMENTATION_PLAN.md`
+- `docs/BT3_VT074/AI_PLAN_REVIEW.md`
+- `docs/BT3_VT074/TEST_STRATEGY.md`
+- `docs/BT3_VT074/TEST_CASES.md`
+- `docs/BT3_VT074/AI_TEST_REVIEW.md`
+- `docs/BT3_VT074/COMMIT_2_REPORT.md`
+- `docs/BT3_VT074/evidence/red.log`
+- `Scene/GameManager.gd`
+- `tests/test_replay_security.gd`
+- `tests/test_run_completion_idempotency.gd`
+
+Lấy specification và revised implementation plan làm contract chính thức; original plan chỉ là bằng chứng lịch sử để review.
+
+Xác định đầy đủ caller của `start_new_run()` và `finish_run()`, các đường save/load, replay, deletion và tín hiệu cập nhật.
+
+Ghi lại phạm vi file sẽ sửa trước khi triển khai.
+
+## 4. PHASE 2 — Triển khai Idempotent Run Completion
+
+Sửa code để đáp ứng 5 acceptance criteria.
+
+### AC-01 — Một run mới chỉ có một kết quả
+
+- Tạo `run_id` khi `start_new_run()` bắt đầu một lượt chơi hợp lệ.
+- ID không được dựa vào seed hoặc timestamp.
+- Giữ nguyên ID khi chuyển tầng.
+- Không tạo ID mới mỗi lần `finish_run()`.
+- Một run được hoàn tất thành công chỉ tạo một history entry.
+- Duy trì tương thích với caller `finish_run(reason)` hiện có.
+
+### AC-02 — Retry không tạo duplicate
+
+- Nếu cùng run ID và payload đã hoàn tất được gửi lại, trả trạng thái DUPLICATE hoặc kết quả tương đương theo contract.
+- Không thêm history entry.
+- Không thay đổi replay, date, last recorded run, FIFO hoặc ledger.
+- Không phát lại completion signal.
+- Không ghi save không cần thiết.
+- Adapter phải giữ completion snapshot đầu tiên; không đọc lại globals đã thay đổi để tạo kết quả mới.
+
+Đặc biệt: test VT74-02 của Commit 2 phải chuyển từ Expected 1 / Actual 2 thành Expected 1 / Actual 1.
+
+### AC-03 — Hai run khác nhau được phân biệt
+
+- Hai run có ID khác nhau nhưng cùng seed vẫn là hai lượt chơi độc lập.
+- Replay seed bắt đầu một run mới với ID mới.
+- Không nhận diện duplicate bằng seed hoặc thời gian.
+- Không làm hỏng tính deterministic của seed.
+
+### AC-04 — Invalid ID và payload conflict
+
+- Kiểm tra request ID và payload hợp lệ.
+- Cùng ID nhưng payload canonical khác phải trả CONFLICT.
+- ID sai định dạng hoặc chưa được cấp không được chấp nhận như completion mới.
+- Những yêu cầu bị từ chối không được làm thay đổi committed state, save, replay hoặc signals.
+- Có boundary nội bộ rõ ràng để test có thể quan sát kết quả mà không cần xây REST API.
+
+### AC-05 — Persistence và retry sau reload
+
+- Persist processed IDs/ledger cùng kết quả completion.
+- Khôi phục đầy đủ `run_id`, receipt, fingerprint và metadata cần thiết.
+- Không mất ID vì loader chỉ đọc whitelist.
+- Hỗ trợ save cũ chưa có run ID.
+- Không tự suy ID cũ từ seed hoặc timestamp.
+- Retention tối đa 128 processed receipts theo contract đã chốt; chỉ prune khi số receipts **> 128**, không prune ở đúng 128.
+- Receipt hết retention không được làm phát sinh lại một completion cũ.
+- Khi lưu thất bại, không được báo COMMITTED giả hoặc phát completion signal.
+- Retry cùng pending request phải an toàn.
+
+Kiểm tra kỹ Godot FileAccess/DirAccess API và ngữ nghĩa replace file thật trên Windows. Ưu tiên candidate snapshot, ghi tạm và xác nhận dữ liệu trước khi publish.
+
+Không tuyên bố atomic durability, crash safety hoặc thread safety vượt quá những gì implementation và test thực tế chứng minh. Nếu storage có kết quả không chắc chắn, thực hiện chính sách fail-closed/reconcile đã mô tả trong specification hoặc báo blocker nếu chưa thể đảm bảo.
+
+## 5. PHASE 3 — Bảo vệ Replay và Regression
+
+Phải giữ các hành vi hiện tại:
+
+- `MAX_RUN_HISTORY = 15`.
+- `MAX_SAVED_REPLAYS = 10`.
+- Replay frames và các sanitizer hiện có.
+- Seed retry.
+- Action replay và fallback.
+- Xóa replay/history và clear-all.
+- Hỗ trợ save legacy.
+
+Kiểm tra vấn đề đã nêu trong R-01:
+
+`tests/test_replay_security.gd` tạo 13 run liên tiếp bằng `finish_run()` nhưng không gọi `start_new_run()` giữa các run.
+
+Khi thêm run ID, fixture này có thể bị ảnh hưởng.
+
+Nếu cần, sửa fixture để:
+- Mỗi simulated run bắt đầu đúng lifecycle.
+- Start trước khi gán stats và frames.
+- Các group test có setup độc lập, tránh phụ thuộc FIFO/shared state.
+- Giữ nguyên ý nghĩa và regression assertions hiện có.
+
+Không xóa test FIFO/manual deletion/clear-all để làm suite xanh.
+
+## 6. PHASE 4 — Chuyển RED thành GREEN
+
+Bằng chứng RED của Commit 2:
+
+- Test: VT74-02.
+- Expected history entries: 1.
+- Actual history entries: 2.
+- Actual completion signals: 2.
+- Actual persisted history entries: 2.
+- Godot exit code: 1.
+
+**Đây là baseline cần giữ nguyên.**
+
+Sau khi sửa code:
+
+1. Chạy lại test bằng Godot 4.7.2 headless.
+2. Xác nhận history RAM chỉ có 1 entry.
+3. Xác nhận history disk chỉ có 1 entry.
+4. Xác nhận chỉ có 1 completion signal.
+5. Kiểm tra fixture của first completion vẫn hợp lệ.
+6. Lưu command, stdout/stderr, exit code và kết quả thực tế.
+
+**Lưu ý quan trọng:** `tests/vt074/run_red.py` được viết để xác nhận test FAIL đúng lỗi duplicate. Vì vậy, không được dùng exit code của runner RED làm oracle cho GREEN.
+
+Hãy tạo một GREEN runner hoặc chế độ kiểm chứng GREEN độc lập, tái sử dụng phương án cô lập save an toàn của Commit 2.
+
+Không sửa `red.log` hoặc `red_run.json`.
+
+Lưu GREEN evidence tại:
+
+`docs/BT3_VT074/evidence/green.log`
+
+Nếu cần thêm test trực tiếp cho contract mới ở Commit 3, chỉ bổ sung những assertions cần thiết để chứng minh implementation; không triển khai toàn bộ integration/failure test của Commit 4.
+
+## 7. PHASE 5 — Regression Verification
+
+Chạy:
+
+- Behavioral test VT74-02.
+- Replay security suite.
+- Các test mới cho lifecycle, duplicate, identity và persistence cần thiết để chứng minh patch.
+- Những regression suites hiện có có khả năng bị ảnh hưởng bởi thay đổi GameManager.
+
+Chạy test trên dữ liệu người dùng **được cô lập**.
+
+Không được đụng file save thật trên máy Windows.
+
+Lưu:
+
+- `docs/BT3_VT074/evidence/green.log`
+- `docs/BT3_VT074/evidence/regression.log`
+
+Nếu có test FAIL, xác định root cause và sửa trong phạm vi Commit 3. Không ghi PASS khi chỉ kiểm tra parse hoặc engine không crash.
+
+Phân biệt rõ:
+- PASS thực sự.
+- FAIL.
+- NOT RUN.
+- PLANNED AFTER PATCH hoặc thuộc Commit 4–5.
+
+## 8. PHASE 6 — AI-Assisted Patch Review
+
+Đây là yêu cầu bắt buộc của bài tập.
+
+Trước và sau implementation:
+
+- Giữ bằng chứng prompt AI và phương án patch AI đề xuất.
+- Xuất diff các file production đã thay đổi.
+- Giải thích từng thay đổi quan trọng, vì sao cần thiết cho AC tương ứng.
+- Phân tích nguy cơ làm hỏng replay, lifecycle, save/load hoặc xử lý failure.
+- Chỉ ra ít nhất 2 điểm trong AI-generated patch cần chú ý, sửa hoặc làm rõ nếu thực sự phát hiện vấn đề.
+- Không tạo findings giả.
+- Đánh dấu rõ phần do AI tạo, phần đã được người thực hiện review và phần còn chờ xác nhận.
+
+Tạo báo cáo ngắn:
+
+`docs/BT3_VT074/COMMIT_3_REPORT.md`
+
+Báo cáo phải có source evidence, implementation summary, diff review, kết quả GREEN/regression và residual risks.
+
+Không tự nhận sinh viên đã trực tiếp review code khi chưa có quyết định của tôi.
+
+## 9. PHASE 7 — Giữ phạm vi commit nhỏ
+
+Ưu tiên những file sau:
+
+- `Scene/GameManager.gd`
+- `tests/test_replay_security.gd` nếu cần migration fixture.
+- Helper persistence nhỏ nếu thực sự cần.
+- Test/runner phục vụ GREEN.
+- Evidence và báo cáo Commit 3.
+
+Chỉ sửa caller như CharacterSelect hoặc replay flow nếu có nguy cơ trạng thái pending/save failure làm gameplay tiếp tục sai; phải có source evidence và regression test.
+
+Không sửa cấu trúc game rộng hơn mức cần thiết.
+
+Không làm mutation `>` → `>=` trong commit này.
+
+Không chạy hoặc tạo benchmark 40-task chỉ để hoàn thành Commit 5 sớm.
+
+Không viết PDF hoặc README cuối cùng.
+
+## 10. PHASE 8 — Final Verification
+
+Trước khi kết luận:
+
+- Kiểm tra toàn bộ changed files.
+- Kiểm tra Git diff và whitespace.
+- Xác minh không có mutation cố ý trong patch.
+- Xác minh file save cá nhân không thay đổi.
+- Xác minh RED evidence của Commit 2 vẫn nguyên vẹn.
+- Chạy GREEN và regression thực tế.
+- Xác minh không có test bị vô hiệu hóa hoặc bị xóa để PASS.
+- Kiểm tra compatibility với save legacy theo phạm vi đã triển khai.
+- Đối chiếu từng AC với code và test.
+
+Chạy:
+
+```bash
+git status --short
+git diff --check
+git diff --stat
+```
+
+Đọc trực tiếp các file untracked trước khi kết luận.
+
+**Không tự stage, commit hoặc push.**
+
+## 11. Báo cáo cuối bằng tiếng Việt
+
+### A. Repository Audit
+Branch, HEAD, working tree và baseline.
+
+### B. Implementation Summary
+Các file production thay đổi, luồng run ID, duplicate, conflict, persistence và replay.
+
+### C. Acceptance Criteria
+Bảng AC-01 đến AC-05: implementation, test, PASS/FAIL/NOT RUN và evidence.
+
+### D. GREEN Verification
+Command thực tế, Godot version, Expected/Actual, exit code và log.
+
+### E. Regression
+Danh sách suites đã chạy, pass/fail count và các regression được giữ.
+
+### F. AI Patch Review
+Những thay đổi quan trọng, source evidence, rủi ro và quyết định còn chờ student review.
+
+### G. File Changes
+Toàn bộ files thay đổi; xác nhận không có thay đổi ngoài scope.
+
+### H. Commit Readiness
+Kết luận:
+
+- `READY FOR COMMIT 3`: khi GREEN và các required regressions thực sự đạt, contract đã triển khai và không còn blocker quan trọng.
+- `NOT READY FOR COMMIT 3`: nếu còn AC chưa được hỗ trợ, save failure chưa xử lý đúng, regression fail hoặc thiếu evidence; ghi rõ nguyên nhân.
+
+Commit message đề xuất:
+
+`fix(vt074): make run completion idempotent`
+
+**DỪNG HẲN SAU COMMIT 3. KHÔNG COMMIT/PUSH. KHÔNG LÀM COMMIT 4–6.**
+
+Tôi sẽ kiểm tra code, diff và kết quả test bằng VS Code/GitHub Desktop trước khi quyết định commit.

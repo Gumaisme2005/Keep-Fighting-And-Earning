@@ -1,0 +1,57 @@
+{
+  "executed_at": "2026-11-12T18:03:52.188991+07:00",
+  "branch": "feat/bt3-vt074-idempotent-run",
+  "baseline": "001785ee52589094f2b096161a0be99d5e3c4003",
+  "godot_version": "4.7.2.stable.official.ed1daf0bf",
+  "name": "regression_contract",
+  "command": "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe --headless --path C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c5\\f345dff8fc9e4b7dbf806b8192a5b59b\\project --log-file C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c5\\f345dff8fc9e4b7dbf806b8192a5b59b\\regression_contract.log res://tests/test_run_completion_contract.tscn",
+  "exit_code": 0,
+  "user_dir": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c5\\f345dff8fc9e4b7dbf806b8192a5b59b\\userdata\\regression_contract\\roaming\\Godot\\app_userdata\\Keep Fighting And Earning",
+  "metadata": {}
+}
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PASS] CG-01 start issues 32 lowercase hex ID
+[PASS] CG-02 floor advance retains ID
+[PASS] CG-03 first completion publishes one result/signal
+[PASS] CG-04 VT74-03 core: frozen envelope/receipt/history/disk unchanged after 10 retries
+[PASS] CG-05 duplicate causes zero writer/signal/FIFO/frame side effects
+[PASS] CG-06 receipts do not expose mutable ledger references
+[PASS] CG-07 adapter reason and explicit payload conflict
+[PASS] CG-08 conflict does not mutate committed snapshot
+[PASS] CG-40 boundary cannot change mode fixed at start
+[PASS] CG-09 invalid ID format/type rejected
+[PASS] CG-10 syntactically valid unissued ID rejected
+[PASS] CG-11 invalid payload is not coerced or treated as conflict
+[PASS] CG-12 rejected requests do not write/mutate
+[PASS] CG-13 load restores IDs and does not resume active session
+[PASS] CG-14 last-recorded metadata round-trips
+[PASS] CG-15 stored fingerprint survives JSON numeric representation/reload
+[PASS] CG-16 history deletion commits through common writer
+[PASS] CG-17 deleted history is not resurrected by retry
+[PASS] CG-18 same seed/fixed date, separate IDs/results
+[PASS] CG-19 delete B does not erase A with same seed/date
+[PASS] CG-20 playback flag change preserves new session identity/mode
+[PASS] CG-21 128 receipts retain history15/replay10 caps
+[PASS] CG-22 at exactly 128 oldest receipt remains despite history pruning
+[PASS] CG-23 129 evicts exactly oldest; expired ID cannot recreate result
+[PASS] CG-24 deterministic temp-write failure does not report COMMITTED
+[PASS] CG-25 failure preserves committed RAM/disk/signals and pending lifecycle
+[PASS] CG-26 replace failure verified old destination, safe retry
+[PASS] CG-27 ambiguous read-back fail-closed before publish
+[PASS] CG-28 uncertain state blocks start and blind retry
+[PASS] CG-29 reconcile recognizes committed candidate and publishes once
+[PASS] CG-30 repeat reconciliation/retry cannot double publish
+[PASS] CG-31 legacy equal seed/date entries kept independently, no ID backfill
+[PASS] CG-32 ambiguous legacy copy cannot select a different entry
+[PASS] CG-33 legacy can save v2 without fabricating IDs
+[PASS] CG-34 invalid v2 missing ledger blocks bootstrap/start without overwriting save
+[PASS] CG-35 CharacterSelect pending guard preserves hero/run/scene
+[PASS] CG-36 replay callers reject pending before hero/scene change
+[PASS] CG-37 synchronous signal retry sees CLOSED and committed receipt
+[PASS] CG-38 clear-all publishes live/playback frame changes before signal
+[PASS] CG-39 independent identity generation preserves seeded combat RNG
+[CONTRACT RESULTS] 40 PASSED, 0 FAILED
+
+STDERR:

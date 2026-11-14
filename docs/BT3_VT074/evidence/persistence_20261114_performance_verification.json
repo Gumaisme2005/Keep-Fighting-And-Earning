@@ -1,0 +1,10 @@
+﻿{
+    "command":  "python tests/vt074/verify_persistence_performance.py --run docs/BT3_VT074/evidence/persistence_4a075bff8672_benchmark.json",
+    "runner_exit_code":  0,
+    "stdout":  "{\n  \"status\": \"PASS\",\n  \"samples\": 5600,\n  \"batches\": 140,\n  \"canonical_archive_reused\": \"docs/BT3_VT074/evidence/heavy_c1_production_a1b80b4f3c6b_snapshots.zip\",\n  \"workloads\": [\n    {\n      \"workload\": \"primary\",\n      \"frames\": 2,\n      \"p95_ms\": 12.146\n    },\n    {\n      \"workload\": \"primary\",\n      \"frames\": 3600,\n      \"p95_ms\": 411.918\n    },\n    {\n      \"workload\": \"secondary\",\n      \"frames\": 2,\n      \"p95_ms\": 1.217\n    },\n    {\n      \"workload\": \"secondary\",\n      \"frames\": 3600,\n      \"p95_ms\": 802.969\n    }\n  ]\n}",
+    "earlier_sandbox_attempt":  {
+                                    "classification":  "SETUP ERROR",
+                                    "error":  "Windows sandbox denied extraction/cleanup of a checked TemporaryDirectory; approved rerun uses the same verified workspace child path policy",
+                                    "runner_exit_code":  1
+                                }
+}

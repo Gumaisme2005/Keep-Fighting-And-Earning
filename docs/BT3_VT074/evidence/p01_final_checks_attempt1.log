@@ -1,0 +1,60 @@
+{
+  "command": "C:\\Users\\ADMIN\\AppData\\Local\\Programs\\Python\\Python314\\python.exe tests/vt074/verify_p01_trial.py --run docs/BT3_VT074/evidence/p01_a0044d484b30_run.json --check-only",
+  "exit_code": 0,
+  "stdout": "{\n  \"verification_exit_code\": 0,\n  \"comparisons\": [\n    {\n      \"workload\": \"primary\",\n      \"frames\": 2,\n      \"pooled_p95_reduction_pct\": 44.20065188011766,\n      \"mean_service_reduction_pct\": 16.794167959986083,\n      \"p95_increase_ms\": -5.5600000000000005,\n      \"pairs\": [\n        {\n          \"pair\": \"A\",\n          \"before_p95_ms\": 13.174,\n          \"after_p95_ms\": 7.196,\n          \"p95_reduction_pct\": 45.377258235919236\n        },\n        {\n          \"pair\": \"B\",\n          \"before_p95_ms\": 7.567,\n          \"after_p95_ms\": 6.706,\n          \"p95_reduction_pct\": 11.378353376503236\n        }\n      ],\n      \"paired_batch_p95_reduction_bootstrap_95pct\": [\n        8.259425628158922,\n        19.541102295581027\n      ],\n      \"bootstrap_note\": \"60 matched batches,5000 resamples,seed23001833. Descriptive interval; same-host background/scheduling/cache drift remains uncontrolled.\"\n    },\n    {\n      \"workload\": \"primary\",\n      \"frames\": 3600,\n      \"pooled_p95_reduction_pct\": 7.559329272462422,\n      \"mean_service_reduction_pct\": 8.175541991792779,\n      \"p95_increase_ms\": -234.3510000000001,\n      \"pairs\": [\n        {\n          \"pair\": \"A\",\n          \"before_p95_ms\": 3044.039,\n          \"after_p95_ms\": 2965.942,\n          \"p95_reduction_pct\": 2.565571597472971\n        },\n        {\n          \"pair\": \"B\",\n          \"before_p95_ms\": 3155.282,\n          \"after_p95_ms\": 2775.39,\n          \"p95_reduction_pct\": 12.039874724351108\n        }\n      ],\n      \"paired_batch_p95_reduction_bootstrap_95pct\": [\n        5.549537791493808,\n        10.490940823540285\n      ],\n      \"bootstrap_note\": \"60 matched batches,5000 resamples,seed23001833. Descriptive interval; same-host background/scheduling/cache drift remains uncontrolled.\"\n    },\n    {\n      \"workload\": \"secondary\",\n      \"frames\": 2,\n      \"pooled_p95_reduction_pct\": -1.4630288651640955,\n      \"mean_service_reduction_pct\": 0.36850620168973336,\n      \"p95_increase_ms\": 0.03699999999999992,\n      \"pairs\": [\n        {\n          \"pair\": \"A\",\n          \"before_p95_ms\": 2.504,\n          \"after_p95_ms\": 3.481,\n          \"p95_reduction_pct\": -39.01757188498402\n        },\n        {\n          \"pair\": \"B\",\n          \"before_p95_ms\": 2.551,\n          \"after_p95_ms\": 2.402,\n          \"p95_reduction_pct\": 5.840846726773819\n        }\n      ],\n      \"paired_batch_p95_reduction_bootstrap_95pct\": [\n        -4.2911073276860945,\n        6.023206131872194\n      ],\n      \"bootstrap_note\": \"60 matched batches,5000 resamples,seed23001833. Descriptive interval; same-host background/scheduling/cache drift remains uncontrolled.\"\n    },\n    {\n      \"workload\": \"secondary\",\n      \"frames\": 3600,\n      \"pooled_p95_reduction_pct\": 34.77108157334047,\n      \"mean_service_reduction_pct\": 24.150150302402963,\n      \"p95_increase_ms\": -1097.335,\n      \"pairs\": [\n        {\n          \"pair\": \"A\",\n          \"before_p95_ms\": 2202.158,\n          \"after_p95_ms\": 2059.463,\n          \"p95_reduction_pct\": 6.479780288244519\n        },\n        {\n          \"pair\": \"B\",\n          \"before_p95_ms\": 3225.971,\n          \"after_p95_ms\": 2012.189,\n          \"p95_reduction_pct\": 37.62532273228742\n        }\n      ],\n      \"paired_batch_p95_reduction_bootstrap_95pct\": [\n        19.16928588006205,\n        26.525974013079466\n      ],\n      \"bootstrap_note\": \"60 matched batches,5000 resamples,seed23001833. Descriptive interval; same-host background/scheduling/cache drift remains uncontrolled.\"\n    }\n  ],\n  \"meaningful_heavy_improvement\": false,\n  \"two_frame_regression_gate_passed\": true,\n  \"conditional_retention_criteria_met\": false,\n  \"regression_summary\": {\n    \"VT74-02\": \"PASS\",\n    \"contract\": \"40 PASS\",\n    \"integration\": \"1335 PASS across forward/reverse/8 independent\",\n    \"boundary127_128_129\": \"27 PASS\",\n    \"replay\": \"forward/reverse/shuffle29 each +5 independent groups\",\n    \"flaky_TIME\": \"20 runs340 PASS\",\n    \"flaky_ORDER\": \"20 rounds160 invocations2320 PASS; exact states equal historical\",\n    \"perk\": \"34/37;3 KNOWN BASELINE FAILURES,engine1\"\n  }\n}\n",
+  "stderr": ""
+}
+{
+  "command": "C:\\Users\\ADMIN\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m py_compile tests/vt074/run_p01_trial.py tests/vt074/verify_p01_trial.py",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": ""
+}
+{
+  "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe status --short --untracked-files=all",
+  "exit_code": 0,
+  "stdout": "?? docs/BT3_VT074/COMMIT_5_REPORT.md\n?? docs/BT3_VT074/COVERAGE_AND_RISKS.md\n?? docs/BT3_VT074/P01_TRIAL_REPORT.md\n?? docs/BT3_VT074/PERFORMANCE_PROFILING.md\n?? docs/BT3_VT074/evidence/commit5_regression_VT74-02.log\n?? docs/BT3_VT074/evidence/commit5_regression_boundary.log\n?? docs/BT3_VT074/evidence/commit5_regression_contract.log\n?? docs/BT3_VT074/evidence/commit5_regression_integration.log\n?? docs/BT3_VT074/evidence/commit5_regression_perk.log\n?? docs/BT3_VT074/evidence/commit5_regression_replay.log\n?? docs/BT3_VT074/evidence/flaky_order.log\n?? docs/BT3_VT074/evidence/flaky_time.log\n?? docs/BT3_VT074/evidence/mutation_bug.log\n?? docs/BT3_VT074/evidence/mutation_original.log\n?? docs/BT3_VT074/evidence/mutation_restored.log\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_AFTER_A.log\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_AFTER_A_performance_40.csv\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_AFTER_A_performance_batches.json\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_AFTER_A_performance_warmup.csv\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_AFTER_B.log\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_AFTER_B_performance_40.csv\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_AFTER_B_performance_batches.json\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_AFTER_B_performance_warmup.csv\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_BEFORE_A.log\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_BEFORE_A_performance_40.csv\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_BEFORE_A_performance_batches.json\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_BEFORE_A_performance_warmup.csv\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_BEFORE_B.log\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_BEFORE_B_performance_40.csv\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_BEFORE_B_performance_batches.json\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_BEFORE_B_performance_warmup.csv\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_equivalence.log\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_flaky_order.log\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_flaky_time.log\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_policy.json\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_regression.log\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_run.json\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_setup.log\n?? docs/BT3_VT074/evidence/p01_a0044d484b30_verification.json\n?? docs/BT3_VT074/evidence/p01_final_checks.json\n?? docs/BT3_VT074/evidence/p01_final_checks.log\n?? docs/BT3_VT074/evidence/performance_40.csv\n?? docs/BT3_VT074/evidence/performance_batches.json\n?? docs/BT3_VT074/evidence/performance_run.log\n?? docs/BT3_VT074/evidence/performance_summary.md\n?? docs/BT3_VT074/evidence/performance_warmup.csv\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_before.log\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_before_performance_40.csv\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_before_performance_batches.json\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_before_performance_warmup.csv\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_before_probe.log\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_import.log\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_import_probe.log\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_instrumentation.patch\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_instrumented.log\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_instrumented_performance_40.csv\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_instrumented_performance_batches.json\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_instrumented_performance_warmup.csv\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_instrumented_probe.log\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_instrumented_profile_spans.jsonl\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_run.json\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_summary.md\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_verification.json\n?? docs/BT3_VT074/evidence/profiling_bc35f2123463_version.log\n?? docs/BT3_VT074/evidence/profiling_final_checks.json\n?? docs/BT3_VT074/evidence/profiling_final_checks.log\n?? docs/BT3_VT074/evidence/profiling_initial_audit.json\n?? docs/BT3_VT074/evidence/profiling_optimization_proposal.patch\n?? docs/BT3_VT074/evidence/quality_cleanup.json\n?? docs/BT3_VT074/evidence/quality_run.json\n?? docs/BT3_VT074/evidence/quality_setup.json\n?? docs/BT3_VT074/evidence/quality_verification.json\n?? tests/vt074/performance_harness.gd\n?? tests/vt074/profile_trace.gd\n?? tests/vt074/quality_entry.gd\n?? tests/vt074/quality_entry.tscn\n?? tests/vt074/quality_fixture.gd\n?? tests/vt074/run_p01_trial.py\n?? tests/vt074/run_profiling.py\n?? tests/vt074/run_quality.py\n?? tests/vt074/test_boundary_mutation.gd\n?? tests/vt074/test_flaky_order.gd\n?? tests/vt074/test_flaky_time.gd\n?? tests/vt074/test_p01_equivalence.gd\n?? tests/vt074/verify_p01_trial.py\n?? tests/vt074/verify_profiling.py\n?? tests/vt074/verify_quality.py\n",
+  "stderr": ""
+}
+{
+  "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff --check",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": ""
+}
+{
+  "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff --stat",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": ""
+}
+{
+  "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe branch --show-current",
+  "exit_code": 0,
+  "stdout": "feat/bt3-vt074-idempotent-run\n",
+  "stderr": ""
+}
+{
+  "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe rev-parse HEAD",
+  "exit_code": 0,
+  "stdout": "001785ee52589094f2b096161a0be99d5e3c4003\n",
+  "stderr": ""
+}
+{
+  "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff -- Scene/GameManager.gd Scene/RunCompletionStore.gd Scene/UI/character_select.gd",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": ""
+}
+{
+  "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff --name-only",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": ""
+}
+{
+  "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff --cached --name-only",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": ""
+}

@@ -415,9 +415,12 @@ func _on_hero_selection_button_pressed() -> void:
 	if hero_selection_button.disabled:
 		return
 	if get_node_or_null("/root/GameManager") != null:
-		GameManager.set_character_by_index(selected_index)
+		if not GameManager.can_start_new_run():
+			return
 		var chosen_seed: String = seed_input.text if seed_input != null else GameManager.current_seed
-		GameManager.start_new_run(chosen_seed, false, [])
+		if not GameManager.start_new_run(chosen_seed, false, []):
+			return
+		GameManager.set_character_by_index(selected_index)
 	var error := get_tree().change_scene_to_file(game_world_path)
 	if error != OK:
 		push_error("Could not open game world: %s — error code %s" % [game_world_path, error])

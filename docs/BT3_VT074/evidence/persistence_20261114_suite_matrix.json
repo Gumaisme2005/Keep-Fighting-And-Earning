@@ -1,0 +1,5744 @@
+{
+  "suites": [
+    {
+      "phase": "all",
+      "name": "pairwise",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 261,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "VT74-02",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [],
+        "pass_lines": 0,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "contract",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[CONTRACT RESULTS] 41 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 41,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "integration_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 445,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "integration_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 445,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "IT-01",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 81,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "IT-02",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 56,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "IT-03",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 117,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "IT-04",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 32,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "IT-05",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 11,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "IT-06",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 73,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "IT-07",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 35,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "IT-08",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 40,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "boundary",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 27,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "time",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 340,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "ownership",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 56,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "p01_differential",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 284,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "heavy_differential",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 1051,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "mutation_original",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 27,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "mutation_mutant",
+      "engine_exit": 1,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 19,
+        "failed": 8,
+        "kind": "structured assertion executions"
+      },
+      "classification": "EXPECTED MUTANT KILLED",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "mutation_restored",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 27,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order0_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order0_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order0_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order0_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order0_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order0_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order0_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order0_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order0_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order0_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order0_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order0_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order0_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order0_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order0_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order0_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order1_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order1_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order1_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order1_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order1_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order1_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order1_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order1_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order1_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order1_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order1_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order1_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order1_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order1_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order1_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order1_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order2_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order2_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order2_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order2_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order2_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order2_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order2_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order2_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order2_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order2_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order2_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order2_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order2_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order2_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order2_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order2_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order3_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order3_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order3_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order3_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order3_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order3_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order3_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order3_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order3_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order3_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order3_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order3_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order3_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order3_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order3_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order3_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order4_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order4_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order4_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order4_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order4_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order4_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order4_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order4_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order4_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order4_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order4_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order4_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order4_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order4_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order4_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order4_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order5_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order5_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order5_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order5_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order5_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order5_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order5_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order5_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order5_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order5_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order5_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order5_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order5_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order5_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order5_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order5_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order6_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order6_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order6_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order6_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order6_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order6_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order6_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order6_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order6_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order6_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order6_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order6_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order6_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order6_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order6_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order6_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order7_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order7_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order7_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order7_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order7_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order7_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order7_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order7_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order7_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order7_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order7_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order7_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order7_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order7_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order7_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order7_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order8_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order8_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order8_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order8_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order8_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order8_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order8_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order8_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order8_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order8_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order8_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order8_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order8_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order8_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order8_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order8_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order9_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order9_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order9_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order9_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order9_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order9_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order9_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order9_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order9_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order9_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order9_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order9_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order9_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order9_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order9_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order9_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order10_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order10_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order10_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order10_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order10_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order10_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order10_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order10_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order10_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order10_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order10_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order10_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order10_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order10_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order10_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order10_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order11_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order11_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order11_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order11_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order11_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order11_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order11_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order11_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order11_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order11_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order11_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order11_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order11_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order11_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order11_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order11_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order12_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order12_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order12_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order12_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order12_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order12_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order12_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order12_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order12_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order12_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order12_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order12_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order12_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order12_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order12_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order12_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order13_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order13_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order13_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order13_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order13_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order13_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order13_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order13_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order13_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order13_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order13_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order13_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order13_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order13_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order13_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order13_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order14_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order14_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order14_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order14_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order14_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order14_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order14_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order14_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order14_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order14_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order14_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order14_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order14_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order14_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order14_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order14_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order15_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order15_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order15_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order15_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order15_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order15_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order15_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order15_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order15_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order15_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order15_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order15_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order15_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order15_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order15_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order15_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order16_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order16_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order16_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order16_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order16_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order16_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order16_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order16_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order16_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order16_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order16_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order16_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order16_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order16_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order16_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order16_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order17_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order17_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order17_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order17_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order17_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order17_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order17_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order17_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order17_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order17_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order17_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order17_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order17_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order17_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order17_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order17_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order18_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order18_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order18_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order18_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order18_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order18_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order18_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order18_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order18_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order18_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order18_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order18_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order18_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order18_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order18_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order18_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order19_replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order19_wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order19_replay_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order19_wrapper_reverse",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order19_replay_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order19_wrapper_shuffle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order19_replay_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 3 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 3,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order19_wrapper_bounds",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order19_replay_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 14 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 14,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order19_wrapper_fifo",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order19_replay_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 6 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 6,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order19_wrapper_manual",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order19_replay_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 4 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 4,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order19_wrapper_clear",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order19_replay_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 2 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 2,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "order19_wrapper_idle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "all",
+      "name": "perk",
+      "engine_exit": 1,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "RESULT: 34/37 PASSED (3 FAILED)"
+        ],
+        "pass_lines": 34,
+        "fail_lines": 3,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "KNOWN BASELINE FAILURES",
+      "raw": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json"
+    },
+    {
+      "phase": "target",
+      "name": "long_session",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 28,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_8b6288391db7_target.json"
+    },
+    {
+      "phase": "target",
+      "name": "writer_boundary",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 59,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_8b6288391db7_target.json"
+    },
+    {
+      "phase": "target",
+      "name": "player_death",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 16,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_8b6288391db7_target.json"
+    },
+    {
+      "phase": "target",
+      "name": "codec_recovery",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 48,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_8b6288391db7_target.json"
+    },
+    {
+      "phase": "groups",
+      "name": "dungeon_generator_unit",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] UNIT TESTS: 28 PASSED | 0 FAILED"
+        ],
+        "pass_lines": 28,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "dungeon_properties",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] PROPERTY TESTS: 11/11 PROPERTIES PASSED (original 100 seeds + 100 variant matrix cases)"
+        ],
+        "pass_lines": 11,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "orc_battle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          ">>> TAT CA 5/5 TEST CASES DEU PASSED 100%! <<<"
+        ],
+        "pass_lines": 0,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "benchmark_dungeon_generator",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [],
+        "pass_lines": 0,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "skeleton_king",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] SKELETON KING: 22 PASSED | 0 FAILED"
+        ],
+        "pass_lines": 22,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "doraemon",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] DORAEMON: 49 PASSED | 0 FAILED"
+        ],
+        "pass_lines": 49,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "yugi",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "YUGI TESTS PASSED"
+        ],
+        "pass_lines": 0,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "werewolf",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 50 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 50,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "moba_hud_and_inventory",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 159 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 159,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "miyabi",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] MIYABI: 18 PASSED | 0 FAILED"
+        ],
+        "pass_lines": 18,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "luong_tho",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] LUONG THO: 15 PASSED | 0 FAILED"
+        ],
+        "pass_lines": 15,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "projectile_obstacles",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] Projectile obstacle failures: 0"
+        ],
+        "pass_lines": 11,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "archer_combat_lifecycle",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 12 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 12,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "enemy_tactics",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] EnemyTactics: 94 passed, 0 failed"
+        ],
+        "pass_lines": 94,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "orc_tactical_ai30",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] Orc tactical AI: 82 passed, 0 failed"
+        ],
+        "pass_lines": 82,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "orc_tactical_ai144",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] Orc tactical AI: 82 passed, 0 failed"
+        ],
+        "pass_lines": 82,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "archer_tactical_ai30",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] Archer tactical AI: 120 passed, 0 failed"
+        ],
+        "pass_lines": 120,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "archer_tactical_ai144",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] Archer tactical AI: 120 passed, 0 failed"
+        ],
+        "pass_lines": 120,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "enemy_ai_integration30",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] Enemy AI integration: 48 passed, 0 failed; 0 runtime errors"
+        ],
+        "pass_lines": 48,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "enemy_ai_integration144",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] Enemy AI integration: 48 passed, 0 failed; 0 runtime errors"
+        ],
+        "pass_lines": 48,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "tactical_navigation_contract30",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] Tactical navigation contract: 49 passed, 0 failed; 0 runtime errors"
+        ],
+        "pass_lines": 49,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "tactical_navigation_contract144",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] Tactical navigation contract: 49 passed, 0 failed; 0 runtime errors"
+        ],
+        "pass_lines": 49,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "tactical_base_enemy_integration30",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] Tactical BaseEnemy integration: 49 passed, 0 failed; 0 runtime errors"
+        ],
+        "pass_lines": 49,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "groups",
+      "name": "tactical_base_enemy_integration144",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[SUMMARY] Tactical BaseEnemy integration: 49 passed, 0 failed; 0 runtime errors"
+        ],
+        "pass_lines": 49,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json"
+    },
+    {
+      "phase": "benchmark",
+      "name": "benchmark",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[PERFORMANCE RESULTS] {\"batches\":140,\"failed_correctness_batches\":0,\"measured_batches\":120,\"model\":\"40 overlapping submissions / single-process serialized execution\",\"tasks_per_batch\":40,\"warmup_batches\":20}"
+        ],
+        "pass_lines": 0,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_4a075bff8672_benchmark.json"
+    },
+    {
+      "phase": "benchmark",
+      "name": "codec_cost",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 73,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_4a075bff8672_benchmark.json"
+    },
+    {
+      "phase": "smoke",
+      "name": "VT74-02",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [],
+        "pass_lines": 0,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_c269529dd090_smoke.json"
+    },
+    {
+      "phase": "smoke",
+      "name": "contract",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "[CONTRACT RESULTS] 41 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 41,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_c269529dd090_smoke.json"
+    },
+    {
+      "phase": "smoke",
+      "name": "integration_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 445,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_c269529dd090_smoke.json"
+    },
+    {
+      "phase": "smoke",
+      "name": "replay_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "summary": [
+          "  TEST RESULTS: 29 PASSED, 0 FAILED"
+        ],
+        "pass_lines": 29,
+        "fail_lines": 0,
+        "kind": "printed oracle; not source coverage"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_c269529dd090_smoke.json"
+    },
+    {
+      "phase": "smoke",
+      "name": "wrapper_forward",
+      "engine_exit": 0,
+      "runner_exit": 0,
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "kind": "structured assertion executions"
+      },
+      "classification": "PASS",
+      "raw": "docs/BT3_VT074/evidence/persistence_c269529dd090_smoke.json"
+    }
+  ],
+  "codec_cost": {
+    "commit_ms": {
+      "n": 30,
+      "mean_ms": 597.3534999999999,
+      "p95_ms": 631.385,
+      "max_ms": 634.423
+    },
+    "decode_ms": {
+      "n": 30,
+      "mean_ms": 539.0719666666666,
+      "p95_ms": 564.341,
+      "max_ms": 595.142
+    }
+  },
+  "first_committed": [
+    {
+      "latency_ms": 1878.588,
+      "old_format": "legacy",
+      "prior_bytes": 1936384,
+      "writer": {
+        "encoding": "zstd-frame64-json-v1",
+        "logical_bytes": 6847882,
+        "persisted_bytes": 1079720,
+        "snapshot_json_bytes": 5833608,
+        "stage": "destination_confirmed"
+      }
+    },
+    {
+      "latency_ms": 1790.409,
+      "old_format": "v2",
+      "prior_bytes": 1936384,
+      "writer": {
+        "encoding": "zstd-frame64-json-v1",
+        "logical_bytes": 6847882,
+        "persisted_bytes": 1079720,
+        "snapshot_json_bytes": 5833608,
+        "stage": "destination_confirmed"
+      }
+    }
+  ]
+}

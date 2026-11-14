@@ -1,0 +1,65 @@
+{
+  "executed_at": "2026-11-12T18:03:52.188991+07:00",
+  "branch": "feat/bt3-vt074-idempotent-run",
+  "baseline": "001785ee52589094f2b096161a0be99d5e3c4003",
+  "godot_version": "4.7.2.stable.official.ed1daf0bf",
+  "name": "regression_replay",
+  "command": "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe --headless --path C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c5\\f345dff8fc9e4b7dbf806b8192a5b59b\\project --log-file C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c5\\f345dff8fc9e4b7dbf806b8192a5b59b\\regression_replay.log res://tests/test_replay_security.tscn",
+  "exit_code": 0,
+  "user_dir": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c5\\f345dff8fc9e4b7dbf806b8192a5b59b\\userdata\\regression_replay\\roaming\\Godot\\app_userdata\\Keep Fighting And Earning",
+  "metadata": {}
+}
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+========================================================
+  RUNNING REPLAY CAPACITY & MEMORY PROTECTION TESTS
+========================================================
+
+[GROUP ORDER] ["bounds", "fifo", "manual", "clear", "idle"] shuffle seed=23001833
+--- Test Group 1: Security Bounds & Memory Constants ---
+  [PASS] MAX_SAVED_REPLAYS is strictly configured to 10
+  [PASS] MAX_DISK_REPLAY_FRAMES is strictly bounded (3600 frames)
+  [PASS] MAX_SAVE_FILE_BYTES is capped at 2MB anti-DoS limit
+
+--- Test Group 2: Maximum 10 Replays FIFO Eviction ---
+  [PASS] Exact 10 replays retained after 13 consecutive runs with replays (count=10)
+  [PASS] Newest run 0 retains active replay frames
+  [PASS] Newest run 1 retains active replay frames
+  [PASS] Newest run 2 retains active replay frames
+  [PASS] Newest run 3 retains active replay frames
+  [PASS] Newest run 4 retains active replay frames
+  [PASS] Newest run 5 retains active replay frames
+  [PASS] Newest run 6 retains active replay frames
+  [PASS] Newest run 7 retains active replay frames
+  [PASS] Newest run 8 retains active replay frames
+  [PASS] Newest run 9 retains active replay frames
+  [PASS] Older run 10 had frame data deallocated from memory (has_replay=false)
+  [PASS] Older run 11 had frame data deallocated from memory (has_replay=false)
+  [PASS] Older run 12 had frame data deallocated from memory (has_replay=false)
+
+--- Test Group 3: Manual Replay Deletion ---
+  [PASS] Run history exists
+  [PASS] Target entry initially has replay
+  [PASS] delete_replay returned true
+  [PASS] Target entry has_replay is now false
+  [PASS] Target entry frames array is completely emptied
+  [PASS] Active replays count decremented to 9
+
+--- Test Group 4: Clear All Replays ---
+  [PASS] get_saved_replays_count returns 0 after clear_all_replays
+  [PASS] All run entries have frames cleared
+  [PASS] All run entries have frames cleared
+  [PASS] All run entries have frames cleared
+
+--- Test Group 5: Idle Frame Compression & Anti-DoS ---
+  [PASS] 100 consecutive identical idle frames compressed into 1 frame (count=1)
+  [PASS] Active input frame is immediately recorded
+
+========================================================
+  TEST RESULTS: 29 PASSED, 0 FAILED
+========================================================
+
+
+STDERR:

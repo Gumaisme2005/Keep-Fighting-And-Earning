@@ -1,0 +1,62 @@
+{
+    "checked_at":  "2026-11-13T10:20:44.8031773+07:00",
+    "branch":  "feat/bt3-vt074-idempotent-run",
+    "head":  "8db06a56720d7f2bbe359c908eb55950b8d208c8",
+    "diff_check_exit":  0,
+    "diff_check_output":  [
+
+                          ],
+    "changed_files":  [
+                          ".github/workflows/ci.yml",
+                          "docs/BT3_VT074/evidence/vt074_final_0084cf203d62_smoke.json",
+                          "docs/BT3_VT074/evidence/vt074_final_25f705a64d37_pairwise.json",
+                          "docs/BT3_VT074/evidence/vt074_final_315966019bc5_all.json",
+                          "docs/BT3_VT074/evidence/vt074_final_43b00db1e9d0_pairwise.json",
+                          "docs/BT3_VT074/evidence/vt074_final_checks.json",
+                          "docs/BT3_VT074/evidence/vt074_final_d76dba213bfa_pairwise.json",
+                          "docs/BT3_VT074/evidence/vt074_final_e8bf00df8fd7_pairwise.json",
+                          "docs/BT3_VT074/evidence/vt074_final_pairwise.log",
+                          "docs/BT3_VT074/FINAL_CODE_TEST_REPORT.md",
+                          "docs/BT3_VT074/README.md",
+                          "tests/vt074/run_ci_import_audit.py",
+                          "tests/vt074/test_pairwise.gd"
+                      ],
+    "changed_file_sha256_excluding_this_report":  {
+                                                      "docs/BT3_VT074/evidence/vt074_final_25f705a64d37_pairwise.json":  "06c81aa5b15de472e504f63680ba6a5292c7022d642673529ee6db856c0db619",
+                                                      "docs/BT3_VT074/evidence/vt074_final_43b00db1e9d0_pairwise.json":  "5c4418513721907573b89de347c3d6685b1085b6418d7648e17d00f1aa59c1d2",
+                                                      "docs/BT3_VT074/evidence/vt074_final_0084cf203d62_smoke.json":  "bd69abd96cc19163e79d09f3647a5b96c5554360cd80a5ce4d7ac5ae86b357f5",
+                                                      "tests/vt074/test_pairwise.gd":  "20015c87103fd50e4c6a9a3667e60d48c8e4f3e091f4c282279edff43f23d851",
+                                                      "docs/BT3_VT074/evidence/vt074_final_d76dba213bfa_pairwise.json":  "2b0bea445b44a31a1ffcb6fe7b8dcda00434f520ca8e580ce89e46ffb625822a",
+                                                      ".github/workflows/ci.yml":  "490b05c7ca09f965953c2ae8bc1210ba89291de5c64b4da04c8a7da8271f55a7",
+                                                      "docs/BT3_VT074/evidence/vt074_final_e8bf00df8fd7_pairwise.json":  "98665986c03d7bf89954b080487f4a396c29c49aaf5fc8997a1234e2b716d4cc",
+                                                      "docs/BT3_VT074/README.md":  "124d9429465cdbe6783dbfd5d59b42efd625d0dcc59cca38b1aa5a0d42769046",
+                                                      "docs/BT3_VT074/evidence/vt074_final_315966019bc5_all.json":  "36216daf274dacf3749db2a5a720c3fca6935dd8a108478189537c12117a317a",
+                                                      "docs/BT3_VT074/evidence/vt074_final_pairwise.log":  "9490c34646ab2d5253c300bbadaea1e799086ecbbba3c3d5d9b1a7877557dbcd",
+                                                      "tests/vt074/run_ci_import_audit.py":  "e6905c43d26e4a36b4f2720fded9d86138b5eab915f15d187c6d49637acceaa9",
+                                                      "docs/BT3_VT074/FINAL_CODE_TEST_REPORT.md":  "8729884522285db0de03287b7429dfd1dd806121c20f2616c9a318b4b8cc00f6"
+                                                  },
+    "staged_files":  [
+
+                     ],
+    "protected_tracked_changes":  [
+
+                                  ],
+    "source_matches_successful_execution":  {
+                                                ".github/workflows/ci.yml":  true,
+                                                "docs/BT3_VT074/README.md":  true,
+                                                "tests/vt074/run_ci_import_audit.py":  true,
+                                                "tests/vt074/test_pairwise.gd":  true
+                                            },
+    "personal_save_sha256":  "2b86ed7cd91bd182f87988eaf87f6a377aceff32c0520e00dc73382dbfe89a26",
+    "personal_save_unchanged":  true,
+    "all_runner_exit":  0,
+    "smoke_runner_exit":  0,
+    "all_suite_invocations":  31,
+    "smoke_suite_invocations":  5,
+    "cache_temp_in_change_list":  [
+
+                                  ],
+    "linux_smoke":  "NOT VERIFIED",
+    "performance":  "REVIEW ONLY; C6 measurements retained; 2 frames PASS, 3600 frames FAIL",
+    "readiness":  "READY FOR COMMIT for test/CI scope; human diff review pending"
+}

@@ -312,8 +312,9 @@ func take_damage(amount: int) -> void:
 			set_physics_process(false)
 			print("[DEATH] Champion has fallen. Expedition Over.")
 
+			var completion_result := {"status": "UNAVAILABLE"}
 			if get_node_or_null("/root/GameManager") != null:
-				GameManager.finish_run("Fallen upon Floor " + str(GameManager.current_level))
+				completion_result = GameManager.finish_run("Fallen upon Floor " + str(GameManager.current_level))
 
 			if has_node("PlayerHurtbox/CollisionShape2D"):
 				$PlayerHurtbox/CollisionShape2D.set_deferred("disabled", true)
@@ -321,7 +322,7 @@ func take_damage(amount: int) -> void:
 			await get_tree().create_timer(2.0).timeout
 			if not is_inside_tree():
 				return
-			get_tree().call_group("game_over_menu", "pause")
+			get_tree().call_group("game_over_menu", "pause", completion_result)
 
 func start_invincibility() -> void:
 	is_invincible = true

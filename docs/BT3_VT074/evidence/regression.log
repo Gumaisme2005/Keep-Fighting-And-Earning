@@ -1,0 +1,3049 @@
+{
+  "executed_at": "2026-11-12T11:53:45.274770+07:00",
+  "branch": "feat/bt3-vt074-idempotent-run",
+  "head": "25026e34b0fc3514e2ae813f017774cf694e5375",
+  "working_tree": "M Scene/GameManager.gd\n M Scene/UI/character_select.gd\n M tests/test_perk_system.gd\n M tests/test_replay_security.gd\n?? Scene/RunCompletionStore.gd\n?? docs/BT3_VT074/COMMIT_3_PATCH_PLAN.md\n?? docs/BT3_VT074/evidence/commit3_prompt.txt\n?? docs/BT3_VT074/evidence/green.log\n?? docs/BT3_VT074/evidence/green_attempt_2866fbd345ef424487da4732ada9fca3.json\n?? docs/BT3_VT074/evidence/green_attempt_89994ee5535c4c678be125a520a3358d.json\n?? docs/BT3_VT074/evidence/regression.log\n?? tests/test_run_completion_contract.gd\n?? tests/test_run_completion_contract.tscn\n?? tests/vt074/run_green.py",
+  "work": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_green\\94472f1d456c40179d949e1c0e3c1c91",
+  "mode": "full",
+  "personal_save_path": "C:\\Users\\ADMIN\\AppData\\Roaming\\Godot\\app_userdata\\Keep Fighting And Earning\\roguelike_save_data.json",
+  "personal_before_sha256": "2b86ed7cd91bd182f87988eaf87f6a377aceff32c0520e00dc73382dbfe89a26",
+  "godot_version": "4.7.2.stable.official.ed1daf0bf",
+  "source_sha256": {
+    "Scene/GameManager.gd": "ea3a61d88fba5c6374e8e7db30c80633e9b48fbbd2fcad453cbb0b21c6079bfe",
+    "Scene/RunCompletionStore.gd": "17afb0c4fb566cc741e4c2b78854d3e2c935b3044d5ea08813009b37fd14eab9",
+    "Scene/UI/character_select.gd": "af52c81e99e2fc198ef0554b250d7ffc7b6e83eaf63d9b4c3b56fe87e80f3f62",
+    "tests/test_run_completion_idempotency.gd": "872af01a06909003e184839f1ce132d343d719745b197b47a6b00814069e5b55",
+    "tests/test_run_completion_contract.gd": "2056d5c97991deed47ecc7f91002d913242b6e83edfce1a3402219778b298b8c",
+    "tests/test_replay_security.gd": "5250be030db80c7e177bccfd49fa81dc77949818ab1f3656cde99f7f1a7b7e10",
+    "tests/test_perk_system.gd": "c51e532c45742a01639cf7b50e3f0608131c6aa8e2e3df6c702dc71bc20259bb",
+    "tests/vt074/run_green.py": "2a96a5adb9452e460170bba60fb91acd9f0913986b5f40aee71f3757793074a0"
+  },
+  "personal_after_sha256": "2b86ed7cd91bd182f87988eaf87f6a377aceff32c0520e00dc73382dbfe89a26",
+  "personal_save_unchanged": true,
+  "immutable_C2_artifacts_unchanged": true,
+  "runner_exit_code": 1
+}
+
+STEP: import_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\import-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/import/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: version
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --version
+Exit code: 0
+STDOUT:
+4.7.2.stable.official.ed1daf0bf
+
+STDERR:
+
+
+STEP: import
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\import.log --import
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registering global classes... (126 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | MainMenu[39m[0m
+[   1% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   2% ] [90m[1mupdate_scripts_classes[22m | BossBalanceData[39m[0m
+[   3% ] [90m[1mupdate_scripts_classes[22m | EnemyBalanceData[39m[0m
+[   3% ] [90m[1mupdate_scripts_classes[22m | HeroBalanceData[39m[0m
+[   4% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   5% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   6% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   7% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   7% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   8% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   9% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  10% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  11% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  11% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  12% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  13% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  14% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  14% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  15% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  16% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  17% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  18% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  18% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  19% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  20% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  21% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  22% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  22% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  23% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  24% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  25% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  25% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  26% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  27% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  28% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  29% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  29% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  30% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  31% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  32% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  34% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  35% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  36% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  37% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  37% ] [90m[1mupdate_scripts_classes[22m | BasePlayer[39m[0m
+[  38% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  39% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  40% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  40% ] [90m[1mupdate_scripts_classes[22m | EnemyTactics[39m[0m
+[  41% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  42% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  43% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  44% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  44% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  45% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  46% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  47% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  48% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  48% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  49% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  51% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  51% ] [90m[1mupdate_scripts_classes[22m | BaseEnemy[39m[0m
+[  52% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  53% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  54% ] [90m[1mupdate_scripts_classes[22m | ItemData[39m[0m
+[  55% ] [90m[1mupdate_scripts_classes[22m | ItemDatabase[39m[0m
+[  55% ] [90m[1mupdate_scripts_classes[22m | DungeonLayoutPlanner[39m[0m
+[  56% ] [90m[1mupdate_scripts_classes[22m | DungeonNavHelper[39m[0m
+[  57% ] [90m[1mupdate_scripts_classes[22m | DungeonPainter[39m[0m
+[  58% ] [90m[1mupdate_scripts_classes[22m | DungeonSpawner[39m[0m
+[  59% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  59% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  60% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  61% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  62% ] [90m[1mupdate_scripts_classes[22m | PerkData[39m[0m
+[  63% ] [90m[1mupdate_scripts_classes[22m | PerkDatabase[39m[0m
+[  64% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  65% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  66% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  66% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  67% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  68% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  69% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  70% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  70% ] [90m[1mupdate_scripts_classes[22m | InventorySlot[39m[0m
+[  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  72% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  73% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  74% ] [90m[1mupdate_scripts_classes[22m | BalanceConfig[39m[0m
+[  74% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  76% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  77% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  77% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  78% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  79% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  80% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  81% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  81% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  82% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  83% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  85% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  85% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  86% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  87% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  88% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  88% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  89% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  90% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  91% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  92% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  92% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  93% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  94% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  95% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  96% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  96% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  97% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  98% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (405 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | bgm_boss.wav[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | bgm_dungeon.wav[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | bgm_glorious_morning.wav[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | bgm_menu.wav[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | sfx_hit.wav[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | sfx_pickup.wav[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | sfx_portal.wav[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | sfx_slash.wav[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | Archer.png[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | Archer_Attack01.png[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | Archer_Attack02.png[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | Archer_Death.png[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | Archer_Hurt.png[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | Archer_Idle.png[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | Archer_Walk.png[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | Arrow02(32x32).png[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | Arrow02(100x100).png[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | Armored Orc_Attack01.png[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | Armored Orc_Attack02.png[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | Armored Orc_Attack03.png[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | Armored Orc_Block.png[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | Armored Orc_Death.png[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | Armored Orc_Hurt.png[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | Armored Orc_Idle.png[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | Armored Orc_Walk.png[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | Bat.png[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | Bat_Attack01.png[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | Bat_Attack02.png[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | Bat_Death.png[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | Bat_Flying.png[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | Bat_Hurt.png[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | doraemon_air_shot.png[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | doraemon_ataru.png[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | doraemon_ataru_bullet.png[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | doraemon_attack_1.png[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | doraemon_bath_door.png[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | doraemon_beam.png[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | doraemon_bomb.png[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | doraemon_bubble.png[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | doraemon_bubble_ball.png[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | doraemon_bullet.png[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | doraemon_cat.png[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | doraemon_cloud.png[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | doraemon_dango.png[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | doraemon_death.png[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | doraemon_door.png[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | doraemon_door_in.png[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | doraemon_door_out.png[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | doraemon_dorami_balloon.png[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | doraemon_dorayaki_item.png[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | doraemon_dorayaki_l.png[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | doraemon_dorayaki_m.png[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | doraemon_dorayaki_s.png[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | doraemon_eat.png[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | doraemon_exit_dorami.png[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | doraemon_exit_gian.png[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | doraemon_exit_nobita.png[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | doraemon_exit_shizuka.png[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | doraemon_exit_suneo.png[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | doraemon_explosion.png[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | doraemon_fish.png[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | doraemon_fish_puffed.png[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | doraemon_friend_dorami.png[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | doraemon_friend_gian.png[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | doraemon_friend_nobita.png[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | doraemon_friend_shizuka.png[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | doraemon_friend_suneo.png[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | doraemon_gian_door.png[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | doraemon_gian_walk.png[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | doraemon_glove.png[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | doraemon_hurt.png[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | doraemon_idle.png[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | doraemon_junk_ball.png[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | doraemon_junk_chair.png[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | doraemon_junk_doll.png[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | doraemon_junk_fridge.png[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | doraemon_junk_hammer.png[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | doraemon_kick.png[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | doraemon_korobashiya.png[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | doraemon_magichand.png[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | doraemon_magichand_grip.png[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | doraemon_magichand_head.png[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | doraemon_mantle.png[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | doraemon_mantle_fx.png[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | doraemon_mantle_wave.png[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | doraemon_minidora.png[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | doraemon_missile.png[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | doraemon_nobita.png[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | doraemon_note_a.png[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | doraemon_note_b.png[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | doraemon_panic.png[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | doraemon_pistol.png[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | doraemon_pocket.png[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | doraemon_pond.png[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | doraemon_portrait.png[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | doraemon_puff.png[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | doraemon_punch_fly.png[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | doraemon_screw.png[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | doraemon_shockgun.png[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | doraemon_shockwave.png[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | doraemon_shock_bullet.png[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | doraemon_skill.png[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | doraemon_sl_run.png[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | doraemon_sl_smoke.png[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | doraemon_spark.png[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | doraemon_stick.png[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | doraemon_summon.png[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | doraemon_suneo_ctrl.png[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | doraemon_throw.png[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | doraemon_trex.png[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | doraemon_uradora_kick.png[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | doraemon_uradora_tf.png[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | doraemon_walk.png[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | doraemon_water.png[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | Human_Archer.png[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | Human_Knight.png[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | Knight.png[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | Knight_Attack01.png[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | Knight_Attack02.png[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | Knight_Attack03.png[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | Knight_Block.png[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | Knight_Death.png[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | Knight_Hurt.png[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | Knight_Idle.png[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | Knight_Walk.png[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | lt_bullets.png[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | lt_portrait.png[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | lt_sheet.png[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | cat_girl_death.png[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | cat_girl_frost_charge.png[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | cat_girl_frost_charge_start.png[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | cat_girl_frost_combo_1.png[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | cat_girl_frost_combo_2.png[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | cat_girl_frost_combo_3.png[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | cat_girl_frost_dash.png[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | cat_girl_frost_release.png[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | cat_girl_frost_special.png[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | cat_girl_hurt.png[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | cat_girl_idle.png[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | cat_girl_walk.png[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | frost_hit.png[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | frost_ice_spikes.png[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | frost_wave.png[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | frost_wave_end.png[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | miyabi_portrait.png[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | spirit_attack.png[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | spirit_bolt.png[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | spirit_bolt_hit.png[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | spirit_hurt.png[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | spirit_idle.png[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | spirit_vanish.png[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | Necromancer_Attack01.png[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | Necromancer_Attack02.png[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | Necromancer_DEATH.png[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | Necromancer_Hurt.png[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | Necromancer_Idle.png[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | Necromancer_Summon(With magic effects).png[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | Necromancer_Summon.png[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | Necromancer_Walk.png[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | Orc.png[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | Orc_Attack01.png[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | Orc_Attack02.png[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | Orc_Death.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | Orc_Hurt.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | Orc_Idle.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | Orc_Walk.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | Orc rider_Attack01.png[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | Orc rider_Attack02.png[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | Orc rider_Attack03.png[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | Orc rider_Block.png[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | Orc rider_Death.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | Orc rider_Hurt.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | Orc rider_Idle.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | Orc rider_Walk.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | enemies-skeleton1_attack.png[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | enemies-skeleton1_death.png[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | enemies-skeleton1_idle.png[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | enemies-skeleton1_movement.png[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | enemies-skeleton1_take_damage.png[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | Skeleton.png[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | Skeleton_Attack01.png[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | Skeleton_Attack02.png[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | Skeleton_Block.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | Skeleton_Death.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | Skeleton_Hurt.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | Skeleton_Idle.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | Skeleton_Summon.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | Skeleton_Walk.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | Arrow03(100x100).png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | Skeleton Archer.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | Skeleton Archer_Attack.png[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | Skeleton Archer_Death.png[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | Skeleton Archer_Hurt.png[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | Skeleton Archer_Idle.png[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | Skeleton Archer_Summon.png[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | Skeleton Archer_Walk.png[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | skeleton_king_cast.png[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | skeleton_king_crystal.png[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | skeleton_king_death.png[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | skeleton_king_enrage.png[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | skeleton_king_hit.png[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | skeleton_king_idle.png[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | skeleton_king_idle_enraged.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | skeleton_king_slam.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | Soldier.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | Soldier_Attack01.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | Soldier_Attack02.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | Soldier_Attack03.png[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | Soldier_Death.png[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | Soldier_Hurt.png[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | Soldier_Idle.png[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | Soldier_Walk.png[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | Swordsman_Attack01.png[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | Swordsman_Attack02.png[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | Swordsman_Attack3.png[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | Swordsman_Death.png[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | Swordsman_Hurt.png[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | Swordsman_Idle.png[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | Swordsman_Walk.png[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | enemies-vampire_attack.png[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | enemies-vampire_death.png[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | enemies-vampire_idle.png[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | enemies-vampire_movement.png[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | enemies-vampire_take_damage.png[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | Werewolf.png[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | Werewolf_Attack01.png[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | Werewolf_Attack02.png[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | Werewolf_Death.png[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | Werewolf_Hurt.png[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | Werewolf_Idle.png[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | Werewolf_Walk.png[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | Werewolf.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | Werewolf_Attack01.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | Werewolf_Attack02.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | Werewolf_Death.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | Werewolf_Hurt.png[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | Werewolf_Idle.png[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | Werewolf_Walk.png[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | death.png[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | guard.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | hold&release-left-click.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | hold&release-right-click.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | icon.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | intro.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | left-click.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | result-1-attack.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | result-1.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | result-2.png[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | result-3-attack.png[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | result-3-creature-part-1.png[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | result-3-creature-part-2.png[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | result-3.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | result-4.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | result-5-attack.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | result-5.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | right-click.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | run.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | shift+left+click.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | shift+right+click.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | special.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | stance.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | Alegreya-Variable.ttf[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | BeVietnamPro-Bold.ttf[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | BeVietnamPro-ExtraBold.ttf[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | BeVietnamPro-Medium.ttf[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | BeVietnamPro-Regular.ttf[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | BeVietnamPro-SemiBold.ttf[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | Grenze-Bold.ttf[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | Grenze-Medium.ttf[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | Grenze-Regular.ttf[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | Grenze-SemiBold.ttf[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | Grenze-Variable.ttf[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | GrenzeGotisch-Bold.ttf[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | GrenzeGotisch-ExtraBold.ttf[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | GrenzeGotisch-Regular.ttf[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | GrenzeGotisch-SemiBold.ttf[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | GrenzeGotisch-Variable.ttf[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | Montserrat-Variable.ttf[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | doors_lever_chest_animation.png[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | blue_mana_potion.png[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | green_poison_potion.png[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | Item_37.png[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | Item_38.png[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | Item_39.png[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | Item_42.png[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | Item_43.png[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | Item_44.png[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | Item__44.png[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | Item__52.png[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | Item__57.png[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | Item__58.png[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | Item__59.png[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | purple_mystery_potion.png[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | red_health_potion.png[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | sword1.png[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | sword2.png[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | sword6.png[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | sword14.png[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | sword24.png[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | sword28.png[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | Icons.png[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | broken_pillar.png[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | cobweb_corner_large.png[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | cobweb_corner_small.png[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | cobweb_wall_hanging.png[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | debris_iron_scrap.png[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | debris_stone_rubble.png[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | iron_chains_wall.png[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | skeleton_bone_pile.png[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | skeleton_fallen_adventurer.png[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | skeleton_ribcage_skull.png[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | skeleton_shattered.png[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | wall_crack_major.png[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | wall_crack_minor.png[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | Dimensional_Portal.png[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | Objects.png[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | trap_animation.png[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | walls_floor.png[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | Arrow01(32x32).png[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | Arrow01(100x100).png[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | Arrow02(32x32).png[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | Arrow02(100x100).png[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | Arrow03(32x32).png[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | Arrow03(100x100).png[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | Human_Archer_Extras.png[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | Necromancer_Attack02_Effect.png[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | Necromancer_Sumon_Effect.png[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | Priest_Attack_effect.png[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | Priest_Heal_effect.png[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | Wizard_Attack01_Effect.png[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | Wizard_Attack02_Effect.png[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | 11.png[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | 12.png[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | 13.png[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | 14.png[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | 15.png[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | 16.png[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | 17.png[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | 18.png[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | 19.png[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | 21.png[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | 22.png[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | 23.png[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | 24.png[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | 25.png[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | 26.png[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | 27.png[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | 31.png[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | 32.png[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | 33.png[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | 34.png[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | 35.png[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | 36.png[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | 37.png[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | 38.png[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | 41.png[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | 42.png[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | 43.png[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | 45.png[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | 46.png[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | 103.png[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | 11.png[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | 12.png[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | 13.png[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | 14.png[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | 15.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | 16.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | 17.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | 18.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | 19.png[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | 21.png[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | 22.png[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | 23.png[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | 24.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | 25.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | 26.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | 27.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | 31.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | 32.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | 33.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | 34.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | 35.png[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | 36.png[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | 37.png[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | 38.png[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | 41.png[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | 42.png[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | 43.png[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | 45.png[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | 46.png[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | 103.png[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | Dungeon.png[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | arrow.png[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | Human_Archer.png[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | Human_Knight.png[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | Soldier.png[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | Swordsman.png[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | HeartEmpty.png[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | HeartFull.png[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | HP label.png[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | ShieldEmpty.png[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | ShieldFull.png[39m[0m
+[  99% ] [90m[1m_update_scan_actions[22m | Action_panel.png[39m[0m
+[  99% ] [90m[1m_update_scan_actions[22m | Inventory.png[39m[0m
+[  99% ] [90m[1m_update_scan_actions[22m | pairwise_cases.csv[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (365 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   1% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   1% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   1% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   1% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   7% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   7% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   7% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   7% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  13% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  13% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  13% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  13% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  15% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  15% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  15% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  15% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  26% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  26% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  26% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  32% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  32% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  32% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  34% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  34% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  34% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  34% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  38% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  38% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  38% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  44% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  44% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  44% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  46% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  46% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  46% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  46% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  49% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  49% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  49% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  53% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  53% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  53% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  53% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  55% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  55% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  55% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  61% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  61% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  61% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  65% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  65% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  65% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  65% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  67% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  67% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  67% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  73% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  73% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  73% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  74% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  74% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  74% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  74% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  79% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  79% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  79% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  84% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  84% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  84% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  84% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  86% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  86% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  86% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  86% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  92% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  92% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  92% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  92% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  94% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  94% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  94% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  97% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  97% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  97% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  98% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  98% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  98% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  98% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  99% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  99% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing pre-reimport operations...[39m[0m
+[   0% ] [90m[1mreimport[22m | pairwise_cases.csv[39m[0m
+[   0% ] [90m[1mreimport[22m | pairwise_cases.csv[39m[0m
+[   0% ] [90m[1mreimport[22m | Montserrat-Variable.ttf[39m[0m
+[   0% ] [90m[1mreimport[22m | GrenzeGotisch-Variable.ttf[39m[0m
+[   1% ] [90m[1mreimport[22m | GrenzeGotisch-SemiBold.ttf[39m[0m
+[   1% ] [90m[1mreimport[22m | GrenzeGotisch-Regular.ttf[39m[0m
+[   1% ] [90m[1mreimport[22m | GrenzeGotisch-ExtraBold.ttf[39m[0m
+[   1% ] [90m[1mreimport[22m | GrenzeGotisch-Bold.ttf[39m[0m
+[   2% ] [90m[1mreimport[22m | Grenze-Variable.ttf[39m[0m
+[   2% ] [90m[1mreimport[22m | Grenze-SemiBold.ttf[39m[0m
+[   2% ] [90m[1mreimport[22m | Grenze-Regular.ttf[39m[0m
+[   3% ] [90m[1mreimport[22m | Grenze-Medium.ttf[39m[0m
+[   3% ] [90m[1mreimport[22m | Grenze-Bold.ttf[39m[0m
+[   3% ] [90m[1mreimport[22m | BeVietnamPro-SemiBold.ttf[39m[0m
+[   3% ] [90m[1mreimport[22m | BeVietnamPro-Regular.ttf[39m[0m
+[   4% ] [90m[1mreimport[22m | BeVietnamPro-Medium.ttf[39m[0m
+[   4% ] [90m[1mreimport[22m | BeVietnamPro-ExtraBold.ttf[39m[0m
+[   4% ] [90m[1mreimport[22m | BeVietnamPro-Bold.ttf[39m[0m
+[   4% ] [90m[1mreimport[22m | pairwise_cases.csv[39m[0m
+[   5% ] [90m[1mreimport[22m | Montserrat-Variable.ttf[39m[0m
+[   5% ] [90m[1mreimport[22m | GrenzeGotisch-Variable.ttf[39m[0m
+[   5% ] [90m[1mreimport[22m | GrenzeGotisch-SemiBold.ttf[39m[0m
+[   6% ] [90m[1mreimport[22m | GrenzeGotisch-Regular.ttf[39m[0m
+[   6% ] [90m[1mreimport[22m | GrenzeGotisch-ExtraBold.ttf[39m[0m
+[   6% ] [90m[1mreimport[22m | GrenzeGotisch-Bold.ttf[39m[0m
+[   6% ] [90m[1mreimport[22m | Grenze-Variable.ttf[39m[0m
+[   7% ] [90m[1mreimport[22m | Grenze-SemiBold.ttf[39m[0m
+[   7% ] [90m[1mreimport[22m | Grenze-Regular.ttf[39m[0m
+[   7% ] [90m[1mreimport[22m | Grenze-Medium.ttf[39m[0m
+[   7% ] [90m[1mreimport[22m | Grenze-Bold.ttf[39m[0m
+[   8% ] [90m[1mreimport[22m | BeVietnamPro-SemiBold.ttf[39m[0m
+[   8% ] [90m[1mreimport[22m | BeVietnamPro-Regular.ttf[39m[0m
+[   8% ] [90m[1mreimport[22m | BeVietnamPro-Medium.ttf[39m[0m
+[   9% ] [90m[1mreimport[22m | BeVietnamPro-ExtraBold.ttf[39m[0m
+[   9% ] [90m[1mreimport[22m | BeVietnamPro-Bold.ttf[39m[0m
+[   9% ] [90m[1mreimport[22m | Alegreya-Variable.ttf[39m[0m
+[   9% ] [90m[1mreimport[22m | stance.png[39m[0m
+[  10% ] [90m[1mreimport[22m | special.png[39m[0m
+[  10% ] [90m[1mreimport[22m | shift+right+click.png[39m[0m
+[  10% ] [90m[1mreimport[22m | shift+left+click.png[39m[0m
+[  10% ] [90m[1mreimport[22m | doors_lever_chest_animation.png[39m[0m
+[  11% ] [90m[1mreimport[22m | cobweb_corner_large.png[39m[0m
+[  11% ] [90m[1mreimport[22m | broken_pillar.png[39m[0m
+[  11% ] [90m[1mreimport[22m | sword28.png[39m[0m
+[  12% ] [90m[1mreimport[22m | sword24.png[39m[0m
+[  12% ] [90m[1mreimport[22m | sword14.png[39m[0m
+[  12% ] [90m[1mreimport[22m | sword6.png[39m[0m
+[  12% ] [90m[1mreimport[22m | sword2.png[39m[0m
+[  13% ] [90m[1mreimport[22m | sword1.png[39m[0m
+[  13% ] [90m[1mreimport[22m | red_health_potion.png[39m[0m
+[  13% ] [90m[1mreimport[22m | purple_mystery_potion.png[39m[0m
+[  13% ] [90m[1mreimport[22m | Item__59.png[39m[0m
+[  14% ] [90m[1mreimport[22m | Item__58.png[39m[0m
+[  14% ] [90m[1mreimport[22m | Item__57.png[39m[0m
+[  14% ] [90m[1mreimport[22m | Item__52.png[39m[0m
+[  15% ] [90m[1mreimport[22m | Item__44.png[39m[0m
+[  15% ] [90m[1mreimport[22m | Item_44.png[39m[0m
+[  15% ] [90m[1mreimport[22m | Item_43.png[39m[0m
+[  15% ] [90m[1mreimport[22m | Item_42.png[39m[0m
+[  16% ] [90m[1mreimport[22m | Item_39.png[39m[0m
+[  16% ] [90m[1mreimport[22m | Item_38.png[39m[0m
+[  16% ] [90m[1mreimport[22m | Item_37.png[39m[0m
+[  16% ] [90m[1mreimport[22m | green_poison_potion.png[39m[0m
+[  17% ] [90m[1mreimport[22m | blue_mana_potion.png[39m[0m
+[  17% ] [90m[1mreimport[22m | Werewolf_Idle.png[39m[0m
+[  17% ] [90m[1mreimport[22m | Werewolf_Hurt.png[39m[0m
+[  18% ] [90m[1mreimport[22m | Werewolf_Death.png[39m[0m
+[  18% ] [90m[1mreimport[22m | Werewolf_Attack02.png[39m[0m
+[  18% ] [90m[1mreimport[22m | Werewolf_Attack01.png[39m[0m
+[  18% ] [90m[1mreimport[22m | Werewolf.png[39m[0m
+[  19% ] [90m[1mreimport[22m | enemies-vampire_take_damage.png[39m[0m
+[  19% ] [90m[1mreimport[22m | enemies-vampire_movement.png[39m[0m
+[  19% ] [90m[1mreimport[22m | enemies-vampire_idle.png[39m[0m
+[  19% ] [90m[1mreimport[22m | enemies-vampire_death.png[39m[0m
+[  20% ] [90m[1mreimport[22m | enemies-vampire_attack.png[39m[0m
+[  20% ] [90m[1mreimport[22m | Soldier_Attack03.png[39m[0m
+[  20% ] [90m[1mreimport[22m | Soldier.png[39m[0m
+[  21% ] [90m[1mreimport[22m | skeleton_king_slam.png[39m[0m
+[  21% ] [90m[1mreimport[22m | skeleton_king_idle_enraged.png[39m[0m
+[  21% ] [90m[1mreimport[22m | skeleton_king_idle.png[39m[0m
+[  21% ] [90m[1mreimport[22m | skeleton_king_hit.png[39m[0m
+[  22% ] [90m[1mreimport[22m | skeleton_king_enrage.png[39m[0m
+[  22% ] [90m[1mreimport[22m | skeleton_king_death.png[39m[0m
+[  22% ] [90m[1mreimport[22m | skeleton_king_crystal.png[39m[0m
+[  22% ] [90m[1mreimport[22m | skeleton_king_cast.png[39m[0m
+[  23% ] [90m[1mreimport[22m | Skeleton Archer_Walk.png[39m[0m
+[  23% ] [90m[1mreimport[22m | run.png[39m[0m
+[  23% ] [90m[1mreimport[22m | right-click.png[39m[0m
+[  24% ] [90m[1mreimport[22m | result-5.png[39m[0m
+[  24% ] [90m[1mreimport[22m | result-4.png[39m[0m
+[  24% ] [90m[1mreimport[22m | result-3.png[39m[0m
+[  24% ] [90m[1mreimport[22m | result-3-creature-part-2.png[39m[0m
+[  25% ] [90m[1mreimport[22m | result-3-creature-part-1.png[39m[0m
+[  25% ] [90m[1mreimport[22m | result-2.png[39m[0m
+[  25% ] [90m[1mreimport[22m | result-1.png[39m[0m
+[  25% ] [90m[1mreimport[22m | left-click.png[39m[0m
+[  26% ] [90m[1mreimport[22m | intro.png[39m[0m
+[  26% ] [90m[1mreimport[22m | icon.png[39m[0m
+[  26% ] [90m[1mreimport[22m | hold&release-left-click.png[39m[0m
+[  27% ] [90m[1mreimport[22m | guard.png[39m[0m
+[  27% ] [90m[1mreimport[22m | death.png[39m[0m
+[  27% ] [90m[1mreimport[22m | Werewolf_Walk.png[39m[0m
+[  27% ] [90m[1mreimport[22m | Werewolf_Idle.png[39m[0m
+[  28% ] [90m[1mreimport[22m | Werewolf_Hurt.png[39m[0m
+[  28% ] [90m[1mreimport[22m | Werewolf_Death.png[39m[0m
+[  28% ] [90m[1mreimport[22m | Werewolf_Attack02.png[39m[0m
+[  28% ] [90m[1mreimport[22m | Werewolf_Attack01.png[39m[0m
+[  29% ] [90m[1mreimport[22m | Werewolf.png[39m[0m
+[  29% ] [90m[1mreimport[22m | Werewolf_Walk.png[39m[0m
+[  29% ] [90m[1mreimport[22m | 24.png[39m[0m
+[  30% ] [90m[1mreimport[22m | 23.png[39m[0m
+[  30% ] [90m[1mreimport[22m | 22.png[39m[0m
+[  30% ] [90m[1mreimport[22m | 21.png[39m[0m
+[  30% ] [90m[1mreimport[22m | 19.png[39m[0m
+[  31% ] [90m[1mreimport[22m | 18.png[39m[0m
+[  31% ] [90m[1mreimport[22m | 17.png[39m[0m
+[  31% ] [90m[1mreimport[22m | 16.png[39m[0m
+[  31% ] [90m[1mreimport[22m | 15.png[39m[0m
+[  32% ] [90m[1mreimport[22m | 14.png[39m[0m
+[  32% ] [90m[1mreimport[22m | 13.png[39m[0m
+[  32% ] [90m[1mreimport[22m | 12.png[39m[0m
+[  33% ] [90m[1mreimport[22m | 11.png[39m[0m
+[  33% ] [90m[1mreimport[22m | 103.png[39m[0m
+[  33% ] [90m[1mreimport[22m | 46.png[39m[0m
+[  33% ] [90m[1mreimport[22m | 45.png[39m[0m
+[  34% ] [90m[1mreimport[22m | 43.png[39m[0m
+[  34% ] [90m[1mreimport[22m | 42.png[39m[0m
+[  34% ] [90m[1mreimport[22m | 41.png[39m[0m
+[  34% ] [90m[1mreimport[22m | 38.png[39m[0m
+[  35% ] [90m[1mreimport[22m | 37.png[39m[0m
+[  35% ] [90m[1mreimport[22m | 36.png[39m[0m
+[  35% ] [90m[1mreimport[22m | Swordsman.png[39m[0m
+[  36% ] [90m[1mreimport[22m | Soldier.png[39m[0m
+[  36% ] [90m[1mreimport[22m | Human_Knight.png[39m[0m
+[  36% ] [90m[1mreimport[22m | Human_Archer.png[39m[0m
+[  36% ] [90m[1mreimport[22m | arrow.png[39m[0m
+[  37% ] [90m[1mreimport[22m | Dungeon.png[39m[0m
+[  37% ] [90m[1mreimport[22m | 103.png[39m[0m
+[  37% ] [90m[1mreimport[22m | 46.png[39m[0m
+[  37% ] [90m[1mreimport[22m | 45.png[39m[0m
+[  38% ] [90m[1mreimport[22m | 43.png[39m[0m
+[  38% ] [90m[1mreimport[22m | 42.png[39m[0m
+[  38% ] [90m[1mreimport[22m | 41.png[39m[0m
+[  39% ] [90m[1mreimport[22m | 38.png[39m[0m
+[  39% ] [90m[1mreimport[22m | 37.png[39m[0m
+[  39% ] [90m[1mreimport[22m | 36.png[39m[0m
+[  39% ] [90m[1mreimport[22m | 35.png[39m[0m
+[  40% ] [90m[1mreimport[22m | 34.png[39m[0m
+[  40% ] [90m[1mreimport[22m | 33.png[39m[0m
+[  40% ] [90m[1mreimport[22m | 32.png[39m[0m
+[  40% ] [90m[1mreimport[22m | 31.png[39m[0m
+[  41% ] [90m[1mreimport[22m | 27.png[39m[0m
+[  41% ] [90m[1mreimport[22m | 26.png[39m[0m
+[  41% ] [90m[1mreimport[22m | 25.png[39m[0m
+[  42% ] [90m[1mreimport[22m | Priest_Heal_effect.png[39m[0m
+[  42% ] [90m[1mreimport[22m | Priest_Attack_effect.png[39m[0m
+[  42% ] [90m[1mreimport[22m | Necromancer_Sumon_Effect.png[39m[0m
+[  42% ] [90m[1mreimport[22m | Necromancer_Attack02_Effect.png[39m[0m
+[  43% ] [90m[1mreimport[22m | Arrow03(100x100).png[39m[0m
+[  43% ] [90m[1mreimport[22m | Arrow03(32x32).png[39m[0m
+[  43% ] [90m[1mreimport[22m | Arrow02(100x100).png[39m[0m
+[  43% ] [90m[1mreimport[22m | Arrow01(100x100).png[39m[0m
+[  44% ] [90m[1mreimport[22m | Arrow01(32x32).png[39m[0m
+[  44% ] [90m[1mreimport[22m | walls_floor.png[39m[0m
+[  44% ] [90m[1mreimport[22m | trap_animation.png[39m[0m
+[  45% ] [90m[1mreimport[22m | Objects.png[39m[0m
+[  45% ] [90m[1mreimport[22m | wall_crack_minor.png[39m[0m
+[  45% ] [90m[1mreimport[22m | wall_crack_major.png[39m[0m
+[  45% ] [90m[1mreimport[22m | skeleton_shattered.png[39m[0m
+[  46% ] [90m[1mreimport[22m | skeleton_ribcage_skull.png[39m[0m
+[  46% ] [90m[1mreimport[22m | skeleton_fallen_adventurer.png[39m[0m
+[  46% ] [90m[1mreimport[22m | skeleton_bone_pile.png[39m[0m
+[  46% ] [90m[1mreimport[22m | iron_chains_wall.png[39m[0m
+[  47% ] [90m[1mreimport[22m | debris_stone_rubble.png[39m[0m
+[  47% ] [90m[1mreimport[22m | debris_iron_scrap.png[39m[0m
+[  47% ] [90m[1mreimport[22m | cobweb_wall_hanging.png[39m[0m
+[  48% ] [90m[1mreimport[22m | cobweb_corner_small.png[39m[0m
+[  48% ] [90m[1mreimport[22m | 35.png[39m[0m
+[  48% ] [90m[1mreimport[22m | 34.png[39m[0m
+[  48% ] [90m[1mreimport[22m | 33.png[39m[0m
+[  49% ] [90m[1mreimport[22m | 32.png[39m[0m
+[  49% ] [90m[1mreimport[22m | 31.png[39m[0m
+[  49% ] [90m[1mreimport[22m | 27.png[39m[0m
+[  50% ] [90m[1mreimport[22m | 26.png[39m[0m
+[  50% ] [90m[1mreimport[22m | 25.png[39m[0m
+[  50% ] [90m[1mreimport[22m | 24.png[39m[0m
+[  50% ] [90m[1mreimport[22m | 23.png[39m[0m
+[  51% ] [90m[1mreimport[22m | 22.png[39m[0m
+[  51% ] [90m[1mreimport[22m | 21.png[39m[0m
+[  51% ] [90m[1mreimport[22m | 19.png[39m[0m
+[  51% ] [90m[1mreimport[22m | 18.png[39m[0m
+[  52% ] [90m[1mreimport[22m | 17.png[39m[0m
+[  52% ] [90m[1mreimport[22m | 16.png[39m[0m
+[  52% ] [90m[1mreimport[22m | 15.png[39m[0m
+[  53% ] [90m[1mreimport[22m | 14.png[39m[0m
+[  53% ] [90m[1mreimport[22m | 13.png[39m[0m
+[  53% ] [90m[1mreimport[22m | 12.png[39m[0m
+[  53% ] [90m[1mreimport[22m | 11.png[39m[0m
+[  54% ] [90m[1mreimport[22m | Wizard_Attack02_Effect.png[39m[0m
+[  54% ] [90m[1mreimport[22m | Wizard_Attack01_Effect.png[39m[0m
+[  54% ] [90m[1mreimport[22m | doraemon_korobashiya.png[39m[0m
+[  54% ] [90m[1mreimport[22m | doraemon_kick.png[39m[0m
+[  55% ] [90m[1mreimport[22m | doraemon_junk_hammer.png[39m[0m
+[  55% ] [90m[1mreimport[22m | doraemon_junk_fridge.png[39m[0m
+[  55% ] [90m[1mreimport[22m | doraemon_junk_doll.png[39m[0m
+[  56% ] [90m[1mreimport[22m | doraemon_junk_chair.png[39m[0m
+[  56% ] [90m[1mreimport[22m | doraemon_junk_ball.png[39m[0m
+[  56% ] [90m[1mreimport[22m | doraemon_idle.png[39m[0m
+[  56% ] [90m[1mreimport[22m | doraemon_hurt.png[39m[0m
+[  57% ] [90m[1mreimport[22m | doraemon_glove.png[39m[0m
+[  57% ] [90m[1mreimport[22m | doraemon_gian_walk.png[39m[0m
+[  57% ] [90m[1mreimport[22m | doraemon_gian_door.png[39m[0m
+[  57% ] [90m[1mreimport[22m | doraemon_friend_suneo.png[39m[0m
+[  58% ] [90m[1mreimport[22m | doraemon_friend_shizuka.png[39m[0m
+[  58% ] [90m[1mreimport[22m | doraemon_friend_nobita.png[39m[0m
+[  58% ] [90m[1mreimport[22m | doraemon_friend_gian.png[39m[0m
+[  59% ] [90m[1mreimport[22m | doraemon_friend_dorami.png[39m[0m
+[  59% ] [90m[1mreimport[22m | doraemon_fish_puffed.png[39m[0m
+[  59% ] [90m[1mreimport[22m | doraemon_fish.png[39m[0m
+[  59% ] [90m[1mreimport[22m | doraemon_explosion.png[39m[0m
+[  60% ] [90m[1mreimport[22m | doraemon_exit_suneo.png[39m[0m
+[  60% ] [90m[1mreimport[22m | doraemon_shock_bullet.png[39m[0m
+[  60% ] [90m[1mreimport[22m | doraemon_shockwave.png[39m[0m
+[  60% ] [90m[1mreimport[22m | doraemon_shockgun.png[39m[0m
+[  61% ] [90m[1mreimport[22m | doraemon_screw.png[39m[0m
+[  61% ] [90m[1mreimport[22m | doraemon_punch_fly.png[39m[0m
+[  61% ] [90m[1mreimport[22m | doraemon_puff.png[39m[0m
+[  62% ] [90m[1mreimport[22m | doraemon_portrait.png[39m[0m
+[  62% ] [90m[1mreimport[22m | doraemon_pond.png[39m[0m
+[  62% ] [90m[1mreimport[22m | doraemon_pocket.png[39m[0m
+[  62% ] [90m[1mreimport[22m | doraemon_pistol.png[39m[0m
+[  63% ] [90m[1mreimport[22m | doraemon_panic.png[39m[0m
+[  63% ] [90m[1mreimport[22m | doraemon_note_b.png[39m[0m
+[  63% ] [90m[1mreimport[22m | doraemon_note_a.png[39m[0m
+[  63% ] [90m[1mreimport[22m | doraemon_nobita.png[39m[0m
+[  64% ] [90m[1mreimport[22m | doraemon_missile.png[39m[0m
+[  64% ] [90m[1mreimport[22m | doraemon_minidora.png[39m[0m
+[  64% ] [90m[1mreimport[22m | doraemon_mantle_wave.png[39m[0m
+[  65% ] [90m[1mreimport[22m | doraemon_mantle_fx.png[39m[0m
+[  65% ] [90m[1mreimport[22m | doraemon_mantle.png[39m[0m
+[  65% ] [90m[1mreimport[22m | doraemon_magichand_head.png[39m[0m
+[  65% ] [90m[1mreimport[22m | doraemon_magichand_grip.png[39m[0m
+[  66% ] [90m[1mreimport[22m | doraemon_magichand.png[39m[0m
+[  66% ] [90m[1mreimport[22m | doraemon_bath_door.png[39m[0m
+[  66% ] [90m[1mreimport[22m | doraemon_attack_1.png[39m[0m
+[  66% ] [90m[1mreimport[22m | doraemon_ataru_bullet.png[39m[0m
+[  67% ] [90m[1mreimport[22m | doraemon_ataru.png[39m[0m
+[  67% ] [90m[1mreimport[22m | doraemon_air_shot.png[39m[0m
+[  67% ] [90m[1mreimport[22m | Bat_Hurt.png[39m[0m
+[  68% ] [90m[1mreimport[22m | Bat_Flying.png[39m[0m
+[  68% ] [90m[1mreimport[22m | Bat_Death.png[39m[0m
+[  68% ] [90m[1mreimport[22m | Bat_Attack02.png[39m[0m
+[  68% ] [90m[1mreimport[22m | Bat_Attack01.png[39m[0m
+[  69% ] [90m[1mreimport[22m | Bat.png[39m[0m
+[  69% ] [90m[1mreimport[22m | Armored Orc_Walk.png[39m[0m
+[  69% ] [90m[1mreimport[22m | Armored Orc_Idle.png[39m[0m
+[  69% ] [90m[1mreimport[22m | Armored Orc_Hurt.png[39m[0m
+[  70% ] [90m[1mreimport[22m | Armored Orc_Death.png[39m[0m
+[  70% ] [90m[1mreimport[22m | Armored Orc_Block.png[39m[0m
+[  70% ] [90m[1mreimport[22m | Armored Orc_Attack03.png[39m[0m
+[  71% ] [90m[1mreimport[22m | Armored Orc_Attack02.png[39m[0m
+[  71% ] [90m[1mreimport[22m | Armored Orc_Attack01.png[39m[0m
+[  71% ] [90m[1mreimport[22m | Arrow02(100x100).png[39m[0m
+[  71% ] [90m[1mreimport[22m | Arrow02(32x32).png[39m[0m
+[  72% ] [90m[1mreimport[22m | Archer.png[39m[0m
+[  72% ] [90m[1mreimport[22m | doraemon_exit_shizuka.png[39m[0m
+[  72% ] [90m[1mreimport[22m | doraemon_exit_nobita.png[39m[0m
+[  72% ] [90m[1mreimport[22m | doraemon_exit_gian.png[39m[0m
+[  73% ] [90m[1mreimport[22m | doraemon_exit_dorami.png[39m[0m
+[  73% ] [90m[1mreimport[22m | doraemon_eat.png[39m[0m
+[  73% ] [90m[1mreimport[22m | doraemon_dorayaki_s.png[39m[0m
+[  74% ] [90m[1mreimport[22m | doraemon_dorayaki_m.png[39m[0m
+[  74% ] [90m[1mreimport[22m | doraemon_dorayaki_l.png[39m[0m
+[  74% ] [90m[1mreimport[22m | doraemon_dorayaki_item.png[39m[0m
+[  74% ] [90m[1mreimport[22m | doraemon_dorami_balloon.png[39m[0m
+[  75% ] [90m[1mreimport[22m | doraemon_door_out.png[39m[0m
+[  75% ] [90m[1mreimport[22m | doraemon_door_in.png[39m[0m
+[  75% ] [90m[1mreimport[22m | doraemon_door.png[39m[0m
+[  75% ] [90m[1mreimport[22m | doraemon_death.png[39m[0m
+[  76% ] [90m[1mreimport[22m | doraemon_dango.png[39m[0m
+[  76% ] [90m[1mreimport[22m | doraemon_cloud.png[39m[0m
+[  76% ] [90m[1mreimport[22m | doraemon_cat.png[39m[0m
+[  77% ] [90m[1mreimport[22m | doraemon_bullet.png[39m[0m
+[  77% ] [90m[1mreimport[22m | doraemon_bubble_ball.png[39m[0m
+[  77% ] [90m[1mreimport[22m | doraemon_bubble.png[39m[0m
+[  77% ] [90m[1mreimport[22m | doraemon_bomb.png[39m[0m
+[  78% ] [90m[1mreimport[22m | doraemon_beam.png[39m[0m
+[  78% ] [90m[1mreimport[22m | Orc rider_Idle.png[39m[0m
+[  78% ] [90m[1mreimport[22m | Orc rider_Hurt.png[39m[0m
+[  78% ] [90m[1mreimport[22m | Orc rider_Death.png[39m[0m
+[  79% ] [90m[1mreimport[22m | Orc rider_Block.png[39m[0m
+[  79% ] [90m[1mreimport[22m | Orc rider_Attack03.png[39m[0m
+[  79% ] [90m[1mreimport[22m | Orc rider_Attack02.png[39m[0m
+[  80% ] [90m[1mreimport[22m | Orc rider_Attack01.png[39m[0m
+[  80% ] [90m[1mreimport[22m | Orc_Walk.png[39m[0m
+[  80% ] [90m[1mreimport[22m | Orc_Idle.png[39m[0m
+[  80% ] [90m[1mreimport[22m | Orc_Hurt.png[39m[0m
+[  81% ] [90m[1mreimport[22m | Orc_Death.png[39m[0m
+[  81% ] [90m[1mreimport[22m | Orc_Attack02.png[39m[0m
+[  81% ] [90m[1mreimport[22m | Orc_Attack01.png[39m[0m
+[  81% ] [90m[1mreimport[22m | Orc.png[39m[0m
+[  82% ] [90m[1mreimport[22m | Necromancer_Walk.png[39m[0m
+[  82% ] [90m[1mreimport[22m | Necromancer_Summon.png[39m[0m
+[  82% ] [90m[1mreimport[22m | Necromancer_Summon(With magic effects).png[39m[0m
+[  83% ] [90m[1mreimport[22m | Necromancer_Idle.png[39m[0m
+[  83% ] [90m[1mreimport[22m | Necromancer_Hurt.png[39m[0m
+[  83% ] [90m[1mreimport[22m | Necromancer_DEATH.png[39m[0m
+[  83% ] [90m[1mreimport[22m | Necromancer_Attack02.png[39m[0m
+[  84% ] [90m[1mreimport[22m | Necromancer_Attack01.png[39m[0m
+[  84% ] [90m[1mreimport[22m | Skeleton Archer_Summon.png[39m[0m
+[  84% ] [90m[1mreimport[22m | Skeleton Archer_Idle.png[39m[0m
+[  84% ] [90m[1mreimport[22m | Skeleton Archer_Hurt.png[39m[0m
+[  85% ] [90m[1mreimport[22m | Skeleton Archer_Death.png[39m[0m
+[  85% ] [90m[1mreimport[22m | Skeleton Archer_Attack.png[39m[0m
+[  85% ] [90m[1mreimport[22m | Skeleton Archer.png[39m[0m
+[  86% ] [90m[1mreimport[22m | Arrow03(100x100).png[39m[0m
+[  86% ] [90m[1mreimport[22m | Skeleton_Walk.png[39m[0m
+[  86% ] [90m[1mreimport[22m | Skeleton_Summon.png[39m[0m
+[  86% ] [90m[1mreimport[22m | Skeleton_Idle.png[39m[0m
+[  87% ] [90m[1mreimport[22m | Skeleton_Hurt.png[39m[0m
+[  87% ] [90m[1mreimport[22m | Skeleton_Death.png[39m[0m
+[  87% ] [90m[1mreimport[22m | Skeleton_Block.png[39m[0m
+[  87% ] [90m[1mreimport[22m | Skeleton_Attack02.png[39m[0m
+[  88% ] [90m[1mreimport[22m | Skeleton_Attack01.png[39m[0m
+[  88% ] [90m[1mreimport[22m | Skeleton.png[39m[0m
+[  88% ] [90m[1mreimport[22m | enemies-skeleton1_take_damage.png[39m[0m
+[  89% ] [90m[1mreimport[22m | enemies-skeleton1_movement.png[39m[0m
+[  89% ] [90m[1mreimport[22m | enemies-skeleton1_idle.png[39m[0m
+[  89% ] [90m[1mreimport[22m | enemies-skeleton1_death.png[39m[0m
+[  89% ] [90m[1mreimport[22m | enemies-skeleton1_attack.png[39m[0m
+[  90% ] [90m[1mreimport[22m | Orc rider_Walk.png[39m[0m
+[  90% ] [90m[1mreimport[22m | cat_girl_death.png[39m[0m
+[  90% ] [90m[1mreimport[22m | lt_sheet.png[39m[0m
+[  90% ] [90m[1mreimport[22m | lt_portrait.png[39m[0m
+[  91% ] [90m[1mreimport[22m | lt_bullets.png[39m[0m
+[  91% ] [90m[1mreimport[22m | Knight_Block.png[39m[0m
+[  91% ] [90m[1mreimport[22m | Knight_Attack03.png[39m[0m
+[  92% ] [90m[1mreimport[22m | Knight.png[39m[0m
+[  92% ] [90m[1mreimport[22m | Human_Knight.png[39m[0m
+[  92% ] [90m[1mreimport[22m | Human_Archer.png[39m[0m
+[  92% ] [90m[1mreimport[22m | doraemon_water.png[39m[0m
+[  93% ] [90m[1mreimport[22m | doraemon_walk.png[39m[0m
+[  93% ] [90m[1mreimport[22m | doraemon_uradora_tf.png[39m[0m
+[  93% ] [90m[1mreimport[22m | doraemon_uradora_kick.png[39m[0m
+[  93% ] [90m[1mreimport[22m | doraemon_trex.png[39m[0m
+[  94% ] [90m[1mreimport[22m | doraemon_throw.png[39m[0m
+[  94% ] [90m[1mreimport[22m | doraemon_suneo_ctrl.png[39m[0m
+[  94% ] [90m[1mreimport[22m | doraemon_summon.png[39m[0m
+[  95% ] [90m[1mreimport[22m | doraemon_stick.png[39m[0m
+[  95% ] [90m[1mreimport[22m | doraemon_spark.png[39m[0m
+[  95% ] [90m[1mreimport[22m | doraemon_sl_smoke.png[39m[0m
+[  95% ] [90m[1mreimport[22m | doraemon_sl_run.png[39m[0m
+[  96% ] [90m[1mreimport[22m | doraemon_skill.png[39m[0m
+[  96% ] [90m[1mreimport[22m | spirit_vanish.png[39m[0m
+[  96% ] [90m[1mreimport[22m | spirit_idle.png[39m[0m
+[  96% ] [90m[1mreimport[22m | spirit_hurt.png[39m[0m
+[  97% ] [90m[1mreimport[22m | spirit_bolt_hit.png[39m[0m
+[  97% ] [90m[1mreimport[22m | pairwise_cases.csv[39m[0m
+[  97% ] [90m[1mreimport[22m | Montserrat-Variable.ttf[39m[0m
+[  98% ] [90m[1mreimport[22m | GrenzeGotisch-Variable.ttf[39m[0m
+[  98% ] [90m[1mreimport[22m | GrenzeGotisch-SemiBold.ttf[39m[0m
+[  98% ] [90m[1mreimport[22m | GrenzeGotisch-Regular.ttf[39m[0m
+[  98% ] [90m[1mreimport[22m | GrenzeGotisch-ExtraBold.ttf[39m[0m
+[  99% ] [90m[1mreimport[22m | GrenzeGotisch-Bold.ttf[39m[0m
+[  99% ] [90m[1mreimport[22m | Grenze-Variable.ttf[39m[0m
+[  99% ] [90m[1mreimport[22m | Finalizing Asset Import...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (365 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing post-reimport operations...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+
+STDERR:
+WARNING: UID duplicate detected between res://tests/test_archer_combat_lifecycle.tscn and res://tests/test_archer_combat_lifecycle.gd.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1405)
+
+
+STEP: VT74-02_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\VT74-02-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/VT74-02/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: contract_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\contract-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/contract/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: replay-forward_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\replay-forward-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/replay-forward/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: replay-reverse_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\replay-reverse-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/replay-reverse/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: replay-shuffle_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\replay-shuffle-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/replay-shuffle/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: replay-bounds_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\replay-bounds-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/replay-bounds/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: replay-fifo_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\replay-fifo-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/replay-fifo/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: replay-manual_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\replay-manual-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/replay-manual/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: replay-clear_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\replay-clear-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/replay-clear/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: replay-idle_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\replay-idle-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/replay-idle/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: test_dungeon_generator_unit_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_dungeon_generator_unit-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/test_dungeon_generator_unit/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: test_dungeon_properties_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_dungeon_properties-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/test_dungeon_properties/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: test_perk_system_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_perk_system-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/test_perk_system/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: test_orc_battle_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_orc_battle-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/test_orc_battle/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: test_doraemon_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_doraemon-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/test_doraemon/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: test_yugi_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_yugi-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/test_yugi/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: test_miyabi_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_miyabi-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/test_miyabi/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: test_luong_tho_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_luong_tho-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/test_luong_tho/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: test_moba_hud_and_inventory_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_moba_hud_and_inventory-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/test_moba_hud_and_inventory/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: test_archer_combat_lifecycle_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_archer_combat_lifecycle-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/test_archer_combat_lifecycle/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: test_tactical_navigation_contract_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_tactical_navigation_contract-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/test_tactical_navigation_contract/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: test_tactical_base_enemy_integration_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_tactical_base_enemy_integration-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/test_tactical_base_enemy_integration/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: test_projectile_obstacles_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_projectile_obstacles-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/test_projectile_obstacles/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: test_skeleton_king_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_skeleton_king-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/test_skeleton_king/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: test_werewolf_probe
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\probe --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_werewolf-probe.log --script res://probe.gd
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_green/94472f1d456c40179d949e1c0e3c1c91/userdata/test_werewolf/roaming/Godot/app_userdata/Keep Fighting And Earning
+[PROBE_ISOLATION] VERIFIED sentinel MATCH
+
+STDERR:
+
+
+STEP: contract
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\contract.log res://tests/test_run_completion_contract.tscn
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PASS] CG-01 start issues 32 lowercase hex ID
+[PASS] CG-02 floor advance retains ID
+[PASS] CG-03 first completion publishes one result/signal
+[PASS] CG-04 VT74-03 core: frozen envelope/receipt/history/disk unchanged after 10 retries
+[PASS] CG-05 duplicate causes zero writer/signal/FIFO/frame side effects
+[PASS] CG-06 receipts do not expose mutable ledger references
+[PASS] CG-07 adapter reason and explicit payload conflict
+[PASS] CG-08 conflict does not mutate committed snapshot
+[PASS] CG-40 boundary cannot change mode fixed at start
+[PASS] CG-09 invalid ID format/type rejected
+[PASS] CG-10 syntactically valid unissued ID rejected
+[PASS] CG-11 invalid payload is not coerced or treated as conflict
+[PASS] CG-12 rejected requests do not write/mutate
+[PASS] CG-13 load restores IDs and does not resume active session
+[PASS] CG-14 last-recorded metadata round-trips
+[PASS] CG-15 stored fingerprint survives JSON numeric representation/reload
+[PASS] CG-16 history deletion commits through common writer
+[PASS] CG-17 deleted history is not resurrected by retry
+[PASS] CG-18 same seed/fixed date, separate IDs/results
+[PASS] CG-19 delete B does not erase A with same seed/date
+[PASS] CG-20 playback flag change preserves new session identity/mode
+[PASS] CG-21 128 receipts retain history15/replay10 caps
+[PASS] CG-22 at exactly 128 oldest receipt remains despite history pruning
+[PASS] CG-23 129 evicts exactly oldest; expired ID cannot recreate result
+[PASS] CG-24 deterministic temp-write failure does not report COMMITTED
+[PASS] CG-25 failure preserves committed RAM/disk/signals and pending lifecycle
+[PASS] CG-26 replace failure verified old destination, safe retry
+[PASS] CG-27 ambiguous read-back fail-closed before publish
+[PASS] CG-28 uncertain state blocks start and blind retry
+[PASS] CG-29 reconcile recognizes committed candidate and publishes once
+[PASS] CG-30 repeat reconciliation/retry cannot double publish
+[PASS] CG-31 legacy equal seed/date entries kept independently, no ID backfill
+[PASS] CG-32 ambiguous legacy copy cannot select a different entry
+[PASS] CG-33 legacy can save v2 without fabricating IDs
+[PASS] CG-34 invalid v2 missing ledger blocks bootstrap/start without overwriting save
+[PASS] CG-35 CharacterSelect pending guard preserves hero/run/scene
+[PASS] CG-36 replay callers reject pending before hero/scene change
+[PASS] CG-37 synchronous signal retry sees CLOSED and committed receipt
+[PASS] CG-38 clear-all publishes live/playback frame changes before signal
+[PASS] CG-39 independent identity generation preserves seeded combat RNG
+[CONTRACT RESULTS] 40 PASSED, 0 FAILED
+
+STDERR:
+
+
+STEP: replay-forward
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\replay-forward.log res://tests/test_replay_security.tscn
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+========================================================
+  RUNNING REPLAY CAPACITY & MEMORY PROTECTION TESTS
+========================================================
+
+[GROUP ORDER] ["bounds", "fifo", "manual", "clear", "idle"] shuffle seed=23001833
+--- Test Group 1: Security Bounds & Memory Constants ---
+  [PASS] MAX_SAVED_REPLAYS is strictly configured to 10
+  [PASS] MAX_DISK_REPLAY_FRAMES is strictly bounded (3600 frames)
+  [PASS] MAX_SAVE_FILE_BYTES is capped at 2MB anti-DoS limit
+
+--- Test Group 2: Maximum 10 Replays FIFO Eviction ---
+  [PASS] Exact 10 replays retained after 13 consecutive runs with replays (count=10)
+  [PASS] Newest run 0 retains active replay frames
+  [PASS] Newest run 1 retains active replay frames
+  [PASS] Newest run 2 retains active replay frames
+  [PASS] Newest run 3 retains active replay frames
+  [PASS] Newest run 4 retains active replay frames
+  [PASS] Newest run 5 retains active replay frames
+  [PASS] Newest run 6 retains active replay frames
+  [PASS] Newest run 7 retains active replay frames
+  [PASS] Newest run 8 retains active replay frames
+  [PASS] Newest run 9 retains active replay frames
+  [PASS] Older run 10 had frame data deallocated from memory (has_replay=false)
+  [PASS] Older run 11 had frame data deallocated from memory (has_replay=false)
+  [PASS] Older run 12 had frame data deallocated from memory (has_replay=false)
+
+--- Test Group 3: Manual Replay Deletion ---
+  [PASS] Run history exists
+  [PASS] Target entry initially has replay
+  [PASS] delete_replay returned true
+  [PASS] Target entry has_replay is now false
+  [PASS] Target entry frames array is completely emptied
+  [PASS] Active replays count decremented to 9
+
+--- Test Group 4: Clear All Replays ---
+  [PASS] get_saved_replays_count returns 0 after clear_all_replays
+  [PASS] All run entries have frames cleared
+  [PASS] All run entries have frames cleared
+  [PASS] All run entries have frames cleared
+
+--- Test Group 5: Idle Frame Compression & Anti-DoS ---
+  [PASS] 100 consecutive identical idle frames compressed into 1 frame (count=1)
+  [PASS] Active input frame is immediately recorded
+
+========================================================
+  TEST RESULTS: 29 PASSED, 0 FAILED
+========================================================
+
+
+STDERR:
+
+
+STEP: replay-reverse
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\replay-reverse.log res://tests/test_replay_security.tscn -- --reverse
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+========================================================
+  RUNNING REPLAY CAPACITY & MEMORY PROTECTION TESTS
+========================================================
+
+[GROUP ORDER] ["idle", "clear", "manual", "fifo", "bounds"] shuffle seed=23001833
+
+--- Test Group 5: Idle Frame Compression & Anti-DoS ---
+  [PASS] 100 consecutive identical idle frames compressed into 1 frame (count=1)
+  [PASS] Active input frame is immediately recorded
+
+--- Test Group 4: Clear All Replays ---
+  [PASS] get_saved_replays_count returns 0 after clear_all_replays
+  [PASS] All run entries have frames cleared
+  [PASS] All run entries have frames cleared
+  [PASS] All run entries have frames cleared
+
+--- Test Group 3: Manual Replay Deletion ---
+  [PASS] Run history exists
+  [PASS] Target entry initially has replay
+  [PASS] delete_replay returned true
+  [PASS] Target entry has_replay is now false
+  [PASS] Target entry frames array is completely emptied
+  [PASS] Active replays count decremented to 9
+
+--- Test Group 2: Maximum 10 Replays FIFO Eviction ---
+  [PASS] Exact 10 replays retained after 13 consecutive runs with replays (count=10)
+  [PASS] Newest run 0 retains active replay frames
+  [PASS] Newest run 1 retains active replay frames
+  [PASS] Newest run 2 retains active replay frames
+  [PASS] Newest run 3 retains active replay frames
+  [PASS] Newest run 4 retains active replay frames
+  [PASS] Newest run 5 retains active replay frames
+  [PASS] Newest run 6 retains active replay frames
+  [PASS] Newest run 7 retains active replay frames
+  [PASS] Newest run 8 retains active replay frames
+  [PASS] Newest run 9 retains active replay frames
+  [PASS] Older run 10 had frame data deallocated from memory (has_replay=false)
+  [PASS] Older run 11 had frame data deallocated from memory (has_replay=false)
+  [PASS] Older run 12 had frame data deallocated from memory (has_replay=false)
+--- Test Group 1: Security Bounds & Memory Constants ---
+  [PASS] MAX_SAVED_REPLAYS is strictly configured to 10
+  [PASS] MAX_DISK_REPLAY_FRAMES is strictly bounded (3600 frames)
+  [PASS] MAX_SAVE_FILE_BYTES is capped at 2MB anti-DoS limit
+
+========================================================
+  TEST RESULTS: 29 PASSED, 0 FAILED
+========================================================
+
+
+STDERR:
+
+
+STEP: replay-shuffle
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\replay-shuffle.log res://tests/test_replay_security.tscn -- --shuffle
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+========================================================
+  RUNNING REPLAY CAPACITY & MEMORY PROTECTION TESTS
+========================================================
+
+[GROUP ORDER] ["fifo", "bounds", "manual", "clear", "idle"] shuffle seed=23001833
+
+--- Test Group 2: Maximum 10 Replays FIFO Eviction ---
+  [PASS] Exact 10 replays retained after 13 consecutive runs with replays (count=10)
+  [PASS] Newest run 0 retains active replay frames
+  [PASS] Newest run 1 retains active replay frames
+  [PASS] Newest run 2 retains active replay frames
+  [PASS] Newest run 3 retains active replay frames
+  [PASS] Newest run 4 retains active replay frames
+  [PASS] Newest run 5 retains active replay frames
+  [PASS] Newest run 6 retains active replay frames
+  [PASS] Newest run 7 retains active replay frames
+  [PASS] Newest run 8 retains active replay frames
+  [PASS] Newest run 9 retains active replay frames
+  [PASS] Older run 10 had frame data deallocated from memory (has_replay=false)
+  [PASS] Older run 11 had frame data deallocated from memory (has_replay=false)
+  [PASS] Older run 12 had frame data deallocated from memory (has_replay=false)
+--- Test Group 1: Security Bounds & Memory Constants ---
+  [PASS] MAX_SAVED_REPLAYS is strictly configured to 10
+  [PASS] MAX_DISK_REPLAY_FRAMES is strictly bounded (3600 frames)
+  [PASS] MAX_SAVE_FILE_BYTES is capped at 2MB anti-DoS limit
+
+--- Test Group 3: Manual Replay Deletion ---
+  [PASS] Run history exists
+  [PASS] Target entry initially has replay
+  [PASS] delete_replay returned true
+  [PASS] Target entry has_replay is now false
+  [PASS] Target entry frames array is completely emptied
+  [PASS] Active replays count decremented to 9
+
+--- Test Group 4: Clear All Replays ---
+  [PASS] get_saved_replays_count returns 0 after clear_all_replays
+  [PASS] All run entries have frames cleared
+  [PASS] All run entries have frames cleared
+  [PASS] All run entries have frames cleared
+
+--- Test Group 5: Idle Frame Compression & Anti-DoS ---
+  [PASS] 100 consecutive identical idle frames compressed into 1 frame (count=1)
+  [PASS] Active input frame is immediately recorded
+
+========================================================
+  TEST RESULTS: 29 PASSED, 0 FAILED
+========================================================
+
+
+STDERR:
+
+
+STEP: replay-bounds
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\replay-bounds.log res://tests/test_replay_security.tscn -- --group=bounds
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+========================================================
+  RUNNING REPLAY CAPACITY & MEMORY PROTECTION TESTS
+========================================================
+
+[GROUP ORDER] ["bounds"] shuffle seed=23001833
+--- Test Group 1: Security Bounds & Memory Constants ---
+  [PASS] MAX_SAVED_REPLAYS is strictly configured to 10
+  [PASS] MAX_DISK_REPLAY_FRAMES is strictly bounded (3600 frames)
+  [PASS] MAX_SAVE_FILE_BYTES is capped at 2MB anti-DoS limit
+
+========================================================
+  TEST RESULTS: 3 PASSED, 0 FAILED
+========================================================
+
+
+STDERR:
+
+
+STEP: replay-fifo
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\replay-fifo.log res://tests/test_replay_security.tscn -- --group=fifo
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+========================================================
+  RUNNING REPLAY CAPACITY & MEMORY PROTECTION TESTS
+========================================================
+
+[GROUP ORDER] ["fifo"] shuffle seed=23001833
+
+--- Test Group 2: Maximum 10 Replays FIFO Eviction ---
+  [PASS] Exact 10 replays retained after 13 consecutive runs with replays (count=10)
+  [PASS] Newest run 0 retains active replay frames
+  [PASS] Newest run 1 retains active replay frames
+  [PASS] Newest run 2 retains active replay frames
+  [PASS] Newest run 3 retains active replay frames
+  [PASS] Newest run 4 retains active replay frames
+  [PASS] Newest run 5 retains active replay frames
+  [PASS] Newest run 6 retains active replay frames
+  [PASS] Newest run 7 retains active replay frames
+  [PASS] Newest run 8 retains active replay frames
+  [PASS] Newest run 9 retains active replay frames
+  [PASS] Older run 10 had frame data deallocated from memory (has_replay=false)
+  [PASS] Older run 11 had frame data deallocated from memory (has_replay=false)
+  [PASS] Older run 12 had frame data deallocated from memory (has_replay=false)
+
+========================================================
+  TEST RESULTS: 14 PASSED, 0 FAILED
+========================================================
+
+
+STDERR:
+
+
+STEP: replay-manual
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\replay-manual.log res://tests/test_replay_security.tscn -- --group=manual
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+========================================================
+  RUNNING REPLAY CAPACITY & MEMORY PROTECTION TESTS
+========================================================
+
+[GROUP ORDER] ["manual"] shuffle seed=23001833
+
+--- Test Group 3: Manual Replay Deletion ---
+  [PASS] Run history exists
+  [PASS] Target entry initially has replay
+  [PASS] delete_replay returned true
+  [PASS] Target entry has_replay is now false
+  [PASS] Target entry frames array is completely emptied
+  [PASS] Active replays count decremented to 9
+
+========================================================
+  TEST RESULTS: 6 PASSED, 0 FAILED
+========================================================
+
+
+STDERR:
+
+
+STEP: replay-clear
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\replay-clear.log res://tests/test_replay_security.tscn -- --group=clear
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+========================================================
+  RUNNING REPLAY CAPACITY & MEMORY PROTECTION TESTS
+========================================================
+
+[GROUP ORDER] ["clear"] shuffle seed=23001833
+
+--- Test Group 4: Clear All Replays ---
+  [PASS] get_saved_replays_count returns 0 after clear_all_replays
+  [PASS] All run entries have frames cleared
+  [PASS] All run entries have frames cleared
+  [PASS] All run entries have frames cleared
+
+========================================================
+  TEST RESULTS: 4 PASSED, 0 FAILED
+========================================================
+
+
+STDERR:
+
+
+STEP: replay-idle
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\replay-idle.log res://tests/test_replay_security.tscn -- --group=idle
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+========================================================
+  RUNNING REPLAY CAPACITY & MEMORY PROTECTION TESTS
+========================================================
+
+[GROUP ORDER] ["idle"] shuffle seed=23001833
+
+--- Test Group 5: Idle Frame Compression & Anti-DoS ---
+  [PASS] 100 consecutive identical idle frames compressed into 1 frame (count=1)
+  [PASS] Active input frame is immediately recorded
+
+========================================================
+  TEST RESULTS: 2 PASSED, 0 FAILED
+========================================================
+
+
+STDERR:
+
+
+STEP: test_dungeon_generator_unit
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_dungeon_generator_unit.log res://tests/test_dungeon_generator_unit.tscn
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+==================================================================
+[UNIT TESTS] PROCEDURAL DUNGEON GENERATOR & SECURITY
+==================================================================
+  [PASS] UT-01a: Room count matches num_rooms (16) - generated=16
+  [PASS] UT-01b: All room dimensions within [room_min_size, room_max_size] ([16, 25]) 
+  [PASS] UT-02a: Room 0 is START room and unique - start_cnt=1
+  [PASS] UT-02b: Exactly 1 BOSS room generated - boss_cnt=1
+  [PASS] UT-02c: Treasure room count in [2, 3] - treasure_cnt=3, combat_cnt=11
+  [PASS] UT-03: Graph is a valid grid spanning tree (E = V - 1 = 19, unit grid edges) 
+  [PASS] UT-04: Boss room placed at maximum BFS shortest-path distance from START - boss_pos=(2, 1), boss_dist=3, max_dist=3
+  [PASS] UT-05: Spike traps placed only on clean FLOOR_COORD tiles and free of decorations - trap_count=52
+  [PASS] UT-06: All planned enemies in COMBAT rooms lie on valid walkable floor cells - total_enemies=59
+  [PASS] UT-07: Floor 1 and Floor 2 derive distinct deterministic layouts from the same base seed 
+  [PASS] UT-08a: Security seed sanitization blocks XSS/traversal/SQLi chars and enforces max length <= 32 - sanitized='scriptalert1scriptetcpasswdDROP_' (len=32)
+  [PASS] UT-08b: Security replay frame validator filters non-dict entries, NaN/INF floats, and out-of-bounds slots 
+  [PASS] UT-09: All Soul Knight UI scenes (MainMenu, CharacterSelect, GameUI, Pause, GameOver) & UITheme AtlasTextures instantiate cleanly 
+[BOSS] Tầng 1 - Boss: Necromancer xuất hiện!
+  [PASS] UT-10a: Z-Index hierarchy Floor(-1) < Doors(0) < Player(2) ensures closed doors are visible on floor without covering actors 
+  [PASS] UT-10b: Minimap tracks exact player room & continuous grid coordinates across rooms/corridors - room=1, grid=(0.01, 1.01) vs target=(0, 1)
+  [PASS] UT-10c: DungeonAtmosphere mounts all torches strictly on wall tiles (0 on floor) + wisps & AudioManager tracks - wall_torches=64
+[BOSS] Tầng 1 - Boss: Necromancer xuất hiện!
+  [PASS] UT-11: Line-of-Sight blocks attacks through walls/doors & RoomManager rejects corridor false-locks (Seed: SEED-Q244GL_2) 
+  [PASS] UT-12: Archer (Miya) shoots flying arrows properly & continuous damage never stun-locks player movement 
+  [PASS] UT-13: Centralized BalanceConfig applies Archer (Miya) nerf, dynamic unit buff/nerf & Lord of the Rings lore 
+  [PASS] UT-14: Variant metadata matches room indices and COMBAT/noncombat types - seed="ALOALO1234" rooms=16 floor=1 sizes=16..25 variants=true 
+  [PASS] UT-15: Actual separate 2x2 pillars match metadata and variant limits - seed="BUG_PILLAR_SPAWN_42" rooms=32 floor=3 sizes=16..25 variants=true 
+  [PASS] UT-16: Regeneration resets metadata/cache across seeds, floors, room counts and mode changes 
+  [PASS] UT-17: Fully protected COVER_ROOM deterministically falls back to an empty OPEN_ARENA 
+  [PASS] UT-18: One-pillar-only COVER_ROOM removes the partial layout and updates metadata 
+  [PASS] UT-19: Disabled variants match Commit 1 geometry/traps/spawns/all tile layers/RNG - 27 independent baseline cases (d83caa1)
+  [PASS] UT-20: Variant choice, pillars and decoration phase preserve the main RNG and planned traps - seed="RNG_ISOLATION" rooms=16 floor=3 sizes=16..25 variants=true 
+  [PASS] UT-21a: Collision path checks reject an isolated pocket without relying on metadata - before= after=room=1 floor is disconnected inside the room
+  [PASS] UT-21b: Actual 32x32 decoration polygon blocks neighboring cells with no TileMap anchor - seed="COLLISION_FOOTPRINT" rooms=8 floor=1 sizes=16..25 variants=true
+------------------------------------------------------------------
+[SUMMARY] UNIT TESTS: 28 PASSED | 0 FAILED
+==================================================================
+
+
+STDERR:
+
+
+STEP: test_dungeon_properties
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_dungeon_properties.log res://tests/test_dungeon_properties.tscn
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+==================================================================
+[PROPERTY TESTS] RUNNING 100 SEEDS ACROSS 5 INVARIANTS
+==================================================================
+  [PASS] PROP-01 [Seed Determinism: generate(s) == generate(s)] — Verified 100/100 seeds identical
+  [PASS] PROP-02 [Graph Connectivity: all rooms reachable from START] — Verified 100/100 seeds connected
+  [PASS] PROP-03 [Grid Tile Flood-Fill Walkability across all rooms] — Verified 100/100 seeds walkable on TileMap
+  [PASS] PROP-04 [Boss Room Optimality: dist(START, BOSS) == max_v dist(START, v)] — Verified 100/100 seeds optimal
+  [PASS] PROP-05 [Safe Spawn Invariant: 0 entities/centers overlap obstacles/traps] — Verified 100/100 seeds collision-free
+[VARIANT PROPERTIES] 100 seeds distributed over 8/16/32 rooms x floors 1/2/3
+[VARIANT PROGRESS] 20/100 seeds
+[VARIANT PROGRESS] 40/100 seeds
+[VARIANT PROGRESS] 60/100 seeds
+[VARIANT PROGRESS] 80/100 seeds
+[VARIANT PROGRESS] 100/100 seeds
+  [PASS] VAR-01 [Variant assignment and metadata indexing] — 100 seeds / 9 configurations
+  [PASS] VAR-02 [Actual pillar footprints/counts and OPEN/COVER limits] — 100 seeds / 9 configurations
+  [PASS] VAR-03 [Reproducible variants, pillars, all tiles, traps, enemy spawns and RNG] — 100 seeds / 9 configurations
+  [PASS] VAR-04 [Actual collision, connected rooms, entrances and reachable safe spawns] — 100 seeds / 9 configurations
+  [PASS] VAR-05 [Both OPEN_ARENA and COVER_ROOM observed; all nine configurations covered] — 100 seeds / 9 configurations observed variants=[0, 2, 1]
+  [PASS] VAR-06 [Clean boss rooms and fixed Skeleton King arena on floor 3] — 100 seeds / 9 configurations
+------------------------------------------------------------------
+[SUMMARY] PROPERTY TESTS: 11/11 PROPERTIES PASSED (original 100 seeds + 100 variant matrix cases)
+==================================================================
+
+
+STDERR:
+
+
+STEP: test_perk_system
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_perk_system.log res://tests/test_perk_system.tscn
+Exit code: 1
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+==================================================================
+  TEST SUITE: COMPLETE PERK SYSTEM VERIFICATION (STEPS 1 - 4)
+==================================================================
+
+[TEST 1] Testing PerkData Model & Modifiers...
+  [PASS] PerkData ID initialized
+  [PASS] PerkData Rarity Name
+  [PASS] PerkData Modifier speed_bonus
+  [PASS] PerkData Modifier default fallback
+
+[TEST 2] Testing PerkDatabase Catalog & Icons...
+  [PASS] PerkDatabase contains exactly 30 perks (Found: 30)
+  [PASS] All perk icon files exist on disk
+  [PASS] Catalog contains all 4 rarities
+
+[TEST 3] Testing Deterministic Perk Rolling...
+  [PASS] Roll returned exactly 3 perks
+  [PASS] Roll with identical seed and floor is 100% deterministic
+  [PASS] Different floor produces distinct roll combination
+
+[TEST 4] Testing Unique Perk Filtering...
+[PERK] Acquired: Gân Cốt Thiết Giáp (Thường (Common))
+  [PASS] Owned unique perk is not offered in subsequent rolls
+
+[TEST 5] Testing Applying Perks to Player...
+[PERK] Acquired: Gân Cốt Thiết Giáp (Thường (Common))
+  [PASS] Bonus HP applied (+1 HP -> 5)
+  [PASS] Bonus Armor applied (+1 Armor -> 3)
+[PERK] Acquired: Bộ Pháp Tật Phong (Thường (Common))
+  [PASS] Speed bonus applied (+15 -> 165)
+[PERK] Acquired: Lưỡi Kiếm Tôi Rèn (Thường (Common))
+  [PASS] Base damage applied (+1 -> 2)
+
+[TEST 6] Testing PerkManager Query Helpers...
+[PERK] Acquired: Lôi Thần Trừng Phạt (Huyền Thoại (Legendary))
+[PERK] Acquired: Bàn Thạch Hộ Thể (Sử Thi (Epic))
+[PERK] Acquired: Ý Chí Bất Diệt (Huyền Thoại (Legendary))
+[PERK] Acquired: Đồng Hồ Cát Cổ (Hiếm (Rare))
+  [PASS] has_lightning_on_hit() is true
+  [PASS] is_spike_immune() is true
+  [PASS] get_cooldown_reduction() == 0.25
+  [PASS] has_second_chance() is true
+[PERK] Second Chance (Immortal Will) consumed!
+  [PASS] Second chance consumed successfully
+  [PASS] manager.reset() cleared all perks
+
+[TEST 7] Testing Player Class Combat Hooks & Revive...
+  [PASS] Player initial total damage >= 1
+[PERK] Acquired: Lưỡi Kiếm Tôi Rèn (Thường (Common))
+  [FAIL] Player get_total_damage() increased by perk bonus - 
+[PERK] Acquired: Bàn Thạch Hộ Thể (Sử Thi (Epic))
+  [PASS] Player is_spike_immune() returns true
+[PERK] Acquired: Ý Chí Bất Diệt (Huyền Thoại (Legendary))
+[PERK] Second Chance (Immortal Will) consumed!
+  [PASS] Player survived fatal hit via Immortal Will
+  [PASS] Player HP restored to at least 50% upon revive
+[PERK] Acquired: Cuồng Chiến Đồ Đao (Huyền Thoại (Legendary))
+  [FAIL] Berserk Frenzy raw damage scales +15% per missing HP (Expected: %.2f, Got: %.2f) - 
+  [PASS] Movement speed is capped at max_speed_cap (260.0)
+
+[TEST 8] Testing Stochastic Damage Resolution (Way 1)...
+  [PASS] Integer damage 3.0 resolves exactly to 3
+  [PASS] Zero damage resolves to 0
+  [PASS] 2.5 damage resolves to either 2 or 3
+  [PASS] Stochastic average of 2.5 dmg across 1000 hits is ~ 2.5 (Observed: 2.498)
+
+[TEST 9] Testing PerkSelectionModal UI Component...
+  [PASS] PerkSelectionModal is visible when shown
+  [PASS] Modal generated 3 Perk Cards
+[PERK] Acquired: Gân Cốt Thiết Giáp (Thường (Common))
+  [PASS] Modal hidden after selection
+  [FAIL] Completion callback invoked upon perk selection - 
+  [PASS] Perk acquired into PerkManager
+
+------------------------------------------------------------------
+RESULT: 34/37 PASSED (3 FAILED)
+==================================================================
+
+STDERR:
+ERROR: String formatting error: unsupported format character.
+   at: validated_evaluate (core/variant/variant_op.h:770)
+   GDScript backtrace (most recent call first):
+       [0] test_character_combat_hooks_and_revive (res://tests/test_perk_system.gd:252)
+       [1] _ready (res://tests/test_perk_system.gd:49)
+
+
+STEP: test_orc_battle
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_orc_battle.log res://tests/test_orc_battle.tscn
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+--- TEST 1: DIRECTLY BELOW (35px) ---
+Distance: 35.0 px
+PASS! Orc chem trung sau 14 frames. Armor: 2/4
+
+--- TEST 2: DIAGONAL BELOW-RIGHT (35px) ---
+Distance: 34.9 px
+PASS! Orc chem trung sau 14 frames. Armor: 2/4
+
+--- TEST 3: DIAGONAL BELOW-LEFT (35px) ---
+Distance: 34.9 px
+PASS! Orc chem trung sau 14 frames. Armor: 2/4
+
+--- TEST 4: DIRECTLY RIGHT (35px) ---
+Distance: 35.0 px
+PASS! Orc chem trung sau 14 frames. Armor: 2/4
+
+--- TEST 5: DIRECTLY ABOVE (35px) ---
+Distance: 35.0 px
+PASS! Orc chem trung sau 14 frames. Armor: 2/4
+
+==================================================
+>>> TAT CA 5/5 TEST CASES DEU PASSED 100%! <<<
+==================================================
+
+STDERR:
+
+
+STEP: test_doraemon
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_doraemon.log res://tests/test_doraemon.tscn
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+=== DORAEMON TESTS ===
+  [PASS] DR-01: Doraemon is the 6th hero (index 5) in roster, scenes and balance data
+[BOSS] Tầng 1 - Boss: Necromancer xuất hiện!
+  [PASS] DR-02: 4D Pocket holds 10 pages / 20 gadgets, 6 friends and 10 supers
+  [PASS] DR-03: Every gadget / super pose animation and the pocket HUD are loaded
+  [PASS] DR-04: Mouse wheel / Z / X cycle the gadget pages (wraps around) - page=9
+  [PASS] DR-G air_cannon: Air Cannon hits enemies - damage=1
+  [PASS] DR-G door: Anywhere Door teleports
+  [PASS] DR-G kick: Kick hits enemies - damage=1
+  [PASS] DR-G glove: Champion Glove hits enemies - damage=4
+  [PASS] DR-G air_pistol: Air Pistol hits enemies - damage=6
+  [PASS] DR-G shock_gun: Shock Gun hits enemies - damage=3
+  [PASS] DR-G ataru_gun: Ataru Gun hits enemies - damage=4
+  [PASS] DR-G pencil_missile: Pencil Missile hits enemies - damage=6
+  [PASS] DR-G shockwave_pistol: Shock-wave Pistol hits enemies - damage=4
+  [PASS] DR-G bubble_pistol: Bubble Pistol hits enemies - damage=3
+  [PASS] DR-G thundercloud: Mini Thundercloud hits enemies - damage=3
+  [PASS] DR-G shock_stick: Shock Stick hits enemies - damage=6
+  [PASS] DR-G magic_hand: Magic Hand hits enemies - damage=2
+  [PASS] DR-G hustle_screw: Hustle Screw hits enemies - damage=6
+  [PASS] DR-G grenades: Grenades hits enemies - damage=20
+  [PASS] DR-G fishing_pond: Fishing Pond hits enemies - damage=8
+  [PASS] DR-G kibidango: Kibi-dango T-Rex hits enemies - damage=9
+  [PASS] DR-G minidora: Mini-Dora March hits enemies - damage=12
+  [PASS] DR-G korobashiya: Korobashiya (10 power) hits enemies - damage=3
+  [PASS] DR-G hirari_mantle: Hirari Mantle counters the hit with double damage
+  [PASS] DR-05: Korobashiya cannot be used without 10 power
+  [PASS] DR-F nobita: Nobita answers Q - damage=2
+  [PASS] DR-F gian: Gian answers Q - damage=2
+  [PASS] DR-F shizuka: Shizuka answers Q - damage=2
+  [PASS] DR-F dorami: Dorami answers Q - damage=2
+  [PASS] DR-F suneo: Suneo answers Q - damage=2
+  [PASS] DR-F cat: Come-come Cat answers Q - damage=1 thrown_behind=true
+  [PASS] DR-06: Friends rotate and wrap around
+  [PASS] DR-S uradoraman: Uradoraman - damage=19 power_spent=100
+  [PASS] DR-S sl_chimney: SL Chimney - damage=13 power_spent=100
+  [PASS] DR-S nobita_rush: Nobita's Air Pistol Rush - damage=14 power_spent=100
+  [PASS] DR-S friendship_controller: Friendship Controller - damage=25 power_spent=100
+  [PASS] DR-S shizuka_bath: Shizuka's Bath - damage=20 power_spent=100
+  [PASS] DR-S dorami_balloon: Dorami's Balloon - damage=32 power_spent=100
+  [PASS] DR-S gian_recital: Gian Recital (all bars) - damage=28 power_spent=300
+  [PASS] DR-S junk_barrage: "Nanika nai ka!" Junk (all bars) - damage=12 power_spent=300
+  [PASS] DR-S everyone_takecopter: Everyone Take-copter! - damage=10 power_spent=100
+  [PASS] DR-S dorayakin: Dorayakin (all bars) - damage=125 power_spent=300
+  [PASS] DR-07: Dorayakin grows with the power bars spent - [6, 25]
+  [PASS] DR-08: F eats a Dorayaki (+1 HP, +40 power)
+  [PASS] DR-09: Power gauge fills when landing hits and when hurt - 3 -> 13
+  [PASS] DR-10: Champion Glove hits 3 times and knocks the enemy back - hits=3 shoved=39px
+  [PASS] DR-11: Magic Hand reaches 110px with its own hand sprite, slaps once and trips the enemy - hits=1 tripped=true grip_pose=true
+  [PASS] DR-12: The hitbox turns with Doraemon (left / right)
+  [PASS] DR-13: Air Cannon is blocked by wooden crates and cannot hit enemies behind crates
+[SUMMARY] DORAEMON: 49 PASSED | 0 FAILED
+
+STDERR:
+
+
+STEP: test_yugi
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_yugi.log res://tests/test_yugi.tscn
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+YUGI animation left-click: 5
+YUGI animation right-click: 8
+YUGI animation hold&release-left-click: 3
+YUGI animation hold&release-right-click: 9
+YUGI animation shift+left+click: 3
+YUGI animation result-5: 22
+YUGI TESTS PASSED
+
+STDERR:
+
+
+STEP: test_miyabi
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_miyabi.log res://tests/test_miyabi.tscn
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+=== HOSHIMI MIYABI TESTS ===
+  [PASS] MY-01: Hoshimi Miyabi is the 7th hero (index 6) in roster, scenes and balance data
+[BOSS] Tầng 1 - Boss: Necromancer xuất hiện!
+  [PASS] MY-02: Every frost animation (frame counts from the JSON) and the ice spirit are loaded
+  [PASS] MY-03: Facing left flips the sprites and reverses the x offsets - spikes R=(49.30002, -14.0) L=(-49.30002, -14.0)
+  [PASS] MY-04: One click = frost_combo_1, hits on frame 2, only in front of her - front=1 behind=0
+  [PASS] MY-05: Three clicks = frost_combo_1 / 2 / 3 (1 + 1 + 2 damage), the 3rd lunges and freezes - damage=4 hits=3 frozen=true lunge=13px
+  [PASS] MY-06: Holding Left Click chains the 3-hit combo - hits=3
+  [PASS] MY-07: A late click restarts the combo at swing 1 - step=0
+  [PASS] MY-08: Shift dash slash travels ~72px, cuts every enemy on the path (2x) and is untouchable - dash=77px hits=2/2/0
+  [PASS] MY-09: The dash follows the movement keys (dashes up while holding W) - dy=-77
+  [PASS] MY-10: Tapping Right Click releases a small Frost Wave (1x) - level=0 damage=1
+  [PASS] MY-11: Holding Right Click loops frost_charge; a full charge sends a big wave that pierces (3x) and freezes - level=2 damage=3/3 frozen=true
+  [PASS] MY-12: Frost Wave follows the aim (thrown left when aiming left)
+  [PASS] MY-13: Q Frost Bloom: ice spikes erupt in front of her (3x + freeze), then shatter (1x) - near=4 far=4 behind=0 off-line=0
+  [PASS] MY-14: Frost Bloom facing left mirrors the spikes
+  [PASS] MY-15: The ice spirit fires a bolt at the nearest enemy every 2s - shots=2 damage=2
+  [PASS] MY-16: Replays are deterministic and keep Miyabi's inputs (Shift / held clicks) - [[(389.143, 328.0), 6], [(389.143, 328.0), 6]]
+  [PASS] MY-17: The spirit flinches when Miyabi is hurt
+  [PASS] MY-18: The hitbox turns with Miyabi (left / right)
+[SUMMARY] MIYABI: 18 PASSED | 0 FAILED
+
+STDERR:
+
+
+STEP: test_luong_tho
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_luong_tho.log res://tests/test_luong_tho.tscn
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+=== LUONG THO TESTS ===
+  [PASS] LT-01: Lương Thơ is the 8th hero (index 7) in roster, scenes and balance data
+[BOSS] Tầng 1 - Boss: Necromancer xuất hiện!
+  [PASS] LT-02: Both forms (rows 0-8 / 10-18), the transformation and the bullets load with the JSON frame counts
+  [PASS] LT-03: Facing left flips the sprite around the pivot (24, 55), the barrels and the hitbox - barrel R=(23.25, -9.75) L=(-23.25, -9.75)
+  [PASS] LT-04: Idle keeps the weapons on her back; moving plays draw -> run; standing 2s puts them away - idle -> draw -> run -> ready -> idle
+  [PASS] LT-05: One click = Stab, hits on frame 4, reaches ~34px in front only - front=1 behind=0 far=0
+  [PASS] LT-06: Three clicks = Stab / Twin Swing (2 hits) / Ground Smash (2x + daze) - damage=5 hits=4 dazed=true
+  [PASS] LT-07: Holding Left Click chains Stab -> Twin Swing -> Ground Smash - hits=4
+  [PASS] LT-08: Ground Smash hits every enemy around the impact in front of her - 2/2/0
+  [PASS] LT-09: Right Click fires both barrels on frame 3 (2 rounds); a base round stops at the first enemy - near=2 far=0
+  [PASS] LT-10: Twin Barrels fire along the aim (left)
+  [PASS] LT-11: Q plays the transformation (untouchable) and switches to the white-haired form - form=upgraded q_cd=18.9 time=11.8
+  [PASS] LT-12: White form: Stab lands sooner for 2, rounds deal 2 each and pierce - stab=2 rounds=4/4
+  [PASS] LT-15: The white-haired form takes no damage; the base form does
+  [PASS] LT-13: When the white form wears off she transforms back (reverse animation)
+  [PASS] LT-14: Replays are deterministic and keep her inputs - [[(318.9749, 328.0), 5], [(318.9749, 328.0), 5]]
+[SUMMARY] LUONG THO: 15 PASSED | 0 FAILED
+
+STDERR:
+
+
+STEP: test_moba_hud_and_inventory
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_moba_hud_and_inventory.log res://tests/test_moba_hud_and_inventory.tscn
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+========================================================
+  RUNNING MOBA HUD, INVENTORY & ITEM DATABASE TESTS
+========================================================
+
+--- Test Group 1: MOBA HUD Progress Bars & Numeric Labels ---
+  [PASS] MOBA Health ProgressBar is initialized
+  [PASS] MOBA Health Numeric Label is initialized
+  [PASS] MOBA Armor ProgressBar is initialized
+  [PASS] MOBA Armor Numeric Label is initialized
+  [PASS] Hero Name Label is initialized
+  [PASS] Hero Damage Label is initialized
+  [PASS] HP bar value matches current_hp (14)
+  [PASS] HP bar max_value matches max_hp (16)
+  [PASS] HP label displays exact formatted text '14 / 16'
+  [PASS] Armor bar value matches current_armor (5)
+  [PASS] Armor bar max_value matches max_armor (5)
+  [PASS] Armor label displays exact formatted text '5 / 5'
+
+--- Test Group 2: Minecraft-Style Item Stacking (Potions) ---
+  [PASS] Adding 8 potions succeeded
+  [PASS] Inventory maintains fixed 16 slots invariant
+  [PASS] 8 potions occupy exactly 1 inventory slot (Minecraft-style)
+  [PASS] Slot 0 stack_count equals 8
+  [PASS] Adding 5 more potions succeeded
+  [PASS] Still occupies exactly 1 slot
+  [PASS] Slot 0 stack_count merged to 13
+  [PASS] Adding 5 more potions (exceeding max_stack 16) succeeded
+  [PASS] Inventory size remains fixed at 16
+  [PASS] Overflow created exactly 2nd slot
+  [PASS] First slot capped at max_stack 16
+  [PASS] Second slot contains remainder 2
+
+--- Test Group 3: Consuming Potions from Stack ---
+  [PASS] Slot is not removed after consuming 1 potion from stack
+  [PASS] stack_count decremented from 3 to 2
+  [PASS] Inventory size remains fixed at 16
+  [PASS] Slot is cleanly cleared when stack reaches 0
+  [PASS] Slot 0 is now null without shifting array indices
+
+--- Test Group 4: Item Drop / Removal Mechanism ---
+  [PASS] drop_item returned true
+  [PASS] Slot still remains for remaining stack
+  [PASS] Stack count reduced from 4 to 3
+  [PASS] drop_item all returned true
+  [PASS] Inventory size remains fixed at 16
+  [PASS] Slot removed after dropping all items
+  [PASS] Slot 0 is now null
+
+--- Test Group 5: RPG Equipment Helmet & Armor & Weapon ---
+[EQUIP] Equipped HELMET: Iron Helm (+0 DMG, +2 Armor, +0 HP)
+  [PASS] Helmet equipped successfully
+  [PASS] Slot 0 became empty (null) without shifting other slots
+[EQUIP] Equipped ARMOR: Reinforced Steel Cuirass (+0 DMG, +4 Armor, +0 HP)
+  [PASS] Armor equipped successfully
+  [PASS] Total defense from Helm (2) + Armor (4) equals 6
+  [PASS] Slot 1 became empty (null)
+[EQUIP] Equipped WEAPON: Broadsword (+3 DMG, +0 Armor, +0 HP)
+  [PASS] Weapon equipped successfully
+  [PASS] Weapon damage equals 3
+  [PASS] Slot 2 became empty (null)
+
+--- Test Group 5B: Fixed 16 Slots & Anti-Shift Invariants ---
+  [PASS] Fresh inventory has exactly 16 slots
+  [PASS] All 16 slots are initially null
+  [PASS] Fresh inventory is not full
+  [PASS] Item A is at slot 0
+  [PASS] Item B is at slot 1
+  [PASS] swap_slots(1, 4) succeeded
+  [PASS] Slot 1 is now empty (null)
+  [PASS] Item B moved cleanly to slot 4
+  [PASS] Slot 0 is now empty (null) after consuming potion
+  [PASS] Inventory size remains strictly 16 (never shrank)
+  [PASS] Anti-Shift Invariant: Item at slot 4 did NOT shift!
+[EQUIP] Equipped WEAPON: Shadow Dagger (+5 DMG, +0 Armor, +0 HP)
+  [PASS] Equipped Shadow Dagger
+  [PASS] Slot 4 is now empty
+[EQUIP] Equipped WEAPON: Valyrian Greatsword (+9 DMG, +0 Armor, +0 HP)
+  [PASS] New weapon equipped
+  [PASS] Old weapon swapped back directly into slot 4
+
+--- Test Group 5C: Anti-Duplicate Item Pickup Protection ---
+  [PASS] All 16 slots are occupied
+  [PASS] Backpack has no empty slots left
+[INVENTORY] Backpack is full! Cannot add more Health Potion
+  [PASS] add_item returned false due to partial capacity
+  [PASS] Slot 15 stack filled to exactly max_stack 16 (took 2 potions)
+  [PASS] Floor item stack_count reduced strictly to remainder 3 (Anti-Duplicate Guard)
+  [PASS] Total item quantity strictly conserved (2 in bag + 3 on floor == 5)
+[INVENTORY] Backpack is full! Cannot add more Claymore
+  [PASS] Cannot add new item when backpack is 100% full
+  [PASS] Item stack_count remained 1 with 0 loss or duplication
+
+--- Test Group 5D: Polymorphic Equipment Dictionary & Encapsulated Tooltips ---
+  [PASS] Equipment is backed by a Dictionary
+  [PASS] Equipment dict has HELMET slot
+  [PASS] Equipment dict has ARMOR slot
+  [PASS] Equipment dict has WEAPON slot
+  [PASS] Tooltip includes formatted rarity tag and item name
+  [PASS] Tooltip includes Attack Power line
+  [PASS] Tooltip includes Attack Speed line
+  [PASS] Tooltip includes Mythic Effect line
+  [PASS] Tooltip includes description
+[EQUIP] Equipped WEAPON: Starforged Katana (+15 DMG, +0 Armor, +0 HP)
+  [PASS] Weapon slot is marked as equipped
+  [PASS] get_equipped_item(WEAPON) returns Starforged Katana
+  [PASS] Backward-compatible getter inv.equipped_weapon returns Starforged Katana
+  [PASS] get_weapon_damage() reflects dictionary lookup value 15
+  [PASS] get_attack_speed_bonus() reflects dictionary lookup value 0.25
+  [PASS] has_mythic_weapon() returns true
+  [PASS] Weapon slot is now unequipped
+  [PASS] Backward-compatible getter inv.equipped_weapon is null
+  [PASS] Weapon safely stored back into bag[0]
+
+--- Test Group 5E: Drag & Drop Slot Interaction Mechanics ---
+  [PASS] Empty slot produces null drag data
+  [PASS] Drag fixture starts an actual Viewport drag
+  [PASS] Slot with item generates valid drag dictionary
+  [PASS] Drag data type equals 'inventory_slot'
+  [PASS] Source slot_index is 0
+  [PASS] Drag data references the correct item
+  [PASS] Cannot drop item onto itself
+  [PASS] Can drop item into another bag slot
+  [PASS] Equipment slot rejects invalid item type (Weapon into Helmet slot)
+  [PASS] Equipment slot accepts matching item type (Helmet into Helmet slot)
+  [PASS] slot_dropped signal emitted successfully upon drop
+  [PASS] Drag fixture cleans up the Viewport drag
+
+--- Test Group 6: Item Count & Inverse Rarity Distribution ---
+  [PASS] Total catalog items equals 21: got 21
+  [PASS] Common tier has exactly 5 items (got 5)
+  [PASS] Rare tier has exactly 5 items (got 5)
+  [PASS] Heroic tier has exactly 4 items (got 4)
+  [PASS] Legendary tier has exactly 4 items (got 4)
+  [PASS] Mythic tier has exactly 3 items (got 3)
+  [PASS] Item count distribution is inverse to rarity: 5 >= 5 > 4 >= 4 > 3
+
+--- Test Group 7: Complete Sets (Helmet, Armor, Weapon) per Rarity ---
+  [PASS] Rarity [Common] has complete set: Helmet=true, Armor=true, Weapon=true
+  [PASS] Rarity [Rare] has complete set: Helmet=true, Armor=true, Weapon=true
+  [PASS] Rarity [Heroic] has complete set: Helmet=true, Armor=true, Weapon=true
+  [PASS] Rarity [Legendary] has complete set: Helmet=true, Armor=true, Weapon=true
+  [PASS] Rarity [Mythic] has complete set: Helmet=true, Armor=true, Weapon=true
+
+--- Test Group 8: Mythic Special Effects & Secondary Stats Verification ---
+  [PASS] Mythic weapon exists
+  [PASS] Mythic weapon has primary DMG = 12
+  [PASS] Mythic weapon secondary stat: Attack Speed = +35%
+  [PASS] Mythic weapon secondary stat: Physical Armor = +3
+  [PASS] Mythic weapon secondary stat: Max HP = +4
+  [PASS] Mythic weapon has special effect: Solar Ignite
+  [PASS] Mythic armor exists
+  [PASS] Mythic armor primary Armor = 10
+  [PASS] Mythic armor secondary stat: Max HP = +10
+  [PASS] Mythic armor secondary stat: Attack Damage = +2
+  [PASS] Mythic armor has special effect: Divine Retaliation
+  [PASS] Mythic helm exists
+  [PASS] Mythic helm primary Armor = 7
+  [PASS] Mythic helm secondary stat: Attack Damage = +3
+  [PASS] Mythic helm secondary stat: Max HP = +8
+  [PASS] Mythic helm has special effect: Celestial Smite
+
+--- Test Group 9: Diverse Potions & Minecraft Stacking ---
+  [PASS] Red potion heals 4 HP
+  [PASS] Green tonic fortifies 1 Max HP
+  [PASS] Purple draught grants 6 HP + 3 Max HP
+  [PASS] Blue phial grants 10 HP + 5 Max HP
+  [PASS] Potions are Minecraft-style stackable up to 16
+
+--- Test Group 10: Floor Drop Scaling & Boss Chest Guarantee ---
+  [PASS] Floor 1 regular drops produce 0 Mythic/Legendary in 500 rolls
+  [PASS] Floor 8 Boss Chests produce 0 Common items (Rare+ guarantee)
+  [PASS] Floor 8 Boss Chests produce high Mythic frequency (got 103 / 500)
+
+--- Test Group 11: Dual Boss Chests & Loot Logic ---
+  [PASS] Exactly 2 boss chests created
+  [PASS] Chest 1 is marked as boss chest
+  [PASS] Chest 2 is marked as boss chest
+  [PASS] Chest 1 left offset is accurate (-48, +8)
+  [PASS] Chest 2 right offset is accurate (+48, +8)
+  [PASS] Direct boss drop generated successfully
+  [PASS] Direct boss drop rarity is Rare or higher
+
+--- Test Group 12: Damage Number Pool & Floor Transition Safety ---
+  [PASS] GameUI belongs to group 'game_ui' (essential for next_level and combat events)
+  [PASS] Active damage labels capped at MAX_DAMAGE_LABELS (40) when 50 hits spawned
+  [PASS] Active labels remain valid instances during rapid reuse
+  [PASS] Labels receive generational metadata
+  [PASS] Labels receive generational counter to prevent zombie callback conflicts
+  [PASS] Active label has registered Tween metadata
+  [PASS] Active Tween is valid and running
+  [PASS] Old Tween was killed when label was reused during active playback
+  [PASS] Generation counter incremented upon reuse
+  [PASS] Label visibility turned off upon normal animation completion
+  [PASS] Finished label removed from active damage labels list
+  [PASS] Finished label safely returned to pool
+  [PASS] Completed label had damage_tween metadata cleanly removed
+  [PASS] Zombie callback with outdated generation ignored, preserving active state
+  [PASS] Labels active before level advance
+  [PASS] All active labels cleared after call_group('game_ui', 'reset_damage_number_pool')
+  [PASS] GameUI freed cleanly without leaking tweens or errors
+
+--- Test Group 13: Deterministic RNG Isolation (BaseEnemy & Replay Safety) ---
+  [PASS] Baseline global RNG sequence matched
+  [PASS] Enemy _ready() does NOT consume global RNG (RNG isolation preserved)
+
+========================================================
+  TEST RESULTS: 159 PASSED, 0 FAILED
+========================================================
+
+
+STDERR:
+
+
+STEP: test_archer_combat_lifecycle
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_archer_combat_lifecycle.log res://tests/test_archer_combat_lifecycle.tscn
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+========================================================
+  RUNNING SKELETON ARCHER COMBAT LIFECYCLE TESTS
+========================================================
+
+--- Test 1: Normal Attack Fires Arrow ---
+  [PASS] Archer enters attacking state upon attack()
+  [PASS] Attack availability locked during windup
+  [PASS] Exactly one arrow emitted when windup completes uninterrupted with valid LOS
+  [PASS] Archer can_attack restored after full cooldown
+--- Test 2: Windup Interrupted by Hurt Cancels Shot ---
+  [PASS] Archer marked as hurt after taking damage
+  [PASS] Attacking state cancelled when hurt
+  [PASS] No arrow emitted because windup was interrupted by hurt
+--- Test 3: Windup Interrupted by LOS Loss (Player Behind Wall) Cancels Shot ---
+  [PASS] No arrow emitted because LOS was lost before release
+--- Test 4: Windup Interrupted by Player Deletion Safe ---
+  [PASS] No arrow emitted when player is deleted during windup
+  [PASS] Archer remains valid without crashing on null player reference
+--- Test 5: Death During Windup Cancels Shot ---
+  [PASS] Archer marked dead after lethal damage
+  [PASS] No ghost arrow emitted after archer death
+
+========================================================
+  TEST RESULTS: 12 PASSED, 0 FAILED
+========================================================
+
+
+STDERR:
+
+
+STEP: test_tactical_navigation_contract
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_tactical_navigation_contract.log res://tests/test_tactical_navigation_contract.tscn
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PASS] Tactical policy does not calculate steering, move, or attack
+[PASS] Orc intent preserves seeded tactical flanking
+[PASS] Navigation receives the tactical direction and returns its own steering result
+[PASS] Navigation refresh never resets tactical state, hold duration, or decision scheduling
+[PASS] Missing navigation has a nonzero desired-direction fallback without a cache warmup
+[PASS] Tier 1 exposes approach independently of navigation
+[PASS] Tier 1 immediately invalidates approach steering on emergency retreat
+[PASS] Tier 1 changes navigation mode without forcing a tactical state change
+[PASS] Unchanged mode permits navigation reuse
+[PASS] A new strafe side invalidates the old direction
+[PASS] Collision invalidates navigation before its next scheduled refresh
+[PASS] Missing navigation retains basic collision strafe even at a high floor
+[PASS] Tier 3 exposes approach independently of navigation
+[PASS] Tier 3 immediately invalidates approach steering on emergency retreat
+[PASS] Tier 3 changes navigation mode without forcing a tactical state change
+[PASS] Unchanged mode permits navigation reuse
+[PASS] A new strafe side invalidates the old direction
+[PASS] Collision invalidates navigation before its next scheduled refresh
+[PASS] Missing navigation retains basic collision strafe even at a high floor
+[PASS] Tier 5 exposes approach independently of navigation
+[PASS] Tier 5 immediately invalidates approach steering on emergency retreat
+[PASS] Tier 5 changes navigation mode without forcing a tactical state change
+[PASS] Unchanged mode permits navigation reuse
+[PASS] A new strafe side invalidates the old direction
+[PASS] Collision invalidates navigation before its next scheduled refresh
+[PASS] Missing navigation retains basic collision strafe even at a high floor
+[PASS] Tier 7 exposes approach independently of navigation
+[PASS] Tier 7 immediately invalidates approach steering on emergency retreat
+[PASS] Tier 7 changes navigation mode without forcing a tactical state change
+[PASS] Unchanged mode permits navigation reuse
+[PASS] A new strafe side invalidates the old direction
+[PASS] Collision invalidates navigation before its next scheduled refresh
+[PASS] Missing navigation retains basic collision strafe even at a high floor
+[PASS] Target replacement invalidates navigation and observed prediction
+[PASS] Deactivation invalidates movement while preserving the tactical state
+[PASS] Target replacement invalidates navigation and observed prediction
+[PASS] Deactivation invalidates movement while preserving the tactical state
+[PASS] Reactivation immediately produces usable movement without cache initialization
+[PASS] Reactivation immediately produces usable movement without cache initialization
+[PASS] Observed motion produces positive prediction before reversal
+[PASS] Observed motion produces positive prediction before reversal
+[PASS] Reversed motion replaces the previous prediction at the next decision
+[PASS] Reversed motion replaces the previous prediction at the next decision
+[PASS] A stationary teleported target cannot leave prolonged stale prediction
+[PASS] A stationary teleported target cannot leave prolonged stale prediction
+[TRACE] Tactical navigation recovery hash: 1508124697
+[PASS] A visible in-range target permits a normal attack intent
+[PASS] An old visible intent/LOS cache cannot authorize an attack after a door closes
+[PASS] Spawning and evaluating twelve tactical enemies leaves global RNG unchanged
+[PASS] Navigation contract produces no runtime errors
+[SUMMARY] Tactical navigation contract: 49 passed, 0 failed; 0 runtime errors
+
+STDERR:
+
+
+STEP: test_tactical_base_enemy_integration
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_tactical_base_enemy_integration.log res://tests/test_tactical_base_enemy_integration.tscn
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 1
+[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 1
+[PASS] Queued target deletion immediately suspends tactical observations
+[PASS] Inherited lookup never retains a queued player
+[PASS] Queued target deletion immediately suspends tactical observations
+[PASS] Inherited lookup never retains a queued player
+[PASS] Inherited lookup clears a freed player when no replacement exists
+[PASS] Inherited lookup clears a freed player when no replacement exists
+[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 3
+[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 3
+[PASS] Queued target deletion immediately suspends tactical observations
+[PASS] Inherited lookup never retains a queued player
+[PASS] Queued target deletion immediately suspends tactical observations
+[PASS] Inherited lookup never retains a queued player
+[PASS] Inherited lookup clears a freed player when no replacement exists
+[PASS] Inherited lookup clears a freed player when no replacement exists
+[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 5
+[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 5
+[PASS] Queued target deletion immediately suspends tactical observations
+[PASS] Inherited lookup never retains a queued player
+[PASS] Queued target deletion immediately suspends tactical observations
+[PASS] Inherited lookup never retains a queued player
+[PASS] Inherited lookup clears a freed player when no replacement exists
+[PASS] Inherited lookup clears a freed player when no replacement exists
+[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 7
+[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 7
+[PASS] Queued target deletion immediately suspends tactical observations
+[PASS] Inherited lookup never retains a queued player
+[PASS] Queued target deletion immediately suspends tactical observations
+[PASS] Inherited lookup never retains a queued player
+[PASS] Inherited lookup clears a freed player when no replacement exists
+[PASS] Inherited lookup clears a freed player when no replacement exists
+[PASS] Cold navigation cache computes movement immediately
+[PASS] Emergency retreat refreshes cached direction without resetting the tactical state
+[PASS] Strafe never reuses the previous retreat vector
+[PASS] Twelve enemies use fewer than half the per-physics-tick steering calls
+[BUDGET] 12 enemies / 120 ticks: steering=263 LOS=2028
+[PASS] Windup fixture starts a real attack
+[PASS] Recovering from hurt before windup finishes cannot revive the cancelled shot
+[PASS] Hurt cancellation retains the normal cooldown completion
+[PASS] Windup fixture starts a real attack
+[PASS] Replacing a freed windup target cannot redirect an old attack to the new player
+[PASS] Windup fixture starts a real attack
+[PASS] Room reactivation cannot revive a windup cancelled while inactive
+[PASS] Windup fixture starts a real attack
+[PASS] A reattached enemy rejects the old coroutine even though it is inside the tree again
+[PASS] The new attack emits exactly one arrow after its own windup
+[PASS] Old cooldown completion cannot unlock the newer attack
+[PASS] Only the new coroutine restores attack availability
+[PASS] BaseEnemy integration produces no runtime errors
+[SUMMARY] Tactical BaseEnemy integration: 49 passed, 0 failed; 0 runtime errors
+
+STDERR:
+
+
+STEP: test_projectile_obstacles
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_projectile_obstacles.log res://tests/test_projectile_obstacles.tscn
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[PASS] Open floor lets shots through
+[PASS] Wooden crate blocks shots
+[PASS] Crate blocks the full shot segment
+[PASS] Crate blocks the endpoint
+[PASS] Shots cannot start inside a crate
+[PASS] straight cannot skip a crate in one frame
+[PASS] homing cannot skip a crate in one frame
+[PASS] drift cannot skip a crate in one frame
+[PASS] Ricochet reverses at the crate
+[PASS] Air Cannon cannot skip a crate
+[PASS] Non-solid decoration does not block shots
+[SUMMARY] Projectile obstacle failures: 0
+
+STDERR:
+
+
+STEP: test_skeleton_king
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_skeleton_king.log res://tests/test_skeleton_king.tscn
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+=== SKELETON KING TESTS ===
+  [PASS] SK-01: Skeleton King arena replaces the boss room on floors 3, 6, 9 (fixed 32x18, clean floor)
+  [PASS] SK-02: Other rooms on a king floor stay within normal size bounds
+  [PASS] SK-02b: Enabled combat variants leave Skeleton King metadata NONE with zero variant pillars
+[BOSS] Tầng 3 - Boss: Skeleton King xuất hiện!
+  [PASS] SK-03: Floor 3 spawns the Skeleton King as the active boss
+  [PASS] SK-04: King is centred on the top wall with his body rising above the arena
+  [PASS] SK-05: King is invulnerable to direct hits
+  [PASS] SK-06: Entering the arena awakens the King and raises Soul Crystals - crystals=2
+  [PASS] SK-07: Arena camera frames the whole room and the King
+  [PASS] SK-08: Crystals spawn inside the arena with a Hurtbox
+  [PASS] SK-09: Vertical / horizontal laser lines are parallel and evenly spaced inside the arena - cols=[-75, -71, -67, -63, -59, -55, -51, -47] rows=[-67, -63, -59, -55]
+  [PASS] SK-10: Active beam hits the player on it once; the gap between beams is safe
+  [PASS] SK-11: Laser volley frees itself after firing
+  [PASS] SK-12: Slam shockwave staggers parallel beams across the arena - beams=11
+  [PASS] SK-12b: Vertical, horizontal, grid, double and shockwave patterns all stay inside the arena
+  [PASS] SK-13: King summons existing enemies into the arena - count=3
+  [PASS] SK-14: Shattering a Soul Crystal damages the King - hp=48/60
+  [PASS] SK-14b: Soul Crystals cannot be moved, pulled or frozen - pos=(-920.0, -1048.0) home=(-920.0, -1048.0)
+  [PASS] SK-14c: An expired crystal vanishes and heals the King - hp 48 -> 54 (+6)
+  [PASS] SK-14d: Expired crystal is removed after its fade-out
+  [PASS] SK-15: King enrages at 50% HP
+  [PASS] SK-16: Death clears crystals and summoned minions
+[VICTORY] Boss đã gục ngã! Triệu hồi Cổng Dịch Chuyển & 2 Rương Kho Báu...
+  [PASS] SK-17: After the death animation the arena unlocks, a portal opens and the hero camera returns
+[SUMMARY] SKELETON KING: 22 PASSED | 0 FAILED
+
+STDERR:
+
+
+STEP: test_werewolf
+Command: C:\Users\ADMIN\Desktop\Godot_v4.7.2-stable_win64.exe --headless --path C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\project --log-file C:\Users\ADMIN\Documents\GitHub\Keep-Fighting-And-Earning\.godot\vt074_green\94472f1d456c40179d949e1c0e3c1c91\test_werewolf.log res://tests/test_werewolf.tscn
+Exit code: 0
+STDOUT:
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+========================================================
+  RUNNING WEREWOLF FUNCTIONAL & INTEGRATION TESTS
+========================================================
+
+--- Test Group 1: Configuration & Stats ---
+  [PASS] BalanceConfig has 'werewolf' entry
+  [PASS] HP is configured to 5
+  [PASS] Claw damage is configured to 2
+  [PASS] Pounce damage is configured to 3
+  [PASS] Pounce speed is configured to 175.0
+  [PASS] Pounce distance is configured to 95.0
+  [PASS] Pounce windup time is configured to 0.65
+  [PASS] Instance loaded hp = 5 from BalanceConfig
+  [PASS] Instance loaded damage = 2
+  [PASS] Instance loaded pounce_damage = 3
+  [PASS] Instance loaded pounce_speed = 175.0
+  [PASS] Instance loaded pounce_distance = 95.0
+
+--- Test Group 2: Nodes & Animations ---
+  [PASS] AnimatedSprite2D node exists
+  [PASS] SpriteFrames resource is assigned
+  [PASS] Has 'idle' animation
+  [PASS] Has 'walk' animation
+  [PASS] Has 'attack_1' animation
+  [PASS] Has 'attack_2' animation
+  [PASS] Has 'hurt' animation
+  [PASS] Has 'death' animation
+  [PASS] Hurtbox exists with exact name 'Hurtbox'
+  [PASS] ClawHitbox exists
+  [PASS] PounceHitbox exists
+  [PASS] ClawHitbox is initially disabled
+  [PASS] PounceHitbox is initially disabled
+
+--- Test Group 3: Claw Attack (Attack01) ---
+  [PASS] Wolf enters attacking state in close range
+  [PASS] Wolf plays 'attack_1' animation
+  [PASS] ClawHitbox collision is enabled during attack
+  [PASS] Attack state resets after animation finishes
+  [PASS] ClawHitbox collision is disabled after attack
+
+--- Test Group 4: Pounce Windup & Warning Telegraph ---
+  [PASS] Wolf enters is_preparing_pounce state
+  [PASS] show_pounce_warning flag is true
+  [PASS] Velocity is ZERO during windup
+  [PASS] Pounce direction is locked to target dir
+  [PASS] Pounce cooldown timer is set
+
+--- Test Group 5: Windup Interrupted by Damage ---
+  [PASS] Windup started
+  [PASS] is_preparing_pounce is canceled on taking damage
+  [PASS] show_pounce_warning is turned off
+  [PASS] Wolf plays 'hurt' animation
+  [PASS] Wolf HP decreased by 1
+
+--- Test Group 6: Pounce Fixed Distance Bounding ---
+  [PASS] Still pouncing before reaching max distance
+  [PASS] Distance traveled accumulating under limit
+  [PASS] Pounce stops exactly when reaching pounce_distance
+  [PASS] pounce_traveled is clamped to pounce_distance
+  [PASS] Velocity drops to ZERO when pounce finishes
+
+--- Test Group 7: Damage & Death Lifecycle ---
+  [PASS] Wolf is marked as is_dead
+  [PASS] Wolf plays 'death' animation
+  [PASS] Main collision is disabled on death
+  [PASS] Hurtbox collision is disabled on death
+
+--- Test Group 8: Dungeon Generator Integration ---
+  [PASS] dungeon_generator.enemy_scenes contains Werewolf scene
+
+========================================================
+  TEST RESULTS: 50 PASSED, 0 FAILED
+========================================================
+
+
+STDERR:
+
+
+===== FINAL COMMIT 3 A/B TRIAGE =====
+{
+  "triaged_at": "2026-11-12T13:00:08.856947+07:00",
+  "original_regression_log_prefix_sha256": "d03dc3078a483cae5afb2536ef4f004f93c64ab605d4be4bd1b6efe69587ec7d",
+  "source": "perk_ab.json / perk_ab.log; actual new isolated A/B runs",
+  "baseline": "25026e34b0fc3514e2ae813f017774cf694e5375",
+  "classification": "KNOWN BASELINE FAILURES",
+  "full_run_unchanged": "24 PASS / 1 FAIL of 25 invocations; runner exit 1; entire suite NOT PASS",
+  "pristine_A": {
+    "engine_exit_code": 0,
+    "failing_assertions": [],
+    "observations": [],
+    "initial_state": [],
+    "errors": [
+      "SCRIPT ERROR: Parse Error: Cannot infer the type of \"manager\" variable because the value doesn't have a set type.",
+      "SCRIPT ERROR: Parse Error: Cannot infer the type of \"roll_1\" variable because the value doesn't have a set type.",
+      "SCRIPT ERROR: Parse Error: Cannot infer the type of \"roll_2\" variable because the value doesn't have a set type.",
+      "SCRIPT ERROR: Parse Error: Cannot infer the type of \"roll_floor_2\" variable because the value doesn't have a set type.",
+      "SCRIPT ERROR: Parse Error: Cannot infer the type of \"diff_floor\" variable because the value doesn't have a set type.",
+      "SCRIPT ERROR: Parse Error: Cannot infer the type of \"manager\" variable because the value doesn't have a set type.",
+      "SCRIPT ERROR: Parse Error: Cannot infer the type of \"rolled\" variable because the value doesn't have a set type.",
+      "SCRIPT ERROR: Parse Error: Cannot infer the type of \"manager\" variable because the value doesn't have a set type.",
+      "SCRIPT ERROR: Parse Error: Cannot infer the type of \"manager\" variable because the value doesn't have a set type.",
+      "SCRIPT ERROR: Parse Error: Cannot infer the type of \"consumed\" variable because the value doesn't have a set type.",
+      "ERROR: Failed to load script \"res://tests/test_perk_system.gd\" with error \"Parse error\"."
+    ],
+    "summary_34_of_37": false,
+    "parser_or_setup_failure": true
+  },
+  "pristine_A_exit_note": "Engine exit 0 is forced --quit-after 60 after parser failure, no assertions; NOT PASS",
+  "pristine_B": {
+    "engine_exit_code": 1,
+    "failing_assertions": [
+      "Player get_total_damage() increased by perk bonus",
+      "Berserk Frenzy raw damage scales +15% per missing HP (Expected: %.2f, Got: %.2f)",
+      "Completion callback invoked upon perk selection"
+    ],
+    "observations": [],
+    "initial_state": [],
+    "errors": [
+      "ERROR: String formatting error: unsupported format character."
+    ],
+    "summary_34_of_37": true,
+    "parser_or_setup_failure": false
+  },
+  "A_star_fixture_note": "Production unmodified C2; one preload/four constructors as B; identical observation prints; original assertions unchanged",
+  "A_observed": {
+    "engine_exit_code": 1,
+    "failing_assertions": [
+      "Player get_total_damage() increased by perk bonus",
+      "Berserk Frenzy raw damage scales +15% per missing HP (Expected: %.2f, Got: %.2f)",
+      "Completion callback invoked upon perk selection"
+    ],
+    "observations": [
+      {
+        "actual": 3,
+        "base_before": 1,
+        "expected": 2,
+        "id": "damage",
+        "perk_bonus": 1,
+        "player_base_after": 2
+      },
+      {
+        "actual": 4.35,
+        "expected": 2.9,
+        "id": "berserk",
+        "missing_hp": 3,
+        "perk_bonus": 1,
+        "player_base": 2,
+        "weapon_damage": 0
+      },
+      {
+        "actual": false,
+        "callback_entered": true,
+        "expected": true,
+        "id": "callback"
+      }
+    ],
+    "initial_state": [
+      {
+        "floor": 1,
+        "hero": 2,
+        "kills": 0,
+        "perks": 0,
+        "rng_seed": 1554938935,
+        "seed": "ALOALO1234"
+      }
+    ],
+    "errors": [
+      "ERROR: String formatting error: unsupported format character."
+    ],
+    "summary_34_of_37": true,
+    "parser_or_setup_failure": false
+  },
+  "B_observed": {
+    "engine_exit_code": 1,
+    "failing_assertions": [
+      "Player get_total_damage() increased by perk bonus",
+      "Berserk Frenzy raw damage scales +15% per missing HP (Expected: %.2f, Got: %.2f)",
+      "Completion callback invoked upon perk selection"
+    ],
+    "observations": [
+      {
+        "actual": 3,
+        "base_before": 1,
+        "expected": 2,
+        "id": "damage",
+        "perk_bonus": 1,
+        "player_base_after": 2
+      },
+      {
+        "actual": 4.35,
+        "expected": 2.9,
+        "id": "berserk",
+        "missing_hp": 3,
+        "perk_bonus": 1,
+        "player_base": 2,
+        "weapon_damage": 0
+      },
+      {
+        "actual": false,
+        "callback_entered": true,
+        "expected": true,
+        "id": "callback"
+      }
+    ],
+    "initial_state": [
+      {
+        "floor": 1,
+        "hero": 2,
+        "kills": 0,
+        "perks": 0,
+        "rng_seed": 1554938935,
+        "seed": "ALOALO1234"
+      }
+    ],
+    "errors": [
+      "ERROR: String formatting error: unsupported format character."
+    ],
+    "summary_34_of_37": true,
+    "parser_or_setup_failure": false
+  },
+  "comparison": {
+    "identical_failure_names": true,
+    "identical_expected_actual_and_context": true,
+    "equivalent_initial_seed_hero_stats_perks_rng": true,
+    "identical_nonparser_errors": true,
+    "both_engine_exit_1": true,
+    "both_34_of_37": true,
+    "no_parser_or_setup_error_in_behavioral_pair": true,
+    "additional_B_failing_assertions": []
+  },
+  "audit_runner_exit_code": 0,
+  "personal_save_unchanged": true,
+  "CLI_check_only_note": "Both diagnostic CLI check-only runs exit 1 without normal autoload context; kept separately, not behavioral failures"
+}

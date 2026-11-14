@@ -1,0 +1,379 @@
+{
+  "executed_at": "2026-11-12T14:20:39.794045+07:00",
+  "commands": [
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe status --short --untracked-files=all",
+      "exit_code": 0,
+      "stdout": "?? docs/BT3_VT074/COMMIT_4_REPORT.md\n?? docs/BT3_VT074/evidence/commit4_regression.log\n?? docs/BT3_VT074/evidence/commit4_verification.json\n?? docs/BT3_VT074/evidence/integration.log\n?? docs/BT3_VT074/evidence/integration_attempt_015e87a341594e19b6487e742d06f6bc.json\n?? docs/BT3_VT074/evidence/integration_attempt_13b6de3063fb466ea4040781a779eaa3.json\n?? docs/BT3_VT074/evidence/integration_attempt_ad1cd9596cb74da3b865105225a77752.json\n?? docs/BT3_VT074/evidence/integration_scene_attempt.json\n?? docs/BT3_VT074/evidence/integration_scene_attempt.log\n?? docs/BT3_VT074/evidence/integration_setup_attempt.json\n?? docs/BT3_VT074/evidence/integration_setup_attempt.log\n?? tests/test_vt074_integration.gd\n?? tests/test_vt074_integration.tscn\n?? tests/vt074/fixtures/integration_entry.gd\n?? tests/vt074/fixtures/integration_store.gd\n?? tests/vt074/fixtures/legacy_save.json\n?? tests/vt074/run_integration.py\n?? tests/vt074/verify_commit4.py\n",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff --check",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff --stat",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff --name-only 2c7119510097c83cf5114d08fe3cd2daacb0fc06",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff --cached --name-only",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe branch --show-current",
+      "exit_code": 0,
+      "stdout": "feat/bt3-vt074-idempotent-run\n",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe rev-parse HEAD",
+      "exit_code": 0,
+      "stdout": "2c7119510097c83cf5114d08fe3cd2daacb0fc06\n",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe log -4 --oneline",
+      "exit_code": 0,
+      "stdout": "2c71195 fix(vt074): make run completion idempotent\n25026e3 test(vt074): add risk-based failing idempotency tests\nbe8e39d docs(vt074): specify idempotent completion and review AI plan\n56e97e1 Merge pull request #71 from Gumaisme2005/feat/enemy-tactical-ai\n",
+      "stderr": ""
+    }
+  ],
+  "checks": {
+    "branch_and_committed_C3_HEAD": true,
+    "diff_check": true,
+    "no_tracked_production_regression_or_history_changes": true,
+    "index_empty": true,
+    "actual_full_C4_runner_exit_0": true,
+    "all_10_integration_invocations_pass": true,
+    "source_hashes_match_executed_copy": true,
+    "prior_artifacts_and_sources_unchanged": true,
+    "personal_save_unchanged": true,
+    "eight_cases_same_actual_oracles_in_all_orders": true,
+    "negative_and_conflict_executable_with_zero_side_effect_oracles": true,
+    "real_IO_faults_and_both_reconcile_outcomes": true,
+    "actual_UI_flow_completed_all_three_runs": true,
+    "VT74_02_contract_and_all_replay_regressions_pass": true,
+    "only_proven_inherited_perk_failures_remain": true,
+    "C2_raw_RED_preserved": true,
+    "every_changed_file_read_scope_UTF8_whitespace_links": true,
+    "no_detected_credentials": true,
+    "python_compile": true
+  },
+  "all_checks_passed": true,
+  "verifier_exit_code": 0,
+  "errors": [],
+  "privacy_findings": [],
+  "files_read": [
+    {
+      "path": "docs/BT3_VT074/COMMIT_4_REPORT.md",
+      "bytes": 24268,
+      "sha256": "c1a1e3179915867431ca6ea09faad9662295ba5c0ce3b1cbf041068ba63edde9"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/commit4_regression.log",
+      "bytes": 141076,
+      "sha256": "12e73fdce1488a082707e1e73ade11d8be192ba0b8773a434e8aba3e2dce4137"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/commit4_verification.json",
+      "bytes": 12609,
+      "sha256": "00dce3cf875e00e4f828f7fc17a1f2681ec2e99573bd3f7a16a285a51e8a6bf2"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/integration.log",
+      "bytes": 583311,
+      "sha256": "bfbd9951518954c4a72efc26fb2da989f22a91b3a92689353599a2d06cf10bfe"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/integration_attempt_015e87a341594e19b6487e742d06f6bc.json",
+      "bytes": 3529783,
+      "sha256": "71b037ef13b28b776c3b768e20432b7820f259d1e510ba09fb1efaa8ce9ee9c1"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/integration_attempt_13b6de3063fb466ea4040781a779eaa3.json",
+      "bytes": 728619,
+      "sha256": "d12eb4188e06700ffb6df7bea284df6e64535148670ede8a867c22c82eb7e9e0"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/integration_attempt_ad1cd9596cb74da3b865105225a77752.json",
+      "bytes": 5190274,
+      "sha256": "bc1a5d07959e9c7a108f558110b2e68d270324eee1062f936c8715bfcf0164ea"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/integration_scene_attempt.json",
+      "bytes": 399,
+      "sha256": "aa4ffb6dcff0707346e73d3394319df9701220aea305bc15043349d1e32642f5"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/integration_scene_attempt.log",
+      "bytes": 1407193,
+      "sha256": "4a35c6f91cc8bf448418554cbad3266ebb9bad88174f63c265f402e43140d33b"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/integration_setup_attempt.json",
+      "bytes": 938,
+      "sha256": "33ad6ae18ba8e38dc89cb691a6373243d7bb13788dcd6cdf0b0138dec0ebef05"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/integration_setup_attempt.log",
+      "bytes": 821,
+      "sha256": "9d23c0c029bcc027c3d1a6f15b36f94861f24f08d21550733621a6e3ec840268"
+    },
+    {
+      "path": "tests/test_vt074_integration.gd",
+      "bytes": 25935,
+      "sha256": "9f3abf9827e443fd669b0740f3bdfb82a3f237672dbb3e1e5cc9058d810905d8"
+    },
+    {
+      "path": "tests/test_vt074_integration.tscn",
+      "bytes": 347,
+      "sha256": "dd7036d53209c440f31ace1d9d9694e95b777ab33c4bcb8919a2606b57218d8d"
+    },
+    {
+      "path": "tests/vt074/fixtures/integration_entry.gd",
+      "bytes": 258,
+      "sha256": "0eae300a6b0df38671ec677eb1e504353322f2555d00614ef03bb2739ada4aba"
+    },
+    {
+      "path": "tests/vt074/fixtures/integration_store.gd",
+      "bytes": 1880,
+      "sha256": "c67a5b4bf6c9bacefa80398adeed979eed3047aeb393ba334e2e7da0616f8577"
+    },
+    {
+      "path": "tests/vt074/fixtures/legacy_save.json",
+      "bytes": 790,
+      "sha256": "4b3db183f32c54050b23f15a1a5d8d75a9e755ed016cff931f91b124f1a59c78"
+    },
+    {
+      "path": "tests/vt074/run_integration.py",
+      "bytes": 12297,
+      "sha256": "063fc8ce6002076091486229fc59ef707ff507dbe903284d32d46a17c729364d"
+    },
+    {
+      "path": "tests/vt074/verify_commit4.py",
+      "bytes": 8517,
+      "sha256": "a2637881621599f11c0c99561c52d5961f458e74293a06d2e823c1efb7a287bd"
+    }
+  ],
+  "case_evidence": {
+    "IT-01": {
+      "assertions_per_invocation": 81,
+      "all_pass": true,
+      "exact_labels_expected_actual_outcomes_identical_forward_reverse_independent": true
+    },
+    "IT-02": {
+      "assertions_per_invocation": 56,
+      "all_pass": true,
+      "exact_labels_expected_actual_outcomes_identical_forward_reverse_independent": true
+    },
+    "IT-03": {
+      "assertions_per_invocation": 117,
+      "all_pass": true,
+      "exact_labels_expected_actual_outcomes_identical_forward_reverse_independent": true
+    },
+    "IT-04": {
+      "assertions_per_invocation": 32,
+      "all_pass": true,
+      "exact_labels_expected_actual_outcomes_identical_forward_reverse_independent": true
+    },
+    "IT-05": {
+      "assertions_per_invocation": 11,
+      "all_pass": true,
+      "exact_labels_expected_actual_outcomes_identical_forward_reverse_independent": true
+    },
+    "IT-06": {
+      "assertions_per_invocation": 73,
+      "all_pass": true,
+      "exact_labels_expected_actual_outcomes_identical_forward_reverse_independent": true
+    },
+    "IT-07": {
+      "assertions_per_invocation": 35,
+      "all_pass": true,
+      "exact_labels_expected_actual_outcomes_identical_forward_reverse_independent": true
+    },
+    "IT-08": {
+      "assertions_per_invocation": 40,
+      "all_pass": true,
+      "exact_labels_expected_actual_outcomes_identical_forward_reverse_independent": true
+    }
+  },
+  "actual_attempt": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_c4\\13b6de3063fb466ea4040781a779eaa3",
+  "integration_distinct_assertions_in_forward": 445,
+  "suite_outcomes": [
+    {
+      "name": "integration-forward",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 445
+    },
+    {
+      "name": "integration-reverse",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 445
+    },
+    {
+      "name": "IT-01-independent",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 81
+    },
+    {
+      "name": "IT-02-independent",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 56
+    },
+    {
+      "name": "IT-03-independent",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 117
+    },
+    {
+      "name": "IT-04-independent",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 32
+    },
+    {
+      "name": "IT-05-independent",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 11
+    },
+    {
+      "name": "IT-06-independent",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 73
+    },
+    {
+      "name": "IT-07-independent",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 35
+    },
+    {
+      "name": "IT-08-independent",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 40
+    },
+    {
+      "name": "VT74-02",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 0
+    },
+    {
+      "name": "contract",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 0
+    },
+    {
+      "name": "replay-forward",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 0
+    },
+    {
+      "name": "replay-reverse",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 0
+    },
+    {
+      "name": "replay-shuffle",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 0
+    },
+    {
+      "name": "replay-bounds",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 0
+    },
+    {
+      "name": "replay-fifo",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 0
+    },
+    {
+      "name": "replay-manual",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 0
+    },
+    {
+      "name": "replay-clear",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 0
+    },
+    {
+      "name": "replay-idle",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 0
+    },
+    {
+      "name": "test_dungeon_generator_unit",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 0
+    },
+    {
+      "name": "test_dungeon_properties",
+      "passed": true,
+      "classification": "PASS",
+      "exit_code": 0,
+      "assertions": 0
+    },
+    {
+      "name": "test_perk_system",
+      "passed": false,
+      "classification": "KNOWN BASELINE FAILURES",
+      "exit_code": 1,
+      "assertions": 0
+    }
+  ],
+  "entire_regression_suite_passed": false,
+  "note": "Readiness allows only proven inherited perk failures. No claim of C5 mutation/performance/flaky evidence or human code review. Self-file hash is pre-write."
+}

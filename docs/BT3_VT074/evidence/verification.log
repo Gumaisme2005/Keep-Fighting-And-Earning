@@ -1,0 +1,264 @@
+{
+  "executed_at": "2026-11-12T10:11:32.261939+07:00",
+  "commands": [
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\Programs\\Python\\Python314\\python.exe tests/vt074/pairwise.py",
+      "exit_code": 0,
+      "stdout": "{\n  \"algorithm\": \"deterministic greedy maximum uncovered pairs; Cartesian-order tie break; reverse redundant-row removal\",\n  \"strength\": 2,\n  \"factors\": {\n    \"identity\": [\n      \"active_new\",\n      \"retained\",\n      \"invalid\",\n      \"unknown_unissued\",\n      \"unknown_expired\"\n    ],\n    \"payload\": [\n      \"same\",\n      \"different\"\n    ],\n    \"storage\": [\n      \"in_memory\",\n      \"after_reload\"\n    ],\n    \"ledger\": [\n      \"below\",\n      \"at_128\",\n      \"overflow_129\"\n    ]\n  },\n  \"cartesian_rows\": 60,\n  \"feasible_full_rows\": 52,\n  \"infeasible_full_rows\": 8,\n  \"array_rows\": 14,\n  \"all_pair_count\": 51,\n  \"feasible_pair_count\": 49,\n  \"covered_feasible_pairs\": 49,\n  \"missing_pairs\": [],\n  \"catalog_case_count\": 22,\n  \"mapped_case_ids\": [\n    \"VT74-01\",\n    \"VT74-02\",\n    \"VT74-04\",\n    \"VT74-05\",\n    \"VT74-07\",\n    \"VT74-09\",\n    \"VT74-10\",\n    \"VT74-15\"\n  ],\n  \"directed_case_ids_not_in_matrix\": [\n    \"VT74-03\",\n    \"VT74-06\",\n    \"VT74-08\",\n    \"VT74-11\",\n    \"VT74-12\",\n    \"VT74-13\",\n    \"VT74-14\",\n    \"VT74-16\",\n    \"VT74-17\",\n    \"VT74-18\",\n    \"VT74-19\",\n    \"VT74-20\",\n    \"VT74-21\",\n    \"VT74-22\"\n  ],\n  \"engine_rows_executed\": 0,\n  \"excluded_pairs\": [\n    {\n      \"pair\": [\n        \"identity\",\n        \"unknown_expired\",\n        \"ledger\",\n        \"at_128\"\n      ],\n      \"reason\": \"Expired receipt requires overflow at the 129th successful completion; below/at-128 has not evicted oldest.\"\n    },\n    {\n      \"pair\": [\n        \"identity\",\n        \"unknown_expired\",\n        \"ledger\",\n        \"below\"\n      ],\n      \"reason\": \"Expired receipt requires overflow at the 129th successful completion; below/at-128 has not evicted oldest.\"\n    }\n  ],\n  \"errors\": [],\n  \"verified\": true\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m py_compile tests/vt074/run_red.py tests/vt074/pairwise.py tests/vt074/verify_commit2.py",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff --check",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe status --short --untracked-files=all",
+      "exit_code": 0,
+      "stdout": " M docs/BT3_VT074/AI_PLAN_REVIEW.md\n?? docs/BT3_VT074/AI_TEST_REVIEW.md\n?? docs/BT3_VT074/COMMIT_2_REPORT.md\n?? docs/BT3_VT074/PAIRWISE.md\n?? docs/BT3_VT074/TEST_CASES.md\n?? docs/BT3_VT074/TEST_STRATEGY.md\n?? docs/BT3_VT074/evidence/pairwise_verification.json\n?? docs/BT3_VT074/evidence/red.log\n?? docs/BT3_VT074/evidence/red_run.json\n?? docs/BT3_VT074/evidence/setup_import_attempt.log\n?? docs/BT3_VT074/evidence/setup_probe_attempt.log\n?? docs/BT3_VT074/evidence/verification.log\n?? tests/test_run_completion_idempotency.gd\n?? tests/test_run_completion_idempotency.tscn\n?? tests/vt074/pairwise.py\n?? tests/vt074/pairwise_cases.csv\n?? tests/vt074/run_red.py\n?? tests/vt074/verify_commit2.py\n",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff --name-only",
+      "exit_code": 0,
+      "stdout": "docs/BT3_VT074/AI_PLAN_REVIEW.md\n",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe diff --cached --name-only",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe rev-parse HEAD",
+      "exit_code": 0,
+      "stdout": "be8e39d3e5d8b3bdce9f815ab93966e3bcf51fde\n",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe branch --show-current",
+      "exit_code": 0,
+      "stdout": "feat/bt3-vt074-idempotent-run\n",
+      "stderr": ""
+    },
+    {
+      "command": "C:\\Users\\ADMIN\\AppData\\Local\\GitHubDesktop\\app-3.6.10\\resources\\app\\git\\cmd\\git.exe ls-files -- .godot/vt074_verify.py",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "checks": {
+    "pairwise_verifier_exit_0": true,
+    "python_compile_exit_0": true,
+    "git_diff_check_exit_0": true,
+    "only_review_tracked_change": true,
+    "index_empty": true,
+    "head_unchanged": true,
+    "branch_correct": true,
+    "original_plan_spec_SUT_regression_config_CI_byte_identical": true,
+    "untracked_scope": true,
+    "18_files_to_review": true,
+    "cache_verifier_removed": true,
+    "cache_verifier_not_indexed": true,
+    "untracked_and_review_read_UTF8_whitespace": true,
+    "local_file_links_exist": true,
+    "22_unique_test_cases": true,
+    "all_case_rows_have_9_required_fields": true,
+    "two_human_test_decisions_accepted": true,
+    "original_weak_oracles_retained_in_review": true,
+    "revised_03_11_still_planned": true,
+    "revisions_applied_to_catalog": true,
+    "20_cases_designed_only": true,
+    "actual_behavioral_red_exit_1_and_save_unchanged": true,
+    "verified_source_same_as_RED": true,
+    "RED_test_launcher_and_raw_evidence_preserved": true,
+    "one_executed_engine_scenario": true,
+    "isolation_probes_clean_and_sentinel_verified": true,
+    "behavioral_failure_has_no_setup_or_runtime_errors": true,
+    "evidence_no_serialized_save_payload_or_detected_credentials": true
+  },
+  "byte_comparisons": {
+    "docs/BT3_VT074/AI_IMPLEMENTATION_PLAN.md": {
+      "byte_identical_to_HEAD": true,
+      "sha256": "3418b9435e91d48e7a33fae4af42ec055200c23e792d702cfde1d6b2b92c8247"
+    },
+    "docs/BT3_VT074/SPECIFICATION.md": {
+      "byte_identical_to_HEAD": true,
+      "sha256": "4c8d34a4e8fe53b0f13da008cb9674a02eff6a44f53b1a484c9a6c49df531ab3"
+    },
+    "Scene/GameManager.gd": {
+      "byte_identical_to_HEAD": true,
+      "sha256": "6f0a8ae1abd40841dc293f251bb6f13f72815de54980a661245b12429d9ddada"
+    },
+    "tests/test_replay_security.gd": {
+      "byte_identical_to_HEAD": true,
+      "sha256": "d93a240e5899303ad6c214726164f9f490d04d2a0c2411ed935b123b4cc7bfa4"
+    },
+    "project.godot": {
+      "byte_identical_to_HEAD": true,
+      "sha256": "3332d3d43f4ffa240f391acd4f70f808eabfc167e890248e226881b50708b677"
+    },
+    ".github/workflows/ci.yml": {
+      "byte_identical_to_HEAD": true,
+      "sha256": "8fcfe6d88f84afa1ff03d66cf7e6a0a0755634451bbd8cbd4a8c9df748ba2ee3"
+    }
+  },
+  "scope_errors": [],
+  "text_errors": [],
+  "link_errors": [],
+  "case_ids": [
+    "VT74-01",
+    "VT74-02",
+    "VT74-03",
+    "VT74-04",
+    "VT74-05",
+    "VT74-06",
+    "VT74-07",
+    "VT74-08",
+    "VT74-09",
+    "VT74-10",
+    "VT74-11",
+    "VT74-12",
+    "VT74-13",
+    "VT74-14",
+    "VT74-15",
+    "VT74-16",
+    "VT74-17",
+    "VT74-18",
+    "VT74-19",
+    "VT74-20",
+    "VT74-21",
+    "VT74-22"
+  ],
+  "files_read": [
+    {
+      "path": "docs/BT3_VT074/AI_TEST_REVIEW.md",
+      "bytes": 6069,
+      "sha256": "0271d77263046b1256166345dc693a26fd76d8e43b9ad4601ae97fda0759a027"
+    },
+    {
+      "path": "docs/BT3_VT074/COMMIT_2_REPORT.md",
+      "bytes": 13297,
+      "sha256": "5dd62ed9925e3840144869ee97233f4c553ed5abfcf94f4813075a9b6c26ddf0"
+    },
+    {
+      "path": "docs/BT3_VT074/PAIRWISE.md",
+      "bytes": 7262,
+      "sha256": "631f8e6b5775ea001ed8f49baebfbedeae896efd43be0e8862b27046455786d9"
+    },
+    {
+      "path": "docs/BT3_VT074/TEST_CASES.md",
+      "bytes": 12938,
+      "sha256": "b4412cdd6ced5bb775482ce4c59419d43ce89c736b5edf371011ab3cbf5b6e45"
+    },
+    {
+      "path": "docs/BT3_VT074/TEST_STRATEGY.md",
+      "bytes": 10284,
+      "sha256": "67b47d09b89612c5db4440c2d08c74df4f8041912bddfdb76353374149777f27"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/pairwise_verification.json",
+      "bytes": 1786,
+      "sha256": "551a0392b760be6c98b9b809b9bb573213a669f55e5128a19288ddbc37297e6e"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/red.log",
+      "bytes": 98233,
+      "sha256": "49921bf9bf3f33248b4b6a105efd05b7f15d41dd4dfbc8393eb56e53a831e7ce"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/red_run.json",
+      "bytes": 130587,
+      "sha256": "21d949c19f532179c2e6e47a88733d02e8d56d274b7b6ebd440dda393afb7578"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/setup_import_attempt.log",
+      "bytes": 93652,
+      "sha256": "bc6564b20eafe9a898186748dccfa480162e31f8b79cfaf4f7470dfa59282365"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/setup_probe_attempt.log",
+      "bytes": 2611,
+      "sha256": "781faf59791edcdce86ea578907d83e412b621e21c823db75bdaa4545ec52ac5"
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/verification.log",
+      "bytes": 9339,
+      "sha256": "3efcb451d40502695a337b37b389ea1ac61e50a2067179ec910bf24c60432ace"
+    },
+    {
+      "path": "tests/test_run_completion_idempotency.gd",
+      "bytes": 4039,
+      "sha256": "872af01a06909003e184839f1ce132d343d719745b197b47a6b00814069e5b55"
+    },
+    {
+      "path": "tests/test_run_completion_idempotency.tscn",
+      "bytes": 216,
+      "sha256": "57ce1b8a1d2336fd683ce7004773686858724fdb4044367e08cf83ce535789f1"
+    },
+    {
+      "path": "tests/vt074/pairwise.py",
+      "bytes": 6641,
+      "sha256": "fc9b8ad3e99ff3ca161563e561cc5c5b03e234427615ed87a4db921cf8cc0eab"
+    },
+    {
+      "path": "tests/vt074/pairwise_cases.csv",
+      "bytes": 1377,
+      "sha256": "fb7beda119265f6cf2857e3329c9f6063f6e59344fd3b4cf14038be98ba28c55"
+    },
+    {
+      "path": "tests/vt074/run_red.py",
+      "bytes": 11740,
+      "sha256": "95f4fbeee6cdb02c5a3808146f92b5fa70da42b84d4536ed2c6f20b252966ee9"
+    },
+    {
+      "path": "tests/vt074/verify_commit2.py",
+      "bytes": 11152,
+      "sha256": "2b10d52bbd02e32cad82db345ec16a3d3080793ba858c796466f201457164b9c"
+    },
+    {
+      "path": "docs/BT3_VT074/AI_PLAN_REVIEW.md",
+      "bytes": 23724,
+      "sha256": "1fa6691a73d4ede34f7e56bef0eb147d2069f010dc6188cd2bf1d5ecc255486f"
+    }
+  ],
+  "preserved_RED_hash_matches": {
+    "tests/test_run_completion_idempotency.gd": true,
+    "tests/test_run_completion_idempotency.tscn": true,
+    "tests/vt074/run_red.py": true,
+    "docs/BT3_VT074/evidence/red.log": true,
+    "docs/BT3_VT074/evidence/red_run.json": true,
+    "docs/BT3_VT074/evidence/setup_import_attempt.log": true,
+    "docs/BT3_VT074/evidence/setup_probe_attempt.log": true
+  },
+  "evidence_privacy_review": {
+    "files_read": [
+      "pairwise_verification.json",
+      "red.log",
+      "red_run.json",
+      "setup_import_attempt.log",
+      "setup_probe_attempt.log",
+      "verification.log"
+    ],
+    "findings": [],
+    "retained_metadata": "Local execution/save paths and before/after SHA-256 only; no save JSON payload printed."
+  },
+  "engine_execution_counts": {
+    "automated_scenarios": 1,
+    "behavioral_failures": 1,
+    "baseline_first_completion_control_subsets": 1,
+    "designed_only_cases": 20,
+    "pairwise_engine_rows_executed": 0
+  },
+  "note": "verification.log is this check's output; its pre-write hash is not a stable manifest. Human-approved v1 designs are still PLANNED AFTER PATCH, not executed tests.",
+  "all_checks_passed": true
+}
