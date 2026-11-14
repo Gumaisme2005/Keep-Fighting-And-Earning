@@ -1,20 +1,111 @@
-# VT-074 — coverage và risk analysis hiện tại
+# VT-074 — Coverage and Risk Analysis
 
-14/11/2026; HEAD `476ff8e` + working diff. **Line coverage = NOT MEASURED; branch coverage = NOT MEASURED.** Numerator/denominator/versioned source-coverage report: NOT MEASURED. Godot 4.7.2 help không có coverage CLI; repository không có configured GUT/gdUnit/coverage instrumentation. Audit thực: [raw smoke](evidence/persistence_c269529dd090_smoke.json) `coverage_audit`; không cài dependencies hoặc sửa production để tạo một phần trăm không đáng tin. Assertions/cases dưới đây là behavioral evidence.
+**Cập nhật:** 14/11/2026  
+**Branch:** `feat/bt3-vt074-idempotent-run`  
+**Commit đã kiểm chứng:** `1b81031`
 
-Phạm vi feature: GameManager, RunCompletionStore, relevant BasePlayer death entry và Game Over reporting. [AC-to-executable mapping](TRACEABILITY.md), [exact suite outcomes](PERSISTENCE_VERIFICATION.md), [per-invocation counters](evidence/persistence_20261114_suite_matrix.json).
+## 1. Coverage Status
 
-| Risk | Executed witnesses / result | Residual limit |
+**Line coverage = NOT MEASURED.**
+
+**Branch coverage = NOT MEASURED.**
+
+Chưa có numerator, denominator hoặc versioned source-coverage report đáng tin cậy. Godot 4.7.2 CLI help không cung cấp coverage command tương ứng, và repository chưa cấu hình GUT, gdUnit hoặc coverage instrumentation thích hợp.
+
+Bằng chứng kiểm tra công cụ: [coverage audit](evidence/persistence_c269529dd090_smoke.json).
+
+Không cài dependency mới hoặc sửa production chỉ để tạo một tỷ lệ phần trăm coverage không có cơ sở. Các test cases, số lượng assertions và kết quả PASS là **behavioral evidence**, không phải line/branch coverage.
+
+Phạm vi source:
+
+- [GameManager.gd](../../Scene/GameManager.gd)
+- [RunCompletionStore.gd](../../Scene/RunCompletionStore.gd)
+- [BasePlayer.gd](../../Scene/Character/BasePlayer.gd)
+- [Game Over menu](../../Menu/game%20over%20menu/game_over_menu.gd)
+
+Các yêu cầu AC-01…AC-05 và NFR-01…NFR-03 được liên kết với bài kiểm thử trong [TRACEABILITY.md](TRACEABILITY.md). Kết quả cụ thể trong [PERSISTENCE_VERIFICATION.md](PERSISTENCE_VERIFICATION.md) và [suite matrix](evidence/persistence_20261114_suite_matrix.json).
+
+## 2. Risk-Based Testing
+
+| Risk | Executed witnesses / result | Residual risk |
 | --- | --- | --- |
-| False success / missing history | Synthetic schema-valid 5.116.489-byte RED, new compact GREEN; actual death status/UI retry, exact ledger/history/signal checks | Human original file not inspected; exact private failure stage unconfirmed; short-run post-fix human PASS với observation và hai ảnh đã đối chiếu; human near-2-MiB NOT RUN |
-| Long replay / data loss | 18.000 varied frames, prior history, bit-exact doubles, nonzero result, full snapshot/reload/receipt/fingerprint, 3.600 history cap | Plain legacy/v2 JSON retains historical precision limits; cannot restore bits already lost |
-| Physical byte boundary | Exactly 2.097.152 succeeds, 2.097.153 fails, UTF8/encoded bytes measured, old/missing file, incompressible real manager failure | Unfit data remains pending/explicitly failed; no guarantee every future payload fits |
-| Partial IO / orphan temp | Real open/replace, partial write/read-back mismatch, no-temp assertions; uncertain old/candidate reconcile | OS disk-full/power-loss/external writer matrix not exhaustively tested; unresolved uncertainty keeps temp witness |
-| Duplicate/conflict/invalid | CG/IT + canonical94 + differential26 + cache ownership56; reload-tail-frame conflict and zero-side-effect duplicate | Receipt retention finite 128; unknown expired ID cannot be reconstructed |
-| Off-by-one | 127/128/129 and >→>= original/mutant/restored | One targeted mutant; not a general mutation score |
-| Flaky TIME / ORDER | 20 repetitions and 20 rounds; independent groups, fixed seed/clock/providers, assertions+state comparison | Repetition evidence does not prove absence of all flaky risks |
-| New format/security | Bound decompression32MiB, encoded cap2MiB, checksum, malformed/unknown/invalid-double rejection; older reader LOAD_ERROR/no overwrite | Checksum is not authentication. Older builds cannot play compact saves; single process/writer |
-| Latency | Four original 40-task p95 targets PASS; long first-COMMITTED and codec cost measured separately | Long varied completion can take seconds; RAM/memory allocation and power-loss durability NOT MEASURED |
-| Integration/regression | IT-08 real scenes + new actual death callback; 24 project/group invocations and 30/144 traces; Perk baseline explicitly retained | New GitHub Actions Linux run NOT RUN; two pre-restart screenshots inspected, live input/restart not observed by agent; restart student-confirmed |
+| False success / missing history | Synthetic RED với candidate JSON hợp lệ 5.116.489 bytes; compact GREEN; actual death/UI retry, ledger/history/signal assertions | Không kiểm tra trực tiếp private save trước fix; short-run human PASS nhưng near-2-MiB human gameplay chưa chạy lại |
+| Long replay / data loss | 18.000 varied frames, previous history, bit-exact double values, nonzero result, full snapshot/reload/receipt/fingerprint, history recording cap 3.600 | Legacy/v2 plain JSON vẫn có giới hạn precision lịch sử; không khôi phục được những bit đã mất từ trước |
+| Physical byte boundary | Chấp nhận đúng 2.097.152 bytes; từ chối 2.097.153 bytes; kiểm UTF-8/encoded size, old/missing file và incompressible data | Không bảo đảm mọi payload tương lai đều có thể nén vừa giới hạn |
+| Partial IO / orphan temp | Real open/replace failures, partial write, read-back mismatch, safe cleanup và uncertain old/candidate reconcile | Chưa kiểm exhaustive disk-full, power loss hoặc external writer; unresolved uncertainty có thể giữ temporary witness |
+| Duplicate/conflict/invalid | Contract/integration tests, 94 canonical cases, 26 differential scenarios, 56 cache ownership assertions | Ledger retention hữu hạn 128 receipts; expired ID không thể tự tái dựng |
+| Off-by-one retention | Boundary 127/128/129 và mutation `>` → `>=`, original/mutant/restored | Chỉ kiểm một targeted mutant; không phải mutation score cho toàn bộ source |
+| Flaky TIME/ORDER | 20 TIME repetitions và 20 ORDER rounds; independent fixtures, fixed clock/seed và state comparisons | Không thể khẳng định loại bỏ mọi flaky risk |
+| New format/security | Bounded decompression 32 MiB, encoded file cap 2 MiB, checksum, malformed/unknown/invalid-double rejection, old-reader guard | Checksum không phải authentication; Godot build cũ không đọc được compact saves |
+| Latency/performance | Cả bốn original 40-task p95 workloads PASS; đo riêng first-COMMITTED và codec cost | Long completion vẫn có thể mất vài giây; memory allocation và power-loss durability chưa đo đầy đủ |
+| Integration/regression | IT-08 scene integration, actual death callback, 24 project/group invocations, 30/144 FPS traces; CI Linux SUCCESS | Human replay playback/retry riêng chưa chạy; hai ảnh Manual E2E trước restart, kết quả restart do sinh viên xác nhận |
 
-AC-01…05/NFR-01…03 assertions are traceable in linked matrix. Catalog22 is design, pairwise14 rows is engine execution, structured assertion counts include repetitions/setup/control; none is a source-coverage percentage. [Manual verification](MANUAL_E2E_VERIFICATION.md): short-run human PASS, observation and two screenshots verified; restart human-confirmed without post-restart screenshot. Human near-2-MiB NOT RUN; student review/reflection remain pending. [Integration review](EVIDENCE_INTEGRATION_REVIEW_20261114.md) records current checks and inventory.
+## 3. Test Evidence Summary
+
+| Hạng mục | Kết quả |
+| --- | --- |
+| AC-01…AC-05 | PASS theo executable witnesses |
+| NFR-01 TIME/ORDER | PASS |
+| NFR-02 Performance | PASS |
+| NFR-03 Compatibility | PASS synthetic/headless |
+| Pairwise | 14/14 rows, 261 assertions |
+| Feasible-pair coverage | 49/49 pairs |
+| Mutation | Original PASS → mutant bị phát hiện → restored PASS |
+| Manual short-run | PASS |
+| GitHub Actions Linux | SUCCESS trên commit `1b81031` |
+| Line coverage | NOT MEASURED |
+| Branch coverage | NOT MEASURED |
+| Perk inherited baseline | 34/37 PASS, 3 known failures |
+
+[Linux CI result](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/43575655486)
+
+Các kết quả PASS được giới hạn trong test và môi trường đã thực thi. Không thay thế source coverage bằng assertion counts và không gọi toàn bộ test dự án PASS khi còn ba Perk baseline failures.
+
+## 4. Manual E2E Evidence
+
+**Trước fix — FAIL:**
+
+- Hero: Miya
+- Seed: `ALOALO1234`
+- Floor: 5
+- Kills: 307
+- Game Over không tạo bản ghi History
+- Remote Inspector ghi nhận `SAVE_FAILED`
+
+**Sau fix — PASS short-run:**
+
+- Hero: Miya
+- Seed: `ALOALO1234`
+- Floor: 2
+- Kills: 39
+- Game Over hiển thị `RUN SAVED`
+- Expedition History có entry mới khớp
+- Sinh viên xác nhận entry vẫn còn sau khi restart
+
+Hai ảnh Game Over và History đã được đối chiếu, nhưng đều chụp trước restart. Không có ảnh sau restart hoặc lần manual gameplay dài gần 2 MiB tương đương trước fix.
+
+Bằng chứng: [MANUAL_E2E_VERIFICATION.md](MANUAL_E2E_VERIFICATION.md).
+
+## 5. Giới hạn và trách nhiệm
+
+- Pending completion chưa commit chỉ được giữ trong RAM và có thể mất nếu game thoát/crash.
+- Không có bằng chứng fsync/power-loss durability tuyệt đối.
+- File quá lớn hoặc không nén vừa vẫn có thể trả `SAVE_FAILED` an toàn.
+- Benchmark 40 tác vụ chạy trong một tiến trình, không mô phỏng thực tế 631 người dùng đồng thời.
+- Source coverage chưa đo, nhưng AC/risk traceability và regression execution đã được ghi rõ.
+- Student Review persistence fix đã được sinh viên ghi **ACCEPT** trong [AI_USAGE_LOG.md](AI_USAGE_LOG.md).
+- [REFLECTION.md](REFLECTION.md) đã cập nhật theo kết quả cuối, có khai báo AI hỗ trợ.
+
+## 6. Kết luận
+
+Các rủi ro trọng yếu của VT-074 đã được kiểm tra bằng contract, integration, regression, mutation, pairwise, TIME/ORDER, performance và manual short-run E2E.
+
+**Technical verification: COMPLETED trong phạm vi bằng chứng đã thu thập.**
+
+**Line/branch coverage: NOT MEASURED.**
+
+**GitHub Actions Linux: SUCCESS trên commit `1b81031`.**
+
+Các giới hạn còn lại được ghi rõ thay vì mặc định coi là PASS. PR và PDF nộp bài vẫn là công việc tiếp theo.
+
+[Integration review trước khi commit](EVIDENCE_INTEGRATION_REVIEW_20261114.md) được giữ làm snapshot lịch sử, không thay thế trạng thái hiện tại.
