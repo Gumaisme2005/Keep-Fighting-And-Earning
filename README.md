@@ -3,8 +3,8 @@
 Keep Fighting And Earning is a 2D top-down action roguelike developed using Godot Engine 4. The project incorporates deterministic procedural dungeon generation, real-time combat mechanics, centralized stat balancing, and an automated verification test suite.
 
 > **Base Commit & Development Alignment**:
-> Nhánh `development` được căn chuẩn trên commit nền **`d718e45`** (từ `origin/main`), bảo toàn toàn bộ tính năng hữu ích của `main` (Dungeon Benchmark, Fog of War, Spike Traps, Audio Glorious Morning, Soul Knight UI) và tích hợp hoàn chỉnh 2 nhân vật mới **Yugi / Atem** cùng **Doraemon** (kèm các nhân vật và hệ thống mở rộng).
-> Chi tiết bảng diff, rà soát xung đột và bằng chứng kiểm thử: xem tại [`docs/BASE_COMMIT_ANALYSIS_AND_DIFF.md`](docs/BASE_COMMIT_ANALYSIS_AND_DIFF.md).
+> NhÃ¡nh `development` Ä‘Æ°á»£c cÄƒn chuáº©n trÃªn commit ná»n **`d718e45`** (tá»« `origin/main`), báº£o toÃ n toÃ n bá»™ tÃ­nh nÄƒng há»¯u Ã­ch cá»§a `main` (Dungeon Benchmark, Fog of War, Spike Traps, Audio Glorious Morning, Soul Knight UI) vÃ  tÃ­ch há»£p hoÃ n chá»‰nh 2 nhÃ¢n váº­t má»›i **Yugi / Atem** cÃ¹ng **Doraemon** (kÃ¨m cÃ¡c nhÃ¢n váº­t vÃ  há»‡ thá»‘ng má»Ÿ rá»™ng).
+> Chi tiáº¿t báº£ng diff, rÃ  soÃ¡t xung Ä‘á»™t vÃ  báº±ng chá»©ng kiá»ƒm thá»­: xem táº¡i [`docs/BASE_COMMIT_ANALYSIS_AND_DIFF.md`](docs/BASE_COMMIT_ANALYSIS_AND_DIFF.md).
 
 ---
 
@@ -49,7 +49,7 @@ The roster features 8 distinct heroes, selectable from the character selection s
 | 4 | Yugi / Atem | Pharaoh Summoner | 5 | 1 | 1 | 150.0 | Millennium Puzzle (monsters, guard, room spells) |
 | 5 | Doraemon | 22nd-Century Specialist | 5 | 2 | 1 | 150.0 | 4D Pocket (20 gadgets, 6 assists, 10 supers) |
 | 6 | Hoshimi Miyabi | Frost Swordswoman | 4 | 2 | 1 | 160.0 | Frost combo, dash, charged wave, Frost Bloom and ice spirit |
-| 7 | Lương Thơ | Twin Gunblade Duelist | 5 | 2 | 1 | 155.0 | Three-hit combo, Twin Barrels and White Moon transformation |
+| 7 | LÆ°Æ¡ng ThÆ¡ | Twin Gunblade Duelist | 5 | 2 | 1 | 155.0 | Three-hit combo, Twin Barrels and White Moon transformation |
 
 ### 2.2 Hero Profiles and Ability Breakdown
 
@@ -93,7 +93,7 @@ The roster features 8 distinct heroes, selectable from the character selection s
 - **Hold/release RMB**: Charged Frost Wave; **Q**: Frost Bloom ice spikes.
 - An ice spirit follows Miyabi and automatically attacks nearby visible enemies.
 
-#### Index 7: Lương Thơ (Twin Gunblade Duelist)
+#### Index 7: LÆ°Æ¡ng ThÆ¡ (Twin Gunblade Duelist)
 - **LMB**: Stab, twin swing and ground-smash combo; **RMB**: Twin Barrels.
 - **Q**: White Moon transformation grants 12 seconds of invulnerability, stronger and faster attacks, faster movement and piercing bullets.
 
@@ -167,7 +167,7 @@ The test suite is executable headlessly in Godot Engine:
 
 9. **MOBA HUD and Inventory Tests (`tests/test_moba_hud_and_inventory.tscn`)**: Numeric bars, item stacking, equipment and dropping items.
 10. **Miyabi Tests (`tests/test_miyabi.tscn`)**: Frost abilities, spirit, facing and replay.
-11. **Lương Thơ Tests (`tests/test_luong_tho.tscn`)**: Combo, firearms, transformation and replay.
+11. **LÆ°Æ¡ng ThÆ¡ Tests (`tests/test_luong_tho.tscn`)**: Combo, firearms, transformation and replay.
 12. **Projectile Obstacle Tests (`tests/test_projectile_obstacles.tscn`)**: Crates block fast projectiles; ricochets bounce; non-solid decoration remains transparent.
 
 ---
@@ -200,6 +200,30 @@ godot --headless --path . "res://tests/test_werewolf.tscn"
 godot --headless --path . "res://tests/test_moba_hud_and_inventory.tscn"
 godot --headless --path . "res://tests/test_replay_security.tscn"
 ```
+
+---
+
+### 6.4 VT-076 Bulk Import Verification
+
+Risk-based functional and state-transition tests:
+
+```cmd
+godot --headless --path . "res://tests/test_bulk_balance_import.tscn"
+```
+
+Expected result: 17 PASSED | 0 FAILED.
+
+Performance harness:
+
+```cmd
+godot --headless --path . "res://tests/benchmark_bulk_balance_import.tscn"
+```
+
+Acceptance criterion: 60 concurrent tasks, 0 task failures, p95 <= 2000 ms.
+
+Limitation: the performance harness measures in-process concurrent validation only; it does not include network latency, disk persistence, or concurrent writes to shared BalanceConfig state.
+
+Known baseline issue: tests/test_perk_system.tscn has pre-existing GDScript type-inference parse errors under Godot 4.7.2. This existed before VT-076 and is outside the VT-076 change scope.
 
 ---
 
