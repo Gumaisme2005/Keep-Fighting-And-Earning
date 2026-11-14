@@ -1,48 +1,177 @@
 # VT-074 — AI Usage Log
 
-Cập nhật 14/11/2026: xem [save-failure report](SAVE_FAILURE_FIX_REPORT.md) và [verification hiện tại](PERSISTENCE_VERIFICATION.md). Các dòng C1…C6 dưới đây là lịch sử theo thời điểm, không phải kết luận performance/manual hiện tại.
+**Bài tập cá nhân 3 – Software Engineering**
 
-| Bổ sung hiện tại | Nguồn / quyết định | Trách nhiệm và trạng thái |
-| --- | --- | --- |
-| Candidate C1 / HEAD 476ff8e | User đã duyệt C1 và trade-off trong phiên trước; [báo cáo áp dụng](C1_PRODUCTION_APPLIED_REPORT.md), [patch/source evidence](evidence/heavy_tradeoff_144f3df0463e_candidate.patch) | Giữ duplicate fast path và ownership; không suy quyết định trước thành human review patch persistence mới |
-| SAVE_FAILED / yêu cầu 14/11 | User yêu cầu triển khai, test-first, giữ 2 MiB và dữ liệu riêng tư; prompt từ attachment, không dựng transcript | AI tạo fixture, code/tests/evidence/docs; không mở save/backup thật; chưa có human post-fix signoff |
-| Lossless compact persistence | Raw candidate vượt cap ở behavioral RED; giữ nguyên JSON vừa cap, encode oversized snapshot, bounded decode, atomic publication | AI chọn sau khi kiểm size/stage; không tăng cap/xóa history/ledger. Student review patch mới: PENDING |
-| Precision trials và follow-up save | Varied controls phát hiện `result` bị reset và decimal JSON/full_precision không bit-exact; raw trials giữ nguyên trong save-failure report | AI loại decimal-only codec, dùng exact double bytes trước compression; giữ compact format sau khi file nhỏ lại. Các quyết định kỹ thuật này chưa có human review mới |
-| Game Over và recovery | Actual death bỏ qua returned status; UI mới báo thất bại/uncertainty, retry frozen ID/envelope | Test headless có actual take_damage/timer/menu; short-run manual sau fix PASS theo báo cáo sinh viên (Floor 2 / 39 kills, RUN SAVED, History khớp, restart xác nhận bằng lời); human observation và hai ảnh thật đã đọc/xem, hash và đưa vào inventory; human near-2-MiB NOT RUN; không suy ra human patch approval |
-| Reflection/authorship correction | AI đã hỗ trợ draft reflection và cung cấp snippets HT-01/HT-02 | Không khẳng định reflection/tests hoàn toàn do sinh viên tự nghĩ/viết độc lập. REFLECTION.md giữ lịch sử; [đề xuất review riêng](REFLECTION_REVIEW_PROPOSAL.md) chờ sinh viên |
+- **Sinh viên:** Vũ Xuân Bắc
+- **MSSV:** 23001833
+- **Nhóm:** SE2026-T19
+- **Ngày cập nhật:** 14/11/2026
+- **Branch:** `feat/bt3-vt074-idempotent-run`
+- **Công cụ AI:** ChatGPT, Codex
 
-Sinh viên: Vũ Xuân Bắc, 23001833, SE2026-T19. Công cụ: **Codex** và tools đọc source/Git, chạy Godot/Python, truy vấn GitHub Actions. Phiên C1 tự mô tả dựa trên GPT-6; không có deployment/model ID được xác minh để ghi chi tiết hơn. Không nhận các tool kiểm thử là một AI reviewer độc lập.
+## 1. Tổng quan sử dụng AI
 
-Log này tổng hợp artifacts và quyết định có thể kiểm chứng. Không dựng lại nguyên văn prompt nếu chưa có bản được lưu. Các summary của mục tiêu prompt dưới đây được ghi là summary; phần original plan không bị viết lại.
+Trong bài tập này, tôi sử dụng AI để hỗ trợ phân tích yêu cầu VT-074, xây dựng kế hoạch, thiết kế test cases, triển khai tính năng chống ghi trùng lịch sử lượt chơi và kiểm tra kết quả.
 
-| Giai đoạn / SHA | Mục tiêu prompt và output AI | Assumptions / review | Student decision, Accepted/Modified/Rejected | Evidence |
-| --- | --- | --- | --- | --- |
-| C1 `be8e39d` | Summary: phân tích slice, lưu original plan trước review, viết spec và revised plan | Single owner/local JSON; seed/time không phải identity; chưa có runtime proof | R-01/R-02 **MODIFY** được sinh viên xác nhận trực tiếp ở C2: isolation fixture và restore ID/ledger/fingerprint/metadata khi load; không phá save cũ | [Original prompt + plan](AI_IMPLEMENTATION_PLAN.md), [review E/R IDs và human quotes](AI_PLAN_REVIEW.md) |
-| C2 `25026e3` | Summary: strategy, 22 catalog cases, pairwise CSV/verifier và behavioral RED | Không gọi API chưa có để tạo behavioral RED; save isolation phải có probe | TR-01/TR-02 **MODIFY, chấp nhận v1**; AI cập nhật thiết kế theo quyết định. Đây chưa phải thao tác sinh viên trực tiếp sửa code test | [AI_TEST_REVIEW](AI_TEST_REVIEW.md), [cases](TEST_CASES.md), [RED raw](evidence/red.log), [C2 report](COMMIT_2_REPORT.md) |
-| C3 `2c71195` | Summary: idempotency boundary/lifecycle, common writer/loader, caller guards; GREEN contract + replay | Single process, local read-back không đồng nghĩa power-loss durability. AI tự review reentrant publication và parser/fixture issues | User cho phép fixture isolation/load modifications và yêu cầu triage A/B; accepted handoff giữ ba baseline failures, không sửa gameplay để ép xanh. Không suy commit thành bằng chứng human line-by-line review | [Prompt gốc C3](evidence/commit3_prompt.txt), [patch plan](COMMIT_3_PATCH_PLAN.md), [C3 report](COMMIT_3_REPORT.md), [perk A/B](evidence/perk_ab.json) |
-| C4 `001785e` | Summary: IT-01…08 negative/failure/reload/legacy và actual scene-flow E2E | Fixtures synthetic, actual IO faults có phạm vi; headless flow khác manual visual E2E | Handoff kiểm chứng theo phạm vi user yêu cầu. Không có evidence student tự viết các C4 tests; human direct-edit gate vẫn OPEN lúc đó | [C4 report](COMMIT_4_REPORT.md), [integration log](evidence/integration.log) |
-| C5 `65516e6` | Summary: boundary mutation, TIME/ORDER, 40-overlap harness, profiling và P-01 proposal/trial | Main-thread serialized submissions; không phải network users/threads. Workstation drift, không giảm workload để đạt p95 | Sinh viên **chỉ cho thử P-01 có điều kiện**, không approve production cuối. Trial không đạt retention gate và **REJECT**; production không giữ candidate. User yêu cầu giữ đủ evidence và nhãn heavy FAIL | [C5 report §L](COMMIT_5_REPORT.md), [profiling](PERFORMANCE_PROFILING.md), [trial](P01_TRIAL_REPORT.md), [predeclared policy](evidence/p01_a0044d484b30_policy.json) |
-| CI fix `becb711` | Summary: đối chiếu C4/C5 import, phát hiện CSV bị import thành translations; thêm `.gdignore`, clean Windows import và regressions | Windows không tái hiện allocator abort Linux; CSV import là verified exposure, root cause native memory chưa chứng minh | User tự commit/push fix. Linux run tiếp theo PASS được GitHub xác nhận; không nhận AI đã push hoặc có native crash backtrace | [Investigation](CI_IMPORT_INVESTIGATION.md), [Actions](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/43241670891) |
-| C6 HEAD `becb711` + working diff | Summary: review hai human edits, chạy tests/save probes; README/traceability/log/final review | AI đưa đề xuất HT-01/HT-02; sinh viên chịu trách nhiệm trải nghiệm và nội dung reflection | Sinh viên xác nhận trực tiếp sửa/lưu hai files trong VS Code. Diff thật chỉ thêm assertions/snapshot/helper và dòng trống. AI kiểm chứng 41 contract, wrapper31 và nguyên assertions cũ. Reflection 343 từ do sinh viên gửi; AI lưu nguyên văn và kiểm số từ | [Human edit review](HUMAN_TEST_EDIT_REVIEW.md), [diff](evidence/commit6_human_edits.patch), [actual run](evidence/commit6_369f4ec56761_all.json), [reflection](REFLECTION.md) |
+AI hỗ trợ đề xuất code, tạo dữ liệu kiểm thử, chạy test và tổng hợp báo cáo. Tôi xem xét các đề xuất, điều chỉnh những điểm chưa phù hợp, thực hiện kiểm thử thủ công và đưa ra quyết định chấp nhận hoặc từ chối giải pháp.
 
-## Những output AI cần phản biện bằng evidence
+Các đoạn nhận xét và Reflection cũng có sự hỗ trợ soạn thảo của AI. Tôi chịu trách nhiệm xem xét nội dung trước khi sử dụng và lưu vào repository.
 
-1. **TR-01, oracle v0 chỉ đếm history.** Mười retry vẫn có thể cùng giữ một entry nhưng thay receipt, ghi save/emit hoặc đổi frozen payload. V1 được sinh viên chấp nhận bổ sung state/disk/counters và conflict checks. Đến C6, kiểm source cho thấy `_snapshot()` vẫn không chứa `_envelope`; sinh viên thêm HT-01 so trực tiếp deep-copy envelope sau retry. Không nói CG-04 hiện tại chỉ còn đếm history, và không nhận AI đã tự sửa thay sinh viên.
-2. **TR-02, lặp cùng order và chỉ so counts chưa chứng minh độc lập.** Các group FIFO/manual/clear từng dùng shared fixture. R-01/TR-02 dẫn tới setup riêng, independent/forward/reverse/seeded shuffle và exact per-group state comparison. C6 sinh viên bổ sung HT-02: fixture phải có đủ replays trước destructive operations, tránh clear trên rỗng đạt một cách vô nghĩa. Toàn bộ inherited regression assertions giữ nguyên.
-3. **P-01, giả thuyết giảm copy chưa đủ làm quyết định production.** Functional equivalence 94 cases/mode và 568 assertions đạt, nhưng primary-heavy pooled p95 chỉ giảm 7,56%, service 8,18%, dưới gate 10% đã ghi trước; heavy vẫn FAIL. Candidate bị REJECT, không đổi mục tiêu sau khi thấy kết quả hoặc cắt frames/tasks. Đây là thử nghiệm không đạt mức cải thiện để giữ patch, không phải tuyên bố code gây functional regression.
-4. **Khoảng trống import cuối repository.** Profiling/P-01 copies bỏ `docs/`, nên tests trước đó không kiểm Godot import 14 CSV mới trong gói commit cuối. CI abort 134 sau import; điều tra xác nhận CSV bị tạo translation resources. `.gdignore` loại exposure, CI sau fix PASS; native root cause vẫn là strongest hypothesis, không được nâng thành kết luận đã chứng minh.
+## 2. AI Plan Review
 
-## Trách nhiệm và provenance
+| ID | Đề xuất ban đầu | Nhận xét và quyết định |
+|---|---|---|
+| R-01 | Dùng fixture kiểm thử hiện có | **MODIFY:** Cần cô lập dữ liệu giữa các test để tránh phụ thuộc thứ tự chạy. |
+| R-02 | Cập nhật save/load cho dữ liệu mới | **MODIFY:** Cần bảo toàn run ID, ledger, fingerprint và metadata khi tải lại save. |
 
-- Sinh viên đưa các quyết định R/TR, cho phép thử nghiệm P-01 có điều kiện, xác nhận trực tiếp sửa/lưu hai test HT theo snippets AI hỗ trợ và gửi reflection có AI hỗ trợ draft; không suy đây là toàn bộ nội dung độc lập của sinh viên. Sinh viên tự review/stage/commit/push qua công cụ của mình.
-- AI đề xuất plan/tests/patches, ghi lại quyết định đã nhận, tự kiểm source/diff, chạy tools và tổng hợp tài liệu. Việc sinh viên copy/chỉnh đề xuất AI được ghi đúng là AI hỗ trợ và human direct edit; không gọi là phát minh độc lập của sinh viên.
-- Hai lần trước user xác nhận đã sửa nhưng files trên ổ đĩa còn nguyên: AI giữ gate OPEN. Chỉ sau khi có diff thật và chạy test mới ghi SATISFIED. Không xem lời xác nhận đơn lẻ thay cho diff/execution evidence.
-- Chỉ prompt C1 và C3 được trỏ đến bản nguyên văn đã lưu trong repo ở bảng trên. Prompt C2/C4/C5/C6 và các lời review có trong cuộc hội thoại/attachments, nhưng không giả tạo bản transcript mới trong repo. Những trích dẫn human decisions đã có trong AI_PLAN_REVIEW/AI_TEST_REVIEW được giữ nguyên.
-- Không tuyên line/branch coverage, manual UI E2E, mọi workload p95 hoặc toàn regression PASS khi chưa có evidence tương ứng. C6 không tự stage/commit/push/PR/PDF.
-### Student Review – Persistence Fix (14/11/2026)
+**Kết quả:** Hai đề xuất được điều chỉnh trước khi tiếp tục triển khai.
+
+Bằng chứng: [AI_PLAN_REVIEW.md](AI_PLAN_REVIEW.md), [AI_IMPLEMENTATION_PLAN.md](AI_IMPLEMENTATION_PLAN.md).
+
+## 3. AI-Generated Test Review
+
+| ID | Vấn đề phát hiện | Điều chỉnh của sinh viên |
+|---|---|---|
+| TR-01 | Chỉ đếm số bản ghi History chưa đủ để xác nhận idempotency | Bổ sung kiểm tra trạng thái, dữ liệu yêu cầu gốc và các side effects. |
+| TR-02 | Chạy test theo cùng thứ tự chưa chứng minh được tính độc lập | Tách fixture và kiểm tra nhiều thứ tự chạy. |
+| HT-01 | Chưa kiểm tra trực tiếp frozen envelope sau retry | Thêm assertion xác nhận envelope không thay đổi. |
+| HT-02 | Test xóa replay có thể PASS dù fixture rỗng | Thêm assertion xác nhận replay tồn tại trước khi xóa. |
+
+Hai thay đổi HT-01 và HT-02 được sinh viên trực tiếp chỉnh sửa, lưu vào test files theo đề xuất có AI hỗ trợ. AI kiểm tra diff và chạy lại test để xác minh.
+
+**Kết quả:** Các bài test liên quan PASS và những assertion cũ được giữ nguyên.
+
+Bằng chứng: [HUMAN_TEST_EDIT_REVIEW.md](HUMAN_TEST_EDIT_REVIEW.md), [before/after patch](evidence/commit6_human_edits.patch).
+
+## 4. Nhật ký triển khai và quyết định
+
+| Giai đoạn | AI hỗ trợ | Quyết định / kết quả |
+|---|---|---|
+| C1 – Specification | Phân tích yêu cầu, tạo specification và AI plan | Sinh viên điều chỉnh R-01, R-02. |
+| C2 – Test Design | Thiết kế test strategy, 22 test cases và pairwise | Sinh viên điều chỉnh TR-01, TR-02; tạo bằng chứng RED. |
+| C3 – Implementation | Triển khai idempotent run completion, save/load và GREEN tests | Chấp nhận phần triển khai sau kiểm chứng; giữ nguyên các baseline failures không liên quan. |
+| C4 – Integration | Kiểm tra retry, invalid requests, conflict, reload và failure paths | Các bài test liên quan PASS. |
+| C5 – Quality Testing | Mutation testing, TIME/ORDER, performance harness và thử nghiệm P-01 | **REJECT P-01** vì mức cải thiện chưa đạt tiêu chí 10% đã đặt ra. |
+| C6 – Human Test Review | AI đề xuất HT-01, HT-02; kiểm tra code diff và test results | Sinh viên trực tiếp chỉnh sửa hai test; kết quả PASS. |
+| C1 Production Optimization | Kiểm tra duplicate fast path, ownership và benchmark | **ACCEPT C1** sau khi đánh giá kết quả và trade-off. |
+| Persistence Fix | Phân tích lỗi `SAVE_FAILED`, bổ sung codec, recovery và regression tests | **ACCEPT** sau khi xem xét bằng chứng và kiểm thử thủ công. |
+| Final Review | Tổng hợp kết quả kiểm thử, CI và tài liệu | Code, testing và Linux CI đạt yêu cầu trong phạm vi kiểm chứng. |
+
+Các giai đoạn trên là bản tóm tắt quá trình thực hiện, không phải bản sao nguyên văn mọi prompt.
+
+## 5. Student Review – Persistence Fix (14/11/2026)
 
 **Decision: ACCEPT**
 
 Tôi đồng ý với cách AI xử lý lỗi `SAVE_FAILED` bằng nén dữ liệu không mất mát, vì giải pháp này giữ nguyên thông tin replay và không cần tăng giới hạn file. Các bài test đã PASS và tôi đã chơi thử, xác nhận dữ liệu vẫn còn sau khi khởi động lại game.
 
 Tuy nhiên, tôi lưu ý trường hợp chơi rất dài chưa được kiểm tra lại thủ công. Tôi chấp nhận giải pháp hiện tại với giới hạn này.
+
+**Lý do chấp nhận:**
+
+- Giữ giới hạn file 2 MiB.
+- Không cần xóa replay hoặc ledger cũ để giảm dung lượng.
+- Bảo toàn dữ liệu replay khi mã hóa và giải mã.
+- Có regression tests cho trường hợp vượt giới hạn và lỗi lưu dữ liệu.
+- Manual E2E cơ bản đã PASS.
+
+Nhận xét được AI hỗ trợ soạn thảo và sinh viên xem xét, đăng lên GitHub.
+
+Bằng chứng: [SAVE_FAILURE_FIX_REPORT.md](SAVE_FAILURE_FIX_REPORT.md), [Student Review commit 7c01d3e](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/commit/7c01d3ed14408e73d5d19691995754484db45245).
+
+## 6. Testing và Verification
+
+| Hạng mục | Kết quả |
+|---|---|
+| Test-first RED → GREEN | PASS |
+| Unit / Integration / Persistence regression | PASS trong các suite mục tiêu |
+| Pairwise | 14/14 cases PASS |
+| Mutation testing | Mutant bị phát hiện; khôi phục code PASS |
+| Flaky TIME | 20 lượt kiểm tra PASS |
+| Flaky ORDER | 20 lượt kiểm tra PASS |
+| Performance 40 tasks | Bốn workload đạt p95 ≤ 1.500 ms |
+| Manual E2E cơ bản | PASS |
+| GitHub Actions Linux cho bản sửa code cuối | SUCCESS |
+| Line/branch coverage | NOT MEASURED |
+
+### Performance
+
+| Workload | p95 |
+|---|---:|
+| Primary – 2 frames | 12.146 ms |
+| Secondary – 2 frames | 1.217 ms |
+| Primary – 3.600 frames | 411.918 ms |
+| Secondary – 3.600 frames | 802.969 ms |
+
+Cả bốn workload đều đạt mục tiêu 1.500 ms. Tuy nhiên, đây là phép đo 40 tác vụ chồng lấp trong một tiến trình, không phải kiểm thử trực tiếp 631 người dùng đồng thời qua mạng.
+
+Đề xuất P-01 từng bị từ chối vì chưa đạt tiêu chí cải thiện. Kết quả đó thuộc thử nghiệm trước đây, không mâu thuẫn với benchmark PASS sau khi áp dụng C1.
+
+### Manual E2E
+
+**Trước khi sửa:**
+
+- Miya, seed `ALOALO1234`.
+- Floor 5, 307 kills.
+- Trạng thái `SAVE_FAILED`.
+- Không xuất hiện bản ghi mới trong Expedition History.
+
+**Sau khi sửa:**
+
+- Miya, seed `ALOALO1234`.
+- Floor 2, 39 kills.
+- Game Over hiển thị `RUN SAVED`.
+- History hiển thị bản ghi khớp.
+- Sau khi khởi động lại game, dữ liệu vẫn còn theo xác nhận của sinh viên.
+
+Manual E2E cơ bản **PASS**. Tuy nhiên, chưa chơi lại thủ công một lượt dài tương đương trường hợp lỗi ban đầu. Hai ảnh bằng chứng được chụp trước khi khởi động lại.
+
+### GitHub Actions
+
+Bản sửa persistence tại commit `879b8b4` đã chạy thành công trên Linux, bao gồm VT-074 Smoke và Persistence Regression.
+
+[GitHub Actions – Successful Run](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/43573367776)
+
+Line/branch coverage chưa được đo vì dự án chưa có instrumentation phù hợp. Thay vào đó, các yêu cầu và rủi ro được liên kết với test evidence trong [COVERAGE_AND_RISKS.md](COVERAGE_AND_RISKS.md) và [TRACEABILITY.md](TRACEABILITY.md).
+
+Ba Perk baseline failures đã biết vẫn được ghi riêng; không coi toàn bộ test của dự án đều PASS.
+
+## 7. Những giới hạn và bài học
+
+Trong quá trình thực hiện, tôi nhận thấy một số đề xuất AI chưa đủ chặt chẽ nếu chỉ dựa vào số lượng test PASS. Ví dụ, việc chỉ đếm History không phát hiện được mọi side effect; test xóa replay cũng có thể PASS khi dữ liệu đầu vào rỗng.
+
+Lỗi `SAVE_FAILED` cho thấy dữ liệu hợp lệ vẫn có thể vượt giới hạn dung lượng khi lưu. Việc bổ sung kiểm thử biên, kiểm tra giao diện và khởi động lại game giúp phát hiện vấn đề mà các test ban đầu chưa bao phủ đầy đủ.
+
+Tôi cũng nhận thấy cần phân biệt kết quả test tự động với kiểm tra thực tế. Các giới hạn còn lại gồm:
+
+- Chưa kiểm tra lại thủ công tình huống gameplay dài gần 2 MiB.
+- Chưa kiểm tra riêng thao tác phát replay và retry trên giao diện sau sửa.
+- Chưa đo line/branch coverage.
+- Pending completion chưa commit vẫn có thể mất khi game thoát hoặc crash.
+- Kết quả benchmark không thay thế được thử nghiệm tải nhiều người dùng thực.
+
+## 8. AI Usage và trách nhiệm
+
+**AI hỗ trợ:** Phân tích yêu cầu, đề xuất kế hoạch, triển khai code, xây dựng test, tạo fixture, chạy các công cụ kiểm thử, phân tích lỗi và hỗ trợ viết tài liệu, Reflection và nhận xét.
+
+**Sinh viên thực hiện:** Xem xét các đề xuất, đưa ra quyết định MODIFY/ACCEPT/REJECT, trực tiếp chỉnh sửa HT-01/HT-02 theo hướng dẫn, thử game trên Godot, kiểm tra kết quả, quản lý commit và push lên GitHub.
+
+Những test và đoạn code AI hỗ trợ không được trình bày là hoàn toàn do sinh viên tự viết độc lập. Các quyết định đều được mô tả theo bằng chứng hiện có, không tự tạo nội dung review hoặc transcript chưa từng được lưu.
+
+File save và backup cá nhân không được đưa vào repository.
+
+## 9. Tài liệu tham chiếu
+
+- [SPECIFICATION.md](SPECIFICATION.md)
+- [AI_IMPLEMENTATION_PLAN.md](AI_IMPLEMENTATION_PLAN.md)
+- [AI_PLAN_REVIEW.md](AI_PLAN_REVIEW.md)
+- [AI_TEST_REVIEW.md](AI_TEST_REVIEW.md)
+- [TEST_CASES.md](TEST_CASES.md)
+- [HUMAN_TEST_EDIT_REVIEW.md](HUMAN_TEST_EDIT_REVIEW.md)
+- [PERSISTENCE_VERIFICATION.md](PERSISTENCE_VERIFICATION.md)
+- [SAVE_FAILURE_FIX_REPORT.md](SAVE_FAILURE_FIX_REPORT.md)
+- [MANUAL_E2E_VERIFICATION.md](MANUAL_E2E_VERIFICATION.md)
+- [COVERAGE_AND_RISKS.md](COVERAGE_AND_RISKS.md)
+- [REFLECTION.md](REFLECTION.md)
+
+**Kết luận:** Sinh viên chấp nhận bản sửa persistence hiện tại trong phạm vi các bằng chứng đã kiểm tra. Phần code và kiểm thử kỹ thuật đã đạt mục tiêu chính; các giới hạn chưa kiểm chứng được ghi rõ để phục vụ báo cáo và đánh giá.
