@@ -1,0 +1,5 @@
+FAIL TC-09 frames=0: invalid frame count must return false; rejection changed state or truncated input; rejection mutated the supplied replay; rejection emitted saved_data_changed
+FAIL TC-09 frames=1: undo_delete_replay() is not implemented
+FAIL TC-09 frames=3599: undo_delete_replay() is not implemented
+FAIL TC-09 frames=3600: undo_delete_replay() is not implemented
+FAIL TC-09 frames=3601: invalid frame count must return false; rejection changed state or truncated input; rejection mutated the supplied replay; rejection emitted saved_data_changed

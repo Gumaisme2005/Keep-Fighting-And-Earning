@@ -1,0 +1,23 @@
+Assignment: GAME-2D-02 - VT-073
+Student: 23001832
+Phase: RED - Boundary Value Analysis
+Godot: 4.7.2.stable.official.ed1daf0bf
+
+Test: TC-09
+Test file: tests/vt073/test_replay_boundaries.gd
+Exit code: 1
+
+Results:
+0 frames: FAIL - Empty replay accepted.
+1 frame: FAIL - Undo not implemented.
+3599 frames: FAIL - Undo not implemented.
+3600 frames: FAIL - Undo not implemented.
+3601 frames: FAIL - Over-limit replay accepted.
+
+Evidence:
+docs/VT-073/red_bva_stdout.log
+docs/VT-073/red_bva_stderr.log
+
+Conclusion:
+Boundary tests expose missing validation and Undo behavior.
+Production code has not been modified.
