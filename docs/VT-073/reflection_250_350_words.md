@@ -1,0 +1,11 @@
+# VT-073 — Reflection (250–350 words)
+
+This assignment changed how I evaluate AI-assisted software development. The initial request sounded simple: add Undo to a Delete Replay button in a Godot game. In practice, the risky part was not drawing the button. It was preserving state when inputs were invalid, permission was denied, or saving failed. I therefore began with acceptance criteria, invariants, and a risk-based test plan before implementing the feature.
+
+The RED-to-GREEN cycle provided concrete evidence of progress. I first ran tests that failed because Undo, validation, and authorization protections were missing. After reviewing the AI-generated patch, I ran the same tests again. Boundary values around replay-frame limits, JSON persistence, and an injected file-open failure revealed behavior that a happy-path demonstration would not cover. Mutation testing was especially useful: disabling one authorization guard made TC-07 fail for three observable reasons, proving that the test could detect a meaningful regression.
+
+I also learned that AI suggestions require technical scrutiny. Treating a replay's presence in a collection as authorization would have been misleading; the application needed a separate permission check, even though it was only a local policy. A broad persistence rewrite would have increased the change surface without resolving the immediate requirement. Later, a test draft risked overwriting existing sandbox data before backing it up. Correcting that test was as important as correcting production code.
+
+Several limitations remain. The direct-write save mechanism is not crash-atomic, and my failure-path test covered file-open errors rather than interrupted writes. The 100-request benchmark measured an in-memory approximation; its compiler diagnostics and mocked persistence prevent a full performance claim. I also did not obtain numerical line or branch coverage. Finally, a whitespace mistake broke GDScript parsing until I corrected the file's tab indentation.
+
+My main takeaway is that AI accelerates implementation but does not replace verification. Small changes, isolated fixtures, honest evidence, and explicit limits make the result more trustworthy than an apparently successful demo alone.

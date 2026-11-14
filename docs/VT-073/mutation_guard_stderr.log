@@ -1,0 +1,3 @@
+FAIL TC-07: delete_replay() must return false
+FAIL TC-07: rejected deletion mutated replay/save state
+FAIL TC-07: rejected deletion emitted saved_data_changed

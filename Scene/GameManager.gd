@@ -53,6 +53,10 @@ var replay_frames: Array = []
 var current_recording_frames: Array = []
 var last_recorded_run: Dictionary = {}
 
+# Local, cooperative permission policy; not authenticated-user security.
+var _replay_permission_mode: String = "EDITABLE"
+var _replay_undo: Dictionary = {}
+
 func _ready() -> void:
 	load_save_data()
 	if saved_seeds.is_empty():
@@ -210,6 +214,7 @@ func register_level_advance(new_level: int) -> void:
 	stats_updated.emit(current_level, enemies_killed)
 
 func finish_run(reason: String = "Game Over") -> void:
+	_replay_undo.clear()
 	var hero_info := get_selected_character_info()
 	var timestamp := Time.get_datetime_string_from_system(false, true)
 	var entry := {
@@ -244,25 +249,172 @@ func enforce_replay_limits() -> void:
 		if bool(item.get("has_replay", false)) and item.has("frames") and not item["frames"].is_empty():
 			replay_count += 1
 			if replay_count > MAX_SAVED_REPLAYS:
+				_replay_undo.clear()
 				# Thu hồi vùng nhớ các mảng frame của các replay cũ vượt quá giới hạn 10
 				item["frames"].clear()
 				item["has_replay"] = false
 
+func set_replay_permission_mode(mode: String) -> void:
+	# Unknown modes fail closed; switching permission never consumes Undo.
+	_replay_permission_mode = "EDITABLE" if mode == "EDITABLE" else "READ_ONLY"
+
+func _live_replay_index(run_entry: Dictionary) -> int:
+	var found := -1
+	for i in range(run_history.size()):
+		if is_same(run_history[i], run_entry):
+			if found != -1: # The same instance in two slots is ambiguous.
+				return -1
+			found = i
+	return found
+
+static func _valid_replay_frames(frames: Variant, limit: int) -> bool:
+	if not (frames is Array) or frames.is_empty() or frames.size() > limit:
+		return false
+	for frame in frames:
+		# Yugi records mouse transitions instead of atk/rmb; those are optional.
+		if not (frame is Dictionary) or not frame.has_all(["dx", "dy", "ax", "ay", "q", "slot"]):
+			return false
+		for value in frame.values():
+			if not (value is bool or value is int or value is float):
+				return false
+			if value is float and not is_finite(value):
+				return false
+		# Compare against existing bounds, but never store sanitized/truncated data.
+		var safe: Dictionary = _sanitize_replay_frames([frame], 1)[0]
+		for key in frame:
+			if not safe.has(key) or (safe[key] is bool) != (frame[key] is bool):
+				return false
+			if frame[key] != safe[key]:
+				return false
+	return true
+
+func _valid_history_replay(entry: Dictionary) -> bool:
+	for key in ["seed", "date", "hero_name", "reason"]:
+		if not (entry.get(key) is String):
+			return false
+		if entry[key] != sanitize_note(entry[key]):
+			return false
+	if entry["seed"].is_empty() or entry["seed"] != sanitize_seed(entry["seed"]) or entry["date"].is_empty():
+		return false
+	for key in ["hero_idx", "floor", "kills"]:
+		if not (entry.get(key) is int):
+			return false
+	if entry["hero_idx"] < 0 or entry["hero_idx"] >= CHARACTER_SCENES.size():
+		return false
+	if entry["floor"] < 1 or entry["floor"] > 9999 or entry["kills"] < 0 or entry["kills"] > 999999:
+		return false
+	if not (entry.get("has_replay") is bool) or not entry["has_replay"]:
+		return false
+	return _valid_replay_frames(entry.get("frames"), MAX_DISK_REPLAY_FRAMES)
+
+func _matches_last_recording(entry: Dictionary) -> bool:
+	# Association only, never selection authority. Legacy/ambiguous data is kept.
+	for key in ["seed", "date", "hero_idx", "hero_name", "floor", "kills", "reason"]:
+		if not entry.has(key) or not last_recorded_run.has(key) or entry[key] != last_recorded_run[key]:
+			return false
+	var frames: Variant = entry.get("frames")
+	var latest: Variant = last_recorded_run.get("frames")
+	if not (frames is Array) or not (latest is Array) or frames.is_empty():
+		return false
+	if frames.size() != mini(latest.size(), MAX_DISK_REPLAY_FRAMES):
+		return false
+	return frames == latest.slice(0, frames.size())
+
 func delete_replay(run_entry: Dictionary) -> bool:
-	for entry in run_history:
-		if entry == run_entry or (entry.get("date") == run_entry.get("date") and entry.get("seed") == run_entry.get("seed")):
-			if entry.has("frames") and entry["frames"] is Array:
-				entry["frames"].clear()
-			entry["has_replay"] = false
-			if last_recorded_run.get("date") == entry.get("date"):
-				last_recorded_run.clear()
-			save_data_to_disk()
-			saved_data_changed.emit()
-			return true
-	return false
+	if _replay_permission_mode != "EDITABLE":
+		return false
+	if run_entry.is_empty() or run_history.size() > MAX_RUN_HISTORY:
+		return false
+	var index := _live_replay_index(run_entry)
+	if index < 0 or not _valid_history_replay(run_entry):
+		return false
+	var clear_latest := false
+	if _matches_last_recording(run_entry):
+		var matches := 0
+		for item in run_history:
+			if item is Dictionary and _matches_last_recording(item):
+				matches += 1
+		clear_latest = matches == 1
+	if clear_latest and not _valid_replay_frames(last_recorded_run.get("frames"), MAX_REPLAY_FRAMES):
+		return false
+	var snapshot := run_entry.duplicate(true)
+	var old_frames: Array = run_entry["frames"]
+	var old_latest := last_recorded_run
+	var latest_snapshot := old_latest.duplicate(true) if clear_latest else {}
+	# Rebind instead of clearing arrays/dictionaries shared by other game state.
+	run_entry["frames"] = []
+	run_entry["has_replay"] = false
+	if clear_latest:
+		last_recorded_run = {}
+	if not save_data_to_disk(true):
+		run_entry["frames"] = old_frames
+		run_entry["has_replay"] = snapshot["has_replay"]
+		last_recorded_run = old_latest
+		return false
+	_replay_undo = {
+		"target": run_entry, "index": index, "before": snapshot,
+		"after": run_entry.duplicate(true), "restore_latest": clear_latest,
+		"latest": latest_snapshot
+	}
+	saved_data_changed.emit()
+	return true
+func can_undo_delete_replay() -> bool:
+	if _replay_permission_mode != "EDITABLE":
+		return false
+
+	if _replay_undo.is_empty():
+		return false
+
+	if not (_replay_undo.get("target") is Dictionary):
+		return false
+
+	var target: Dictionary = _replay_undo["target"]
+
+	return (
+		_live_replay_index(target) == _replay_undo.get("index", -1)
+		and target == _replay_undo.get("after")
+	)
+
+func undo_delete_replay() -> bool:
+	if _replay_permission_mode != "EDITABLE" or _replay_undo.is_empty():
+		return false
+	var entry: Dictionary = _replay_undo["target"]
+	if _live_replay_index(entry) != _replay_undo["index"] or entry != _replay_undo["after"]:
+		return false
+	if run_history.size() > MAX_RUN_HISTORY:
+		return false
+	var replay_count := 0
+	for item in run_history:
+		if not (item is Dictionary) or not (item.get("frames") is Array):
+			return false
+		if item["frames"].size() > MAX_DISK_REPLAY_FRAMES:
+			return false
+		if item.get("has_replay", false) and not item["frames"].is_empty():
+			replay_count += 1
+	if replay_count >= MAX_SAVED_REPLAYS:
+		return false
+	var restore_latest: bool = _replay_undo["restore_latest"]
+	if restore_latest and not last_recorded_run.is_empty():
+		return false # Never overwrite a newer recording.
+	var snapshot: Dictionary = _replay_undo["before"]
+	var old_frames: Array = entry["frames"]
+	var old_latest := last_recorded_run
+	entry["frames"] = snapshot["frames"].duplicate(true)
+	entry["has_replay"] = snapshot["has_replay"]
+	if restore_latest:
+		last_recorded_run = _replay_undo["latest"].duplicate(true)
+	if not save_data_to_disk(true):
+		entry["frames"] = old_frames
+		entry["has_replay"] = false
+		last_recorded_run = old_latest
+		return false
+	_replay_undo.clear()
+	saved_data_changed.emit()
+	return true
 
 func delete_run_history_entry(index: int) -> bool:
 	if index >= 0 and index < run_history.size():
+		_replay_undo.clear()
 		var entry = run_history[index]
 		if entry.has("frames") and entry["frames"] is Array:
 			entry["frames"].clear()
@@ -273,6 +425,7 @@ func delete_run_history_entry(index: int) -> bool:
 	return false
 
 func clear_all_replays() -> void:
+	_replay_undo.clear()
 	for entry in run_history:
 		if entry.has("frames") and entry["frames"] is Array:
 			entry["frames"].clear()
@@ -346,7 +499,7 @@ func start_action_replay(run_entry: Dictionary = {}) -> bool:
 	get_tree().change_scene_to_file("res://world.tscn")
 	return true
 
-func save_data_to_disk() -> void:
+func save_data_to_disk(check_size_limit: bool = false) -> bool:
 	var data := {
 		"current_seed": current_seed,
 		"selected_character_index": selected_character_index,
@@ -354,10 +507,19 @@ func save_data_to_disk() -> void:
 		"run_history": run_history,
 		"last_recorded_run": last_recorded_run
 	}
+	var content := JSON.stringify(data, "\t")
+	# Delete/Undo must not commit a save that the existing loader rejects.
+	if check_size_limit and content.to_utf8_buffer().size() > MAX_SAVE_FILE_BYTES:
+		return false
 	var file := FileAccess.open(SAVE_FILE_PATH, FileAccess.WRITE)
-	if file != null:
-		file.store_string(JSON.stringify(data, "\t"))
-		file.close()
+	if file == null:
+		return false
+	var write_ok := file.store_string(content) and file.get_error() == OK
+	file.flush()
+	var flush_ok := file.get_error() == OK
+	file.close()
+	# Direct writes are not atomic; memory rollback cannot repair a partial file.
+	return write_ok and flush_ok
 
 func load_save_data() -> void:
 	if not FileAccess.file_exists(SAVE_FILE_PATH):
@@ -374,6 +536,7 @@ func load_save_data() -> void:
 	var parsed = JSON.parse_string(content)
 	if not (parsed is Dictionary):
 		return
+	_replay_undo.clear()
 	if parsed.has("current_seed"):
 		var s := sanitize_seed(String(parsed["current_seed"]))
 		if not s.is_empty():

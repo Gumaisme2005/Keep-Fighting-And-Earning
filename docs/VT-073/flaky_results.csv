@@ -1,0 +1,7 @@
+﻿"Test","Run","ExitCode","Result"
+"test_replay_persistence","1","0","PASS"
+"test_replay_persistence","2","0","PASS"
+"test_replay_persistence","3","0","PASS"
+"test_replay_save_failure","1","0","PASS"
+"test_replay_save_failure","2","0","PASS"
+"test_replay_save_failure","3","0","PASS"

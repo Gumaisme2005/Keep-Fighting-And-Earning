@@ -1,0 +1,33 @@
+Assignment: GAME-2D-02 - VT-073
+Student: Nguyen Le Ngoc Bao - 23001832
+Test: Mutation Testing - TC-07
+Godot: 4.7.2
+
+Mutation:
+Temporarily disabled the EDITABLE authorization guard
+inside delete_replay() in the disposable Sandbox.
+
+Expected:
+TC-07 must fail when an unauthorized deletion succeeds.
+
+Actual:
+TC-04: PASS
+TC-05: PASS
+TC-07: FAIL
+
+TC-07 detected:
+- Unauthorized deletion returned an incorrect result.
+- Replay/save state was mutated.
+- saved_data_changed was emitted.
+
+Mutation test exit code: 1
+Mutation status: KILLED
+Sandbox source code restored: True (SHA-256 verified)
+
+Evidence:
+mutation_guard_stdout.log
+mutation_guard_stderr.log
+
+Scope:
+Local cooperative permission policy, not authenticated-user security.
+No mutation was applied to the submission branch.

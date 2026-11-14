@@ -1,0 +1,30 @@
+SCRIPT ERROR: Compile Error: Identifier not found: AudioManager
+   at: GDScript::reload (res://Scene/Character/Player 3_Miya/player_3.gd:80)
+ERROR: Failed to load script "res://Scene/Character/Player 3_Miya/player_3.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Compile Error: Identifier not found: AudioManager
+   at: GDScript::reload (res://Scene/Items/WorldItem/WorldItem.gd:57)
+ERROR: Failed to load script "res://Scene/Items/WorldItem/WorldItem.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Compile Error: Identifier not found: AudioManager
+   at: GDScript::reload (res://Scene/UI/GameUI.gd:380)
+ERROR: Failed to load script "res://Scene/UI/GameUI.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Compile Error: Identifier not found: GameManager
+   at: GDScript::reload (res://Scene/Character/Player 1_Pyrois/player.gd:91)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://Scene/Character/Player 2_Olaf/player_2.gd:0)
+ERROR: Failed to load script "res://Scene/Character/Player 2_Olaf/player_2.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Compile Error: Identifier not found: GameManager
+   at: GDScript::reload (res://Scene/Character/Player 4_Charlotte/player_4.gd:29)
+ERROR: Failed to load script "res://Scene/Character/Player 4_Charlotte/player_4.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Compile Error: Identifier not found: GameManager
+   at: GDScript::reload (res://Scene/Character/Yugi/yugi.gd:30)
+ERROR: Failed to load script "res://Scene/Character/Yugi/yugi.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Compile Error: Identifier not found: GameManager
+   at: GDScript::reload (res://Scene/Character/Doraemon/doraemon.gd:125)
+ERROR: Failed to load script "res://Scene/Character/Doraemon/doraemon.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)

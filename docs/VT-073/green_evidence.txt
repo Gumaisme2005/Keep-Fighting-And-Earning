@@ -1,0 +1,33 @@
+Assignment: GAME-2D-02 - VT-073
+Student: Nguyen Le Ngoc Bao - 23001832
+Phase: GREEN
+Godot: 4.7.2.stable.official.ed1daf0bf
+
+Baseline commit: 777d9d9fbcfffe61ea421071d3d891a3dd7bd788
+Latest RED commit: e2a3201
+
+TC-02: PASS - Replay restored exactly.
+TC-04: PASS - Empty input rejected.
+TC-05: PASS - Copied dictionary rejected.
+TC-07: PASS - READ_ONLY permission enforced.
+
+TC-09 Boundary Value Analysis:
+0 frames: PASS
+1 frame: PASS
+3599 frames: PASS
+3600 frames: PASS
+3601 frames: PASS
+
+All three test executions returned exit code 0.
+
+Evidence:
+green_tc02_stdout.log
+green_tc02_stderr.log
+green_guards_stdout.log
+green_guards_stderr.log
+green_bva_stdout.log
+green_bva_stderr.log
+
+Note:
+Integration, mutation, failure-path, and performance
+tests are not yet complete.

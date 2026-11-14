@@ -1,0 +1,18 @@
+Assignment: GAME-2D-02 - VT-073
+Student: 23001832
+Godot: 4.7.2.stable.official.ed1daf0bf
+
+Test file: tests/vt073/test_replay_undo_state.gd
+
+TC-03: PASS - Single-use Undo enforced.
+TC-08: PASS - READ_ONLY denies Undo without consuming recovery.
+
+Exit code: 0
+
+Evidence:
+green_undo_state_stdout.log
+green_undo_state_stderr.log
+
+Scope:
+In-memory state and signal checks.
+Disk persistence and mutation testing remain pending.

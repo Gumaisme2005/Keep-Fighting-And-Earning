@@ -1,0 +1,23 @@
+Assignment: GAME-2D-02 - VT-073
+Student: Nguyen Le Ngoc Bao - 23001832
+Test ID: TC-12
+Level: Integration
+Godot: 4.7.2.stable.official.ed1daf0bf
+Exit code: 0
+
+Result: PASS
+
+Verified:
+- Initial replay persisted to JSON.
+- Delete updated the saved JSON.
+- Undo restored the original saved JSON.
+- Reload recovered the restored replay.
+- Unrelated save data remained unchanged.
+
+Evidence:
+green_persistence_stdout.log
+green_persistence_stderr.log
+
+Limitation:
+Reload was tested within the same Godot process.
+A separate application restart was not tested.

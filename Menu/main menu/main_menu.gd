@@ -15,6 +15,7 @@ var seed_modal: PanelContainer = null
 var lore_modal: PanelContainer = null
 var help_modal: PanelContainer = null
 var history_hdr_label: Label = null
+var undo_replay_btn: Button = null
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -267,6 +268,28 @@ func _build_seed_and_replay_modal() -> void:
 	UITheme.style_header_label(history_hdr_label, 13, UITheme.COLOR_TEXT_GOLD)
 	right_vbox.add_child(history_hdr_label)
 
+	# VT-073: One-step Undo for Delete Replay.
+	undo_replay_btn = UITheme.create_button(
+		"Undo Last Delete",
+		"",
+		Vector2(160, 28),
+		UITheme.COLOR_GOLD_BORDER,
+		UITheme.COLOR_BG_DARK,
+		11
+	)
+
+	undo_replay_btn.tooltip_text = "Restore the last deleted replay in this session"
+	undo_replay_btn.disabled = true
+	undo_replay_btn.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+
+	undo_replay_btn.pressed.connect(func():
+		if not GameManager.undo_delete_replay():
+			push_warning("Undo failed or is no longer available.")
+		_refresh_seed_lists()
+	)
+
+	right_vbox.add_child(undo_replay_btn)
+
 	var r_scroll := ScrollContainer.new()
 	r_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	right_vbox.add_child(r_scroll)
@@ -286,7 +309,8 @@ func _refresh_seed_lists() -> void:
 
 	if get_node_or_null("/root/GameManager") == null:
 		return
-
+	if undo_replay_btn != null:
+		undo_replay_btn.disabled = not GameManager.can_undo_delete_replay()
 	for item in GameManager.saved_seeds:
 		var card := PanelContainer.new()
 		card.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_DARK, UITheme.COLOR_GOLD_BORDER_MUTED, 1, 4, 8, 6))
