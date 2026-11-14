@@ -1,0 +1,8 @@
+Test ID: TC-02
+Phase: RED
+Godot: 4.7.2.stable.official.ed1daf0bf
+Baseline: 777d9d9fbcfffe61ea421071d3d891a3dd7bd788
+Exit code: 1
+Result: FAIL TC-02: undo_delete_replay() is not implemented
+Reason: Undo functionality is absent before implementation.
+Test file: tests/vt073/test_replay_undo.gd
