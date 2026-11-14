@@ -1,4 +1,5 @@
 extends Node
+const GameManagerScript = preload("res://Scene/GameManager.gd")
 
 class RingEnemy extends Node2D:
 	var is_dead := false
@@ -183,7 +184,7 @@ func _ready() -> void:
 	player._physics_process(1.0 / 60)
 	assert(get_child(get_child_count() - 1).move_name == "result-5")
 	assert(not player.can_use_skill)
-	var sanitized = GameManager._sanitize_replay_frames([{"shift": true, "lp": true, "result": 5}], 10)
+	var sanitized = GameManagerScript._sanitize_replay_frames([{"shift": true, "lp": true, "result": 5}], 10)
 	assert(sanitized[0].shift and sanitized[0].lp and sanitized[0].result == 5)
 	assert(player.animated_sprite.sprite_frames.get_frame_count("death") == 4)
 	assert(not player.animated_sprite.sprite_frames.get_animation_loop("death"))

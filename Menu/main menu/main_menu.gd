@@ -2,10 +2,10 @@ class_name MainMenu
 extends Control
 
 const UITheme = preload("res://Scene/UI/UITheme.gd")
+const GameManagerScript = preload("res://Scene/GameManager.gd")
 
 @onready var start_button: Button = $MarginContainer/HBoxContainer/VBoxContainer/Start_button as Button
 @onready var exit_button: Button = $MarginContainer/HBoxContainer/VBoxContainer/Exit_button as Button
-@onready var start_level = preload("res://Scene/UI/CharacterSelect.tscn") as PackedScene
 
 var seed_input: LineEdit = null
 var seed_status_lbl: Label = null
@@ -110,7 +110,7 @@ func _enhance_main_menu_ui() -> void:
 	UITheme.style_line_edit(seed_input, 13)
 	seed_input.text_changed.connect(func(new_txt: String):
 		if get_node_or_null("/root/GameManager") != null:
-			var clean: String = GameManager.sanitize_seed(new_txt)
+			var clean: String = GameManagerScript.sanitize_seed(new_txt)
 			if not clean.is_empty():
 				GameManager.set_seed(clean)
 	)
@@ -338,9 +338,10 @@ func _refresh_seed_lists() -> void:
 			var h_name: String = String(run_item.get("hero_name", "Hero"))
 			var flr: int = int(run_item.get("floor", 1))
 			var kills: int = int(run_item.get("kills", 0))
+			var run_coins: int = int(run_item.get("coins", 0))
 
 			var lbl := Label.new()
-			lbl.text = "%s • Seed: %s\nFloor: %d • Foes Slain: %d" % [h_name, s_val, flr, kills]
+			lbl.text = "%s • Seed: %s\nFloor: %d • Foes Slain: %d • Coins: %d" % [h_name, s_val, flr, kills, run_coins]
 			lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			lbl.add_theme_font_size_override("font_size", 12)
 			lbl.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
@@ -485,9 +486,13 @@ func on_exit_pressed() -> void:
 	_on_exit_button_pressed()
 
 func _on_start_button_pressed() -> void:
-	if seed_input != null and get_node_or_null("/root/GameManager") != null:
-		GameManager.set_seed(seed_input.text)
-	get_tree().change_scene_to_packed(start_level)
+	# Chọn nhân vật ngay trong Guild Hall (màn "Chọn nhân vật" kiểu Soul Knight) thay cho màn chọn cũ
+	if get_node_or_null("/root/GameManager") != null:
+		if seed_input != null:
+			GameManager.set_seed(seed_input.text)
+		GameManager.start_run_in_hall(GameManager.current_seed)
+	else:
+		get_tree().change_scene_to_file("res://Scene/Map/GuildHall/guild_hall.tscn")
 
 func _on_exit_button_pressed() -> void:
 	get_tree().quit()

@@ -1,0 +1,9 @@
+Field ground & bushes: built from the "The Forest" top-down pixel-art tileset preview (CraftPix.net)
+(The-Forest-Top-Down-Tileset-Pixel-Art2-1536x1024.webp). The sprites were re-extracted at native
+resolution (16 px tiles) and composed into field_ground.png / field_canopy.png.
+If the game is published, make sure you own a licence for the full CraftPix pack: https://craftpix.net/file-licenses/
+
+curio_tent.png - purple curio tent cut from the same market preview as shop.png (native resolution).
+mage_idle.png - hooded fortune teller + grey mage idle animation (36 frames, 64x45), cut from the user-supplied GIF at native resolution.
+potion_cart.png - green-canopy potion cart cut from the same market preview as shop.png (native resolution).
+brewers_idle.png - crowned knight + barbarian stirring a cauldron idle animation (30 frames, 56x45), cut from the user-supplied GIF at native resolution.

@@ -1,9 +1,9 @@
 extends Node2D
 
-const PerkData = preload("res://Scene/Perks/PerkData.gd")
-const PerkDatabase = preload("res://Scene/Perks/PerkDatabase.gd")
+const PerkManagerScript = preload("res://Scene/Perks/PerkManager.gd")
 
 class MockPlayerForPerks extends Node2D:
+	@warning_ignore("unused_signal")
 	signal stats_changed(hp, max_hp, armor, max_armor)
 
 	var base_max_hp: int = 4
@@ -111,7 +111,7 @@ func test_perk_database_integrity() -> void:
 
 func test_deterministic_perk_rolling() -> void:
 	print("\n[TEST 3] Testing Deterministic Perk Rolling...")
-	var manager := PerkManager.new()
+	var manager := PerkManagerScript.new()
 	add_child(manager)
 	manager.reset()
 
@@ -137,7 +137,7 @@ func test_deterministic_perk_rolling() -> void:
 
 func test_unique_perk_filtering() -> void:
 	print("\n[TEST 4] Testing Unique Perk Filtering...")
-	var manager := PerkManager.new()
+	var manager := PerkManagerScript.new()
 	add_child(manager)
 	manager.reset()
 
@@ -155,7 +155,7 @@ func test_unique_perk_filtering() -> void:
 
 func test_apply_perk_to_mock_player() -> void:
 	print("\n[TEST 5] Testing Applying Perks to Player...")
-	var manager := PerkManager.new()
+	var manager := PerkManagerScript.new()
 	add_child(manager)
 	manager.reset()
 
@@ -184,7 +184,7 @@ func test_apply_perk_to_mock_player() -> void:
 
 func test_perk_manager_query_helpers() -> void:
 	print("\n[TEST 6] Testing PerkManager Query Helpers...")
-	var manager := PerkManager.new()
+	var manager := PerkManagerScript.new()
 	add_child(manager)
 	manager.reset()
 
@@ -260,17 +260,17 @@ func test_character_combat_hooks_and_revive() -> void:
 func test_stochastic_damage_resolution() -> void:
 	print("\n[TEST 8] Testing Stochastic Damage Resolution (Way 1)...")
 	# 1. Số nguyên thuần túy không bị biến đổi
-	_assert_test(PerkManager.resolve_stochastic_damage(3.0) == 3, "Integer damage 3.0 resolves exactly to 3")
-	_assert_test(PerkManager.resolve_stochastic_damage(0.0) == 0, "Zero damage resolves to 0")
+	_assert_test(PerkManagerScript.resolve_stochastic_damage(3.0) == 3, "Integer damage 3.0 resolves exactly to 3")
+	_assert_test(PerkManagerScript.resolve_stochastic_damage(0.0) == 0, "Zero damage resolves to 0")
 
 	# 2. Số lẻ 2.5 luôn cho ra 2 hoặc 3 (không bao giờ < 2 hoặc > 3)
-	var val_2_5 := PerkManager.resolve_stochastic_damage(2.5)
+	var val_2_5 := PerkManagerScript.resolve_stochastic_damage(2.5)
 	_assert_test(val_2_5 == 2 or val_2_5 == 3, "2.5 damage resolves to either 2 or 3")
 
 	# 3. Phân phối xác suất 2.5 sau 1000 lần thử phải có trung bình ~ 2.5
 	var sum := 0
 	for i in range(1000):
-		sum += PerkManager.resolve_stochastic_damage(2.5)
+		sum += PerkManagerScript.resolve_stochastic_damage(2.5)
 	var avg := float(sum) / 1000.0
 	_assert_test(avg >= 2.4 and avg <= 2.6, "Stochastic average of 2.5 dmg across 1000 hits is ~ 2.5 (Observed: %.3f)" % avg)
 
@@ -280,9 +280,9 @@ func test_perk_selection_modal() -> void:
 	var modal = modal_scene.instantiate()
 	add_child(modal)
 
-	var callback_called := false
+	var callback_state := {"called": false}
 	modal.show_selection(null, func():
-		callback_called = true
+		callback_state.called = true
 	)
 
 	_assert_test(modal.visible == true, "PerkSelectionModal is visible when shown")
@@ -294,7 +294,7 @@ func test_perk_selection_modal() -> void:
 	modal._on_perk_card_selected(first_perk)
 
 	_assert_test(modal.visible == false, "Modal hidden after selection")
-	_assert_test(callback_called == true, "Completion callback invoked upon perk selection")
+	_assert_test(callback_state.called == true, "Completion callback invoked upon perk selection")
 	_assert_test(PerkManager.has_perk("iron_sinew") == true, "Perk acquired into PerkManager")
 
 	modal.queue_free()

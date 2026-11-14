@@ -279,7 +279,9 @@ static func _stats(values: Array) -> Dictionary:
 	return {"n": n, "mean_ms": total / n, "median_ms": median, "p95_ms": sorted[ceili(0.95 * n) - 1], "min_ms": sorted[0], "max_ms": sorted[-1]}
 
 static func _percent(delta: float, baseline: float) -> Variant:
-	return delta / baseline * 100.0 if baseline > 0.0 else null
+	if baseline > 0.0:
+		return delta / baseline * 100.0
+	return null
 
 static func _statistics_self_check() -> bool:
 	var values: Array = []

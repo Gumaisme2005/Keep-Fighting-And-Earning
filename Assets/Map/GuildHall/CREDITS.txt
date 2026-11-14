@@ -1,0 +1,9 @@
+Guild Hall tiles & props: "Free Top-Down Pixel Art Guild Hall Asset Pack" by CraftPix.net
+https://craftpix.net/freebies/  -  license: https://craftpix.net/file-licenses/
+Used by Scene/Map/GuildHall/guild_hall.tscn (no character sprites from the pack are used).
+
+rune_sword_idle.png (24 frame 74x154) va rune_circle.png (67x56): tu GIF/PNG nguoi dung cung cap (kiem phu phep bay tren vong rune), giu ti le 1:1.
+rune_sword_active.png (24 frame 74x154): cong rune xoay xanh, tu GIF nguoi dung cung cap, cung khung voi rune_sword_idle.png.
+
+Decor/*.png: do do nguoi dung cung cap (thu muc Downloads/assest): ke giap, gia vu khi, ban, mu, khien, ruong, co, dau rong, tu, chau cay, ke sach, hinh nom, bia ban cung, sofa (thu nho 3x ve 1x), tham (keo dai), meo, Dark Magician / Dark Magician Girl (bo vien xanh nen).
+Cac anh hung dung trong sanh dung lai sprite sheet cua chinh ho trong Assets/Character.

@@ -49,7 +49,7 @@ var pending_rmb_skill: bool = false
 var current_aim_offset: Vector2 = Vector2.RIGHT * 32.0
 
 const BalanceData = preload("res://Scene/BalanceConfig.gd")
-const PerkData = preload("res://Scene/Perks/PerkData.gd")
+const PerkManagerScript = preload("res://Scene/Perks/PerkManager.gd")
 @export var hero_balance_id: String = ""
 
 @onready var animated_sprite: AnimatedSprite2D = get_node_or_null("AnimatedSprite2D")
@@ -419,7 +419,7 @@ func get_raw_damage() -> float:
 func get_total_damage() -> int:
 	var raw := get_raw_damage()
 	if get_node_or_null("/root/PerkManager") != null:
-		return PerkManager.resolve_stochastic_damage(raw)
+		return PerkManagerScript.resolve_stochastic_damage(raw)
 	return int(round(raw))
 
 func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
@@ -436,7 +436,7 @@ func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
 		if rng.randf() <= crit_chance:
 			var mult: float = pm.get_crit_multiplier() if pm.has_method("get_crit_multiplier") else 2.0
 			var raw_crit: float = float(in_damage) * mult
-			final_dmg = PerkManager.resolve_stochastic_damage(raw_crit)
+			final_dmg = PerkManagerScript.resolve_stochastic_damage(raw_crit)
 			if get_tree():
 				get_tree().call_group("game_ui", "spawn_damage_number", target.global_position + Vector2(0, -28), final_dmg, Color(1.0, 0.85, 0.1))
 

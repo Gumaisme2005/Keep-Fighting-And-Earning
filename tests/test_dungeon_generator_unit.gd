@@ -1,7 +1,7 @@
 extends Node2D
+const GameManagerScript = preload("res://Scene/GameManager.gd")
 
 const UITheme = preload("res://Scene/UI/UITheme.gd")
-const BalanceConfig = preload("res://Scene/BalanceConfig.gd")
 const WORLD_SCENE = preload("res://world.tscn")
 const VariantChecks = preload("res://tests/dungeon_variant_test_support.gd")
 
@@ -191,7 +191,7 @@ func _test_ut07_multi_level_seed_derivation() -> void:
 
 func _test_ut08_security_seed_and_replay_sanitization() -> void:
 	var malicious_seed: String = "<script>alert(1)</script>../../etc/passwd;DROP_TABLE_USERS_1234567890"
-	var sanitized: String = GameManager.sanitize_seed(malicious_seed)
+	var sanitized: String = GameManagerScript.sanitize_seed(malicious_seed)
 	var valid_len: bool = sanitized.length() > 0 and sanitized.length() <= GameManager.MAX_SEED_LENGTH
 	var no_bad_chars: bool = not sanitized.contains("<") and not sanitized.contains(">") and not sanitized.contains("/") and not sanitized.contains(".") and not sanitized.contains(";")
 	_assert_true(
@@ -204,7 +204,7 @@ func _test_ut08_security_seed_and_replay_sanitization() -> void:
 		{"dx": 999.0, "dy": -999.0, "ax": INF, "ay": NAN, "atk": "truthy", "slot": 999},
 		"invalid_non_dict_element"
 	]
-	var clean_frames: Array = GameManager._sanitize_replay_frames(malformed_frames, 10)
+	var clean_frames: Array = GameManagerScript._sanitize_replay_frames(malformed_frames, 10)
 	var f0: Dictionary = clean_frames[0] if clean_frames.size() > 0 else {}
 	var bounds_ok: bool = (
 		clean_frames.size() == 1

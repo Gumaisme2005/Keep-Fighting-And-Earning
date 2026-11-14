@@ -174,24 +174,24 @@ func _test_profiles_and_legacy() -> void:
 
 func _test_hysteresis_and_safety() -> void:
 	for floor_number in [3, 5, 7]:
-		var arena := _arena(floor_number)
-		var archer = arena.archer
+		var floor_arena := _arena(floor_number)
+		var archer = floor_arena.archer
 		var margin: float = archer._tactical_ai._tactic_limits.range_hysteresis_px
-		await _at_distance(arena, archer.retreat_range - 1.0)
-		await _at_distance(arena, archer.retreat_range + margin - 0.1)
+		await _at_distance(floor_arena, archer.retreat_range - 1.0)
+		await _at_distance(floor_arena, archer.retreat_range + margin - 0.1)
 		_check(archer.velocity.x < 0.0, "Floor %d keeps retreat within exit margin" % floor_number)
-		await _at_distance(arena, archer.retreat_range + margin)
+		await _at_distance(floor_arena, archer.retreat_range + margin)
 		_check(is_zero_approx(archer.velocity.x), "Floor %d releases retreat at hysteresis boundary" % floor_number)
-		await _at_distance(arena, archer.attack_range + 1.0)
-		await _at_distance(arena, archer.attack_range - margin + 0.1)
+		await _at_distance(floor_arena, archer.attack_range + 1.0)
+		await _at_distance(floor_arena, archer.attack_range - margin + 0.1)
 		_check(archer.velocity.x > 0.0, "Floor %d keeps approach inside the outer hysteresis band during cooldown" % floor_number)
-		await _at_distance(arena, archer.attack_range - margin)
+		await _at_distance(floor_arena, archer.attack_range - margin)
 		_check(is_zero_approx(archer.velocity.x), "Floor %d returns to strafe after entering firing band" % floor_number)
 		var decision_tick: int = archer._tactical_ai._tactics._last_decision_tick
-		await _at_distance(arena, archer.retreat_range - 0.01)
+		await _at_distance(floor_arena, archer.retreat_range - 0.01)
 		_check(archer.velocity.x < 0.0 and archer._tactical_ai._tactics._last_decision_tick == decision_tick,
 			"Floor %d retreats urgently between tactical decisions" % floor_number)
-		arena.map.free()
+		floor_arena.map.free()
 	var arena := _arena(3)
 	await _at_distance(arena, arena.archer.attack_range + 1.0)
 	arena.archer.can_attack = true
@@ -285,8 +285,8 @@ func _motion_selected_side(motion_sign: float) -> float:
 
 func _test_activation_and_animation_locks() -> void:
 	for floor_number in [1, 3, 5, 7]:
-		var arena := _arena(floor_number)
-		var archer = arena.archer
+		var floor_arena := _arena(floor_number)
+		var archer = floor_arena.archer
 		_check(archer.anim.animation == &"summon", "Floor %d preserves summon animation" % floor_number)
 		archer._on_animated_sprite_2d_animation_finished()
 		_check(archer.anim.animation == &"idle", "Floor %d preserves summon completion" % floor_number)
@@ -297,10 +297,10 @@ func _test_activation_and_animation_locks() -> void:
 			archer.is_attacking = lock == "attack"
 			var before: Vector2 = archer.global_position
 			var state: StringName = archer._tactical_ai._tactics.get_state()
-			await _step(arena)
+			await _step(floor_arena)
 			_check(archer.global_position == before and archer._tactical_ai._tactics.get_state() == state
 				and archer._tactical_ai._observed_tick == -1, "Floor %d preserves %s lock" % [floor_number, lock])
-		arena.map.free()
+		floor_arena.map.free()
 	var arena := _arena(7)
 	arena.archer.is_active = false
 	var manager = load("res://Scene/Map/room_manager.gd").new()
@@ -360,17 +360,17 @@ func _test_shot_timing_and_damage() -> void:
 
 func _test_windup_safety() -> void:
 	for reason in ["wall", "hurt", "death"]:
-		var arena := _arena(7)
-		arena.archer.can_attack = true
-		await _step(arena)
+		var floor_arena := _arena(7)
+		floor_arena.archer.can_attack = true
+		await _step(floor_arena)
 		await _wait_ticks(18)
 		if reason == "wall":
-			_door(arena, true)
+			_door(floor_arena, true)
 		else:
-			arena.archer.take_damage(1 if reason == "hurt" else 1000)
+			floor_arena.archer.take_damage(1 if reason == "hurt" else 1000)
 		await _wait_ticks(18)
-		_check(arena.arrows.is_empty(), "%s during windup cancels arrow emission through existing safety checks" % reason)
-		arena.map.free()
+		_check(floor_arena.arrows.is_empty(), "%s during windup cancels arrow emission through existing safety checks" % reason)
+		floor_arena.map.free()
 	var arena := _arena(7)
 	_door(arena, true)
 	arena.archer.can_attack = true

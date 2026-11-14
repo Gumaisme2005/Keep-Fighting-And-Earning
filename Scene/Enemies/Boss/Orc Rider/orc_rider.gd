@@ -244,7 +244,7 @@ func take_damage(amount: int) -> void:
 	if hp <= 0:
 		is_dead = true
 		if get_node_or_null("/root/GameManager") != null:
-			GameManager.register_enemy_kill()
+			GameManager.register_enemy_kill(self, "orc_rider")
 		_drop_boss_loot()
 		_cancel_all_actions()
 		$CollisionShape2D.set_deferred("disabled", true)

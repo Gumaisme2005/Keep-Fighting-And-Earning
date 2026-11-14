@@ -7,13 +7,13 @@ const LaserVolley := preload("res://Scene/Enemies/Boss/Skeleton King/skeleton_ki
 var passed := 0
 var failed := 0
 
-func _check(cond: bool, name: String, detail: String = "") -> void:
+func _check(cond: bool, check_name: String, detail: String = "") -> void:
 	if cond:
 		passed += 1
-		print("  [PASS] ", name, (" - " + detail) if detail != "" else "")
+		print("  [PASS] ", check_name, (" - " + detail) if detail != "" else "")
 	else:
 		failed += 1
-		print("  [FAIL] ", name, (" - " + detail) if detail != "" else "")
+		print("  [FAIL] ", check_name, (" - " + detail) if detail != "" else "")
 
 func _frames(n: int) -> void:
 	for i in range(n):

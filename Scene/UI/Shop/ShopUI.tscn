@@ -1,0 +1,2535 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scene/UI/Shop/ShopUI.gd" id="1_3q02e"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/button_disabled.png" id="2_sn0f7"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/button_hover.png" id="3_qjwtx"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/button_pressed.png" id="4_37sji"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/button.png" id="5_wkgyw"]
+[ext_resource type="FontFile" path="res://Assets/UI/Shop/forge5.fnt" id="6_xkm4l"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/slot_empty.png" id="7_l1ewh"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/slot_hover.png" id="8_3xw4l"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/slot_selected.png" id="9_sqeuk"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/slot.png" id="10_yaug2"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/panel.png" id="11_la4se"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/banner.png" id="12_j6v0o"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/card.png" id="13_4p1en"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/smith_portrait.png" id="14_fniub"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/tag.png" id="15_l6shb"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/coin_big.png" id="16_2xg81"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/well.png" id="17_f1bcr"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/coin.png" id="18_wpp7d"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/sold_out.png" id="19_n0x77"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ow4jj"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+texture = ExtResource("2_sn0f7")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3q0h4"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+texture = ExtResource("3_qjwtx")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cx3qm"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+texture = ExtResource("3_qjwtx")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hrkef"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+texture = ExtResource("4_37sji")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bkkoc"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+texture = ExtResource("5_wkgyw")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qm1gr"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+texture = ExtResource("4_37sji")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xnjdy"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource("7_l1ewh")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a8ovh"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_csost"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource("8_3xw4l")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5wcdc"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource("9_sqeuk")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0ljre"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource("10_yaug2")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ac7k3"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource("9_sqeuk")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+
+[sub_resource type="Theme" id="Theme_a8o43"]
+default_font = ExtResource("6_xkm4l")
+default_font_size = 7
+BannerLabel/base_type = &"Label"
+BannerLabel/colors/font_shadow_color = Color(0.3019608, 0.19215687, 0.2901961, 1)
+BannerLabel/constants/shadow_offset_x = 1
+BannerLabel/constants/shadow_offset_y = 1
+BannerLabel/constants/shadow_outline_size = 0
+Button/colors/font_color = Color(1, 1, 1, 1)
+Button/colors/font_disabled_color = Color(0.7882353, 0.6392157, 0.56078434, 1)
+Button/colors/font_focus_color = Color(1, 1, 1, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+Button/colors/font_outline_color = Color(0.3019608, 0.19215687, 0.2901961, 1)
+Button/colors/font_pressed_color = Color(1, 1, 1, 1)
+Button/font_sizes/font_size = 7
+Button/styles/disabled = SubResource("StyleBoxTexture_ow4jj")
+Button/styles/focus = SubResource("StyleBoxTexture_3q0h4")
+Button/styles/hover = SubResource("StyleBoxTexture_cx3qm")
+Button/styles/hover_pressed = SubResource("StyleBoxTexture_hrkef")
+Button/styles/normal = SubResource("StyleBoxTexture_bkkoc")
+Button/styles/pressed = SubResource("StyleBoxTexture_qm1gr")
+Label/colors/font_color = Color(1, 1, 1, 1)
+Label/constants/line_spacing = 1
+RichTextLabel/colors/default_color = Color(1, 1, 1, 1)
+RichTextLabel/constants/line_separation = 1
+RichTextLabel/font_sizes/normal_font_size = 7
+RichTextLabel/fonts/normal_font = ExtResource("6_xkm4l")
+SlotButton/base_type = &"Button"
+SlotButton/styles/disabled = SubResource("StyleBoxTexture_xnjdy")
+SlotButton/styles/focus = SubResource("StyleBoxEmpty_a8ovh")
+SlotButton/styles/hover = SubResource("StyleBoxTexture_csost")
+SlotButton/styles/hover_pressed = SubResource("StyleBoxTexture_5wcdc")
+SlotButton/styles/normal = SubResource("StyleBoxTexture_0ljre")
+SlotButton/styles/pressed = SubResource("StyleBoxTexture_ac7k3")
+
+[node name="ShopUI" type="CanvasLayer" unique_id=1947398582]
+script = ExtResource("1_3q02e")
+
+[node name="Root" type="Control" parent="." unique_id=216036028]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Dim" type="ColorRect" parent="Root" unique_id=969419615]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.06, 0.03, 0.07, 0.62)
+
+[node name="Window" type="Control" parent="Root" unique_id=876805403]
+texture_filter = 1
+anchors_preset = 0
+offset_right = 416.0
+offset_bottom = 232.0
+theme = SubResource("Theme_a8o43")
+
+[node name="Frame" type="NinePatchRect" parent="Root/Window" unique_id=1666932623]
+layout_mode = 0
+offset_top = 10.0
+offset_right = 416.0
+offset_bottom = 232.0
+texture = ExtResource("11_la4se")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+
+[node name="TitleBanner" type="NinePatchRect" parent="Root/Window" unique_id=2033651636]
+layout_mode = 0
+offset_left = 124.0
+offset_right = 292.0
+offset_bottom = 24.0
+texture = ExtResource("12_j6v0o")
+patch_margin_left = 6
+patch_margin_top = 4
+patch_margin_right = 6
+patch_margin_bottom = 5
+axis_stretch_horizontal = 2
+
+[node name="Text" type="Label" parent="Root/Window/TitleBanner" unique_id=1362489729]
+layout_mode = 0
+offset_left = 4.0
+offset_right = 164.0
+offset_bottom = 21.0
+theme_type_variation = &"BannerLabel"
+theme_override_font_sizes/font_size = 14
+text = "THE BLACKSMITH"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PortraitCard" type="NinePatchRect" parent="Root/Window" unique_id=1587678004]
+clip_children = 1
+layout_mode = 0
+offset_left = 12.0
+offset_top = 30.0
+offset_right = 104.0
+offset_bottom = 106.0
+texture = ExtResource("13_4p1en")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="Portrait" type="TextureRect" parent="Root/Window/PortraitCard" unique_id=334379791]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 12.0
+offset_right = 78.0
+offset_bottom = 76.0
+texture = ExtResource("14_fniub")
+
+[node name="NamePlate" type="NinePatchRect" parent="Root/Window" unique_id=413727622]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 100.0
+offset_right = 100.0
+offset_bottom = 115.0
+texture = ExtResource("12_j6v0o")
+patch_margin_left = 6
+patch_margin_top = 4
+patch_margin_right = 6
+patch_margin_bottom = 5
+axis_stretch_horizontal = 2
+
+[node name="Text" type="Label" parent="Root/Window/NamePlate" unique_id=1314614320]
+layout_mode = 0
+offset_left = 4.0
+offset_right = 80.0
+offset_bottom = 12.0
+theme_type_variation = &"BannerLabel"
+text = "BRAM THE SMITH"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpeechCard" type="NinePatchRect" parent="Root/Window" unique_id=433879885]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 119.0
+offset_right = 104.0
+offset_bottom = 182.0
+texture = ExtResource("13_4p1en")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="Speech" type="Label" parent="Root/Window/SpeechCard" unique_id=915866522]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 88.0
+offset_bottom = 60.0
+autowrap_mode = 3
+
+[node name="WalletPlate" type="NinePatchRect" parent="Root/Window" unique_id=944136057]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 186.0
+offset_right = 104.0
+offset_bottom = 201.0
+texture = ExtResource("15_l6shb")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="Coin" type="TextureRect" parent="Root/Window/WalletPlate" unique_id=2139297136]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 13.0
+offset_bottom = 12.0
+texture = ExtResource("16_2xg81")
+
+[node name="WalletTitle" type="Label" parent="Root/Window/WalletPlate" unique_id=865120089]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 4.0
+offset_right = 56.0
+offset_bottom = 11.0
+theme_override_colors/font_color = Color(0.9098039, 0.7882353, 0.627451, 1)
+text = "COINS"
+
+[node name="Wallet" type="Label" parent="Root/Window/WalletPlate" unique_id=53586007]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 40.0
+offset_top = 4.0
+offset_right = 88.0
+offset_bottom = 11.0
+theme_override_colors/font_color = Color(0.9529412, 0.8901961, 0.627451, 1)
+text = "0"
+horizontal_alignment = 2
+
+[node name="BagHeader" type="NinePatchRect" parent="Root/Window" unique_id=1327377903]
+layout_mode = 0
+offset_left = 110.0
+offset_top = 27.0
+offset_right = 202.0
+offset_bottom = 42.0
+texture = ExtResource("12_j6v0o")
+patch_margin_left = 6
+patch_margin_top = 4
+patch_margin_right = 6
+patch_margin_bottom = 5
+axis_stretch_horizontal = 2
+
+[node name="Text" type="Label" parent="Root/Window/BagHeader" unique_id=807279042]
+layout_mode = 0
+offset_left = 4.0
+offset_right = 88.0
+offset_bottom = 12.0
+theme_type_variation = &"BannerLabel"
+text = "YOUR BAG"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BagWell" type="NinePatchRect" parent="Root/Window" unique_id=315170357]
+layout_mode = 0
+offset_left = 111.0
+offset_top = 44.0
+offset_right = 201.0
+offset_bottom = 164.0
+texture = ExtResource("17_f1bcr")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="BagGrid" type="Control" parent="Root/Window" unique_id=992402786]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_left = 113.0
+offset_top = 47.0
+offset_right = 113.0
+offset_bottom = 47.0
+mouse_filter = 2
+
+[node name="Cell0" type="Control" parent="Root/Window/BagGrid" unique_id=1734063939]
+anchors_preset = 0
+offset_right = 22.0
+offset_bottom = 29.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/BagGrid/Cell0" unique_id=1471937799]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/BagGrid/Cell0/Slot" unique_id=395169347]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/BagGrid/Cell0/Slot" unique_id=1874914707]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/BagGrid/Cell0" unique_id=698957660]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/BagGrid/Cell0/Price" unique_id=2117853765]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/BagGrid/Cell0/Price" unique_id=409333875]
+layout_mode = 2
+
+[node name="Cell1" type="Control" parent="Root/Window/BagGrid" unique_id=1754513361]
+anchors_preset = 0
+offset_left = 22.0
+offset_right = 44.0
+offset_bottom = 29.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/BagGrid/Cell1" unique_id=2113316165]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/BagGrid/Cell1/Slot" unique_id=669689645]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/BagGrid/Cell1/Slot" unique_id=1400585736]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/BagGrid/Cell1" unique_id=1871132779]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/BagGrid/Cell1/Price" unique_id=495881632]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/BagGrid/Cell1/Price" unique_id=458220713]
+layout_mode = 2
+
+[node name="Cell2" type="Control" parent="Root/Window/BagGrid" unique_id=1848652007]
+anchors_preset = 0
+offset_left = 44.0
+offset_right = 66.0
+offset_bottom = 29.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/BagGrid/Cell2" unique_id=1451546120]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/BagGrid/Cell2/Slot" unique_id=855969205]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/BagGrid/Cell2/Slot" unique_id=106582435]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/BagGrid/Cell2" unique_id=185396760]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/BagGrid/Cell2/Price" unique_id=1676385021]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/BagGrid/Cell2/Price" unique_id=411132237]
+layout_mode = 2
+
+[node name="Cell3" type="Control" parent="Root/Window/BagGrid" unique_id=1556539027]
+anchors_preset = 0
+offset_left = 66.0
+offset_right = 88.0
+offset_bottom = 29.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/BagGrid/Cell3" unique_id=189633680]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/BagGrid/Cell3/Slot" unique_id=4762182]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/BagGrid/Cell3/Slot" unique_id=1063726226]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/BagGrid/Cell3" unique_id=1050925326]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/BagGrid/Cell3/Price" unique_id=2007776579]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/BagGrid/Cell3/Price" unique_id=1076502612]
+layout_mode = 2
+
+[node name="Cell4" type="Control" parent="Root/Window/BagGrid" unique_id=21418993]
+anchors_preset = 0
+offset_top = 29.0
+offset_right = 22.0
+offset_bottom = 58.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/BagGrid/Cell4" unique_id=1571272336]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/BagGrid/Cell4/Slot" unique_id=728554953]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/BagGrid/Cell4/Slot" unique_id=1852457123]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/BagGrid/Cell4" unique_id=1791212129]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/BagGrid/Cell4/Price" unique_id=863001518]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/BagGrid/Cell4/Price" unique_id=1579031166]
+layout_mode = 2
+
+[node name="Cell5" type="Control" parent="Root/Window/BagGrid" unique_id=1110974299]
+anchors_preset = 0
+offset_left = 22.0
+offset_top = 29.0
+offset_right = 44.0
+offset_bottom = 58.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/BagGrid/Cell5" unique_id=1122593235]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/BagGrid/Cell5/Slot" unique_id=3608499]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/BagGrid/Cell5/Slot" unique_id=325897004]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/BagGrid/Cell5" unique_id=102091332]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/BagGrid/Cell5/Price" unique_id=13628633]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/BagGrid/Cell5/Price" unique_id=355249647]
+layout_mode = 2
+
+[node name="Cell6" type="Control" parent="Root/Window/BagGrid" unique_id=27938535]
+anchors_preset = 0
+offset_left = 44.0
+offset_top = 29.0
+offset_right = 66.0
+offset_bottom = 58.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/BagGrid/Cell6" unique_id=655999137]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/BagGrid/Cell6/Slot" unique_id=357849031]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/BagGrid/Cell6/Slot" unique_id=1528434025]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/BagGrid/Cell6" unique_id=332872636]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/BagGrid/Cell6/Price" unique_id=1635529546]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/BagGrid/Cell6/Price" unique_id=158873709]
+layout_mode = 2
+
+[node name="Cell7" type="Control" parent="Root/Window/BagGrid" unique_id=2104707230]
+anchors_preset = 0
+offset_left = 66.0
+offset_top = 29.0
+offset_right = 88.0
+offset_bottom = 58.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/BagGrid/Cell7" unique_id=378750400]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/BagGrid/Cell7/Slot" unique_id=1629327627]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/BagGrid/Cell7/Slot" unique_id=1728233140]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/BagGrid/Cell7" unique_id=925733449]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/BagGrid/Cell7/Price" unique_id=2064599775]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/BagGrid/Cell7/Price" unique_id=945029166]
+layout_mode = 2
+
+[node name="Cell8" type="Control" parent="Root/Window/BagGrid" unique_id=1185414646]
+anchors_preset = 0
+offset_top = 58.0
+offset_right = 22.0
+offset_bottom = 87.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/BagGrid/Cell8" unique_id=979465911]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/BagGrid/Cell8/Slot" unique_id=2088685682]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/BagGrid/Cell8/Slot" unique_id=1532539920]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/BagGrid/Cell8" unique_id=1991123674]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/BagGrid/Cell8/Price" unique_id=2122669874]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/BagGrid/Cell8/Price" unique_id=1460916612]
+layout_mode = 2
+
+[node name="Cell9" type="Control" parent="Root/Window/BagGrid" unique_id=1572571293]
+anchors_preset = 0
+offset_left = 22.0
+offset_top = 58.0
+offset_right = 44.0
+offset_bottom = 87.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/BagGrid/Cell9" unique_id=317889024]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/BagGrid/Cell9/Slot" unique_id=874239799]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/BagGrid/Cell9/Slot" unique_id=1141514629]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/BagGrid/Cell9" unique_id=724403877]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/BagGrid/Cell9/Price" unique_id=515787048]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/BagGrid/Cell9/Price" unique_id=637750733]
+layout_mode = 2
+
+[node name="Cell10" type="Control" parent="Root/Window/BagGrid" unique_id=1816519682]
+anchors_preset = 0
+offset_left = 44.0
+offset_top = 58.0
+offset_right = 66.0
+offset_bottom = 87.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/BagGrid/Cell10" unique_id=1820455331]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/BagGrid/Cell10/Slot" unique_id=1634677364]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/BagGrid/Cell10/Slot" unique_id=17741536]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/BagGrid/Cell10" unique_id=1753263816]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/BagGrid/Cell10/Price" unique_id=1768069514]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/BagGrid/Cell10/Price" unique_id=100039982]
+layout_mode = 2
+
+[node name="Cell11" type="Control" parent="Root/Window/BagGrid" unique_id=1819946314]
+anchors_preset = 0
+offset_left = 66.0
+offset_top = 58.0
+offset_right = 88.0
+offset_bottom = 87.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/BagGrid/Cell11" unique_id=1501087666]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/BagGrid/Cell11/Slot" unique_id=1019752836]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/BagGrid/Cell11/Slot" unique_id=806888614]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/BagGrid/Cell11" unique_id=1258593701]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/BagGrid/Cell11/Price" unique_id=43974563]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/BagGrid/Cell11/Price" unique_id=546433162]
+layout_mode = 2
+
+[node name="Cell12" type="Control" parent="Root/Window/BagGrid" unique_id=996170539]
+anchors_preset = 0
+offset_top = 87.0
+offset_right = 22.0
+offset_bottom = 116.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/BagGrid/Cell12" unique_id=329508791]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/BagGrid/Cell12/Slot" unique_id=1531513176]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/BagGrid/Cell12/Slot" unique_id=1961245837]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/BagGrid/Cell12" unique_id=866029298]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/BagGrid/Cell12/Price" unique_id=23947691]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/BagGrid/Cell12/Price" unique_id=1912537510]
+layout_mode = 2
+
+[node name="Cell13" type="Control" parent="Root/Window/BagGrid" unique_id=124615280]
+anchors_preset = 0
+offset_left = 22.0
+offset_top = 87.0
+offset_right = 44.0
+offset_bottom = 116.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/BagGrid/Cell13" unique_id=1443558217]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/BagGrid/Cell13/Slot" unique_id=1230239711]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/BagGrid/Cell13/Slot" unique_id=248764845]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/BagGrid/Cell13" unique_id=1793172855]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/BagGrid/Cell13/Price" unique_id=89664119]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/BagGrid/Cell13/Price" unique_id=1304802176]
+layout_mode = 2
+
+[node name="Cell14" type="Control" parent="Root/Window/BagGrid" unique_id=1060502661]
+anchors_preset = 0
+offset_left = 44.0
+offset_top = 87.0
+offset_right = 66.0
+offset_bottom = 116.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/BagGrid/Cell14" unique_id=2144370498]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/BagGrid/Cell14/Slot" unique_id=1178409785]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/BagGrid/Cell14/Slot" unique_id=461546810]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/BagGrid/Cell14" unique_id=367561372]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/BagGrid/Cell14/Price" unique_id=1399369103]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/BagGrid/Cell14/Price" unique_id=93703398]
+layout_mode = 2
+
+[node name="Cell15" type="Control" parent="Root/Window/BagGrid" unique_id=1573971141]
+anchors_preset = 0
+offset_left = 66.0
+offset_top = 87.0
+offset_right = 88.0
+offset_bottom = 116.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/BagGrid/Cell15" unique_id=1433852539]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/BagGrid/Cell15/Slot" unique_id=28692397]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/BagGrid/Cell15/Slot" unique_id=1963218357]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/BagGrid/Cell15" unique_id=505226447]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/BagGrid/Cell15/Price" unique_id=695084706]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/BagGrid/Cell15/Price" unique_id=987769876]
+layout_mode = 2
+
+[node name="EquipTitle" type="Label" parent="Root/Window" unique_id=713739786]
+layout_mode = 0
+offset_left = 113.0
+offset_top = 168.0
+offset_right = 199.0
+offset_bottom = 175.0
+theme_override_colors/font_color = Color(0.3019608, 0.19215687, 0.2901961, 1)
+text = "EQUIPPED"
+
+[node name="EquipGrid" type="Control" parent="Root/Window" unique_id=1428916506]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_left = 113.0
+offset_top = 177.0
+offset_right = 113.0
+offset_bottom = 177.0
+mouse_filter = 2
+
+[node name="Cell0" type="Control" parent="Root/Window/EquipGrid" unique_id=213460791]
+anchors_preset = 0
+offset_right = 22.0
+offset_bottom = 20.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/EquipGrid/Cell0" unique_id=1062520568]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/EquipGrid/Cell0/Slot" unique_id=1411647203]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/EquipGrid/Cell0/Slot" unique_id=392549177]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Cell1" type="Control" parent="Root/Window/EquipGrid" unique_id=1268982403]
+anchors_preset = 0
+offset_left = 22.0
+offset_right = 44.0
+offset_bottom = 20.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/EquipGrid/Cell1" unique_id=875003749]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/EquipGrid/Cell1/Slot" unique_id=295629474]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/EquipGrid/Cell1/Slot" unique_id=2036273421]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Cell2" type="Control" parent="Root/Window/EquipGrid" unique_id=1034821324]
+anchors_preset = 0
+offset_left = 44.0
+offset_right = 66.0
+offset_bottom = 20.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/EquipGrid/Cell2" unique_id=2037798857]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/EquipGrid/Cell2/Slot" unique_id=678608300]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Root/Window/EquipGrid/Cell2/Slot" unique_id=296521775]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="ShopHeader" type="NinePatchRect" parent="Root/Window" unique_id=935947554]
+layout_mode = 0
+offset_left = 206.0
+offset_top = 27.0
+offset_right = 300.0
+offset_bottom = 42.0
+texture = ExtResource("12_j6v0o")
+patch_margin_left = 6
+patch_margin_top = 4
+patch_margin_right = 6
+patch_margin_bottom = 5
+axis_stretch_horizontal = 2
+
+[node name="Text" type="Label" parent="Root/Window/ShopHeader" unique_id=1787333522]
+layout_mode = 0
+offset_left = 4.0
+offset_right = 90.0
+offset_bottom = 12.0
+theme_type_variation = &"BannerLabel"
+text = "FOR SALE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ShopWell" type="NinePatchRect" parent="Root/Window" unique_id=1172807050]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 44.0
+offset_right = 298.0
+offset_bottom = 164.0
+texture = ExtResource("17_f1bcr")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="ShopGrid" type="Control" parent="Root/Window" unique_id=897743969]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_left = 210.0
+offset_top = 47.0
+offset_right = 210.0
+offset_bottom = 47.0
+mouse_filter = 2
+
+[node name="Cell0" type="Control" parent="Root/Window/ShopGrid" unique_id=81920694]
+anchors_preset = 0
+offset_right = 22.0
+offset_bottom = 29.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/ShopGrid/Cell0" unique_id=1729991799]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/ShopGrid/Cell0/Slot" unique_id=1891567267]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoldX" type="TextureRect" parent="Root/Window/ShopGrid/Cell0/Slot" unique_id=1341936826]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+texture = ExtResource("19_n0x77")
+
+[node name="Count" type="Label" parent="Root/Window/ShopGrid/Cell0/Slot" unique_id=766510438]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/ShopGrid/Cell0" unique_id=386706743]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/ShopGrid/Cell0/Price" unique_id=1556680706]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/ShopGrid/Cell0/Price" unique_id=475298972]
+layout_mode = 2
+
+[node name="Cell1" type="Control" parent="Root/Window/ShopGrid" unique_id=933143043]
+anchors_preset = 0
+offset_left = 22.0
+offset_right = 44.0
+offset_bottom = 29.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/ShopGrid/Cell1" unique_id=504366740]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/ShopGrid/Cell1/Slot" unique_id=1740584217]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoldX" type="TextureRect" parent="Root/Window/ShopGrid/Cell1/Slot" unique_id=888075645]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+texture = ExtResource("19_n0x77")
+
+[node name="Count" type="Label" parent="Root/Window/ShopGrid/Cell1/Slot" unique_id=1861582688]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/ShopGrid/Cell1" unique_id=1012641910]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/ShopGrid/Cell1/Price" unique_id=1900506451]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/ShopGrid/Cell1/Price" unique_id=218175467]
+layout_mode = 2
+
+[node name="Cell2" type="Control" parent="Root/Window/ShopGrid" unique_id=1921097630]
+anchors_preset = 0
+offset_left = 44.0
+offset_right = 66.0
+offset_bottom = 29.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/ShopGrid/Cell2" unique_id=797032311]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/ShopGrid/Cell2/Slot" unique_id=1585664523]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoldX" type="TextureRect" parent="Root/Window/ShopGrid/Cell2/Slot" unique_id=2012187247]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+texture = ExtResource("19_n0x77")
+
+[node name="Count" type="Label" parent="Root/Window/ShopGrid/Cell2/Slot" unique_id=441590706]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/ShopGrid/Cell2" unique_id=1767078446]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/ShopGrid/Cell2/Price" unique_id=1080972914]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/ShopGrid/Cell2/Price" unique_id=1219621343]
+layout_mode = 2
+
+[node name="Cell3" type="Control" parent="Root/Window/ShopGrid" unique_id=879337724]
+anchors_preset = 0
+offset_left = 66.0
+offset_right = 88.0
+offset_bottom = 29.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/ShopGrid/Cell3" unique_id=506730421]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/ShopGrid/Cell3/Slot" unique_id=1868609109]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoldX" type="TextureRect" parent="Root/Window/ShopGrid/Cell3/Slot" unique_id=168572443]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+texture = ExtResource("19_n0x77")
+
+[node name="Count" type="Label" parent="Root/Window/ShopGrid/Cell3/Slot" unique_id=903342993]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/ShopGrid/Cell3" unique_id=1039100202]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/ShopGrid/Cell3/Price" unique_id=1727221647]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/ShopGrid/Cell3/Price" unique_id=127414204]
+layout_mode = 2
+
+[node name="Cell4" type="Control" parent="Root/Window/ShopGrid" unique_id=1785687194]
+anchors_preset = 0
+offset_top = 29.0
+offset_right = 22.0
+offset_bottom = 58.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/ShopGrid/Cell4" unique_id=778174717]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/ShopGrid/Cell4/Slot" unique_id=1821868406]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoldX" type="TextureRect" parent="Root/Window/ShopGrid/Cell4/Slot" unique_id=345260044]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+texture = ExtResource("19_n0x77")
+
+[node name="Count" type="Label" parent="Root/Window/ShopGrid/Cell4/Slot" unique_id=441012915]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/ShopGrid/Cell4" unique_id=948586786]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/ShopGrid/Cell4/Price" unique_id=1070940289]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/ShopGrid/Cell4/Price" unique_id=593087273]
+layout_mode = 2
+
+[node name="Cell5" type="Control" parent="Root/Window/ShopGrid" unique_id=1916189649]
+anchors_preset = 0
+offset_left = 22.0
+offset_top = 29.0
+offset_right = 44.0
+offset_bottom = 58.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/ShopGrid/Cell5" unique_id=702288254]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/ShopGrid/Cell5/Slot" unique_id=314201225]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoldX" type="TextureRect" parent="Root/Window/ShopGrid/Cell5/Slot" unique_id=2008793884]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+texture = ExtResource("19_n0x77")
+
+[node name="Count" type="Label" parent="Root/Window/ShopGrid/Cell5/Slot" unique_id=1566150238]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/ShopGrid/Cell5" unique_id=2040371477]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/ShopGrid/Cell5/Price" unique_id=1202230451]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/ShopGrid/Cell5/Price" unique_id=778253461]
+layout_mode = 2
+
+[node name="Cell6" type="Control" parent="Root/Window/ShopGrid" unique_id=1596675681]
+anchors_preset = 0
+offset_left = 44.0
+offset_top = 29.0
+offset_right = 66.0
+offset_bottom = 58.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/ShopGrid/Cell6" unique_id=1793116998]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/ShopGrid/Cell6/Slot" unique_id=1723600945]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoldX" type="TextureRect" parent="Root/Window/ShopGrid/Cell6/Slot" unique_id=995383731]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+texture = ExtResource("19_n0x77")
+
+[node name="Count" type="Label" parent="Root/Window/ShopGrid/Cell6/Slot" unique_id=1953212020]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/ShopGrid/Cell6" unique_id=939656571]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/ShopGrid/Cell6/Price" unique_id=51261317]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/ShopGrid/Cell6/Price" unique_id=905054132]
+layout_mode = 2
+
+[node name="Cell7" type="Control" parent="Root/Window/ShopGrid" unique_id=2080103507]
+anchors_preset = 0
+offset_left = 66.0
+offset_top = 29.0
+offset_right = 88.0
+offset_bottom = 58.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/ShopGrid/Cell7" unique_id=344357125]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/ShopGrid/Cell7/Slot" unique_id=1274952288]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoldX" type="TextureRect" parent="Root/Window/ShopGrid/Cell7/Slot" unique_id=1824713524]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+texture = ExtResource("19_n0x77")
+
+[node name="Count" type="Label" parent="Root/Window/ShopGrid/Cell7/Slot" unique_id=1883437075]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/ShopGrid/Cell7" unique_id=1984806049]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/ShopGrid/Cell7/Price" unique_id=1630138181]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/ShopGrid/Cell7/Price" unique_id=1439827753]
+layout_mode = 2
+
+[node name="Cell8" type="Control" parent="Root/Window/ShopGrid" unique_id=559614284]
+anchors_preset = 0
+offset_top = 58.0
+offset_right = 22.0
+offset_bottom = 87.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/ShopGrid/Cell8" unique_id=794852900]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/ShopGrid/Cell8/Slot" unique_id=1450504102]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoldX" type="TextureRect" parent="Root/Window/ShopGrid/Cell8/Slot" unique_id=1963167157]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+texture = ExtResource("19_n0x77")
+
+[node name="Count" type="Label" parent="Root/Window/ShopGrid/Cell8/Slot" unique_id=876242738]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/ShopGrid/Cell8" unique_id=1292315325]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/ShopGrid/Cell8/Price" unique_id=2000557949]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/ShopGrid/Cell8/Price" unique_id=418397007]
+layout_mode = 2
+
+[node name="Cell9" type="Control" parent="Root/Window/ShopGrid" unique_id=1716688425]
+anchors_preset = 0
+offset_left = 22.0
+offset_top = 58.0
+offset_right = 44.0
+offset_bottom = 87.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/ShopGrid/Cell9" unique_id=1569928716]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/ShopGrid/Cell9/Slot" unique_id=967974660]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoldX" type="TextureRect" parent="Root/Window/ShopGrid/Cell9/Slot" unique_id=1526033540]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+texture = ExtResource("19_n0x77")
+
+[node name="Count" type="Label" parent="Root/Window/ShopGrid/Cell9/Slot" unique_id=2003175936]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/ShopGrid/Cell9" unique_id=2086441997]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/ShopGrid/Cell9/Price" unique_id=2110065044]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/ShopGrid/Cell9/Price" unique_id=635639282]
+layout_mode = 2
+
+[node name="Cell10" type="Control" parent="Root/Window/ShopGrid" unique_id=937465677]
+anchors_preset = 0
+offset_left = 44.0
+offset_top = 58.0
+offset_right = 66.0
+offset_bottom = 87.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/ShopGrid/Cell10" unique_id=1935476578]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/ShopGrid/Cell10/Slot" unique_id=399248467]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoldX" type="TextureRect" parent="Root/Window/ShopGrid/Cell10/Slot" unique_id=376425260]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+texture = ExtResource("19_n0x77")
+
+[node name="Count" type="Label" parent="Root/Window/ShopGrid/Cell10/Slot" unique_id=94246692]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/ShopGrid/Cell10" unique_id=1498607247]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/ShopGrid/Cell10/Price" unique_id=221639364]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/ShopGrid/Cell10/Price" unique_id=1452124074]
+layout_mode = 2
+
+[node name="Cell11" type="Control" parent="Root/Window/ShopGrid" unique_id=1993427842]
+anchors_preset = 0
+offset_left = 66.0
+offset_top = 58.0
+offset_right = 88.0
+offset_bottom = 87.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/ShopGrid/Cell11" unique_id=1626075720]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/ShopGrid/Cell11/Slot" unique_id=795635365]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoldX" type="TextureRect" parent="Root/Window/ShopGrid/Cell11/Slot" unique_id=160058754]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+texture = ExtResource("19_n0x77")
+
+[node name="Count" type="Label" parent="Root/Window/ShopGrid/Cell11/Slot" unique_id=844635978]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/ShopGrid/Cell11" unique_id=210914557]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/ShopGrid/Cell11/Price" unique_id=1059366509]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/ShopGrid/Cell11/Price" unique_id=89132063]
+layout_mode = 2
+
+[node name="Cell12" type="Control" parent="Root/Window/ShopGrid" unique_id=1324595399]
+anchors_preset = 0
+offset_top = 87.0
+offset_right = 22.0
+offset_bottom = 116.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/ShopGrid/Cell12" unique_id=1407050118]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/ShopGrid/Cell12/Slot" unique_id=1583554020]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoldX" type="TextureRect" parent="Root/Window/ShopGrid/Cell12/Slot" unique_id=132059031]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+texture = ExtResource("19_n0x77")
+
+[node name="Count" type="Label" parent="Root/Window/ShopGrid/Cell12/Slot" unique_id=409164723]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/ShopGrid/Cell12" unique_id=926818127]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/ShopGrid/Cell12/Price" unique_id=1831556928]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/ShopGrid/Cell12/Price" unique_id=1321253119]
+layout_mode = 2
+
+[node name="Cell13" type="Control" parent="Root/Window/ShopGrid" unique_id=839169498]
+anchors_preset = 0
+offset_left = 22.0
+offset_top = 87.0
+offset_right = 44.0
+offset_bottom = 116.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/ShopGrid/Cell13" unique_id=1513214648]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/ShopGrid/Cell13/Slot" unique_id=924301349]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoldX" type="TextureRect" parent="Root/Window/ShopGrid/Cell13/Slot" unique_id=503777697]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+texture = ExtResource("19_n0x77")
+
+[node name="Count" type="Label" parent="Root/Window/ShopGrid/Cell13/Slot" unique_id=1760583182]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/ShopGrid/Cell13" unique_id=960358403]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/ShopGrid/Cell13/Price" unique_id=391898996]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/ShopGrid/Cell13/Price" unique_id=223486159]
+layout_mode = 2
+
+[node name="Cell14" type="Control" parent="Root/Window/ShopGrid" unique_id=18534680]
+anchors_preset = 0
+offset_left = 44.0
+offset_top = 87.0
+offset_right = 66.0
+offset_bottom = 116.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/ShopGrid/Cell14" unique_id=1588629390]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/ShopGrid/Cell14/Slot" unique_id=2101823321]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoldX" type="TextureRect" parent="Root/Window/ShopGrid/Cell14/Slot" unique_id=2020723942]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+texture = ExtResource("19_n0x77")
+
+[node name="Count" type="Label" parent="Root/Window/ShopGrid/Cell14/Slot" unique_id=586662209]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/ShopGrid/Cell14" unique_id=648879787]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/ShopGrid/Cell14/Price" unique_id=2064180991]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/ShopGrid/Cell14/Price" unique_id=1362424067]
+layout_mode = 2
+
+[node name="Cell15" type="Control" parent="Root/Window/ShopGrid" unique_id=1135528182]
+anchors_preset = 0
+offset_left = 66.0
+offset_top = 87.0
+offset_right = 88.0
+offset_bottom = 116.0
+mouse_filter = 2
+
+[node name="Slot" type="Button" parent="Root/Window/ShopGrid/Cell15" unique_id=887259906]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Icon" type="TextureRect" parent="Root/Window/ShopGrid/Cell15/Slot" unique_id=257492930]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoldX" type="TextureRect" parent="Root/Window/ShopGrid/Cell15/Slot" unique_id=1514727708]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+texture = ExtResource("19_n0x77")
+
+[node name="Count" type="Label" parent="Root/Window/ShopGrid/Cell15/Slot" unique_id=371263129]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.0
+offset_right = 19.0
+offset_bottom = 19.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 2
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/ShopGrid/Cell15" unique_id=445335265]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Coin" type="TextureRect" parent="Root/Window/ShopGrid/Cell15/Price" unique_id=1756574180]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="Amount" type="Label" parent="Root/Window/ShopGrid/Cell15/Price" unique_id=1087436328]
+layout_mode = 2
+
+[node name="ShopHint" type="Label" parent="Root/Window" unique_id=369209504]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 168.0
+offset_right = 298.0
+offset_bottom = 479.0
+theme_override_colors/font_color = Color(0.3019608, 0.19215687, 0.2901961, 1)
+text = "CLICK AN ITEM TO SEE IT. BUY ADDS IT TO YOUR BAG."
+autowrap_mode = 3
+
+[node name="IconBox" type="NinePatchRect" parent="Root/Window" unique_id=1199663627]
+layout_mode = 0
+offset_left = 306.0
+offset_top = 28.0
+offset_right = 406.0
+offset_bottom = 74.0
+texture = ExtResource("13_4p1en")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="DetailIcon" type="TextureRect" parent="Root/Window/IconBox" unique_id=2013874157]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 34.0
+offset_top = 7.0
+offset_right = 66.0
+offset_bottom = 39.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DetailSold" type="TextureRect" parent="Root/Window/IconBox" unique_id=2056931985]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 34.0
+offset_top = 7.0
+offset_right = 66.0
+offset_bottom = 39.0
+texture = ExtResource("19_n0x77")
+expand_mode = 1
+
+[node name="NameBanner" type="NinePatchRect" parent="Root/Window" unique_id=1279236051]
+layout_mode = 0
+offset_left = 302.0
+offset_top = 77.0
+offset_right = 410.0
+offset_bottom = 99.0
+texture = ExtResource("12_j6v0o")
+patch_margin_left = 6
+patch_margin_top = 4
+patch_margin_right = 6
+patch_margin_bottom = 5
+axis_stretch_horizontal = 2
+
+[node name="DetailName" type="Label" parent="Root/Window/NameBanner" unique_id=385911731]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 6.0
+offset_top = 2.0
+offset_right = 102.0
+offset_bottom = 18.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="InfoCard" type="NinePatchRect" parent="Root/Window" unique_id=1221906949]
+layout_mode = 0
+offset_left = 306.0
+offset_top = 102.0
+offset_right = 406.0
+offset_bottom = 184.0
+texture = ExtResource("13_4p1en")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="DetailInfo" type="RichTextLabel" parent="Root/Window/InfoCard" unique_id=296925125]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 97.0
+offset_bottom = 66.0
+mouse_filter = 2
+bbcode_enabled = true
+scroll_active = false
+
+[node name="DetailPriceTitle" type="Label" parent="Root/Window/InfoCard" unique_id=1970344946]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 4.0
+offset_top = 70.0
+offset_right = 44.0
+offset_bottom = 77.0
+theme_override_colors/font_color = Color(0.9098039, 0.7882353, 0.627451, 1)
+text = "PRICE"
+
+[node name="PriceBox" type="HBoxContainer" parent="Root/Window/InfoCard" unique_id=391633798]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 70.0
+offset_right = 96.0
+offset_bottom = 77.0
+mouse_filter = 2
+theme_override_constants/separation = 2
+alignment = 2
+
+[node name="DetailPriceCoin" type="TextureRect" parent="Root/Window/InfoCard/PriceBox" unique_id=532225474]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_wpp7d")
+
+[node name="DetailPrice" type="Label" parent="Root/Window/InfoCard/PriceBox" unique_id=454707712]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ActionButton" type="Button" parent="Root/Window" unique_id=1469650523]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 306.0
+offset_top = 187.0
+offset_right = 406.0
+offset_bottom = 203.0
+text = "BUY"
+
+[node name="EquipButton" type="Button" parent="Root/Window" unique_id=322579622]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 306.0
+offset_top = 206.0
+offset_right = 406.0
+offset_bottom = 222.0
+text = "EQUIP"
+
+[node name="ExitButton" type="Button" parent="Root/Window" unique_id=1934221360]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 174.0
+offset_top = 204.0
+offset_right = 242.0
+offset_bottom = 220.0
+text = "EXIT"
