@@ -130,6 +130,9 @@ static func _sanitize_replay_frames(raw_frames: Variant, max_count: int) -> Arra
 		if not is_finite(dy): dy = 0.0
 		if not is_finite(ax): ax = 32.0
 		if not is_finite(ay): ay = 0.0
+		# JSON numbers are floats, including integral Yugi replay outcomes.
+		var result_value: Variant = item.get("result", 0)
+		var valid_result: bool = (result_value is int or result_value is float) and is_finite(float(result_value)) and float(result_value) == floor(float(result_value))
 		safe_frames.append({
 			"dx": clampf(dx, -1.0, 1.0),
 			"dy": clampf(dy, -1.0, 1.0),
@@ -145,7 +148,7 @@ static func _sanitize_replay_frames(raw_frames: Variant, max_count: int) -> Arra
 			"lr": item.get("lr", false) == true,
 			"rp": item.get("rp", false) == true,
 			"rr": item.get("rr", false) == true,
-			"result": clampi(int(item.get("result", 0)), 0, 5) if item.get("result", 0) is int else 0,
+			"result": int(clampf(float(result_value), 0.0, 5.0)) if valid_result else 0,
 			# Doraemon's 4D pocket: gadget page switch (-n..n) and Dorayaki key
 			"pg": clampi(int(item.get("pg", 0)), -10, 10) if (item.get("pg", 0) is int or item.get("pg", 0) is float) else 0,
 			"eat": item.get("eat", false) == true
@@ -278,6 +281,13 @@ func finish_run(reason: String = "Game Over") -> Dictionary:
 		"session_mode": _session_mode,
 		"frames": current_recording_frames if not is_replaying else []
 	})
+
+func retry_pending_completion() -> Dictionary:
+	if storage_state == "STORAGE_UNCERTAIN":
+		return reconcile_storage()
+	if _active_state != "PENDING" or _envelope.is_empty():
+		return _outcome("NOT_PENDING")
+	return complete_run_request(current_run_id, _envelope)
 
 func _outcome(status: String, receipt: Dictionary = {}) -> Dictionary:
 	last_completion_result = {"status": status}
@@ -649,10 +659,19 @@ func load_save_data() -> bool:
 	if not source.exists:
 		return storage_state == "READY"
 	var parsed: Variant = JSON.parse_string(source.bytes.get_string_from_utf8())
+	var compact_storage := false
+	if parsed is Dictionary and parsed.has("storage_encoding"):
+		var decoded := CompletionStore.decode_snapshot(parsed)
+		if decoded.status != "OK":
+			storage_state = "LOAD_ERROR"
+			return false
+		parsed = decoded.snapshot
+		compact_storage = true
 	if not (parsed is Dictionary) or (parsed.has("schema_version") and not _valid_v2_snapshot(parsed)) or (not parsed.has("schema_version") and parsed.has("processed_ledger")):
 		storage_state = "LOAD_ERROR"
 		return false
 	var candidate := _decode_snapshot(parsed)
+	completion_store.prefer_compact = compact_storage
 	_publish_snapshot(candidate)
 	current_run_id = "" # Loading receipts does not resume an uncommitted session.
 	_duplicate_payload = {}

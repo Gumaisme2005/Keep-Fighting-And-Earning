@@ -1,0 +1,396 @@
+{
+  "date": "2026-11-14 Asia/Saigon",
+  "branch": "feat/bt3-vt074-idempotent-run",
+  "head": "476ff8efaec5e0c09b078e86468057d40dc7013e",
+  "inventory_status": "COMPLETE for commit review; disclosed validation/submission limits remain",
+  "final_decision": "READY FOR COMMIT",
+  "commit_count": 63,
+  "files_to_commit": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "1bca602000db6e87ff0158a3b695239b3edfd1de46b1f04fb38ca430bdcfa3ae",
+      "bytes": 7837
+    },
+    {
+      "path": "Menu/game over menu/game_over_menu.gd",
+      "sha256": "ba04ea8f5f7f83ec2b1d5e17ae7d904a226aef2174e475291f42151dbf291262",
+      "bytes": 6293
+    },
+    {
+      "path": "Scene/Character/BasePlayer.gd",
+      "sha256": "d8acd38dab8ad063e834aaa4ba17e7c258910af1dcf260fa4899dba30c3f16aa",
+      "bytes": 19023
+    },
+    {
+      "path": "Scene/GameManager.gd",
+      "sha256": "389d6b58e96505535eca240274e5b89f7f03ddbcc5bfd7cc264bf767d03e21c5",
+      "bytes": 34154
+    },
+    {
+      "path": "Scene/RunCompletionStore.gd",
+      "sha256": "7cd723f48d4da45a6fbd559e4e1baedd705414d4ce952f3f11e6b8bff234d2e3",
+      "bytes": 7834
+    },
+    {
+      "path": "docs/BT3_VT074/AI_USAGE_LOG.md",
+      "sha256": "122d485e2d379d7a8a45b3d3ed2bfeb925acee029e3f73a67aa20110afa05757",
+      "bytes": 10754
+    },
+    {
+      "path": "docs/BT3_VT074/COVERAGE_AND_RISKS.md",
+      "sha256": "6739ca5f7b721b077f8666e930e133fb4f5bcd6a400c5e28e5dc6e43e02f19e2",
+      "bytes": 3932
+    },
+    {
+      "path": "docs/BT3_VT074/EVIDENCE_INTEGRATION_REVIEW_20261114.md",
+      "sha256": "e030c5501454d5b91eb1e66730ec3301fb5b21c657fc899866b2a36693cca56a",
+      "bytes": 12725
+    },
+    {
+      "path": "docs/BT3_VT074/MANUAL_E2E_OBSERVATION_20261114.md",
+      "sha256": "8b69c017da86ebaef23827d2b591954c2bbbe7281bd448070f3d70244b2de1f8",
+      "bytes": 3719
+    },
+    {
+      "path": "docs/BT3_VT074/MANUAL_E2E_VERIFICATION.md",
+      "sha256": "06a52565f3b76078dd0ffb94c4839f20d2233fc10385ddd80f93076df6e58363",
+      "bytes": 4382
+    },
+    {
+      "path": "docs/BT3_VT074/PERSISTENCE_VERIFICATION.md",
+      "sha256": "65fb45332be0e439f90a08a3dc3e0b5ab9d6026c8d9a9a4d384406fb2ae537a8",
+      "bytes": 13437
+    },
+    {
+      "path": "docs/BT3_VT074/README.md",
+      "sha256": "c819b0af9fb9443970f9ea4a8af385c053013e0981b4754dfad20a0e4a6f59d2",
+      "bytes": 3370
+    },
+    {
+      "path": "docs/BT3_VT074/REFLECTION_REVIEW_PROPOSAL.md",
+      "sha256": "139e91ec9144ff399b340e8a3ee43c7825ac9b4bdc1de4c5fb4575b3bc5e038e",
+      "bytes": 1767
+    },
+    {
+      "path": "docs/BT3_VT074/SAVE_FAILURE_FIX_REPORT.md",
+      "sha256": "d69f3fe8160e68412704cb58bf07e9ea29ca9b2d5783e13a7bbe3f456ece3cb7",
+      "bytes": 8648
+    },
+    {
+      "path": "docs/BT3_VT074/TEST_CASES.md",
+      "sha256": "25e961ee009e7bdfb08459d13b36824fea32a425e18e974cabf30266c21aec8c",
+      "bytes": 15100
+    },
+    {
+      "path": "docs/BT3_VT074/TRACEABILITY.md",
+      "sha256": "e5d0208d40a5ba445f5884c6b26cb59fa04d53deb7c997b041ac4e1deb1fc3ab",
+      "bytes": 4005
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/.gitignore",
+      "sha256": "ae11619f05c9cdded221d8a566e06a851ff7c58edab6ea45eb6ef9462e2cbff4",
+      "bytes": 1209
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/manual_e2e_20261114_gameover_run_saved.png",
+      "sha256": "4760ee49ebfda5eed745dd5d38105296cb150e71e7b062fa31a0f0729f6f61fe",
+      "bytes": 189591
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/manual_e2e_20261114_history_miya_floor2.png",
+      "sha256": "33e27b6ab600aa7d32d78e299a37730dc0ccf67a4346fdc738ef8a0d761f0d54",
+      "bytes": 204685
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_0d3b5e74b5dd_red.json",
+      "sha256": "a428b43fab26e8e8e81780c16957d708530ee1d728050b5b1487940975822137",
+      "bytes": 31842
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_0f291bfe9f40_groups.json",
+      "sha256": "cdec43ad1e6f2a2a7ba6885426653926d3ed38f7de68c689241a397897e35e60",
+      "bytes": 143059
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_110301a54df2_target.json",
+      "sha256": "7601408ccf6adc391c46d8d3e6b9b834dadcdc6ce511ba8155f8fc88bac23c69",
+      "bytes": 63131
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_1a2d5fe775c9_benchmark.json",
+      "sha256": "4ec65fba58f0216c3a22413c205671cba2d94d65edcacab6258cd92b4aa8772e",
+      "bytes": 215260
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_1a2d5fe775c9_benchmark_performance_40.csv",
+      "sha256": "f858284858bb1f9dd9a3b524f3471186b2888d8176b509c98d6f077e0a405862",
+      "bytes": 834195
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_1a2d5fe775c9_benchmark_performance_batches.json",
+      "sha256": "ced4358deb550f2e039963206f89fc18e38799ae5d3ef521bd1a76ab057fe6e3",
+      "bytes": 71993
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_1a2d5fe775c9_benchmark_performance_warmup.csv",
+      "sha256": "7db9b0a7ca43971cb8c991a5a17eef712120f55cd8785949281884a4c56b8f72",
+      "bytes": 133838
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_1d8ce204784e_codec.json",
+      "sha256": "0b7a9f1aae1891ce33e3e04378b698fb202487ea024a4cf7e9d203f78ba2b16b",
+      "bytes": 42195
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_20261114_attempt_index.json",
+      "sha256": "049de2e65d1592b3e52e0661d4d5fc3c1eb0f8e6599a076de997259ab78cfcb4",
+      "bytes": 165886
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_20261114_commit_manifest.json",
+      "sha256": "1d829e6e2607f767161067a533b868eddbf9279d58944cb1ab3c20f3caf7a4e2",
+      "bytes": 12808
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_20261114_final_checks.json",
+      "sha256": "1113b72470bcba4338ad3f14c668c55c74b86b8623e15f404a2003712568acbb",
+      "bytes": 6209
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_20261114_performance_verification.json",
+      "sha256": "f69e92be51d884318fcbd7f147a6a99f9781359698c919dc70a0265a1607da23",
+      "bytes": 1197
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_20261114_suite_matrix.json",
+      "sha256": "a97ef4a5753e0b1ef5a18f4088738ecff1dc5a7dd621ceb132d968fda54672f3",
+      "bytes": 161197
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_247b0a2dc1a4_smoke.json",
+      "sha256": "08883ac1635d77392d8d361a3b5c053144fc66863628b59195c306df42460c72",
+      "bytes": 265990
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json",
+      "sha256": "5633a4973ce7273d6f80de4b95e8b846abb29c0689e8c7649aa3f6b1d5b5e98a",
+      "bytes": 7297195
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_3be3750c9470_setup_failure.json",
+      "sha256": "4e6bff9039f4a547641b2e18298975d8e4ab1a4580e6760d2fb6625121a487a4",
+      "bytes": 453910
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_4a075bff8672_benchmark.json",
+      "sha256": "3342e283b23088881d34a463954e141cbd2772e2a24293a849348556d1dbd72b",
+      "bytes": 216041
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_4a075bff8672_benchmark_performance_40.csv",
+      "sha256": "bd4d7d8d63cdd2cd0886d023d1cb51ca4891cb2996befe2abdc57b2389a301bd",
+      "bytes": 834495
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_4a075bff8672_benchmark_performance_batches.json",
+      "sha256": "0cc36129005643963feb79764463d09f8a0be9c60ee92ff64ee0ded148ed4cf9",
+      "bytes": 71991
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_4a075bff8672_benchmark_performance_warmup.csv",
+      "sha256": "895646a452c29122749cbd7bb33a34353517e9ad237bd45dba63ef602fcb1011",
+      "bytes": 133824
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_4ea7fc174e35_codec.json",
+      "sha256": "f9dda40ec8c5f73d9c33cba843c2984edc3c0e18c3d3bb939ffc1c6b70249d77",
+      "bytes": 40365
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_5187c946fc71_codec.json",
+      "sha256": "75600c89c5cb3f01ca0d65a8f57d1a2071340a451206bedb81d74caa9a2de43e",
+      "bytes": 40311
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_5290ad85dab8_codec.json",
+      "sha256": "18c5c1d24d5c9d1b19991ebb5c6c9a30445e8b53831229bf0b7a8090d854a460",
+      "bytes": 39996
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_54b931c50351_red.json",
+      "sha256": "64a3386b8f076857e12fedf6f1491772dbe6aaa41c7a5cbd178ac70ac283db5f",
+      "bytes": 33860
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json",
+      "sha256": "913fed8855d1b4c59c6f0ec5d299a0ea65be6fc9eff0016ca91d788ab456f412",
+      "bytes": 147338
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_5a141fdf2ac0_smoke.json",
+      "sha256": "d81612518e8a0b181786ad1b466d0ec6636a9c5dd36607698ef68754bb9ad9fa",
+      "bytes": 33337
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_659092fe835d_codec_probe.json",
+      "sha256": "69d01d036e9aa124f7b968328ba577e7ec355ee93eb8653cfcf2c5f2b43468f2",
+      "bytes": 7036
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_77bd94a52efe_target.json",
+      "sha256": "ce99e6e6c729adb935b38a5f5996dc50a274f90aa83d4c8dd668869af6aa4a6c",
+      "bytes": 59297
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_8aa0b1588005_groups.json",
+      "sha256": "2b05fdfd4f076c537fc9ae3cedb1858a883e818f740bb6ec666f89b7c7704410",
+      "bytes": 146758
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_8b6288391db7_target.json",
+      "sha256": "dd5616cbc52d4dbf127c245a6492fe3f5b2c5dad5488d88f795591889890264a",
+      "bytes": 63327
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_9267747c8374_red.json",
+      "sha256": "d6bcb8123076e3c2ddf155bb1c87313eb2b14b6c45c10e285d0e7f48ab4f379c",
+      "bytes": 29202
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_92b87d673964_target.json",
+      "sha256": "1db3591015e20b3a7db656a9799d0a3e9a6d81a02e9a4e26f6c9c698365c11cf",
+      "bytes": 61630
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_b1d3de0954dd_target.json",
+      "sha256": "a389a3fbd30d6df9b2a8451247a891adcdef57db8f9930a6efeb11e780277feb",
+      "bytes": 45589
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_ba441018ac89_smoke.json",
+      "sha256": "dc93f8e640f9aaf1db524dfedba7905e91ab7b80a60421f7dc62f19cc10423d5",
+      "bytes": 264185
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_c269529dd090_smoke.json",
+      "sha256": "f8b1948d80ff0b7d5b176caf919a9df3e0a02dd222d216dfa4fd25783de1b8b7",
+      "bytes": 264834
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_integration_20261114_checks.json",
+      "sha256": "eeb9a533cbc41a33f5d46dea60377fd7c32e0ce99d3156db6cf3f0c9e8ea8164",
+      "bytes": 11611
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_integration_20261114_commit_manifest.json",
+      "sha256": null,
+      "note": "Self-hash intentionally omitted"
+    },
+    {
+      "path": "tests/vt074/run_persistence_review.py",
+      "sha256": "ba3bac76b8794ab7fe08f34f60634ff69907dfca08d0921462aa0dd250f1d849",
+      "bytes": 11480
+    },
+    {
+      "path": "tests/vt074/test_codec_cost.gd",
+      "sha256": "4abb4aab1092c50509683957372fc1319f5c8e6b4b811046369cff485ecbcf7e",
+      "bytes": 2766
+    },
+    {
+      "path": "tests/vt074/test_codec_recovery.gd",
+      "sha256": "480ecaaf9824c42bba4ccb08040d8d619dc84175a74147be116d7f6526a3dfd6",
+      "bytes": 9435
+    },
+    {
+      "path": "tests/vt074/test_death_persistence.gd",
+      "sha256": "4c8091982c66e01ebb62f0335a92f10a322255a0b8174cfeb3984f3268c54e8c",
+      "bytes": 3143
+    },
+    {
+      "path": "tests/vt074/test_long_persistence.gd",
+      "sha256": "eca4cd6bf4850011dfc9d69d102ec54fa5c08b2858041fb0b438f70c3707f7f8",
+      "bytes": 5528
+    },
+    {
+      "path": "tests/vt074/test_writer_bytes.gd",
+      "sha256": "278265ddfe4eb94b672d5a537e8f0242a163354675c0fe0e2ec55943e3dccf90",
+      "bytes": 7558
+    },
+    {
+      "path": "tests/vt074/verify_persistence_performance.py",
+      "sha256": "4e47ccf6975bf61809ef52cea416611b1a996949d1a05d5141bb7506468dcbc4",
+      "bytes": 2092
+    }
+  ],
+  "missing_required_files": [],
+  "previous_manifest": "docs/BT3_VT074/evidence/persistence_20261114_commit_manifest.json",
+  "previous_manifest_initial_hash_mismatches": [],
+  "previous_manifest_stale_after_legitimate_document_updates": [
+    "docs/BT3_VT074/AI_USAGE_LOG.md",
+    "docs/BT3_VT074/COVERAGE_AND_RISKS.md",
+    "docs/BT3_VT074/MANUAL_E2E_VERIFICATION.md",
+    "docs/BT3_VT074/PERSISTENCE_VERIFICATION.md",
+    "docs/BT3_VT074/README.md",
+    "docs/BT3_VT074/TEST_CASES.md",
+    "docs/BT3_VT074/TRACEABILITY.md"
+  ],
+  "new_inventory_paths": [
+    "docs/BT3_VT074/EVIDENCE_INTEGRATION_REVIEW_20261114.md",
+    "docs/BT3_VT074/MANUAL_E2E_OBSERVATION_20261114.md",
+    "docs/BT3_VT074/evidence/manual_e2e_20261114_gameover_run_saved.png",
+    "docs/BT3_VT074/evidence/manual_e2e_20261114_history_miya_floor2.png",
+    "docs/BT3_VT074/evidence/persistence_247b0a2dc1a4_smoke.json",
+    "docs/BT3_VT074/evidence/persistence_5a141fdf2ac0_smoke.json",
+    "docs/BT3_VT074/evidence/persistence_integration_20261114_checks.json",
+    "docs/BT3_VT074/evidence/persistence_integration_20261114_commit_manifest.json"
+  ],
+  "excluded_generated_untracked": [
+    "Scene/RunCompletionStore.gd.uid",
+    "tests/test_run_completion_contract.gd.uid",
+    "tests/test_run_completion_idempotency.gd.uid",
+    "tests/test_vt074_integration.gd.uid",
+    "tests/vt074/fixtures/integration_entry.gd.uid",
+    "tests/vt074/fixtures/integration_store.gd.uid",
+    "tests/vt074/pairwise_cases.csv.import",
+    "tests/vt074/pairwise_cases.execution.translation",
+    "tests/vt074/pairwise_cases.expected.translation",
+    "tests/vt074/pairwise_cases.identity.translation",
+    "tests/vt074/pairwise_cases.ledger.translation",
+    "tests/vt074/pairwise_cases.payload.translation",
+    "tests/vt074/pairwise_cases.storage.translation",
+    "tests/vt074/pairwise_cases.test.translation",
+    "tests/vt074/performance_harness.gd.uid",
+    "tests/vt074/profile_trace.gd.uid",
+    "tests/vt074/quality_entry.gd.uid",
+    "tests/vt074/quality_fixture.gd.uid",
+    "tests/vt074/test_boundary_mutation.gd.uid",
+    "tests/vt074/test_codec_cost.gd.uid",
+    "tests/vt074/test_codec_recovery.gd.uid",
+    "tests/vt074/test_death_persistence.gd.uid",
+    "tests/vt074/test_flaky_order.gd.uid",
+    "tests/vt074/test_flaky_time.gd.uid",
+    "tests/vt074/test_heavy_comparison.gd.uid",
+    "tests/vt074/test_heavy_equivalence.gd.uid",
+    "tests/vt074/test_heavy_tradeoff_ownership.gd.uid",
+    "tests/vt074/test_heavy_tradeoff_profile.gd.uid",
+    "tests/vt074/test_long_persistence.gd.uid",
+    "tests/vt074/test_p01_equivalence.gd.uid",
+    "tests/vt074/test_pairwise.gd.uid",
+    "tests/vt074/test_writer_bytes.gd.uid"
+  ],
+  "excluded_local_attempts": [
+    "docs/BT3_VT074/evidence/persistence_0491df7b9512_all.json",
+    "docs/BT3_VT074/evidence/persistence_55abd199c630_all.json",
+    "docs/BT3_VT074/evidence/persistence_9a72db772462_red.json",
+    "docs/BT3_VT074/evidence/persistence_e3d38e6870b9_target.json"
+  ],
+  "exclude_directories": [
+    ".godot/",
+    "__pycache__/"
+  ],
+  "personal_saves_and_backups": "Never access/include",
+  "duplicate_archives": "Excluded; no new archive",
+  "staged": false,
+  "committed": false,
+  "pushed": false
+}

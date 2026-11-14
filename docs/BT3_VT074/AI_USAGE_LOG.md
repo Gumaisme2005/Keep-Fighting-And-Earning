@@ -1,5 +1,16 @@
 # VT-074 — AI Usage Log
 
+Cập nhật 14/11/2026: xem [save-failure report](SAVE_FAILURE_FIX_REPORT.md) và [verification hiện tại](PERSISTENCE_VERIFICATION.md). Các dòng C1…C6 dưới đây là lịch sử theo thời điểm, không phải kết luận performance/manual hiện tại.
+
+| Bổ sung hiện tại | Nguồn / quyết định | Trách nhiệm và trạng thái |
+| --- | --- | --- |
+| Candidate C1 / HEAD 476ff8e | User đã duyệt C1 và trade-off trong phiên trước; [báo cáo áp dụng](C1_PRODUCTION_APPLIED_REPORT.md), [patch/source evidence](evidence/heavy_tradeoff_144f3df0463e_candidate.patch) | Giữ duplicate fast path và ownership; không suy quyết định trước thành human review patch persistence mới |
+| SAVE_FAILED / yêu cầu 14/11 | User yêu cầu triển khai, test-first, giữ 2 MiB và dữ liệu riêng tư; prompt từ attachment, không dựng transcript | AI tạo fixture, code/tests/evidence/docs; không mở save/backup thật; chưa có human post-fix signoff |
+| Lossless compact persistence | Raw candidate vượt cap ở behavioral RED; giữ nguyên JSON vừa cap, encode oversized snapshot, bounded decode, atomic publication | AI chọn sau khi kiểm size/stage; không tăng cap/xóa history/ledger. Student review patch mới: PENDING |
+| Precision trials và follow-up save | Varied controls phát hiện `result` bị reset và decimal JSON/full_precision không bit-exact; raw trials giữ nguyên trong save-failure report | AI loại decimal-only codec, dùng exact double bytes trước compression; giữ compact format sau khi file nhỏ lại. Các quyết định kỹ thuật này chưa có human review mới |
+| Game Over và recovery | Actual death bỏ qua returned status; UI mới báo thất bại/uncertainty, retry frozen ID/envelope | Test headless có actual take_damage/timer/menu; short-run manual sau fix PASS theo báo cáo sinh viên (Floor 2 / 39 kills, RUN SAVED, History khớp, restart xác nhận bằng lời); human observation và hai ảnh thật đã đọc/xem, hash và đưa vào inventory; human near-2-MiB NOT RUN; không suy ra human patch approval |
+| Reflection/authorship correction | AI đã hỗ trợ draft reflection và cung cấp snippets HT-01/HT-02 | Không khẳng định reflection/tests hoàn toàn do sinh viên tự nghĩ/viết độc lập. REFLECTION.md giữ lịch sử; [đề xuất review riêng](REFLECTION_REVIEW_PROPOSAL.md) chờ sinh viên |
+
 Sinh viên: Vũ Xuân Bắc, 23001833, SE2026-T19. Công cụ: **Codex** và tools đọc source/Git, chạy Godot/Python, truy vấn GitHub Actions. Phiên C1 tự mô tả dựa trên GPT-6; không có deployment/model ID được xác minh để ghi chi tiết hơn. Không nhận các tool kiểm thử là một AI reviewer độc lập.
 
 Log này tổng hợp artifacts và quyết định có thể kiểm chứng. Không dựng lại nguyên văn prompt nếu chưa có bản được lưu. Các summary của mục tiêu prompt dưới đây được ghi là summary; phần original plan không bị viết lại.
@@ -23,7 +34,7 @@ Log này tổng hợp artifacts và quyết định có thể kiểm chứng. Kh
 
 ## Trách nhiệm và provenance
 
-- Sinh viên đưa các quyết định R/TR, cho phép thử nghiệm P-01 có điều kiện, trực tiếp sửa hai test HT và tự viết reflection; sinh viên tự review/stage/commit/push qua công cụ của mình.
+- Sinh viên đưa các quyết định R/TR, cho phép thử nghiệm P-01 có điều kiện, xác nhận trực tiếp sửa/lưu hai test HT theo snippets AI hỗ trợ và gửi reflection có AI hỗ trợ draft; không suy đây là toàn bộ nội dung độc lập của sinh viên. Sinh viên tự review/stage/commit/push qua công cụ của mình.
 - AI đề xuất plan/tests/patches, ghi lại quyết định đã nhận, tự kiểm source/diff, chạy tools và tổng hợp tài liệu. Việc sinh viên copy/chỉnh đề xuất AI được ghi đúng là AI hỗ trợ và human direct edit; không gọi là phát minh độc lập của sinh viên.
 - Hai lần trước user xác nhận đã sửa nhưng files trên ổ đĩa còn nguyên: AI giữ gate OPEN. Chỉ sau khi có diff thật và chạy test mới ghi SATISFIED. Không xem lời xác nhận đơn lẻ thay cho diff/execution evidence.
 - Chỉ prompt C1 và C3 được trỏ đến bản nguyên văn đã lưu trong repo ở bảng trên. Prompt C2/C4/C5/C6 và các lời review có trong cuộc hội thoại/attachments, nhưng không giả tạo bản transcript mới trong repo. Những trích dẫn human decisions đã có trong AI_PLAN_REVIEW/AI_TEST_REVIEW được giữ nguyên.

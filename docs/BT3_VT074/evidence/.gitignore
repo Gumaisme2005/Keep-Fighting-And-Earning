@@ -16,3 +16,11 @@ heavy_tradeoff_144f3df0463e_ORIGINAL_B_snapshots.zip
 
 # Byte-identical to heavy_1a3b68d5d730_candidate.patch; retained locally for audit.
 heavy_4992759f992a_candidate.patch
+
+# Verbose initial synthetic RED stays local; use the compact behavioral RED.
+persistence_9a72db772462_red.json
+# Superseded verbose attempts remain local; final compact runs and the attempt
+# index retain their outcomes/hashes without duplicating multi-megabyte logs.
+persistence_0491df7b9512_all.json
+persistence_e3d38e6870b9_target.json
+persistence_55abd199c630_all.json

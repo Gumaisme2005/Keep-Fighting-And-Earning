@@ -1,0 +1,218 @@
+{
+  "date": "2026-11-14 Asia/Saigon",
+  "branch": "feat/bt3-vt074-idempotent-run",
+  "head": "476ff8efaec5e0c09b078e86468057d40dc7013e",
+  "staged_raw": "",
+  "git_diff_check": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "old_manifest": {
+    "path": "docs/BT3_VT074/evidence/persistence_20261114_commit_manifest.json",
+    "sha256": "1d829e6e2607f767161067a533b868eddbf9279d58944cb1ab3c20f3caf7a4e2",
+    "count": 55,
+    "initial_hash_mismatches": [],
+    "initial_verified_hashes": 54,
+    "self_hash_omitted": true,
+    "current_stale_document_entries": [
+      "docs/BT3_VT074/AI_USAGE_LOG.md",
+      "docs/BT3_VT074/COVERAGE_AND_RISKS.md",
+      "docs/BT3_VT074/MANUAL_E2E_VERIFICATION.md",
+      "docs/BT3_VT074/PERSISTENCE_VERIFICATION.md",
+      "docs/BT3_VT074/README.md",
+      "docs/BT3_VT074/TEST_CASES.md",
+      "docs/BT3_VT074/TRACEABILITY.md"
+    ]
+  },
+  "source_sha256": {
+    "Scene/GameManager.gd": "389d6b58e96505535eca240274e5b89f7f03ddbcc5bfd7cc264bf767d03e21c5",
+    "Scene/RunCompletionStore.gd": "7cd723f48d4da45a6fbd559e4e1baedd705414d4ce952f3f11e6b8bff234d2e3",
+    "Scene/Character/BasePlayer.gd": "d8acd38dab8ad063e834aaa4ba17e7c258910af1dcf260fa4899dba30c3f16aa",
+    "Menu/game over menu/game_over_menu.gd": "ba04ea8f5f7f83ec2b1d5e17ae7d904a226aef2174e475291f42151dbf291262",
+    "tests/vt074/run_persistence_review.py": "ba3bac76b8794ab7fe08f34f60634ff69907dfca08d0921462aa0dd250f1d849",
+    "tests/vt074/verify_persistence_performance.py": "4e47ccf6975bf61809ef52cea416611b1a996949d1a05d5141bb7506468dcbc4",
+    "tests/vt074/test_long_persistence.gd": "eca4cd6bf4850011dfc9d69d102ec54fa5c08b2858041fb0b438f70c3707f7f8",
+    "tests/vt074/test_writer_bytes.gd": "278265ddfe4eb94b672d5a537e8f0242a163354675c0fe0e2ec55943e3dccf90",
+    "tests/vt074/test_death_persistence.gd": "4c8091982c66e01ebb62f0335a92f10a322255a0b8174cfeb3984f3268c54e8c",
+    "tests/vt074/test_codec_recovery.gd": "480ecaaf9824c42bba4ccb08040d8d619dc84175a74147be116d7f6526a3dfd6",
+    "tests/vt074/test_codec_cost.gd": "4abb4aab1092c50509683957372fc1319f5c8e6b4b811046369cff485ecbcf7e",
+    ".github/workflows/ci.yml": "1bca602000db6e87ff0158a3b695239b3edfd1de46b1f04fb38ca430bdcfa3ae",
+    "project.godot": "3332d3d43f4ffa240f391acd4f70f808eabfc167e890248e226881b50708b677"
+  },
+  "protected_source_sha256": {
+    "tests/test_run_completion_contract.gd": "3f101b24593670ae0da2a99a83d4251b374992cff3dd34a9006e28f27d772204",
+    "tests/test_run_completion_idempotency.gd": "872af01a06909003e184839f1ce132d343d719745b197b47a6b00814069e5b55",
+    "tests/test_vt074_integration.gd": "9f3abf9827e443fd669b0740f3bdfb82a3f237672dbb3e1e5cc9058d810905d8",
+    "tests/test_replay_security.gd": "5250be030db80c7e177bccfd49fa81dc77949818ab1f3656cde99f7f1a7b7e10",
+    "tests/vt074/test_flaky_order.gd": "586b4bdc39c74b6fd19aa49c52619482ca4b17e9e8c6f7d19663ffbaf1da6caa",
+    "tests/vt074/performance_harness.gd": "babee0921cdcf92e413805c01b9fa7abf3a1813a9ba77a9b03298fbf18cedc60",
+    "docs/BT3_VT074/AI_IMPLEMENTATION_PLAN.md": "3418b9435e91d48e7a33fae4af42ec055200c23e792d702cfde1d6b2b92c8247",
+    "docs/BT3_VT074/AI_PLAN_REVIEW.md": "1fa6691a73d4ede34f7e56bef0eb147d2069f010dc6188cd2bf1d5ecc255486f",
+    "docs/BT3_VT074/AI_TEST_REVIEW.md": "594b1c2a36db72e0f29020bfdbdcc54ad7525a980327aefbb8efb9f16535192d",
+    "docs/BT3_VT074/REFLECTION.md": "f0e1e362cb401de249ecad8bbcbb19cc9c08e1c80e2dbb6a198755b8319870dc",
+    "docs/BT3_VT074/evidence/commit6_human_edits.patch": "9da7fcd9621371f80a5343e06a7947eff1153194df83f8b7502181e6a184f403"
+  },
+  "c1_fast_path_unchanged": true,
+  "canonical_fingerprint_unchanged": true,
+  "ci_existing_workflow_byte_equivalent_after_removing_only_new_step": true,
+  "ci_persistence_target_enabled": true,
+  "ci_original_tests_enabled": true,
+  "historical_raw_evidence_modified": [],
+  "initial_evidence_files_checked": 239,
+  "historical_tracked_docs_tests_changed_only_current_summaries": [
+    "docs/BT3_VT074/AI_USAGE_LOG.md",
+    "docs/BT3_VT074/COVERAGE_AND_RISKS.md",
+    "docs/BT3_VT074/README.md",
+    "docs/BT3_VT074/TEST_CASES.md",
+    "docs/BT3_VT074/TRACEABILITY.md"
+  ],
+  "ht01_ht02_evidence_preserved": true,
+  "reflection_and_review_approval": "No new approval. Original reflection unchanged.",
+  "final_regression_reports": [
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_3744145f2646_all.json",
+      "sha256": "5633a4973ce7273d6f80de4b95e8b846abb29c0689e8c7649aa3f6b1d5b5e98a",
+      "runner_exit": 0,
+      "source_hash_drift": [],
+      "steps": 718
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_8b6288391db7_target.json",
+      "sha256": "dd5616cbc52d4dbf127c245a6492fe3f5b2c5dad5488d88f795591889890264a",
+      "runner_exit": 0,
+      "source_hash_drift": [],
+      "steps": 10
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_56eea881a687_groups.json",
+      "sha256": "913fed8855d1b4c59c6f0ec5d299a0ea65be6fc9eff0016ca91d788ab456f412",
+      "runner_exit": 0,
+      "source_hash_drift": [],
+      "steps": 50
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_4a075bff8672_benchmark.json",
+      "sha256": "3342e283b23088881d34a463954e141cbd2772e2a24293a849348556d1dbd72b",
+      "runner_exit": 0,
+      "source_hash_drift": [],
+      "steps": 6
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_c269529dd090_smoke.json",
+      "sha256": "f8b1948d80ff0b7d5b176caf919a9df3e0a02dd222d216dfa4fd25783de1b8b7",
+      "runner_exit": 0,
+      "source_hash_drift": [],
+      "steps": 14
+    },
+    {
+      "path": "docs/BT3_VT074/evidence/persistence_247b0a2dc1a4_smoke.json",
+      "sha256": "08883ac1635d77392d8d361a3b5c053144fc66863628b59195c306df42460c72",
+      "runner_exit": 0,
+      "source_hash_drift": [],
+      "steps": 14
+    }
+  ],
+  "suite_matrix_entries_crosschecked": 393,
+  "prior_attempt_hashes_verified": 26,
+  "supplemental_historical_reports": {
+    "persistence_77bd94a52efe_target.json": "Historical runner 1 / codec 2 failures; five source hashes differ from current source. Superseded by final target runner 0, all current hashes match.",
+    "persistence_ba441018ac89_smoke.json": "Historical runner 0; three source hashes differ. Superseded by final/current smoke.",
+    "persistence_5a141fdf2ac0_smoke.json": "This review sandbox setup failure (root certificate store), runner 1, no suite executed. Approved retry 247b0a2dc1a4 PASS."
+  },
+  "performance_recheck": {
+    "command": "C:\\Users\\ADMIN\\AppData\\Local\\Programs\\Python\\Python314\\python.exe tests/vt074/verify_persistence_performance.py --run docs/BT3_VT074/evidence/persistence_4a075bff8672_benchmark.json",
+    "observed_tool_exit_code": 0,
+    "status": "PASS",
+    "samples": 5600,
+    "batches": 140,
+    "canonical_archive_reused": "docs/BT3_VT074/evidence/heavy_c1_production_a1b80b4f3c6b_snapshots.zip",
+    "canonical_archive_sha256": "70cdf22b19103704b03a6cddd742428e4e0228a0b9ced9cdccc1c08f1d17c09e",
+    "artifact_sha256": {
+      "docs/BT3_VT074/evidence/persistence_4a075bff8672_benchmark_performance_40.csv": "bd4d7d8d63cdd2cd0886d023d1cb51ca4891cb2996befe2abdc57b2389a301bd",
+      "docs/BT3_VT074/evidence/persistence_4a075bff8672_benchmark_performance_warmup.csv": "895646a452c29122749cbd7bb33a34353517e9ad237bd45dba63ef602fcb1011",
+      "docs/BT3_VT074/evidence/persistence_4a075bff8672_benchmark_performance_batches.json": "0cc36129005643963feb79764463d09f8a0be9c60ee92ff64ee0ded148ed4cf9"
+    },
+    "workload_p95_ms": {
+      "primary/2": 12.146,
+      "primary/3600": 411.918,
+      "secondary/2": 1.217,
+      "secondary/3600": 802.969
+    },
+    "threshold_ms": 1500,
+    "threshold_changed": false,
+    "new_benchmark_or_duplicate_archive": false,
+    "scope": "Recalculated existing CSV/batches and synthetic snapshot hashes; latency was not remeasured."
+  },
+  "pairwise_check_only": {
+    "observed_tool_exit_code": 0,
+    "verified": true,
+    "feasible_pairs": 49,
+    "covered_pairs": 49,
+    "design_rows": 14,
+    "engine_rows_executed": 0
+  },
+  "fresh_smoke": {
+    "path": "docs/BT3_VT074/evidence/persistence_247b0a2dc1a4_smoke.json",
+    "runner_exit": 0,
+    "suites": 5,
+    "intentional_diagnostic": "IT-04 malformed JSON diagnostic retained by existing oracle; no new errors ignored."
+  },
+  "line_coverage": "NOT MEASURED",
+  "branch_coverage": "NOT MEASURED",
+  "risk_ac_mapping_preserved": true,
+  "manual_short_run": "PASS human gameplay, observation and two screenshots visually inspected: Miya ALOALO1234 Floor 2 39 kills, RUN SAVED, matching top History entry; restart persistence confirmed by student.",
+  "manual_attachment_verification": "PASS: observation read, two actual pre-restart screenshots visually inspected; all three hashes recorded.",
+  "missing_required_files": [],
+  "post_restart_screenshot": "Not supplied; none invented",
+  "human_near_2MiB_after_fix": "NOT RUN",
+  "historical_floor5_307kills": "FAIL BEFORE FIX",
+  "github_actions_new_diff": "NOT RUN; no push",
+  "updated_current_docs": [
+    "docs/BT3_VT074/MANUAL_E2E_VERIFICATION.md",
+    "docs/BT3_VT074/README.md",
+    "docs/BT3_VT074/PERSISTENCE_VERIFICATION.md",
+    "docs/BT3_VT074/COVERAGE_AND_RISKS.md",
+    "docs/BT3_VT074/TRACEABILITY.md",
+    "docs/BT3_VT074/AI_USAGE_LOG.md",
+    "docs/BT3_VT074/TEST_CASES.md"
+  ],
+  "new_inventory_paths": [
+    "docs/BT3_VT074/EVIDENCE_INTEGRATION_REVIEW_20261114.md",
+    "docs/BT3_VT074/MANUAL_E2E_OBSERVATION_20261114.md",
+    "docs/BT3_VT074/evidence/manual_e2e_20261114_gameover_run_saved.png",
+    "docs/BT3_VT074/evidence/manual_e2e_20261114_history_miya_floor2.png",
+    "docs/BT3_VT074/evidence/persistence_247b0a2dc1a4_smoke.json",
+    "docs/BT3_VT074/evidence/persistence_5a141fdf2ac0_smoke.json",
+    "docs/BT3_VT074/evidence/persistence_integration_20261114_checks.json",
+    "docs/BT3_VT074/evidence/persistence_integration_20261114_commit_manifest.json"
+  ],
+  "additional_generated_exclusions": [
+    "tests/vt074/test_codec_cost.gd.uid"
+  ],
+  "personal_save_backup_access": "NONE: no read/parse/hash/stat/copy/write",
+  "forbidden_git_mutations_performed": false,
+  "pdf_generated": false,
+  "final_decision": "READY FOR COMMIT",
+  "blocker": null,
+  "human_evidence_sha256": {
+    "docs/BT3_VT074/MANUAL_E2E_OBSERVATION_20261114.md": "8b69c017da86ebaef23827d2b591954c2bbbe7281bd448070f3d70244b2de1f8",
+    "docs/BT3_VT074/evidence/manual_e2e_20261114_gameover_run_saved.png": "4760ee49ebfda5eed745dd5d38105296cb150e71e7b062fa31a0f0729f6f61fe",
+    "docs/BT3_VT074/evidence/manual_e2e_20261114_history_miya_floor2.png": "33e27b6ab600aa7d32d78e299a37730dc0ccf67a4346fdc738ef8a0d761f0d54"
+  },
+  "missing_files_at_first_check_resolved": [
+    "docs/BT3_VT074/MANUAL_E2E_OBSERVATION_20261114.md",
+    "docs/BT3_VT074/evidence/manual_e2e_20261114_gameover_run_saved.png",
+    "docs/BT3_VT074/evidence/manual_e2e_20261114_history_miya_floor2.png"
+  ],
+  "human_duplicate_history": "No additional duplicate reported after restart per student confirmation; no independent full-list audit.",
+  "human_replay_playback_after_fix": "NOT RUN",
+  "remaining_limits": [
+    "Human near-2-MiB NOT RUN",
+    "No post-restart screenshot; restart supported by student confirmation",
+    "New Linux Actions NOT RUN until student commit/push",
+    "No new student reflection or patch approval inferred",
+    "Perk baseline 34/37 retained",
+    "Line and branch coverage NOT MEASURED"
+  ]
+}

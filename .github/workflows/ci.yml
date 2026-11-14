@@ -41,6 +41,12 @@ jobs:
         run: |
           python3 tests/vt074/run_ci_import_audit.py --godot "$(command -v godot)" --mode review --suite smoke
 
+      - name: VT-074 Persistence, Byte Boundary and Player Death Regression
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          python3 tests/vt074/run_persistence_review.py --ci --godot "$(command -v godot)" --phase target
+
       - name: 2. Run Property-Based Tests (100 Seeds x 5 Invariants)
         run: |
           godot --headless "res://tests/test_dungeon_properties.tscn"

@@ -1,0 +1,978 @@
+{
+  "started_at": "2026-11-14T03:47:52.041124+00:00",
+  "phase": "groups",
+  "head": "476ff8efaec5e0c09b078e86468057d40dc7013e",
+  "branch": "feat/bt3-vt074-idempotent-run",
+  "initial_status": "M \"Menu/game over menu/game_over_menu.gd\"\n M Scene/Character/BasePlayer.gd\n M Scene/GameManager.gd\n M Scene/RunCompletionStore.gd\n?? Scene/RunCompletionStore.gd.uid\n?? docs/BT3_VT074/evidence/persistence_0d3b5e74b5dd_red.json\n?? docs/BT3_VT074/evidence/persistence_54b931c50351_red.json\n?? docs/BT3_VT074/evidence/persistence_9267747c8374_red.json\n?? docs/BT3_VT074/evidence/persistence_9a72db772462_red.json\n?? docs/BT3_VT074/evidence/persistence_b1d3de0954dd_target.json\n?? docs/BT3_VT074/evidence/persistence_e3d38e6870b9_target.json\n?? tests/test_run_completion_contract.gd.uid\n?? tests/test_run_completion_idempotency.gd.uid\n?? tests/test_vt074_integration.gd.uid\n?? tests/vt074/fixtures/integration_entry.gd.uid\n?? tests/vt074/fixtures/integration_store.gd.uid\n?? tests/vt074/pairwise_cases.csv.import\n?? tests/vt074/pairwise_cases.execution.translation\n?? tests/vt074/pairwise_cases.expected.translation\n?? tests/vt074/pairwise_cases.identity.translation\n?? tests/vt074/pairwise_cases.ledger.translation\n?? tests/vt074/pairwise_cases.payload.translation\n?? tests/vt074/pairwise_cases.storage.translation\n?? tests/vt074/pairwise_cases.test.translation\n?? tests/vt074/performance_harness.gd.uid\n?? tests/vt074/profile_trace.gd.uid\n?? tests/vt074/quality_entry.gd.uid\n?? tests/vt074/quality_fixture.gd.uid\n?? tests/vt074/run_persistence_review.py\n?? tests/vt074/test_boundary_mutation.gd.uid\n?? tests/vt074/test_death_persistence.gd\n?? tests/vt074/test_flaky_order.gd.uid\n?? tests/vt074/test_flaky_time.gd.uid\n?? tests/vt074/test_heavy_comparison.gd.uid\n?? tests/vt074/test_heavy_equivalence.gd.uid\n?? tests/vt074/test_heavy_tradeoff_ownership.gd.uid\n?? tests/vt074/test_heavy_tradeoff_profile.gd.uid\n?? tests/vt074/test_long_persistence.gd\n?? tests/vt074/test_p01_equivalence.gd.uid\n?? tests/vt074/test_pairwise.gd.uid\n?? tests/vt074/test_writer_bytes.gd",
+  "staged": "",
+  "work": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40",
+  "steps": [
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.41006600006949157,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/version/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "version_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--version"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.0922054999973625,
+      "exit_code": 0,
+      "stdout": "4.7.2.stable.official.ed1daf0bf\n",
+      "stderr": "",
+      "name": "version"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.36871660000178963,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/dungeon_generator_unit/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "dungeon_generator_unit_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "res://tests/test_dungeon_generator_unit.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 18.6539348999504,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n\n==================================================================\n[UNIT TESTS] PROCEDURAL DUNGEON GENERATOR & SECURITY\n==================================================================\n  [PASS] UT-01a: Room count matches num_rooms (16) - generated=16\n  [PASS] UT-01b: All room dimensions within [room_min_size, room_max_size] ([16, 25]) \n  [PASS] UT-02a: Room 0 is START room and unique - start_cnt=1\n  [PASS] UT-02b: Exactly 1 BOSS room generated - boss_cnt=1\n  [PASS] UT-02c: Treasure room count in [2, 3] - treasure_cnt=3, combat_cnt=11\n  [PASS] UT-03: Graph is a valid grid spanning tree (E = V - 1 = 19, unit grid edges) \n  [PASS] UT-04: Boss room placed at maximum BFS shortest-path distance from START - boss_pos=(2, 1), boss_dist=3, max_dist=3\n  [PASS] UT-05: Spike traps placed only on clean FLOOR_COORD tiles and free of decorations - trap_count=52\n  [PASS] UT-06: All planned enemies in COMBAT rooms lie on valid walkable floor cells - total_enemies=59\n  [PASS] UT-07: Floor 1 and Floor 2 derive distinct deterministic layouts from the same base seed \n  [PASS] UT-08a: Security seed sanitization blocks XSS/traversal/SQLi chars and enforces max length <= 32 - sanitized='scriptalert1scriptetcpasswdDROP_' (len=32)\n  [PASS] UT-08b: Security replay frame validator filters non-dict entries, NaN/INF floats, and out-of-bounds slots \n  [PASS] UT-09: All Soul Knight UI scenes (MainMenu, CharacterSelect, GameUI, Pause, GameOver) & UITheme AtlasTextures instantiate cleanly \n[BOSS] Tầng 1 - Boss: Necromancer xuất hiện!\n  [PASS] UT-10a: Z-Index hierarchy Floor(-1) < Doors(0) < Player(2) ensures closed doors are visible on floor without covering actors \n  [PASS] UT-10b: Minimap tracks exact player room & continuous grid coordinates across rooms/corridors - room=1, grid=(0.01, 1.01) vs target=(0, 1)\n  [PASS] UT-10c: DungeonAtmosphere mounts all torches strictly on wall tiles (0 on floor) + wisps & AudioManager tracks - wall_torches=64\n[BOSS] Tầng 1 - Boss: Necromancer xuất hiện!\n  [PASS] UT-11: Line-of-Sight blocks attacks through walls/doors & RoomManager rejects corridor false-locks (Seed: SEED-Q244GL_2) \n  [PASS] UT-12: Archer (Miya) shoots flying arrows properly & continuous damage never stun-locks player movement \n  [PASS] UT-13: Centralized BalanceConfig applies Archer (Miya) nerf, dynamic unit buff/nerf & Lord of the Rings lore \n  [PASS] UT-14: Variant metadata matches room indices and COMBAT/noncombat types - seed=\"ALOALO1234\" rooms=16 floor=1 sizes=16..25 variants=true \n  [PASS] UT-15: Actual separate 2x2 pillars match metadata and variant limits - seed=\"BUG_PILLAR_SPAWN_42\" rooms=32 floor=3 sizes=16..25 variants=true \n  [PASS] UT-16: Regeneration resets metadata/cache across seeds, floors, room counts and mode changes \n  [PASS] UT-17: Fully protected COVER_ROOM deterministically falls back to an empty OPEN_ARENA \n  [PASS] UT-18: One-pillar-only COVER_ROOM removes the partial layout and updates metadata \n  [PASS] UT-19: Disabled variants match Commit 1 geometry/traps/spawns/all tile layers/RNG - 27 independent baseline cases (d83caa1)\n  [PASS] UT-20: Variant choice, pillars and decoration phase preserve the main RNG and planned traps - seed=\"RNG_ISOLATION\" rooms=16 floor=3 sizes=16..25 variants=true \n  [PASS] UT-21a: Collision path checks reject an isolated pocket without relying on metadata - before= after=room=1 floor is disconnected inside the room\n  [PASS] UT-21b: Actual 32x32 decoration polygon blocks neighboring cells with no TileMap anchor - seed=\"COLLISION_FOOTPRINT\" rooms=8 floor=1 sizes=16..25 variants=true\n------------------------------------------------------------------\n[SUMMARY] UNIT TESTS: 28 PASSED | 0 FAILED\n==================================================================\n\n",
+      "stderr": "",
+      "name": "dungeon_generator_unit"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.4578903999645263,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/dungeon_properties/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "dungeon_properties_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "res://tests/test_dungeon_properties.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 145.12283070001286,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n\n==================================================================\n[PROPERTY TESTS] RUNNING 100 SEEDS ACROSS 5 INVARIANTS\n==================================================================\n  [PASS] PROP-01 [Seed Determinism: generate(s) == generate(s)] — Verified 100/100 seeds identical\n  [PASS] PROP-02 [Graph Connectivity: all rooms reachable from START] — Verified 100/100 seeds connected\n  [PASS] PROP-03 [Grid Tile Flood-Fill Walkability across all rooms] — Verified 100/100 seeds walkable on TileMap\n  [PASS] PROP-04 [Boss Room Optimality: dist(START, BOSS) == max_v dist(START, v)] — Verified 100/100 seeds optimal\n  [PASS] PROP-05 [Safe Spawn Invariant: 0 entities/centers overlap obstacles/traps] — Verified 100/100 seeds collision-free\n[VARIANT PROPERTIES] 100 seeds distributed over 8/16/32 rooms x floors 1/2/3\n[VARIANT PROGRESS] 20/100 seeds\n[VARIANT PROGRESS] 40/100 seeds\n[VARIANT PROGRESS] 60/100 seeds\n[VARIANT PROGRESS] 80/100 seeds\n[VARIANT PROGRESS] 100/100 seeds\n  [PASS] VAR-01 [Variant assignment and metadata indexing] — 100 seeds / 9 configurations\n  [PASS] VAR-02 [Actual pillar footprints/counts and OPEN/COVER limits] — 100 seeds / 9 configurations\n  [PASS] VAR-03 [Reproducible variants, pillars, all tiles, traps, enemy spawns and RNG] — 100 seeds / 9 configurations\n  [PASS] VAR-04 [Actual collision, connected rooms, entrances and reachable safe spawns] — 100 seeds / 9 configurations\n  [PASS] VAR-05 [Both OPEN_ARENA and COVER_ROOM observed; all nine configurations covered] — 100 seeds / 9 configurations observed variants=[0, 2, 1]\n  [PASS] VAR-06 [Clean boss rooms and fixed Skeleton King arena on floor 3] — 100 seeds / 9 configurations\n------------------------------------------------------------------\n[SUMMARY] PROPERTY TESTS: 11/11 PROPERTIES PASSED (original 100 seeds + 100 variant matrix cases)\n==================================================================\n\n",
+      "stderr": "",
+      "name": "dungeon_properties"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.3666244000196457,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/orc_battle/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "orc_battle_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "res://tests/test_orc_battle.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 3.313306799973361,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n\n--- TEST 1: DIRECTLY BELOW (35px) ---\nDistance: 35.0 px\nPASS! Orc chem trung sau 14 frames. Armor: 2/4\n\n--- TEST 2: DIAGONAL BELOW-RIGHT (35px) ---\nDistance: 34.9 px\nPASS! Orc chem trung sau 14 frames. Armor: 2/4\n\n--- TEST 3: DIAGONAL BELOW-LEFT (35px) ---\nDistance: 34.9 px\nPASS! Orc chem trung sau 14 frames. Armor: 2/4\n\n--- TEST 4: DIRECTLY RIGHT (35px) ---\nDistance: 35.0 px\nPASS! Orc chem trung sau 14 frames. Armor: 2/4\n\n--- TEST 5: DIRECTLY ABOVE (35px) ---\nDistance: 35.0 px\nPASS! Orc chem trung sau 14 frames. Armor: 2/4\n\n==================================================\n>>> TAT CA 5/5 TEST CASES DEU PASSED 100%! <<<\n==================================================\n",
+      "stderr": "",
+      "name": "orc_battle"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.3984915999462828,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/skeleton_king/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "skeleton_king_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "res://tests/test_skeleton_king.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 13.401154899969697,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n\n=== SKELETON KING TESTS ===\n  [PASS] SK-01: Skeleton King arena replaces the boss room on floors 3, 6, 9 (fixed 32x18, clean floor)\n  [PASS] SK-02: Other rooms on a king floor stay within normal size bounds\n  [PASS] SK-02b: Enabled combat variants leave Skeleton King metadata NONE with zero variant pillars\n[BOSS] Tầng 3 - Boss: Skeleton King xuất hiện!\n  [PASS] SK-03: Floor 3 spawns the Skeleton King as the active boss\n  [PASS] SK-04: King is centred on the top wall with his body rising above the arena\n  [PASS] SK-05: King is invulnerable to direct hits\n  [PASS] SK-06: Entering the arena awakens the King and raises Soul Crystals - crystals=2\n  [PASS] SK-07: Arena camera frames the whole room and the King\n  [PASS] SK-08: Crystals spawn inside the arena with a Hurtbox\n  [PASS] SK-09: Vertical / horizontal laser lines are parallel and evenly spaced inside the arena - cols=[-75, -71, -67, -63, -59, -55, -51, -47] rows=[-67, -63, -59, -55]\n  [PASS] SK-10: Active beam hits the player on it once; the gap between beams is safe\n  [PASS] SK-11: Laser volley frees itself after firing\n  [PASS] SK-12: Slam shockwave staggers parallel beams across the arena - beams=11\n  [PASS] SK-12b: Vertical, horizontal, grid, double and shockwave patterns all stay inside the arena\n  [PASS] SK-13: King summons existing enemies into the arena - count=3\n  [PASS] SK-14: Shattering a Soul Crystal damages the King - hp=48/60\n  [PASS] SK-14b: Soul Crystals cannot be moved, pulled or frozen - pos=(-920.0, -1048.0) home=(-920.0, -1048.0)\n  [PASS] SK-14c: An expired crystal vanishes and heals the King - hp 48 -> 54 (+6)\n  [PASS] SK-14d: Expired crystal is removed after its fade-out\n  [PASS] SK-15: King enrages at 50% HP\n  [PASS] SK-16: Death clears crystals and summoned minions\n[VICTORY] Boss đã gục ngã! Triệu hồi Cổng Dịch Chuyển & 2 Rương Kho Báu...\n  [PASS] SK-17: After the death animation the arena unlocks, a portal opens and the hero camera returns\n[SUMMARY] SKELETON KING: 22 PASSED | 0 FAILED\n",
+      "stderr": "",
+      "name": "skeleton_king"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.5945733999833465,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/doraemon/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "doraemon_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "res://tests/test_doraemon.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 131.1595414999174,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n\n=== DORAEMON TESTS ===\n  [PASS] DR-01: Doraemon is the 6th hero (index 5) in roster, scenes and balance data\n[BOSS] Tầng 1 - Boss: Necromancer xuất hiện!\n  [PASS] DR-02: 4D Pocket holds 10 pages / 20 gadgets, 6 friends and 10 supers\n  [PASS] DR-03: Every gadget / super pose animation and the pocket HUD are loaded\n  [PASS] DR-04: Mouse wheel / Z / X cycle the gadget pages (wraps around) - page=9\n  [PASS] DR-G air_cannon: Air Cannon hits enemies - damage=1\n  [PASS] DR-G door: Anywhere Door teleports\n  [PASS] DR-G kick: Kick hits enemies - damage=1\n  [PASS] DR-G glove: Champion Glove hits enemies - damage=4\n  [PASS] DR-G air_pistol: Air Pistol hits enemies - damage=6\n  [PASS] DR-G shock_gun: Shock Gun hits enemies - damage=3\n  [PASS] DR-G ataru_gun: Ataru Gun hits enemies - damage=4\n  [PASS] DR-G pencil_missile: Pencil Missile hits enemies - damage=6\n  [PASS] DR-G shockwave_pistol: Shock-wave Pistol hits enemies - damage=4\n  [PASS] DR-G bubble_pistol: Bubble Pistol hits enemies - damage=3\n  [PASS] DR-G thundercloud: Mini Thundercloud hits enemies - damage=3\n  [PASS] DR-G shock_stick: Shock Stick hits enemies - damage=6\n  [PASS] DR-G magic_hand: Magic Hand hits enemies - damage=2\n  [PASS] DR-G hustle_screw: Hustle Screw hits enemies - damage=6\n  [PASS] DR-G grenades: Grenades hits enemies - damage=20\n  [PASS] DR-G fishing_pond: Fishing Pond hits enemies - damage=8\n  [PASS] DR-G kibidango: Kibi-dango T-Rex hits enemies - damage=9\n  [PASS] DR-G minidora: Mini-Dora March hits enemies - damage=12\n  [PASS] DR-G korobashiya: Korobashiya (10 power) hits enemies - damage=3\n  [PASS] DR-G hirari_mantle: Hirari Mantle counters the hit with double damage\n  [PASS] DR-05: Korobashiya cannot be used without 10 power\n  [PASS] DR-F nobita: Nobita answers Q - damage=2\n  [PASS] DR-F gian: Gian answers Q - damage=2\n  [PASS] DR-F shizuka: Shizuka answers Q - damage=2\n  [PASS] DR-F dorami: Dorami answers Q - damage=2\n  [PASS] DR-F suneo: Suneo answers Q - damage=2\n  [PASS] DR-F cat: Come-come Cat answers Q - damage=1 thrown_behind=true\n  [PASS] DR-06: Friends rotate and wrap around\n  [PASS] DR-S uradoraman: Uradoraman - damage=19 power_spent=100\n  [PASS] DR-S sl_chimney: SL Chimney - damage=13 power_spent=100\n  [PASS] DR-S nobita_rush: Nobita's Air Pistol Rush - damage=14 power_spent=100\n  [PASS] DR-S friendship_controller: Friendship Controller - damage=25 power_spent=100\n  [PASS] DR-S shizuka_bath: Shizuka's Bath - damage=20 power_spent=100\n  [PASS] DR-S dorami_balloon: Dorami's Balloon - damage=32 power_spent=100\n  [PASS] DR-S gian_recital: Gian Recital (all bars) - damage=28 power_spent=300\n  [PASS] DR-S junk_barrage: \"Nanika nai ka!\" Junk (all bars) - damage=12 power_spent=300\n  [PASS] DR-S everyone_takecopter: Everyone Take-copter! - damage=10 power_spent=100\n  [PASS] DR-S dorayakin: Dorayakin (all bars) - damage=125 power_spent=300\n  [PASS] DR-07: Dorayakin grows with the power bars spent - [6, 25]\n  [PASS] DR-08: F eats a Dorayaki (+1 HP, +40 power)\n  [PASS] DR-09: Power gauge fills when landing hits and when hurt - 3 -> 13\n  [PASS] DR-10: Champion Glove hits 3 times and knocks the enemy back - hits=3 shoved=39px\n  [PASS] DR-11: Magic Hand reaches 110px with its own hand sprite, slaps once and trips the enemy - hits=1 tripped=true grip_pose=true\n  [PASS] DR-12: The hitbox turns with Doraemon (left / right)\n  [PASS] DR-13: Air Cannon is blocked by wooden crates and cannot hit enemies behind crates\n[SUMMARY] DORAEMON: 49 PASSED | 0 FAILED\n",
+      "stderr": "",
+      "name": "doraemon"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.35806380002759397,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/yugi/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "yugi_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "res://tests/test_yugi.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 7.586397200007923,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nYUGI animation left-click: 5\nYUGI animation right-click: 8\nYUGI animation hold&release-left-click: 3\nYUGI animation hold&release-right-click: 9\nYUGI animation shift+left+click: 3\nYUGI animation result-5: 22\nYUGI TESTS PASSED\n",
+      "stderr": "",
+      "name": "yugi"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.3349588999990374,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/werewolf/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "werewolf_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "res://tests/test_werewolf.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 3.313670599949546,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n\n========================================================\n  RUNNING WEREWOLF FUNCTIONAL & INTEGRATION TESTS\n========================================================\n\n--- Test Group 1: Configuration & Stats ---\n  [PASS] BalanceConfig has 'werewolf' entry\n  [PASS] HP is configured to 5\n  [PASS] Claw damage is configured to 2\n  [PASS] Pounce damage is configured to 3\n  [PASS] Pounce speed is configured to 175.0\n  [PASS] Pounce distance is configured to 95.0\n  [PASS] Pounce windup time is configured to 0.65\n  [PASS] Instance loaded hp = 5 from BalanceConfig\n  [PASS] Instance loaded damage = 2\n  [PASS] Instance loaded pounce_damage = 3\n  [PASS] Instance loaded pounce_speed = 175.0\n  [PASS] Instance loaded pounce_distance = 95.0\n\n--- Test Group 2: Nodes & Animations ---\n  [PASS] AnimatedSprite2D node exists\n  [PASS] SpriteFrames resource is assigned\n  [PASS] Has 'idle' animation\n  [PASS] Has 'walk' animation\n  [PASS] Has 'attack_1' animation\n  [PASS] Has 'attack_2' animation\n  [PASS] Has 'hurt' animation\n  [PASS] Has 'death' animation\n  [PASS] Hurtbox exists with exact name 'Hurtbox'\n  [PASS] ClawHitbox exists\n  [PASS] PounceHitbox exists\n  [PASS] ClawHitbox is initially disabled\n  [PASS] PounceHitbox is initially disabled\n\n--- Test Group 3: Claw Attack (Attack01) ---\n  [PASS] Wolf enters attacking state in close range\n  [PASS] Wolf plays 'attack_1' animation\n  [PASS] ClawHitbox collision is enabled during attack\n  [PASS] Attack state resets after animation finishes\n  [PASS] ClawHitbox collision is disabled after attack\n\n--- Test Group 4: Pounce Windup & Warning Telegraph ---\n  [PASS] Wolf enters is_preparing_pounce state\n  [PASS] show_pounce_warning flag is true\n  [PASS] Velocity is ZERO during windup\n  [PASS] Pounce direction is locked to target dir\n  [PASS] Pounce cooldown timer is set\n\n--- Test Group 5: Windup Interrupted by Damage ---\n  [PASS] Windup started\n  [PASS] is_preparing_pounce is canceled on taking damage\n  [PASS] show_pounce_warning is turned off\n  [PASS] Wolf plays 'hurt' animation\n  [PASS] Wolf HP decreased by 1\n\n--- Test Group 6: Pounce Fixed Distance Bounding ---\n  [PASS] Still pouncing before reaching max distance\n  [PASS] Distance traveled accumulating under limit\n  [PASS] Pounce stops exactly when reaching pounce_distance\n  [PASS] pounce_traveled is clamped to pounce_distance\n  [PASS] Velocity drops to ZERO when pounce finishes\n\n--- Test Group 7: Damage & Death Lifecycle ---\n  [PASS] Wolf is marked as is_dead\n  [PASS] Wolf plays 'death' animation\n  [PASS] Main collision is disabled on death\n  [PASS] Hurtbox collision is disabled on death\n\n--- Test Group 8: Dungeon Generator Integration ---\n  [PASS] dungeon_generator.enemy_scenes contains Werewolf scene\n\n========================================================\n  TEST RESULTS: 50 PASSED, 0 FAILED\n========================================================\n\n",
+      "stderr": "",
+      "name": "werewolf"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.34800650004763156,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/moba_hud_and_inventory/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "moba_hud_and_inventory_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "res://tests/test_moba_hud_and_inventory.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 3.247035300009884,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n\n========================================================\n  RUNNING MOBA HUD, INVENTORY & ITEM DATABASE TESTS\n========================================================\n\n--- Test Group 1: MOBA HUD Progress Bars & Numeric Labels ---\n  [PASS] MOBA Health ProgressBar is initialized\n  [PASS] MOBA Health Numeric Label is initialized\n  [PASS] MOBA Armor ProgressBar is initialized\n  [PASS] MOBA Armor Numeric Label is initialized\n  [PASS] Hero Name Label is initialized\n  [PASS] Hero Damage Label is initialized\n  [PASS] HP bar value matches current_hp (14)\n  [PASS] HP bar max_value matches max_hp (16)\n  [PASS] HP label displays exact formatted text '14 / 16'\n  [PASS] Armor bar value matches current_armor (5)\n  [PASS] Armor bar max_value matches max_armor (5)\n  [PASS] Armor label displays exact formatted text '5 / 5'\n\n--- Test Group 2: Minecraft-Style Item Stacking (Potions) ---\n  [PASS] Adding 8 potions succeeded\n  [PASS] Inventory maintains fixed 16 slots invariant\n  [PASS] 8 potions occupy exactly 1 inventory slot (Minecraft-style)\n  [PASS] Slot 0 stack_count equals 8\n  [PASS] Adding 5 more potions succeeded\n  [PASS] Still occupies exactly 1 slot\n  [PASS] Slot 0 stack_count merged to 13\n  [PASS] Adding 5 more potions (exceeding max_stack 16) succeeded\n  [PASS] Inventory size remains fixed at 16\n  [PASS] Overflow created exactly 2nd slot\n  [PASS] First slot capped at max_stack 16\n  [PASS] Second slot contains remainder 2\n\n--- Test Group 3: Consuming Potions from Stack ---\n  [PASS] Slot is not removed after consuming 1 potion from stack\n  [PASS] stack_count decremented from 3 to 2\n  [PASS] Inventory size remains fixed at 16\n  [PASS] Slot is cleanly cleared when stack reaches 0\n  [PASS] Slot 0 is now null without shifting array indices\n\n--- Test Group 4: Item Drop / Removal Mechanism ---\n  [PASS] drop_item returned true\n  [PASS] Slot still remains for remaining stack\n  [PASS] Stack count reduced from 4 to 3\n  [PASS] drop_item all returned true\n  [PASS] Inventory size remains fixed at 16\n  [PASS] Slot removed after dropping all items\n  [PASS] Slot 0 is now null\n\n--- Test Group 5: RPG Equipment Helmet & Armor & Weapon ---\n[EQUIP] Equipped HELMET: Iron Helm (+0 DMG, +2 Armor, +0 HP)\n  [PASS] Helmet equipped successfully\n  [PASS] Slot 0 became empty (null) without shifting other slots\n[EQUIP] Equipped ARMOR: Reinforced Steel Cuirass (+0 DMG, +4 Armor, +0 HP)\n  [PASS] Armor equipped successfully\n  [PASS] Total defense from Helm (2) + Armor (4) equals 6\n  [PASS] Slot 1 became empty (null)\n[EQUIP] Equipped WEAPON: Broadsword (+3 DMG, +0 Armor, +0 HP)\n  [PASS] Weapon equipped successfully\n  [PASS] Weapon damage equals 3\n  [PASS] Slot 2 became empty (null)\n\n--- Test Group 5B: Fixed 16 Slots & Anti-Shift Invariants ---\n  [PASS] Fresh inventory has exactly 16 slots\n  [PASS] All 16 slots are initially null\n  [PASS] Fresh inventory is not full\n  [PASS] Item A is at slot 0\n  [PASS] Item B is at slot 1\n  [PASS] swap_slots(1, 4) succeeded\n  [PASS] Slot 1 is now empty (null)\n  [PASS] Item B moved cleanly to slot 4\n  [PASS] Slot 0 is now empty (null) after consuming potion\n  [PASS] Inventory size remains strictly 16 (never shrank)\n  [PASS] Anti-Shift Invariant: Item at slot 4 did NOT shift!\n[EQUIP] Equipped WEAPON: Shadow Dagger (+5 DMG, +0 Armor, +0 HP)\n  [PASS] Equipped Shadow Dagger\n  [PASS] Slot 4 is now empty\n[EQUIP] Equipped WEAPON: Valyrian Greatsword (+9 DMG, +0 Armor, +0 HP)\n  [PASS] New weapon equipped\n  [PASS] Old weapon swapped back directly into slot 4\n\n--- Test Group 5C: Anti-Duplicate Item Pickup Protection ---\n  [PASS] All 16 slots are occupied\n  [PASS] Backpack has no empty slots left\n[INVENTORY] Backpack is full! Cannot add more Health Potion\n  [PASS] add_item returned false due to partial capacity\n  [PASS] Slot 15 stack filled to exactly max_stack 16 (took 2 potions)\n  [PASS] Floor item stack_count reduced strictly to remainder 3 (Anti-Duplicate Guard)\n  [PASS] Total item quantity strictly conserved (2 in bag + 3 on floor == 5)\n[INVENTORY] Backpack is full! Cannot add more Claymore\n  [PASS] Cannot add new item when backpack is 100% full\n  [PASS] Item stack_count remained 1 with 0 loss or duplication\n\n--- Test Group 5D: Polymorphic Equipment Dictionary & Encapsulated Tooltips ---\n  [PASS] Equipment is backed by a Dictionary\n  [PASS] Equipment dict has HELMET slot\n  [PASS] Equipment dict has ARMOR slot\n  [PASS] Equipment dict has WEAPON slot\n  [PASS] Tooltip includes formatted rarity tag and item name\n  [PASS] Tooltip includes Attack Power line\n  [PASS] Tooltip includes Attack Speed line\n  [PASS] Tooltip includes Mythic Effect line\n  [PASS] Tooltip includes description\n[EQUIP] Equipped WEAPON: Starforged Katana (+15 DMG, +0 Armor, +0 HP)\n  [PASS] Weapon slot is marked as equipped\n  [PASS] get_equipped_item(WEAPON) returns Starforged Katana\n  [PASS] Backward-compatible getter inv.equipped_weapon returns Starforged Katana\n  [PASS] get_weapon_damage() reflects dictionary lookup value 15\n  [PASS] get_attack_speed_bonus() reflects dictionary lookup value 0.25\n  [PASS] has_mythic_weapon() returns true\n  [PASS] Weapon slot is now unequipped\n  [PASS] Backward-compatible getter inv.equipped_weapon is null\n  [PASS] Weapon safely stored back into bag[0]\n\n--- Test Group 5E: Drag & Drop Slot Interaction Mechanics ---\n  [PASS] Empty slot produces null drag data\n  [PASS] Drag fixture starts an actual Viewport drag\n  [PASS] Slot with item generates valid drag dictionary\n  [PASS] Drag data type equals 'inventory_slot'\n  [PASS] Source slot_index is 0\n  [PASS] Drag data references the correct item\n  [PASS] Cannot drop item onto itself\n  [PASS] Can drop item into another bag slot\n  [PASS] Equipment slot rejects invalid item type (Weapon into Helmet slot)\n  [PASS] Equipment slot accepts matching item type (Helmet into Helmet slot)\n  [PASS] slot_dropped signal emitted successfully upon drop\n  [PASS] Drag fixture cleans up the Viewport drag\n\n--- Test Group 6: Item Count & Inverse Rarity Distribution ---\n  [PASS] Total catalog items equals 21: got 21\n  [PASS] Common tier has exactly 5 items (got 5)\n  [PASS] Rare tier has exactly 5 items (got 5)\n  [PASS] Heroic tier has exactly 4 items (got 4)\n  [PASS] Legendary tier has exactly 4 items (got 4)\n  [PASS] Mythic tier has exactly 3 items (got 3)\n  [PASS] Item count distribution is inverse to rarity: 5 >= 5 > 4 >= 4 > 3\n\n--- Test Group 7: Complete Sets (Helmet, Armor, Weapon) per Rarity ---\n  [PASS] Rarity [Common] has complete set: Helmet=true, Armor=true, Weapon=true\n  [PASS] Rarity [Rare] has complete set: Helmet=true, Armor=true, Weapon=true\n  [PASS] Rarity [Heroic] has complete set: Helmet=true, Armor=true, Weapon=true\n  [PASS] Rarity [Legendary] has complete set: Helmet=true, Armor=true, Weapon=true\n  [PASS] Rarity [Mythic] has complete set: Helmet=true, Armor=true, Weapon=true\n\n--- Test Group 8: Mythic Special Effects & Secondary Stats Verification ---\n  [PASS] Mythic weapon exists\n  [PASS] Mythic weapon has primary DMG = 12\n  [PASS] Mythic weapon secondary stat: Attack Speed = +35%\n  [PASS] Mythic weapon secondary stat: Physical Armor = +3\n  [PASS] Mythic weapon secondary stat: Max HP = +4\n  [PASS] Mythic weapon has special effect: Solar Ignite\n  [PASS] Mythic armor exists\n  [PASS] Mythic armor primary Armor = 10\n  [PASS] Mythic armor secondary stat: Max HP = +10\n  [PASS] Mythic armor secondary stat: Attack Damage = +2\n  [PASS] Mythic armor has special effect: Divine Retaliation\n  [PASS] Mythic helm exists\n  [PASS] Mythic helm primary Armor = 7\n  [PASS] Mythic helm secondary stat: Attack Damage = +3\n  [PASS] Mythic helm secondary stat: Max HP = +8\n  [PASS] Mythic helm has special effect: Celestial Smite\n\n--- Test Group 9: Diverse Potions & Minecraft Stacking ---\n  [PASS] Red potion heals 4 HP\n  [PASS] Green tonic fortifies 1 Max HP\n  [PASS] Purple draught grants 6 HP + 3 Max HP\n  [PASS] Blue phial grants 10 HP + 5 Max HP\n  [PASS] Potions are Minecraft-style stackable up to 16\n\n--- Test Group 10: Floor Drop Scaling & Boss Chest Guarantee ---\n  [PASS] Floor 1 regular drops produce 0 Mythic/Legendary in 500 rolls\n  [PASS] Floor 8 Boss Chests produce 0 Common items (Rare+ guarantee)\n  [PASS] Floor 8 Boss Chests produce high Mythic frequency (got 103 / 500)\n\n--- Test Group 11: Dual Boss Chests & Loot Logic ---\n  [PASS] Exactly 2 boss chests created\n  [PASS] Chest 1 is marked as boss chest\n  [PASS] Chest 2 is marked as boss chest\n  [PASS] Chest 1 left offset is accurate (-48, +8)\n  [PASS] Chest 2 right offset is accurate (+48, +8)\n  [PASS] Direct boss drop generated successfully\n  [PASS] Direct boss drop rarity is Rare or higher\n\n--- Test Group 12: Damage Number Pool & Floor Transition Safety ---\n  [PASS] GameUI belongs to group 'game_ui' (essential for next_level and combat events)\n  [PASS] Active damage labels capped at MAX_DAMAGE_LABELS (40) when 50 hits spawned\n  [PASS] Active labels remain valid instances during rapid reuse\n  [PASS] Labels receive generational metadata\n  [PASS] Labels receive generational counter to prevent zombie callback conflicts\n  [PASS] Active label has registered Tween metadata\n  [PASS] Active Tween is valid and running\n  [PASS] Old Tween was killed when label was reused during active playback\n  [PASS] Generation counter incremented upon reuse\n  [PASS] Label visibility turned off upon normal animation completion\n  [PASS] Finished label removed from active damage labels list\n  [PASS] Finished label safely returned to pool\n  [PASS] Completed label had damage_tween metadata cleanly removed\n  [PASS] Zombie callback with outdated generation ignored, preserving active state\n  [PASS] Labels active before level advance\n  [PASS] All active labels cleared after call_group('game_ui', 'reset_damage_number_pool')\n  [PASS] GameUI freed cleanly without leaking tweens or errors\n\n--- Test Group 13: Deterministic RNG Isolation (BaseEnemy & Replay Safety) ---\n  [PASS] Baseline global RNG sequence matched\n  [PASS] Enemy _ready() does NOT consume global RNG (RNG isolation preserved)\n\n========================================================\n  TEST RESULTS: 159 PASSED, 0 FAILED\n========================================================\n\n",
+      "stderr": "",
+      "name": "moba_hud_and_inventory"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.3627083000028506,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/miyabi/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "miyabi_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "res://tests/test_miyabi.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 27.64111900003627,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n\n=== HOSHIMI MIYABI TESTS ===\n  [PASS] MY-01: Hoshimi Miyabi is the 7th hero (index 6) in roster, scenes and balance data\n[BOSS] Tầng 1 - Boss: Necromancer xuất hiện!\n  [PASS] MY-02: Every frost animation (frame counts from the JSON) and the ice spirit are loaded\n  [PASS] MY-03: Facing left flips the sprites and reverses the x offsets - spikes R=(49.30002, -14.0) L=(-49.30002, -14.0)\n  [PASS] MY-04: One click = frost_combo_1, hits on frame 2, only in front of her - front=1 behind=0\n  [PASS] MY-05: Three clicks = frost_combo_1 / 2 / 3 (1 + 1 + 2 damage), the 3rd lunges and freezes - damage=4 hits=3 frozen=true lunge=13px\n  [PASS] MY-06: Holding Left Click chains the 3-hit combo - hits=3\n  [PASS] MY-07: A late click restarts the combo at swing 1 - step=0\n  [PASS] MY-08: Shift dash slash travels ~72px, cuts every enemy on the path (2x) and is untouchable - dash=77px hits=2/2/0\n  [PASS] MY-09: The dash follows the movement keys (dashes up while holding W) - dy=-77\n  [PASS] MY-10: Tapping Right Click releases a small Frost Wave (1x) - level=0 damage=1\n  [PASS] MY-11: Holding Right Click loops frost_charge; a full charge sends a big wave that pierces (3x) and freezes - level=2 damage=3/3 frozen=true\n  [PASS] MY-12: Frost Wave follows the aim (thrown left when aiming left)\n  [PASS] MY-13: Q Frost Bloom: ice spikes erupt in front of her (3x + freeze), then shatter (1x) - near=4 far=4 behind=0 off-line=0\n  [PASS] MY-14: Frost Bloom facing left mirrors the spikes\n  [PASS] MY-15: The ice spirit fires a bolt at the nearest enemy every 2s - shots=2 damage=2\n  [PASS] MY-16: Replays are deterministic and keep Miyabi's inputs (Shift / held clicks) - [[(389.143, 328.0), 6], [(389.143, 328.0), 6]]\n  [PASS] MY-17: The spirit flinches when Miyabi is hurt\n  [PASS] MY-18: The hitbox turns with Miyabi (left / right)\n[SUMMARY] MIYABI: 18 PASSED | 0 FAILED\n",
+      "stderr": "",
+      "name": "miyabi"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.362204400007613,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/luong_tho/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "luong_tho_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "res://tests/test_luong_tho.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 25.101788900094107,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n\n=== LUONG THO TESTS ===\n  [PASS] LT-01: Lương Thơ is the 8th hero (index 7) in roster, scenes and balance data\n[BOSS] Tầng 1 - Boss: Necromancer xuất hiện!\n  [PASS] LT-02: Both forms (rows 0-8 / 10-18), the transformation and the bullets load with the JSON frame counts\n  [PASS] LT-03: Facing left flips the sprite around the pivot (24, 55), the barrels and the hitbox - barrel R=(23.25, -9.75) L=(-23.25, -9.75)\n  [PASS] LT-04: Idle keeps the weapons on her back; moving plays draw -> run; standing 2s puts them away - idle -> draw -> run -> ready -> idle\n  [PASS] LT-05: One click = Stab, hits on frame 4, reaches ~34px in front only - front=1 behind=0 far=0\n  [PASS] LT-06: Three clicks = Stab / Twin Swing (2 hits) / Ground Smash (2x + daze) - damage=5 hits=4 dazed=true\n  [PASS] LT-07: Holding Left Click chains Stab -> Twin Swing -> Ground Smash - hits=4\n  [PASS] LT-08: Ground Smash hits every enemy around the impact in front of her - 2/2/0\n  [PASS] LT-09: Right Click fires both barrels on frame 3 (2 rounds); a base round stops at the first enemy - near=2 far=0\n  [PASS] LT-10: Twin Barrels fire along the aim (left)\n  [PASS] LT-11: Q plays the transformation (untouchable) and switches to the white-haired form - form=upgraded q_cd=18.9 time=11.8\n  [PASS] LT-12: White form: Stab lands sooner for 2, rounds deal 2 each and pierce - stab=2 rounds=4/4\n  [PASS] LT-15: The white-haired form takes no damage; the base form does\n  [PASS] LT-13: When the white form wears off she transforms back (reverse animation)\n  [PASS] LT-14: Replays are deterministic and keep her inputs - [[(318.9749, 328.0), 5], [(318.9749, 328.0), 5]]\n[SUMMARY] LUONG THO: 15 PASSED | 0 FAILED\n",
+      "stderr": "",
+      "name": "luong_tho"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.3617726999800652,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/projectile_obstacles/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "projectile_obstacles_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "res://tests/test_projectile_obstacles.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 3.3402528000297025,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PASS] Open floor lets shots through\n[PASS] Wooden crate blocks shots\n[PASS] Crate blocks the full shot segment\n[PASS] Crate blocks the endpoint\n[PASS] Shots cannot start inside a crate\n[PASS] straight cannot skip a crate in one frame\n[PASS] homing cannot skip a crate in one frame\n[PASS] drift cannot skip a crate in one frame\n[PASS] Ricochet reverses at the crate\n[PASS] Air Cannon cannot skip a crate\n[PASS] Non-solid decoration does not block shots\n[SUMMARY] Projectile obstacle failures: 0\n",
+      "stderr": "",
+      "name": "projectile_obstacles"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.34555680002085865,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/archer_combat_lifecycle/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "archer_combat_lifecycle_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "res://tests/test_archer_combat_lifecycle.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 6.878148499992676,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n\n========================================================\n  RUNNING SKELETON ARCHER COMBAT LIFECYCLE TESTS\n========================================================\n\n--- Test 1: Normal Attack Fires Arrow ---\n  [PASS] Archer enters attacking state upon attack()\n  [PASS] Attack availability locked during windup\n  [PASS] Exactly one arrow emitted when windup completes uninterrupted with valid LOS\n  [PASS] Archer can_attack restored after full cooldown\n--- Test 2: Windup Interrupted by Hurt Cancels Shot ---\n  [PASS] Archer marked as hurt after taking damage\n  [PASS] Attacking state cancelled when hurt\n  [PASS] No arrow emitted because windup was interrupted by hurt\n--- Test 3: Windup Interrupted by LOS Loss (Player Behind Wall) Cancels Shot ---\n  [PASS] No arrow emitted because LOS was lost before release\n--- Test 4: Windup Interrupted by Player Deletion Safe ---\n  [PASS] No arrow emitted when player is deleted during windup\n  [PASS] Archer remains valid without crashing on null player reference\n--- Test 5: Death During Windup Cancels Shot ---\n  [PASS] Archer marked dead after lethal damage\n  [PASS] No ghost arrow emitted after archer death\n\n========================================================\n  TEST RESULTS: 12 PASSED, 0 FAILED\n========================================================\n\n",
+      "stderr": "",
+      "name": "archer_combat_lifecycle"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.3320559000130743,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/enemy_tactics/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "enemy_tactics_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--script",
+        "res://tests/test_enemy_tactics.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 2.1844942999305204,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PASS] Floor 1 maps to tier 0\n[PASS] Floor 2 maps to tier 0\n[PASS] Floor 3 maps to tier 1\n[PASS] Floor 4 maps to tier 1\n[PASS] Floor 5 maps to tier 2\n[PASS] Floor 6 maps to tier 2\n[PASS] Floor 7 maps to tier 3\n[PASS] Floor 10 maps to tier 3\n[PASS] Invalid floors retain basic AI\n[PASS] High floors cap at tier 3\n[PASS] orc tier 0 enables only bounded, tier-appropriate tactics\n[PASS] Orc tier 0 gates flanking and separation\n[PASS] orc tier 0 only exposes tactical configuration\n[PASS] orc tier 1 enables only bounded, tier-appropriate tactics\n[PASS] Orc tier 1 gates flanking and separation\n[PASS] orc tier 1 caps thinking frequency and state switching\n[PASS] orc tier 1 only exposes tactical configuration\n[PASS] orc tier 2 enables only bounded, tier-appropriate tactics\n[PASS] Orc tier 2 gates flanking and separation\n[PASS] orc tier 2 caps thinking frequency and state switching\n[PASS] orc tier 2 only exposes tactical configuration\n[PASS] orc tier 3 enables only bounded, tier-appropriate tactics\n[PASS] Orc tier 3 gates flanking and separation\n[PASS] orc tier 3 caps thinking frequency and state switching\n[PASS] orc tier 3 only exposes tactical configuration\n[PASS] orc tier 3 configuration stops scaling\n[PASS] orc profile mutations do not leak to other enemies\n[PASS] skeleton_archer tier 0 enables only bounded, tier-appropriate tactics\n[PASS] Archer tier 0 gates distance hysteresis and bounded repositioning\n[PASS] skeleton_archer tier 0 only exposes tactical configuration\n[PASS] skeleton_archer tier 1 enables only bounded, tier-appropriate tactics\n[PASS] Archer tier 1 gates distance hysteresis and bounded repositioning\n[PASS] skeleton_archer tier 1 caps thinking frequency and state switching\n[PASS] skeleton_archer tier 1 only exposes tactical configuration\n[PASS] skeleton_archer tier 2 enables only bounded, tier-appropriate tactics\n[PASS] Archer tier 2 gates distance hysteresis and bounded repositioning\n[PASS] skeleton_archer tier 2 caps thinking frequency and state switching\n[PASS] skeleton_archer tier 2 only exposes tactical configuration\n[PASS] skeleton_archer tier 3 enables only bounded, tier-appropriate tactics\n[PASS] Archer tier 3 gates distance hysteresis and bounded repositioning\n[PASS] skeleton_archer tier 3 caps thinking frequency and state switching\n[PASS] skeleton_archer tier 3 only exposes tactical configuration\n[PASS] skeleton_archer tier 3 configuration stops scaling\n[PASS] skeleton_archer profile mutations do not leak to other enemies\n[PASS] Unknown enemy has no tactical profile\n[PASS] Instance configuration is isolated from callers\n[PASS] orc floor 1 delegates to existing AI\n[PASS] orc floor 2 delegates to existing AI\n[PASS] skeleton_archer floor 1 delegates to existing AI\n[PASS] skeleton_archer floor 2 delegates to existing AI\n[PASS] unknown floor 1 delegates to existing AI\n[PASS] unknown floor 2 delegates to existing AI\n[PASS] Unknown high-tier enemy remains disabled\n[PASS] Floor 3 rejects changes without a decision and negative ticks\n[PASS] Floor 3 allows the first decision immediately\n[PASS] Floor 3 throttles repeated/early decisions\n[PASS] Floor 3 holds state across the next decision\n[PASS] Floor 3 changes at the hold boundary without renewing on the same state\n[PASS] Floor 3 rejects empty states and backwards ticks\n[PASS] Floor 3 skips catch-up bursts after a gap\n[PASS] Floor 3 reset clears the decision window and state hold\n[PASS] Floor 5 rejects changes without a decision and negative ticks\n[PASS] Floor 5 allows the first decision immediately\n[PASS] Floor 5 throttles repeated/early decisions\n[PASS] Floor 5 holds state across the next decision\n[PASS] Floor 5 changes at the hold boundary without renewing on the same state\n[PASS] Floor 5 rejects empty states and backwards ticks\n[PASS] Floor 5 skips catch-up bursts after a gap\n[PASS] Floor 5 reset clears the decision window and state hold\n[PASS] Floor 7 rejects changes without a decision and negative ticks\n[PASS] Floor 7 allows the first decision immediately\n[PASS] Floor 7 throttles repeated/early decisions\n[PASS] Floor 7 holds state across the next decision\n[PASS] Floor 7 changes at the hold boundary without renewing on the same state\n[PASS] Floor 7 rejects empty states and backwards ticks\n[PASS] Floor 7 skips catch-up bursts after a gap\n[PASS] Floor 7 reset clears the decision window and state hold\n[PASS] Intervals and hold durations respect the supplied 30 Hz simulation\n[PASS] orc floor 1 produces identical decision/state traces\n[PASS] orc floor 2 produces identical decision/state traces\n[PASS] orc floor 3 produces identical decision/state traces\n[PASS] orc floor 4 produces identical decision/state traces\n[PASS] orc floor 5 produces identical decision/state traces\n[PASS] orc floor 6 produces identical decision/state traces\n[PASS] orc floor 7 produces identical decision/state traces\n[PASS] orc floor 10 produces identical decision/state traces\n[PASS] skeleton_archer floor 1 produces identical decision/state traces\n[PASS] skeleton_archer floor 2 produces identical decision/state traces\n[PASS] skeleton_archer floor 3 produces identical decision/state traces\n[PASS] skeleton_archer floor 4 produces identical decision/state traces\n[PASS] skeleton_archer floor 5 produces identical decision/state traces\n[PASS] skeleton_archer floor 6 produces identical decision/state traces\n[PASS] skeleton_archer floor 7 produces identical decision/state traces\n[PASS] skeleton_archer floor 10 produces identical decision/state traces\n[SUMMARY] EnemyTactics: 94 passed, 0 failed\n",
+      "stderr": "",
+      "name": "enemy_tactics"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.31984590005595237,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/orc_tactical_ai30/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "orc_tactical_ai30_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--max-fps",
+        "30",
+        "res://tests/test_orc_tactical_ai.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 12.68183259991929,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PASS] Floor 1 resolves tier 0 from map\n[PASS] Floor 1 leaves combat stats unchanged\n[PASS] Floor 1 keeps movement speed\n[PASS] Tier 0 preserves direct pursuit\n[PASS] Floor 3 resolves tier 1 from map\n[PASS] Floor 3 leaves combat stats unchanged\n[PASS] Floor 3 keeps movement speed\n[PASS] Floor 3 uses a seeded approach angle\n[PASS] Floor 5 resolves tier 2 from map\n[PASS] Floor 5 leaves combat stats unchanged\n[PASS] Floor 5 keeps movement speed\n[PASS] Floor 5 uses a seeded approach angle\n[PASS] Floor 7 resolves tier 3 from map\n[PASS] Floor 7 leaves combat stats unchanged\n[PASS] Floor 7 keeps movement speed\n[PASS] Floor 7 uses a seeded approach angle\n[PASS] Each Orc owns a separate EnemyTactics instance\n[PASS] Opposite seed parity chooses the opposite flank\n[PASS] Missing navigation/floor uses legacy movement\n[PASS] Standalone Orc ignores saved GameManager floor\n[PASS] Missing navigation/floor uses legacy movement\n[PASS] Invalid floor uses basic AI\n[PASS] Dormant room enemies neither move nor make tactical decisions\n[PASS] Real RoomManager activation enables the first tactical decision\n[PASS] Floor 3 honors minimum state duration under changing observations\n[PASS] Floor 3 can change state when the hold expires\n[PASS] Floor 5 honors minimum state duration under changing observations\n[PASS] Floor 5 can change state when the hold expires\n[PASS] Floor 7 honors minimum state duration under changing observations\n[PASS] Floor 7 can change state when the hold expires\n[PASS] Tier 2 chooses the clear flank around a wall\n[PASS] Real steering and collision physics make progress past the wall\n[PASS] Tier 2 avoids an Orc occupying the preferred flank\n[PASS] Orc makes progress around another collision body\n[PASS] Nearest-neighbor budget and tie ordering are stable across scene order\n[PASS] Tier 3 predicts bounded observed motion without reading target velocity\n[PASS] Losing LoS immediately discards motion prediction\n[PASS] Reacquiring LoS starts a fresh observation instead of inferring hidden motion\n[PASS] A freed/replaced target cannot carry stale observed prediction\n[PASS] Floor 1 does not start an attack outside range\n[PASS] Floor 1 retains immediate attack/hitbox activation at range boundary\n[PASS] Floor 1 keeps melee damage unchanged\n[PASS] Floor 1 rejects out-of-range hitbox contact\n[PASS] Floor 1 rechecks LoS at damage time\n[PASS] Floor 1 cannot initiate melee through a closed door\n[PASS] Floor 1 respects inactive behavior/damage lock\n[PASS] Floor 1 respects attack behavior/damage lock\n[PASS] Floor 1 respects hurt behavior/damage lock\n[PASS] Floor 1 respects death behavior/damage lock\n[PASS] Floor 3 does not start an attack outside range\n[PASS] Floor 3 retains immediate attack/hitbox activation at range boundary\n[PASS] Floor 3 keeps melee damage unchanged\n[PASS] Floor 3 rejects out-of-range hitbox contact\n[PASS] Floor 3 rechecks LoS at damage time\n[PASS] Floor 3 cannot initiate melee through a closed door\n[PASS] Floor 3 respects inactive behavior/damage lock\n[PASS] Floor 3 respects attack behavior/damage lock\n[PASS] Floor 3 respects hurt behavior/damage lock\n[PASS] Floor 3 respects death behavior/damage lock\n[PASS] Floor 5 does not start an attack outside range\n[PASS] Floor 5 retains immediate attack/hitbox activation at range boundary\n[PASS] Floor 5 keeps melee damage unchanged\n[PASS] Floor 5 rejects out-of-range hitbox contact\n[PASS] Floor 5 rechecks LoS at damage time\n[PASS] Floor 5 cannot initiate melee through a closed door\n[PASS] Floor 5 respects inactive behavior/damage lock\n[PASS] Floor 5 respects attack behavior/damage lock\n[PASS] Floor 5 respects hurt behavior/damage lock\n[PASS] Floor 5 respects death behavior/damage lock\n[PASS] Floor 7 does not start an attack outside range\n[PASS] Floor 7 retains immediate attack/hitbox activation at range boundary\n[PASS] Floor 7 keeps melee damage unchanged\n[PASS] Floor 7 rejects out-of-range hitbox contact\n[PASS] Floor 7 rechecks LoS at damage time\n[PASS] Floor 7 cannot initiate melee through a closed door\n[PASS] Floor 7 respects inactive behavior/damage lock\n[PASS] Floor 7 respects attack behavior/damage lock\n[PASS] Floor 7 respects hurt behavior/damage lock\n[PASS] Floor 7 respects death behavior/damage lock\n[PASS] Actual take_damage interrupts combat and clears stale observations\n[PASS] Lethal damage keeps the axe disabled\n[PASS] Identical observations reproduce positions/states despite RNG, replay flag and neighbor insertion order\n[TRACE] Orc observed-input replay hash: 22124633\n[SUMMARY] Orc tactical AI: 82 passed, 0 failed\n",
+      "stderr": "",
+      "name": "orc_tactical_ai30"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.35075209999922663,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/orc_tactical_ai144/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "orc_tactical_ai144_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--max-fps",
+        "144",
+        "res://tests/test_orc_tactical_ai.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 12.676913299947046,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PASS] Floor 1 resolves tier 0 from map\n[PASS] Floor 1 leaves combat stats unchanged\n[PASS] Floor 1 keeps movement speed\n[PASS] Tier 0 preserves direct pursuit\n[PASS] Floor 3 resolves tier 1 from map\n[PASS] Floor 3 leaves combat stats unchanged\n[PASS] Floor 3 keeps movement speed\n[PASS] Floor 3 uses a seeded approach angle\n[PASS] Floor 5 resolves tier 2 from map\n[PASS] Floor 5 leaves combat stats unchanged\n[PASS] Floor 5 keeps movement speed\n[PASS] Floor 5 uses a seeded approach angle\n[PASS] Floor 7 resolves tier 3 from map\n[PASS] Floor 7 leaves combat stats unchanged\n[PASS] Floor 7 keeps movement speed\n[PASS] Floor 7 uses a seeded approach angle\n[PASS] Each Orc owns a separate EnemyTactics instance\n[PASS] Opposite seed parity chooses the opposite flank\n[PASS] Missing navigation/floor uses legacy movement\n[PASS] Standalone Orc ignores saved GameManager floor\n[PASS] Missing navigation/floor uses legacy movement\n[PASS] Invalid floor uses basic AI\n[PASS] Dormant room enemies neither move nor make tactical decisions\n[PASS] Real RoomManager activation enables the first tactical decision\n[PASS] Floor 3 honors minimum state duration under changing observations\n[PASS] Floor 3 can change state when the hold expires\n[PASS] Floor 5 honors minimum state duration under changing observations\n[PASS] Floor 5 can change state when the hold expires\n[PASS] Floor 7 honors minimum state duration under changing observations\n[PASS] Floor 7 can change state when the hold expires\n[PASS] Tier 2 chooses the clear flank around a wall\n[PASS] Real steering and collision physics make progress past the wall\n[PASS] Tier 2 avoids an Orc occupying the preferred flank\n[PASS] Orc makes progress around another collision body\n[PASS] Nearest-neighbor budget and tie ordering are stable across scene order\n[PASS] Tier 3 predicts bounded observed motion without reading target velocity\n[PASS] Losing LoS immediately discards motion prediction\n[PASS] Reacquiring LoS starts a fresh observation instead of inferring hidden motion\n[PASS] A freed/replaced target cannot carry stale observed prediction\n[PASS] Floor 1 does not start an attack outside range\n[PASS] Floor 1 retains immediate attack/hitbox activation at range boundary\n[PASS] Floor 1 keeps melee damage unchanged\n[PASS] Floor 1 rejects out-of-range hitbox contact\n[PASS] Floor 1 rechecks LoS at damage time\n[PASS] Floor 1 cannot initiate melee through a closed door\n[PASS] Floor 1 respects inactive behavior/damage lock\n[PASS] Floor 1 respects attack behavior/damage lock\n[PASS] Floor 1 respects hurt behavior/damage lock\n[PASS] Floor 1 respects death behavior/damage lock\n[PASS] Floor 3 does not start an attack outside range\n[PASS] Floor 3 retains immediate attack/hitbox activation at range boundary\n[PASS] Floor 3 keeps melee damage unchanged\n[PASS] Floor 3 rejects out-of-range hitbox contact\n[PASS] Floor 3 rechecks LoS at damage time\n[PASS] Floor 3 cannot initiate melee through a closed door\n[PASS] Floor 3 respects inactive behavior/damage lock\n[PASS] Floor 3 respects attack behavior/damage lock\n[PASS] Floor 3 respects hurt behavior/damage lock\n[PASS] Floor 3 respects death behavior/damage lock\n[PASS] Floor 5 does not start an attack outside range\n[PASS] Floor 5 retains immediate attack/hitbox activation at range boundary\n[PASS] Floor 5 keeps melee damage unchanged\n[PASS] Floor 5 rejects out-of-range hitbox contact\n[PASS] Floor 5 rechecks LoS at damage time\n[PASS] Floor 5 cannot initiate melee through a closed door\n[PASS] Floor 5 respects inactive behavior/damage lock\n[PASS] Floor 5 respects attack behavior/damage lock\n[PASS] Floor 5 respects hurt behavior/damage lock\n[PASS] Floor 5 respects death behavior/damage lock\n[PASS] Floor 7 does not start an attack outside range\n[PASS] Floor 7 retains immediate attack/hitbox activation at range boundary\n[PASS] Floor 7 keeps melee damage unchanged\n[PASS] Floor 7 rejects out-of-range hitbox contact\n[PASS] Floor 7 rechecks LoS at damage time\n[PASS] Floor 7 cannot initiate melee through a closed door\n[PASS] Floor 7 respects inactive behavior/damage lock\n[PASS] Floor 7 respects attack behavior/damage lock\n[PASS] Floor 7 respects hurt behavior/damage lock\n[PASS] Floor 7 respects death behavior/damage lock\n[PASS] Actual take_damage interrupts combat and clears stale observations\n[PASS] Lethal damage keeps the axe disabled\n[PASS] Identical observations reproduce positions/states despite RNG, replay flag and neighbor insertion order\n[TRACE] Orc observed-input replay hash: 22124633\n[SUMMARY] Orc tactical AI: 82 passed, 0 failed\n",
+      "stderr": "",
+      "name": "orc_tactical_ai144"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.34953739994671196,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/archer_tactical_ai30/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "archer_tactical_ai30_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--max-fps",
+        "30",
+        "res://tests/test_archer_tactical_ai.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 15.74852199992165,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PASS] Floor 1 resolves tier 0\n[PASS] Floor 1 preserves all combat stats and cooldown\n[PASS] Floor 3 resolves tier 1\n[PASS] Floor 3 preserves all combat stats and cooldown\n[PASS] Floor 5 resolves tier 2\n[PASS] Floor 5 preserves all combat stats and cooldown\n[PASS] Floor 7 resolves tier 3\n[PASS] Floor 7 preserves all combat stats and cooldown\n[PASS] Tier 0 approaches at original speed\n[PASS] Tier 0 retreats at original threshold and speed\n[PASS] Tier 0 retains cooldown strafe\n[PASS] Tier 0 retains 1.35-second strafe reversal\n[PASS] Tier 0 approaches at original speed\n[PASS] Tier 0 retreats at original threshold and speed\n[PASS] Tier 0 retains cooldown strafe\n[PASS] Tier 0 retains 1.35-second strafe reversal\n[PASS] Missing map floor/navigation retains legacy behavior\n[PASS] Standalone Archer ignores saved GameManager floor\n[PASS] Missing map floor/navigation retains legacy behavior\n[PASS] Invalid floor disables tactical behavior\n[PASS] Each Archer owns its EnemyTactics instance\n[PASS] Floor 3 keeps retreat within exit margin\n[PASS] Floor 3 releases retreat at hysteresis boundary\n[PASS] Floor 3 keeps approach inside the outer hysteresis band during cooldown\n[PASS] Floor 3 returns to strafe after entering firing band\n[PASS] Floor 3 retreats urgently between tactical decisions\n[PASS] Floor 5 keeps retreat within exit margin\n[PASS] Floor 5 releases retreat at hysteresis boundary\n[PASS] Floor 5 keeps approach inside the outer hysteresis band during cooldown\n[PASS] Floor 5 returns to strafe after entering firing band\n[PASS] Floor 5 retreats urgently between tactical decisions\n[PASS] Floor 7 keeps retreat within exit margin\n[PASS] Floor 7 releases retreat at hysteresis boundary\n[PASS] Floor 7 keeps approach inside the outer hysteresis band during cooldown\n[PASS] Floor 7 returns to strafe after entering firing band\n[PASS] Floor 7 retreats urgently between tactical decisions\n[PASS] Hysteresis never increases attack_range\n[PASS] A ready in-range shot does not wait for the tactical clock or approach latch\n[PASS] Floor 5 holds its strafe side instead of flipping every frame\n[PASS] Floor 5 chooses the clear strafe side when the hold expires\n[PASS] Floor 5 attempts lateral LoS search only within the profile budget\n[PASS] Floor 5 resumes existing steering at search timeout without waiting for state cooldown\n[PASS] Floor 7 holds its strafe side instead of flipping every frame\n[PASS] Floor 7 chooses the clear strafe side when the hold expires\n[PASS] Floor 7 attempts lateral LoS search only within the profile budget\n[PASS] Floor 7 resumes existing steering at search timeout without waiting for state cooldown\n[PASS] Tier 3 leads only observed displacement, bounded by 0.25-second profile\n[PASS] Loss of LoS immediately invalidates prediction between decisions\n[PASS] Reacquisition does not infer hidden target movement\n[PASS] Freed/replaced player does not retain stale motion\n[PASS] A missing player safely suspends AI\n[PASS] Observed closing motion selects the safer of the two candidate positions\n[PASS] Observed closing motion selects the safer of the two candidate positions\n[PASS] Opposite observed motion selects opposite tactical positions at the same current target position\n[PASS] Floor 1 preserves summon animation\n[PASS] Floor 1 preserves summon completion\n[PASS] Floor 1 preserves inactive lock\n[PASS] Floor 1 preserves hurt lock\n[PASS] Floor 1 preserves death lock\n[PASS] Floor 1 preserves attack lock\n[PASS] Floor 3 preserves summon animation\n[PASS] Floor 3 preserves summon completion\n[PASS] Floor 3 preserves inactive lock\n[PASS] Floor 3 preserves hurt lock\n[PASS] Floor 3 preserves death lock\n[PASS] Floor 3 preserves attack lock\n[PASS] Floor 5 preserves summon animation\n[PASS] Floor 5 preserves summon completion\n[PASS] Floor 5 preserves inactive lock\n[PASS] Floor 5 preserves hurt lock\n[PASS] Floor 5 preserves death lock\n[PASS] Floor 5 preserves attack lock\n[PASS] Floor 7 preserves summon animation\n[PASS] Floor 7 preserves summon completion\n[PASS] Floor 7 preserves inactive lock\n[PASS] Floor 7 preserves hurt lock\n[PASS] Floor 7 preserves death lock\n[PASS] Floor 7 preserves attack lock\n[PASS] Real RoomManager activation enables tactical AI\n[PASS] Actual damage retains hurt animation and lock\n[PASS] Hurt completion restores original idle state\n[PASS] Shot starts with original attack animation and cooldown lock\n[PASS] Shot starts with original attack animation and cooldown lock\n[PASS] Shot starts with original attack animation and cooldown lock\n[PASS] Shot starts with original attack animation and cooldown lock\n[PASS] No arrow is emitted before the original windup\n[PASS] No arrow is emitted before the original windup\n[PASS] No arrow is emitted before the original windup\n[PASS] No arrow is emitted before the original windup\n[PASS] Original windup emits one arrow and retains recovery lock\n[PASS] Tactics preserve arrow damage and direct aiming\n[PASS] Real arrow collision delivers unchanged damage\n[PASS] Original windup emits one arrow and retains recovery lock\n[PASS] Tactics preserve arrow damage and direct aiming\n[PASS] Real arrow collision delivers unchanged damage\n[PASS] Original windup emits one arrow and retains recovery lock\n[PASS] Tactics preserve arrow damage and direct aiming\n[PASS] Real arrow collision delivers unchanged damage\n[PASS] Original windup emits one arrow and retains recovery lock\n[PASS] Tactics preserve arrow damage and direct aiming\n[PASS] Real arrow collision delivers unchanged damage\n[PASS] Arrow windup remains 0.4 seconds within idle-timer frame quantization\n[PASS] All tiers emit on the same frame as baseline Archer\n[PASS] All tiers emit on the same frame as baseline Archer\n[PASS] All tiers emit on the same frame as baseline Archer\n[PASS] All tiers emit on the same frame as baseline Archer\n[PASS] Original recovery ends before attack cooldown\n[PASS] Original recovery ends before attack cooldown\n[PASS] Original recovery ends before attack cooldown\n[PASS] Original recovery ends before attack cooldown\n[PASS] Original attack_cooldown makes the next shot available\n[PASS] Original attack_cooldown makes the next shot available\n[PASS] Original attack_cooldown makes the next shot available\n[PASS] Original attack_cooldown makes the next shot available\n[PASS] wall during windup cancels arrow emission through existing safety checks\n[PASS] hurt during windup cancels arrow emission through existing safety checks\n[PASS] death during windup cancels arrow emission through existing safety checks\n[PASS] Archer cannot begin firing through a wall\n[PASS] Real arrow movement cannot cross a newly closed door even in a large physics step\n[PASS] Visible observations reproduce identical traces despite RNG, replay flag and different occluded target positions\n[TRACE] Archer observed-input hash: 3174731550\n[SUMMARY] Archer tactical AI: 120 passed, 0 failed\n",
+      "stderr": "",
+      "name": "archer_tactical_ai30"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.35936699993908405,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/archer_tactical_ai144/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "archer_tactical_ai144_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--max-fps",
+        "144",
+        "res://tests/test_archer_tactical_ai.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 14.863603400066495,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PASS] Floor 1 resolves tier 0\n[PASS] Floor 1 preserves all combat stats and cooldown\n[PASS] Floor 3 resolves tier 1\n[PASS] Floor 3 preserves all combat stats and cooldown\n[PASS] Floor 5 resolves tier 2\n[PASS] Floor 5 preserves all combat stats and cooldown\n[PASS] Floor 7 resolves tier 3\n[PASS] Floor 7 preserves all combat stats and cooldown\n[PASS] Tier 0 approaches at original speed\n[PASS] Tier 0 retreats at original threshold and speed\n[PASS] Tier 0 retains cooldown strafe\n[PASS] Tier 0 retains 1.35-second strafe reversal\n[PASS] Tier 0 approaches at original speed\n[PASS] Tier 0 retreats at original threshold and speed\n[PASS] Tier 0 retains cooldown strafe\n[PASS] Tier 0 retains 1.35-second strafe reversal\n[PASS] Missing map floor/navigation retains legacy behavior\n[PASS] Standalone Archer ignores saved GameManager floor\n[PASS] Missing map floor/navigation retains legacy behavior\n[PASS] Invalid floor disables tactical behavior\n[PASS] Each Archer owns its EnemyTactics instance\n[PASS] Floor 3 keeps retreat within exit margin\n[PASS] Floor 3 releases retreat at hysteresis boundary\n[PASS] Floor 3 keeps approach inside the outer hysteresis band during cooldown\n[PASS] Floor 3 returns to strafe after entering firing band\n[PASS] Floor 3 retreats urgently between tactical decisions\n[PASS] Floor 5 keeps retreat within exit margin\n[PASS] Floor 5 releases retreat at hysteresis boundary\n[PASS] Floor 5 keeps approach inside the outer hysteresis band during cooldown\n[PASS] Floor 5 returns to strafe after entering firing band\n[PASS] Floor 5 retreats urgently between tactical decisions\n[PASS] Floor 7 keeps retreat within exit margin\n[PASS] Floor 7 releases retreat at hysteresis boundary\n[PASS] Floor 7 keeps approach inside the outer hysteresis band during cooldown\n[PASS] Floor 7 returns to strafe after entering firing band\n[PASS] Floor 7 retreats urgently between tactical decisions\n[PASS] Hysteresis never increases attack_range\n[PASS] A ready in-range shot does not wait for the tactical clock or approach latch\n[PASS] Floor 5 holds its strafe side instead of flipping every frame\n[PASS] Floor 5 chooses the clear strafe side when the hold expires\n[PASS] Floor 5 attempts lateral LoS search only within the profile budget\n[PASS] Floor 5 resumes existing steering at search timeout without waiting for state cooldown\n[PASS] Floor 7 holds its strafe side instead of flipping every frame\n[PASS] Floor 7 chooses the clear strafe side when the hold expires\n[PASS] Floor 7 attempts lateral LoS search only within the profile budget\n[PASS] Floor 7 resumes existing steering at search timeout without waiting for state cooldown\n[PASS] Tier 3 leads only observed displacement, bounded by 0.25-second profile\n[PASS] Loss of LoS immediately invalidates prediction between decisions\n[PASS] Reacquisition does not infer hidden target movement\n[PASS] Freed/replaced player does not retain stale motion\n[PASS] A missing player safely suspends AI\n[PASS] Observed closing motion selects the safer of the two candidate positions\n[PASS] Observed closing motion selects the safer of the two candidate positions\n[PASS] Opposite observed motion selects opposite tactical positions at the same current target position\n[PASS] Floor 1 preserves summon animation\n[PASS] Floor 1 preserves summon completion\n[PASS] Floor 1 preserves inactive lock\n[PASS] Floor 1 preserves hurt lock\n[PASS] Floor 1 preserves death lock\n[PASS] Floor 1 preserves attack lock\n[PASS] Floor 3 preserves summon animation\n[PASS] Floor 3 preserves summon completion\n[PASS] Floor 3 preserves inactive lock\n[PASS] Floor 3 preserves hurt lock\n[PASS] Floor 3 preserves death lock\n[PASS] Floor 3 preserves attack lock\n[PASS] Floor 5 preserves summon animation\n[PASS] Floor 5 preserves summon completion\n[PASS] Floor 5 preserves inactive lock\n[PASS] Floor 5 preserves hurt lock\n[PASS] Floor 5 preserves death lock\n[PASS] Floor 5 preserves attack lock\n[PASS] Floor 7 preserves summon animation\n[PASS] Floor 7 preserves summon completion\n[PASS] Floor 7 preserves inactive lock\n[PASS] Floor 7 preserves hurt lock\n[PASS] Floor 7 preserves death lock\n[PASS] Floor 7 preserves attack lock\n[PASS] Real RoomManager activation enables tactical AI\n[PASS] Actual damage retains hurt animation and lock\n[PASS] Hurt completion restores original idle state\n[PASS] Shot starts with original attack animation and cooldown lock\n[PASS] Shot starts with original attack animation and cooldown lock\n[PASS] Shot starts with original attack animation and cooldown lock\n[PASS] Shot starts with original attack animation and cooldown lock\n[PASS] No arrow is emitted before the original windup\n[PASS] No arrow is emitted before the original windup\n[PASS] No arrow is emitted before the original windup\n[PASS] No arrow is emitted before the original windup\n[PASS] Original windup emits one arrow and retains recovery lock\n[PASS] Tactics preserve arrow damage and direct aiming\n[PASS] Real arrow collision delivers unchanged damage\n[PASS] Original windup emits one arrow and retains recovery lock\n[PASS] Tactics preserve arrow damage and direct aiming\n[PASS] Real arrow collision delivers unchanged damage\n[PASS] Original windup emits one arrow and retains recovery lock\n[PASS] Tactics preserve arrow damage and direct aiming\n[PASS] Real arrow collision delivers unchanged damage\n[PASS] Original windup emits one arrow and retains recovery lock\n[PASS] Tactics preserve arrow damage and direct aiming\n[PASS] Real arrow collision delivers unchanged damage\n[PASS] Arrow windup remains 0.4 seconds within idle-timer frame quantization\n[PASS] All tiers emit on the same frame as baseline Archer\n[PASS] All tiers emit on the same frame as baseline Archer\n[PASS] All tiers emit on the same frame as baseline Archer\n[PASS] All tiers emit on the same frame as baseline Archer\n[PASS] Original recovery ends before attack cooldown\n[PASS] Original recovery ends before attack cooldown\n[PASS] Original recovery ends before attack cooldown\n[PASS] Original recovery ends before attack cooldown\n[PASS] Original attack_cooldown makes the next shot available\n[PASS] Original attack_cooldown makes the next shot available\n[PASS] Original attack_cooldown makes the next shot available\n[PASS] Original attack_cooldown makes the next shot available\n[PASS] wall during windup cancels arrow emission through existing safety checks\n[PASS] hurt during windup cancels arrow emission through existing safety checks\n[PASS] death during windup cancels arrow emission through existing safety checks\n[PASS] Archer cannot begin firing through a wall\n[PASS] Real arrow movement cannot cross a newly closed door even in a large physics step\n[PASS] Visible observations reproduce identical traces despite RNG, replay flag and different occluded target positions\n[TRACE] Archer observed-input hash: 3174731550\n[SUMMARY] Archer tactical AI: 120 passed, 0 failed\n",
+      "stderr": "",
+      "name": "archer_tactical_ai144"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.3894787000026554,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/enemy_ai_integration30/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "enemy_ai_integration30_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--max-fps",
+        "30",
+        "res://tests/test_enemy_ai_integration.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 33.092842799960636,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PASS] Both enemy types remain dormant before room activation\n[PASS] Twelve mixed enemies respect per-enemy decision and neighbor budgets\n[PASS] Mixed room retains steering and collision movement\n[PASS] Real mixed spawns resolve floor -10 safely\n[PASS] Real mixed spawns resolve floor 9999 safely\n[PASS] Replacing a floor releases old enemy instances and observations\n[PASS] New-floor enemies start with independent fresh AI clocks/states\n[PASS] New floor leaves no stale enemies in the group\n[PASS] Mixed room, moving target and closing doors reproduce the same observed-input replay\n[TRACE] Mixed enemy AI hash: 2349528668\n[PASS] Lifecycle fixture starts a real attack before teardown\n[PASS] death at 0.10s cannot emit a new ghost arrow\n[PASS] death at 0.10s cannot re-enable a cancelled attack coroutine\n[PASS] death rejects a fresh attack before starting any timer\n[PASS] Lifecycle fixture starts a real attack before teardown\n[PASS] detach at 0.10s cannot emit a new ghost arrow\n[PASS] detach at 0.10s cannot re-enable a cancelled attack coroutine\n[PASS] detach rejects a fresh attack before starting any timer\n[PASS] Lifecycle fixture starts a real attack before teardown\n[PASS] death at 0.55s cannot emit a new ghost arrow\n[PASS] death at 0.55s cannot re-enable a cancelled attack coroutine\n[PASS] death rejects a fresh attack before starting any timer\n[PASS] Lifecycle fixture starts a real attack before teardown\n[PASS] detach at 0.55s cannot emit a new ghost arrow\n[PASS] detach at 0.55s cannot re-enable a cancelled attack coroutine\n[PASS] detach rejects a fresh attack before starting any timer\n[PASS] Lifecycle fixture starts a real attack before teardown\n[PASS] death at 1.00s cannot emit a new ghost arrow\n[PASS] death at 1.00s cannot re-enable a cancelled attack coroutine\n[PASS] death rejects a fresh attack before starting any timer\n[PASS] Lifecycle fixture starts a real attack before teardown\n[PASS] detach at 1.00s cannot emit a new ghost arrow\n[PASS] detach at 1.00s cannot re-enable a cancelled attack coroutine\n[PASS] detach rejects a fresh attack before starting any timer\n[PASS] Queued teardown fixture starts a real attack\n[PASS] Queued scene teardown at 0.10s releases Archer and target\n[PASS] Queued scene teardown at 0.10s cannot emit another projectile\n[PASS] Queued teardown fixture starts a real attack\n[PASS] Queued scene teardown at 0.55s releases Archer and target\n[PASS] Queued scene teardown at 0.55s cannot emit another projectile\n[PASS] Queued teardown fixture starts a real attack\n[PASS] Queued scene teardown at 1.00s releases Archer and target\n[PASS] Queued scene teardown at 1.00s cannot emit another projectile\n[PASS] Valid Archer starts a normal attack through its physics loop\n[PASS] Losing the player during windup emits no arrow and completes the normal cooldown safely\n[PASS] A surviving Archer reacquires the player and attacks after cooldown\n[PASS] Healthy attack emits exactly one arrow and restores availability\n[PASS] A second healthy attack still emits an arrow after the full cooldown\n[PASS] Scene transitions do not produce coroutine/SceneTree errors\n[SUMMARY] Enemy AI integration: 48 passed, 0 failed; 0 runtime errors\n",
+      "stderr": "",
+      "name": "enemy_ai_integration30"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.31392240000423044,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/enemy_ai_integration144/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "enemy_ai_integration144_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--max-fps",
+        "144",
+        "res://tests/test_enemy_ai_integration.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 32.604146099998616,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PASS] Both enemy types remain dormant before room activation\n[PASS] Twelve mixed enemies respect per-enemy decision and neighbor budgets\n[PASS] Mixed room retains steering and collision movement\n[PASS] Real mixed spawns resolve floor -10 safely\n[PASS] Real mixed spawns resolve floor 9999 safely\n[PASS] Replacing a floor releases old enemy instances and observations\n[PASS] New-floor enemies start with independent fresh AI clocks/states\n[PASS] New floor leaves no stale enemies in the group\n[PASS] Mixed room, moving target and closing doors reproduce the same observed-input replay\n[TRACE] Mixed enemy AI hash: 2349528668\n[PASS] Lifecycle fixture starts a real attack before teardown\n[PASS] death at 0.10s cannot emit a new ghost arrow\n[PASS] death at 0.10s cannot re-enable a cancelled attack coroutine\n[PASS] death rejects a fresh attack before starting any timer\n[PASS] Lifecycle fixture starts a real attack before teardown\n[PASS] detach at 0.10s cannot emit a new ghost arrow\n[PASS] detach at 0.10s cannot re-enable a cancelled attack coroutine\n[PASS] detach rejects a fresh attack before starting any timer\n[PASS] Lifecycle fixture starts a real attack before teardown\n[PASS] death at 0.55s cannot emit a new ghost arrow\n[PASS] death at 0.55s cannot re-enable a cancelled attack coroutine\n[PASS] death rejects a fresh attack before starting any timer\n[PASS] Lifecycle fixture starts a real attack before teardown\n[PASS] detach at 0.55s cannot emit a new ghost arrow\n[PASS] detach at 0.55s cannot re-enable a cancelled attack coroutine\n[PASS] detach rejects a fresh attack before starting any timer\n[PASS] Lifecycle fixture starts a real attack before teardown\n[PASS] death at 1.00s cannot emit a new ghost arrow\n[PASS] death at 1.00s cannot re-enable a cancelled attack coroutine\n[PASS] death rejects a fresh attack before starting any timer\n[PASS] Lifecycle fixture starts a real attack before teardown\n[PASS] detach at 1.00s cannot emit a new ghost arrow\n[PASS] detach at 1.00s cannot re-enable a cancelled attack coroutine\n[PASS] detach rejects a fresh attack before starting any timer\n[PASS] Queued teardown fixture starts a real attack\n[PASS] Queued scene teardown at 0.10s releases Archer and target\n[PASS] Queued scene teardown at 0.10s cannot emit another projectile\n[PASS] Queued teardown fixture starts a real attack\n[PASS] Queued scene teardown at 0.55s releases Archer and target\n[PASS] Queued scene teardown at 0.55s cannot emit another projectile\n[PASS] Queued teardown fixture starts a real attack\n[PASS] Queued scene teardown at 1.00s releases Archer and target\n[PASS] Queued scene teardown at 1.00s cannot emit another projectile\n[PASS] Valid Archer starts a normal attack through its physics loop\n[PASS] Losing the player during windup emits no arrow and completes the normal cooldown safely\n[PASS] A surviving Archer reacquires the player and attacks after cooldown\n[PASS] Healthy attack emits exactly one arrow and restores availability\n[PASS] A second healthy attack still emits an arrow after the full cooldown\n[PASS] Scene transitions do not produce coroutine/SceneTree errors\n[SUMMARY] Enemy AI integration: 48 passed, 0 failed; 0 runtime errors\n",
+      "stderr": "",
+      "name": "enemy_ai_integration144"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.3973553000250831,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/tactical_navigation_contract30/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "tactical_navigation_contract30_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--max-fps",
+        "30",
+        "res://tests/test_tactical_navigation_contract.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 5.188016399974003,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PASS] Tactical policy does not calculate steering, move, or attack\n[PASS] Orc intent preserves seeded tactical flanking\n[PASS] Navigation receives the tactical direction and returns its own steering result\n[PASS] Navigation refresh never resets tactical state, hold duration, or decision scheduling\n[PASS] Missing navigation has a nonzero desired-direction fallback without a cache warmup\n[PASS] Tier 1 exposes approach independently of navigation\n[PASS] Tier 1 immediately invalidates approach steering on emergency retreat\n[PASS] Tier 1 changes navigation mode without forcing a tactical state change\n[PASS] Unchanged mode permits navigation reuse\n[PASS] A new strafe side invalidates the old direction\n[PASS] Collision invalidates navigation before its next scheduled refresh\n[PASS] Missing navigation retains basic collision strafe even at a high floor\n[PASS] Tier 3 exposes approach independently of navigation\n[PASS] Tier 3 immediately invalidates approach steering on emergency retreat\n[PASS] Tier 3 changes navigation mode without forcing a tactical state change\n[PASS] Unchanged mode permits navigation reuse\n[PASS] A new strafe side invalidates the old direction\n[PASS] Collision invalidates navigation before its next scheduled refresh\n[PASS] Missing navigation retains basic collision strafe even at a high floor\n[PASS] Tier 5 exposes approach independently of navigation\n[PASS] Tier 5 immediately invalidates approach steering on emergency retreat\n[PASS] Tier 5 changes navigation mode without forcing a tactical state change\n[PASS] Unchanged mode permits navigation reuse\n[PASS] A new strafe side invalidates the old direction\n[PASS] Collision invalidates navigation before its next scheduled refresh\n[PASS] Missing navigation retains basic collision strafe even at a high floor\n[PASS] Tier 7 exposes approach independently of navigation\n[PASS] Tier 7 immediately invalidates approach steering on emergency retreat\n[PASS] Tier 7 changes navigation mode without forcing a tactical state change\n[PASS] Unchanged mode permits navigation reuse\n[PASS] A new strafe side invalidates the old direction\n[PASS] Collision invalidates navigation before its next scheduled refresh\n[PASS] Missing navigation retains basic collision strafe even at a high floor\n[PASS] Target replacement invalidates navigation and observed prediction\n[PASS] Deactivation invalidates movement while preserving the tactical state\n[PASS] Target replacement invalidates navigation and observed prediction\n[PASS] Deactivation invalidates movement while preserving the tactical state\n[PASS] Reactivation immediately produces usable movement without cache initialization\n[PASS] Reactivation immediately produces usable movement without cache initialization\n[PASS] Observed motion produces positive prediction before reversal\n[PASS] Observed motion produces positive prediction before reversal\n[PASS] Reversed motion replaces the previous prediction at the next decision\n[PASS] Reversed motion replaces the previous prediction at the next decision\n[PASS] A stationary teleported target cannot leave prolonged stale prediction\n[PASS] A stationary teleported target cannot leave prolonged stale prediction\n[TRACE] Tactical navigation recovery hash: 1508124697\n[PASS] A visible in-range target permits a normal attack intent\n[PASS] An old visible intent/LOS cache cannot authorize an attack after a door closes\n[PASS] Spawning and evaluating twelve tactical enemies leaves global RNG unchanged\n[PASS] Navigation contract produces no runtime errors\n[SUMMARY] Tactical navigation contract: 49 passed, 0 failed; 0 runtime errors\n",
+      "stderr": "",
+      "name": "tactical_navigation_contract30"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.3686520999763161,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/tactical_navigation_contract144/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "tactical_navigation_contract144_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--max-fps",
+        "144",
+        "res://tests/test_tactical_navigation_contract.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 4.204509799950756,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PASS] Tactical policy does not calculate steering, move, or attack\n[PASS] Orc intent preserves seeded tactical flanking\n[PASS] Navigation receives the tactical direction and returns its own steering result\n[PASS] Navigation refresh never resets tactical state, hold duration, or decision scheduling\n[PASS] Missing navigation has a nonzero desired-direction fallback without a cache warmup\n[PASS] Tier 1 exposes approach independently of navigation\n[PASS] Tier 1 immediately invalidates approach steering on emergency retreat\n[PASS] Tier 1 changes navigation mode without forcing a tactical state change\n[PASS] Unchanged mode permits navigation reuse\n[PASS] A new strafe side invalidates the old direction\n[PASS] Collision invalidates navigation before its next scheduled refresh\n[PASS] Missing navigation retains basic collision strafe even at a high floor\n[PASS] Tier 3 exposes approach independently of navigation\n[PASS] Tier 3 immediately invalidates approach steering on emergency retreat\n[PASS] Tier 3 changes navigation mode without forcing a tactical state change\n[PASS] Unchanged mode permits navigation reuse\n[PASS] A new strafe side invalidates the old direction\n[PASS] Collision invalidates navigation before its next scheduled refresh\n[PASS] Missing navigation retains basic collision strafe even at a high floor\n[PASS] Tier 5 exposes approach independently of navigation\n[PASS] Tier 5 immediately invalidates approach steering on emergency retreat\n[PASS] Tier 5 changes navigation mode without forcing a tactical state change\n[PASS] Unchanged mode permits navigation reuse\n[PASS] A new strafe side invalidates the old direction\n[PASS] Collision invalidates navigation before its next scheduled refresh\n[PASS] Missing navigation retains basic collision strafe even at a high floor\n[PASS] Tier 7 exposes approach independently of navigation\n[PASS] Tier 7 immediately invalidates approach steering on emergency retreat\n[PASS] Tier 7 changes navigation mode without forcing a tactical state change\n[PASS] Unchanged mode permits navigation reuse\n[PASS] A new strafe side invalidates the old direction\n[PASS] Collision invalidates navigation before its next scheduled refresh\n[PASS] Missing navigation retains basic collision strafe even at a high floor\n[PASS] Target replacement invalidates navigation and observed prediction\n[PASS] Deactivation invalidates movement while preserving the tactical state\n[PASS] Target replacement invalidates navigation and observed prediction\n[PASS] Deactivation invalidates movement while preserving the tactical state\n[PASS] Reactivation immediately produces usable movement without cache initialization\n[PASS] Reactivation immediately produces usable movement without cache initialization\n[PASS] Observed motion produces positive prediction before reversal\n[PASS] Observed motion produces positive prediction before reversal\n[PASS] Reversed motion replaces the previous prediction at the next decision\n[PASS] Reversed motion replaces the previous prediction at the next decision\n[PASS] A stationary teleported target cannot leave prolonged stale prediction\n[PASS] A stationary teleported target cannot leave prolonged stale prediction\n[TRACE] Tactical navigation recovery hash: 1508124697\n[PASS] A visible in-range target permits a normal attack intent\n[PASS] An old visible intent/LOS cache cannot authorize an attack after a door closes\n[PASS] Spawning and evaluating twelve tactical enemies leaves global RNG unchanged\n[PASS] Navigation contract produces no runtime errors\n[SUMMARY] Tactical navigation contract: 49 passed, 0 failed; 0 runtime errors\n",
+      "stderr": "",
+      "name": "tactical_navigation_contract144"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.33760950004216284,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/tactical_base_enemy_integration30/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "tactical_base_enemy_integration30_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--max-fps",
+        "30",
+        "res://tests/test_tactical_base_enemy_integration.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 10.335562099935487,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 1\n[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 1\n[PASS] Queued target deletion immediately suspends tactical observations\n[PASS] Inherited lookup never retains a queued player\n[PASS] Queued target deletion immediately suspends tactical observations\n[PASS] Inherited lookup never retains a queued player\n[PASS] Inherited lookup clears a freed player when no replacement exists\n[PASS] Inherited lookup clears a freed player when no replacement exists\n[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 3\n[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 3\n[PASS] Queued target deletion immediately suspends tactical observations\n[PASS] Inherited lookup never retains a queued player\n[PASS] Queued target deletion immediately suspends tactical observations\n[PASS] Inherited lookup never retains a queued player\n[PASS] Inherited lookup clears a freed player when no replacement exists\n[PASS] Inherited lookup clears a freed player when no replacement exists\n[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 5\n[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 5\n[PASS] Queued target deletion immediately suspends tactical observations\n[PASS] Inherited lookup never retains a queued player\n[PASS] Queued target deletion immediately suspends tactical observations\n[PASS] Inherited lookup never retains a queued player\n[PASS] Inherited lookup clears a freed player when no replacement exists\n[PASS] Inherited lookup clears a freed player when no replacement exists\n[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 7\n[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 7\n[PASS] Queued target deletion immediately suspends tactical observations\n[PASS] Inherited lookup never retains a queued player\n[PASS] Queued target deletion immediately suspends tactical observations\n[PASS] Inherited lookup never retains a queued player\n[PASS] Inherited lookup clears a freed player when no replacement exists\n[PASS] Inherited lookup clears a freed player when no replacement exists\n[PASS] Cold navigation cache computes movement immediately\n[PASS] Emergency retreat refreshes cached direction without resetting the tactical state\n[PASS] Strafe never reuses the previous retreat vector\n[PASS] Twelve enemies use fewer than half the per-physics-tick steering calls\n[BUDGET] 12 enemies / 120 ticks: steering=263 LOS=2028\n[PASS] Windup fixture starts a real attack\n[PASS] Recovering from hurt before windup finishes cannot revive the cancelled shot\n[PASS] Hurt cancellation retains the normal cooldown completion\n[PASS] Windup fixture starts a real attack\n[PASS] Replacing a freed windup target cannot redirect an old attack to the new player\n[PASS] Windup fixture starts a real attack\n[PASS] Room reactivation cannot revive a windup cancelled while inactive\n[PASS] Windup fixture starts a real attack\n[PASS] A reattached enemy rejects the old coroutine even though it is inside the tree again\n[PASS] The new attack emits exactly one arrow after its own windup\n[PASS] Old cooldown completion cannot unlock the newer attack\n[PASS] Only the new coroutine restores attack availability\n[PASS] BaseEnemy integration produces no runtime errors\n[SUMMARY] Tactical BaseEnemy integration: 49 passed, 0 failed; 0 runtime errors\n",
+      "stderr": "",
+      "name": "tactical_base_enemy_integration30"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_persistence\\0f291bfe9f40\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.35440579999703914,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_persistence/0f291bfe9f40/userdata/tactical_base_enemy_integration144/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": "",
+      "name": "tactical_base_enemy_integration144_probe"
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--max-fps",
+        "144",
+        "res://tests/test_tactical_base_enemy_integration.tscn"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 10.096228400012478,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 1\n[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 1\n[PASS] Queued target deletion immediately suspends tactical observations\n[PASS] Inherited lookup never retains a queued player\n[PASS] Queued target deletion immediately suspends tactical observations\n[PASS] Inherited lookup never retains a queued player\n[PASS] Inherited lookup clears a freed player when no replacement exists\n[PASS] Inherited lookup clears a freed player when no replacement exists\n[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 3\n[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 3\n[PASS] Queued target deletion immediately suspends tactical observations\n[PASS] Inherited lookup never retains a queued player\n[PASS] Queued target deletion immediately suspends tactical observations\n[PASS] Inherited lookup never retains a queued player\n[PASS] Inherited lookup clears a freed player when no replacement exists\n[PASS] Inherited lookup clears a freed player when no replacement exists\n[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 5\n[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 5\n[PASS] Queued target deletion immediately suspends tactical observations\n[PASS] Inherited lookup never retains a queued player\n[PASS] Queued target deletion immediately suspends tactical observations\n[PASS] Inherited lookup never retains a queued player\n[PASS] Inherited lookup clears a freed player when no replacement exists\n[PASS] Inherited lookup clears a freed player when no replacement exists\n[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 7\n[PASS] Both tactical enemies inherit BaseEnemy and apply resource balance at floor 7\n[PASS] Queued target deletion immediately suspends tactical observations\n[PASS] Inherited lookup never retains a queued player\n[PASS] Queued target deletion immediately suspends tactical observations\n[PASS] Inherited lookup never retains a queued player\n[PASS] Inherited lookup clears a freed player when no replacement exists\n[PASS] Inherited lookup clears a freed player when no replacement exists\n[PASS] Cold navigation cache computes movement immediately\n[PASS] Emergency retreat refreshes cached direction without resetting the tactical state\n[PASS] Strafe never reuses the previous retreat vector\n[PASS] Twelve enemies use fewer than half the per-physics-tick steering calls\n[BUDGET] 12 enemies / 120 ticks: steering=263 LOS=2028\n[PASS] Windup fixture starts a real attack\n[PASS] Recovering from hurt before windup finishes cannot revive the cancelled shot\n[PASS] Hurt cancellation retains the normal cooldown completion\n[PASS] Windup fixture starts a real attack\n[PASS] Replacing a freed windup target cannot redirect an old attack to the new player\n[PASS] Windup fixture starts a real attack\n[PASS] Room reactivation cannot revive a windup cancelled while inactive\n[PASS] Windup fixture starts a real attack\n[PASS] A reattached enemy rejects the old coroutine even though it is inside the tree again\n[PASS] The new attack emits exactly one arrow after its own windup\n[PASS] Old cooldown completion cannot unlock the newer attack\n[PASS] Only the new coroutine restores attack availability\n[PASS] BaseEnemy integration produces no runtime errors\n[SUMMARY] Tactical BaseEnemy integration: 49 passed, 0 failed; 0 runtime errors\n",
+      "stderr": "",
+      "name": "tactical_base_enemy_integration144"
+    }
+  ],
+  "personal_save_access": "NONE: no read/hash/stat/copy",
+  "source_sha256": {
+    "tests/vt074/run_persistence_review.py": "04c18c64355f34285516260c40aee8f0d3e6a21608848895d372112532d0e8a4",
+    "tests/vt074/test_death_persistence.gd": "4c8091982c66e01ebb62f0335a92f10a322255a0b8174cfeb3984f3268c54e8c",
+    "tests/vt074/test_long_persistence.gd": "eca4cd6bf4850011dfc9d69d102ec54fa5c08b2858041fb0b438f70c3707f7f8",
+    "tests/vt074/test_writer_bytes.gd": "2586d6c45a91d3c05618acea42566717e8e6e3bdf94c69b71fcd0ac6cf3d1c64",
+    ".github/workflows/ci.yml": "490b05c7ca09f965953c2ae8bc1210ba89291de5c64b4da04c8a7da8271f55a7",
+    "Menu/game over menu/game_over_menu.gd": "ba04ea8f5f7f83ec2b1d5e17ae7d904a226aef2174e475291f42151dbf291262",
+    "Menu/game over menu/game_over_menu.tscn": "798ab85a3bc59fe6e8c7997a664d2f17ee2a6a6a4470a28d71c8a0ceaee9f082",
+    "Menu/main menu/main_menu.gd": "010fc9bd78ce9a7e7cca21eba84571ca2f772deacac2f2825fe99f80a8357d80",
+    "Menu/main menu/main_menu.tscn": "c6817b3d71c1efd3d3af3fc0ca271409db77771021f423659d03fc9b40a9530b",
+    "Menu/pause menu/pause_menu.gd": "fefc0f56b3b3f0aa547cf79132e4ea5bb039bae5aded2a4d440f6eb02b08c4fe",
+    "Menu/pause menu/pause_menu.tscn": "79188ebf3aca4656e794128fe0725e0f353213406c373d0b93576bacdbf0b7c0",
+    "Scene/AudioManager.gd": "c8ddcd4ec43d73a94e78f06a8f0ae1b5f64927917212ebbd391bdcd22177941c",
+    "Scene/Balance/BossBalanceData.gd": "6208676a728c0b9ab42eb75d233af32a2a2528cdff8ddf3c213398c0c037d15b",
+    "Scene/Balance/EnemyBalanceData.gd": "f2566b7e58b6ee84840d1ea7186a81f1737ecfb99b7003b2b9caff4639c9fb7a",
+    "Scene/Balance/HeroBalanceData.gd": "77b32c82025289690296247b9dce2894ee9871c676cff15980bbcd93e1172ae6",
+    "Scene/BalanceConfig.gd": "c1834a81290cfc8b8b4d533f3459ba6a695a61a8d55444dfe955f7ef44231024",
+    "Scene/Character/BasePlayer.gd": "d8acd38dab8ad063e834aaa4ba17e7c258910af1dcf260fa4899dba30c3f16aa",
+    "Scene/Character/Doraemon/DoraemonSprites.gd": "b6312f91959c76df44f574fe94ca26a7c310f516c74b87bd2b6895dae303cddc",
+    "Scene/Character/Doraemon/air_cannon_shot.gd": "e91c321b887a68e0f344bfa450c44aeb950f5ef071900425228a27e97ac01e55",
+    "Scene/Character/Doraemon/door_ghost.gd": "7a7f2752183159e39cb61e67fc48e0910087a4129bab49474fada0aeb1f024d6",
+    "Scene/Character/Doraemon/dora_fx.gd": "0146ef9cd08127b36977aeef52c7580a9d85ec602f26c661ce38a08d2bb3ff4e",
+    "Scene/Character/Doraemon/dora_hud.gd": "11336fccb66b5d766708422bd9f9be2f346c2c02ea4ae15cf146a604ea187914",
+    "Scene/Character/Doraemon/dora_projectile.gd": "d314ba7a9ee3eb347648228b4e19a6eaa28e032bfde849a1d0f5b8f954d642b6",
+    "Scene/Character/Doraemon/dora_stun.gd": "61ef912c80d139be976db09daa070e2b6cff76c5ed0d09df059f77810054fc37",
+    "Scene/Character/Doraemon/dora_util.gd": "1a85df9bce700d2f3c8182aa81ff14c8839596527f3c3a615a9a207bead150a4",
+    "Scene/Character/Doraemon/dora_walker.gd": "9eda273ee1fde6d908dd6d59ddd95e4a80c3b76ed4645e8591e7b6bbb6db6127",
+    "Scene/Character/Doraemon/doraemon.gd": "06d4d4251e1f6ed66a880ffa16c85e768645a93858d3f39698784d4ff178b19e",
+    "Scene/Character/Doraemon/doraemon.tscn": "1a6c8f691d50b3d3315306bd28431fec997d89a8c605de8991d7232a12c2fc20",
+    "Scene/Character/Doraemon/trex_summon.gd": "ee0a153c09037eecc672758f309c1ccd79abf7b8a0f36be1a7f79c20f9a3ab7c",
+    "Scene/Character/InventoryManager.gd": "a5ce614440a29f86ada18477877f82033c5d5415a9d25255d313960ffe888636",
+    "Scene/Character/LuongTho/LTSprites.gd": "7e107f3ad5dc42d1099bcea30d130a69067e33bf91efcc3ed452446387892a7d",
+    "Scene/Character/LuongTho/lt_bullet.gd": "0f634b0d49d9e4869f97538406a1bafffd26b4d965236577b540eeba9233e5d4",
+    "Scene/Character/LuongTho/lt_stun.gd": "2f1c1e14f94d78233bd68193f5db32e2dac5c48f471a714e45c5e87f9936c9dd",
+    "Scene/Character/LuongTho/lt_util.gd": "7d1fea0e2428a4691318abec30e14650c4b434515f8e3a4b6503e49dc26a89d8",
+    "Scene/Character/LuongTho/luong_tho.gd": "2ad6a1a4885c28a51dc54a21bf25172e193d1bb2a3036a70afdfe735d41c576f",
+    "Scene/Character/LuongTho/luong_tho.tscn": "84fa252db75716b95f3b2b39fe65a9352b6c978aa6e36b03471d8ce55b587b75",
+    "Scene/Character/Miyabi/MiyabiSprites.gd": "babf7784ae7ff8d08619a48825aa6c9d94b77b5b70073dcebc415ac927b0ddab",
+    "Scene/Character/Miyabi/frost_wave.gd": "acc8bcd9dbf0e0e6aa453ac6879f4ddcbfc60d2966d59ae5fd6a8d681d714a65",
+    "Scene/Character/Miyabi/ice_spikes.gd": "b48962ed0bad39d68d228e635d340f8f74145d743000aa3a189b4b53f08f2a2e",
+    "Scene/Character/Miyabi/miyabi.gd": "76fba465b960dedfe8e00fc91ac0daf24de3e59de4c3a80a831a34040c3c6781",
+    "Scene/Character/Miyabi/miyabi.tscn": "20940046762f691ad0cbd1ffdbe382e2733cb0288358285e915ab17e5a31da25",
+    "Scene/Character/Miyabi/miyabi_freeze.gd": "6a825768cb2b435c14899e33de0e0cabf895fb95dd3107fa9b7effa8ff6b04ac",
+    "Scene/Character/Miyabi/miyabi_fx.gd": "cca7348fe59890b8b6ee87b08afbf485cce69bb8bdd5ce076c65e9c44edd3051",
+    "Scene/Character/Miyabi/miyabi_spirit.gd": "9069139522e3be4f3bb1afc2f7731e3d1ddd641ad42472e4fb01d7b36edbafcd",
+    "Scene/Character/Miyabi/miyabi_util.gd": "3cf3bf4e4b616259c41ee2ef619ffcddc7ede48e847e71c2ce158e124734cd0c",
+    "Scene/Character/Miyabi/spirit_bolt.gd": "827856ea9e487a034532ebb8396d61be3763a105a5fd8a812cd2d95c4e61d9ab",
+    "Scene/Character/Player 1_Pyrois/player.gd": "795db167f5fcd41f1d2f78ea04a734822e4d8a36d6a1d2f8de51e77e43041129",
+    "Scene/Character/Player 1_Pyrois/player.tscn": "7be5d44d17f219a7c9992c145e42e5099ed4b8518148be4a78ad0aa7924f1265",
+    "Scene/Character/Player 2_Olaf/player_2.gd": "8819d7e5246d90e272a5bc670a7833cedfd7003b65db75f264f1d68a0c606da1",
+    "Scene/Character/Player 2_Olaf/player_2.tscn": "4f3a7517b09fa490358b679beb167beb5ea6728ccdb4528ccde67e0a3d42546c",
+    "Scene/Character/Player 3_Miya/player_3.gd": "1c16955f619b4f52b42c0330025ec4367f416baae5c45ff76fa27b7b81bd7daf",
+    "Scene/Character/Player 3_Miya/player_3.tscn": "37ac4061f64815d62610210f2745593f7eda08c9e5bff412aede8620c1ccb775",
+    "Scene/Character/Player 4_Charlotte/player_4.gd": "9f3c8c577f5df158c792d65ed4d493401db53155291f0989582e400dbdad98c9",
+    "Scene/Character/Player 4_Charlotte/player_4.tscn": "a6424cb7ad1491a7dd7fd5f4c1a3179f333b4997f477ee82cc0396785233b8c3",
+    "Scene/Character/Yugi/YugiSprites.gd": "474eb04880084dd1d9bf7df78df526adf87aca6c9507755746e70e04f4710b3e",
+    "Scene/Character/Yugi/energy_ball.gd": "baff14ca2bbf51078bdf79a83b7422985cfcf89cb13c1b2467e1ef77e0b5b36f",
+    "Scene/Character/Yugi/explosion_flash.gd": "bc045619e771d4c197a1c0d15bd63d5ba38a967443bd6bf79046587061a84367",
+    "Scene/Character/Yugi/fire_beam.gd": "65fde16456cf8d957cc2f9e14138e9bf8b8e3ec3b4f6580d2b5d7e56d4f81cac",
+    "Scene/Character/Yugi/lightning_hit.gd": "4921a4f28468e3530c0688329150aa991f0a90ac491ba02d24d8f48d18b7e86c",
+    "Scene/Character/Yugi/room_blast.gd": "588dd3ab37e13fcef18c6b2c1817141d84ea2a28ff49e9c44e5c6d61303c0799",
+    "Scene/Character/Yugi/room_fire.gd": "66dd881cc9adb8a5d08b1f94fca33d4cd007261b1a6d0dfe8f270267a3ae0033",
+    "Scene/Character/Yugi/room_laser.gd": "60f2cd4e4da69358e3a655fc81767b3a63b8850d340f3119e68ce3b6257596a1",
+    "Scene/Character/Yugi/room_lightning.gd": "c475e9c5c18934010a4bf6f096cf426f7f80089d43a8496cd4bd1f92acb9977c",
+    "Scene/Character/Yugi/room_pull.gd": "29a2cf4641056ccdaa998f2005889d44754dbd2d3618d9eacb3f3cbbe9fc6ed4",
+    "Scene/Character/Yugi/summon.gd": "b67d235152c5a420bc6037695d5878807588e809f9b2a88dcb09393097c66e0a",
+    "Scene/Character/Yugi/target_ring.gd": "73904e01fc53bbacadd57350e2708efacd12fab5ff46c44dfc0978a135f44805",
+    "Scene/Character/Yugi/yugi.gd": "76d22464f70227a10cb40df75d64db933763b04460df51c7acf4919e1c3d2c65",
+    "Scene/Character/Yugi/yugi.tscn": "0a1a07cb99adfabd7ed9a9144f1d18f0bac28701a7d4004386d658f7f9adf540",
+    "Scene/Enemies/AI/ArcherTacticalController.gd": "e8c550ede530d239cf8f224526d218b813f1a9a792438ed2933814d6111186e2",
+    "Scene/Enemies/AI/EnemyMovementIntent.gd": "e948713d13278b763fd5915ab87b58b70596ce20b160cde75f6508d01b8cf035",
+    "Scene/Enemies/AI/EnemyTactics.gd": "b51d07b7f6461778402e7a57137b64718ce65e1dca2d5da681821d3cc9bbdc7e",
+    "Scene/Enemies/AI/OrcTacticalController.gd": "36301369473fcc5cc371ec56958f0517e3eab830d6a5b319e235918fecebc13d",
+    "Scene/Enemies/AI/TacticalNavigationCache.gd": "b9f637a7e77b5957ebe12eb84d034ea4be1434487958f3b4c6645908e6c93ef3",
+    "Scene/Enemies/Armored_orc/armored_orc.gd": "23d0ca3c83e5e7ff01a67fd48b1c7119b7d78e68eccd50e1870bee5f71ea50bf",
+    "Scene/Enemies/Armored_orc/armored_orc.tscn": "571ba74251f7ae32777cd0df1228a86519d55620f8f0292dbf8fcf33926ad4a0",
+    "Scene/Enemies/BaseEnemy.gd": "32b8cf7df5e813722dca099a34755e91b13a042af7ef4ccfa814fc3a022f367b",
+    "Scene/Enemies/Boss/Necromancer/necromancer.gd": "cbdb4ddee3525f1b97dea39296e760998cb6dbb850e915185b22e4ea680975d4",
+    "Scene/Enemies/Boss/Necromancer/necromancer.tscn": "7e2c5400139bde843cef8f1f1ec716841ba30a6c4a173d4d1f9a57e1efb3d1af",
+    "Scene/Enemies/Boss/Orc Rider/orc_rider.gd": "9f2cc2b27ab0bb1ff2e95b2efaa1c39ad96b63db677be4083af737a7beb6750e",
+    "Scene/Enemies/Boss/Orc Rider/orc_rider.tscn": "0b2b486d8f9075a1359c5280390c6fc493a2d6449259191e6804d78ac127f237",
+    "Scene/Enemies/Boss/Skeleton King/skeleton_king.gd": "a80da43ece6c65a1d790149c9f7ff6b446f62c67ea0ab7464991baf48154c7a0",
+    "Scene/Enemies/Boss/Skeleton King/skeleton_king_crystal.gd": "fbe77ce1ee5d24f437bb99356a4638097664e69bc0eb27f8a9c27c0bb3f8b904",
+    "Scene/Enemies/Boss/Skeleton King/skeleton_king_laser.gd": "f9758eddcc5840d1001bf093cb3615a3f7ce46d807696c1b2b37b4892f8b1a5b",
+    "Scene/Enemies/Orc/orc.gd": "7ebf3eedeb64e3f47c15ad681a1508fdd577207f072a7cb31878ae8cf626faa6",
+    "Scene/Enemies/Orc/orc.tscn": "dd221cfb85c805e45bdadf9c33b7a10e86d33cd29d4c8e0e90a7bc7aff086ce9",
+    "Scene/Enemies/Skeleton Archer/skeleton_archer.gd": "845dbad17354f5844e6c7342796b2c8c6a0c8049188a96bbf6aec01e89816c77",
+    "Scene/Enemies/Skeleton Archer/skeleton_archer.tscn": "137b60552a80612dc98266c64df0e25602e48424b51ed5594c87eef9f4c978fc",
+    "Scene/Enemies/Skeleton/skeleton.gd": "483941bbe6e7ca82dd153397572c4f76da6d2b598b7741ad5bf06874246fdd31",
+    "Scene/Enemies/Skeleton/skeleton.tscn": "5fd145a5a9d26e689eb3b59d64418c86f2e6de9626e00ceb75083fa94830edf7",
+    "Scene/Enemies/Vampire/vampire.gd": "4e88b9ef6aacf9dd285f9c3eeda5154500aa87d19fe43d3ac6245e99e0562e55",
+    "Scene/Enemies/Vampire/vampire.tscn": "2df16f1a53c9f53d5dc28760d7ad22524294e5704b16c33aca80e4d66bcafa4d",
+    "Scene/Enemies/Werewolf/werewolf.gd": "fcd1b2aa21b1290514626a6b5a602493e1fb4067f47aa4cb8240500391696605",
+    "Scene/Enemies/Werewolf/werewolf.tscn": "e6546a32f3ab5f1995282a7b46ded90332fc82b5d9ad69550b7a3ab1e466db8b",
+    "Scene/GameManager.gd": "6dd17d3e48abeb8510e3570bd9610e73fd38a621f96ccd1b286a6a0b4dc4ca68",
+    "Scene/Items/Chest/chest.gd": "8ee5b65e08acbe9ba7c746520240cfbf6fe7234ac5a5807236872e19312f6a14",
+    "Scene/Items/Chest/chest.tscn": "27c07d12eec094d1d52cd6bee46b1c78a4754383a08c886ab0b060d99279d22e",
+    "Scene/Items/ItemData.gd": "9938fc33ac79a7419f665b19778af46fdfd695eb154248182e6f7f65dc46775b",
+    "Scene/Items/ItemDatabase.gd": "bff4352bcd998698504adb7b09becb778ac61082aa9ec8a216a0358a0ec13161",
+    "Scene/Items/WorldItem/WorldItem.gd": "1b2c95afcf4f54a2fc569f276fbb2f85a96b80b9eefe1a461c6fb16815680645",
+    "Scene/Items/WorldItem/WorldItem.tscn": "63cadfc035b54c864b7a9bdc1d32f988fad0ab5251f83c39cda25fb242f3d9f3",
+    "Scene/Map/DungeonLayoutPlanner.gd": "545006b8200ea387bcfbaef8b928b2a004022b7d07b64057f93ac15390eb0d15",
+    "Scene/Map/DungeonNavHelper.gd": "fa2b1baf05a6068587bb2b0925cca3c65317ac1810d447376e89d49b05124b5b",
+    "Scene/Map/DungeonPainter.gd": "3c54026c61103a93b54d466bd684dc23b3bc65671f7aef5eebd2f9deabbedbc6",
+    "Scene/Map/DungeonSpawner.gd": "54c8fc1c53261d8e72be5aa1407fef73da6d4c0cb863e5ff16d2b86a1fb03754",
+    "Scene/Map/RoomManager.tscn": "9bf1c24c4b9f38e715255b407eb9eaaeb618cbb32c54952efef5ef9f6435a912",
+    "Scene/Map/SpikeTrap.tscn": "60a3d94b236066a8f36809d9cb3e305a91ce7da168f7f631bd49ae4a6829502b",
+    "Scene/Map/dungeon_atmosphere.gd": "9ad843ab8bb8e920ffcbd0a8cefad39a1ec1af4fee88d029fe369f086fd30d19",
+    "Scene/Map/dungeon_generator.gd": "a4c6a2a79e1a33d01ae507edb546797a3a467a64c860fb440d115975ce434be3",
+    "Scene/Map/portal.gd": "66daa4a3d9bba7f591cf4c68d4aee3eb4bdc7e2b06935a0b1e36f79538a4b8e6",
+    "Scene/Map/portal.tscn": "ae4e94ee309bb26cc60a44171db6099e50aedc4f6153ca4d356a3b881623297a",
+    "Scene/Map/room_manager.gd": "7c4056ee7b4c6d5e80a8015c0e04b857a9684399dbf644bcc4afd7d0eea67ff2",
+    "Scene/Map/spike_trap.gd": "c5e07f5b1cc9ba731b286b134c4429152f81acd1a389a552f8456a4900bc6bad",
+    "Scene/Perks/PerkData.gd": "900cc95a794b0062a3c018229c54aa39f4105496098a30ffd3eeed37dba783ac",
+    "Scene/Perks/PerkDatabase.gd": "f28d8101595f226f672bf7f04c1ce4f74b754f3589b414cfea5a7ad61edcc022",
+    "Scene/Perks/PerkManager.gd": "0b986a447e5a1fa70fce5067b56b711b8332d2e68c19da4246f6773684f1c9f4",
+    "Scene/Projectiles/arrow.gd": "d5494978724d95f4e1673ee0343850d8145abe27612c73cd590fb5c61672afc8",
+    "Scene/Projectiles/arrow.tscn": "e062345b41fad2b25f4ce48f9bb2c157a7ad5a36501921b69754c787580173b5",
+    "Scene/Projectiles/bomb.gd": "d6f4b37fb8f1ef62e07a2ccb8245d5432227f2bb4731bd542353bebff9261513",
+    "Scene/Projectiles/bomb.tscn": "bb1186dd75628372e80b2513c251609485d2b53c4067183f68b399b125d413e2",
+    "Scene/Projectiles/enemy_arrow.gd": "313374f3d477f17c894dc61ae5d2eee90506ff01cd309c9560bfb0654ffc7fff",
+    "Scene/Projectiles/enemy_arrow.tscn": "4c268d1838d7eba090bc81decc676679404a389027c20acac1844571d26e5741",
+    "Scene/Projectiles/magic_spell.gd": "afd00f2ec9d18f92eace1d6a9ecb5dbed6765a6ac7a647b4c6dec845754597f1",
+    "Scene/Projectiles/magic_spell.tscn": "927119faec809c301e123229cf13649f4226d6859e4d40a3cb6a0352c2d9a309",
+    "Scene/Projectiles/poison_explosion.gd": "5aa9a7c2391b3a295a1cf2619f982f7b5be08eb66a7a1faa047a8131545beaf6",
+    "Scene/Projectiles/poison_explosion.tscn": "3294c9775e9c8ee261ef159e547f403afcb5b3ec1cc1fce832c4ba95f21871ff",
+    "Scene/RunCompletionStore.gd": "c7f16ae316440d8f55064cff943506fc2b5b140521c6f317c364489a2243768b",
+    "Scene/UI/CharacterSelect.tscn": "42d4717c984a6bf1b549bcf397d0e69b9295b53343604a113b544ed46042156b",
+    "Scene/UI/GameUI.gd": "3f294e27c9693cefa6cc02123cd79da7ba541e75f417f04f820bf715e648097a",
+    "Scene/UI/GameUI.tscn": "fe03169321fedbb4b5ea860e3a363e199fbc1cbd669dee800989b9ef76caa237",
+    "Scene/UI/InventorySlot.gd": "236f1c92c933c695b081cbebd9c46c1209afccc733af59c4ecbc2ea42f95ba8a",
+    "Scene/UI/InventorySlot.tscn": "064c11904c04b59ddaf47e2e6a5b73ddc2ad350856fbb67081862c39c011b8f8",
+    "Scene/UI/PerkSelectionModal.gd": "8b939ac85e77072faf38d5282d06c09b270bef681d274c5de09192098bd269d9",
+    "Scene/UI/PerkSelectionModal.tscn": "cc028fb4e8a332151b65a8716c10e892b329a1d725a0bd276eaf272584f8c3c9",
+    "Scene/UI/UITheme.gd": "f31b36b3b208f6382b1808f0fddeab3740d6eba25098eca861556652b296baae",
+    "Scene/UI/character_select.gd": "af52c81e99e2fc198ef0554b250d7ffc7b6e83eaf63d9b4c3b56fe87e80f3f62",
+    "benchmark/advanced/analyze_stress.py": "ff053a792bb58fed5259a479a9d5fb08fa032df10328baebe200caafac826c6b",
+    "benchmark/advanced/gan_diem_do_tuong.py": "e40e70e92d154cba14c5feaa5963bc53ef2b642738fe42a7c26ee51a07df770b",
+    "benchmark/advanced/kiem_tra_cau_truc_tilemap.gd": "e16be4631a8053eab54f2b71112795cdae876f9f37412719a6aa4be48089f56c",
+    "benchmark/advanced/kiem_tra_seed_doc_lap.gd": "6b4dfd3b602ecbdc6ecf911da719f11c42283ae4add62636120faf055fe72397",
+    "benchmark/advanced/phan_tich_giai_doan.py": "d643a823a97f149bdce15168773f58c5de950bd80f68a797900ba7bb7606b62e",
+    "benchmark/advanced/profile_giai_doan.gd": "df9f0a9f0af15e01b82507a3df4ef348bd0ecb4fbed7873b8f25260dd4d75117",
+    "benchmark/advanced/so_sanh_seed_doc_lap.py": "063fbffa29d346229782bdd88b17768c394fc6e9ee4832715b41254fb2303c70",
+    "benchmark/advanced/stress_benchmark.gd": "d67d6990d5b1dd15bfd029a84f9a1786a87556002cf68bf3dae1d5c55e0d3ef1",
+    "benchmark/benchmark.tscn": "e7db65459faa11e63084941ae05e33b853d3bca40329ce199442c9350b732aad",
+    "benchmark/combat_room_variants_benchmark.gd": "10736e1489487af662eff2e09174ce06403bf4bbe4c085ff6fe1958fa2a4116c",
+    "benchmark/combat_room_variants_benchmark.tscn": "bfe69af7ea45b111d270210a9864f26caff6c73767bd3d6f843ebd9f227f354d",
+    "benchmark/dungeon_benchmark.gd": "89408431f87ab7c2181987569b736708e0639cc448f6b29565a3bc9ce7a3b4b5",
+    "benchmark/scalability/analyze_benchmark.py": "1745c10228612516ca2048586da1031799efffc2957f9b7b4ceb0650af7ec734",
+    "benchmark/scalability/dungeon_benchmark.gd": "bd591689e6bd158927d7cc36e749da015475bac28087c82e9badc4a8e7eae418",
+    "benchmark/verify_combat_room_variants.py": "1171d6b67c218223a14539d33979f80f23719911ef2476ed21bd53ff16077923",
+    "project.godot": "3332d3d43f4ffa240f391acd4f70f808eabfc167e890248e226881b50708b677",
+    "tests/benchmark_dungeon_generator.gd": "833afcb56a2ea573fd16e65f88318a5eee93076e4fae30fd77e3027c711fae07",
+    "tests/benchmark_dungeon_generator.tscn": "8d03c20e3a05b41ab2e08044ba073243844298100d82550119fd772d1659cb6d",
+    "tests/dungeon_variant_test_support.gd": "12c13b2552465d1649c1151a8e6444c596560e42204e5e5f454300016d00c383",
+    "tests/fixtures/counting_dungeon_nav.gd": "19d06b09db4e028bcbe34934342cb177358fe14c21b35a38980d450ba849ea63",
+    "tests/fixtures/generate_commit1_baseline.gd": "f364f564421d1339ea7b0033825897e3924a55fadbed8ee48e92fd74eed42bcd",
+    "tests/mock_player.gd": "8f83c10b657fa9a31ecb2d8c65d3becb72945dd7f8c8c9ee8407dff9953213f5",
+    "tests/test_archer_combat_lifecycle.gd": "d01f433c843f14032124176c22251d54f39ceaf582570663b9103a45c80e7f97",
+    "tests/test_archer_combat_lifecycle.tscn": "b671497713b0a34ff8bcaac23a40f3d435c555fa78a486fe540a6e3b0ea18244",
+    "tests/test_archer_tactical_ai.gd": "c08721a695b127f98adf24c496b349fc573cc0b70d3631fa07a42eb95535d031",
+    "tests/test_archer_tactical_ai.tscn": "fbedb4fa465ad7c33a2a65aa78a6c8ee0cd5df7f9e76217102103555bc31af41",
+    "tests/test_doraemon.gd": "287eb6145088bb4bcf6497a82e8873c7e25faa705a6d45dd787ab967305e6eaa",
+    "tests/test_doraemon.tscn": "1b0600932d8d1446275164554786732284f63b5a6769b2f57db607d5b743a966",
+    "tests/test_dungeon_generator_unit.gd": "dcac859c3b2a13f6fd22434d07cb95ba773ee61401aa376cdc701d638f5d2af6",
+    "tests/test_dungeon_generator_unit.tscn": "3806c0e059b3d4217bf61f17f06f800eae3ccd965328d018e2ddadf7babed266",
+    "tests/test_dungeon_properties.gd": "669afa96d27d5afa032bca6b5c835f62a26542dcadac4b55c36f35583a866edb",
+    "tests/test_dungeon_properties.tscn": "807a3fec2c3a11382e21d51e728a9f5763093e2b0dae564a875703dcab592a29",
+    "tests/test_enemy_ai_integration.gd": "a05cbcc8f7ebcaa0749fa4c4b994f970925d7fa06f4f4266c827e419a32233fe",
+    "tests/test_enemy_ai_integration.tscn": "ed79363899ae18c304888c631d279338049daa2214f0634852402020df5adf3a",
+    "tests/test_enemy_tactics.gd": "c95bd58b188d300845aedf07cfaac321a877a5261d8f1e442b2761a580d4de49",
+    "tests/test_luong_tho.gd": "404da83e71e4fd21a509c7b3bb505013382c65e1b0a4dcf1a67420dfb4ff95d6",
+    "tests/test_luong_tho.tscn": "b9863921a5540dc40822e6fdcc78626c615d43696a6fde55db4c13a3d3b28179",
+    "tests/test_miyabi.gd": "a39c597392991da0f3c64e9f13245f073786431833315c413e30654b5d03fba0",
+    "tests/test_miyabi.tscn": "ee3219ddc59b449f07db9c0120bba497b2477a15c88a5a850e1f41894b8ab806",
+    "tests/test_moba_hud_and_inventory.gd": "4ba31eebb9b7c2feeeadc101ff49f47cb54eb2cb1fa3840ec0dc1c3f25972977",
+    "tests/test_moba_hud_and_inventory.tscn": "9d8fb412a465114b6ad0b25e97fa0054a205c09cc028b091a0bdbf1173d6b849",
+    "tests/test_new_mechanics.tscn": "d39dcc7154b7af0efcd3633ede285f6b0b79dda4fcd706367a8b17c379914778",
+    "tests/test_new_mechanics_node.gd": "33121040b213442b1a49bdddaa1a15a988208f115c67465948afd134177531fb",
+    "tests/test_orc_battle.gd": "8e02d03c84f791f6cd236d508001fde4c1697225910ff50e416810ad56ed271c",
+    "tests/test_orc_battle.tscn": "7a2effa48545a96bbdb776eca6d1ff137cb944025ae6c640d41e0013feec2840",
+    "tests/test_orc_tactical_ai.gd": "e4cc5b14192b49d7478860d64ed2f196e0bb6b80b4f3259ca86c3c93fe608388",
+    "tests/test_orc_tactical_ai.tscn": "f9babfaa923d948dcb060acd1abf2573885e1388996371334c878f6be36050a8",
+    "tests/test_perk_system.gd": "c51e532c45742a01639cf7b50e3f0608131c6aa8e2e3df6c702dc71bc20259bb",
+    "tests/test_perk_system.tscn": "8d489911fc09a76de3f010f5de9a639b62c102274b09a5c2ae284abb0a0797f5",
+    "tests/test_projectile_obstacles.gd": "8becc0eb28e9a39582e54147e1e6d0f555dcaba7f06f8bda7e6a4691c2bae626",
+    "tests/test_projectile_obstacles.tscn": "91a2135fc5b26e68bc7546f105075c6cc17d22faf6cc03ed1ca1b8cf7d71140b",
+    "tests/test_replay_security.gd": "5250be030db80c7e177bccfd49fa81dc77949818ab1f3656cde99f7f1a7b7e10",
+    "tests/test_replay_security.tscn": "8e7b80c8a585c1067376cee976f05c709bbdff2955cf0bf833ad41ba052a63b6",
+    "tests/test_run_completion_contract.gd": "3f101b24593670ae0da2a99a83d4251b374992cff3dd34a9006e28f27d772204",
+    "tests/test_run_completion_contract.tscn": "d962bebd0bf494f74f6fcae03e3eb69cb6e1dccfeefa3c00c6092a787672d5ab",
+    "tests/test_run_completion_idempotency.gd": "872af01a06909003e184839f1ce132d343d719745b197b47a6b00814069e5b55",
+    "tests/test_run_completion_idempotency.tscn": "57ce1b8a1d2336fd683ce7004773686858724fdb4044367e08cf83ce535789f1",
+    "tests/test_skeleton_king.gd": "9cb71bfcda42ed689152162cac6eb791569c78b506a02d5c82a84f7fe37ff769",
+    "tests/test_skeleton_king.tscn": "a94e7ba371df261f143a1fdf9114ea746745b924d153ef0cc0b5e575cbb4bca0",
+    "tests/test_tactical_base_enemy_integration.gd": "8af18600b4198deb1e53f52e14a37cac52d85412d5e498af522fe3489bad1cc7",
+    "tests/test_tactical_base_enemy_integration.tscn": "61be64222ee727c71e88d6b9de00d67522fa8768d60423570ad3e5bde6385de8",
+    "tests/test_tactical_navigation_contract.gd": "5c079003d1b9070d4f9f63374d5b01d2102f149ef732272cb8a7085442181c2f",
+    "tests/test_tactical_navigation_contract.tscn": "71e9f2dcfa22040636008dea0b1909d0211379ade8da695f34a4ee86ae4521b9",
+    "tests/test_visual_backdrop.tscn": "a6e11ee86b2b873bf65df284f128c883411f7264b1a073a0150a4cf7214b42e7",
+    "tests/test_visual_backdrop_node.gd": "3cdf58e367207cae7d4055f42a1eb62ca8ed431e43def9b2b3af945167b07c89",
+    "tests/test_vt074_integration.gd": "9f3abf9827e443fd669b0740f3bdfb82a3f237672dbb3e1e5cc9058d810905d8",
+    "tests/test_vt074_integration.tscn": "dd7036d53209c440f31ace1d9d9694e95b777ab33c4bcb8919a2606b57218d8d",
+    "tests/test_werewolf.gd": "5bb6a8e3cb900c3d177540aa8138af305282f41ac42149883836af01667d6b53",
+    "tests/test_werewolf.tscn": "f0e3f5fa4f4b1ae28b21083283e67f7830b9d52d823615b4e2b2ce21da9231f4",
+    "tests/test_yugi.gd": "45566a81e21be5be209ddd03adbe5eafb9f3e370e6581842be0e710c564c2ca2",
+    "tests/test_yugi.tscn": "1427ac718ec7c02d8c5fd87b445cb23f696102cbcb8db48784304252114c3f92",
+    "tests/vt074/audit_commit3.py": "9fd896994c0acd2af1eb4bbafa91c9ca9e0ef2b82adc4265ed425e6f05a61e47",
+    "tests/vt074/fixtures/integration_entry.gd": "0eae300a6b0df38671ec677eb1e504353322f2555d00614ef03bb2739ada4aba",
+    "tests/vt074/fixtures/integration_store.gd": "c67a5b4bf6c9bacefa80398adeed979eed3047aeb393ba334e2e7da0616f8577",
+    "tests/vt074/pairwise.py": "902521675fd0cc4bce167af0eb5aa1350ffab6091713b06c8ba6fc9f993d8168",
+    "tests/vt074/performance_harness.gd": "babee0921cdcf92e413805c01b9fa7abf3a1813a9ba77a9b03298fbf18cedc60",
+    "tests/vt074/profile_trace.gd": "ef34896052423712335fb36a7054b7d2f6eb5df18f984112060053dc55621efb",
+    "tests/vt074/quality_entry.gd": "3bf99e0186cc823ab8c407744e7eb0aacb547ee591a6783ecf044c50b1f14b6c",
+    "tests/vt074/quality_entry.tscn": "c03d84fec1ea80cbac43b8884b7eecd0843d5dfeaa3c4cd1c50638e9d10ea36f",
+    "tests/vt074/quality_fixture.gd": "e2445ecaee15b7294d072bb3d15a97d90cf87d4d5282746f4a9a2a865266fb32",
+    "tests/vt074/run_c1_production.py": "0c8fab29cbb3990a871d6238a8d7f6cf82db959f2ec95f695ac2d8bb134e7579",
+    "tests/vt074/run_ci_import_audit.py": "e6905c43d26e4a36b4f2720fded9d86138b5eab915f15d187c6d49637acceaa9",
+    "tests/vt074/run_green.py": "2a96a5adb9452e460170bba60fb91acd9f0913986b5f40aee71f3757793074a0",
+    "tests/vt074/run_heavy_tradeoff.py": "4c52af38ba2d84bebbfeb4147c960cba1ddc4163de4096cd1fd3035d05f64df7",
+    "tests/vt074/run_heavy_trial.py": "96e330c1e6b265be1afca4aa34aa8966592529517491bec71ca1c6dfded7ee25",
+    "tests/vt074/run_integration.py": "063fc8ce6002076091486229fc59ef707ff507dbe903284d32d46a17c729364d",
+    "tests/vt074/run_p01_trial.py": "b96edfabfce5079dfb9c71e9144d7ae879c71ddad65c7f1c8599fee7203c7eb2",
+    "tests/vt074/run_perk_baseline.py": "baa448f43374543f14a52cf89cee391df08682caf625b1a4febbec251836c89e",
+    "tests/vt074/run_profiling.py": "87dbe89540be0800036a7641f0b8f475c10bcd650fbd83f17644e68d05c0d971",
+    "tests/vt074/run_quality.py": "32575e2bb9d84e90e05792497e7799e58239c51ac6935222da45dd0be170dce1",
+    "tests/vt074/run_red.py": "95f4fbeee6cdb02c5a3808146f92b5fa70da42b84d4536ed2c6f20b252966ee9",
+    "tests/vt074/test_boundary_mutation.gd": "5cc6f73c7506c62cc479472ab5ce718fbdbba1eae0af68a00e123adccc34d78b",
+    "tests/vt074/test_flaky_order.gd": "586b4bdc39c74b6fd19aa49c52619482ca4b17e9e8c6f7d19663ffbaf1da6caa",
+    "tests/vt074/test_flaky_time.gd": "b3d0f2006d28a0e8bbf245e651add78d223f5df7f5dbd7d34f20abd14b8041f3",
+    "tests/vt074/test_heavy_comparison.gd": "457f358315bbf05b3970150cc422ab86ef9f490979bc7e43c1239867d2e35239",
+    "tests/vt074/test_heavy_equivalence.gd": "c64e447e5b8315fe384aa9ce8836f42e8e8f997d167077241eb35a46937150c4",
+    "tests/vt074/test_heavy_tradeoff_ownership.gd": "f5040733fb039f0b5bc46061ed0ba02d6ce6932635240922d0f606980ba1129a",
+    "tests/vt074/test_heavy_tradeoff_profile.gd": "e4ecf443a7f32f962bdab13d9861a32fee9c5c700a83f772a449d95265eb7232",
+    "tests/vt074/test_p01_equivalence.gd": "c5575b76e322ed61efa426634c961371b769c2fcef716ef4ee2b52cbc6dc7168",
+    "tests/vt074/test_pairwise.gd": "20015c87103fd50e4c6a9a3667e60d48c8e4f3e091f4c282279edff43f23d851",
+    "tests/vt074/verify_commit2.py": "2b10d52bbd02e32cad82db345ec16a3d3080793ba858c796466f201457164b9c",
+    "tests/vt074/verify_commit4.py": "a2637881621599f11c0c99561c52d5961f458e74293a06d2e823c1efb7a287bd",
+    "tests/vt074/verify_green.py": "ff6d99bc114cb9a51d429bea6d065306246e0cd5a91adcfb8b8b6ee8d1a370dd",
+    "tests/vt074/verify_heavy_trial.py": "e0e2064722c45148a8ff7ab6a1a7d2665fc1f0ce432a1f870aa6c6c8094f818d",
+    "tests/vt074/verify_p01_trial.py": "e3b73880ef0d53b3e5ee224b34dea30c9a1a9579ca1b6d76a7b61787b386d089",
+    "tests/vt074/verify_profiling.py": "1c8b9f1c799dc2de360165b1047752cd2e5c348c0c200b2204fc38f25297326e",
+    "tests/vt074/verify_quality.py": "8af8516f6d2cd546d0ffd85364e2dc181cb2e05945e209020798ee8e76eb2c97",
+    "world.tscn": "f5af9b3bcf55844f8b6092ea9b2b7fe89152fb06e221fb9c0d430844042fb40f"
+  },
+  "godot_version": "4.7.2.stable.official.ed1daf0bf",
+  "trace_pairs_equal": true,
+  "source_files_changed_during_run": [],
+  "index_unchanged": true,
+  "runner_exit_code": 0
+}

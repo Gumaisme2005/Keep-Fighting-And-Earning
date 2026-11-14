@@ -1,0 +1,41 @@
+{
+  "source_sha256": {
+    "Scene/GameManager.gd": "6dd17d3e48abeb8510e3570bd9610e73fd38a621f96ccd1b286a6a0b4dc4ca68",
+    "Scene/RunCompletionStore.gd": "c7f16ae316440d8f55064cff943506fc2b5b140521c6f317c364489a2243768b",
+    "tests/vt074/test_codec_recovery.gd": "a6d9f2da4fbfc5c07c928a26629afbe98668af1b4075e6d2ca13639e4446f99a"
+  },
+  "personal_save_access": "NONE",
+  "work": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_codec_probe\\659092fe835d",
+  "steps": [
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\vt074_codec_probe\\659092fe835d\\probe",
+        "--script",
+        "res://probe.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 0.49010709999129176,
+      "exit_code": 0,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[PROBE_USER_DIR] C:/Users/ADMIN/Documents/GitHub/Keep-Fighting-And-Earning/.godot/vt074_codec_probe/659092fe835d/APPDATA/Godot/app_userdata/Keep Fighting And Earning\n[PROBE_ISOLATION] VERIFIED sentinel MATCH\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "res://tests/vt074/quality_entry.tscn",
+        "--",
+        "--suite=res://tests/vt074/test_codec_recovery.gd"
+      ],
+      "cwd": "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning",
+      "elapsed_seconds": 19.68627559999004,
+      "exit_code": 1,
+      "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\n[CODEC_ASSERT] {\"actual\":true,\"expected\":true,\"label\":\"near-cap old format loads\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":\"COMMITTED\",\"expected\":\"COMMITTED\",\"label\":\"first-attempt long completion\",\"result\":\"PASS\"}\n[FIRST_COMMITTED] {\"latency_ms\":2529.459,\"old_format\":\"legacy\",\"prior_bytes\":1936384,\"writer\":{\"encoding\":\"zstd-json-v1\",\"logical_bytes\":5833608,\"persisted_bytes\":1144509,\"stage\":\"destination_confirmed\"}}\n[CODEC_ASSERT] {\"actual\":\"7d4e6bda5eb35c3ed9ee0236ef829ac6f9c570dbb1d8a24e60dc424ca4c75848\",\"expected\":\"7d4e6bda5eb35c3ed9ee0236ef829ac6f9c570dbb1d8a24e60dc424ca4c75848\",\"label\":\"prior history exactly retained\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":\"351d04ed51cf95808b06d87a6ef00a7d173e20ac831e087f8f4b366624153a92\",\"expected\":\"9b4cf32b7cc0855848321aa80e3c2db5b01d613f83e10ca48d2c4c629e658570\",\"label\":\"all varied replay fields roundtrip\",\"result\":\"FAIL\"}\n[CODEC_ASSERT] {\"actual\":\"DUPLICATE\",\"expected\":\"DUPLICATE\",\"label\":\"varied full-frame fingerprint after reload\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":true,\"expected\":true,\"label\":\"compact commit no temp\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":true,\"expected\":true,\"label\":\"near-cap old format loads\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":\"COMMITTED\",\"expected\":\"COMMITTED\",\"label\":\"first-attempt long completion\",\"result\":\"PASS\"}\n[FIRST_COMMITTED] {\"latency_ms\":2856.106,\"old_format\":\"v2\",\"prior_bytes\":1936384,\"writer\":{\"encoding\":\"zstd-json-v1\",\"logical_bytes\":5833608,\"persisted_bytes\":1144521,\"stage\":\"destination_confirmed\"}}\n[CODEC_ASSERT] {\"actual\":\"7d4e6bda5eb35c3ed9ee0236ef829ac6f9c570dbb1d8a24e60dc424ca4c75848\",\"expected\":\"7d4e6bda5eb35c3ed9ee0236ef829ac6f9c570dbb1d8a24e60dc424ca4c75848\",\"label\":\"prior history exactly retained\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":\"d25817ad43e913fc7e18c22a247809fa1e6b566760f7c41407303f2d1fa06521\",\"expected\":\"606a21a775d377dfc56fa1de8b7eb00c90b6195a9e853ed6c01453ffb87d1e86\",\"label\":\"all varied replay fields roundtrip\",\"result\":\"FAIL\"}\n[CODEC_ASSERT] {\"actual\":\"DUPLICATE\",\"expected\":\"DUPLICATE\",\"label\":\"varied full-frame fingerprint after reload\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":true,\"expected\":true,\"label\":\"compact commit no temp\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":\"STORAGE_UNCERTAIN\",\"expected\":\"STORAGE_UNCERTAIN\",\"label\":\"uncertain completion explicit\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":0,\"expected\":0,\"label\":\"uncertain has no history publication\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":false,\"expected\":false,\"label\":\"uncertain blocks new lifecycle\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":\"SAVE_FAILED\",\"expected\":\"SAVE_FAILED\",\"label\":\"retry first reconciles\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":true,\"expected\":true,\"label\":\"resolved uncertainty no orphan\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":\"COMMITTED\",\"expected\":\"COMMITTED\",\"label\":\"old destination permits frozen retry\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":1,\"expected\":1,\"label\":\"reconciliation retry produces one result\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":\"STORAGE_UNCERTAIN\",\"expected\":\"STORAGE_UNCERTAIN\",\"label\":\"uncertain completion explicit\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":0,\"expected\":0,\"label\":\"uncertain has no history publication\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":false,\"expected\":false,\"label\":\"uncertain blocks new lifecycle\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":\"COMMITTED\",\"expected\":\"COMMITTED\",\"label\":\"retry first reconciles\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":true,\"expected\":true,\"label\":\"resolved uncertainty no orphan\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":1,\"expected\":1,\"label\":\"reconciliation retry produces one result\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":\"LOAD_ERROR\",\"expected\":\"LOAD_ERROR\",\"label\":\"corrupt encoding blocks loader\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":\"LOAD_ERROR\",\"expected\":\"LOAD_ERROR\",\"label\":\"corrupt encoding blocks writes\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":\"a8d66991231f5e9f5a26357fafe1239e6235fb91099c3af1364ce14deeddece5\",\"expected\":\"a8d66991231f5e9f5a26357fafe1239e6235fb91099c3af1364ce14deeddece5\",\"label\":\"corrupt envelope untouched\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":\"LOAD_ERROR\",\"expected\":\"LOAD_ERROR\",\"label\":\"corrupt encoding blocks loader\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":\"LOAD_ERROR\",\"expected\":\"LOAD_ERROR\",\"label\":\"corrupt encoding blocks writes\",\"result\":\"PASS\"}\n[CODEC_ASSERT] {\"actual\":\"9b63f8322de6fac0aee410e38d32f6a453294354380b6a7a3570d0de22e23722\",\"expected\":\"9b63f8322de6fac0aee410e38d32f6a453294354380b6a7a3570d0de22e23722\",\"label\":\"corrupt envelope untouched\",\"result\":\"PASS\"}\n[CODEC RESULTS] {\"failed\":2,\"passed\":29}\n",
+      "stderr": ""
+    }
+  ],
+  "runner_exit_code": 1
+}

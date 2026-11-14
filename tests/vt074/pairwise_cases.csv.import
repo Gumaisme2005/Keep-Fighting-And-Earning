@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://bncsaui2kkw1e"
+
+[deps]
+
+files=["res://tests/vt074/pairwise_cases.identity.translation", "res://tests/vt074/pairwise_cases.payload.translation", "res://tests/vt074/pairwise_cases.storage.translation", "res://tests/vt074/pairwise_cases.ledger.translation", "res://tests/vt074/pairwise_cases.expected.translation", "res://tests/vt074/pairwise_cases.test.translation", "res://tests/vt074/pairwise_cases.execution.translation"]
+
+source_file="res://tests/vt074/pairwise_cases.csv"
+dest_files=["res://tests/vt074/pairwise_cases.identity.translation", "res://tests/vt074/pairwise_cases.payload.translation", "res://tests/vt074/pairwise_cases.storage.translation", "res://tests/vt074/pairwise_cases.ledger.translation", "res://tests/vt074/pairwise_cases.expected.translation", "res://tests/vt074/pairwise_cases.test.translation", "res://tests/vt074/pairwise_cases.execution.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

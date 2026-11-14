@@ -1,3 +1,27 @@
+<!-- PERSISTENCE CURRENT -->
+# VT-074 — execution mapping hiện tại, 14/11/2026
+
+HEAD `476ff8e` + working diff. Original 22-row catalog bên dưới là **thiết kế lịch sử C2**; trạng thái PLANNED trong khối đó mô tả thời điểm C2. Không gọi 22 designed cases là 22 automated cases đã chạy. [Verification hiện tại](PERSISTENCE_VERIFICATION.md) và [traceability](TRACEABILITY.md) thay thế các kết luận execution cũ.
+
+| Catalog IDs | Current executable witnesses / status |
+| --- | --- |
+| 01/02 | VT74-02 GREEN + CG-03/37 + IT-08 PASS |
+| 03 | CG-04…08 và HT-01 frozen-envelope assertion PASS |
+| 04/05/15/16/18 | CG/IT validation/canonical conflict, canonical94 cases, pairwise14 rows/261 assertions PASS |
+| 06/07/17/20/21 | IT-03/04/05/07/08 + replay orders/groups PASS; compact old/new reload và old-reader guard PASS |
+| 08/19 | Real IO failures, uncertain old/candidate/read-unresolved, frozen safe retry PASS |
+| 09/10 | Boundary127/128/129 27 assertions; mutant8 expected behavioral failures; restored PASS |
+| 11/13 | HT-02; 20 ORDER rounds/160 wrapper invocations/2.480 assertions; TIME20/340 PASS |
+| 12 | Actual scene-flow + actual take_damage death headless PASS; human manual historical FAIL trước fix / short-run post-fix human-reported PASS (Floor 2 / 39 kills; restart confirmed without screenshot), observation + two screenshots verified; human near-2-MiB NOT RUN |
+| 14 | Original40 overlap/5 warm-up+30 measured/2&3600frames; four p95 targets PASS |
+| 22 | Encoded byte layer exact2.097.152/2.097.153, previous/no previous file, no publication, no orphan, recoverable retry PASS; power-loss/crash exhaustive matrix NOT RUN |
+
+New directed regression files: `test_long_persistence.gd` (28 assertions), `test_writer_bytes.gd` (59), `test_death_persistence.gd` (16), `test_codec_recovery.gd` (48); raw [raw target](evidence/persistence_8b6288391db7_target.json). Codec cost is a separate measured experiment, not a new catalog case count. Human HT before/after evidence remains unchanged. Line/branch coverage NOT MEASURED.
+
+---
+
+## Original catalog và status lịch sử C2 — preserved
+
 # BT3 VT-074 — Test cases với hai human-approved revisions v1
 
 Ngày sinh và human review: 12/11/2026, Asia/Saigon. Nguồn: SPEC AC-01…AC-05, R-01/R-02, revised plan. Bản AI v0 đã lưu trước review; sinh viên trực tiếp xác nhận TR-01/TR-02 MODIFY, chấp nhận v1. Hai revisions được áp dụng vào VT74-03/VT74-11 bên dưới; bản gốc, lý do, bản sửa và quyết định nguyên văn giữ tại [AI_TEST_REVIEW.md](AI_TEST_REVIEW.md). Các case khác giữ nguyên. `RUNNABLE NOW` chỉ nói khả năng thực thi baseline subset; kết quả thực xem [evidence/red.log](evidence/red.log). `PLANNED AFTER PATCH` không phải PASS.
