@@ -1,0 +1,893 @@
+﻿ID,Module,Chức năng,Tiêu đề test case,Điều kiện tiên quyết,Các bước thực hiện,Dữ liệu test,Kết quả mong đợi,Loại,Ưu tiên,Kết quả thực tế,Trạng thái,Người test,Ngày test,Ghi chú,Tiến độ biên soạn,Nguồn đối chiếu
+TC-MN-01,Menu chính,Hiển thị,Main Menu hiển thị khi khởi chạy game,Đã import dự án vào Godot,1. Nhấn F5 để chạy game,-,Hiển thị Main Menu có nút Start và Exit; không có lỗi trong Output,Chức năng,Cao,,Đạt,,,README ghi có thêm nút Options nhưng script main_menu.gd chỉ xử lý Start và Exit,Đã hoàn thành,
+TC-MN-02,Menu chính,Start,Nhấn Start chuyển sang màn Chọn nhân vật,Đang ở Main Menu,1. Nhấn nút Start,-,"Chuyển sang CharacterSelect với carousel 8 nhân vật: Miya, Olaf, Pyrois, Charlotte, Yugi, Doraemon, Miyabi, Lương Thơ; không có lỗi scene.",Chức năng,Cao,,Đạt,,,[Đối chiếu development: Đã cập nhật danh sách từ 4 lên 8 nhân vật; cần chạy lại để xác nhận],Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/character_select.gd
+TC-MN-03,Menu chính,Exit,Nhấn Exit thoát game,Đang ở Main Menu,1. Nhấn nút Exit,-,"Cửa sổ game đóng, tiến trình dừng",Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-MN-04,Menu chính,Start,Nhấn Start nhiều lần liên tiếp,Đang ở Main Menu,1. Nhấn nhanh nút Start 5 lần,-,"Chỉ chuyển scene một lần, không lỗi, không tạo scene trùng",Tiêu cực,Trung bình,,Đạt,,,Script dùng button_down nên kích hoạt ngay khi nhấn xuống,Đã hoàn thành,
+TC-CS-01,Chọn nhân vật,Chọn nhân vật,Chọn Pyrois vào game thành công,Đang ở màn Chọn nhân vật,"1. Tại carousel, chọn portrait có tên Pyrois (index 2 trong CHARACTER_SCENES)
+2. Bắt đầu run
+3. Quan sát character model và HUD",Nhân vật: Pyrois,"Vào dungeon với Pyrois, hiển thị đúng HP 4/4 và Giáp 4/4 (khi không có buff/trang bị), không sinh nhân vật khác.",Chức năng,Cao,,Đạt,,,README ghi Pyrois 'khởi điểm 5 máu' nhưng code: hp = max_hp = base_max_hp (4) | [Đối chiếu development: Vị trí portrait mới và stat data-driven; kết quả PASS cũ là lịch sử; cần chạy lại để xác nhận],Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/character_select.gd
+TC-CS-02,Chọn nhân vật,Chọn nhân vật,Chọn Olaf vào game thành công,Đang ở màn Chọn nhân vật,"1. Tại carousel, chọn portrait có tên Olaf (index 1 trong CHARACTER_SCENES)
+2. Bắt đầu run
+3. Quan sát character model và HUD",Nhân vật: Olaf,"Vào dungeon với Olaf, hiển thị đúng HP 6/6 và Giáp 1/1 (khi không có buff/trang bị), không sinh nhân vật khác.",Chức năng,Cao,,Đạt,,,[Đối chiếu development: Vị trí portrait mới và stat data-driven; kết quả PASS cũ là lịch sử; cần chạy lại để xác nhận],Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/character_select.gd
+TC-CS-03,Chọn nhân vật,Chọn nhân vật,Chọn Miya vào game thành công,Đang ở màn Chọn nhân vật,"1. Tại carousel, chọn portrait có tên Miya (index 0 trong CHARACTER_SCENES)
+2. Bắt đầu run
+3. Quan sát character model và HUD",Nhân vật: Miya,"Vào dungeon với Miya, hiển thị đúng HP 3/3 và Giáp 1/1 (khi không có buff/trang bị), không sinh nhân vật khác.",Chức năng,Cao,,Đạt,,,[Đối chiếu development: Vị trí portrait mới và stat data-driven; kết quả PASS cũ là lịch sử; cần chạy lại để xác nhận],Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/character_select.gd
+TC-CS-04,Chọn nhân vật,Chọn nhân vật,Chọn Charlotte vào game thành công,Đang ở màn Chọn nhân vật,"1. Tại carousel, chọn portrait có tên Charlotte (index 3 trong CHARACTER_SCENES)
+2. Bắt đầu run
+3. Quan sát character model và HUD",Nhân vật: Charlotte,"Vào dungeon với Charlotte, hiển thị đúng HP 5/5 và Giáp 0/0 (khi không có buff/trang bị), không sinh nhân vật khác.",Chức năng,Cao,,Đạt,,,[Đối chiếu development: Vị trí portrait mới và stat data-driven; kết quả PASS cũ là lịch sử; cần chạy lại để xác nhận],Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/character_select.gd
+TC-CS-05,Chọn nhân vật,Chọn nhân vật,Nhân vật đã chọn được giữ khi Retry,Đã chơi và chết với Olaf,"1. Ở màn Game Over nhấn Retry
+2. Chọn Miya
+3. Quan sát nhân vật trong game",-,"Vào game với Miya, không bị dùng lại Olaf",Chức năng,Trung bình,,Đạt,,,,Đã hoàn thành,
+TC-CS-06,Chọn nhân vật,Chọn nhân vật,Nhân vật cũ không bị giữ khi chọn lại,Đã chơi 1 ván với Pyrois rồi Retry,"1. Chọn Charlotte
+2. Vào game",-,Nhân vật là Charlotte (GameManager cập nhật đúng),Chức năng,Trung bình,,Đạt,,,,Đã hoàn thành,
+TC-CS-07,Chọn nhân vật,Chọn nhân vật,Nhấn nhanh 2 nút nhân vật liên tiếp,Đang ở màn Chọn nhân vật,"1. Tại CharacterSelect, click rất nhanh hai portrait liên tiếp (Yugi rồi Miyabi)
+2. Nhấn Enter để bắt đầu run",-,"Chỉ một hero có selected_index hợp lệ được chọn; load đúng scene hero được xác nhận, không tạo 2 player.",Tiêu cực,Thấp,,Đạt,,,[Đối chiếu development: Đã thay nút 4 nhân vật bằng carousel 8 portrait; cần chạy lại để xác nhận],Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/character_select.gd
+TC-PA-01,Pause Menu,Pause,ESC mở Pause Menu,Đang trong màn chơi,1. Nhấn ESC,-,"Pause Menu hiện, game dừng (quái, bẫy, đạn đứng yên)",Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-PA-02,Pause Menu,Pause,ESC lần 2 tiếp tục game,Pause Menu đang mở,1. Nhấn ESC lần nữa,-,"Menu ẩn, game chạy tiếp",Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-PA-03,Pause Menu,Pause,Nút Resume tiếp tục game,Pause Menu đang mở,1. Nhấn Resume,-,"Menu ẩn, game chạy tiếp",Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-PA-04,Pause Menu,Pause,Nút Restart tải lại màn chơi,Đang chơi tầng 2 hoặc đã nhặt đồ,"1. Mở Pause, nhấn Restart",-,"Scene world tải lại, tầng về giá trị khởi đầu, túi đồ và chỉ số được khởi tạo lại; vẫn dùng nhân vật đã chọn",Chức năng,Cao,,Đạt,,,Restart dùng reload_current_scene nên không quay về màn Chọn nhân vật,Đã hoàn thành,
+TC-PA-05,Pause Menu,Pause,Nút Exit thoát game,Pause Menu đang mở,1. Nhấn Exit,-,Game đóng,Chức năng,Trung bình,,Đạt,,,,Đã hoàn thành,
+TC-PA-06,Pause Menu,Pause,Không bấm được hành động khi game tạm dừng,Pause Menu đang mở,"1. Click chuột, nhấn WASD, Q, 1-9",-,Nhân vật không di chuyển/tấn công/dùng vật phẩm khi đang pause,Tiêu cực,Trung bình,,Đạt,,,,Đã hoàn thành,
+TC-PA-07,Pause Menu,Pause,ESC không mở Pause khi đang Game Over,"Nhân vật vừa chết, Game Over Menu đang hiện",1. Nhấn ESC,-,Pause Menu không hiện (bị chặn bởi kiểm tra game_over_menu),Tiêu cực,Trung bình,,Đạt,,,,Đã hoàn thành,
+TC-PA-08,Pause Menu,Pause,Timer tạm dừng cùng game,Cooldown kỹ năng Q đang đếm,"1. Nhấn Q
+2. Ngay lập tức pause 10 giây
+3. Resume
+4. Quan sát cooldown",-,Cooldown không giảm trong lúc pause,Biên,Thấp,,Đạt,,,,Đã hoàn thành,
+TC-GO-01,Game Over,Game Over,Hiện Game Over khi hết máu,"Nhân vật còn 1 máu, giáp = 0","1. Để quái đánh trúng nhân vật
+2. Chờ 2 giây sau hoạt ảnh chết",-,Phát hoạt ảnh death; sau 2 giây hiện Game Over Menu và game tạm dừng,Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-GO-02,Game Over,Game Over,Nút Retry quay về Chọn nhân vật,Game Over Menu đang hiện,1. Nhấn Retry,-,Game bỏ pause và chuyển về màn Chọn nhân vật,Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-GO-03,Game Over,Game Over,Nút Exit thoát game,Game Over Menu đang hiện,1. Nhấn Exit,-,Game đóng,Chức năng,Trung bình,,Đạt,,,,Đã hoàn thành,
+TC-GO-04,Game Over,Game Over,Nhân vật chết không còn nhận thêm sát thương,Nhân vật vừa chết,1. Để quái/bẫy đánh tiếp trong 2 giây chờ,-,Không phát sinh thêm lỗi; Game Over chỉ hiện một lần,Tiêu cực,Trung bình,,Đạt,,,,Đã hoàn thành,
+TC-GO-05,Game Over,Game Over,Không điều khiển được khi đã chết,Nhân vật vừa chết (trong 2 giây chờ),"1. Nhấn WASD, Q, chuột trái, phím 1-9",-,Nhân vật không phản hồi (is_dead = true),Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-MV-01,Di chuyển & điều khiển,Di chuyển,Di chuyển 4 hướng W/A/S/D,"Đang trong màn chơi, Pyrois","1. Nhấn lần lượt W, A, S, D",-,"Nhân vật di chuyển lên, trái, xuống, phải; phát hoạt ảnh walk; dừng thì phát idle",Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-MV-02,Di chuyển & điều khiển,Di chuyển,Di chuyển chéo không nhanh hơn,"Pyrois, tốc độ 150","1. Giữ W+D cùng lúc và đo quãng đường trong 2 giây
+2. So sánh với chỉ giữ D",-,Tốc độ chéo bằng tốc độ thẳng (vector chuẩn hóa),Biên,Trung bình,,Đạt,,,,Đã hoàn thành,
+TC-MV-03,Di chuyển & điều khiển,Di chuyển,Nhấn hai phím ngược chiều,-,1. Giữ A và D cùng lúc,-,"Nhân vật đứng yên, phát idle",Biên,Thấp,,Đạt,,,,Đã hoàn thành,
+TC-MV-04,Di chuyển & điều khiển,Di chuyển,Quay mặt theo chuột,-,"1. Di chuột sang bên trái nhân vật
+2. Di chuột sang bên phải",-,Sprite lật trái/phải theo vị trí chuột; hitbox kiếm lật theo,Chức năng,Trung bình,,Đạt,,,,Đã hoàn thành,
+TC-MV-05,Di chuyển & điều khiển,Di chuyển,Va chạm với tường,-,1. Đi thẳng vào tường,-,"Nhân vật bị chặn, không đi xuyên tường hay cột đá",Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-MV-06,Di chuyển & điều khiển,Di chuyển,Không thể di chuyển khi đang tấn công,Pyrois,1. Nhấn chuột trái và giữ W ngay khi vung kiếm,-,"Nhân vật đứng yên trong lúc hoạt ảnh attack_1 chạy, sau đó di chuyển lại bình thường",Chức năng,Trung bình,,Đạt,,,,Đã hoàn thành,
+TC-MV-07,Di chuyển & điều khiển,Di chuyển,Không thể di chuyển khi bị thương,Pyrois bị đánh,"1. Để quái đánh trúng
+2. Giữ phím di chuyển",-,Nhân vật đứng yên đến khi hoạt ảnh hurt kết thúc,Chức năng,Trung bình,,Đạt,,,,Đã hoàn thành,
+TC-HP-01,Máu / Giáp / Bất tử,Sát thương,Sát thương trừ vào Giáp trước,"Pyrois: Giáp 4/4, Máu 4/4",1. Nhận 1 sát thương từ Orc,Sát thương = 1,"Giáp 3/4, Máu giữ nguyên 4/4; HUD cập nhật",Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-HP-02,Máu / Giáp / Bất tử,Sát thương,Sát thương tràn sang Máu khi vỡ Giáp,"Pyrois: Giáp 1/4, Máu 4/4",1. Nhận 3 sát thương (vd. Armored Orc rage),Sát thương = 3,"Giáp về 0, Máu mất 2 (còn 2/4)",Biên,Cao,,Đạt,,,,Đã hoàn thành,
+TC-HP-03,Máu / Giáp / Bất tử,Sát thương,Sát thương đúng bằng Giáp hiện có,Pyrois: Giáp 2/4,1. Nhận 2 sát thương,Sát thương = 2,"Giáp về 0, Máu giữ nguyên",Biên,Trung bình,,Đạt,,,,Đã hoàn thành,
+TC-HP-04,Máu / Giáp / Bất tử,Sát thương,Nhận sát thương khi Giáp = 0,"Giáp 0/4, Máu 4/4",1. Nhận 1 sát thương,Sát thương = 1,Máu còn 3/4,Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-HP-05,Máu / Giáp / Bất tử,Sát thương,Sát thương <= 0 bị bỏ qua,-,1. Gọi take_damage(0) hoặc take_damage(-1) (qua debug),"0, -1","Không đổi Giáp/Máu, không phát I-Frames",Tiêu cực,Thấp,,Đạt,,,,Đã hoàn thành,
+TC-HP-06,Máu / Giáp / Bất tử,Bất tử,I-Frames 0.75 giây sau khi bị đánh,"Pyrois, đứng cạnh 2 quái","1. Bị đánh lần 1
+2. Trong 0.75 giây bị đánh thêm",-,Nhân vật nhấp nháy 5 lần; đòn thứ 2 trong 0.75 giây không gây sát thương,Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-HP-07,Máu / Giáp / Bất tử,Bất tử,Hết I-Frames nhận sát thương trở lại,-,"1. Bị đánh
+2. Chờ > 0.75 giây
+3. Bị đánh tiếp",-,Đòn sau 0.75 giây gây sát thương bình thường; alpha sprite về 1.0,Biên,Trung bình,,Đạt,,,,Đã hoàn thành,
+TC-HP-08,Máu / Giáp / Bất tử,Hồi giáp,Giáp tự hồi sau 4 giây không bị đánh,Giáp 1/4,"1. Tránh mọi sát thương
+2. Quan sát giáp sau 4 giây","Delay 4s, tốc độ 1 giáp/giây",Sau 4 giây giáp bắt đầu hồi +1 mỗi giây đến khi đầy 4/4,Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-HP-09,Máu / Giáp / Bất tử,Hồi giáp,Bị đánh khi đang hồi giáp thì reset,Giáp đang hồi (2/4),1. Nhận 1 sát thương khi đang hồi,-,"Dừng hồi giáp, đếm lại 4 giây rồi mới hồi tiếp",Biên,Cao,,Đạt,,,,Đã hoàn thành,
+TC-HP-10,Máu / Giáp / Bất tử,Hồi giáp,Hồi giáp dừng khi đầy,-,1. Chờ giáp hồi đầy,-,"Giáp dừng ở mức tối đa, không vượt quá",Biên,Trung bình,,Đạt,,,,Đã hoàn thành,
+TC-HP-11,Máu / Giáp / Bất tử,Chết,Nhân vật chết khi Máu về 0,"Giáp 0, Máu 1",1. Nhận 1 sát thương,-,"Phát hoạt ảnh death, tắt physics, vô hiệu hóa PlayerHurtbox",Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-HP-12,Máu / Giáp / Bất tử,Chết,Sát thương quá lớn vượt Máu,"Giáp 0, Máu 1",1. Nhận sát thương 5,-,"Máu = 0 (không âm), nhân vật chết",Biên,Trung bình,,Đạt,,,,Đã hoàn thành,
+TC-HP-13,Máu / Giáp / Bất tử,Bất tử,Bị thương hủy hành động đang thực hiện,Pyrois đang vung kiếm,1. Bị quái đánh trúng lúc đang attack,-,"Hủy attack, tắt hitbox kiếm, chuyển hurt, không bị đơ nhân vật",Tiêu cực,Cao,,Đạt,,,,Đã hoàn thành,
+TC-PY-01,Pyrois,Chỉ số,Chỉ số khởi đầu của Pyrois,Chọn Pyrois,"1. Vào game, kiểm tra HUD, tốc độ, sát thương",-,"Tốc độ 150, Máu 4, Giáp 4, Sát thương 1",Chức năng,Cao,,Không đạt,,,,Đã hoàn thành,
+TC-PY-02,Pyrois,Tấn công,Chém kiếm bằng chuột trái,"Pyrois, trước mặt có quái đã kích hoạt","1. Hướng chuột vào quái
+2. Nhấn chuột trái",-,"Phát attack_1, quái mất 1 máu (chưa vũ khí)",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-PY-03,Pyrois,Tấn công,Chém trúng nhiều quái cùng lúc,2 quái đứng trong tầm kiếm,1. Chém 1 lần,-,Cả 2 quái nhận sát thương,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-PY-04,Pyrois,Tấn công,Chém khi quái chưa kích hoạt,"Đang ở ngoài phòng chiến đấu, quái chưa active",1. Chém quái,-,Quái không mất máu (miễn nhiễm khi is_active = false),Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-PY-05,Pyrois,Tấn công,Spam chuột trái,-,1. Click liên tục 20 lần trong 3 giây,-,Không đơ/crash; mỗi đòn chờ hoạt ảnh kết thúc mới chém tiếp,Tiêu cực,Trung bình,,Đạt,,,,Đã hoàn thành,
+TC-PY-06,Pyrois,Kỹ năng Q,Kỹ năng Q: nhảy bổ kiếm,"Pyrois, quái ở phía trước",1. Nhấn Q hướng về quái,Sát thương Q = base + 2,Nhân vật lướt 150 px/s trong 0.3 giây rồi bổ xuống; quái nhận base + 2 = 3 sát thương,Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-PY-07,Pyrois,Kỹ năng Q,I-Frames trong lúc dùng Q,Quái đang tấn công gần Pyrois,1. Nhấn Q và để quái đánh trúng trong lúc nhảy,-,Không nhận sát thương; sprite ánh xanh; hết kỹ năng thì tắt bất tử,Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-PY-08,Pyrois,Kỹ năng Q,Cooldown Q 5 giây,-,"1. Nhấn Q
+2. Nhấn Q lại sau 2 giây
+3. Nhấn Q lại sau 5 giây",Cooldown 5.0s,Lần 2 không kích hoạt; lần 3 kích hoạt thành công,Biên,Cao,,Đạt,,,,Đã hoàn thành,
+TC-PY-09,Pyrois,Kỹ năng Q,Không dùng Q khi đang tấn công/bị thương,-,"1. Chém rồi nhấn Q ngay
+2. Bị thương rồi nhấn Q",-,Q không kích hoạt trong 2 trạng thái này,Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-PY-10,Pyrois,Kỹ năng Q,Q hướng theo mặt nhân vật,Chuột bên trái nhân vật,1. Nhấn Q,-,Nhân vật lướt về bên trái,Chức năng,Thấp,,Chưa chạy,,,,Đã hoàn thành,
+TC-OL-01,Olaf,Chỉ số,Chỉ số khởi đầu của Olaf,Chọn Olaf,"1. Kiểm tra HUD, tốc độ, sát thương",-,"Tốc độ 160, Máu 6, Giáp 1, Sát thương 2",Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-OL-02,Olaf,Kỹ năng Q,Cuồng nộ nhân đôi sát thương,"Olaf, base_damage = 2","1. Nhấn Q
+2. Chém quái trong 5 giây",Buff 5s,Sát thương đòn đánh = 4 trong thời gian buff,Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-OL-03,Olaf,Kỹ năng Q,Hết buff sát thương trở về bình thường,-,"1. Nhấn Q
+2. Chờ 5 giây
+3. Chém quái",-,Sát thương về 2; không bị cộng dồn hay thấp hơn ban đầu,Biên,Cao,,Đạt,,,,Đã hoàn thành,
+TC-OL-04,Olaf,Kỹ năng Q,Buff cộng đúng khi có vũ khí,Olaf đã trang bị Kiếm sắt (+1),"1. Nhấn Q
+2. Chém quái","base 2, vũ khí +1",Sát thương trong buff = (2 + 2) + 1 = 5; hết buff về 2 + 1 = 3,Biên,Trung bình,,Chưa chạy,,,Kiểm tra README ghi 'nhân đôi sát thương của đòn đánh'; vũ khí không được nhân đôi,Đã hoàn thành,
+TC-OL-05,Olaf,Kỹ năng Q,Cooldown Q 5 giây,-,"1. Nhấn Q
+2. Nhấn Q lần nữa sau 3 giây",Cooldown 5.0s,Lần 2 không kích hoạt,Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-OL-06,Olaf,Kỹ năng Q,Chết trong lúc buff,Olaf đang buff,1. Để quái đánh chết Olaf trong lúc buff,-,Không phát sinh lỗi script; Game Over hiện bình thường,Tiêu cực,Thấp,,Chưa chạy,,,,Đã hoàn thành,
+TC-MI-01,Miya,Chỉ số,Chỉ số khởi đầu của Miya,Chọn Miya,"1. Kiểm tra HUD, tốc độ, sát thương",-,"Tốc độ 180, Máu 4, Giáp 1, Sát thương 2",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-MI-02,Miya,Tấn công,Bắn tên theo hướng chuột,Miya,"1. Hướng chuột sang phải
+2. Nhấn chuột trái",-,"Mũi tên xuất hiện cách nhân vật 16 px, bay thẳng về phía chuột, góc quay đúng hướng",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-MI-03,Miya,Tấn công,Sát thương mũi tên bằng tổng sát thương,Miya có Kiếm tai ương (+8),1. Bắn trúng quái,2 + 8,Quái nhận 10 sát thương,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-MI-04,Miya,Tấn công,Mũi tên tự hủy sau 2 giây,Bắn vào khoảng trống rộng,1. Bắn tên ra xa,"Tốc độ 300, sống 2s",Mũi tên biến mất sau 2 giây,Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-MI-05,Miya,Tấn công,Mũi tên biến mất khi trúng tường,-,1. Bắn vào tường,-,Mũi tên biến mất ngay khi chạm tường,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-MI-06,Miya,Tấn công,Mũi tên không gây sát thương cho Miya,-,1. Bắn sát tường để tên bắn lên bản thân,-,Mũi tên bỏ qua người chơi,Tiêu cực,Thấp,,Chưa chạy,,,,Đã hoàn thành,
+TC-MI-07,Miya,Kỹ năng Q,Ném bom tới vị trí chuột,Miya,"1. Đặt chuột ở vị trí A
+2. Nhấn Q",Sát thương bom = 3 x tổng sát thương,"Bom bay tới A trong 0.4s, chờ 0.5s rồi nổ; quái trong vùng nổ nhận 6 sát thương",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-MI-08,Miya,Kỹ năng Q,Bom không gây sát thương cho người chơi,Miya đứng trong vùng nổ,1. Ném bom dưới chân,-,Miya không mất máu/giáp,Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-MI-09,Miya,Kỹ năng Q,Bom gây sát thương diện rộng,3 quái đứng cạnh nhau,1. Ném bom vào giữa nhóm,-,Cả 3 quái trong vùng nổ cùng nhận sát thương,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-MI-10,Miya,Kỹ năng Q,Cooldown Q 5 giây,-,1. Nhấn Q hai lần cách nhau 2 giây,Cooldown 5.0s,Lần 2 không ném bom,Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-CL-01,Charlotte,Chỉ số,Chỉ số khởi đầu của Charlotte,Chọn Charlotte,"1. Kiểm tra HUD, tốc độ, sát thương",-,"Tốc độ 180, Máu 5, Giáp 0 (HUD không có icon giáp), Sát thương 2",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-CL-02,Charlotte,Kỹ năng Q,Chém 3 nhịp tại chỗ,"Charlotte, quái gần",1. Nhấn Q,"3 nhịp, mỗi nhịp 0.1s bật hitbox","Nhân vật đứng yên, chém 3 lần liên tiếp; quái trúng nhận sát thương theo từng nhịp",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-CL-03,Charlotte,Kỹ năng Q,Cooldown Q 3 giây,-,"1. Nhấn Q
+2. Nhấn Q lại sau 1.5 giây
+3. Nhấn Q lại sau 3 giây",Cooldown 3.0s,"Lần 2 bị từ chối, lần 3 thành công",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-CL-04,Charlotte,Kỹ năng chuột phải,Lướt 400 và đâm 4 nhịp,"Charlotte, quái phía trước","1. Hướng chuột về quái
+2. Nhấn chuột phải",Tốc độ lướt 400,Lướt nhanh về phía trước rồi đâm 4 nhịp,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-CL-05,Charlotte,Kỹ năng chuột phải,I-Frames trong lúc lướt,Quái đang đánh,1. Nhấn chuột phải khi quái sắp đánh trúng,-,Không nhận sát thương trong lúc lướt; I-Frames tắt khi kỹ năng kết thúc,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-CL-06,Charlotte,Kỹ năng chuột phải,Cooldown chuột phải 5 giây độc lập với Q,-,"1. Nhấn chuột phải
+2. Nhấn Q ngay sau đó
+3. Nhấn chuột phải lại sau 3 giây","Q 3s, RMB 5s",Q dùng được (cooldown riêng); chuột phải lần 2 bị từ chối,Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-CL-07,Charlotte,Kỹ năng Q,Hủy kỹ năng khi bị đánh,Charlotte đang chém Q,1. Để quái đánh trúng giữa kỹ năng,-,"Kỹ năng bị hủy, không bị đơ trạng thái, hitbox được tắt",Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-CL-08,Charlotte,Kỹ năng Q,Không kích hoạt khi đang tấn công,-,1. Nhấn chuột trái rồi nhấn Q ngay,-,Q bị chặn khi is_attacking = true,Tiêu cực,Thấp,,Chưa chạy,,,,Đã hoàn thành,
+TC-IT-01,Vật phẩm,Chỉ số,Bình máu nhỏ hồi 2 máu,Pyrois: Máu 2/4,1. Nhấn phím số của Bình máu nhỏ,heal 2,Máu 4/4; bình biến mất khỏi túi,Chức năng,Cao,,Chưa chạy,,,[Đối chiếu development: Danh mục vật phẩm hiện dùng ItemDatabase và tier .tres; cần retest tên và hiệu ứng potion; cần chạy lại để xác nhận],Đã hoàn thành,
+TC-IT-02,Vật phẩm,Chỉ số,Hồi máu không vượt Máu tối đa,Máu 3/4,1. Dùng Bình máu nhỏ,heal 2,Máu 4/4 (không vượt tối đa); bình vẫn bị tiêu hao,Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-IT-03,Vật phẩm,Chỉ số,Dùng bình khi đầy máu,Máu 4/4,1. Dùng Bình máu nhỏ,-,Máu không đổi; ghi nhận hành vi bình vẫn mất khỏi túi,Biên,Thấp,,Chưa chạy,,,Cần xác nhận với nhóm đây có phải hành vi mong muốn,Đã hoàn thành,
+TC-IT-04,Vật phẩm,Chỉ số,Bình máu lớn hồi 3 và tăng 1 máu tối đa,Máu 2/4,1. Dùng Bình máu lớn,"heal 3, max_hp_bonus 1",Máu tối đa 5; máu = 2 + 1 + 3 = 6 bị giới hạn ở 5 → 5/5; HUD hiện 5 tim,Biên,Cao,,Chưa chạy,,,Tính: Máu tối đa 4+1 = 5; hồi 3 từ 3 máu lên tối đa 5 | [Đối chiếu development: Cần đối chiếu tác dụng potion cũ với tier item data-driven; cần chạy lại để xác nhận],Đã hoàn thành,
+TC-IT-05,Vật phẩm,Chỉ số,Tăng Máu tối đa từ bình là vĩnh viễn,Đã dùng Bình máu lớn,1. Trang bị rồi tháo Giáp cốt,-,Máu tối đa không bị mất phần cộng từ bình,Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-IT-06,Vật phẩm,Chỉ số,Mũ sắt +1 giáp,Pyrois có Mũ sắt,1. Trang bị Mũ sắt,armor 1,Giáp tối đa 5,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-IT-07,Vật phẩm,Chỉ số,Giáp sắt +2 giáp,Pyrois có Giáp sắt,1. Trang bị Giáp sắt,armor 2,Giáp tối đa 6,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-IT-08,Vật phẩm,Chỉ số,"Giáp cốt: +3 giáp, +2 máu tối đa",Pyrois có Giáp cốt,1. Trang bị Giáp cốt,"armor 3, max_hp +2","Giáp tối đa 7, Máu tối đa 6, Máu hiện tại tăng 2",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-IT-09,Vật phẩm,Chỉ số,Kiếm sắt +1 sát thương,Pyrois có Kiếm sắt,"1. Trang bị Kiếm sắt
+2. Chém Orc (3 máu)",damage 1,Sát thương mỗi đòn = 2,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-IT-10,Vật phẩm,Chỉ số,"Kiếm tai ương: +8 sát thương, +1 giáp",Pyrois có Kiếm tai ương,"1. Trang bị
+2. Chém quái","damage 8, armor 1",Sát thương mỗi đòn = 1 + 8 = 9; Giáp tối đa 5 (4 + 1),Chức năng,Cao,,Chưa chạy,,,Mô tả vật phẩm ghi '+1 DMG +1 Giáp' nhưng dữ liệu damage = 8: lệch mô tả,Đã hoàn thành,
+TC-IT-11,Vật phẩm,Hiển thị,Bình máu lớn hiển thị tên trong tooltip,Có Bình máu lớn trong hotbar,1. Rê chuột vào ô hotbar,-,Tooltip hiển thị tên + mô tả vật phẩm,Giao diện,Thấp,,Chưa chạy,,,big_health_potion.tres không có item_name (giá trị mặc định 'Vật phẩm mới'),Đã hoàn thành,
+TC-IV-01,Túi đồ & trang bị,Túi đồ,Túi đồ khởi tạo có 3 vật phẩm thử,Vào game bất kỳ nhân vật,1. Quan sát hotbar,-,"Hotbar có Bình máu nhỏ, Giáp cốt, Kiếm tai ương ở ô 1-3 (do code thử trong player.gd)",Chức năng,Trung bình,,Chưa chạy,,,Kiểm tra có chủ ý hay là code debug cần xóa trước khi phát hành | [Đối chiếu development: Item khởi tạo thử của phiên bản cũ có thể đã thay đổi; cần kiểm tra trạng thái start inventory; cần chạy lại để xác nhận],Đã hoàn thành,
+TC-IV-02,Túi đồ & trang bị,Trang bị,Dùng phím số trang bị Giáp,Giáp cốt ở ô 2,1. Nhấn phím 2,-,"Giáp cốt chuyển vào ô trang bị, rời khỏi túi; HUD cập nhật",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-IV-03,Túi đồ & trang bị,Trang bị,Vị trí vật phẩm dồn lên sau khi trang bị,"Túi: [Bình, Giáp cốt, Kiếm]","1. Nhấn phím 2 (trang bị giáp)
+2. Quan sát ô 2",-,"Túi còn [Bình, Kiếm]; Kiếm nằm ở ô 2",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-IV-04,Túi đồ & trang bị,Trang bị,Click ô hotbar để dùng/trang bị,-,1. Click chuột vào ô hotbar có Giáp cốt,-,Giống nhấn phím số tương ứng,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-IV-05,Túi đồ & trang bị,Trang bị,Đổi trang bị cùng loại,"Đang mặc Giáp sắt, trong túi có Giáp cốt",1. Nhấn phím số của Giáp cốt,-,Giáp sắt trở lại túi đúng vị trí ô vừa dùng; Giáp cốt được mặc,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-IV-06,Túi đồ & trang bị,Trang bị,Tổng giáp cộng dồn Mũ + Giáp,Có Mũ sắt và Giáp sắt,1. Trang bị cả hai,1 + 2,Giáp tối đa = 4 + 1 + 2 = 7,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-IV-07,Túi đồ & trang bị,Trang bị,Phím số ô trống,Túi có 2 vật phẩm,1. Nhấn phím 5,-,"Không có gì xảy ra, không lỗi (log ô trống)",Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-IV-08,Túi đồ & trang bị,Trang bị,Tháo trang bị cất vào túi,Đang mặc Giáp cốt,1. Gọi unequip_item(ARMOR),-,Giáp cốt vào túi; Máu/Giáp tối đa giảm về ban đầu; máu hiện tại không vượt tối đa,Chức năng,Cao,,Chưa chạy,,,Hàm unequip_item tồn tại nhưng chưa có UI ô trang bị nào gọi tới trong repo,Đã hoàn thành,
+TC-IV-09,Túi đồ & trang bị,Trang bị,Tháo trang bị khi túi đầy,"Túi đầy 16 ô, đang mặc Giáp",1. Gọi unequip_item,-,Không tháo; thông báo túi đầy; trang bị giữ nguyên,Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-IV-10,Túi đồ & trang bị,Túi đồ,Nhặt đồ khi túi đầy,Túi có 16 vật phẩm,1. Nhấn E nhặt vật phẩm dưới đất,-,Không nhặt; vật phẩm còn trên đất,Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-IV-11,Túi đồ & trang bị,Túi đồ,Dùng vật phẩm ở ô 10-16,Túi có 12 vật phẩm,1. Thử dùng vật phẩm thứ 10-12,-,"Hotbar chỉ có 9 ô, phím 1-9: kiểm tra có cách dùng vật phẩm 10-16 hay không",Biên,Trung bình,,Chưa chạy,,,Có thể là lỗi thiết kế: vật phẩm ô 10-16 không có đường dùng,Đã hoàn thành,
+TC-IV-12,Túi đồ & trang bị,Trang bị,Chỉ số chạm đáy khi đổi trang bị thấp hơn,Giáp 7/7 đang đầy,1. Tháo Giáp cốt,-,Giáp hiện tại bị giới hạn xuống mức tối đa mới (4),Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-CH-01,Rương & nhặt đồ,Rương,Rương mở khi người chơi lại gần,Phòng kho báu,1. Đi vào vùng rương,drop 0.8,Rương phát hoạt ảnh open; vật phẩm văng ra cách rương 20 px phía dưới,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-CH-02,Rương & nhặt đồ,Rương,Rương chỉ mở một lần,Rương đã mở,1. Rời đi rồi quay lại,-,Không rớt thêm vật phẩm; vùng va chạm đã bị tắt,Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-CH-03,Rương & nhặt đồ,Rương,Tỷ lệ rớt đồ của rương 80%,Nhiều rương (mở ít nhất 20 rương/20 ván),"1. Mở nhiều rương, đếm số lần rớt đồ",drop_chance 0.8,Xấp xỉ 80% rương có vật phẩm,Biên,Thấp,,Chưa chạy,,,Chạy 20+ lần để kiểm tra thống kê,Đã hoàn thành,
+TC-CH-04,Rương & nhặt đồ,Nhặt đồ,Vật phẩm phát sáng khi lại gần,Có vật phẩm trên đất,1. Đi lại gần vật phẩm,-,Sprite sáng lên; khi đi xa trở về bình thường,Giao diện,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-CH-05,Rương & nhặt đồ,Nhặt đồ,Nhấn E nhặt vật phẩm,Đứng gần vật phẩm,1. Nhấn E,-,Vật phẩm vào túi và biến mất khỏi đất,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-CH-06,Rương & nhặt đồ,Nhặt đồ,Nhấn E khi ở xa vật phẩm,Đứng xa vật phẩm,1. Nhấn E,-,Không nhặt được,Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-CH-07,Rương & nhặt đồ,Nhặt đồ,"Hai vật phẩm cạnh nhau, nhấn E một lần",Đứng gần 2 vật phẩm,1. Nhấn E một lần,-,Ghi nhận hành vi: cả hai có thể được nhặt cùng lúc vì cùng nghe phím E,Biên,Thấp,,Chưa chạy,,,,Đã hoàn thành,
+TC-CH-08,Rương & nhặt đồ,Quái rớt đồ,Quái thường rớt đồ 30%,Giết ≥ 20 Orc,1. Giết nhiều Orc và đếm số lần rớt,drop 0.3,Xấp xỉ 30% có vật phẩm rớt đúng vị trí quái chết,Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-UI-01,HUD & Hotbar,HUD,HUD hiển thị HP và giáp dạng thanh số đúng chỉ số,-,"1. Chọn Pyrois vào dungeon
+2. Quan sát số HP/Max HP và giáp/Max Giáp trên HUD",-,HUD dùng thanh HP/giáp và số hiện tại/tối đa đúng với hero và modifier; không phụ thuộc hình tim cũ.,Giao diện,Cao,,Chưa chạy,,,[Đối chiếu development: HUD đã chuyển sang thanh số; cần chạy lại để xác nhận],Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/GameUI.gd
+TC-UI-02,HUD & Hotbar,HUD,HUD cập nhật khi bị đánh,-,1. Nhận sát thương,-,Khiên/tim đầy chuyển sang icon rỗng ngay lập tức,Giao diện,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-UI-03,HUD & Hotbar,HUD,HUD cập nhật khi giáp hồi,-,1. Chờ giáp hồi,-,Khiên đầy dần mỗi giây,Giao diện,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-UI-04,HUD & Hotbar,HUD,HUD cập nhật khi mặc/tháo đồ,-,1. Trang bị Giáp cốt,-,Số tim/khiên tăng theo chỉ số mới,Giao diện,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-UI-05,HUD & Hotbar,Hotbar,Hotbar có 9 ô và hiển thị icon,Túi có 3 vật phẩm,1. Quan sát hotbar,-,"9 ô, 3 ô đầu có icon, 6 ô còn lại trống",Giao diện,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-UI-06,HUD & Hotbar,Hotbar,Tooltip hiển thị tên và mô tả,-,1. Rê chuột vào ô có vật phẩm,-,Tooltip: tên + xuống dòng + mô tả,Giao diện,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-UI-07,HUD & Hotbar,HUD,HUD không lỗi với Máu tối đa lớn,Máu tối đa 15,1. Dùng nhiều Bình máu lớn,-,Các tim không tràn khỏi màn hình hoặc chồng lấp,Biên,Thấp,,Chưa chạy,,,,Đã hoàn thành,
+TC-MP-01,Sinh hầm ngục,Sinh map,Số phòng được sinh đúng,Vào game,1. Quan sát số phòng (hoặc in ra generated_rooms.size()),num_rooms mặc định 16,Có 16 phòng (README ghi 10),Chức năng,Cao,,Chưa chạy,,,Lệch README: code mặc định 16 phòng,Đã hoàn thành,
+TC-MP-02,Sinh hầm ngục,Sinh map,Phòng đầu tiên là phòng xuất phát,-,1. Quan sát vị trí người chơi lúc bắt đầu,-,"Nhân vật xuất hiện ở tâm phòng 0, phòng này không có quái/rương/bẫy",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-MP-03,Sinh hầm ngục,Sinh map,Có đúng 1 phòng Boss ở xa nhất,-,1. Đi tới phòng cuối,-,Phòng Boss là phòng xa nhất (BFS) từ phòng xuất phát,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-MP-04,Sinh hầm ngục,Sinh map,Có 2-3 phòng kho báu,-,"1. Khám phá toàn bộ bản đồ, đếm rương",-,Số rương trong khoảng 2 đến 3,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-MP-05,Sinh hầm ngục,Sinh map,Tất cả phòng đều kết nối,-,1. Đi từ phòng xuất phát tới mọi phòng,-,"Không có phòng bị cô lập, hành lang đủ 5 ô",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-MP-06,Sinh hầm ngục,Sinh map,Cùng seed cho cùng bản đồ,map_seed = ALOALO1234,"1. Chạy game 2 lần với tầng 1
+2. So sánh bố cục",-,Bố cục tầng 1 giống nhau ở cả 2 lần,Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-MP-07,Sinh hầm ngục,Sinh map,Seed khác cho bản đồ khác,-,"1. Đổi map_seed thành chuỗi khác
+2. Chạy lại",-,Bố cục khác,Chức năng,Thấp,,Chưa chạy,,,,Đã hoàn thành,
+TC-MP-08,Sinh hầm ngục,Trang trí,Cột đá/thùng gỗ không chặn hành lang,-,1. Đi qua hành lang giữa các phòng,-,Không bị chặn bởi cột/thùng ở hành lang,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-MP-09,Sinh hầm ngục,Trang trí,Trang trí không đè lên bẫy,-,1. Quan sát phòng có bẫy,-,Không có cột hay thùng chồng lên vị trí bẫy,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-MP-10,Sinh hầm ngục,Quái,Số quái mỗi phòng từ 2 đến 6,-,"1. Vào từng phòng chiến đấu, đếm quái","min 2, max 6",Mỗi phòng 2-6 quái (có thể ít hơn nếu vị trí trùng trang trí),Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-MP-11,Sinh hầm ngục,Quái,Quái không xuất hiện trong tường/vật trang trí,-,1. Quan sát vị trí quái trong các phòng,-,"Quái nằm trên nền sàn, không trong tường",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-RM-01,Phòng & khóa cửa,Khóa cửa,Khóa cửa khi vào phòng có quái,Phòng chiến đấu chưa dọn,1. Bước vào giữa phòng,-,Gạch chặn xuất hiện ở mọi lối ra vào; quái được kích hoạt,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-RM-02,Phòng & khóa cửa,Khóa cửa,Mở cửa khi giết hết quái,Phòng đang khóa,1. Tiêu diệt toàn bộ quái,-,Cửa tự biến mất sau khi quái cuối biến mất,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-RM-03,Phòng & khóa cửa,Khóa cửa,Không thể rời phòng khi đang khóa,Phòng đang khóa,1. Cố đi ra ngoài qua lối vào,-,Bị chặn bởi gạch cửa,Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-RM-04,Phòng & khóa cửa,Khóa cửa,Phòng đã dọn không khóa lại,Đã dọn phòng,1. Rời phòng rồi quay lại,-,"Cửa không khóa lại, không có quái mới",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-RM-05,Phòng & khóa cửa,Khóa cửa,Quái chỉ hoạt động sau khi phòng khóa,Đứng ngoài phòng,1. Đứng ở cửa phòng và quan sát quái,-,"Quái không di chuyển, không nhận sát thương trước khi người chơi vào",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-RM-06,Phòng & khóa cửa,Khóa cửa,Quái chết trước khi vào phòng,Quái bị bẫy giết hoặc đã chết,1. Bước vào phòng không còn quái,-,"Phòng được đánh dấu cleared, không khóa; nếu là phòng Boss thì mở cổng",Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-RM-07,Phòng & khóa cửa,Khóa cửa,Skeleton biến mất sau 1 giây tính vào số quái,Phòng chỉ còn Skeleton,"1. Giết con Skeleton cuối cùng
+2. Quan sát cửa",-,"Sau khoảng 1 giây Skeleton biến mất, cửa mở",Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-SP-01,Bẫy gai,Bẫy,Bẫy báo đỏ 0.5 giây trước khi đâm,Phòng chiến đấu có bẫy,1. Bước lên bẫy,-,Bẫy đổi màu đỏ 0.5 giây rồi gai nhô lên,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-SP-02,Bẫy gai,Bẫy,Bẫy gây 1 sát thương nếu vẫn đứng trên,-,1. Đứng yên trên bẫy 1 giây,damage 1,Mất 1 giáp (hoặc 1 máu nếu hết giáp),Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-SP-03,Bẫy gai,Bẫy,Né bẫy trong 0.5 giây thì không bị thương,-,1. Bước lên bẫy rồi chạy ra ngay,-,Không nhận sát thương,Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-SP-04,Bẫy gai,Bẫy,Bẫy reset sau 1 giây,-,"1. Kích hoạt bẫy
+2. Chờ 1.5 giây
+3. Bước lên bẫy lần nữa",-,"Bẫy trở lại trạng thái idle, kích hoạt lại được",Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-SP-05,Bẫy gai,Bẫy,Bẫy gây sát thương cho quái,Quái đi qua bẫy,1. Dụ quái đứng trên bẫy,-,Quái nhận 1 sát thương,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-SP-06,Bẫy gai,Bẫy,I-Frames chặn sát thương bẫy,Charlotte lướt qua bẫy,1. Dùng chuột phải lướt qua bẫy khi gai nhô lên,-,Không nhận sát thương,Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-SP-07,Bẫy gai,Bẫy,Bẫy chỉ xuất hiện trong phòng chiến đấu,-,"1. Kiểm tra các phòng Start, Treasure, Boss",-,"Không có bẫy trong phòng xuất phát, kho báu, Boss",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-PT-01,Cổng & qua màn,Cổng,Cổng xuất hiện sau khi hạ Boss,Phòng Boss đang khóa,1. Hạ Boss,-,Cổng dịch chuyển xuất hiện ở tâm phòng Boss,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-PT-02,Cổng & qua màn,Cổng,Cổng không xuất hiện khi Boss còn sống,-,1. Quan sát phòng Boss khi đang đánh,-,Không có cổng,Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-PT-03,Cổng & qua màn,Cổng,Bước vào cổng qua tầng mới,Cổng đã xuất hiện,1. Bước vào cổng,-,"Tầng +1; bản đồ được tạo mới, nhân vật về phòng xuất phát, cũ bị xóa",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-PT-04,Cổng & qua màn,Cổng,Chỉ số nhân vật giữ nguyên qua tầng,"Đã trang bị đồ, giáp và máu thay đổi",1. Qua tầng,-,"Nhân vật, túi đồ, trang bị giữ nguyên",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-PT-05,Cổng & qua màn,Cổng,Bản đồ tầng mới khác tầng cũ,-,1. Qua tầng 2 và quan sát bố cục,seed = map_seed + _ + level,Bố cục khác tầng 1,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-PT-06,Cổng & qua màn,Cổng,Boss luân phiên theo tầng,-,"1. Quan sát Boss tầng 1, 2, 3",-,Tầng lẻ: Necromancer; tầng chẵn: Orc Rider,Chức năng,Trung bình,,Chưa chạy,,,README nhắc Kitsune nhưng repo không có Kitsune,Đã hoàn thành,
+TC-PT-07,Cổng & qua màn,Cổng,Không còn quái/đạn/bẫy của tầng cũ,-,1. Qua tầng,-,"Các node tầng cũ bị xóa, không còn đạn, vật phẩm cũ",Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-PT-08,Cổng & qua màn,Cổng,Qua nhiều tầng liên tiếp,-,1. Qua 5 tầng liên tiếp (có thể giảm máu Boss),-,"Không lỗi, không rò rỉ bộ nhớ, tầng tăng đúng",Biên,Thấp,,Chưa chạy,,,,Đã hoàn thành,
+TC-EN-01,Quái thường,Orc,Orc: chỉ số cơ bản,"Phòng có Orc, đã khóa","1. Quan sát tốc độ, chém Orc","HP 3, speed 70, range 35",Orc chết sau tổng sát thương 3; đuổi theo và vung rìu khi cách ≤ 35 px,Chức năng,Cao,,Không đạt,,,,Đã hoàn thành,
+TC-EN-02,Quái thường,Orc,Orc gây sát thương cận chiến,-,1. Để Orc đánh trúng,-,Người chơi nhận sát thương (giáp trước),Chức năng,Cao,,Đạt,,,,Đã hoàn thành,
+TC-EN-03,Quái thường,Armored Orc,Giáp của Armored Orc hấp thụ sát thương,"Armored Orc, giáp 5, máu 3",1. Chém 2 lần (1 sát thương mỗi lần),armor 5,"Giáp còn 3, máu giữ nguyên, phát animation block",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-EN-04,Quái thường,Armored Orc,Sát thương tràn khi vỡ giáp,Giáp còn 1,1. Chém với sát thương 3,-,"Giáp = 0, máu mất 2",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-EN-05,Quái thường,Armored Orc,Rage damage sau khi vỡ giáp,Giáp = 0,1. Để Armored Orc đánh trúng,"normal 1, rage 3",Sát thương gây ra = 3 (đòn thường chỉ 1 khi còn giáp),Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-EN-06,Quái thường,Skeleton,Skeleton nhanh và ít máu,-,"1. Quan sát tốc độ, chém Skeleton","HP 2, speed 100",Chết sau tổng 2 sát thương; biến mất sau 1 giây,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-EN-07,Quái thường,Skeleton Archer,Archer giữ khoảng cách,Archer vs Player,"1. Đến gần < 90 px
+2. Ra xa > 200 px","range 200, retreat 90","Lùi khi < 90, đứng bắn khi 90-200, tiến lại khi > 200",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-EN-08,Quái thường,Skeleton Archer,Archer bắn mỗi 2 giây,-,"1. Đứng trong tầm 100-200 px, đo thời gian giữa các mũi tên","cooldown 2.0, damage 1","Một mũi tên mỗi ~2 giây, 1 sát thương",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-EN-09,Quái thường,Vampire,"Vampire chậm, nhiều máu",-,1. Chém Vampire,"HP 4, speed 60, range 40",Chết sau tổng 4 sát thương,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-EN-10,Quái thường,Quái,Quái chết ngừng hành động,Quái vừa chết,1. Đứng cạnh xác quái,-,Không còn gây sát thương; hitbox bị tắt,Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-EN-11,Quái thường,Quái,Nhiều quái cùng tấn công,4 quái trong phòng,1. Đứng giữa phòng,-,"Sát thương được xử lý đúng nhờ I-Frames, không crash",Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-EN-12,Quái thường,Blood Monster,Blood Monster theo README,-,1. Tìm Blood Monster trong game,"HP 3, speed 80, tầm 180",Không thấy trong game: file/scene không tồn tại và không có trong danh sách quái của dungeon_generator,Chức năng,Trung bình,,Chưa chạy,,,"README liệt kê nhưng repo thiếu, cần xác nhận với nhóm phát triển | [Đối chiếu development: Blood Monster không có trong ENEMY_RESOURCES; giữ test để truy vết yêu cầu cũ; cần chạy lại để xác nhận]",Đã hoàn thành,
+TC-BS-01,Boss,Necromancer,Necromancer: chỉ số và tấn công,"Tầng 1, phòng Boss","1. Vào phòng Boss
+2. Quan sát đòn đánh","HP 30, tầm cận chiến 60, tầm độc 200",Boss tấn công cận chiến (1) hoặc ném vùng độc (2) cách nhau 1.5 giây,Chức năng,Cao,,Chưa chạy,,,[Đối chiếu development: Chỉ số Necromancer hiện lấy từ BossBalanceData resource; cần chạy lại để xác nhận],Đã hoàn thành,
+TC-BS-02,Boss,Necromancer,Vùng độc nổ sau 2 giây,-,"1. Quan sát vùng đỏ dưới chân
+2. Chờ 2 giây",damage 2,"Vòng đỏ nhấp nháy 2 giây rồi nổ, gây 2 sát thương nếu người chơi trong vòng bán kính 30",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-BS-03,Boss,Necromancer,Phase 2 tại 2/3 máu triệu hồi quái,Boss còn ≤ 20 máu,1. Gây sát thương đến khi Boss ≤ 20,Phase 2,"Boss triệu hồi 5-7 quái, tăng sát thương +1",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-BS-04,Boss,Necromancer,Phase 3 tại 1/3 máu,Boss còn ≤ 10 máu,1. Gây sát thương đến khi Boss ≤ 10,Phase 3,"Boss triệu hồi thêm quái, giảm hồi chiêu xuống 60%, sát thương +1 nữa",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-BS-05,Boss,Necromancer,Boss miễn nhiễm khi đang triệu hồi,Boss đang cast,1. Chém Boss khi cast,-,Không nhận sát thương trong lúc cast,Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-BS-06,Boss,Necromancer,Boss chết kích hoạt cổng,-,1. Hạ Boss (hết máu),-,"Phát animation death, cửa mở, cổng xuất hiện",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-BS-07,Boss,Orc Rider,Orc Rider: chỉ số,"Tầng 2, phòng Boss",1. Vào phòng Boss,"HP 30, speed 70","Boss xuất hiện, đuổi theo, có đòn lao và xoay búa",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-BS-08,Boss,Orc Rider,Đòn lao tăng tốc x4,-,1. Đứng cách xa Boss và quan sát đòn lao,speed 70 x 4 = 280,Boss báo hiệu rồi lao với tốc độ cao; đòn tại điểm phanh gây x2 sát thương (4),Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-BS-09,Boss,Orc Rider,Đòn xoay búa x3 sát thương,-,1. Để Boss dùng xoay búa trúng người chơi,base damage 2,Gây 6 sát thương,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-BS-10,Boss,Orc Rider,Chuyển Phase theo máu,-,"1. Gây sát thương đến ≤ 19 máu, sau đó ≤ 9",66% và 33%,Phase 2: tốc độ 110; Phase 3: tốc độ 140,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-BS-11,Boss,Orc Rider,Boss bị khóa trong lúc đổi Phase,-,1. Đánh Boss ngay lúc đổi Phase,-,"Boss hủy hành động hiện tại, không đơ",Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-BS-12,Boss,Kitsune,Boss Kitsune theo README,-,1. Tìm Boss Kitsune ở các tầng 1-5,-,Không thấy: không có file Kitsune trong repo; tầng chẵn dùng Orc Rider (log in ra 'Kitsune'),Chức năng,Trung bình,,Chưa chạy,,,"Lệch README: Kitsune chưa có | [Đối chiếu development: Kitsune không xuất hiện trong boss resource và flow hiện tại; giữ để xác minh yêu cầu cũ, không báo PASS; cần chạy lại để xác nhận]",Đã hoàn thành,
+TC-PR-01,Đạn & bom,Đạn quái,Mũi tên quái trúng người chơi,Archer bắn,1. Đứng yên để mũi tên trúng,"damage 1, speed 200","Nhận 1 sát thương, mũi tên biến mất",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-PR-02,Đạn & bom,Đạn quái,Mũi tên quái biến mất khi trúng tường,-,1. Đứng sau tường để Archer bắn,-,Mũi tên biến mất khi chạm tường,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-PR-03,Đạn & bom,Đạn quái,Mũi tên quái tự hủy sau 3 giây,-,"1. Né mũi tên, quan sát",3s,Mũi tên biến mất sau 3 giây,Biên,Thấp,,Chưa chạy,,,,Đã hoàn thành,
+TC-PR-04,Đạn & bom,Đạn quái,I-Frames chặn sát thương đạn,Charlotte lướt,1. Lướt xuyên mũi tên bằng chuột phải,-,Không nhận sát thương,Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-SY-01,Hệ thống & môi trường,Cấu hình,Chạy được trên Godot 4.7.2,Cài Godot 4.7.2,"1. Import dự án, nhấn F5",-,Dự án mở không lỗi; game chạy vào Main Menu,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-SY-02,Hệ thống & môi trường,Cấu hình,Không có lỗi/warning khi tải scene,-,1. Mở Output sau khi chạy 1 ván,-,"Không có lỗi đỏ (script, resource, đường dẫn)",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,
+TC-SY-03,Hệ thống & môi trường,Cấu hình,Thay đổi kích thước cửa sổ,-,1. Phóng to/thu nhỏ cửa sổ khi chơi,"stretch canvas_items, aspect expand","Giao diện co giãn đúng, HUD không bị mất",Giao diện,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-SY-04,Hệ thống & môi trường,Cấu hình,Hiệu năng ổn định ở màn đông quái,-,"1. Vào phòng có ≥ 6 quái và Boss triệu hồi 7 quái
+2. Quan sát FPS",-,FPS ổn định (≥ 55 với máy cấu hình trung bình),Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-SY-05,Hệ thống & môi trường,Cấu hình,Chơi nhiều lượt liên tiếp,-,"1. Chơi, chết, Retry, chơi lại 5 lần",-,"Không crash, không rò rỉ trạng thái giữa các ván",Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-SY-06,Hệ thống & môi trường,Cấu hình,Không có file phụ thuộc bị thiếu,-,1. Quét thư mục Scene khi mở dự án,-,Không có thông báo thiếu resource,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,
+TC-CS-08,Chọn nhân vật,Danh sách,Màn chọn hiển thị đủ 8 anh hùng,Project Godot development mở được; ở Main Menu / CharacterSelect,"1. Từ menu chính chọn Start
+2. Quan sát toàn bộ carousel nhân vật và cuộn sang cuối",8 portrait,"Danh sách có 8 lựa chọn: Miya, Olaf, Pyrois, Charlotte, Yugi, Doraemon, Hoshimi Miyabi, Lương Thơ; không thiếu ảnh hay tên",Giao diện,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/character_select.gd
+TC-CS-09,Chọn nhân vật,Chọn nhân vật,Chọn Yugi khởi tạo đúng scene,Project Godot development mở được; ở Main Menu / CharacterSelect,"1. Chọn portrait Yugi
+2. Nhấn xác nhận hoặc Enter để bắt đầu
+3. Quan sát nhân vật và HUD",Yugi / idx 4,"GameManager chọn hero_idx=4; world tải Yugi, skill/hình ảnh đúng nhân vật, không bị thay bởi hero khác",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/character_select.gd
+TC-CS-10,Chọn nhân vật,Chọn nhân vật,Chọn Doraemon khởi tạo đúng scene,Project Godot development mở được; ở Main Menu / CharacterSelect,"1. Chọn portrait Doraemon
+2. Vào dungeon
+3. Kiểm tra HUD và các trang gadget",Doraemon / idx 5,"GameManager chọn hero_idx=5; Doraemon xuất hiện cùng giao diện 4D Pocket, không lỗi scene",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/character_select.gd
+TC-CS-11,Chọn nhân vật,Chọn nhân vật,Chọn Miyabi khởi tạo đúng scene,Project Godot development mở được; ở Main Menu / CharacterSelect,"1. Chọn portrait Hoshimi Miyabi
+2. Vào dungeon
+3. Quan sát linh thể băng và phím kỹ năng",Hoshimi Miyabi / idx 6,"GameManager chọn hero_idx=6, Miyabi xuất hiện và triệu hồi spirit theo _ready()",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/character_select.gd
+TC-CS-12,Chọn nhân vật,Chọn nhân vật,Chọn Lương Thơ khởi tạo đúng scene,Project Godot development mở được; ở Main Menu / CharacterSelect,"1. Chọn portrait Lương Thơ
+2. Vào dungeon
+3. Quan sát tư thế vũ khí và kỹ năng",Lương Thơ / idx 7,"GameManager chọn hero_idx=7, scene Lương Thơ tải thành công; trạng thái đầu là base/sheathed",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/character_select.gd
+TC-CS-13,Chọn nhân vật,Điều hướng,Điều hướng carousel bằng mũi tên trái/phải,Project Godot development mở được; ở Main Menu / CharacterSelect,"1. Mở màn chọn nhân vật
+2. Nhấn Left/A rồi Right/D
+3. Quan sát portrait được highlight và scroll",KEY_LEFT / KEY_RIGHT / A / D,Chỉ số chọn đổi từng bước đúng hướng; carousel tự cuộn tới portrait được chọn,Giao diện,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/character_select.gd
+TC-CS-14,Chọn nhân vật,Điều hướng,Điều hướng ở ranh giới đầu/cuối danh sách,Project Godot development mở được; ở Main Menu / CharacterSelect,"1. Chọn portrait đầu tiên
+2. Nhấn Left nhiều lần rồi chọn portrait cuối và nhấn Right nhiều lần","0,7","Chỉ số chọn luôn nằm trong phạm vi 0..7, UI không lỗi/không trỏ nhân vật ngoài danh sách",Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/character_select.gd
+TC-CS-15,Chọn nhân vật,Thông tin,Thay đổi portrait cập nhật chỉ số và mô tả,Project Godot development mở được; ở Main Menu / CharacterSelect,"1. Chọn Miya, sau đó Miyabi rồi Lương Thơ
+2. Đối chiếu tên, HP, giáp, damage, speed và mô tả Q/RMB",3 nhân vật,Mỗi lựa chọn hiển thị thông tin từ GameManager.CHARACTER_INFO ứng với đúng index,Giao diện,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/character_select.gd
+TC-CS-16,Chọn nhân vật,Seed đầu game,Seed nhập tại màn chọn nhân vật truyền sang dungeon,Project Godot development mở được; ở Main Menu / CharacterSelect,"1. Nhập seed kiểm thử vào ô seed
+2. Chọn Miyabi và Enter
+3. Quan sát seed của dungeon/HUD",QA_Miyabi_2026,Dungeon sử dụng seed đã nhập và nhân vật được chọn; không rơi về seed cũ,Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/character_select.gd
+TC-CS-17,Chọn nhân vật,Seed đầu game,Nút Random ở màn chọn nhân vật thay seed,Project Godot development mở được; ở Main Menu / CharacterSelect,"1. Ghi lại seed hiện tại
+2. Nhấn Random
+3. Bắt đầu một run",Random seed,Ô seed cập nhật giá trị ngẫu nhiên hợp lệ; run dùng seed vừa hiện trên màn hình,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/character_select.gd
+TC-MYB-01,Hoshimi Miyabi,Khởi tạo,Miyabi dùng chỉ số cơ bản từ balance resource,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Bắt đầu run với Miyabi
+2. Kiểm tra HP/giáp/tốc độ trong game và file miyabi.tres",hero_idx=6,"HP, giáp, damage, speed lấy theo HeroBalanceData của miyabi, không sử dụng giá trị của Pyrois",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-02,Hoshimi Miyabi,Đánh thường,Click trái lần đầu kích hoạt frost_combo_1,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Đứng trước Orc trong tầm đánh
+2. Nhấn chuột trái một lần
+3. Quan sát hit frame và HP của Orc","LMB, địch ở khoảng 20px","Dùng animation frost_combo_1, một đòn trúng trong tầm và hướng phù hợp, damage = _dmg()",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-03,Hoshimi Miyabi,Đánh thường,Combo 3 nhịp theo chuỗi nhấn liên tiếp,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Đặt mục tiêu phía trước
+2. Nhấn/giữ LMB để nối 3 đòn trong cửa sổ 0,3 giây
+3. Quan sát hoạt ảnh và sát thương",COMBO_WINDOW=0.3s,"Combo chạy frost_combo_1 → 2 → 3; nhịp 3 có hệ số 2 và lunge, không bỏ qua frame đánh",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-04,Hoshimi Miyabi,Đánh thường,Combo hết cửa sổ sẽ khởi động lại từ nhịp 1,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Đánh đúng một nhịp đầu
+2. Đợi quá 0,3 giây sau khi đòn kết thúc
+3. Nhấn LMB lần nữa",Trễ > 0.3s,Đòn kế tiếp bắt đầu ở frost_combo_1 thay vì nhảy sang combo_2,Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-05,Hoshimi Miyabi,Đánh thường,Nhịp combo cuối đóng băng mục tiêu,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Đặt Orc trong tầm combo cuối
+2. Thực hiện liên tục đủ ba nhịp
+3. Theo dõi chuyển động địch","frost_combo_3, 0.5s","Đòn 3 gây damage 2x và áp hiệu ứng freeze trong 0,5s cho mục tiêu bị đánh trúng",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-06,Hoshimi Miyabi,Dash,Shift tạo dash theo hướng đang di chuyển,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Giữ W hoặc D
+2. Nhấn Shift lần đầu
+3. Đo vị trí trong khoảng dash","Shift, 72px","Nhân vật dash theo vector di chuyển, quãng dash cấu hình 72 px trong khoảng 0,14s, chịu collision của scene",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-07,Hoshimi Miyabi,Dash,Shift khi đứng yên dash theo hướng ngắm,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Thả WASD
+2. Hướng chuột về trái
+3. Nhấn Shift","direction=(0,0)",Hướng dash lấy từ aim khi không có input di chuyển; không bị đứng yên do direction=0,Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-08,Hoshimi Miyabi,Dash,Miyabi miễn sát thương trong khoảng dash,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Kích hoạt dash qua vùng địch đang tấn công
+2. Theo dõi HP/giáp ở thời điểm _untouchable=true
+3. Theo dõi sau khi dash kết thúc",_untouchable,Không bị trừ HP/giáp trong cửa sổ dash; trạng thái miễn nhiễm được tắt khi hết khoảng dash,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-09,Hoshimi Miyabi,Dash,Mỗi quái chỉ nhận một hit cho một lần dash,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Xếp địch trên đường dash
+2. Dash xuyên qua một quái và kiểm tra số lần hit
+3. Lặp lại một lần dash mới",_dash_hits,Mỗi mục tiêu nhận tối đa 1 lần sát thương trong 1 dash nhờ _dash_hits; dash mới xóa bộ nhớ trúng,Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-10,Hoshimi Miyabi,Dash,Không được dash liên tiếp khi cooldown chưa kết thúc,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Nhấn Shift để dash
+2. Trong vòng dưới 1,2s nhấn Shift lại
+3. Nhấn khi đã đủ cooldown",dash_cd=1.2s,Không có dash mới trong cooldown; dash mới chỉ được kích hoạt khi dash_cd<=0,Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-11,Hoshimi Miyabi,Frost Wave,Thả RMB sớm tạo Frost Wave cấp 0,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Giữ RMB khoảng 0,2s
+2. Thả trước mốc 0,45s
+3. Đo số đạn Frost Wave và sát thương",charge_time=0.2s,"Sinh 1 Frost Wave cấp 0 damage x1, size x1 và không đóng băng",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-12,Hoshimi Miyabi,Frost Wave,"Tích RMB 0,45s tạo Frost Wave cấp 1",Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Giữ RMB 0,55s
+2. Thả chuột phải
+3. Đo sát thương/vùng hiệu ứng",charge_time=0.55s,"Wave cấp 1: damage x2 và hệ số kích thước 1,25; không freeze",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-13,Hoshimi Miyabi,Frost Wave,Tích RMB ít nhất 1s tạo Frost Wave cấp 2,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Giữ RMB >1s
+2. Thả chuột phải
+3. Quan sát mục tiêu dính sóng",charge_time=1.1s,"Wave cấp 2: damage x3, kích thước x1,5 và đóng băng mục tiêu trúng 0,8s",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-14,Hoshimi Miyabi,Frost Wave,Giữ RMB lâu hơn không vượt cấp tối đa,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Giữ RMB trong 3s
+2. Thả và ghi nhận wave_level
+3. So với RMB 1,1s",3s,"Wave vẫn ở cấp tối đa 2, không có cấp 3; damage không tăng vô hạn theo thời gian giữ",Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-15,Hoshimi Miyabi,Frost Wave,RMB giảm tốc khi tích tụ,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Đi bộ đều khi chưa tích RMB và đo quãng đường
+2. Giữ RMB và tiếp tục đi cùng hướng
+3. So sánh vận tốc",WASD + RMB,"Trong trạng thái charge vận tốc theo direction * speed * 0,4 như _step_charge",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-16,Hoshimi Miyabi,Frost Wave,Không kích lại RMB khi đang cooldown,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Bắn Frost Wave một lần
+2. Nhấn lại RMB ngay
+3. Đợi đến hết rmb_cooldown và thử lại",rmb_cooldown=2s,Không khởi tạo wave mới trong thời gian hồi 2s (trừ các modifier hợp lệ),Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-17,Hoshimi Miyabi,Frost Bloom,Q triệu hồi hàng ice spikes phía trước,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Đứng gần một nhóm Orc
+2. Ngắm về bên phải rồi nhấn Q
+3. Quan sát animation, hướng và sát thương","Q, _start_special","IceSpikes sinh từ frame eruption; tuyến băng phía trước theo facing, gây damage x3 và đóng băng 1,2s",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-18,Hoshimi Miyabi,Frost Bloom,Ice spikes gây shatter hit khi kết thúc,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Đứng gần quái còn sống sau đợt băng đầu
+2. Nhấn Q và theo dõi animation đến frame vỡ
+3. Theo dõi HP quái",SHATTER_FRAME=8,"Sau khi mọc, spikes có pha shatter gây thêm damage x1; không lặp hit vô hạn",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-19,Hoshimi Miyabi,Frost Bloom,Q không lặp khi đang hồi,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Nhấn Q, chờ hoàn tất cast
+2. Nhấn Q trước khi q_cd=0
+3. Thử lại sau cooldown",Q cooldown từ balance,Không sinh thêm đợt ice spikes khi chưa hết skill cooldown,Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-20,Hoshimi Miyabi,Linh thể,Linh thể băng tự theo chủ và tấn công mục tiêu gần,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Vào game chọn Miyabi, đứng gần Orc trong tầm 150px
+2. Không nhấn tấn công
+3. Đợi tối thiểu 2s và quan sát","spirit attack_range=150, cooldown=2","Spirit theo Miyabi, tự chọn địch gần phù hợp và phóng spirit bolt theo cooldown 2s",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-21,Hoshimi Miyabi,Linh thể,Spirit không bắn khi không có mục tiêu hợp lệ,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Vào phòng trống với Miyabi
+2. Không có enemy trong bán kính 150px
+3. Quan sát hơn 3s",enemy count=0,"Spirit giữ trạng thái idle, không tạo đạn vô mục tiêu",Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-22,Hoshimi Miyabi,Linh thể,Spirit phản ứng khi Miyabi bị đánh/chết,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Đưa Miyabi vào vùng chịu sát thương
+2. Quan sát spirit khi giảm HP
+3. Cho Miyabi chết ở lần thử tách biệt",on_hero_hurt / died,"Spirit gọi on_hero_hurt khi bị mất HP/giáp và on_hero_died khi chết, không tiếp tục bình thường sau death",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-MYB-23,Hoshimi Miyabi,Replay,Replay Miyabi tái hiện Shift/RMB/Q,Đã khởi động dungeon với Hoshimi Miyabi (hero_idx=6); có thể tạo mục tiêu thử,"1. Ghi run có Shift dash, charge RMB, Q và đánh combo
+2. Kết thúc run, chọn Replay
+3. So sánh sự kiện/khung hình giữa bản ghi và phát lại",shift/rmb/q/atk,Input replay có shift/rmb/q/atk; cùng seed và frame stream tái hiện đúng chuỗi kỹ năng trong điều kiện như nhau,Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Miyabi/miyabi.gd
+TC-LT-01,Lương Thơ,Khởi tạo,Lương Thơ lấy chỉ số từ balance resource,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Vào dungeon với Lương Thơ
+2. Quan sát chỉ số và so với luong_tho.tres",hero_idx=7,"Nhân vật sử dụng bộ chỉ số Lương Thơ, không kế thừa nhầm chỉ số cố định của Pyrois",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-02,Lương Thơ,Đánh thường,Combo nhịp 1 tạo một stab hit,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Đưa Orc vào trước mặt trong tầm 34px
+2. Nhấn LMB ngắn một lần
+3. Theo dõi HP Orc",stab,"Animation stab đánh tại frame 4, gây damage hệ số 1 cho địch trong hitbox và có line-of-sight",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-03,Lương Thơ,Đánh thường,Combo nhịp 2 có hai hit riêng biệt,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Tấn công liên tiếp để đến nhịp 2
+2. Giữ địch trong hitbox swing
+3. Theo dõi số lần giảm HP","swing hits [2,4]","Animation swing ghi nhận hai hit tại frame 2 và 4, mỗi hit hệ số 1; không cộng thêm hit ngoài lịch",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-04,Lương Thơ,Đánh thường,Nhịp 3 Ground Smash gây sát thương vùng và stun,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Thực hiện combo đến nhịp 3 trước một cụm địch
+2. Quan sát splash và chuyển động địch",smash,"Ground Smash gây damage hệ số 2 theo vòng tròn bán kính 20 px cộng enemy radius và stun 0,6s",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-05,Lương Thơ,Đánh thường,Giữ LMB tự nối đầy đủ ba nhịp,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Nhấn giữ LMB liên tục qua 3 hoạt ảnh
+2. Quan sát combo_step mỗi lần chuyển",hold LMB,"Tự nối stab → swing → smash khi đến frame chain, không buộc nhấn nhả từng lần",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-06,Lương Thơ,Đánh thường,Nhấn quá chậm thì combo trở lại nhịp đầu,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Đánh một nhịp rồi thả
+2. Chờ quá 0,35s sau kết thúc
+3. Nhấn LMB lần nữa",COMBO_WINDOW=0.35s,Lần đánh mới bắt đầu từ nhịp 0 khi combo_chain hết hạn,Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-07,Lương Thơ,Đánh thường,Địch sau tường không bị trúng đòn cận chiến,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Đặt Orc sau tường trong khoảng cách trùng hitbox
+2. Nhấn combo về phía Orc
+3. Quan sát HP",LoS blocked,"Sát thương được loại khi Util.sees không có line-of-sight, kể cả khi nằm trong hitbox hình học",Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-08,Lương Thơ,Twin Barrels,RMB bắn từ hai nòng súng,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Đứng trước mục tiêu và hướng chuột về nó
+2. Nhấn RMB
+3. Theo dõi sprite và hai đầu đạn",RMB,Một lần _fire tạo một bullet cho mỗi BULLET_SPAWN (2 viên) đúng hướng ngắm và damage hiện tại,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-09,Lương Thơ,Twin Barrels,Giữ RMB có thể bắn lại sau mỗi cooldown,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Giữ RMB liên tục ở phòng trống
+2. Quan sát shots_fired trong 3s",shoot_cooldown cấu hình 0.8s,"Các lượt bắn xuất hiện khi rmb_cd<=0, không bắn dồn ngoài cooldown",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-10,Lương Thơ,Twin Barrels,Đạn súng ngừng khi hết tầm bay,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Bắn về hành lang không có địch
+2. Đo tầm bay/tuổi thọ đạn",bullet_range=220px,"Đạn không bay vượt bullet_range được cấu hình (mặc định 220px), được giải phóng khi hết tầm",Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-11,Lương Thơ,Twin Barrels,Đạn mặc định không xuyên nhiều mục tiêu,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Xếp hai Orc trên cùng đường bắn
+2. Bắn trong form base
+3. Quan sát sát thương trên Orc phía sau",form=base,Đạn form base không bật pierce; không tiếp tục trúng nhiều mục tiêu theo một viên như upgraded,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-12,Lương Thơ,White Moon,Q bắt đầu quá trình biến hình,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Bắt đầu Lương Thơ form base
+2. Nhấn Q khi cooldown=0
+3. Quan sát animation transform và trạng thái","Q, form_time=12",Chuyển sang trạng thái transform rồi upgraded (tóc trắng) khi animation hoàn tất; bắt đầu form_time=12s,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-13,Lương Thơ,White Moon,Miễn sát thương trong toàn bộ trạng thái nâng cấp,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Kích hoạt White Moon
+2. Để Orc/bẫy trúng trong transform rồi upgraded
+3. Quan sát HP và giáp","_untouchable, upgraded",take_damage không giảm HP/giáp trong biến hình và suốt form upgraded,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-14,Lương Thơ,White Moon,White Moon cộng một damage cho mỗi hit,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Đánh cùng loại quái bằng form base và upgraded, cùng trang bị
+2. So sánh sát thương từ hit_damage()",+1 damage,"Damage của hit trong upgraded lớn hơn base đúng 1 trước hệ số đòn, không nhân sai stat khác",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-15,Lương Thơ,White Moon,Tốc độ di chuyển tăng 20 phần trăm,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Đo vận tốc base trên đường thẳng
+2. Kích hoạt upgraded, chạy cùng điều kiện
+3. So sánh quãng đường trong 1s",UPGRADED_SPEED=1.2,"Vận tốc upgraded có multiplier 1,2 trên get_effective_speed, sau khi áp giới hạn max_speed_cap",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-16,Lương Thơ,White Moon,Tốc độ tấn công tăng 25 phần trăm,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Đánh 3 nhịp trong form base và ghi timing
+2. Thực hiện combo tương tự trong upgraded
+3. So sánh duration",UPGRADED_ATTACK_RATE=1.25,"Tốc độ animation/attack form upgraded tuân hệ số _rate() 1,25, không kéo dài hơn form base",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-17,Lương Thơ,White Moon,Đạn bắn ở form upgraded có xuyên mục tiêu,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Kích hoạt White Moon
+2. Xếp hai mục tiêu trên cùng đường đạn
+3. Bắn RMB và theo dõi cả hai",pierce=true,"Bullet được tạo với pierce=true, có thể tác động lên mục tiêu phía sau theo xử lý collision",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-18,Lương Thơ,White Moon,Hết 12 giây tự chuyển về base,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Biến hình và đứng yên đủ thời gian
+2. Quan sát tóc trắng biến mất
+3. Theo dõi biến hình ngược",upgrade_duration=12s,"Khi form_time<=0, bắt đầu revert với animation transform đảo ngược 2x rồi trả về base",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-19,Lương Thơ,White Moon,Miễn sát thương cả giai đoạn revert,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Để địch tấn công đúng lúc nhân vật revert
+2. Theo dõi HP/giáp trước và sau revert",revert,_untouchable tiếp tục bật trong revert; hết revert thì có thể chịu sát thương như thường,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-20,Lương Thơ,White Moon,Không biến hình lần hai trước khi Q hồi xong,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Nhấn Q biến hình
+2. Sau khi trả form base, thử nhấn lại khi q_cd>0
+3. Thử khi q_cd=0",skill_cooldown=20s,Không chạy _start_transform khi form không phải base hoặc Q đang cooldown,Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-21,Lương Thơ,Tư thế,Khi di chuyển nhân vật rút vũ khí ra,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Chọn Lương Thơ đứng yên
+2. Nhấn D để di chuyển
+3. Quan sát trạng thái stance",sheathed → drawing,stance đổi từ sheathed sang drawing rồi combat/run; hướng quay/animation đúng hướng di chuyển,Giao diện,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-22,Lương Thơ,Tư thế,Đứng yên hai giây tự cất vũ khí,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Di chuyển cho đến khi stance=combat
+2. Dừng hẳn quá 2s không giao chiến
+3. Quan sát animation",SHEATHE_AFTER=2s,"Bắt đầu sheathing với animation draw chạy ngược, kết thúc ở idle/sheathed",Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-LT-23,Lương Thơ,Replay,Replay Lương Thơ giữ đồng bộ combo/RMB/Q,"Đã bắt đầu dungeon với Lương Thơ (hero_idx=7), có quái/không gian test phù hợp","1. Ghi một run gồm combo, giữ RMB, biến hình Q
+2. Chọn Replay của run
+3. So sánh số lượt bắn, form và thứ tự đòn",input replay,Dữ liệu atk/rmb/q trong replay tái hiện các chuỗi động tác giống bản ghi cùng seed,Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/LuongTho/luong_tho.gd
+TC-YG-01,Yugi,Khởi tạo,Intro của Yugi không cho tấn công khi đang phát,"Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Chọn Yugi bắt đầu run
+2. Trong intro nhấn LMB/RMB/Q
+3. Quan sát kỹ năng/đạn",intro_active,"Khi intro_active, _cast không thực hiện kỹ năng dù có nhập; không phát sinh summon sớm",Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-02,Yugi,Khởi tạo,Intro Yugi có thể bỏ qua bằng input phù hợp,"Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Vào màn chơi với Yugi
+2. Nhấn một phím hợp lệ khác Escape hoặc click
+3. Quan sát trạng thái intro",KEY_ANY không phải Escape,Intro kết thúc theo _input; người chơi có thể điều khiển sau khi intro không còn active,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-03,Yugi,Chuột trái,"Nhả LMB trước 0,65s sử dụng đòn thường","Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Khi intro hết, nhấn giữ chuột trái 0,2s
+2. Nhả chuột gần quái
+3. Quan sát đòn summon",hold=0.2s,"Thực hiện left-click, multiplier=1 và action duration 0,6s",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-04,Yugi,Chuột trái,"Giữ LMB ít nhất 0,65s dùng charged attack","Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Giữ chuột trái 0,8s
+2. Nhả trước mục tiêu
+3. So sánh với đánh thường",hold=0.8s,"Thực hiện hold&release-left-click, damage multiplier=2, không chọn đòn thường",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-05,Yugi,Chuột phải,Nhả RMB sớm triệu hồi tại vị trí hướng tới,"Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Đứng trước địch và trỏ một vị trí hợp lệ
+2. Giữ RMB 0,2s rồi thả
+3. Theo dõi summon",RMB=0.2s,"Tạo right-click summon theo hướng ngắm, multiplier=1; vị trí có kiểm tra tường",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-06,Yugi,Chuột phải,"Giữ RMB 0,65s chuyển sang charged summon","Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Giữ RMB 0,8s hướng vào hành lang hợp lệ
+2. Thả và quan sát sát thương",RMB=0.8s,Tạo hold&release-right-click với multiplier=3; không dùng nhầm dạng thường,Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-07,Yugi,Chuột phải,Không triệu hồi xuyên vào ô tường,"Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Chỉ vào vị trí sát tường/không có khoảng đứng
+2. Thả RMB
+3. Quan sát vị trí và số đối tượng sinh ra",Wall blocked,Vị trí được điều chỉnh về ô an toàn hoặc huỷ summon khi không tìm được vị trí khác người chơi,Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-08,Yugi,Phòng thủ,Giữ Shift kích hoạt GuardSummon và giảm vận tốc,"Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Giữ Shift khi không cast
+2. Di chuyển cùng hướng trong 1s
+3. Quan sát guard sprite và quãng đường",Shift,GuardSummon xuất hiện; vận tốc khi guarding bằng 25% tốc độ thường,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-09,Yugi,Phòng thủ,Nhả Shift kết thúc trạng thái guard,"Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Giữ Shift để vào guard
+2. Nhả Shift
+3. Quan sát animation và đối tượng GuardSummon",Shift release,"guarding=false; GuardSummon được ẩn, giải phóng và không bị tồn dư node",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-10,Yugi,Phòng thủ,Shift + LMB thực hiện tổ hợp phòng thủ,"Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Giữ Shift
+2. Nhấn chuột trái một lần
+3. Quan sát summon/combat",Shift+LMB,"Thực hiện shift+left+click, multiplier=2; guard bị tắt khi cast bắt đầu",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-11,Yugi,Phòng thủ,Shift + RMB tạo vòng mục tiêu gần,"Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Giữ Shift và nhấn RMB khi có >=2 enemy
+2. Quan sát TargetRing
+3. Đếm mục tiêu nhận ring",Shift+RMB,"Gắn TargetRing cho tối đa 2 mục tiêu theo _nearest_ring_targets(), không tạo ở địch ngoài điều kiện",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-12,Yugi,Q,Q chọn đúng một trong năm phép nguyên tố,"Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Ghi một run Yugi với Q sẵn sàng
+2. Kích Q nhiều lần trên các run seed khác nhau
+3. Quan sát kết quả và cooldown",result 1..5,"result từ 1..5 ánh xạ lần lượt RoomBlast, RoomLaser, RoomLightning, RoomPull, RoomFire; mỗi lượt cast chỉ kích một phép",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-13,Yugi,Q,Phép RoomBlast tạo đối tượng hiệu ứng riêng,"Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Đưa input Q result=1 qua test harness/replay hợp lệ
+2. Quan sát node được tạo",result=1,Sinh RoomBlast có caster=self ở vị trí hợp lệ theo hướng ngắm,Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-14,Yugi,Q,Phép RoomLaser tạo hiệu ứng laser,"Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Chạy Yugi với input result=2
+2. Quan sát node và hiệu ứng",result=2,"Sinh RoomLaser, damage_per_tick từ get_total_damage(), hướng ngắm hợp lệ",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-15,Yugi,Q,Phép RoomLightning tạo hiệu ứng sét,"Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Chạy Yugi với input result=3
+2. Quan sát lightning và mục tiêu",result=3,Sinh RoomLightning với damage = 4 × get_total_damage(),Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-16,Yugi,Q,Phép RoomPull tạo hiệu ứng kéo,"Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Chạy Yugi với input result=4
+2. Quan sát quái và hướng kéo",result=4,"Sinh RoomPull theo facing, damage = 4 × get_total_damage()",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-17,Yugi,Q,Phép RoomFire tạo vùng cháy,"Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Chạy Yugi với input result=5
+2. Quan sát vùng lửa theo thời gian",result=5,"Sinh RoomFire với damage_per_tick = get_total_damage(), không thay bằng loại phép khác",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-18,Yugi,Q,Q không thực thi khi chưa hồi xong,"Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Nhấn Q lần đầu
+2. Nhấn lại trước hết skill cooldown
+3. Đợi hết và nhấn tiếp",cooldown 12s,"Không cast Q thêm trong cooldown, không ghi nhận hai spell cùng lượt",Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-YG-19,Yugi,Replay,Yugi replay tái hiện press/release và Q result,"Đã chọn Yugi (hero_idx=4), intro hoàn thành nếu không kiểm tra intro","1. Ghi run có LMB ngắn/dài, RMB ngắn/dài, Shift và Q
+2. Mở Combat Replay cùng seed
+3. So sánh loại summon",Input replay event,"Trường lp/lr/rp/rr, shift và result được bảo toàn để phát lại đúng đòn đã thi triển",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Yugi/yugi.gd
+TC-DR-01,Doraemon,Khởi tạo,Doraemon tạo thanh power và HUD gadget,"Đã vào dungeon với Doraemon (hero_idx=5), có thể đặt power qua debug/test harness khi cần","1. Chọn Doraemon bắt đầu run
+2. Quan sát 4D Pocket HUD, trang đầu và power
+3. Thử LMB/RMB khi cooldown=0","page=0, power=0",Trang mặc định 0 hiển thị Air Cannon / Door; power ban đầu 0 và HUD phản ánh hai gadget theo trang,Giao diện,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-02,Doraemon,Điều hướng gadget,Phím X chuyển sang trang gadget kế tiếp,"Đã vào dungeon với Doraemon (hero_idx=5), có thể đặt power qua debug/test harness khi cần","1. Đang ở trang 1/10
+2. Nhấn X một lần và quan sát HUD
+3. Nhấn nhiều lần liên tiếp",KEY_X,"Chỉ số page tăng theo số trang, tên LMB/RMB/Super đổi theo cấu hình PAGES",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-03,Doraemon,Điều hướng gadget,Phím Z chuyển về trang gadget trước,"Đã vào dungeon với Doraemon (hero_idx=5), có thể đặt power qua debug/test harness khi cần","1. Chuyển sang trang 4/10
+2. Nhấn Z
+3. Quan sát trang hiện tại",KEY_Z,Chỉ số page giảm một trang và HUD cập nhật đúng danh sách gadget,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-04,Doraemon,Điều hướng gadget,Cuộn chuột thay đổi trang gadget,"Đã vào dungeon với Doraemon (hero_idx=5), có thể đặt power qua debug/test harness khi cần","1. Chọn Doraemon trong game
+2. Cuộn wheel up rồi wheel down
+3. Quan sát trang/nhãn",MOUSE_BUTTON_WHEEL,Wheel thay đổi page đúng chiều quy định và không kích LMB/RMB nhầm,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-05,Doraemon,Điều hướng gadget,Chuyển trang ở biên 0 và 9 không lỗi,"Đã vào dungeon với Doraemon (hero_idx=5), có thể đặt power qua debug/test harness khi cần","1. Đi đến trang 0, nhấn Z
+2. Đi đến trang 9, nhấn X
+3. Quan sát page/HUD",page=0/9,"Điều hướng biên xử lý theo vòng hoặc quy tắc trong code, luôn giữ page trong 0..9, không IndexError",Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-06,Doraemon,Năng lượng,Power có trần 300,"Đã vào dungeon với Doraemon (hero_idx=5), có thể đặt power qua debug/test harness khi cần","1. Dùng công cụ test add_power nhiều lần vượt mức 300
+2. Kiểm tra biến power/HUD
+3. Tiếp tục cộng",POWER_MAX=300,"Power không vượt POWER_MAX=300, HUD phản ánh số thanh tương ứng",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-07,Doraemon,Năng lượng,Q dưới 100 power triệu hồi đồng đội,"Đã vào dungeon với Doraemon (hero_idx=5), có thể đặt power qua debug/test harness khi cần","1. Đặt power=50, friend_cd=0
+2. Nhấn Q và theo dõi
+3. Quan sát power và cooldown",power=50,Kích hoạt nhánh friend thay vì Super; friend_index tăng và friend_cd bắt đầu từ 8s có thể chịu perk CDR,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-08,Doraemon,Năng lượng,Q từ 100 power kích hoạt Super đúng trang,"Đã vào dungeon với Doraemon (hero_idx=5), có thể đặt power qua debug/test harness khi cần","1. Đặt power=100 trên trang 1
+2. Nhấn Q
+3. Kiểm tra power và mode","power=100, BAR=100","Kích hoạt Super của trang đã chọn và tiêu hao ít nhất 100 power, không gọi friend",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-09,Doraemon,Năng lượng,Power 99 không được phép dùng Super,"Đã vào dungeon với Doraemon (hero_idx=5), có thể đặt power qua debug/test harness khi cần","1. Đặt power=99 và cooldown friend=0
+2. Nhấn Q
+3. Theo dõi hành động và power",power=99,"Điều kiện power>=100 không đạt; hệ thống chuyển qua friend, không chạy Super",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-10,Doraemon,Đồng đội,Sáu đồng đội xoay vòng khi dùng Q dưới 100,"Đã vào dungeon với Doraemon (hero_idx=5), có thể đặt power qua debug/test harness khi cần","1. Đặt power<100, lần lượt reset/đợi friend_cd
+2. Nhấn Q sáu lần và ghi tên hiệu ứng
+3. Nhấn lần thứ 7",6 FRIENDS,"Thứ tự Nobita → Gian → Shizuka → Dorami → Suneo → Come-come Cat → Nobita, không vượt chỉ số mảng",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-11,Doraemon,Đồng đội,Bạn đồng hành không được triệu hồi khi còn cooldown,"Đã vào dungeon với Doraemon (hero_idx=5), có thể đặt power qua debug/test harness khi cần","1. Power<100, dùng Q lần đầu
+2. Nhấn Q lần nữa trước 8s
+3. Nhấn lại sau 8s",FRIEND_COOLDOWN=8s,friend_index không tăng và không sinh đồng đội mới khi friend_cd>0,Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-12,Doraemon,Đồng đội,Shizuka gây stun khi hỗ trợ,"Đã vào dungeon với Doraemon (hero_idx=5), có thể đặt power qua debug/test harness khi cần","1. Power<100, tiến vòng friend_index đến Shizuka
+2. Chọn địch trong phạm vi tìm mục tiêu và nhấn Q
+3. Theo dõi trạng thái địch",friend=shizuka,Shizuka dùng _friend_from_below với damage x2 và stun_time=1s khi hit hợp lệ,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-13,Doraemon,Đồng đội,Come-come Cat đánh nhiều mục tiêu rồi trở về,"Đã vào dungeon với Doraemon (hero_idx=5), có thể đặt power qua debug/test harness khi cần","1. Đưa friend_index tới cat
+2. Đứng trước nhóm quái rồi nhấn Q
+3. Quan sát hiệu ứng nhiều hit",friend=cat,"Cat dùng walker có max_targets=3, stun_time=0,6s và relocate_to chủ, không đứng lại vĩnh viễn",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-14,Doraemon,Dorayaki,Phím F ăn Dorayaki với cooldown 12s,"Đã vào dungeon với Doraemon (hero_idx=5), có thể đặt power qua debug/test harness khi cần","1. Chọn Doraemon đang thiếu máu
+2. Nhấn F và quan sát hồi phục/power
+3. Nhấn F lại trước và sau 12s","KEY_F, EAT_COOLDOWN=12s",Ăn chỉ kích hoạt khi eat_cd<=0; chế độ eat bắt đầu; không ăn liên tục bỏ qua cooldown,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-15,Doraemon,Replay,Replay ghi lại chuyển trang gadget và phím F,"Đã vào dungeon với Doraemon (hero_idx=5), có thể đặt power qua debug/test harness khi cần","1. Ghi run chuyển trang Z/X, bắn 2 gadget, dùng F và Q
+2. Phát replay cùng seed
+3. So sánh page, eat, q, atk, rmb","pg,eat",Các trường pg/eat/atk/rmb/q được ghi và đọc theo frame; trang và hành động tái hiện đúng lịch,Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-16,Doraemon,Phòng thủ,Các chế độ bất tử của Doraemon không nhận damage,"Đã vào dungeon với Doraemon (hero_idx=5), có thể đặt power qua debug/test harness khi cần","1. Kích hoạt một mode thuộc danh sách INVULNERABLE_MODES
+2. Cho projectile va chạm trong mode
+3. So sánh với sau khi mode kết thúc",INVULNERABLE_MODES,"Trong mode door/screw/sl/uradora_dash/uradora_tf/uradora_kick/punch, take_damage không gây HP loss như khi thường",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-17,Doraemon,Bộ gadget,Trang 1 dùng đúng gadget LMB/RMB: Air Cannon / Door,"Doraemon đang ở dungeon, cooldown các gadget bằng 0","1. Dùng Z/X hoặc wheel chuyển tới trang 1
+2. Nhấn LMB kích hoạt air_cannon
+3. Nhấn RMB kích hoạt door và quan sát hiệu ứng",page=0; LMB=air_cannon; RMB=door,HUD thể hiện đúng cặp Air Cannon / Door; Air Cannon tạo đạn hướng ngắm; Anywhere Door thử tìm điểm đến an toàn và dịch chuyển qua mode door; mỗi gadget tuân cooldown của MOVES và không kích nhầm gadget trang khác,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-18,Doraemon,Bộ gadget,Trang 2 dùng đúng gadget LMB/RMB: Kick / Glove,"Doraemon đang ở dungeon, cooldown các gadget bằng 0","1. Dùng Z/X hoặc wheel chuyển tới trang 2
+2. Nhấn LMB kích hoạt kick
+3. Nhấn RMB kích hoạt glove và quan sát hiệu ứng",page=1; LMB=kick; RMB=glove,HUD thể hiện đúng cặp Kick / Glove; Kick gây đòn cận chiến; Champion Glove thực hiện chuỗi 3 beat với khoảng đẩy/stun cuối; mỗi gadget tuân cooldown của MOVES và không kích nhầm gadget trang khác,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-19,Doraemon,Bộ gadget,Trang 3 dùng đúng gadget LMB/RMB: Air Pistol / Shock Gun,"Doraemon đang ở dungeon, cooldown các gadget bằng 0","1. Dùng Z/X hoặc wheel chuyển tới trang 3
+2. Nhấn LMB kích hoạt air_pistol
+3. Nhấn RMB kích hoạt shock_gun và quan sát hiệu ứng",page=2; LMB=air_pistol; RMB=shock_gun,HUD thể hiện đúng cặp Air Pistol / Shock Gun; Air Pistol tạo loạt projectile; Shock Gun nhắm mục tiêu gần con trỏ hoặc theo aim; mỗi gadget tuân cooldown của MOVES và không kích nhầm gadget trang khác,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-20,Doraemon,Bộ gadget,Trang 4 dùng đúng gadget LMB/RMB: Ataru Gun / Missile,"Doraemon đang ở dungeon, cooldown các gadget bằng 0","1. Dùng Z/X hoặc wheel chuyển tới trang 4
+2. Nhấn LMB kích hoạt ataru_gun
+3. Nhấn RMB kích hoạt pencil_missile và quan sát hiệu ứng",page=3; LMB=ataru_gun; RMB=pencil_missile,HUD thể hiện đúng cặp Ataru Gun / Missile; Ataru Gun chọn mục tiêu trong tầm 220px; Pencil Missile tạo projectile tại hướng ngắm; mỗi gadget tuân cooldown của MOVES và không kích nhầm gadget trang khác,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-21,Doraemon,Bộ gadget,Trang 5 dùng đúng gadget LMB/RMB: Shock-wave / Bubbles,"Doraemon đang ở dungeon, cooldown các gadget bằng 0","1. Dùng Z/X hoặc wheel chuyển tới trang 5
+2. Nhấn LMB kích hoạt shockwave_pistol
+3. Nhấn RMB kích hoạt bubble_pistol và quan sát hiệu ứng",page=4; LMB=shockwave_pistol; RMB=bubble_pistol,HUD thể hiện đúng cặp Shock-wave / Bubbles; Shock-wave và Bubbles gọi đúng handler và sinh hiệu ứng/phát đạn tương ứng; mỗi gadget tuân cooldown của MOVES và không kích nhầm gadget trang khác,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-22,Doraemon,Bộ gadget,Trang 6 dùng đúng gadget LMB/RMB: Thundercloud / Stick,"Doraemon đang ở dungeon, cooldown các gadget bằng 0","1. Dùng Z/X hoặc wheel chuyển tới trang 6
+2. Nhấn LMB kích hoạt thundercloud
+3. Nhấn RMB kích hoạt shock_stick và quan sát hiệu ứng",page=5; LMB=thundercloud; RMB=shock_stick,HUD thể hiện đúng cặp Thundercloud / Stick; Thundercloud tạo hiệu ứng gọi mây; Shock Stick gây tác động cận chiến tương ứng; mỗi gadget tuân cooldown của MOVES và không kích nhầm gadget trang khác,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-23,Doraemon,Bộ gadget,Trang 7 dùng đúng gadget LMB/RMB: Magic Hand / Screw,"Doraemon đang ở dungeon, cooldown các gadget bằng 0","1. Dùng Z/X hoặc wheel chuyển tới trang 7
+2. Nhấn LMB kích hoạt magic_hand
+3. Nhấn RMB kích hoạt hustle_screw và quan sát hiệu ứng",page=6; LMB=magic_hand; RMB=hustle_screw,HUD thể hiện đúng cặp Magic Hand / Screw; Magic Hand tác động trong tầm cấu hình; Screw vào mode chuyển động tương ứng; mỗi gadget tuân cooldown của MOVES và không kích nhầm gadget trang khác,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-24,Doraemon,Bộ gadget,Trang 8 dùng đúng gadget LMB/RMB: Grenades / Fishing,"Doraemon đang ở dungeon, cooldown các gadget bằng 0","1. Dùng Z/X hoặc wheel chuyển tới trang 8
+2. Nhấn LMB kích hoạt grenades
+3. Nhấn RMB kích hoạt fishing_pond và quan sát hiệu ứng",page=7; LMB=grenades; RMB=fishing_pond,HUD thể hiện đúng cặp Grenades / Fishing; Grenades tạo vật thể ném; Fishing Pond tạo hiệu ứng/vùng tác động tương ứng; mỗi gadget tuân cooldown của MOVES và không kích nhầm gadget trang khác,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-25,Doraemon,Bộ gadget,Trang 9 dùng đúng gadget LMB/RMB: Kibi-dango / Mini-Dora,"Doraemon đang ở dungeon, cooldown các gadget bằng 0","1. Dùng Z/X hoặc wheel chuyển tới trang 9
+2. Nhấn LMB kích hoạt kibidango
+3. Nhấn RMB kích hoạt minidora và quan sát hiệu ứng",page=8; LMB=kibidango; RMB=minidora,HUD thể hiện đúng cặp Kibi-dango / Mini-Dora; Kibi-dango triệu hồi T-Rex; Mini-Dora tạo hiệu ứng triệu hồi riêng; mỗi gadget tuân cooldown của MOVES và không kích nhầm gadget trang khác,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-26,Doraemon,Bộ gadget,Trang 10 dùng đúng gadget LMB/RMB: Korobashiya / Mantle,"Doraemon đang ở dungeon, cooldown các gadget bằng 0","1. Dùng Z/X hoặc wheel chuyển tới trang 10
+2. Nhấn LMB kích hoạt korobashiya
+3. Nhấn RMB kích hoạt hirari_mantle và quan sát hiệu ứng",page=9; LMB=korobashiya; RMB=hirari_mantle,HUD thể hiện đúng cặp Korobashiya / Mantle; Korobashiya trừ 10 power nếu kích hoạt hợp lệ; Mantle dùng chế độ phản công/phản xạ; mỗi gadget tuân cooldown của MOVES và không kích nhầm gadget trang khác,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-27,Doraemon,Super theo trang,Trang 1 kích hoạt Super uradoraman,"Doraemon đang ở dungeon, có power tối thiểu 100 và mode rảnh","1. Chuyển sang trang gadget 1
+2. Đặt power đủ 1 thanh (hoặc 2/3 thanh với super nhiều thanh)
+3. Nhấn Q và quan sát hiệu ứng, thanh power và số đối tượng",page=0; super=uradoraman; power=100/200/300,"Q thực hiện đúng Super uradoraman: Uradoraman vào mode uradora_dash và có trạng thái invincible; power giảm số thanh tương ứng, không gọi friend",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-28,Doraemon,Super theo trang,Trang 2 kích hoạt Super sl_chimney,"Doraemon đang ở dungeon, có power tối thiểu 100 và mode rảnh","1. Chuyển sang trang gadget 2
+2. Đặt power đủ 1 thanh (hoặc 2/3 thanh với super nhiều thanh)
+3. Nhấn Q và quan sát hiệu ứng, thanh power và số đối tượng",page=1; super=sl_chimney; power=100/200/300,"Q thực hiện đúng Super sl_chimney: SL Chimney vào mode sl, chạy animation sl_run và có trạng thái invincible; power giảm số thanh tương ứng, không gọi friend",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-29,Doraemon,Super theo trang,Trang 3 kích hoạt Super nobita_rush,"Doraemon đang ở dungeon, có power tối thiểu 100 và mode rảnh","1. Chuyển sang trang gadget 3
+2. Đặt power đủ 1 thanh (hoặc 2/3 thanh với super nhiều thanh)
+3. Nhấn Q và quan sát hiệu ứng, thanh power và số đối tượng",page=2; super=nobita_rush; power=100/200/300,"Q thực hiện đúng Super nobita_rush: Nobita bắn tối đa 10 loạt/đòn với final_shot_damage x4; power giảm số thanh tương ứng, không gọi friend",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-30,Doraemon,Super theo trang,Trang 4 kích hoạt Super friendship_controller,"Doraemon đang ở dungeon, có power tối thiểu 100 và mode rảnh","1. Chuyển sang trang gadget 4
+2. Đặt power đủ 1 thanh (hoặc 2/3 thanh với super nhiều thanh)
+3. Nhấn Q và quan sát hiệu ứng, thanh power và số đối tượng",page=3; super=friendship_controller; power=100/200/300,"Q thực hiện đúng Super friendship_controller: Friendship Controller tạo walker suneo_ctrl và vào mode punch invincible; power giảm số thanh tương ứng, không gọi friend",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-31,Doraemon,Super theo trang,Trang 5 kích hoạt Super shizuka_bath,"Doraemon đang ở dungeon, có power tối thiểu 100 và mode rảnh","1. Chuyển sang trang gadget 5
+2. Đặt power đủ 1 thanh (hoặc 2/3 thanh với super nhiều thanh)
+3. Nhấn Q và quan sát hiệu ứng, thanh power và số đối tượng",page=4; super=shizuka_bath; power=100/200/300,"Q thực hiện đúng Super shizuka_bath: Shizuka's Bath tạo chuỗi 40 giọt nước theo lịch hẹn trong vùng mục tiêu; power giảm số thanh tương ứng, không gọi friend",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-32,Doraemon,Super theo trang,Trang 6 kích hoạt Super dorami_balloon,"Doraemon đang ở dungeon, có power tối thiểu 100 và mode rảnh","1. Chuyển sang trang gadget 6
+2. Đặt power đủ 1 thanh (hoặc 2/3 thanh với super nhiều thanh)
+3. Nhấn Q và quan sát hiệu ứng, thanh power và số đối tượng",page=5; super=dorami_balloon; power=100/200/300,"Q thực hiện đúng Super dorami_balloon: Dorami's Balloon phóng đạn homing nổ vùng bán kính 60px và gọi consume_potion(1,0); power giảm số thanh tương ứng, không gọi friend",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-33,Doraemon,Super theo trang,Trang 7 kích hoạt Super gian_recital,"Doraemon đang ở dungeon, có power tối thiểu 100 và mode rảnh","1. Chuyển sang trang gadget 7
+2. Đặt power đủ 1 thanh (hoặc 2/3 thanh với super nhiều thanh)
+3. Nhấn Q và quan sát hiệu ứng, thanh power và số đối tượng",page=6; super=gian_recital; power=100/200/300,"Q thực hiện đúng Super gian_recital: Gian Recital tạo Gian walker và chuỗi note damage; số thanh tăng thời gian tồn tại; power giảm số thanh tương ứng, không gọi friend",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-34,Doraemon,Super theo trang,Trang 8 kích hoạt Super junk_barrage,"Doraemon đang ở dungeon, có power tối thiểu 100 và mode rảnh","1. Chuyển sang trang gadget 8
+2. Đặt power đủ 1 thanh (hoặc 2/3 thanh với super nhiều thanh)
+3. Nhấn Q và quan sát hiệu ứng, thanh power và số đối tượng",page=7; super=junk_barrage; power=100/200/300,"Q thực hiện đúng Super junk_barrage: Junk Barrage tạo 2+4×số thanh vật thể ném; từ 2 thanh bổ sung fridge; power giảm số thanh tương ứng, không gọi friend",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-35,Doraemon,Super theo trang,Trang 9 kích hoạt Super everyone_takecopter,"Doraemon đang ở dungeon, có power tối thiểu 100 và mode rảnh","1. Chuyển sang trang gadget 9
+2. Đặt power đủ 1 thanh (hoặc 2/3 thanh với super nhiều thanh)
+3. Nhấn Q và quan sát hiệu ứng, thanh power và số đối tượng",page=8; super=everyone_takecopter; power=100/200/300,"Q thực hiện đúng Super everyone_takecopter: Everyone Take-copter gọi 5 đồng đội tấn công lần lượt, tối đa 5 mục tiêu gần; power giảm số thanh tương ứng, không gọi friend",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-DR-36,Doraemon,Super theo trang,Trang 10 kích hoạt Super dorayakin,"Doraemon đang ở dungeon, có power tối thiểu 100 và mode rảnh","1. Chuyển sang trang gadget 10
+2. Đặt power đủ 1 thanh (hoặc 2/3 thanh với super nhiều thanh)
+3. Nhấn Q và quan sát hiệu ứng, thanh power và số đối tượng",page=9; super=dorayakin; power=100/200/300,"Q thực hiện đúng Super dorayakin: Dorayakin gây vụ nổ theo tier: bán kính 34/48/72 khi dùng 1/2/3 thanh; power giảm số thanh tương ứng, không gọi friend",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/Doraemon/doraemon.gd
+TC-PK-01,Perk / Chúc phúc,Roll 3 lựa chọn,Vào giao diện lựa chọn perk sau sự kiện tương ứng,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Chuyển tầng hoặc kích hoạt GameUI.open_perk_selection() theo luồng game
+2. Quan sát modal và số thẻ",3 choices,"Modal hiển thị tối đa 3 thẻ do roll_perks(3,seed,floor) cung cấp; mỗi thẻ có tên và mô tả",Giao diện,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-02,Perk / Chúc phúc,Roll định trước,Cùng seed và floor tạo cùng bộ perk,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Reset active_perks
+2. Gọi roll_perks(3,'QA_PERK',3) và ghi danh sách ID
+3. Reset và gọi lại với cùng tham số","seed=QA_PERK, floor=3",Danh sách ID và thứ tự giống nhau vì dùng RNG với seed kết hợp floor,Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-03,Perk / Chúc phúc,Roll khác tầng,Đổi floor làm thay đổi khóa RNG của perk,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Roll cùng seed tại floor=2
+2. Roll tại floor=3
+3. Đối chiếu khóa RNG và các kết quả",floor=2/3,Roll dùng seed+':perk_floor:'+floor; các lần roll độc lập theo tầng; không dùng lại trạng thái RNG trước,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-04,Perk / Chúc phúc,Roll không lặp,Một lần roll không trả hai thẻ cùng ID,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Gọi roll_perks(3) qua nhiều seed
+2. Đếm ID trùng trong từng kết quả",100 seeds,Các ID trong một lần roll luôn duy nhất nhờ picked_ids,Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-05,Perk / Chúc phúc,Unique perk,Perk unique đã sở hữu bị loại khỏi pool,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Cho PerkManager.add_perk(perk unique)
+2. Gọi roll_perks(3)
+3. Kiểm tra tất cả ID trả về",is_unique=true,Perk unique đang có không nằm trong danh sách roll tiếp theo,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-06,Perk / Chúc phúc,Unique perk,Không cộng chỉ số hai lần khi add cùng perk unique,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Thêm một perk unique +1 damage
+2. Gọi add_perk lại với object tương đương cùng ID
+3. Kiểm tra số active_perks và damage",same perk ID,Chỉ sở hữu 1 bản perk cùng ID; chỉ số không bị cộng lại lần hai,Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-07,Perk / Chúc phúc,Rarity,Roll theo trọng số phẩm cấp ở mỗi tầng,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Lấy mẫu nhiều seed ở floor1 và floor8
+2. Đếm rarity và đối chiếu logic common/rare/epic/legendary
+3. Không can thiệp RNG production",floors 1 and 8,Các lựa chọn tuân ngưỡng trọng số trong PerkManager; floor cao tăng khả năng Epic/Legendary theo config,Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-08,Perk / Chúc phúc,Modal,Chọn một thẻ xong đóng modal và nhận perk,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Mở modal có ba lựa chọn
+2. Click một thẻ
+3. Theo dõi active_perks và modal",1 card,"Thẻ được thêm đúng 1 lần; perk_chosen emit, modal đóng và UI hiện banner tên perk",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-09,Perk / Chúc phúc,Modal,Chọn perk hiển thị màu và icon theo rarity,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Mở nhiều lần qua seed phù hợp
+2. Quan sát tên rarity, đường viền, icon của các cấp
+3. Đối chiếu PerkData",COMMON/RARE/EPIC/LEGENDARY,"Viền, badge và icon tương ứng với rarity; không hiển thị ô trống do lỗi texture",Giao diện,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-10,Perk / Chúc phúc,Chỉ số,Perk bonus_hp cập nhật max HP và HP hiện tại,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Đặt HP 2/4 rồi nhận perk iron_sinew
+2. Quan sát HP/maxHP và HUD",iron_sinew,"bonus_hp=1 làm base_max_hp,max_hp,hp tăng 1, HUD nhận stats_changed",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-11,Perk / Chúc phúc,Chỉ số,Perk bonus_armor cộng vào giới hạn giáp,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Ghi max_armor/current_armor
+2. Nhận perk iron_sinew hoặc sturdy_plating
+3. So sánh giá trị",sturdy_plating,"base_armor, max_armor, current_armor tăng đúng bonus_armor được khai báo",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-12,Perk / Chúc phúc,Chỉ số,Perk speed_bonus tăng tốc độ nhân vật,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Đo tốc độ trước perk
+2. Thêm swift_stride
+3. Đo tốc độ sau",swift_stride=15,"player.speed tăng đúng 15 theo modifier speed_bonus, không cộng vào HP/damage",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-13,Perk / Chúc phúc,Chỉ số,Perk damage_bonus tăng sát thương trực tiếp,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Ghi base_damage ban đầu
+2. Nhận sharpened_edge
+3. Đánh cùng loại quái",sharpened_edge,base_damage tăng đúng 1; tính năng chiến đấu sử dụng damage mới,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-14,Perk / Chúc phúc,Hồi phục,Perk heal_instant không vượt máu tối đa,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Đặt HP=maxHP-1
+2. Thêm vitality_essence
+3. Đối chiếu HP/maxHP",vitality_essence,"bonus_hp cộng trước, hồi heal_instant dùng mini(max_hp,hp+2), không vượt maxHP",Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-15,Perk / Chúc phúc,CDR,Cooldown reduction cộng dồn không quá 60%,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Tạo dữ liệu perk cho tổng cooldown_reduction=0.8
+2. Gọi get_cooldown_reduction()
+3. So với giới hạn",CDR total=0.8,"Giá trị trả về được clamp vào khoảng 0..0,60",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-16,Perk / Chúc phúc,Giáp hồi,Perk giảm thời gian trễ hồi giáp có giới hạn,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Đặt armor_regen_delay ở giá trị 2s
+2. Nhận miner_fortitude
+3. Đọc timer.wait_time",miner_fortitude,"Thời gian chờ hồi giáp giảm 1s nhưng không thấp hơn 1s, timer cập nhật",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-17,Perk / Chúc phúc,Chí mạng,Query crit_chance và crit_multiplier đúng modifier,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Gắn perk có crit_chance và crit_multiplier vào player
+2. Đọc hai hàm query
+3. Kiểm tra damage trên bộ input có RNG kiểm soát","crit_chance, crit_multiplier","crit_chance là tổng từ perk; crit_multiplier chọn giá trị cao nhất, tối thiểu 2.0",Tích hợp,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-18,Perk / Chúc phúc,Đốt và sét,On-hit perk bật đúng hook burn/lightning,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Thêm perk có on_hit_burn hoặc on_hit_lightning
+2. Tấn công mục tiêu có thể chịu hiệu ứng
+3. Kiểm tra hook và effect",on_hit_burn/lightning,"has_burn_on_hit/has_lightning_on_hit phản ánh modifier, effect chỉ kích khi sở hữu perk phù hợp",Tích hợp,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-19,Perk / Chúc phúc,Bẫy gai,Spike immunity perk ngăn bẫy gây sát thương,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Nhận perk có spike_immune=true
+2. Đứng trên spike trap khi kích hoạt
+3. So với run không perk",spike_immune,"PerkManager.is_spike_immune trả true, luồng trap tôn trọng khả năng miễn sát thương",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-20,Perk / Chúc phúc,Cơ hội thứ hai,Second Chance chỉ tiêu thụ một lần,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Nhận perk second_chance=true
+2. Kích điều kiện tiêu thụ và gọi consume_second_chance 2 lần",second_chance,Lần đầu return true và second_chance_used bật; lần thứ hai trả false đến khi reset,Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-21,Perk / Chúc phúc,On kill,Perk hồi máu khi giết quái không vượt max HP,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Có on_kill_heal_chance, đặt HP<maxHP
+2. Giết quái theo RNG kiểm soát trúng chance
+3. Quan sát HP/HUD",on_kill_heal_chance,"Khi roll thành công, HP hồi 1 và không vượt maxHP, phát stats_changed",Tích hợp,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-22,Perk / Chúc phúc,Perk giữa các run,Tạo run mới phải reset active_perks,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Nhận ít nhất một perk và xác nhận buff
+2. Bắt đầu run mới hoặc reset PerkManager
+3. Quan sát active_perks và buff",PerkManager.reset,"Danh sách perk về rỗng, second chance được reset, luồng stats được làm mới",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-23,Perk / Chúc phúc,Damage lẻ,"Stochastic damage 2,5 gây 2 hoặc 3",Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Trong test harness gọi resolve_stochastic_damage(2.5) qua seed RNG có kiểm soát
+2. Đếm giá trị trả về",raw_damage=2.5,Chỉ có giá trị 2 hoặc 3; phần 0.5 được dùng làm xác suất cộng 1,Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-PK-24,Perk / Chúc phúc,Damage lẻ,Stochastic damage không âm cho input không dương,Project development mở được; cần Godot test harness hoặc giao diện game để tạo các trạng thái perk,"1. Gọi resolve_stochastic_damage(0.0)
+2. Gọi với -3.0 rồi 1.0","0,-3,1","Input <=0 trả 0; 1.0 trả 1, không tạo số âm hoặc NaN",Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Perks/PerkManager.gd
+TC-RP-01,Replay & lịch sử,Ghi input,Frame combat hợp lệ được ghi vào current_recording_frames,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Bắt đầu run normal chưa replay
+2. Di chuyển/đánh trong 10 physics frame
+3. Đọc current_recording_frames",normal run,Frame có dx/dy/ax/ay và các action được ghi khi không replay và chưa vượt MAX_REPLAY_FRAMES,Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-02,Replay & lịch sử,Ghi input,Không tiếp tục record khi đang replay,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Chuẩn bị replay hợp lệ và bắt đầu is_replaying=true
+2. Gọi record_frame_input(frame)
+3. Đo số lượng current_recording_frames",is_replaying=true,"Số frame không tăng, không làm bẩn nội dung được ghi gốc",Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-03,Replay & lịch sử,Ghi input,Frame idle lặp được nén,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Ghi một frame đứng yên với aim không đổi
+2. Ghi lại frame idle cùng aim liên tục
+3. Đếm số frame","dx=dy=0, action=false","Frame idle trùng điều kiện bị bỏ qua, không lưu lặp lại dữ liệu đứng yên không thay đổi",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-04,Replay & lịch sử,Ghi input,Idle thay hướng ngắm không bị nén sai,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Ghi frame idle aim x=32
+2. Ghi frame idle tiếp theo aim x=45
+3. Đọc danh sách frame",ax=32 ->45,Frame thứ hai được lưu vì delta aim vượt ngưỡng <1.0 dùng trong anti-DoS,Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-05,Replay & lịch sử,Giới hạn frame,Bộ nhớ replay không vượt 18.000 frame,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Gọi record_frame_input với 18.005 frame thay đổi
+2. Đọc current_recording_frames.size()",MAX_REPLAY_FRAMES=18000,"Kích thước tối đa 18.000, frame vượt giới hạn bị bỏ qua",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-06,Replay & lịch sử,Làm sạch frame,Vector di chuyển replay bị clamp -1 đến 1,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Gọi _sanitize_replay_frames với dx=99,dy=-8
+2. Đọc frame output","dx=99,dy=-8","dx=1.0, dy=-1.0, không làm phát sinh tốc độ di chuyển vượt input hợp lệ",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-07,Replay & lịch sử,Làm sạch frame,Aim vô cực hoặc NaN được thay bằng mặc định,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Đưa ax/ay vô hạn, NaN bằng test harness
+2. Gọi _sanitize_replay_frames
+3. Kiểm tra giá trị","INF, NAN","Non-finite aim được thay bằng giá trị hữu hạn mặc định, không truyền NaN vào physics",Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-08,Replay & lịch sử,Làm sạch frame,Dữ liệu input sai kiểu được đặt fallback an toàn,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Truyền frame có atk='true', slot='abc', dx='fast'
+2. Gọi sanitizer
+3. Đọc kết quả",malformed frame,"Không crash; boolean sai kiểu trở thành false, slot mặc định -1, dx mặc định 0",Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-09,Replay & lịch sử,Làm sạch frame,Slot replay ngoài giới hạn được clamp,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Sanitize slot=-99 và slot=900
+2. Đọc giá trị đầu ra","slot=-99,900","slot được clamp vào [-1,15], không thể truy cập túi ngoài range",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-10,Replay & lịch sử,Làm sạch frame,Các action bổ sung của nhân vật có trong frame,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Sanitize frame có shift/lp/lr/rp/rr/result/pg/eat
+2. Đối chiếu output và input hợp lệ",special input keys,"Giữ trường phục vụ Yugi/Miyabi/Doraemon; result 0..5, pg -10..10, eat kiểu bool",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-11,Replay & lịch sử,Phát replay,Replay có frame bắt đầu đúng hero và seed,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Tạo run có frames hợp lệ và hero_idx=6
+2. Gọi start_action_replay(entry)
+3. Đọc is_replaying và selected_character_index",hero_idx=6,"Run replay khởi tạo đúng hero, seed và dữ liệu frames đã sanitize, chuyển vào world.tscn",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-12,Replay & lịch sử,Phát replay,Replay trống nhưng có seed chuyển thành Retry,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Tạo run_entry có seed nhưng frames=[]
+2. Gọi start_action_replay(entry)
+3. Quan sát kết quả",frames=[]; seed=QA,"Hệ thống gọi replay_seed_run() để chơi lại seed ở normal mode, không cố đọc frame rỗng",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-13,Replay & lịch sử,Phát replay,Replay không có seed và frame bị từ chối,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Tạo run_entry trống và last_recorded_run trống
+2. Gọi start_action_replay({})
+3. Kiểm tra kết quả",entry={},"Hàm trả false, không tự ý chuyển scene khi không đủ dữ liệu",Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-14,Replay & lịch sử,Giới hạn lưu,Lưu không quá 10 replay chứa input,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Tạo 12 run_history entries có frames và has_replay
+2. Gọi enforce_replay_limits
+3. Đếm số entry còn frames",12 entries,"Tối đa 10 replay dữ liệu còn lại; entry cũ hơn bị xóa frames và has_replay=false, metadata vẫn còn",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-15,Replay & lịch sử,Giới hạn lưu,Lưu frame trên đĩa giới hạn 3.600,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Tạo save JSON có replay 4.000 frame hợp lệ
+2. Gọi load_save_data() trong môi trường test riêng
+3. Đọc số frames trong run_history",4000 frames,Mỗi replay disk chỉ nạp tối đa MAX_DISK_REPLAY_FRAMES=3600 frames,Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-16,Replay & lịch sử,Xóa Replay,Xóa một replay giữ metadata run history,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Tạo run lịch sử có seed,date,hero và frames
+2. Gọi delete_replay(entry) hoặc chọn Del tương ứng
+3. Đọc lại run_history",delete_replay,"has_replay=false, frames rỗng; record run history còn tồn tại, số replay đã lưu giảm",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-17,Replay & lịch sử,Xóa Replay,Xóa replay không tồn tại phải trả false,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Tạo một run_history entry
+2. Truyền dictionary khác seed/date vào delete_replay
+3. So sánh run_history trước/sau",unmatched entry,Trả false và không xóa dữ liệu của entry khác,Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-18,Replay & lịch sử,Xóa Replay,Xóa toàn bộ replay không xóa lịch sử run,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Tạo lịch sử nhiều run có replay
+2. Gọi clear_all_replays()
+3. Quan sát metadata và arrays",clear_all_replays,"Frames của tất cả run rỗng và has_replay=false; run_history metadata còn, current recording và last recorded được dọn",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-19,Replay & lịch sử,Xóa lịch sử,Chỉ số xóa lịch sử ngoài range bị từ chối,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Tạo run_history 2 entry
+2. Gọi delete_run_history_entry(-1) và (100)
+3. Đọc trạng thái và dữ liệu","index=-1,100","Hai lần đều trả false, không loại bỏ entry khác",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-20,Replay & lịch sử,UI lưu trữ,Menu Chronicles hiển thị đúng tùy chọn Replay/Retry,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Tạo một run đã ghi replay và một run chỉ có seed
+2. Mở Saved Seeds & Combat Replays
+3. Quan sát nút mỗi dòng",2 entries,"Run có frames hiển thị Retry, Replay và Del; run không có replay chỉ có Retry, không cung cấp Replay vô hiệu",Giao diện,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-21,Replay & lịch sử,UI lưu trữ,Bộ đếm replay UI đúng số dữ liệu thực,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Tạo 3 entry has_replay=true chứa frames
+2. Mở modal history
+3. Quan sát nhãn Saved: x/10",3 replay,"Nhãn hiển thị Saved: 3/10 dựa trên get_saved_replays_count(), không đếm metadata-only",Giao diện,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-RP-22,Replay & lịch sử,UI replay,Take Control kết thúc chế độ phát replay,"Chạy project development bằng Godot; với các hàm nội bộ dùng SceneTree test riêng, không ghi đè save thật","1. Mở một action replay hợp lệ
+2. Nhấn Take Control trên banner
+3. Quan sát điều khiển và replay_banner",Take Control,"GameManager.is_replaying=false, banner được ẩn; người chơi trở lại điều khiển trực tiếp",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-SD-01,Seed & dữ liệu lưu,Sanitize seed,Seed loại ký tự không hợp lệ và thay dấu cách,Sử dụng bản test riêng của user:// để bảo vệ dữ liệu chơi thật; có thể chạy GDScript harness,"1. Gọi sanitize_seed('  QA seed!*  ')
+2. Đối chiếu chuỗi đầu ra",  QA seed!*  ,"Chuỗi được trim, khoảng trắng đổi '_', dấu ! và * bị bỏ; kết quả 'QA_seed'",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-SD-02,Seed & dữ liệu lưu,Sanitize seed,Seed bị giới hạn tối đa 32 ký tự,Sử dụng bản test riêng của user:// để bảo vệ dữ liệu chơi thật; có thể chạy GDScript harness,"1. Tạo seed 50 ký tự hợp lệ
+2. Gọi sanitize_seed
+3. Đếm length",50 chữ A,"Kết quả dài không quá MAX_SEED_LENGTH=32, không sinh ký tự mới bất hợp lệ",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-SD-03,Seed & dữ liệu lưu,Sanitize note,Note không nhận thẻ HTML hoặc ký tự điều khiển,Sử dụng bản test riêng của user:// để bảo vệ dữ liệu chơi thật; có thể chạy GDScript harness,"1. Gọi sanitize_note('<b>abc</b>\nend')
+2. Đối chiếu output",<b>abc</b>,"Loại '<','>' và control char; không đưa ký tự điều khiển vào save metadata",Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-SD-04,Seed & dữ liệu lưu,Sanitize note,Note dài quá 80 ký tự được cắt,Sử dụng bản test riêng của user:// để bảo vệ dữ liệu chơi thật; có thể chạy GDScript harness,"1. Tạo note 100 ký tự
+2. Gọi sanitize_note
+3. Đo độ dài",100 chữ a,"Note xử lý tối đa 80 ký tự đầu vào, không vượt MAX_NOTE_LENGTH",Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-SD-05,Seed & dữ liệu lưu,Seed list,Lưu cùng một seed không tạo bản ghi trùng,Sử dụng bản test riêng của user:// để bảo vệ dữ liệu chơi thật; có thể chạy GDScript harness,"1. Lưu seed QA_TEST với note A
+2. Lưu lại cùng seed với note B
+3. Đếm entry",QA_TEST,"Chỉ có một saved_seed cho QA_TEST; bản mới lên đầu, note được cập nhật",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-SD-06,Seed & dữ liệu lưu,Seed list,Danh sách saved seed chỉ giữ tối đa 20,Sử dụng bản test riêng của user:// để bảo vệ dữ liệu chơi thật; có thể chạy GDScript harness,"1. Lưu 22 seed hợp lệ khác nhau
+2. Kiểm tra kích thước và thứ tự saved_seeds",MAX_SAVED_SEEDS=20,Danh sách có tối đa 20; seed cũ nhất bị đẩy khỏi cuối khi quá giới hạn,Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-SD-07,Seed & dữ liệu lưu,Seed list,Xóa seed từ UI không xóa run_history,Sử dụng bản test riêng của user:// để bảo vệ dữ liệu chơi thật; có thể chạy GDScript harness,"1. Lưu một seed và ghi một run cùng seed
+2. Tại modal nhấn Del bên Saved Seeds
+3. Quan sát run history",seed QA_A,Seed bị loại khỏi saved_seeds; record lịch sử run không bị xóa nhầm,Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-SD-08,Seed & dữ liệu lưu,Tạo seed,Khi seed rỗng tạo seed random an toàn,Sử dụng bản test riêng của user:// để bảo vệ dữ liệu chơi thật; có thể chạy GDScript harness,"1. Gọi set_seed('   ')
+2. Quan sát current_seed và thông báo seed_changed",seed blank,"current_seed được thay bằng generate_random_seed(), không còn chuỗi rỗng",Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-SD-09,Seed & dữ liệu lưu,Run history,Lịch sử run giới hạn 15 bản ghi,Sử dụng bản test riêng của user:// để bảo vệ dữ liệu chơi thật; có thể chạy GDScript harness,"1. Tạo 17 run liên tiếp và finish_run đúng luồng
+2. Đọc run_history theo thứ tự",17 runs,"Có tối đa MAX_RUN_HISTORY=15, run mới được ghi và run cũ nhất bị loại khi quá giới hạn",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-SD-10,Seed & dữ liệu lưu,Save/load,"Lưu rồi tải giữ seed, hero, history",Sử dụng bản test riêng của user:// để bảo vệ dữ liệu chơi thật; có thể chạy GDScript harness,"1. Trong sandbox save profile: set seed/hero và ghi history
+2. Gọi save_data_to_disk
+3. Khởi động lại sandbox rồi load_save_data",temporary user:// profile,"current_seed, selected_character_index, saved_seeds, run_history và last_recorded_run được khôi phục phù hợp JSON",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-SD-11,Seed & dữ liệu lưu,Save/load,Save JSON bị hỏng không crash game,Sử dụng bản test riêng của user:// để bảo vệ dữ liệu chơi thật; có thể chạy GDScript harness,"1. Trong sandbox ghi JSON không hợp lệ vào save path
+2. Chạy load_save_data()
+3. Quan sát Output/trạng thái",invalid JSON,Không phát sinh crash/ngoại lệ không xử lý; dữ liệu nội bộ không bị biến thành object sai kiểu,Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-SD-12,Seed & dữ liệu lưu,Save/load,Giới hạn file save 2 MB chống dữ liệu quá lớn,Sử dụng bản test riêng của user:// để bảo vệ dữ liệu chơi thật; có thể chạy GDScript harness,"1. Tạo file save trên sandbox >2MB
+2. Gọi load_save_data
+3. Quan sát kết quả/error",>2MB,"Không nạp nội dung vượt MAX_SAVE_FILE_BYTES=2097152, không gây treo hoặc tăng RAM bất thường",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-SD-13,Seed & dữ liệu lưu,Seed/Map,"Cùng seed, khác tầng sinh world seed có hậu tố",Sử dụng bản test riêng của user:// để bảo vệ dữ liệu chơi thật; có thể chạy GDScript harness,"1. Đặt seed 'QA_FLOOR', current_level=1 và gọi effective seed
+2. Đổi tầng 2 rồi gọi lại",QA_FLOOR; floors1/2,"Tầng 1 dùng QA_FLOOR; tầng 2 dùng QA_FLOOR_2, tạo thế giới khác cho floor mới",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/GameManager.gd
+TC-SK-01,Skeleton King,Sinh boss,Skeleton King xuất hiện tại các tầng chia hết cho 3,Có thể vào arena Skeleton King trong Godot development; cho phép test scene và quan sát debugger,"1. Bắt đầu run có thể tăng đến tầng 3
+2. Vào boss room ở tầng 3 rồi tầng 6
+3. So với tầng 2/4","floors 2,3,4,6","Tầng 3,6 sử dụng Skeleton King trong arena riêng; tầng không chia hết cho 3 dùng boss tương ứng",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/Boss/Skeleton%20King/skeleton_king.gd
+TC-SK-02,Skeleton King,Arena,Arena Skeleton King sử dụng kích thước riêng,Có thể vào arena Skeleton King trong Godot development; cho phép test scene và quan sát debugger,"1. Vào tầng 3
+2. Xác định boss room trong generated_rooms
+3. Đọc kích thước room",32x18 cells,"Boss room tầng Skeleton King có kích thước 32×18 cell, không dùng kích thước room random mặc định",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/Boss/Skeleton%20King/skeleton_king.gd
+TC-SK-03,Skeleton King,Kích hoạt,Boss chỉ thức dậy khi người chơi vào boss room,Có thể vào arena Skeleton King trong Godot development; cho phép test scene và quan sát debugger,"1. Đứng ngoài boss room
+2. Theo dõi trạng thái boss
+3. Đi vào và đợi lock_room",room activation,Boss được _awaken khi phòng kích hoạt; trước đó không chạy loạt tấn công trái thời điểm,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/Boss/Skeleton%20King/skeleton_king.gd
+TC-SK-04,Skeleton King,Soul Crystal,Boss trực tiếp không nhận damage từ weapon,Có thể vào arena Skeleton King trong Godot development; cho phép test scene và quan sát debugger,"1. Dùng trang bị đánh vào thân Skeleton King khi còn crystal
+2. Đọc HP boss",direct damage,take_damage() của Skeleton King không giảm HP; boss chỉ mất HP qua on_crystal_shattered(),Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/Boss/Skeleton%20King/skeleton_king.gd
+TC-SK-05,Skeleton King,Soul Crystal,Đánh vỡ crystal trừ máu boss một lần,Có thể vào arena Skeleton King trong Godot development; cho phép test scene và quan sát debugger,"1. Đánh một crystal đến hết 6 HP
+2. Quan sát animation vỡ
+3. Đối chiếu HP boss","crystal_hp=6, lvl3","Một crystal shattered giảm HP boss đúng crystal_damage, không gọi mất máu hai lần",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/Boss/Skeleton%20King/skeleton_king.gd
+TC-SK-06,Skeleton King,Soul Crystal,Crystal tồn tại độc lập và có hurtbox,Có thể vào arena Skeleton King trong Godot development; cho phép test scene và quan sát debugger,"1. Vào arena, ngắm vào crystal
+2. Gây sát thương với nhân vật bất kỳ
+3. Quan sát HP pips trên crystal",crystal.take_damage,Hurtbox của crystal nhận damage và trừ hp; các nguồn tấn công đều có đường gây damage hợp lệ,Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/Boss/Skeleton%20King/skeleton_king.gd
+TC-SK-07,Skeleton King,Soul Crystal,Crystal không bị kéo/đóng băng/đẩy đi,Có thể vào arena Skeleton King trong Godot development; cho phép test scene và quan sát debugger,"1. Dùng RoomPull của Yugi, Frost Wave của Miyabi quanh crystal
+2. Theo dõi tọa độ crystal",Yugi/Miyabi,Crystal giữ vị trí vì is_immovable=true; không dịch chuyển hoặc freeze như quái thường,Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/Boss/Skeleton%20King/skeleton_king.gd
+TC-SK-08,Skeleton King,Soul Crystal,Crystal hết lifetime được thu hồi và hồi máu boss,Có thể vào arena Skeleton King trong Godot development; cho phép test scene và quan sát debugger,"1. Để một crystal tồn tại đến hết lifetime mà không phá
+2. Theo dõi HP boss trước/sau sự kiện expire",crystal_lifetime=9s,"Crystal biến mất và hồi HP boss theo ceili(crystal_damage * 0.5), tối đa maxHP",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/Boss/Skeleton%20King/skeleton_king.gd
+TC-SK-09,Skeleton King,Soul Crystal,Hồi máu khi crystal expire không vượt max HP,Có thể vào arena Skeleton King trong Godot development; cho phép test scene và quan sát debugger,"1. Đặt boss HP gần maxHP
+2. Đợi crystal expire
+3. Đối chiếu HP",hp=max_hp-1,"HP sau hồi không vượt maxHP nhờ min(get_expire_heal(),max_hp-hp)",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/Boss/Skeleton%20King/skeleton_king.gd
+TC-SK-10,Skeleton King,Soul Crystal,Giới hạn crystal sống được giữ theo phase,Có thể vào arena Skeleton King trong Godot development; cho phép test scene và quan sát debugger,"1. Quan sát số crystal ngay khi thức tỉnh
+2. Chờ các lần spawn thêm và đếm
+3. Đổi sang phase 2",2/3 crystals,Số crystal đồng thời tôn trọng max_crystals=2 (phase1) và max_crystals_enraged=3 (phase2),Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/Boss/Skeleton%20King/skeleton_king.gd
+TC-SK-11,Skeleton King,Phase,HP giảm xuống <=50% kích hoạt phase Enraged,Có thể vào arena Skeleton King trong Godot development; cho phép test scene và quan sát debugger,"1. Phá đủ crystal để giảm HP dưới ngưỡng 50%
+2. Theo dõi current_phase/HUD",HP <=50%,"Boss chuyển sang current_phase=2, enraged=true, hiện banner Enraged, không reset về phase 1",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/Boss/Skeleton%20King/skeleton_king.gd
+TC-SK-12,Skeleton King,Phase,Phase 2 tăng độ khó crystal và đòn đánh,Có thể vào arena Skeleton King trong Godot development; cho phép test scene và quan sát debugger,"1. Ở phase1 đo số crystal/lifetime
+2. Vào phase2 và đo lại
+3. So sánh cấu hình",phase1 vs 2,"Ở phase 2 giới hạn crystal tăng và lifetime tương ứng 7,5s cấu hình, hành vi theo trạng thái enraged",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/Boss/Skeleton%20King/skeleton_king.gd
+TC-SK-13,Skeleton King,Đòn đánh,Laser volley tạo vùng cảnh báo và gây damage,Có thể vào arena Skeleton King trong Godot development; cho phép test scene và quan sát debugger,"1. Vào arena và né tránh vài chu kỳ cast
+2. Ghi nhận các laser volley
+3. Cho hero thử đứng đúng đường tấn công",cast_laser,"Volley được tạo theo pattern, gây laser_damage khi tiếp xúc hợp lệ; không bắn ngoài vùng arena",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/Boss/Skeleton%20King/skeleton_king.gd
+TC-SK-14,Skeleton King,Đòn đánh,Slam tạo shockwave đúng thời điểm animation,Có thể vào arena Skeleton King trong Godot development; cho phép test scene và quan sát debugger,"1. Quan sát boss cast slam
+2. Kiểm tra frame impact và hitbox
+3. Cho nhân vật ở trong/ngoài vùng",slam frame8,Shockwave được phát từ SLAM_IMPACT_FRAME=8 và chỉ trúng nhân vật trong vùng ảnh hưởng,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/Boss/Skeleton%20King/skeleton_king.gd
+TC-SK-15,Skeleton King,Triệu hồi,Boss triệu hồi quái nhưng giới hạn số minion,Có thể vào arena Skeleton King trong Godot development; cho phép test scene và quan sát debugger,"1. Ở boss room chờ cast_summon nhiều lần
+2. Đếm minion tồn tại
+3. Giết một minion và quan sát lượt sau",summon_cap=4,Số minion không vượt giới hạn summon_cap từ balance; quái mới spawn ở ô hợp lệ,Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/Boss/Skeleton%20King/skeleton_king.gd
+TC-SK-16,Skeleton King,Thắng boss,"Hạ boss xóa crystals, laser, minions và rơi đồ",Có thể vào arena Skeleton King trong Godot development; cho phép test scene và quan sát debugger,"1. Phá crystal cuối cùng
+2. Quan sát HP boss về 0 và animation death
+3. Kiểm tra object đang tồn tại",hp=0,"Boss chết, các object crystal/volley/minion được dọn; phát sinh loot boss theo seed và kết quả boss room tiến triển",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/Boss/Skeleton%20King/skeleton_king.gd
+TC-SK-17,Skeleton King,Độ khó tầng,Skeleton King floor6 có tier HP/crystal cao hơn floor3,Có thể vào arena Skeleton King trong Godot development; cho phép test scene và quan sát debugger,"1. Ghi maxHP và crystal_hp tại floor3
+2. Lặp lại tại floor6
+3. Đối chiếu config",floor3 vs floor6,Tier tăng theo tầng; maxHP và crystal_hp tăng theo hp_per_tier/crystal_hp_per_tier của balance,Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/Boss/Skeleton%20King/skeleton_king.gd
+TC-MP-12,Sinh hầm ngục,Floor seed,Map ở floor2 dùng seed khác floor1 theo hậu tố,"Dùng Godot development, debug generation/physics ở nhiều seed và tầng","1. Khởi chạy với seed cố định
+2. Ghi layout floor1
+3. Qua portal sang floor2 và ghi layout",QA_ROOM / floor2,"Khóa random floor2 là seed+'_2', layout floor2 phát sinh nhất quán riêng, không copy nguyên room của floor1",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Map/dungeon_generator.gd
+TC-MP-13,Sinh hầm ngục,Loại phòng,Các phòng COMBAT có thể có biến thể Open Arena/Cover,"Dùng Godot development, debug generation/physics ở nhiều seed và tầng","1. Bật enable_combat_room_variants=true
+2. Generate dungeon với nhiều seed
+3. Ghi combat_room_variants",Room variants,"Kết quả chỉ gồm NONE/OPEN_ARENA/COVER_ROOM, đúng điều kiện và không phá kết nối phòng",Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Map/dungeon_generator.gd
+TC-MP-14,Sinh hầm ngục,Cột đá,Các cột Cover không cô lập ô đi lại,"Dùng Godot development, debug generation/physics ở nhiều seed và tầng","1. Dùng seed tạo cover_room nhiều pillar
+2. Chạy kiểm tra connectivity các combat cells
+3. Quan sát lối ra",_combat_cells_connected,"Các ô combat hợp lệ vẫn kết nối với điểm an toàn, không bị pillar chặn tuyệt đối",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Map/dungeon_generator.gd
+TC-MP-15,Sinh hầm ngục,Spawn địch,Quái không xuất hiện trên vật thể/tường ở Cover Room,"Dùng Godot development, debug generation/physics ở nhiều seed và tầng","1. Sinh nhiều dungeon có combat variants
+2. Duyệt planned_enemy_spawns
+3. Đối chiếu tile blocked",100 seeds,Mọi spawn cell thỏa is_valid_combat_spawn_cell và không bị pillar/trap chặn,Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Map/dungeon_generator.gd
+TC-MP-16,Sinh hầm ngục,Scale quái,Tầng cao tăng HP quái theo cấp,"Dùng Godot development, debug generation/physics ở nhiều seed và tầng","1. Ghi HP một quái tầng1
+2. Đưa cùng loại quái lên tầng3
+3. So sánh dữ liệu spawn",level1 vs 3,HP và maxHP tầng3 tăng (3-1)*2=4 so với chỉ số gốc trước perk/đồ; từ tầng3 damage tăng 1,Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Map/dungeon_generator.gd
+TC-MP-17,Sinh hầm ngục,Boss progression,Các tầng boss có luồng boss riêng phù hợp loại tầng,"Dùng Godot development, debug generation/physics ở nhiều seed và tầng","1. Vào boss room floor1/2/3
+2. Đối chiếu scene boss và khóa phòng",1/2/3,"Floor1 dùng Necromancer, floor2 dùng Orc Rider, floor3 dùng Skeleton King; room boss được đánh dấu và khóa",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Map/dungeon_generator.gd
+TC-MP-18,Sinh hầm ngục,BGM theo phòng,Nhạc dungeon/boss chuyển phù hợp khi vào và rời phòng,"Dùng Godot development, debug generation/physics ở nhiều seed và tầng","1. Ở phòng thường ghi BGM
+2. Vào boss room
+3. Đánh thắng rồi đi tiếp",dungeon/boss,notify_room_entered gọi boss BGM và notify_room_cleared trả về dungeon BGM; không phát 2 bản nhạc đồng thời,Tích hợp,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Map/dungeon_generator.gd
+TC-MP-19,Sinh hầm ngục,Điều kiện ngắm,LoS trả false khi ray chạm tường/door,"Dùng Godot development, debug generation/physics ở nhiều seed và tầng","1. Bố trí hai vị trí trước/sau cửa khóa
+2. Gọi has_line_of_sight qua vị trí
+3. Mở cửa và thử lại",locked door,"Khi vật cản giữa hai vị trí, raycast chặn LoS; sau khi mở cửa có thể quan sát mục tiêu hợp lệ",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Map/dungeon_generator.gd
+TC-AI-01,AI quái nâng cao,Tier theo tầng,AI Tier 0 ở tầng 1-2,Godot test harness cho EnemyTactics hoặc dungeon floor cao với debug,"1. Gọi get_tier_for_floor cho 1,2
+2. Đối chiếu kết quả","floors 1,2",Trả Tier.BASIC=0; tactical controller không bật các chiến thuật Tier1+,Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/AI/EnemyTactics.gd
+TC-AI-02,AI quái nâng cao,Tier theo tầng,"AI Tier thay đổi theo 3-4,5-6,7+",Godot test harness cho EnemyTactics hoặc dungeon floor cao với debug,"1. Gọi get_tier_for_floor 3,4,5,6,7,99
+2. Kiểm tra tier","3,4,5,6,7,99","3-4 SIMPLE, 5-6 ADVANCED, từ7 ADAPTIVE; floor 99 không vượt tier3",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/AI/EnemyTactics.gd
+TC-AI-03,AI quái nâng cao,Đối tượng,Profile AI không biết enemy ID trả về rỗng,Godot test harness cho EnemyTactics hoặc dungeon floor cao với debug,"1. Gọi get_profile('unknown',4)
+2. Gọi is_enabled với EnemyTactics unknown",unknown enemy,Profile {} và controller không tạo quyết định chiến thuật ngoài AI gốc,Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/AI/EnemyTactics.gd
+TC-AI-04,AI quái nâng cao,Lịch quyết định,AI tick không ra nhiều quyết định trong một interval,Godot test harness cho EnemyTactics hoặc dungeon floor cao với debug,"1. Tạo EnemyTactics orc floor7 ở 60Hz
+2. Gọi begin_decision tick 0,1,2 rồi tick12
+3. Đếm true","tick0,1,2,12","Quyết định tối đa một lần mỗi interval 0,2s theo tick; không chạy lại với tick bị lặp",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/AI/EnemyTactics.gd
+TC-AI-05,AI quái nâng cao,Lịch quyết định,Tick âm không gây quyết định AI,Godot test harness cho EnemyTactics hoặc dungeon floor cao với debug,"1. Gọi begin_decision(-1)
+2. Kiểm tra state/tick",tick=-1,Return false; không cập nhật thời gian quyết định bằng tick âm,Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/AI/EnemyTactics.gd
+TC-AI-06,AI quái nâng cao,Profile Orc,Orc tier3 có flank và separation,Godot test harness cho EnemyTactics hoặc dungeon floor cao với debug,"1. Tạo OrcTacticalController floor7
+2. Đưa nhiều enemy cận kề và player có LoS
+3. Quan sát movement intent",floor7 Orc,"Controller có thể chọn hướng flank/separation theo profile tier3 và tránh chồng đội hình, không bỏ logic va chạm",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/AI/EnemyTactics.gd
+TC-AI-07,AI quái nâng cao,Profile Archer,Skeleton Archer reposition khi mất LoS,Godot test harness cho EnemyTactics hoặc dungeon floor cao với debug,"1. Đứng sau vật cản ở floor7
+2. Theo dõi ArcherTacticalController trong thời gian >0,8s
+3. So sánh hành vi khi mở LoS",floor7 Archer,Archer thử lateral search có giới hạn rồi tiếp cận; chỉ bắn khi kiểm tra LoS mới hợp lệ,Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/AI/EnemyTactics.gd
+TC-AI-08,AI quái nâng cao,Replay AI,Tactical AI quyết định ổn định theo fixed tick,Godot test harness cho EnemyTactics hoặc dungeon floor cao với debug,"1. Cùng seed và trạng thái ban đầu ở floor7
+2. Chạy 2 phiên mô phỏng với số fixed ticks bằng nhau
+3. So sánh state sequence","same seed, tick stream",Các quyết định không dùng wall-clock/RNG ngoài kiểm soát; cùng input và tick sinh state/action nhất quán,Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Enemies/AI/EnemyTactics.gd
+TC-IV-13,Túi đồ & trang bị,Stacking,Nhặt hai stack potion cùng tên phải gộp,Tạo inventory fixture trong game Godot bằng ItemData hợp lệ và 16 slots,"1. Tạo potion stackable đã có 5 ở ô 1
+2. Nhặt thêm 4 cùng tên
+3. Kiểm tra túi",5+4,"Ô 1 tăng thành 9, không dùng ô mới khi còn đủ chỗ và không có bản sao đối tượng sai",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/InventoryManager.gd
+TC-IV-14,Túi đồ & trang bị,Stacking,Potion stack không vượt max_stack,Tạo inventory fixture trong game Godot bằng ItemData hợp lệ và 16 slots,"1. Có stack 15/16 trong túi
+2. Thêm potion cùng tên số lượng 5
+3. Kiểm tra hai stack",15+5; max_stack=16,"Stack đầu thành 16, phần dư 4 đặt vào ô trống, tổng số không đổi",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/InventoryManager.gd
+TC-IV-15,Túi đồ & trang bị,Stacking,Full bag vẫn gộp stack đã có chỗ,Tạo inventory fixture trong game Godot bằng ItemData hợp lệ và 16 slots,"1. Lấp đủ 16 slot, trong đó 1 stack potion=10/16
+2. Nhặt thêm 4 potion cùng tên
+3. Đọc kết quả add_item",full bag + stack=10,"Gộp thành 14 ngay cả khi không còn slot trống, hàm trả true",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/InventoryManager.gd
+TC-IV-16,Túi đồ & trang bị,Stacking,Full bag và không còn chỗ trả false,Tạo inventory fixture trong game Godot bằng ItemData hợp lệ và 16 slots,"1. Lấp đủ 16 slot và tất cả stack cùng tên đã max
+2. Thử nhặt item mới
+3. So sánh số lượng item",16 full slots,"add_item trả false, không làm mất item gốc và không tăng số ô vượt 16",Tiêu cực,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/InventoryManager.gd
+TC-IV-17,Túi đồ & trang bị,Stacking,Tham số null cho add_item bị từ chối,Tạo inventory fixture trong game Godot bằng ItemData hợp lệ và 16 slots,"1. Gọi add_item(null)
+2. Đọc return/bag",item=null,"Hàm trả false, bag không thay đổi",Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/InventoryManager.gd
+TC-IV-18,Túi đồ & trang bị,Di chuyển slot,Swap hai ô túi hoán đổi đúng item,Tạo inventory fixture trong game Godot bằng ItemData hợp lệ và 16 slots,"1. Đặt A vào slot0, B vào slot1
+2. Gọi swap_slots(0,1) hoặc drag/drop UI
+3. Kiểm tra túi",slots 0/1,"B nằm ở slot0, A ở slot1, không mất stack_count",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/InventoryManager.gd
+TC-IV-19,Túi đồ & trang bị,Drop,Drop một đơn vị stack tạo WorldItem tương ứng,Tạo inventory fixture trong game Godot bằng ItemData hợp lệ và 16 slots,"1. Tạo stack potion=5
+2. Gọi drop_item(index,false,world_pos)
+3. Quan sát bag/WorldItem",drop_all=false,"Bag giảm từ 5 còn 4, vật phẩm rơi có stack_count=1 tại vị trí truyền vào",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/InventoryManager.gd
+TC-IV-20,Túi đồ & trang bị,Drop,Drop toàn bộ stack không để lại item rỗng,Tạo inventory fixture trong game Godot bằng ItemData hợp lệ và 16 slots,"1. Có stack=5
+2. Gọi drop_item(index,true,world_pos)
+3. Kiểm tra bag và WorldItem",drop_all=true,"Ô túi thành null; WorldItem mang stack_count=5, không mất hoặc nhân đôi số lượng",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/InventoryManager.gd
+TC-IV-21,Túi đồ & trang bị,Drop,Drop chỉ số slot sai không ảnh hưởng túi,Tạo inventory fixture trong game Godot bằng ItemData hợp lệ và 16 slots,"1. Gọi drop_item(-1) rồi drop_item(16)
+2. So sánh bag trước/sau","-1,16",Đều trả false và không thay đổi bất kỳ ô nào,Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Character/InventoryManager.gd
+TC-IT-12,Vật phẩm,Catalog,Danh mục ItemDatabase nạp được các cấp rarities,Godot test harness dùng ItemDatabase và inventory; không sửa tài nguyên gốc,"1. Mở project và gọi ItemDatabase.get_all_items
+2. Nhóm theo rarity và kiểm tra data",ItemDatabase,"Các item thực tế trong Common/Rare/Heroic/Legendary/Mythic được load thành ItemData hợp lệ, không có null",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Items/ItemDatabase.gd
+TC-IT-13,Vật phẩm,Catalog,get_item trả bản sao không làm bẩn catalog,Godot test harness dùng ItemDatabase và inventory; không sửa tài nguyên gốc,"1. Gọi get_item('common_sword_1') hai lần
+2. Sửa thuộc tính của bản đầu
+3. Đọc bản thứ hai",common_sword_1,Hai object độc lập; sửa bản lấy ra không thay đổi dữ liệu catalog gốc,Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Items/ItemDatabase.gd
+TC-IT-14,Vật phẩm,Catalog,get_item với ID không tồn tại trả null,Godot test harness dùng ItemDatabase và inventory; không sửa tài nguyên gốc,"1. Gọi get_item('not_real_id')
+2. Đọc kết quả",not_real_id,"Trả null, không tạo item rỗng hay phát sinh exception",Tiêu cực,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Items/ItemDatabase.gd
+TC-IT-15,Vật phẩm,Drop rarity,Rơi đồ thường floor1 thiên về Common/Rare,Godot test harness dùng ItemDatabase và inventory; không sửa tài nguyên gốc,"1. Roll rarity non-boss floor1 nhiều lần bằng RNG cố định
+2. Đếm tỉ lệ và kiểm tra các nhóm",floor1 non-boss,Chỉ trả Common/Rare/Heroic theo nhánh floor<=2; không xuất hiện Legendary/Mythic,Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Items/ItemDatabase.gd
+TC-IT-16,Vật phẩm,Drop rarity,Boss floor1 không rơi Common,Godot test harness dùng ItemDatabase và inventory; không sửa tài nguyên gốc,"1. Gọi roll_rarity_for_floor(1,true) nhiều seed
+2. Đếm rarity",floor1 boss,Chỉ trả Rare/Heroic/Legendary theo ngưỡng boss floor1; không có Common/Mythic,Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Items/ItemDatabase.gd
+TC-IT-17,Vật phẩm,Drop rarity,Boss floor3 có khả năng Mythic,Godot test harness dùng ItemDatabase và inventory; không sửa tài nguyên gốc,"1. Dùng RNG test cho roll thuộc khoảng >=0.95
+2. Gọi roll_rarity_for_floor(3,true)",floor3 roll0.97,"Kết quả Mythic khi roll >=0,95 đúng bảng ngưỡng floor3-4",Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Items/ItemDatabase.gd
+TC-IT-18,Vật phẩm,Drop rarity,Floor5+ có Mythic theo xác suất,Godot test harness dùng ItemDatabase và inventory; không sửa tài nguyên gốc,"1. Sử dụng RNG cố định hoặc giả lập roll nằm trong nhánh mythic floor5
+2. Đọc rarity",floor5 roll0.98,"Floor5/6 non-boss có nhánh Mythic ở roll>=0.96, không loại Mythic vô lý",Biên,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Items/ItemDatabase.gd
+TC-IT-19,Vật phẩm,Mythic gear,Trang bị Mythic nhận diện đúng theo loại,Godot test harness dùng ItemDatabase và inventory; không sửa tài nguyên gốc,"1. Trang bị Mythic weapon/armor/helmet lần lượt
+2. Gọi các has_mythic_*
+3. Đối chiếu",3 mythic gear,Mỗi hàm chỉ trả true khi đúng loại gear đang trang bị là Mythic,Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Items/ItemDatabase.gd
+TC-IT-20,Vật phẩm,Loot deterministic,Cùng loot seed tạo item nhất quán,Godot test harness dùng ItemDatabase và inventory; không sửa tài nguyên gốc,"1. Tạo hai RNG cùng seed để gọi get_random_drop cùng floor/is_boss
+2. Đối chiếu item ID và rarity",loot_seed=2026,Cùng seed và bối cảnh tạo cùng kết quả loot để replay/run tái lập được,Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/Items/ItemDatabase.gd
+TC-UI-08,HUD & Hotbar,Inventory,Phím I/Tab/B mở đóng cùng một Inventory Modal,"Godot development đang chạy dungeon, HUD đã kết nối player/GameManager","1. Ở dungeon nhấn I để mở
+2. Nhấn Tab để đóng, B để mở lần nữa
+3. Theo dõi UI",I/Tab/B,Ba phím điều khiển cùng inventory_modal.visible mà không tạo nhiều cửa sổ trùng,Giao diện,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/GameUI.gd
+TC-UI-09,HUD & Hotbar,Quick drop,Phím G rơi một món ở slot đầu đang chứa đồ,"Godot development đang chạy dungeon, HUD đã kết nối player/GameManager","1. Đặt stack potion=3 ở slot đầu tiên
+2. Nhấn G
+3. Theo dõi bag và vật phẩm trên đất",KEY_G,"Drop 1 đơn vị tại player+Vector2(16,0); hiển thị toast Dropped 1x ..., stack còn 2",Chức năng,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/GameUI.gd
+TC-UI-10,HUD & Hotbar,Minimap,Phím M thay đổi kích thước minimap,"Godot development đang chạy dungeon, HUD đã kết nối player/GameManager","1. Nhấn M khi đang chơi
+2. Đo minimap_control và panel
+3. Nhấn M lần nữa",KEY_M,"Kích thước chuyển 177×122 ↔ 305×205 theo minimap_expanded, không bị tràn màn hình",Giao diện,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/GameUI.gd
+TC-UI-11,HUD & Hotbar,Audio shortcut,Phím N bật/tắt mute và cập nhật nhãn,"Godot development đang chạy dungeon, HUD đã kết nối player/GameManager","1. Nhấn N khi audio đang bật
+2. Quan sát nhãn và toast
+3. Nhấn N lần nữa",KEY_N,AudioManager.toggle_mute() thay trạng thái và nhãn Audio: Off/On tương ứng,Giao diện,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/GameUI.gd
+TC-UI-12,HUD & Hotbar,Boss bar,Thanh boss HP cập nhật máu và phase,"Godot development đang chạy dungeon, HUD đã kết nối player/GameManager","1. Vào boss room Skeleton King
+2. Phá một crystal rồi kích phase2
+3. Quan sát boss_bar/label",Skeleton King,"HP và phase cập nhật từ signal boss_hp_changed, không dùng chỉ số cũ của boss khác",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/GameUI.gd
+TC-UI-13,HUD & Hotbar,Replay banner,Banner replay xuất hiện đúng khi xem action replay,"Godot development đang chạy dungeon, HUD đã kết nối player/GameManager","1. Ghi replay rồi nhấn Replay trong Chronicles
+2. Quan sát banner
+3. Nhấn Take Control",replay_banner,Banner hiển thị khi is_replaying=true và ẩn khi Take Control; không che HUD ở normal run,Giao diện,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/GameUI.gd
+TC-UI-14,HUD & Hotbar,Damage popup,Hiệu ứng số sát thương giới hạn tối đa 40 label hoạt động,"Godot development đang chạy dungeon, HUD đã kết nối player/GameManager","1. Tạo nhiều hit liên tiếp >40 trong khoảng ngắn qua test harness
+2. Quan sát active labels và pool
+3. Đợi tween kết thúc",MAX_DAMAGE_LABELS=40,Tại một thời điểm không cấp phát vô hạn hơn MAX_DAMAGE_LABELS=40; label tái sử dụng đúng thế hệ,Biên,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/GameUI.gd
+TC-UI-15,HUD & Hotbar,Active perk bar,Thanh perk hiển thị sau khi chọn perk và xóa khi reset,"Godot development đang chạy dungeon, HUD đã kết nối player/GameManager","1. Nhận 2 perk qua modal
+2. Quan sát thanh biểu tượng HUD
+3. Bắt đầu run mới",2 active perks,Biểu tượng 2 perk xuất hiện; PerkManager.perks_cleared khiến thanh được làm rỗng,Giao diện,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/UI/GameUI.gd
+TC-BL-01,Dữ liệu cân bằng,Data driven,Tám hero đều có balance resource hợp lệ,Dùng bản sao game sandbox để tránh thay đổi balance resource ở repository,"1. Gọi BalanceConfig.get_hero_list_for_ui()
+2. Kiểm tra HERO_ORDER và đường dẫn Resource
+3. Đếm entries",8 .tres files,"Chính xác 8 hero theo thứ tự Miya, Olaf, Pyrois, Charlotte, Yugi, Doraemon, Miyabi, LuongTho; mỗi resource đọc được",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/BalanceConfig.gd
+TC-BL-02,Dữ liệu cân bằng,Data driven,Sáu enemy được ánh xạ tới resource,Dùng bản sao game sandbox để tránh thay đổi balance resource ở repository,"1. Duyệt các ID trong ENEMY_RESOURCES
+2. Gọi get_enemy_stats cho từng ID",6 enemy types,"Orc, Armored Orc, Skeleton, Skeleton Archer, Vampire, Werewolf có stat dictionary hợp lệ",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/BalanceConfig.gd
+TC-BL-03,Dữ liệu cân bằng,Data driven,Ba boss có resource đúng stat,Dùng bản sao game sandbox để tránh thay đổi balance resource ở repository,"1. Gọi get_boss_stats cho Necromancer, Orc Rider, Skeleton King
+2. So sánh HP và cấu hình",3 bosses,"Ba boss trả dữ liệu từ resource tương ứng, không sử dụng nhầm hero/enemy template",Tích hợp,Cao,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/BalanceConfig.gd
+TC-BL-04,Dữ liệu cân bằng,Data driven,Thay đổi stat qua API không chạm category khác,Dùng bản sao game sandbox để tránh thay đổi balance resource ở repository,"1. Trong sandbox chọn một stat tạm của hero
+2. Gọi set_unit_stat('hero',id,key,value)
+3. Đọc lại hero và các enemy/boss",set_unit_stat; sandbox,Chỉ resource đích thay đổi nếu key/giá trị hợp lệ; dữ liệu các category khác không bị tác động,Tích hợp,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/BalanceConfig.gd
+TC-BL-05,Dữ liệu cân bằng,Data driven,Ghi lại resource được chỉnh qua API save_resource,Dùng bản sao game sandbox để tránh thay đổi balance resource ở repository,"1. Trong sandbox sửa một stat hợp lệ
+2. Gọi save_resource đúng category/id
+3. Nạp lại bản test",save_resource; sandbox only,Resource hợp lệ được lưu vào đúng Scene/Balance/<category> file và nạp lại giữ thay đổi,Tích hợp,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/BalanceConfig.gd
+TC-AU-01,Âm thanh,BGM,Chuyển BGM dungeon sang boss không chồng track,Project development chạy và AudioManager autoload hợp lệ,"1. Ở dungeon thường ghi current BGM
+2. Vào boss room
+3. Đo player BGM","dungeon,boss",Chỉ có đúng track boss phát; track dungeon được dừng hoặc chuyển trạng thái theo play_bgm,Tích hợp,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/AudioManager.gd
+TC-AU-02,Âm thanh,Mute,Mute điều khiển âm lượng cả BGM/SFX,Project development chạy và AudioManager autoload hợp lệ,"1. Phát BGM và một SFX
+2. Gọi toggle_mute()
+3. Thử phát SFX tiếp rồi toggle_mute lần nữa",toggle_mute,Mute có tác dụng lên audio do AudioManager quản lý; bỏ mute khôi phục âm thanh,Chức năng,Trung bình,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/AudioManager.gd
+TC-AU-03,Âm thanh,SFX,SFX không tồn tại không làm game lỗi,Project development chạy và AudioManager autoload hợp lệ,"1. Gọi play_sfx('unregistered') trong sandbox
+2. Quan sát output và âm thanh",unregistered key,Không crash hoặc tạo tài nguyên sai khi không có key trong SFX_PATHS,Tiêu cực,Thấp,,Chưa chạy,,,,Đã hoàn thành,https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/development/Scene/AudioManager.gd
