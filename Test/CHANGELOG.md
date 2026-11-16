@@ -94,3 +94,67 @@
 - **Priority:** Low.
 - **Related Test Cases:** TC-SP-02 (also related to TC-SP-01).
 - **Status:** To Do.
+## 2026-11-16
+
+### QA
+- **23:31** - Performed a major update and modernization of the QA test suite based on the latest reviewed source code from the `development` branch of **Keep Fighting And Earning**.
+- Analyzed the implemented gameplay systems, character mechanics, enemy AI, boss behaviors, inventory, equipment, perks, procedural dungeon generation, replay functionality, and user interface.
+- Compared the existing test cases against the current implementation to identify outdated coverage, missing scenarios, and newly introduced features.
+- Expanded the test suite to cover all **8 playable characters**: Miya, Olaf, Pyrois, Charlotte, Yugi, Doraemon, Hoshimi Miyabi, and Lương Thơ.
+- Added detailed functional, boundary, negative, UI, integration, and regression test scenarios where applicable.
+
+### Test Suite Update
+- Updated both test case files:
+  - `Test/TestCase.xlsx`
+  - `Test/TestCase.csv`
+- Previous test suite: **183 test cases** (complete set recovered from the original CSV).
+- New test cases added: **237**.
+- Total test cases after update: **420**.
+- Total modules covered: **33**.
+- Preserved all 183 existing test cases and their historical execution results.
+- Reconciled the previous inconsistency between the Excel file (182 test cases) and CSV file (183 test cases).
+- Updated outdated test case descriptions where necessary to reflect the current implementation.
+- Added two tracking columns:
+  - `Tiến độ biên soạn` (Documentation Progress).
+  - `Nguồn đối chiếu` (Source Code Reference).
+- Marked all 420 test cases as **Đã hoàn thành** for documentation preparation only.
+- Preserved execution statuses independently from documentation progress.
+
+### New Feature Coverage
+- **Playable Characters:** Expanded testing for Yugi's summoning and guard mechanics, Doraemon's gadgets and Super Moves, Miyabi's frost-based combat and ice spirit, and Lương Thơ's combo attacks, Twin Barrels, and White Moon transformation.
+- **Perk System:** Added test scenarios for perk selection, rarity, deterministic rolling, character stat modifiers, cooldown reduction, unique perks, and combat effects.
+- **Replay & History:** Added coverage for combat recording, action replay, replay deletion, history management, frame validation, storage limits, and replay-related edge cases.
+- **Skeleton King:** Added test scenarios for boss encounters, Soul Crystals, attack patterns, phase transitions, enrage behavior, and boss defeat.
+- **Inventory & Equipment:** Expanded coverage for item stacking, equipment management, inventory capacity, item dropping, and item-related boundary conditions.
+- **Dungeon Generation:** Added scenarios for deterministic seeds, room generation, combat room variants, enemy spawning, floor progression, and dungeon consistency.
+- **Enemy AI:** Added coverage for tactical movement, line-of-sight handling, navigation, and difficulty-dependent AI behavior.
+- **Additional Systems:** Expanded tests for seed management, loot rarity, balance configuration, HUD, audio controls, and other implemented gameplay mechanics.
+
+### Validation
+- Verified that `TestCase.xlsx` and `TestCase.csv` contain the same **420 test case IDs**.
+- Confirmed that all 420 test case IDs are unique.
+- Confirmed that no existing test cases were lost during synchronization.
+- Verified that the Excel workbook remains readable and retains its three worksheets:
+  - `Tổng quan`
+  - `Test Case`
+  - `Điểm cần xác minh`
+- Checked workbook formulas and found no reported formula errors.
+- Confirmed that both files contain the updated documentation progress and source reference fields.
+
+### Progress
+- **Total test cases:** 420.
+- **Documentation completed:** 420/420 (100%).
+- **Previously Passed:** 51.
+- **Previously Failed:** 2.
+- **Not Run:** 367.
+- **Historical execution pass rate:** 96.23% (51 passed out of 53 previously executed test cases).
+- **Test suite synchronization:** Completed.
+- **New test case execution:** Pending.
+
+### Notes
+- This update focuses on **test case design, documentation modernization, and coverage expansion**, not on executing the new test cases.
+- Existing Passed/Failed results were preserved from previous QA records.
+- Newly added test cases remain marked as `Chưa chạy` until actual test execution.
+- Previously reported Jira issues remain subject to retesting and verification; their resolution status has not been changed.
+- No gameplay source code was modified, and no changes were pushed or merged into the shared GitHub repository.
+- The updated test suite will serve as the baseline for future functional testing and regression testing of the `development` branch.
