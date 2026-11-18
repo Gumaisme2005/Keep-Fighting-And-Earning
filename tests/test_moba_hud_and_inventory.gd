@@ -38,6 +38,7 @@ func _ready() -> void:
 	test_dual_boss_chests_and_loot()
 	await test_damage_number_pool_and_reset()
 	test_deterministic_rng_isolation()
+	test_equip_unequip_does_not_heal()
 
 	print("\n========================================================")
 	print("  TEST RESULTS: ", tests_passed, " PASSED, ", tests_failed, " FAILED")
@@ -677,5 +678,45 @@ func test_deterministic_rng_isolation() -> void:
 
 	orc.queue_free()
 	archer.queue_free()
+
+func test_equip_unequip_does_not_heal() -> void:
+	print("\n--- Test Group 14: Equip/Unequip Max HP Gear Anti-Heal Regression ---")
+	var player_scene = preload("res://Scene/Character/Player 1_Pyrois/player.tscn")
+	var player = player_scene.instantiate()
+	add_child(player)
+
+	var armor_item = ITEM_DATA_SCRIPT.new()
+	armor_item.item_name = "Test Vigor Plate"
+	armor_item.type = ItemData.ItemType.ARMOR
+	armor_item.armor = 2
+	armor_item.max_hp_bonus = 3
+
+	var base_hp: int = player.base_max_hp
+	player.hp = 1
+	player.inventory.add_item(armor_item)
+	var armor_slot: int = -1
+	for i in range(player.inventory.bag.size()):
+		if player.inventory.bag[i] != null and player.inventory.bag[i].item_name == "Test Vigor Plate":
+			armor_slot = i
+			break
+
+	assert_test(armor_slot >= 0, "Test armor added to inventory bag")
+
+	# Mặc rồi tháo 3 lần liên tiếp: HP không được hồi lên
+	for _cycle in range(3):
+		player.inventory.use_or_equip_item(armor_slot, player)
+		assert_test(player.max_hp == base_hp + 3, "Equipping armor raises max_hp by +3")
+		assert_test(player.hp == 1, "Equipping max_hp gear does not heal player hp")
+		player.inventory.unequip_item(ItemData.ItemType.ARMOR)
+		assert_test(player.max_hp == base_hp, "Unequipping armor restores base max_hp")
+		assert_test(player.hp == 1, "Unequipping armor keeps hp at 1 (no free heal exploit)")
+
+	# Nếu máu đang cao hơn max_hp gốc rồi tháo đồ thì phải kẹp về max_hp mới
+	player.inventory.use_or_equip_item(armor_slot, player)
+	player.hp = base_hp + 3
+	player.inventory.unequip_item(ItemData.ItemType.ARMOR)
+	assert_test(player.hp == base_hp, "Unequipping armor clamps hp to new max_hp")
+
+	player.queue_free()
 
 

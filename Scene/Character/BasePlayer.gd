@@ -357,15 +357,12 @@ func consume_potion(heal_amount: int, bonus_max_hp: int) -> void:
 func _on_equipment_changed() -> void:
 	if inventory == null:
 		return
-	var old_max_hp = max_hp
+	# Chỉ cập nhật trần max_hp và kẹp hp; không cộng thêm hp khi mặc để tránh exploit mặc/tháo hồi máu.
 	max_hp = base_max_hp + inventory.get_total_max_hp_bonus()
-
-	if max_hp > old_max_hp:
-		hp += (max_hp - old_max_hp)
-	hp = min(hp, max_hp)
+	hp = mini(hp, max_hp)
 
 	max_armor = base_armor + inventory.get_total_defense()
-	current_armor = min(current_armor, max_armor)
+	current_armor = mini(current_armor, max_armor)
 
 	if current_armor < max_armor and regen_delay_timer.is_stopped() and regen_tick_timer.is_stopped():
 		regen_delay_timer.start()
