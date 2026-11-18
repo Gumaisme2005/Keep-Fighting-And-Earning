@@ -155,6 +155,54 @@
 - This update focuses on **test case design, documentation modernization, and coverage expansion**, not on executing the new test cases.
 - Existing Passed/Failed results were preserved from previous QA records.
 - Newly added test cases remain marked as `Chưa chạy` until actual test execution.
+
+## 2026-11-18
+
+### QA
+- **22:12** - Performed exploratory testing on the **Orc Rider boss** using **Yugi**.
+- Identified an issue where the Orc Rider continues performing attack animations but fails to damage the Player when Yugi stands directly below the boss.
+- Observed that the Player remains unharmed even when standing inside the visually indicated spinning attack area.
+- Source code inspection suggests a possible mismatch between the boss's attack hitboxes and the visible attack warning area.
+
+- **22:12** - Performed exploratory testing on **Combat Room activation** using **Doraemon**.
+- Identified an issue where the Player can enter a combat room and move along its perimeter without activating the encounter.
+- Observed that enemies remain stationary and do not chase or attack the Player while the room remains inactive.
+- The combat room only activates after Doraemon moves farther into the room, triggering the **"GATES SEALED — VANQUISH THE HORDE!"** message.
+- Source code inspection suggests that the room activation boundary may not cover all accessible areas near the room's perimeter.
+
+### Bug
+
+**Bug 1: Orc Rider Attack Hitbox**
+
+- **Jira Bug:** [BOSS] Orc Rider cannot damage the Player when standing directly below the Boss
+- **Bug Type:** Functional / Combat / Hitbox Collision.
+- **Priority:** High.
+- **Related Test Cases:** TC-BS-07 (also requires reviewing TC-BS-08 and TC-BS-09).
+- **Test Character:** Yugi.
+- **Test Result:** FAIL.
+- **Status:** To Do.
+- **Evidence:** `Screen Recording 2026-11-18 215251.mp4`
+- **Notes:** The boss's spinning attack warning area appears inconsistent with its actual damage hitbox. Further testing is required to confirm the cause and determine whether other attacks are affected.
+
+**Bug 2: Combat Room Activation**
+
+- **Jira Bug:** [Combat Room] Enemies remain inactive when the Player enters and moves along the room perimeter
+- **Bug Type:** Functional / Room Activation / Gameplay Exploit.
+- **Priority:** Medium.
+- **Related Test Cases:** TC-RM-01, TC-RM-03, TC-RM-05.
+- **Test Character:** Doraemon.
+- **Test Result:** FAIL (subject to confirmation of the intended activation boundary).
+- **Status:** To Do.
+- **Evidence:** `Screen Recording 2026-11-18 220315.mp4`
+- **Notes:** The room activation logic requires the Player to move sufficiently far inside the room before locking the gates and activating enemies. Further investigation is required to determine whether the current activation boundary permits unintended encounter bypasses.
+
+### Progress
+- Identified and documented **2 additional gameplay issues**.
+- Added new exploratory testing evidence for the Orc Rider boss and Combat Room activation system.
+- Both issues require investigation, fixes where applicable, and regression testing.
+- The Orc Rider hitbox issue should be tracked separately from the previously reported boss AI issue involving Miya standing in a corner.
+- The existing test suite remains at **420 test cases**; no execution statuses in `TestCase.xlsx` or `TestCase.csv` were changed during this bug-reporting activity.
+- Both issues remain pending verification and resolution.
 - Previously reported Jira issues remain subject to retesting and verification; their resolution status has not been changed.
 - No gameplay source code was modified, and no changes were pushed or merged into the shared GitHub repository.
 - The updated test suite will serve as the baseline for future functional testing and regression testing of the `development` branch.
