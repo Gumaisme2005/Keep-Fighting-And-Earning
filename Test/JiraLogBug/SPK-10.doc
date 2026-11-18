@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>[#SPK-10] [Combat Room] Enemies remain inactive when the Player enters and moves along the room perimeter</title>
+    <meta http-equiv="Content-Type" Content="application/vnd.ms-word; charset=UTF-8">
+        <style type="text/css">
+
+.tableBorder, .grid
+{
+    background-color: #fff;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tableBorder td, .grid td
+{
+    vertical-align: top;
+    padding: 2px;
+    border: 1px solid #ccc;
+}
+
+.noPadding
+{
+    padding: 0 !important;
+}
+
+h3 .subText
+{
+    font-size: 60%;
+    font-weight: normal;
+}
+
+.tabLabel
+{
+    font-weight: bold;
+    border: 1px solid #ccc;
+    border-bottom:none;
+    padding: 2px;
+    display: inline;
+}
+
+td.blank
+{
+    padding: 0;
+    margin: 0;
+}
+
+.blank td
+{
+    border: none;
+}
+
+#descriptionArea
+{
+    margin: 0;
+    padding: 2px;
+    border: 1px solid #ccc;
+}
+
+hr
+{
+    border-top:1px solid #aaa;
+}
+
+hr.fullcontent
+{
+  height: 15px;
+  padding: 10px 0;
+  background: #fff url('https://lengocbaonguyen622.atlassian.net/images/icons/hr.gif') no-repeat scroll center;
+}
+
+</style>
+
+</head>
+<body>
+
+<table class="tableBorder" cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td bgcolor="#f0f0f0" width="100%" colspan="2" valign="top">
+                            <h3 class="formtitle">
+                        [SPK-10]&nbsp;<a href="https://lengocbaonguyen622.atlassian.net/browse/SPK-10">[Combat Room] Enemies remain inactive when the Player enters and moves along the room perimeter</a>
+            <span class="subText">
+               Created: 18/Nov/26                   &nbsp;Updated: 18/Nov/26
+
+                                            </span>
+            </h3>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%"><b>Status:</b></td>
+        <td width="80%">To Do</td>
+    </tr>
+    <tr>
+        <td width="20%"><b>Project:</b></td>
+        <td width="80%"><a href="https://lengocbaonguyen622.atlassian.net/secure/BrowseProject.jspa?id=10072">SE_Project_K2026</a></td>
+    </tr>
+
+        <tr>
+            <td><b>Components:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+
+        <tr>
+            <td><b>Affects versions:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+
+        <tr>
+            <td><b>Fix versions:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+    
+    </table>
+
+<br />
+<table class="grid" cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td bgcolor="#f0f0f0" valign="top" width="20%">
+            <b>Type:</b>
+        </td>
+        <td bgcolor="#ffffff" valign="top"  width="30%" >
+            Bug
+        </td>
+
+                    <td bgcolor="#f0f0f0">
+                <b>Priority:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" nowrap>
+                Low
+            </td>
+            </tr>
+    <tr>
+                        <td bgcolor="#f0f0f0" valign="top" width="20%">
+                <b>Reporter:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top"  width="30%" >
+                                        
+                
+        
+            <a class="user-hover" rel="712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                id="word_reporter_712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                href="https://lengocbaonguyen622.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3Aeb99c4f8-79be-40c7-b727-b6f526e38ae2">
+                    Lê Ngọc Bảo Nguyễn
+                </a>
+
+                            </td>
+        
+                    <td bgcolor="#f0f0f0" width="20%">
+                <b>Assignee:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" nowrap  width="30%" >
+                                        
+                
+        
+            <a class="user-hover" rel="712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                id="word_assignee_712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                href="https://lengocbaonguyen622.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3Aeb99c4f8-79be-40c7-b727-b6f526e38ae2">
+                    Lê Ngọc Bảo Nguyễn
+                </a>
+
+                            </td>
+            </tr>
+    	<tr>
+		<td bgcolor="#f0f0f0" width="20%">
+			<b>Resolution:</b>
+		</td>
+		<td bgcolor="#ffffff" valign="top" width="30%" nowrap>
+            				Unresolved
+                    </td>
+                    <td bgcolor="#f0f0f0" width="20%">
+                <b>Votes:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" width="30%" nowrap>
+                0
+            </td>
+        
+    </tr>
+    
+        <tr>
+        <td bgcolor="#f0f0f0" width="20%">
+            <b>Labels:</b>
+        </td>
+        <td id="labels-10133-value" class="value" bgcolor="#ffffff" valign="top" colspan="3" nowrap>
+                            None
+                    </td>
+    </tr>
+    
+    	<tr>
+        		<td bgcolor="#f0f0f0" width="20%"><b>Remaining Estimate:</b></td>
+        <td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+    </tr>
+    <tr>
+                <td bgcolor="#f0f0f0" width="20%"><b>Time Spent:</b></td>
+		<td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+	</tr>
+    <tr>
+                <td bgcolor="#f0f0f0" width="20%"><b>Original estimate:</b></td>
+		<td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+    </tr>
+    
+    </table>
+
+
+
+    <br />
+
+    	<table class="grid" cellpadding="0" cellspacing="0" border="0" width="100%">
+            
+
+                <tr>
+            <td bgcolor="#f0f0f0" width=20% valign=top>
+                <b>Attachments:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top">
+                                    <img src="https://lengocbaonguyen622.atlassian.net/images/icons/attach/file.gif" height="16" width="16" border="0" alt="File">
+                    [Combat Room] Enemies remain inactive when the Player enters and moves along the room perimeter.mp4 &nbsp;&nbsp;&nbsp;
+                            </td>
+        </tr>
+        
+    
+
+
+    
+                        <tr>
+                <td bgcolor="#f0f0f0" width="20%" valign="top"><b>Start date:</b></td>
+                <td id="customfield_10015-10133-value" class="value" bgcolor="#ffffff" width="80%">          <span title="18/Nov/26"><time datetime="2026-11-18">18/Nov/26</time></span>
+    </td>
+            </tr>
+                                <tr>
+                <td bgcolor="#f0f0f0" width="20%" valign="top"><b>Rank:</b></td>
+                <td id="customfield_10019-10133-value" class="value" bgcolor="#ffffff" width="80%">      0|i000cz:
+  </td>
+            </tr>
+            </table>
+
+    <br/>
+
+    <table cellpadding="2" cellspacing="0" border="0" width="100%" align="center">
+    <tr>
+        <td bgcolor="#bbbbbb" width="1%" nowrap align="center">
+            &nbsp;<font color="#ffffff"><b>Description</b></font>&nbsp;
+        </td>
+        <td>&nbsp;</td>
+    </tr>
+    </table>
+
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td id="descriptionArea">
+            <p><b>Bug Type:</b> Functional / Room Activation / Gameplay Exploit</p>
+
+<p><b>Priority:</b> Medium</p>
+
+<p><b>Preconditions:</b></p>
+
+<ul>
+	<li>Game is running and the player is exploring a dungeon.</li>
+	<li>The selected character is Doraemon.</li>
+	<li>The player approaches a combat room containing multiple enemies.</li>
+	<li>The combat room has not been cleared or activated.</li>
+	<li>The room entrance is accessible.</li>
+</ul>
+
+
+<p><b>Steps to Reproduce:</b></p>
+
+<ol>
+	<li>Start the game and select Doraemon.</li>
+	<li>Find a combat room containing enemies.</li>
+	<li>Enter the room through an open doorway.</li>
+	<li>Instead of moving toward the center, stay close to the walls and move along the room's perimeter.</li>
+	<li>Continue moving around the edges of the room, including areas close to enemies.</li>
+	<li>Observe the enemies' movement, attack behavior, and the room's gate status.</li>
+	<li>Move farther into the interior of the room.</li>
+	<li>Observe whether the gates close and the enemies become active.</li>
+</ol>
+
+
+<p><b>Expected Result:</b></p>
+
+<ul>
+	<li>Once the player has entered the intended combat area, the room should activate correctly.</li>
+	<li>The gates should close to prevent the player from leaving before defeating the enemies (TC-RM-01).</li>
+	<li>Enemies should become active and respond to the player's presence after the encounter is triggered.</li>
+	<li>The player should not be able to freely explore a substantial portion of an uncleared combat room without triggering the encounter.</li>
+	<li>The activation boundary should be consistent with the room's visible entrance and playable area.</li>
+</ul>
+
+
+<p><b>Actual Result:</b></p>
+
+<ul>
+	<li>Doraemon can enter the combat room and move along its perimeter without immediately activating the encounter.</li>
+	<li>Enemies remain stationary and do not chase or attack the player, even when Doraemon moves close to them.</li>
+	<li>The room gates remain open while the player follows the perimeter.</li>
+	<li>The player's HP and armor remain unchanged during the observed movement.</li>
+	<li>The enemies only become active after Doraemon moves farther into the room.</li>
+	<li>At approximately 11 seconds in the recording, the message "GATES SEALED — VANQUISH THE HORDE!" appears, indicating that the room has finally been activated.</li>
+</ul>
+
+
+<p><b>Test Case Result:</b></p>
+
+<ul>
+	<li><b>FAIL — Potential room activation boundary issue</b></li>
+	<li><b>Related Test Cases:</b>
+	<ul>
+		<li>TC-RM-01: Combat room gates close when the encounter is triggered.</li>
+		<li>TC-RM-05: Enemies become active after the room is locked.</li>
+		<li>TC-RM-03: The player cannot leave an active, locked combat room.</li>
+	</ul>
+	</li>
+	<li><b>Regression Testing:</b> Required after confirmation and correction of the activation rules.</li>
+</ul>
+
+
+<p><b>Notes:</b></p>
+
+<ul>
+	<li>Source code inspection suggests that this behavior may be caused by the combat room's activation condition rather than an enemy AI malfunction.</li>
+	<li>In <tt>room_manager.gd</tt>, the <tt>_is_player_deep_inside_room()</tt> function checks whether the player's position is inside an inset area of the room (<tt>room_rect.grow(-1)</tt>).</li>
+	<li>If the player stays near the room boundary without entering this activation area, the room may remain unlocked and its enemies inactive.</li>
+	<li>This depth requirement appears intentional, but the current activation boundary may allow the player to move too far inside the visible combat room without triggering the encounter.</li>
+	<li>Verify whether this behavior is intended by the level design.</li>
+	<li>Check whether players can bypass combat rooms entirely by following the perimeter.</li>
+	<li>Check whether enemies can be attacked or defeated before the room is activated.</li>
+	<li>Test the behavior at all room entrances and along every wall.</li>
+	<li>Repeat the test using other playable characters.</li>
+	<li>Verify that the room activates consistently when the player crosses its intended trigger boundary.</li>
+	<li>If the player can bypass mandatory combat encounters, consider increasing the priority to <b>High</b>.</li>
+</ul>
+
+
+<p><b>Relevant Source Files:</b></p>
+
+<ul>
+	<li><tt>Scene/Map/room_manager.gd</tt></li>
+	<li><tt>Scene/Map/DungeonSpawner.gd</tt></li>
+	<li><tt>Scene/Map/RoomManager.tscn</tt></li>
+</ul>
+
+
+<p><b>Attachment:</b></p>
+
+<ul>
+	<li><tt>Screen Recording 2026-11-18 220315.mp4</tt></li>
+</ul>
+
+
+<p><b>Status:</b> To Do</p>
+            <br/>
+        </td>
+    </tr>
+    </table>
+
+Generated at Wed Nov 18 15:12:02 UTC 2026 by Lê Ngọc Bảo Nguyễn using Jira 1001.0.0-SNAPSHOT#100296-rev:16bb250ea884137f4703b3fbb48ab436cd7c478a.
+
+</body>
+</html>
