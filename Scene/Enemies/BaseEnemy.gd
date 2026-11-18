@@ -25,7 +25,9 @@ var is_active: bool = false
 # --- THÔNG TIN ĐIỀU HƯỚNG AI & TIẾT KIỆM TÍNH TOÁN RAYCAST ---
 var _ai_tick_timer: float = 0.0
 var _ai_tick_interval: float = 0.1 # Cập nhật tìm đường 10 lần/s thay vì 60 lần/s
+@warning_ignore("unused_private_class_variable") # dùng bởi lớp con & TacticalNavigationCache
 var _cached_steer_dir: Vector2 = Vector2.ZERO
+@warning_ignore("unused_private_class_variable")
 var _cached_has_los: bool = true
 
 @onready var animated_sprite: AnimatedSprite2D = get_node_or_null("AnimatedSprite2D")
@@ -90,7 +92,7 @@ func _die() -> void:
 	is_dead = true
 	var gm = get_node_or_null("/root/GameManager")
 	if gm != null and gm.has_method("register_enemy_kill"):
-		gm.register_enemy_kill()
+		gm.register_enemy_kill(self, enemy_balance_id)
 	if animated_sprite != null and animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation("death"):
 		animated_sprite.play("death")
 	_disable_all_collisions()

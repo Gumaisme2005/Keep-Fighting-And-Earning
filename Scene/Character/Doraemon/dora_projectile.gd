@@ -144,7 +144,7 @@ func _move_bounce(world: Node, step: Vector2) -> void:
 		return
 	global_position = next
 
-func _move_lob(world: Node, delta: float) -> void:
+func _move_lob(world: Node, _delta: float) -> void:
 	if _landed:
 		if age >= life - 0.0001:
 			return

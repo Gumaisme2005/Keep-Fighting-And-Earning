@@ -83,6 +83,7 @@ var room_types: Array = []
 var corridor_cells = {}
 var combat_room_variants: Array[int] = []
 var combat_room_pillar_counts: Array[int] = []
+@warning_ignore("unused_private_class_variable") # dùng bởi DungeonPainter / DungeonSpawner / DungeonLayoutPlanner
 var _combat_room_spawn_cells: Dictionary = {}
 
 var reserved_trap_positions: Array[Vector2i] = []
@@ -229,8 +230,8 @@ func _is_cell_wall_or_door(cell: Vector2i) -> bool:
 func is_global_pos_wall_or_door(world_pos: Vector2) -> bool:
 	return NavHelper.is_global_pos_wall_or_door(self, world_pos)
 
-func has_line_of_sight(from_global: Vector2, to_global: Vector2) -> bool:
-	return NavHelper.has_line_of_sight(self, from_global, to_global)
+func has_line_of_sight(from_global: Vector2, target_global: Vector2) -> bool:
+	return NavHelper.has_line_of_sight(self, from_global, target_global)
 
 func get_smart_steer_direction(from_global: Vector2, desired_dir: Vector2) -> Vector2:
 	return NavHelper.get_smart_steer_direction(self, from_global, desired_dir)

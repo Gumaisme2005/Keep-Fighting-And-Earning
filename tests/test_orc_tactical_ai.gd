@@ -89,9 +89,9 @@ func _step(arena: Dictionary) -> void:
 func _test_floor_profiles_and_fallbacks() -> void:
 	var stats: Dictionary = BALANCE.get_enemy_stats("orc")
 	for fixture in [[1, 0], [3, 1], [5, 2], [7, 3]]:
-		var arena := _arena(fixture[0])
-		var orc = arena.orc
-		await _step(arena)
+		var floor_arena := _arena(fixture[0])
+		var orc = floor_arena.orc
+		await _step(floor_arena)
 		_check(orc._tactical_ai._tactics.get_config()["tier"] == fixture[1], "Floor %d resolves tier %d from map" % fixture)
 		_check(orc.hp == stats.hp and orc.max_hp == stats.hp and orc.damage == stats.damage
 			and orc.speed == stats.speed and orc.attack_range == stats.attack_range,
@@ -103,7 +103,7 @@ func _test_floor_profiles_and_fallbacks() -> void:
 		else:
 			_check(orc._tactical_ai._tactics.get_state() == &"flank_right" and orc.velocity.y > 0.0,
 				"Floor %d uses a seeded approach angle" % fixture[0])
-		arena.map.free()
+		floor_arena.map.free()
 	var arena := _arena(3)
 	var first = arena.orc
 	var second = _new_orc(arena.map, Vector2(0, -80), 8)
@@ -247,30 +247,30 @@ func _test_observed_prediction() -> void:
 
 func _test_attack_guards_and_locks() -> void:
 	for floor_number in [1, 3, 5, 7]:
-		var arena := _arena(floor_number)
-		var orc = arena.orc
-		arena.target.position = Vector2(orc.attack_range + 1.0, 0)
-		await _step(arena)
+		var floor_arena := _arena(floor_number)
+		var orc = floor_arena.orc
+		floor_arena.target.position = Vector2(orc.attack_range + 1.0, 0)
+		await _step(floor_arena)
 		_check(not orc.is_attacking, "Floor %d does not start an attack outside range" % floor_number)
 		orc.position = Vector2.ZERO
-		arena.target.position = Vector2(orc.attack_range, 0)
-		await _step(arena)
+		floor_arena.target.position = Vector2(orc.attack_range, 0)
+		await _step(floor_arena)
 		_check(orc.is_attacking and not orc.axe_collision.disabled,
 			"Floor %d retains immediate attack/hitbox activation at range boundary" % floor_number)
-		orc._on_axe_hitbox_area_entered(arena.hurtbox)
-		_check(arena.target.damage_taken == orc.damage, "Floor %d keeps melee damage unchanged" % floor_number)
-		arena.target.position.x += 0.01
-		orc._on_axe_hitbox_area_entered(arena.hurtbox)
-		_check(arena.target.damage_taken == orc.damage, "Floor %d rejects out-of-range hitbox contact" % floor_number)
-		arena.target.position = Vector2(18, 0)
-		arena.map.set_cell(2, Vector2i(1, 0), 0, Vector2i(1, 3))
-		orc._on_axe_hitbox_area_entered(arena.hurtbox)
-		_check(arena.target.damage_taken == orc.damage, "Floor %d rechecks LoS at damage time" % floor_number)
+		orc._on_axe_hitbox_area_entered(floor_arena.hurtbox)
+		_check(floor_arena.target.damage_taken == orc.damage, "Floor %d keeps melee damage unchanged" % floor_number)
+		floor_arena.target.position.x += 0.01
+		orc._on_axe_hitbox_area_entered(floor_arena.hurtbox)
+		_check(floor_arena.target.damage_taken == orc.damage, "Floor %d rejects out-of-range hitbox contact" % floor_number)
+		floor_arena.target.position = Vector2(18, 0)
+		floor_arena.map.set_cell(2, Vector2i(1, 0), 0, Vector2i(1, 3))
+		orc._on_axe_hitbox_area_entered(floor_arena.hurtbox)
+		_check(floor_arena.target.damage_taken == orc.damage, "Floor %d rechecks LoS at damage time" % floor_number)
 		orc._on_animated_sprite_2d_animation_finished()
-		await _step(arena)
+		await _step(floor_arena)
 		_check(not orc.is_attacking, "Floor %d cannot initiate melee through a closed door" % floor_number)
-		arena.map.set_cell(2, Vector2i(1, 0), -1)
-		arena.target.position = Vector2(160, 0)
+		floor_arena.map.set_cell(2, Vector2i(1, 0), -1)
+		floor_arena.target.position = Vector2(160, 0)
 		for lock in ["inactive", "attack", "hurt", "death"]:
 			orc.is_active = lock != "inactive"
 			# Simulate pending deferred hitbox disabling on hurt/death, too.
@@ -279,16 +279,16 @@ func _test_attack_guards_and_locks() -> void:
 			orc.animated_sprite.play("hurt" if lock == "hurt" else "attack" if lock == "attack" else "idle")
 			var before: Vector2 = orc.global_position
 			var state_before: StringName = orc._tactical_ai._tactics.get_state()
-			var damage_before: int = arena.target.damage_taken
-			await _step(arena)
-			arena.target.position = orc.position + Vector2(10, 0)
-			orc._on_axe_hitbox_area_entered(arena.hurtbox)
+			var damage_before: int = floor_arena.target.damage_taken
+			await _step(floor_arena)
+			floor_arena.target.position = orc.position + Vector2(10, 0)
+			orc._on_axe_hitbox_area_entered(floor_arena.hurtbox)
 			var expected_damage: int = damage_before + (orc.damage if lock == "attack" else 0)
 			_check(orc.global_position == before and orc._tactical_ai._tactics.get_state() == state_before
-				and arena.target.damage_taken == expected_damage,
+				and floor_arena.target.damage_taken == expected_damage,
 				"Floor %d respects %s behavior/damage lock" % [floor_number, lock])
-			arena.target.position = Vector2(160, 0)
-		arena.map.free()
+			floor_arena.target.position = Vector2(160, 0)
+		floor_arena.map.free()
 	var arena := _arena(7)
 	await _step(arena)
 	arena.orc.take_damage(1)

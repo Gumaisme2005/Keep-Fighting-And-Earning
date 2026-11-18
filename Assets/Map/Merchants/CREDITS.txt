@@ -1,0 +1,9 @@
+Wandering merchants (dungeon floor 3+):
+joanna_idle.png (6 frames 64x64) and eleonore_idle.png (9 frames 64x64), merchant_shadow.png:
+"Eleonore & Joanna" idle sprites by otsoga (Pedro Reis) - http://artstation.com/otsoga
+License (from the pack): free for personal and commercial use, may be modified; credit appreciated;
+the asset itself may NOT be redistributed or resold.
+Frames were copied 1:1 into horizontal strips (no rescaling).
+
+Assets/UI/Shop/joanna_portrait.png (76x85) and eleonore_portrait.png (88x71): shop portraits
+taken from images supplied by the user, reduced back to their native pixel grid (6.2x / 8.27x upscales).

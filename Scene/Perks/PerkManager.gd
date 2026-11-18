@@ -32,9 +32,10 @@ func reset() -> void:
 		seed_combat_rng((GameManager.current_seed + ":combat").hash())
 	perks_cleared.emit()
 
-func _on_game_stats_updated(level: int, _kills: int) -> void:
-	if level <= 1 and active_perks.size() > 0:
-		# Bắt đầu chuyến thám hiểm mới, reset perk
+func _on_game_stats_updated(level: int, kills: int) -> void:
+	# Chỉ reset khi bắt đầu chuyến thám hiểm mới (tầng 1, chưa hạ quái nào).
+	# Trước đây mọi lần hạ quái ở tầng 1 đều xóa perk -> chấn mua ở cửa hàng pháp sư lúc đang ở tầng 1 bị mất.
+	if level <= 1 and kills <= 0 and active_perks.size() > 0:
 		reset()
 
 func on_enemy_killed() -> void:

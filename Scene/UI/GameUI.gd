@@ -1,7 +1,6 @@
 extends CanvasLayer
 
 const UITheme = preload("res://Scene/UI/UITheme.gd")
-const InventorySlot = preload("res://Scene/UI/InventorySlot.gd")
 const SLOT_SCENE = preload("res://Scene/UI/InventorySlot.tscn")
 const HOTBAR_SIZE = 9
 const BAG_SIZE = 16
@@ -60,7 +59,17 @@ var equip_stats_label: Label = null
 var minimap_control: Control = null
 var minimap_panel: PanelContainer = null
 var minimap_expanded: bool = false
+var minimap_title: Label = null
 var mute_btn: Button = null
+
+# --- BỘ ĐẾM XU (GÓC TRÊN PHẢI) ---
+const COIN_PICKUP_SCRIPT = preload("res://Scene/Items/Coin/coin_pickup.gd")
+var coin_panel: PanelContainer = null
+var coin_icon: TextureRect = null
+var coin_label: Label = null
+var coin_display_value: float = 0.0
+var coin_target_value: int = 0
+var _coin_pulse_tween: Tween = null
 
 const PERK_MODAL_SCENE = preload("res://Scene/UI/PerkSelectionModal.tscn")
 var perk_modal: CanvasLayer = null
@@ -68,6 +77,16 @@ var active_perks_bar: HBoxContainer = null
 
 class MinimapCanvas extends Control:
 	var tilemap: TileMap = null
+	## Guild Hall đang đứng (khi không ở hầm ngục): vẽ bản đồ sảnh + bãi cỏ thay cho sơ đồ phòng.
+	var hall: Node2D = null
+	var player: Node2D = null
+
+	const HALL_MARKERS := {
+		"portal": [Color(0.35, 0.95, 1.0), "diamond"],   # thanh kiếm rune -> hầm ngục
+		"smith": [Color(1.0, 0.62, 0.22), "square"],     # thợ rèn (vũ khí, giáp)
+		"mage": [Color(0.78, 0.48, 1.0), "circle"],      # pháp sư (chấn)
+		"potion": [Color(0.45, 0.92, 0.42), "circle"],   # giả kim (thuốc)
+	}
 
 	func _process(_delta: float) -> void:
 		queue_redraw()
@@ -77,6 +96,8 @@ class MinimapCanvas extends Control:
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0.68, 0.55, 0.28, 0.90), false, 2.0)
 
 		if tilemap == null or not is_instance_valid(tilemap):
+			if hall != null and is_instance_valid(hall) and hall.has_method("get_minimap_data"):
+				_draw_hall()
 			return
 		var positions: Array = tilemap.get("room_positions")
 		var types: Array = tilemap.get("room_types")
@@ -188,6 +209,65 @@ class MinimapCanvas extends Control:
 		draw_circle(player_screen_pos, 3.6, Color(0.05, 0.08, 0.12, 0.95))
 		draw_circle(player_screen_pos, 2.6, Color(0.35, 1.0, 0.95, 1.0))
 		draw_circle(player_screen_pos, 1.4, Color.WHITE)
+
+	## Bản đồ Guild Hall: bãi cỏ (trái) + sảnh (phải), lối thông ở tường trái, các điểm quan trọng và vị trí người chơi.
+	func _draw_hall() -> void:
+		var d: Dictionary = hall.get_minimap_data()
+		var bounds: Rect2 = d.get("bounds", Rect2(0, 0, 576, 352))
+		var pad := 8.0
+		var sc := minf((size.x - pad * 2.0) / bounds.size.x, (size.y - pad * 2.0) / bounds.size.y)
+		var origin := (size - bounds.size * sc) * 0.5 - bounds.position * sc
+		var to_map := func(p: Vector2) -> Vector2: return origin + p * sc
+		var map_rect := func(r: Rect2) -> Rect2: return Rect2(origin + r.position * sc, r.size * sc)
+		# bãi cỏ
+		var clearing: PackedVector2Array = d.get("field", PackedVector2Array())
+		if clearing.size() >= 3:
+			var pts := PackedVector2Array()
+			for p in clearing:
+				pts.append(to_map.call(p))
+			draw_colored_polygon(pts, Color(0.27, 0.52, 0.27, 0.95))
+			pts.append(pts[0])
+			draw_polyline(pts, Color(0.15, 0.32, 0.16, 1.0), 1.0)
+		# sảnh: tường + sàn gỗ + thảm, lối sang bãi cỏ
+		draw_rect(map_rect.call(d.get("room", Rect2(0, 0, 576, 352))), Color(0.22, 0.15, 0.12, 1.0), true)
+		draw_rect(map_rect.call(d.get("floor", Rect2(32, 64, 512, 256))), Color(0.58, 0.39, 0.24, 1.0), true)
+		for r in d.get("rugs", []):
+			draw_rect(map_rect.call(r), Color(0.66, 0.56, 0.36, 1.0), true)
+		for r in d.get("blocks", []):
+			draw_rect(map_rect.call(r), Color(0.36, 0.24, 0.17, 1.0), true)
+		var door: Rect2 = d.get("door", Rect2())
+		if door.size != Vector2.ZERO:
+			draw_rect(map_rect.call(door), Color(0.58, 0.39, 0.24, 1.0), true)
+		draw_rect(map_rect.call(d.get("room", Rect2(0, 0, 576, 352))), Color(0.10, 0.07, 0.06, 1.0), false, 1.0)
+		# điểm quan trọng
+		var pulse := (sin(Time.get_ticks_msec() * 0.006) + 1.0) * 0.5
+		for m in d.get("markers", []):
+			var spec: Array = HALL_MARKERS.get(String(m.kind), [Color.WHITE, "circle"])
+			var c: Vector2 = to_map.call(m.pos)
+			var col: Color = spec[0]
+			match String(spec[1]):
+				"diamond":
+					draw_circle(c, 4.5 + pulse * 2.0, Color(col.r, col.g, col.b, 0.25))
+					draw_colored_polygon(PackedVector2Array([c + Vector2(0, -4), c + Vector2(4, 0), c + Vector2(0, 4), c + Vector2(-4, 0)]), col)
+					draw_polyline(PackedVector2Array([c + Vector2(0, -4), c + Vector2(4, 0), c + Vector2(0, 4), c + Vector2(-4, 0), c + Vector2(0, -4)]), Color(0.05, 0.08, 0.12), 1.0)
+				"square":
+					draw_rect(Rect2(c - Vector2(3, 3), Vector2(6, 6)), col, true)
+					draw_rect(Rect2(c - Vector2(3, 3), Vector2(6, 6)), Color(0.05, 0.08, 0.12), false, 1.0)
+				_:
+					draw_circle(c, 3.4, Color(0.05, 0.08, 0.12))
+					draw_circle(c, 2.6, col)
+		# các anh hùng đang đứng chờ trong sảnh
+		for p in d.get("heroes", []):
+			draw_circle(to_map.call(p), 1.3, Color(0.86, 0.86, 0.9, 0.85))
+		# người chơi
+		if player != null and is_instance_valid(player) and player.is_inside_tree():
+			var pp: Vector2 = to_map.call(hall.to_local(player.global_position))
+			pp.x = clampf(pp.x, 4.0, size.x - 4.0)
+			pp.y = clampf(pp.y, 4.0, size.y - 4.0)
+			draw_circle(pp, 4.4 + pulse * 1.4, Color(0.20, 0.95, 1.0, 0.35))
+			draw_circle(pp, 3.2, Color(0.05, 0.08, 0.12, 0.95))
+			draw_circle(pp, 2.3, Color(0.35, 1.0, 0.95, 1.0))
+			draw_circle(pp, 1.2, Color.WHITE)
 
 func _ready() -> void:
 	add_to_group("game_ui")
@@ -338,7 +418,7 @@ func _build_enhanced_ui() -> void:
 	top_right.offset_left = -285.0
 	top_right.offset_right = -12.0
 	top_right.offset_top = 10.0
-	top_right.offset_bottom = 115.0
+	top_right.offset_bottom = 150.0
 	top_right.add_theme_constant_override("separation", 6)
 	add_child(top_right)
 
@@ -390,13 +470,45 @@ func _build_enhanced_ui() -> void:
 	map_btn.pressed.connect(_toggle_minimap_size)
 	seed_btn_hbox.add_child(map_btn)
 
-	var is_muted_now: bool = (get_node_or_null("/root/AudioManager") != null and AudioManager.is_muted)
 	mute_btn = UITheme.create_button("Audio", "", Vector2(0, 24), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 11, 5, 4)
 	mute_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	mute_btn.focus_mode = Control.FOCUS_NONE
 	mute_btn.tooltip_text = "Toggle Sound & Music"
 	mute_btn.pressed.connect(_on_toggle_mute_pressed)
 	seed_btn_hbox.add_child(mute_btn)
+
+	# Bộ đếm xu: biểu tượng đồng xu + số xu hiện có, canh phải ngay dưới bảng thông tin
+	coin_panel = PanelContainer.new()
+	coin_panel.name = "CoinCounter"
+	coin_panel.size_flags_horizontal = Control.SIZE_SHRINK_END
+	coin_panel.add_theme_stylebox_override("panel", UITheme.make_panel_style(Color(0.06, 0.08, 0.13, 0.94), UITheme.COLOR_GOLD_BORDER, 2, 4, 10, 3))
+	coin_panel.tooltip_text = "Coins — defeat enemies to earn more"
+	top_right.add_child(coin_panel)
+
+	var coin_row := HBoxContainer.new()
+	coin_row.add_theme_constant_override("separation", 6)
+	coin_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	coin_panel.add_child(coin_row)
+
+	coin_icon = TextureRect.new()
+	coin_icon.texture = COIN_PICKUP_SCRIPT.load_pixel_texture(COIN_PICKUP_SCRIPT.COIN_ICON_PATH)
+	coin_icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	coin_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	coin_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	coin_icon.custom_minimum_size = Vector2(19, 22)
+	coin_icon.pivot_offset = Vector2(9.5, 11.0)
+	coin_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	coin_row.add_child(coin_icon)
+
+	coin_label = Label.new()
+	coin_label.text = "0"
+	coin_label.custom_minimum_size = Vector2(40, 0)
+	coin_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	coin_label.add_theme_font_size_override("font_size", 16)
+	coin_label.add_theme_color_override("font_color", Color(1.0, 0.95, 0.80))
+	coin_label.add_theme_color_override("font_outline_color", Color(0.05, 0.05, 0.08, 0.95))
+	coin_label.add_theme_constant_override("outline_size", 3)
+	coin_row.add_child(coin_label)
 
 	# 3. Minimap Góc Dưới Phía Bên Phải
 	minimap_panel = PanelContainer.new()
@@ -420,6 +532,7 @@ func _build_enhanced_ui() -> void:
 	UITheme.style_header_label(mm_title, 11, UITheme.COLOR_TEXT_GOLD)
 	mm_title.text = "DUNGEON MAP"
 	mm_vbox.add_child(mm_title)
+	minimap_title = mm_title
 
 	minimap_control = MinimapCanvas.new()
 	minimap_control.custom_minimum_size = Vector2(177, 122)
@@ -747,7 +860,7 @@ func _build_inventory_modal() -> void:
 		grid.add_child(slot)
 		bag_slots.append(slot)
 
-func _create_equip_slot(label_txt: String, icon_name: String, item_type: int, parent_box: Container) -> TextureButton:
+func _create_equip_slot(label_txt: String, _icon_name: String, item_type: int, parent_box: Container) -> TextureButton:
 	var vbox := VBoxContainer.new()
 	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	vbox.add_theme_constant_override("separation", 3)
@@ -810,6 +923,25 @@ func _connect_to_player_and_map() -> void:
 		dungeon_map = player.get_parent()
 	elif get_tree().current_scene and get_tree().current_scene.has_node("TileMap"):
 		dungeon_map = get_tree().current_scene.get_node("TileMap")
+	elif dungeon_map != null and not is_instance_valid(dungeon_map):
+		dungeon_map = null
+
+	# Guild Hall: bản đồ nhỏ vẽ sảnh + bãi cỏ (guild_hall.gd get_minimap_data)
+	var hall_node: Node2D = null
+	if player != null and dungeon_map == null:
+		var n: Node = player.get_parent()
+		while n != null and not n.has_method("get_minimap_data"):
+			n = n.get_parent()
+		hall_node = n as Node2D
+	if minimap_control != null:
+		minimap_control.hall = hall_node
+		minimap_control.player = player
+		if hall_node != null:
+			minimap_control.tilemap = null
+		minimap_control.tooltip_text = ("Guild Hall Map:\nCyan: Rune Sword (to the dungeon) • Orange: Blacksmith • Purple: Mages • Green: Brewers\nPress M to expand or collapse"
+			if hall_node != null else "Dungeon Map:\nGreen: Entrance • Blue: Cleared • Orange: Combat • Gold: Treasure • Red: Boss Lair\nPress M to expand or collapse")
+	if minimap_title != null:
+		minimap_title.text = "GUILD HALL" if hall_node != null else "DUNGEON MAP"
 
 	if dungeon_map != null:
 		minimap_control.tilemap = dungeon_map
@@ -823,6 +955,9 @@ func _connect_to_player_and_map() -> void:
 			GameManager.stats_updated.connect(_on_game_stats_updated)
 		_on_game_stats_updated(GameManager.current_level, GameManager.enemies_killed)
 		seed_label.text = "Seed: " + GameManager.current_seed
+		if not GameManager.coins_changed.is_connected(_on_coins_changed):
+			GameManager.coins_changed.connect(_on_coins_changed)
+		set_coin_display(GameManager.coins)
 		replay_banner.visible = GameManager.is_replaying
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -894,6 +1029,35 @@ func _on_game_stats_updated(level: int, kills: int) -> void:
 		floor_kills_label.text = "Floor %d   •   Slain: %d" % [level, kills]
 	if seed_label != null and get_node_or_null("/root/GameManager") != null:
 		seed_label.text = "Seed: " + GameManager.current_seed
+
+# --- BỘ ĐẾM XU ---
+func set_coin_display(total: int) -> void:
+	coin_target_value = maxi(0, total)
+	coin_display_value = float(coin_target_value)
+	if coin_label != null:
+		coin_label.text = str(coin_target_value)
+
+func _on_coins_changed(total: int, delta: int) -> void:
+	coin_target_value = maxi(0, total)
+	if delta <= 0:
+		# Bị trừ / reset: cập nhật ngay, không đếm
+		set_coin_display(total)
+		return
+	if coin_icon != null:
+		if _coin_pulse_tween != null and _coin_pulse_tween.is_valid():
+			_coin_pulse_tween.kill()
+		coin_icon.scale = Vector2(1.3, 1.3)
+		_coin_pulse_tween = coin_icon.create_tween()
+		_coin_pulse_tween.tween_property(coin_icon, "scale", Vector2.ONE, 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+func _process(delta: float) -> void:
+	if coin_label == null or int(round(coin_display_value)) == coin_target_value:
+		return
+	# Số xu chạy lên dần (nhanh hơn khi chênh lệch lớn)
+	var gap: float = float(coin_target_value) - coin_display_value
+	var step: float = maxf(25.0, absf(gap) * 10.0) * delta
+	coin_display_value = move_toward(coin_display_value, float(coin_target_value), step)
+	coin_label.text = str(int(round(coin_display_value)))
 
 func _on_dungeon_generated() -> void:
 	if boss_panel != null:

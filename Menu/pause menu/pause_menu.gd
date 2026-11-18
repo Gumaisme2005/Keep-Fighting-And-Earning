@@ -104,8 +104,8 @@ func resume() -> void:
 
 func pause() -> void:
 	if info_label != null and get_node_or_null("/root/GameManager") != null:
-		info_label.text = "Seed: %s  •  Floor: %d  •  Enemies Slain: %d" % [
-			GameManager.current_seed, GameManager.current_level, GameManager.enemies_killed
+		info_label.text = "Seed: %s  •  Floor: %d  •  Enemies Slain: %d  •  Coins: %d" % [
+			GameManager.current_seed, GameManager.current_level, GameManager.enemies_killed, GameManager.coins
 		]
 	show()
 	get_tree().paused = true

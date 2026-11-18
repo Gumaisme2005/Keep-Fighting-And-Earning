@@ -233,6 +233,31 @@ static func get_boss_resource(boss_id: String) -> BossBalanceData:
 	var key := boss_id.to_lower()
 	return BOSS_RESOURCES.get(key, BOSS_RESOURCES.get("necromancer", null))
 
+# ------------------------------------------------------------------------------
+# COIN ECONOMY (XU RƠI RA KHI HẠ KẺ ĐỊCH)
+# ------------------------------------------------------------------------------
+# [min, max] xu cho mỗi lần hạ, trước khi nhân thưởng theo tầng.
+static var COIN_REWARDS: Dictionary = {
+	"skeleton": [2, 3],
+	"orc": [3, 4],
+	"skeleton_archer": [3, 5],
+	"vampire": [3, 5],
+	"werewolf": [4, 6],
+	"armored_orc": [5, 7],
+	"necromancer": [30, 40],
+	"orc_rider": [35, 45],
+	"skeleton_king": [50, 65]
+}
+const COIN_DEFAULT_REWARD: Array = [1, 2]
+const COIN_SUMMONED_REWARD: int = 1   # lính do boss triệu hồi chỉ rơi 1 xu (chống farm)
+const COIN_FLOOR_BONUS: float = 0.15  # +15% xu cho mỗi tầng sâu hơn
+
+static func get_coin_reward(reward_key: String) -> Array:
+	return COIN_REWARDS.get(reward_key.to_lower(), COIN_DEFAULT_REWARD)
+
+static func is_boss_reward(reward_key: String) -> bool:
+	return BOSS_STATS.has(reward_key.to_lower())
+
 # --- API TRA CỨU & BUFF/NERF ĐỘNG ---
 static func get_hero_stats(hero_id: String) -> Dictionary:
 	var key := hero_id.to_lower()

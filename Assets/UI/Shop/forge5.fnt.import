@@ -1,0 +1,17 @@
+[remap]
+
+importer="font_data_bmfont"
+type="FontFile"
+uid="uid://c6a0uppn238kl"
+path="res://.godot/imported/forge5.fnt-66b535575df9a6ffe772ba3be7b7bada.fontdata"
+
+[deps]
+
+source_file="res://Assets/UI/Shop/forge5.fnt"
+dest_files=["res://.godot/imported/forge5.fnt-66b535575df9a6ffe772ba3be7b7bada.fontdata"]
+
+[params]
+
+fallbacks=[]
+compress=true
+scaling_mode=2

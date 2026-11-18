@@ -4,6 +4,114 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 
 ---
 
+## [2026-11-14] — Thương Nhân Lang Thang: Hiệp Sĩ Joanna & Pháp Sư Eleonore
+
+- **Xuất hiện trong hầm ngục** (`Scene/Map/Merchants/wandering_merchant.gd`, gọi từ `DungeonSpawner.spawn_entities`):
+  - Cứ sau khi người chơi vượt 2 tầng thì tầng tiếp theo — tầng **3, 6, 9, 12…** — có **50%** khả năng gặp **1 trong 2** người (mỗi người 50%). Các tầng khác không có ai.
+  - Họ đứng ở góc trên-trái phòng xuất phát như hình mẫu.
+  - Ai xuất hiện và bán gì đều tính từ seed của lượt + số tầng bằng bộ số ngẫu nhiên riêng: cùng seed ra cùng kết quả, không làm lệch bản đồ hay replay.
+  - Chỗ đứng tránh tường, hành lang, bẫy và chỗ người chơi xuất hiện giữa phòng. Đứng gần hiện "[E] SHOP", nhấn E để mở cửa hàng. Sang tầng mới thì thương nhân cũ biến mất.
+  - Sprite idle 64×64 từ gói "Eleonore & Joanna" (otsoga): Joanna 6 khung, Eleonore 9 khung, kèm bóng đổ và ánh sáng nhỏ để nhìn rõ trong hầm tối.
+- **Cửa hàng 3 món** (`Scene/UI/Shop/MerchantShopUI.gd`, `merchant_offer.gd`): cùng khung với shop thợ rèn (túi đồ, mua/bán, mặc, uống, trả bằng ví), cột hàng bán là danh sách 3 dòng có tên + giá, chân dung pixel của từng người.
+  - **Hiệp sĩ Joanna — KNIGHT'S WARES**: 3 món giáp / vũ khí khác nhau, luôn có ít nhất 1 vũ khí và 1 mũ/giáp; mỗi món chỉ có 1 cái.
+  - **Pháp sư Eleonore — WITCH'S BREWS**: 3 loại thuốc khác nhau; thuốc thường 3 bình, thuốc hiếm 2, còn lại 1.
+  - Độ hiếm tung theo bảng rơi đồ của tầng nên tầng sâu bán đồ tốt hơn; giá trùng với Guild Hall nếu món đó cũng bán ở đó.
+  - Hàng đã mua giữ nguyên khi mở lại cửa hàng trong cùng tầng. Trong replay không mua được (ví không đổi).
+- `ShopUI.gd`: `catalog` nhận thêm đối tượng hàng riêng của từng thương nhân (chỉ đổi kiểu biến).
+- **Kiểm thử**: thêm `tests/test_wandering_merchant.tscn` — **56/56 PASS** (chỉ tầng 3, 6, 9… mới có thể gặp, tỉ lệ xuất hiện, tầng 4–5 không có ai, seed cố định, 3 món đúng loại, độ hiếm theo tầng, vị trí đứng, mở shop bằng E, mua bằng ví, hết hàng, mặc đồ / uống thuốc, replay không mua được, sang tầng mới).
+- Hồi quy Godot 4.7.2 headless: toàn bộ test khác giữ nguyên kết quả (Wallet 46/46, Shop 48/48, Potion Shop 19/19, Rune Portal 63/63, Guild Hall 105/105, Replay Security 39/39, MOBA HUD 159/159, …; benchmark hoàn tất). `test_perk_system` vẫn **35/37** như trước (lỗi có sẵn, không liên quan).
+- Thêm bước [16/16] vào `run_tests.bat`. Bước CI tương ứng (bước 21) cần thêm thủ công vào `.github/workflows/ci.yml`.
+
+---
+
+## [2026-11-10] — Ví Tiền Lưu Lâu Dài
+
+- **Ví dùng chung** cho mọi nhân vật và mọi lượt chơi (`Scene/GameManager.gd`): số dư không còn bị đặt về 0 khi bắt đầu lượt mới; đổi nhân vật, chết, về menu chính hay tắt rồi mở lại game đều giữ nguyên số xu.
+- **Hàm quản lý ví tập trung**:
+  - `add_coins()`: nhặt xu, bán đồ.
+  - `spend_coins()`: mua đồ, đổi chấn. Từ chối số tiền ≤ 0 hoặc lớn hơn số dư.
+  - `set_wallet_balance()`: công cụ / kiểm thử, kẹp trong 0..`MAX_COINS`.
+  - `GameManager.coins` giờ là thuộc tính đọc số dư ví; gán trực tiếp cũng đi qua `set_wallet_balance()`. Số dư không bao giờ âm và không vượt `MAX_COINS`.
+- **Tự động lưu** vào file riêng `user://wallet.json` (`{"version": 1, "coins": N}`), không cần bấm Save:
+  - Nhặt xu: gom các lần nhặt liên tiếp, lưu một lần sau 1.5 giây. Bộ đếm chạy cả khi game tạm dừng.
+  - Lưu ngay khi: chi tiêu, chuyển tầng (kể cả xuống tầng 1 qua thanh kiếm rune), bắt đầu hoặc kết thúc lượt, đóng cửa sổ / thoát game.
+- **Ghi an toàn**:
+  - Các bước: ghi `wallet.json.tmp`, đọc lại để kiểm tra, chép file chính cũ sang `wallet.json.bak`, rồi đổi tên file tạm thành file chính.
+  - Khi tải, thứ tự thử là file chính, rồi file tạm (lần ghi trước bị ngắt), rồi bản dự phòng. Dùng bản dự phòng thì file chính được ghi lại ngay.
+  - Ghi lỗi thì ví vẫn đánh dấu "chưa lưu" và thử lại ở lần lưu sau.
+- **Kiểm tra khi tải**:
+  - `coins` phải là số nguyên trong khoảng 0..`MAX_COINS`; file quá 4 KB, JSON hỏng, sai kiểu (chuỗi, bool, số lẻ, mảng, null) hoặc thiếu khoá đều bị bỏ qua.
+  - Save cũ chưa có ví bắt đầu từ 0. Số xu trong lịch sử các lượt **không** được cộng dồn vào ví.
+- **Kết thúc lượt** không cộng lại tiền: lịch sử lượt chơi ghi `run_coins` (số xu nhặt được trong lượt đó), ví đã được cộng lúc nhặt.
+- **Replay** không đổi và không ghi đè ví thật: khi `is_replaying`, nhặt xu không cộng, không chi tiêu được, không gán được số dư, file ví không bị ghi.
+- **HUD** (`GameUI`) hiển thị số dư ví qua tín hiệu `coins_changed` sẵn có: trừ tiền cập nhật ngay, cộng tiền bắt đầu đếm lên ngay.
+- **Chạy kiểm thử** (scene / script trong `tests/`) dùng ví riêng `user://wallet_test.json`, không đụng ví thật của người chơi.
+
+### Kiểm Thử
+- Thêm `tests/test_wallet.gd` / `.tscn` — **46/46 PASS**:
+  - 202 xu giữ nguyên qua lượt mới, đổi nhân vật, chết, về menu và mở lại game.
+  - Nhặt 10 xu → 212, kết thúc lượt vẫn 212; lưu gom sau ~1.5 giây.
+  - Chi 50 → 162 và lưu ngay; chi vượt số dư, số âm hoặc 0 đều bị từ chối.
+  - Lưu ngay khi chuyển tầng, kết thúc lượt và đóng game.
+  - Replay không đổi ví và không ghi file.
+  - Save cũ chưa có ví → 0; khôi phục từ bản dự phòng / file tạm; mọi bản đều hỏng → 0; từ chối giá trị sai.
+  - HUD hiển thị số dư.
+- Thêm bước [15/15] vào `run_tests.bat`. Bước CI tương ứng (chạy `test_wallet.tscn` với `XDG_DATA_HOME` dùng một lần) cần thêm thủ công vào `.github/workflows/ci.yml`.
+- Cập nhật `tests/test_coins.gd` (**36/36**) và `tests/test_hall_select.gd` (**48/48**): lượt mới giữ số dư thay vì về 0.
+- Kiểm thử thực tế hai tiến trình: nhặt xu rồi thoát ngay (chưa hết 1.5 giây) → mở lại game vẫn 212.
+- Hồi quy bằng Godot 4.7.2 headless, tất cả PASS:
+  - Unit **28/28**, Property **11/11**, Orc, Skeleton King **22/22**, Doraemon **49/49**, Yugi, Werewolf **50/50**.
+  - MOBA HUD/Inventory **159/159**, Miyabi **18/18**, Lương Thơ **15/15**, Projectile Obstacles, Replay Security **39/39**.
+  - Archer Combat **12/12**, Archer AI **120/120**, Orc AI **82/82**, Enemy AI **48/48**, Tactical Navigation **49/49**, Tactical BaseEnemy **49/49**.
+  - Guild Hall **105/105**, Rune Portal **63/63**, Shop **48/48**, Mage Shop **33/33**, Potion Shop **19/19**, New Mechanics, Visual Backdrop; benchmark hoàn tất.
+- `tests/test_perk_system.tscn` vẫn **35/37** như trước khi sửa (2 lỗi có sẵn về sát thương perk, không liên quan tới ví).
+
+---
+
+## [2026-11-10] — Bản Đồ Nhỏ Cho Guild Hall
+
+- Khung bản đồ góc phải dưới giờ có bản đồ khi ở Guild Hall. Tiêu đề khung đổi thành **GUILD HALL** khi ở sảnh và về lại **DUNGEON MAP** khi xuống hầm ngục.
+- **Bản đồ sảnh** gồm:
+  - Bãi cỏ màu xanh bên trái, sảnh màu gỗ bên phải, và lối thông qua tường trái nối hai bên.
+  - Thảm, đồ đạc lớn trong sảnh (kệ, rương, bàn, sofa, bia, hình nộm…) và chân lều, xe thuốc ngoài bãi cỏ. Những thứ này vẽ màu tối, là chỗ không đi qua được.
+- **Các điểm cần tìm**:
+  - Hình thoi xanh nhấp nháy: thanh kiếm rune để xuống hầm ngục.
+  - Ô vuông cam: thợ rèn. Chấm tím: pháp sư. Chấm xanh lá: nhóm giả kim.
+  - Các chấm trắng nhỏ: những anh hùng đang đứng chờ trong sảnh.
+  - Chấm xanh có vòng nhấp nháy: vị trí người chơi, chạy theo thời gian thực.
+- Phím **M** vẫn phóng to / thu nhỏ khung như trong hầm ngục. Rê chuột vào khung sẽ hiện chú thích các màu.
+- Bản đồ tự đổi khi vào sảnh bằng nút **BẮT ĐẦU**, bằng phím **T**, hoặc đi qua thanh kiếm rune xuống hầm. Màn "Chọn nhân vật" lúc chưa điều khiển ai thì chưa có thanh HUD này.
+- File sửa: `Scene/UI/GameUI.gd` (chế độ vẽ sảnh của minimap, đổi tiêu đề), `Scene/Map/GuildHall/guild_hall.gd` (`get_minimap_data()`: mặt sàn, bãi cỏ, lối thông, vật cản, các điểm đánh dấu, anh hùng).
+- **Kiểm thử**: thêm kiểm tra vào `tests/test_hall_select.gd` (**48/48**) và `tests/test_rune_portal.gd` (**63/63**). Các test khác vẫn đạt: Guild Hall **105**, HUD/túi đồ **159**, xu **36**, shop **48**, mage **33**, thuốc **19**, unit hầm ngục **28**.
+
+---
+
+## [2026-11-10] — Màn Chọn Nhân Vật Lấp Kín Màn Hình
+
+- Màn "Chọn nhân vật" giờ lấp kín màn hình bằng sảnh, không còn lộ bãi cỏ bên trái hay nền đen bên phải. Đã kiểm tra ở hai cỡ cửa sổ: 1280×720 và cửa sổ rộng 1913×931.
+- **Camera** (`Scene/Map/GuildHall/hall_select.gd`):
+  - Tự phóng to theo kích thước cửa sổ để sảnh (từ tường trái tới tường phải, từ trần tới tường dưới — khung `VIEW_RECT`) phủ kín màn hình, và không được đi ra ngoài khung sảnh.
+  - Cả lúc tiến lại gần một nhân vật cũng không lộ phần bên ngoài.
+  - Cửa sổ rộng: sảnh lấp đủ bề ngang nên không thể thấy hết chiều cao. Ưu tiên giữ hàng nhân vật dưới đáy (Yugi, Doraemon, Miyabi…) và cắt bớt phần tường trên, chỗ thanh tiêu đề vốn đã che.
+- **HUD** bám theo góc màn hình ở mọi cỡ cửa sổ: nút **MENU CHÍNH** góc trên trái, tiêu đề ở giữa trên, nút **DANH SÁCH NHÂN VẬT** góc dưới trái, dòng gợi ý ở giữa dưới.
+- Chỉ sửa `Scene/Map/GuildHall/hall_select.gd` và `tests/test_hall_select.gd` — **45/45 PASS**.
+
+---
+
+## [2026-11-06] — Guild Hall: Sảnh Chờ Dựng Từ Bộ Tài Nguyên CraftPix
+
+- **Sảnh mới** `Scene/Map/GuildHall/guild_hall.tscn` + `guild_hall.gd`, dựng theo ảnh mẫu bằng "Free Top-Down Pixel Art Guild Hall Asset Pack" của CraftPix (`Assets/Map/GuildHall/`: `Walls_interior.png`, `Interior_objects.png`, `Fire.png`, hình nộm tập đánh). Không có NPC; không dùng sprite nhân vật nào của bộ tài nguyên (xem `Assets/Map/GuildHall/CREDITS.txt`).
+- **Các lớp**:
+  - `Floor` / `Walls` / `WallsFront`: TileMapLayer, vẽ lại được trong editor bằng `guild_hall_tileset.tres`. Tường hai bên và tường dưới (`WallsFront`) vẽ đè lên nhân vật.
+  - `FloorDecor` (thảm, vòng phép) nằm dưới mọi thứ; `WallDecor` (cờ, đầu rồng…) treo trên tường.
+  - `Props`: node y-sort cho nhân vật và đồ đạc; mỗi món tự có `StaticBody2D` nên không đi xuyên qua được.
+- Camera giới hạn trong sảnh. Nhân vật đang chọn xuất hiện ở `PlayerSpawn`; chạy thẳng scene (F6) để đi dạo. ESC mở menu tạm dừng, chết thì hiện Game Over như trong hầm ngục.
+- `ExitArea` ở tường dưới phát tín hiệu `exit_reached`, chỗ để gắn lối ra.
+- **Phím T** (action `teleport_hall`, xử lý ở `GameManager.teleport_to_guild_hall()`): từ hầm ngục đưa nhân vật đang chơi về sảnh, giữ nguyên máu. Không dùng được khi đang xem replay.
+- **Kiểm thử** `tests/test_guild_hall.tscn`: cấu trúc scene, nhân vật đi vào mọi bức tường không lọt ra ngoài, phím T từ hầm ngục về sảnh — hiện **105/105 PASS** (Godot 4.7.2 headless).
+
+---
+
 ## [2026-11-05] — Hợp Nhất Bản Backup Với Development
 
 - Ghép thay đổi từ backup `5b7da7f` vào checkout development `a82be27`, dựa trên mốc chung `9ad0399`: thêm Miyabi, Lương Thơ, sửa hướng hitbox, chặn đạn Doraemon qua thùng và giảm sát thương cầu năng lượng Yugi.

@@ -95,8 +95,8 @@ func pause() -> void:
 	if pause_menu != null:
 		pause_menu.hide()
 	if summary_label != null and get_node_or_null("/root/GameManager") != null:
-		summary_label.text = "Seed: %s\nFloor Reached: %d   •   Enemies Slain: %d" % [
-			GameManager.current_seed, GameManager.current_level, GameManager.enemies_killed
+		summary_label.text = "Seed: %s\nFloor Reached: %d   •   Enemies Slain: %d   •   Coins: %d" % [
+			GameManager.current_seed, GameManager.current_level, GameManager.enemies_killed, GameManager.coins
 		]
 	show()
 	get_tree().paused = true
@@ -104,7 +104,11 @@ func pause() -> void:
 
 func _on_retry_button_pressed() -> void:
 	get_tree().paused = false
-	get_tree().change_scene_to_file("res://Scene/UI/CharacterSelect.tscn")
+	# chọn lại nhân vật ở Guild Hall (run mới, cùng seed)
+	if get_node_or_null("/root/GameManager") != null:
+		GameManager.start_run_in_hall(GameManager.current_seed)
+	else:
+		get_tree().change_scene_to_file("res://Scene/Map/GuildHall/guild_hall.tscn")
 
 func _on_exit_button_pressed() -> void:
 	get_tree().paused = false

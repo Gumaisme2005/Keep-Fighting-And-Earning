@@ -153,7 +153,7 @@ func take_damage(damage_amount: int) -> void:
 	else:
 		is_dead = true
 		if get_node_or_null("/root/GameManager") != null:
-			GameManager.register_enemy_kill()
+			GameManager.register_enemy_kill(self, "necromancer")
 		_drop_boss_loot()
 		_cleanup_summoned_minions()
 		anim.modulate = Color.WHITE
@@ -205,6 +205,7 @@ func cast_summon_skill():
 		var num_mobs = rng.randi_range(4, 6)
 		for i in range(num_mobs):
 			var minion = summon_enemy_scene.instantiate()
+			minion.set_meta("summoned", true)
 			parent_node.call_deferred("add_child", minion)
 			var angle = i * (TAU / num_mobs)
 			var spawn_offset = Vector2(cos(angle), sin(angle)) * 55.0

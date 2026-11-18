@@ -73,7 +73,7 @@ static func character_frames(form: String) -> SpriteFrames:
 	if _frames_cache.has(form):
 		return _frames_cache[form]
 	var tex := texture("lt_sheet.png")
-	var offset := UPGRADED_ROW_OFFSET if form == "upgraded" else 0
+	var row_offset := UPGRADED_ROW_OFFSET if form == "upgraded" else 0
 	var frames := SpriteFrames.new()
 	if frames.has_animation("default"):
 		frames.remove_animation("default")
@@ -83,10 +83,10 @@ static func character_frames(form: String) -> SpriteFrames:
 		frames.set_animation_speed(anim, float(info[2]))
 		frames.set_animation_loop(anim, bool(info[3]))
 		for i in range(int(info[1])):
-			frames.add_frame(anim, _cell(tex, FRAME, int(info[0]) + offset, i))
+			frames.add_frame(anim, _cell(tex, FRAME, int(info[0]) + row_offset, i))
 	frames.add_animation("ready")
 	frames.set_animation_loop("ready", false)
-	frames.add_frame("ready", _cell(tex, FRAME, int(ANIMS["draw"][0]) + offset, int(ANIMS["draw"][1]) - 1))
+	frames.add_frame("ready", _cell(tex, FRAME, int(ANIMS["draw"][0]) + row_offset, int(ANIMS["draw"][1]) - 1))
 	frames.add_animation("transform")
 	frames.set_animation_speed("transform", float(TRANSFORM[2]))
 	frames.set_animation_loop("transform", false)
