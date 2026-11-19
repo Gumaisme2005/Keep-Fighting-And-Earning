@@ -4,10 +4,11 @@ extends Node
 ## its sprite while it lies on the floor (Magic Hand trip).
 
 const WALL_PROBES := [Vector2.ZERO, Vector2(6, 0), Vector2(-6, 0), Vector2(0, -8), Vector2(0, 4)]
+const CombatUtil = preload("res://Scene/Character/CombatUtil.gd")
 
 var remaining: float = 1.0
 var target: Node
-var restore: bool = true
+var _locked: bool = false
 
 var world: Node = null
 var push_velocity: Vector2 = Vector2.ZERO
@@ -19,10 +20,8 @@ var _sprite_position: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	target = get_parent()
-	restore = target.is_physics_processing()
-	target.set_physics_process(false)
-	if target is CharacterBody2D:
-		(target as CharacterBody2D).velocity = Vector2.ZERO
+	CombatUtil.acquire_stun_lock(target)
+	_locked = true
 	if target is CanvasItem:
 		(target as CanvasItem).modulate = Color(0.75, 0.85, 1.25)
 
@@ -74,6 +73,9 @@ func _blocked(point: Vector2) -> bool:
 	return false
 
 func _release() -> void:
+	if not _locked:
+		return
+	_locked = false
 	if tripped and is_instance_valid(_sprite):
 		_sprite.rotation = _sprite_rotation
 		_sprite.position = _sprite_position
@@ -82,8 +84,7 @@ func _release() -> void:
 	if is_instance_valid(target) and not target.is_queued_for_deletion():
 		if target is CanvasItem:
 			(target as CanvasItem).modulate = Color.WHITE
-		if target.get("is_dead") != true and target.get_node_or_null("YugiLightningStun") == null:
-			target.set_physics_process(restore)
+		CombatUtil.release_stun_lock(target)
 
 func _exit_tree() -> void:
 	_release()

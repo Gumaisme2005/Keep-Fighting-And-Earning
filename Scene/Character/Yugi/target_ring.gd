@@ -1,6 +1,7 @@
 extends Node2D
 
 const Sprites = preload("res://Scene/Character/Yugi/YugiSprites.gd")
+const CombatUtil = preload("res://Scene/Character/CombatUtil.gd")
 var damage := 2
 var elapsed := 0.0
 var dealt_damage := false
@@ -32,5 +33,5 @@ func _physics_process(delta: float) -> void:
 		return
 	if not dealt_damage and elapsed >= 0.35:
 		dealt_damage = true
-		target.take_damage(damage)
+		CombatUtil.deal_player_damage(self, target, damage)
 	if elapsed >= 0.8: queue_free()
