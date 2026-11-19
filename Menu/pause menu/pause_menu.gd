@@ -92,11 +92,14 @@ func _unhandled_input(event: InputEvent) -> void:
 	var game_over_menu := get_tree().get_first_node_in_group("game_over_menu")
 	if game_over_menu != null and game_over_menu.is_visible_in_tree():
 		return
+	var gm := get_node_or_null("/root/GameManager")
 	if event.is_action_pressed("esc") and not event.is_echo():
-		if get_tree().paused:
+		if visible:
 			resume()
-		else:
+			get_viewport().set_input_as_handled()
+		elif not get_tree().paused and (gm == null or not bool(gm.get("hall_selecting"))):
 			pause()
+			get_viewport().set_input_as_handled()
 
 func resume() -> void:
 	get_tree().paused = false

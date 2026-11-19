@@ -89,9 +89,12 @@ func start_teleport(who: Node2D) -> void:
 	fout.tween_property(fl.get_node("Rect"), "color:a", 0.0, FLASH_OUT)
 	fout.tween_callback(fl.queue_free)
 	var gm := get_node_or_null("/root/GameManager")
+	var entered := false
 	if gm != null and gm.has_method("enter_dungeon_from_hall"):
-		gm.enter_dungeon_from_hall(who)
-	else:
+		entered = bool(gm.enter_dungeon_from_hall(who))
+	if not entered:
+		teleporting = false
+		flash = null
 		fl.queue_free()
 
 func _make_flash() -> CanvasLayer:

@@ -28,7 +28,8 @@ var _ai_tick_interval: float = 0.1 # Cập nhật tìm đường 10 lần/s thay
 @warning_ignore("unused_private_class_variable") # dùng bởi lớp con & TacticalNavigationCache
 var _cached_steer_dir: Vector2 = Vector2.ZERO
 @warning_ignore("unused_private_class_variable")
-var _cached_has_los: bool = true
+var _cached_has_los: bool = false
+var _has_observed_los: bool = false
 
 @onready var animated_sprite: AnimatedSprite2D = get_node_or_null("AnimatedSprite2D")
 var player: Node2D = null
@@ -109,18 +110,22 @@ func drop_loot() -> void:
 	var item_scene = world_item_scene if world_item_scene != null else preload("res://Scene/Items/WorldItem/WorldItem.tscn")
 	var rng := RandomNumberGenerator.new()
 	rng.seed = loot_seed if loot_seed != 0 else (int(global_position.x * 911) ^ int(global_position.y * 3571))
-	if rng.randf() <= drop_chance:
+	var effective_drop_chance := drop_chance
+	var pm = get_node_or_null("/root/PerkManager")
+	if pm != null and pm.has_method("get_potion_drop_multiplier"):
+		effective_drop_chance = minf(1.0, drop_chance * float(pm.get_potion_drop_multiplier()))
+	if rng.randf() <= effective_drop_chance:
 		var floor_lvl := 1
 		if get_node_or_null("/root/GameManager") != null:
 			floor_lvl = GameManager.current_level
 		var random_item: ItemData = ItemDatabase.get_random_drop(floor_lvl, false, rng)
 		if random_item == null and loot_table.size() > 0:
-			random_item = loot_table[rng.randi() % loot_table.size()]
+			random_item = loot_table[rng.randi() % loot_table.size()].duplicate()
 
 		if random_item != null:
 			var item_drop = item_scene.instantiate()
 			item_drop.item_data = random_item
-			item_drop.global_position = global_position
-			var parent_node = get_parent() if get_parent() != null else get_tree().current_scene
+			var parent_node = get_parent() if get_parent() != null else (get_tree().current_scene if get_tree() != null else null)
 			if parent_node != null:
 				parent_node.call_deferred("add_child", item_drop)
+				item_drop.set_deferred("global_position", global_position)

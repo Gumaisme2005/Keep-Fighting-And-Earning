@@ -146,7 +146,7 @@ static func spawn_entities(gen: TileMap) -> void:
 			manager.tilemap = gen
 
 			var shape = RectangleShape2D.new()
-			shape.size = Vector2((room.size.x - 4) * 16, (room.size.y - 4) * 16)
+			shape.size = Vector2(room.size.x * 16, room.size.y * 16)
 			manager.get_node("CollisionShape2D").shape = shape
 			manager.global_position = gen.to_global(gen.map_to_local(room.get_center()))
 
@@ -166,17 +166,22 @@ static func spawn_entities(gen: TileMap) -> void:
 				var enemy = gen.enemy_scenes[spawn_info["enemy_idx"]].instantiate()
 				if "loot_seed" in enemy:
 					enemy.loot_seed = spawn_info["loot_seed"]
+				enemy.z_index = 2
+				enemy.add_to_group("enemies")
+				gen.add_child(enemy)
 				if gen.current_level > 1:
 					var bonus_hp: int = (gen.current_level - 1) * 2
 					if "hp" in enemy:
 						enemy.hp += bonus_hp
 						if "max_hp" in enemy:
 							enemy.max_hp = enemy.hp
-					if "damage" in enemy and gen.current_level >= 3:
-						enemy.damage += 1
-				enemy.z_index = 2
-				enemy.add_to_group("enemies")
-				gen.add_child(enemy)
+					if gen.current_level >= 3:
+						if "damage" in enemy:
+							enemy.damage += 1
+						if "normal_damage" in enemy:
+							enemy.normal_damage += 1
+						if "rage_damage" in enemy:
+							enemy.rage_damage += 1
 				enemy.global_position = gen.to_global(gen.map_to_local(spawn_info["cell"]))
 				manager.enemies.append(enemy)
 
@@ -188,7 +193,7 @@ static func spawn_entities(gen: TileMap) -> void:
 			manager.tilemap = gen
 
 			var shape = RectangleShape2D.new()
-			shape.size = Vector2((room.size.x - 4) * 16, (room.size.y - 4) * 16)
+			shape.size = Vector2(room.size.x * 16, room.size.y * 16)
 			manager.get_node("CollisionShape2D").shape = shape
 			manager.global_position = gen.to_global(gen.map_to_local(room.get_center()))
 
@@ -231,17 +236,22 @@ static func spawn_entities(gen: TileMap) -> void:
 			boss_instance.z_index = 2
 			boss_instance.add_to_group("enemies")
 			boss_instance.add_to_group("boss")
+			gen.add_child(boss_instance)
 			if gen.current_level > 1:
 				var boss_bonus_hp: int = (gen.current_level - 1) * 20
 				if "hp" in boss_instance:
 					boss_instance.hp += boss_bonus_hp
 					if "max_hp" in boss_instance:
 						boss_instance.max_hp = boss_instance.hp
+				var dmg_bonus: int = gen.current_level - 1
 				if "melee_damage" in boss_instance:
-					boss_instance.melee_damage += gen.current_level - 1
+					boss_instance.melee_damage += dmg_bonus
 				if "damage" in boss_instance:
-					boss_instance.damage += gen.current_level - 1
-			gen.add_child(boss_instance)
+					boss_instance.damage += dmg_bonus
+				if "base_damage" in boss_instance:
+					boss_instance.base_damage += dmg_bonus
+				if "active_damage" in boss_instance:
+					boss_instance.active_damage += dmg_bonus
 
 			boss_instance.global_position = gen.to_global(gen.map_to_local(room.get_center()))
 			manager.enemies.append(boss_instance)

@@ -16,6 +16,7 @@ var pounce_direction: Vector2 = Vector2.ZERO
 var pounce_traveled: float = 0.0
 var show_pounce_warning: bool = false
 var windup_flash_tween: Tween = null
+var _windup_generation: int = 0
 
 @onready var claw_hitbox: Area2D = $ClawHitbox
 @onready var claw_collision: CollisionShape2D = $ClawHitbox/CollisionShape2D
@@ -77,9 +78,7 @@ func _physics_process(delta: float) -> void:
 	if is_pouncing:
 		var remain_dist: float = pounce_distance - pounce_traveled
 		if remain_dist <= 0.0 or is_on_wall():
-			is_pouncing = false
-			pounce_traveled = pounce_distance
-			velocity = Vector2.ZERO
+			_end_pounce_motion()
 		else:
 			var current_spd: float = pounce_speed
 			if pounce_traveled > pounce_distance * 0.7:
@@ -87,14 +86,13 @@ func _physics_process(delta: float) -> void:
 
 			var step_dist: float = current_spd * delta
 			if step_dist >= remain_dist:
-				pounce_traveled = pounce_distance
-				is_pouncing = false
-				velocity = Vector2.ZERO
+				velocity = pounce_direction * (remain_dist / maxf(delta, 0.0001))
+				move_and_slide()
+				_end_pounce_motion()
 			else:
 				pounce_traveled += step_dist
 				velocity = pounce_direction * current_spd
-
-			move_and_slide()
+				move_and_slide()
 		return
 
 	if pounce_timer > 0.0:
@@ -124,8 +122,9 @@ func _physics_process(delta: float) -> void:
 
 	var tmap = get_parent()
 	_ai_tick_timer -= delta
-	if _ai_tick_timer <= 0.0:
+	if _ai_tick_timer <= 0.0 or not _has_observed_los:
 		_ai_tick_timer = _ai_tick_interval
+		_has_observed_los = true
 		_cached_has_los = (tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position))
 		if distance > attack_range or not _cached_has_los:
 			_cached_steer_dir = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
@@ -153,7 +152,16 @@ func attack_claw(dir: Vector2) -> void:
 	animated_sprite.play("attack_1")
 	claw_collision.disabled = false
 
+func _end_pounce_motion() -> void:
+	is_pouncing = false
+	pounce_traveled = pounce_distance
+	velocity = Vector2.ZERO
+	if pounce_collision != null:
+		pounce_collision.set_deferred("disabled", true)
+
 func start_pounce_windup(dir: Vector2) -> void:
+	_windup_generation += 1
+	var my_gen := _windup_generation
 	is_attacking = true
 	is_preparing_pounce = true
 	is_pouncing = false
@@ -168,7 +176,7 @@ func start_pounce_windup(dir: Vector2) -> void:
 	_start_flash_windup_effect()
 
 	await get_tree().create_timer(pounce_windup_time).timeout
-	if not is_inside_tree() or is_dead:
+	if not is_instance_valid(self) or not is_inside_tree() or is_dead or my_gen != _windup_generation:
 		return
 
 	if not is_preparing_pounce:
@@ -214,6 +222,7 @@ func take_damage(damage_amount: int) -> void:
 	_spawn_damage_popup(damage_amount, Color(1.0, 0.4, 0.4))
 
 	if is_preparing_pounce:
+		_windup_generation += 1
 		is_preparing_pounce = false
 		show_pounce_warning = false
 		_stop_flash_effect()
@@ -229,6 +238,11 @@ func take_damage(damage_amount: int) -> void:
 		_die()
 
 func _die() -> void:
+	_windup_generation += 1
+	is_preparing_pounce = false
+	show_pounce_warning = false
+	_stop_flash_effect()
+	queue_redraw()
 	super._die()
 	is_attacking = false
 	is_pouncing = false
@@ -255,8 +269,12 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		animated_sprite.play("idle")
 
 func _on_claw_hitbox_area_entered(area: Area2D) -> void:
+	if is_dead or not is_active or not is_attacking:
+		return
 	if area.name == "PlayerHurtbox":
 		var target = area.get_parent()
+		if target == null or not is_instance_valid(target):
+			return
 		var tmap = get_parent()
 		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
 			return
@@ -264,8 +282,12 @@ func _on_claw_hitbox_area_entered(area: Area2D) -> void:
 			target.take_damage(damage)
 
 func _on_pounce_hitbox_area_entered(area: Area2D) -> void:
+	if is_dead or not is_active or not is_attacking:
+		return
 	if area.name == "PlayerHurtbox":
 		var target = area.get_parent()
+		if target == null or not is_instance_valid(target):
+			return
 		var tmap = get_parent()
 		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
 			return

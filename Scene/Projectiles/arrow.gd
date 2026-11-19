@@ -13,7 +13,7 @@ func _ready() -> void:
 		$AnimatedSprite2D.play("fly")
 
 	await get_tree().create_timer(2.0).timeout
-	if is_instance_valid(self):
+	if is_instance_valid(self) and is_inside_tree():
 		queue_free()
 
 func _physics_process(delta: float) -> void:
@@ -50,25 +50,26 @@ func _on_area_entered(area: Area2D) -> void:
 		if target.is_in_group("player"):
 			return
 
-		# Kiểm tra không có tường hoặc cửa đóng chắn giữa mũi tên/người bắn và mục tiêu
+		# Kiểm tra không có tường hoặc cửa đóng chắn ngay tại điểm va chạm
 		var tmap = get_parent()
 		if tmap != null and tmap.has_method("has_line_of_sight"):
-			var origin_check: Vector2 = shooter_origin if shooter_origin != Vector2.ZERO else (global_position - direction * 8.0)
-			if tmap.is_global_pos_wall_or_door(global_position) or not tmap.has_line_of_sight(origin_check, target.global_position):
+			var check_from: Vector2 = global_position - direction * 8.0
+			if tmap.is_global_pos_wall_or_door(global_position) or not tmap.has_line_of_sight(check_from, global_position):
 				is_broken = true
 				queue_free()
 				return
 
-		if target.has_method("take_damage"):
+		if target.has_method("take_damage") and target.get("is_dead") != true:
 			is_broken = true
 			var final_dmg = damage
 			var players = get_tree().get_nodes_in_group("player")
 			if not players.is_empty() and players[0].has_method("apply_on_hit_effects"):
 				final_dmg = players[0].apply_on_hit_effects(target, damage)
-			target.take_damage(final_dmg)
+			if is_instance_valid(target) and target.get("is_dead") != true:
+				target.take_damage(final_dmg)
 			queue_free()
 
 func _on_body_entered(body: Node2D) -> void:
-	if body is TileMap:
+	if body is TileMap or body is StaticBody2D:
 		is_broken = true
 		queue_free()

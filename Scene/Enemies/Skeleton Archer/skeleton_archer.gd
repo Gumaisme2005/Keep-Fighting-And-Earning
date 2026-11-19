@@ -68,11 +68,13 @@ func _physics_process(delta: float) -> void:
 		&"strafe": _cached_strafe_dir = move_dir
 	velocity = move_dir * (speed * intent.speed_scale)
 	anim.play("walk")
-	if intent.mode == &"retreat":
+	if intent.mode == &"retreat" and absf(velocity.x) > 0.01:
 		anim.flip_h = velocity.x < 0
 	move_and_slide()
 	if intent.mode == &"strafe":
 		_tactical_ai.report_movement_collision(get_slide_collision_count() > 0)
+	elif intent.mode == &"retreat":
+		_tactical_ai.report_retreat_blocked(get_slide_collision_count() > 0)
 
 
 func _attack_is_current(generation: int) -> bool:

@@ -284,7 +284,7 @@ static func _init_catalog() -> void:
 		"Một lần duy nhất mỗi chuyến thám hiểm: Khi chịu đòn tử vong, sống lại ngay với 50% HP và 2.5s bất tử.",
 		PerkData.Rarity.LEGENDARY,
 		"27.png",
-		{"second_chance": true}
+		{"second_chance": true, "invincibility_duration": 2.5}
 	))
 
 	_register(_build_perk(
