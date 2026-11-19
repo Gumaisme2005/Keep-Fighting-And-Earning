@@ -141,7 +141,7 @@ static func _sanitize_replay_frames(raw_frames: Variant, max_count: int) -> Arra
 		if not is_finite(dy): dy = 0.0
 		if not is_finite(ax): ax = 32.0
 		if not is_finite(ay): ay = 0.0
-		safe_frames.append({
+		var clean_frame := {
 			"dx": clampf(dx, -1.0, 1.0),
 			"dy": clampf(dy, -1.0, 1.0),
 			"ax": clampf(ax, -100000.0, 100000.0),
@@ -156,12 +156,31 @@ static func _sanitize_replay_frames(raw_frames: Variant, max_count: int) -> Arra
 			"lr": item.get("lr", false) == true,
 			"rp": item.get("rp", false) == true,
 			"rr": item.get("rr", false) == true,
-			"result": clampi(int(item.get("result", 0)), 0, 5) if item.get("result", 0) is int else 0,
+			"result": clampi(int(item.get("result", 0)), 0, 5) if (item.get("result", 0) is int or item.get("result", 0) is float) else 0,
 			# Doraemon's 4D pocket: gadget page switch (-n..n) and Dorayaki key
 			"pg": clampi(int(item.get("pg", 0)), -10, 10) if (item.get("pg", 0) is int or item.get("pg", 0) is float) else 0,
 			"eat": item.get("eat", false) == true
-		})
+		}
+		if item.has("repeat") and (item.get("repeat") is int or item.get("repeat") is float):
+			var rep := clampi(int(item.get("repeat", 1)), 1, MAX_REPLAY_FRAMES)
+			if rep > 1:
+				clean_frame["repeat"] = rep
+		safe_frames.append(clean_frame)
 	return safe_frames
+
+static func _expand_replay_frames(sanitized: Array, max_count: int) -> Array:
+	var expanded: Array = []
+	for item in sanitized:
+		if not (item is Dictionary):
+			continue
+		var rep := clampi(int(item.get("repeat", 1)), 1, max_count)
+		var base: Dictionary = item.duplicate()
+		base.erase("repeat")
+		for _r in range(rep):
+			if expanded.size() >= max_count:
+				return expanded
+			expanded.append(base)
+	return expanded
 
 # --- PHÍM T: DỊCH CHUYỂN VỀ GUILD HALL ---
 func _unhandled_input(event: InputEvent) -> void:
@@ -172,7 +191,7 @@ func _unhandled_input(event: InputEvent) -> void:
 ## Đưa nhân vật đang chơi (giữ nguyên máu, đồ, hồi chiêu) sang Guild Hall.
 ## Không làm gì khi chưa có nhân vật (menu), nhân vật đã gục, đang xem replay hoặc game đang tạm dừng.
 func teleport_to_guild_hall() -> bool:
-	if is_replaying or get_tree().paused:
+	if is_replaying or hall_selecting or get_tree().paused:
 		return false
 	var hero := _find_hero()
 	if hero == null or hero.get("is_dead") == true:
@@ -181,6 +200,14 @@ func teleport_to_guild_hall() -> bool:
 	if current != null and current.has_method("place_hero") and current.scene_file_path == GUILD_HALL_SCENE:
 		current.place_hero(hero)
 		return true
+	if current != null and current.has_node("TileMap"):
+		var gen := current.get_node("TileMap")
+		var managers = gen.get("room_managers")
+		if managers is Dictionary:
+			for mgr in managers.values():
+				if is_instance_valid(mgr) and mgr.get("is_locked") == true:
+					get_tree().call_group("game_ui", "show_toast", "Cannot teleport during locked combat!")
+					return false
 	hall_selecting = false
 	call_deferred("_swap_to_guild_hall", hero)
 	return true
@@ -188,6 +215,8 @@ func teleport_to_guild_hall() -> bool:
 func _swap_to_guild_hall(hero: Node2D) -> void:
 	if not is_instance_valid(hero):
 		return
+	if hero.has_method("set_skill_invincible"):
+		hero.set_skill_invincible(false)
 	var tree := get_tree()
 	var old_scene := tree.current_scene
 	var hall: Node = load(GUILD_HALL_SCENE).instantiate()
@@ -210,6 +239,7 @@ func enter_dungeon_from_hall(hero: Node2D = null) -> bool:
 	if hero == null or hero.get("is_dead") == true:
 		return false
 	current_level = 1
+	current_recording_frames.clear()
 	if sanitize_seed(current_seed).is_empty():
 		current_seed = generate_random_seed()
 	flush_wallet()   # xuống hầm ngục = chuyển tầng: lưu ví ngay
@@ -302,7 +332,7 @@ func start_new_run(custom_seed: String = "", replay_mode: bool = false, frames_t
 	run_start_time_msec = Time.get_ticks_msec()
 	is_replaying = replay_mode
 	if replay_mode:
-		replay_frames = _sanitize_replay_frames(frames_to_replay, MAX_REPLAY_FRAMES)
+		replay_frames = _expand_replay_frames(_sanitize_replay_frames(frames_to_replay, MAX_REPLAY_FRAMES), MAX_REPLAY_FRAMES)
 		current_recording_frames.clear()
 	else:
 		replay_frames.clear()
@@ -314,13 +344,16 @@ func start_new_run(custom_seed: String = "", replay_mode: bool = false, frames_t
 	flush_wallet()
 
 func record_frame_input(frame_data: Dictionary) -> void:
-	if is_replaying:
+	if is_replaying or hall_selecting:
+		return
+	var cs := get_tree().current_scene if get_tree() != null else null
+	if cs != null and cs.scene_file_path == GUILD_HALL_SCENE:
 		return
 	if current_recording_frames.size() >= MAX_REPLAY_FRAMES:
 		return
 
-	# Nén/khử trùng lặp trạng thái đứng yên (anti-DoS / memory ballooning):
-	# Nếu nhân vật không thao tác và hướng chuột không đổi, không lặp lại frame tĩnh
+	# Nén/khử trùng lặp trạng thái đứng yên (anti-DoS / memory ballooning) bằng RLE repeat count:
+	# Giữ đúng 1 entry trong mảng khi đứng yên liên tục nhưng bảo toàn thời lượng khi phát replay
 	if not current_recording_frames.is_empty():
 		var last_f: Dictionary = current_recording_frames[-1]
 		var is_idle: bool = (
@@ -344,6 +377,9 @@ func record_frame_input(frame_data: Dictionary) -> void:
 			and absf(float(last_f.get("ay", 0.0)) - float(frame_data.get("ay", 0.0))) < 1.0
 		)
 		if is_idle and last_idle:
+			var rep := int(last_f.get("repeat", 1))
+			if rep < MAX_REPLAY_FRAMES:
+				last_f["repeat"] = rep + 1
 			return
 
 	current_recording_frames.append(frame_data)
@@ -679,6 +715,7 @@ func remove_saved_seed(seed_str: String) -> void:
 func replay_seed_run(seed_str: String, hero_idx: int = -1) -> void:
 	if hero_idx >= 0:
 		set_character_by_index(hero_idx)
+	hall_selecting = false
 	start_new_run(seed_str, false, [])
 	get_tree().paused = false
 	get_tree().change_scene_to_file("res://world.tscn")
@@ -693,6 +730,7 @@ func start_action_replay(run_entry: Dictionary = {}) -> bool:
 	var hero_idx := clampi(int(target.get("hero_idx", selected_character_index)), 0, CHARACTER_SCENES.size() - 1)
 	var seed_str := sanitize_seed(String(target.get("seed", current_seed)))
 	var frames: Array = _sanitize_replay_frames(target.get("frames", []), MAX_REPLAY_FRAMES)
+	hall_selecting = false
 	set_character_by_index(hero_idx)
 	start_new_run(seed_str, true, frames)
 	get_tree().paused = false
@@ -700,16 +738,42 @@ func start_action_replay(run_entry: Dictionary = {}) -> bool:
 	return true
 
 func save_data_to_disk() -> void:
+	var disk_history: Array = []
+	for r in run_history:
+		if r is Dictionary:
+			var rc: Dictionary = (r as Dictionary).duplicate(true)
+			if rc.has("frames") and rc["frames"] is Array and (rc["frames"] as Array).size() > MAX_DISK_REPLAY_FRAMES:
+				rc["frames"] = (rc["frames"] as Array).slice(0, MAX_DISK_REPLAY_FRAMES)
+			disk_history.append(rc)
+	var disk_last_run: Dictionary = last_recorded_run.duplicate(true)
+	if not disk_last_run.is_empty():
+		if disk_history.size() > 0 and disk_history[0].get("date") == disk_last_run.get("date") and disk_history[0].get("seed") == disk_last_run.get("seed") and bool(disk_history[0].get("has_replay", false)):
+			# Avoid storing duplicate frame arrays on disk when run_history[0] already holds them
+			disk_last_run["frames"] = []
+		elif disk_last_run.has("frames") and disk_last_run["frames"] is Array and (disk_last_run["frames"] as Array).size() > MAX_DISK_REPLAY_FRAMES:
+			disk_last_run["frames"] = (disk_last_run["frames"] as Array).slice(0, MAX_DISK_REPLAY_FRAMES)
 	var data := {
 		"current_seed": current_seed,
 		"selected_character_index": selected_character_index,
 		"saved_seeds": saved_seeds,
-		"run_history": run_history,
-		"last_recorded_run": last_recorded_run
+		"run_history": disk_history,
+		"last_recorded_run": disk_last_run
 	}
+	var json_str := JSON.stringify(data)
+	# Trim oldest saved replay payloads if needed so save files stay under MAX_SAVE_FILE_BYTES (2MB)
+	var idx := disk_history.size() - 1
+	while json_str.to_utf8_buffer().size() > MAX_SAVE_FILE_BYTES and idx >= 0:
+		if disk_history[idx] is Dictionary and disk_history[idx].has("frames") and not (disk_history[idx]["frames"] as Array).is_empty():
+			disk_history[idx]["frames"] = []
+			disk_history[idx]["has_replay"] = false
+			json_str = JSON.stringify(data)
+		idx -= 1
+	if json_str.to_utf8_buffer().size() > MAX_SAVE_FILE_BYTES and disk_last_run.has("frames") and not (disk_last_run["frames"] as Array).is_empty():
+		disk_last_run["frames"] = []
+		json_str = JSON.stringify(data)
 	var file := FileAccess.open(SAVE_FILE_PATH, FileAccess.WRITE)
 	if file != null:
-		file.store_string(JSON.stringify(data, "\t"))
+		file.store_string(json_str)
 		file.close()
 
 func load_save_data() -> void:
@@ -771,12 +835,20 @@ func load_save_data() -> void:
 	if parsed.has("last_recorded_run") and parsed["last_recorded_run"] is Dictionary:
 		var lr: Dictionary = parsed["last_recorded_run"]
 		var lr_frames := _sanitize_replay_frames(lr.get("frames", []), MAX_REPLAY_FRAMES)
+		var lr_seed := sanitize_seed(String(lr.get("seed", current_seed)))
+		var lr_date := sanitize_note(String(lr.get("date", "")))
+		if lr_frames.is_empty() and not run_history.is_empty():
+			var top_hist: Dictionary = run_history[0]
+			if top_hist.get("date") == lr_date and top_hist.get("seed") == lr_seed and bool(top_hist.get("has_replay", false)):
+				lr_frames = (top_hist.get("frames", []) as Array).duplicate(true)
 		last_recorded_run = {
-			"seed": sanitize_seed(String(lr.get("seed", current_seed))),
+			"seed": lr_seed if not lr_seed.is_empty() else current_seed,
 			"hero_idx": clampi(int(lr.get("hero_idx", selected_character_index)), 0, CHARACTER_SCENES.size() - 1),
 			"hero_name": sanitize_note(String(lr.get("hero_name", "Hero"))),
 			"floor": clampi(int(lr.get("floor", 1)), 1, 9999),
 			"kills": clampi(int(lr.get("kills", 0)), 0, 999999),
 			"coins": clampi(int(lr.get("coins", 0)), 0, MAX_COINS),
+			"reason": sanitize_note(String(lr.get("reason", "Game Over"))),
+			"date": lr_date,
 			"frames": lr_frames
 		}

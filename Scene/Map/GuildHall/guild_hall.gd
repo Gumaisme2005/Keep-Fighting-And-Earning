@@ -26,6 +26,9 @@ const CAMERA_MARGIN := 8.0
 var hero: Node2D = null
 
 func _ready() -> void:
+	var am := get_node_or_null("/root/AudioManager")
+	if am != null and am.has_method("play_bgm"):
+		am.play_bgm("menu")
 	var exit_area := get_node_or_null("ExitArea") as Area2D
 	if exit_area != null:
 		exit_area.body_entered.connect(_on_exit_body_entered)
@@ -108,6 +111,9 @@ func place_hero(node: Node2D) -> void:
 		node.velocity = Vector2.ZERO
 	_fit_camera(node)
 	update_hall_heroes()
+	var am := get_node_or_null("/root/AudioManager")
+	if am != null and am.has_method("play_bgm"):
+		am.play_bgm("menu")
 	# HUD của nhân vật (GameUI) chuyển bản đồ nhỏ sang bản đồ sảnh
 	if is_inside_tree():
 		get_tree().call_group_flags(SceneTree.GROUP_CALL_DEFERRED, "game_ui", "_connect_to_player_and_map")
