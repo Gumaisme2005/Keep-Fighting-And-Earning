@@ -43,8 +43,9 @@ func _physics_process(delta: float) -> void:
 
 	var tmap = get_parent()
 	_ai_tick_timer -= delta
-	if _ai_tick_timer <= 0.0:
+	if _ai_tick_timer <= 0.0 or not _has_observed_los:
 		_ai_tick_timer = _ai_tick_interval
+		_has_observed_los = true
 		_cached_has_los = (tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position))
 		if distance > attack_range or not _cached_has_los:
 			_cached_steer_dir = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
@@ -75,7 +76,7 @@ func _die() -> void:
 	super._die()
 	sword_collision.set_deferred("disabled", true)
 	await get_tree().create_timer(1.0).timeout
-	if not is_inside_tree():
+	if not is_instance_valid(self) or not is_inside_tree():
 		return
 	drop_loot()
 	queue_free()
@@ -92,8 +93,12 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		animated_sprite.play("idle")
 
 func _on_sword_hitbox_area_entered(area: Area2D) -> void:
+	if is_dead or not is_active or not is_attacking:
+		return
 	if area.name == "PlayerHurtbox":
 		var target = area.get_parent()
+		if target == null or not is_instance_valid(target):
+			return
 		var tmap = get_parent()
 		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
 			return
