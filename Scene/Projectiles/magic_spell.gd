@@ -12,7 +12,7 @@ func _ready() -> void:
 	if anim != null and anim.sprite_frames != null and anim.sprite_frames.has_animation("fly"):
 		anim.play("fly")
 	await get_tree().create_timer(3.2).timeout
-	if is_instance_valid(self) and is_inside_tree() and not is_broken:
+	if is_instance_valid(self):
 		queue_free()
 
 func _physics_process(delta: float) -> void:
@@ -31,22 +31,18 @@ func _on_area_entered(area: Area2D) -> void:
 		return
 	if area.name == "PlayerHurtbox":
 		var target = area.get_parent()
-		if target == null or not is_instance_valid(target):
-			return
 		var tmap = get_parent()
 		if tmap != null and tmap.has_method("has_line_of_sight"):
 			var check_from: Vector2 = global_position - direction * 8.0
 			if tmap.is_global_pos_wall_or_door(global_position) or not tmap.has_line_of_sight(check_from, target.global_position):
 				_explode()
 				return
-		if target.has_method("take_ranged_damage"):
-			target.take_ranged_damage(damage)
-		elif target.has_method("take_damage"):
+		if target.has_method("take_damage"):
 			target.take_damage(damage)
 		_explode()
 
 func _on_body_entered(body: Node2D) -> void:
-	if body is TileMap or body is StaticBody2D:
+	if body is TileMap:
 		_explode()
 
 func _explode() -> void:

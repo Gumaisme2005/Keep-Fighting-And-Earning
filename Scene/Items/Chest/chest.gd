@@ -32,12 +32,7 @@ func spawn_loot():
 	else:
 		rng.seed = int(global_position.x * 73856093) ^ int(global_position.y * 19349663)
 
-	var effective_drop_chance := drop_chance
-	var pm = get_node_or_null("/root/PerkManager")
-	if pm != null and pm.has_method("get_potion_drop_multiplier"):
-		effective_drop_chance = minf(1.0, drop_chance * float(pm.get_potion_drop_multiplier()))
-
-	if rng.randf() <= effective_drop_chance:
+	if rng.randf() <= drop_chance:
 		var floor_lvl := 1
 		if get_node_or_null("/root/GameManager") != null:
 			floor_lvl = GameManager.current_level
@@ -50,13 +45,12 @@ func spawn_loot():
 			if is_boss_chest or loot_table.is_empty():
 				dropped_item = ItemDatabase.get_random_drop(floor_lvl, is_boss_chest, rng)
 			else:
-				dropped_item = loot_table[rng.randi() % loot_table.size()].duplicate()
+				dropped_item = loot_table[rng.randi() % loot_table.size()]
 
 			if dropped_item != null:
 				var item_drop = item_scene.instantiate()
 				item_drop.item_data = dropped_item
 				var offset: Vector2 = spread_offsets[i % spread_offsets.size()] if num_drops > 1 else Vector2(0, 20)
-				var parent_node = get_parent() if get_parent() != null else (get_tree().current_scene if get_tree() != null else null)
-				if parent_node != null:
-					parent_node.call_deferred("add_child", item_drop)
-					item_drop.set_deferred("global_position", global_position + offset)
+				item_drop.global_position = global_position + offset
+				var parent_node = get_parent() if get_parent() != null else get_tree().current_scene
+				parent_node.call_deferred("add_child", item_drop)

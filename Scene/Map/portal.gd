@@ -25,19 +25,16 @@ func _ready() -> void:
 		return
 	is_ready = true
 	for body in get_overlapping_bodies():
-		if body.is_in_group("player") and body.get("is_dead") != true:
+		if body.is_in_group("player"):
 			_trigger_teleport()
 			break
 
 func _on_body_entered(body: Node2D) -> void:
-	if is_ready and body.is_in_group("player") and body.get("is_dead") != true:
+	if is_ready and body.is_in_group("player"):
 		_trigger_teleport()
 
 func _trigger_teleport() -> void:
 	if is_teleporting:
-		return
-	var players := get_tree().get_nodes_in_group("player") if get_tree() != null else []
-	if players.is_empty() or not is_instance_valid(players[0]) or players[0].get("is_dead") == true:
 		return
 	is_teleporting = true
 	if get_node_or_null("/root/AudioManager") != null:
@@ -56,5 +53,5 @@ func _trigger_teleport() -> void:
 func _proceed_to_next_floor() -> void:
 	if get_tree():
 		get_tree().call_group("game_ui", "show_banner", "DESCENDING TO DEEPER VAULTS OF MORIA...", Color(0.4, 0.85, 1.0))
-	if get_parent() != null and get_parent().has_method("next_level"):
+	if get_parent().has_method("next_level"):
 		get_parent().call_deferred("next_level")

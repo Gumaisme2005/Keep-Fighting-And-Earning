@@ -16,7 +16,6 @@ var _retreat_latched: bool = false
 var _approach_latched: bool = false
 var _lost_los_tick: int = -1
 var _strafe_blocked: bool = false
-var _retreat_blocked: bool = false
 var _seen_target: Node2D = null
 var _has_last_seen: bool = false
 var _last_seen_position: Vector2 = Vector2.ZERO
@@ -79,8 +78,6 @@ func get_movement_intent(tmap: Node, direction: Vector2, distance: float, has_lo
 			if int(_tactic_config["tier"]) == Tactics.Tier.ADAPTIVE:
 				# The actual target position above is used only for the visibility
 				# query. Navigation while occluded knows only the last seen position.
-				if _has_last_seen and _enemy.global_position.distance_to(_last_seen_position) <= 12.0:
-					_has_last_seen = false
 				direction = _enemy.global_position.direction_to(_last_seen_position) if _has_last_seen else Vector2.RIGHT * _enemy.strafe_sign
 				if direction == Vector2.ZERO:
 					direction = _last_seen_direction
@@ -93,21 +90,15 @@ func get_movement_intent(tmap: Node, direction: Vector2, distance: float, has_lo
 
 	_advanced_movement = advanced
 	if not has_los:
-		_retreat_blocked = false
 		var lateral := advanced and _lateral_search_active()
 		return _publish(&"lateral_reposition" if lateral else &"search",
 				direction.orthogonal() * _enemy.strafe_sign if lateral else direction, direction, 1.0, has_los)
 	var retreating: bool = distance < _enemy.retreat_range or (tactical and _retreat_latched)
 	var approaching: bool = distance > _enemy.attack_range or (tactical and _approach_latched and not _enemy.can_attack and not retreating)
 	if approaching:
-		_retreat_blocked = false
 		return _publish(&"approach", direction, direction, 1.0, has_los)
 	if retreating:
-		if _retreat_blocked and _enemy.can_attack:
-			_retreat_blocked = false
-			return _publish(&"attack", Vector2.ZERO, direction, 0.0, has_los)
 		return _publish(&"retreat", -direction, direction, 0.85, has_los)
-	_retreat_blocked = false
 	if _enemy.can_attack:
 		return _publish(&"attack", Vector2.ZERO, direction, 0.0, has_los)
 	return _publish(&"strafe", direction.orthogonal() * _enemy.strafe_sign, direction, 0.72, has_los)
@@ -129,15 +120,11 @@ func report_movement_collision(blocked: bool) -> void:
 		_enemy.strafe_sign = -_enemy.strafe_sign
 
 
-func report_retreat_blocked(blocked: bool) -> void:
-	_retreat_blocked = blocked
-
 func _clear_tactical_motion() -> void:
 	_observed_tick = -1
 	_prediction_offset = Vector2.ZERO
 	_lost_los_tick = -1
 	_strafe_blocked = false
-	_retreat_blocked = false
 
 
 func _update_range_hysteresis(distance: float) -> void:

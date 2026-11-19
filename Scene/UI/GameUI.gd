@@ -923,7 +923,7 @@ func _connect_to_player_and_map() -> void:
 		dungeon_map = player.get_parent()
 	elif get_tree().current_scene and get_tree().current_scene.has_node("TileMap"):
 		dungeon_map = get_tree().current_scene.get_node("TileMap")
-	else:
+	elif dungeon_map != null and not is_instance_valid(dungeon_map):
 		dungeon_map = null
 
 	# Guild Hall: bản đồ nhỏ vẽ sảnh + bãi cỏ (guild_hall.gd get_minimap_data)
@@ -961,13 +961,6 @@ func _connect_to_player_and_map() -> void:
 		replay_banner.visible = GameManager.is_replaying
 
 func _unhandled_input(event: InputEvent) -> void:
-	if get_tree() == null or get_tree().paused:
-		return
-	var gm := get_node_or_null("/root/GameManager")
-	if gm != null and (bool(gm.get("is_replaying")) or bool(gm.get("hall_selecting"))):
-		return
-	if player == null or not is_instance_valid(player) or player.get("is_dead") == true:
-		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_I or event.keycode == KEY_TAB or event.keycode == KEY_B:
 			toggle_inventory_modal()
@@ -990,7 +983,7 @@ func _quick_drop_item() -> void:
 			var item_name: String = item.item_name
 			var drop_pos: Vector2 = player.global_position + Vector2(16, 0)
 			if inventory.has_method("drop_item"):
-				if inventory.drop_item(first_idx, false, drop_pos, true):
+				if inventory.drop_item(first_idx, false, drop_pos):
 					show_toast("Dropped 1x " + item_name)
 
 func _on_toggle_mute_pressed() -> void:
@@ -1176,7 +1169,7 @@ func update_hud(current_hp: int, max_hp: int, current_shield: int, max_shield: i
 		hero_name_label.text = hero_title
 
 	if hero_dmg_label != null and player != null:
-		var dmg: int = player.get_display_damage() if player.has_method("get_display_damage") else (player.get_total_damage() if player.has_method("get_total_damage") else 1)
+		var dmg = player.get_total_damage() if player.has_method("get_total_damage") else 1
 		hero_dmg_label.text = "⚔ %d DMG" % dmg
 
 func _on_slot_clicked(index: int) -> void:
@@ -1191,7 +1184,7 @@ func _on_slot_right_clicked(index: int) -> void:
 		var item_name: String = item.item_name
 		var drop_pos: Vector2 = player.global_position + Vector2(16, 0)
 		if inventory.has_method("drop_item"):
-			if inventory.drop_item(index, false, drop_pos, true):
+			if inventory.drop_item(index, false, drop_pos):
 				show_toast("Dropped 1x " + item_name)
 
 func _on_slot_dropped(source_data: Dictionary, target_slot: Control) -> void:
@@ -1271,11 +1264,10 @@ func refresh_ui() -> void:
 		equip_weapon_slot.set_item(inventory.equipped_weapon)
 
 	if equip_stats_label != null and player != null:
-		var total_dmg: int = player.get_display_damage() if player.has_method("get_display_damage") else (player.get_total_damage() if player.has_method("get_total_damage") else 1)
+		var total_dmg = player.get_total_damage() if player.has_method("get_total_damage") else 1
 		var extra_stats: Array[String] = []
-		var atk_spd_bonus: float = float(player.get_attack_speed_bonus()) if player.has_method("get_attack_speed_bonus") else (float(inventory.get_attack_speed_bonus()) if inventory.has_method("get_attack_speed_bonus") else 0.0)
-		if atk_spd_bonus > 0.0:
-			extra_stats.append("• Attack Speed: +%d%%" % int(round(atk_spd_bonus * 100.0)))
+		if inventory.has_method("get_attack_speed_bonus") and inventory.get_attack_speed_bonus() > 0.0:
+			extra_stats.append("• Attack Speed: +%d%%" % int(inventory.get_attack_speed_bonus() * 100))
 
 		var extra_text := ("\n" + "\n".join(extra_stats)) if not extra_stats.is_empty() else ""
 		equip_stats_label.text = "TOTAL ATTRIBUTES:\n• Attack Power: %d • Weapon: +%d\n• Physical Defense: +%d\n• Bonus Max HP: +%d%s" % [

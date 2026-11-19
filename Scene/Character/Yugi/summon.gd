@@ -1,7 +1,6 @@
 extends Area2D
 
 const Sprites = preload("res://Scene/Character/Yugi/YugiSprites.gd")
-const CombatUtil = preload("res://Scene/Character/CombatUtil.gd")
 const EnergyBall = preload("res://Scene/Character/Yugi/energy_ball.gd")
 const RIGHT_CLICK_FIRE_TIME := 0.5
 const EXPLOSION_RADIUS := 80.0
@@ -105,7 +104,7 @@ func _explode() -> void:
 	# Reuse enemy filtering and line-of-sight checks, without the two-target cap.
 	for target in caster._nearest_ring_targets(0):
 		if center.distance_squared_to(target.global_position) <= EXPLOSION_RADIUS * EXPLOSION_RADIUS:
-			CombatUtil.deal_player_damage(caster, target, damage)
+			target.take_damage(damage)
 
 func _fire_energy_ball() -> void:
 	var ball := EnergyBall.new()

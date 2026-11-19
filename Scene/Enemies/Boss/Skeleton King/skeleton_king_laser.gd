@@ -44,10 +44,7 @@ func _physics_process(delta: float) -> void:
 		var p := to_local(player.global_position)
 		for beam in beams:
 			if is_beam_active(beam) and _point_on_beam(beam, p):
-				if player.has_method("take_ranged_damage"):
-					player.take_ranged_damage(damage)
-				else:
-					player.take_damage(damage)
+				player.take_damage(damage)
 				player_hits += 1
 				hit_cooldown = PLAYER_HIT_COOLDOWN
 				break

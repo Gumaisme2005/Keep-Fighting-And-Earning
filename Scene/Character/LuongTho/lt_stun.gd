@@ -1,16 +1,16 @@
 extends Node
 ## Ground Smash daze: stops an enemy's AI for a moment.
 
-const CombatUtil = preload("res://Scene/Character/CombatUtil.gd")
-
 var remaining: float = 0.6
 var target: Node
-var _locked: bool = false
+var restore: bool = true
 
 func _ready() -> void:
 	target = get_parent()
-	CombatUtil.acquire_stun_lock(target)
-	_locked = true
+	restore = target.is_physics_processing()
+	target.set_physics_process(false)
+	if target is CharacterBody2D:
+		(target as CharacterBody2D).velocity = Vector2.ZERO
 	if target is CanvasItem:
 		(target as CanvasItem).modulate = Color(1.2, 1.1, 0.8)
 
@@ -26,13 +26,11 @@ func _physics_process(delta: float) -> void:
 		queue_free()
 
 func _release() -> void:
-	if not _locked:
-		return
-	_locked = false
 	if is_instance_valid(target) and not target.is_queued_for_deletion():
 		if target is CanvasItem:
 			(target as CanvasItem).modulate = Color.WHITE
-		CombatUtil.release_stun_lock(target)
+		if target.get("is_dead") != true:
+			target.set_physics_process(restore)
 
 func _exit_tree() -> void:
 	_release()

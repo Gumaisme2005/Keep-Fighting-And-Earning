@@ -168,16 +168,16 @@ func test_apply_perk_to_mock_player() -> void:
 	_assert_test(player.max_hp == 5 and player.hp == 5, "Bonus HP applied (+1 HP -> 5)")
 	_assert_test(player.max_armor == 3 and player.current_armor == 3, "Bonus Armor applied (+1 Armor -> 3)")
 
-	# 2. Thêm Bộ Pháp Tật Phong (+15 Tốc độ, được truy vấn qua query hook, không ghi đè player.speed để tránh cộng 2 lần)
+	# 2. Thêm Bộ Pháp Tật Phong (+15 Tốc độ sau khi người dùng tinh chỉnh)
 	var perk_speed := PerkDatabase.get_perk_by_id("swift_stride")
 	manager.add_perk(perk_speed, player)
-	var expected_spd_bonus := float(perk_speed.get_modifier("speed_bonus", 15.0))
-	_assert_test(player.speed == 150.0 and is_equal_approx(manager.get_total_speed_bonus(), expected_spd_bonus), "Speed bonus tracked once without mutating base speed (bonus=%.1f)" % manager.get_total_speed_bonus())
+	var expected_spd = 150.0 + float(perk_speed.get_modifier("speed_bonus", 15.0))
+	_assert_test(player.speed == expected_spd, "Speed bonus applied (+%d -> %d)" % [int(perk_speed.get_modifier("speed_bonus", 15.0)), int(expected_spd)])
 
-	# 3. Thêm Lưỡi Kiếm Tôi Rèn (+1 Sát thương, được truy vấn qua query hook)
+	# 3. Thêm Lưỡi Kiếm Tôi Rèn (+1 Sát thương)
 	var perk_dmg := PerkDatabase.get_perk_by_id("sharpened_edge")
 	manager.add_perk(perk_dmg, player)
-	_assert_test(player.base_damage == 1 and manager.get_total_bonus_damage() == 1, "Bonus damage tracked once without mutating base_damage")
+	_assert_test(player.base_damage == 2, "Base damage applied (+1 -> 2)")
 
 	player.queue_free()
 	manager.queue_free()
@@ -247,8 +247,8 @@ func test_character_combat_hooks_and_revive() -> void:
 	player.hp = 1 # Đang còn 1 máu
 	var missing: int = player.max_hp - player.hp
 	var raw_berserk_dmg: float = player.get_raw_damage()
-	var expected_raw: float = float(player.base_damage + PerkManager.get_total_bonus_damage()) * (1.0 + float(missing) * 0.15)
-	_assert_test(abs(raw_berserk_dmg - expected_raw) < 0.01, "Berserk Frenzy raw damage scales +15%% per missing HP (Expected: %.2f, Got: %.2f)" % [expected_raw, raw_berserk_dmg])
+	var expected_raw: float = float(player.base_damage) * (1.0 + float(missing) * 0.15)
+	_assert_test(abs(raw_berserk_dmg - expected_raw) < 0.01, "Berserk Frenzy raw damage scales +15% per missing HP (Expected: %.2f, Got: %.2f)" % [expected_raw, raw_berserk_dmg])
 
 	# 6. Kiểm tra trần tốc độ chạy tối đa (max_speed_cap)
 	player.speed = 999.0

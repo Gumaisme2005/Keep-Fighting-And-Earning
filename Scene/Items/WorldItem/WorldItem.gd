@@ -9,8 +9,6 @@ var prompt_label: Label = null
 
 func _ready() -> void:
 	add_to_group("world_items")
-	if item_data != null:
-		item_data = item_data.duplicate()
 	if item_data != null and item_data.icon != null:
 		sprite.texture = item_data.icon
 
@@ -58,40 +56,18 @@ func _on_body_exited(body: Node2D) -> void:
 		if prompt_label != null:
 			prompt_label.visible = false
 
-func _is_nearest_pickup_candidate() -> bool:
-	if not is_instance_valid(player_node) or get_tree() == null:
-		return true
-	var my_d := global_position.distance_squared_to(player_node.global_position)
-	for node in get_tree().get_nodes_in_group("world_items"):
-		if node == self or not is_instance_valid(node) or node.is_queued_for_deletion():
-			continue
-		if node.get("is_player_near") != true:
-			continue
-		var other_d: float = (node as Node2D).global_position.distance_squared_to(player_node.global_position)
-		if other_d < my_d - 0.01 or (absf(other_d - my_d) <= 0.01 and node.get_instance_id() < get_instance_id()):
-			return false
-	return true
-
 func _unhandled_input(event: InputEvent) -> void:
-	if not is_player_near or get_tree() == null or get_tree().paused:
-		return
-	if not is_instance_valid(player_node) or player_node.get("is_dead") == true:
-		return
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_E:
-		if _is_nearest_pickup_candidate():
-			get_viewport().set_input_as_handled()
+	if is_player_near and event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_E:
 			_pickup_item()
 
 func _pickup_item() -> void:
-	if get_tree() != null and get_tree().paused:
-		return
-	if is_instance_valid(player_node) and player_node.get("is_dead") != true and player_node.has_node("Inventory") and item_data != null:
+	if player_node != null and player_node.has_node("Inventory") and item_data != null:
 		var inventory = player_node.get_node("Inventory")
 		var initial_count: int = item_data.stack_count if item_data.stack_count > 0 else 1
-		var fully_added: bool = inventory.add_item(item_data.duplicate(), initial_count)
-		var remaining: int = int(inventory.get("last_add_remaining")) if "last_add_remaining" in inventory else (0 if fully_added else item_data.stack_count)
+		var fully_added: bool = inventory.add_item(item_data, initial_count)
 
-		if fully_added or remaining <= 0:
+		if fully_added or item_data.stack_count <= 0:
 			if get_node_or_null("/root/AudioManager") != null:
 				AudioManager.play_sfx("pickup")
 			if get_tree():
@@ -101,8 +77,7 @@ func _pickup_item() -> void:
 				get_tree().call_group("game_ui", "show_toast", toast_msg)
 			queue_free()
 		else:
-			item_data.stack_count = remaining
-			var taken: int = initial_count - remaining
+			var taken: int = initial_count - item_data.stack_count
 			if taken > 0:
 				if get_node_or_null("/root/AudioManager") != null:
 					AudioManager.play_sfx("pickup")

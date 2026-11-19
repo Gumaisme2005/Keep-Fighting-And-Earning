@@ -28,7 +28,6 @@ var phase_2_triggered: bool = false
 var phase_3_triggered: bool = false
 var summoned_minions: Array = []
 var rng := RandomNumberGenerator.new()
-var _cooldown_generation: int = 0
 
 @onready var anim = $AnimatedSprite2D
 @onready var scythe_hitbox = $ScytheHitbox
@@ -126,11 +125,8 @@ func take_damage(damage_amount: int) -> void:
 		get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -30), damage_amount, Color(1.0, 0.4, 0.9))
 
 	if hp <= max_hp / 3.0 and not phase_3_triggered and hp > 0:
-		if not phase_2_triggered:
-			phase_2_triggered = true
-			melee_damage += 1
-			poison_damage += 1
 		phase_3_triggered = true
+		phase_2_triggered = true
 		current_phase = 3
 		attack_cooldown *= 0.6
 		melee_damage += 1
@@ -156,7 +152,6 @@ func take_damage(damage_amount: int) -> void:
 		scythe_collision.set_deferred("disabled", true)
 	else:
 		is_dead = true
-		_cooldown_generation += 1
 		if get_node_or_null("/root/GameManager") != null:
 			GameManager.register_enemy_kill(self, "necromancer")
 		_drop_boss_loot()
@@ -187,7 +182,6 @@ func _cleanup_summoned_minions() -> void:
 	summoned_minions.clear()
 
 func cast_summon_skill():
-	_cooldown_generation += 1
 	is_casting_special = true
 	is_attacking = false
 	velocity = Vector2.ZERO
@@ -201,7 +195,7 @@ func cast_summon_skill():
 
 	await get_tree().create_timer(2.0).timeout
 
-	if not is_instance_valid(self) or not is_inside_tree() or is_dead:
+	if not is_inside_tree() or is_dead:
 		if tween != null and tween.is_valid():
 			tween.kill()
 		return
@@ -214,17 +208,12 @@ func cast_summon_skill():
 			minion.set_meta("summoned", true)
 			parent_node.call_deferred("add_child", minion)
 			var angle = i * (TAU / num_mobs)
-			var spawn_pos: Vector2 = global_position + Vector2(cos(angle), sin(angle)) * 55.0
-			if parent_node.has_method("is_global_pos_wall_or_door") and parent_node.is_global_pos_wall_or_door(spawn_pos):
-				spawn_pos = global_position
-			elif parent_node.has_method("has_line_of_sight") and not parent_node.has_line_of_sight(global_position, spawn_pos):
-				spawn_pos = global_position
-			minion.set_deferred("global_position", spawn_pos)
+			var spawn_offset = Vector2(cos(angle), sin(angle)) * 55.0
+			minion.global_position = global_position + spawn_offset
 			summoned_minions.append(minion)
 
-			var boss_ref := self
 			get_tree().create_timer(0.1).timeout.connect(func():
-				if is_instance_valid(minion) and is_instance_valid(boss_ref) and not boss_ref.is_dead and minion.is_inside_tree():
+				if is_instance_valid(minion) and not is_dead and minion.is_inside_tree():
 					minion.is_active = true
 			)
 
@@ -235,13 +224,11 @@ func cast_summon_skill():
 			parent_node.call_deferred("add_child", explosion)
 
 			var angle = i * (PI / 4.0)
-			var exp_pos: Vector2 = global_position + Vector2(cos(angle), sin(angle)) * 100.0
-			if parent_node.has_method("is_global_pos_wall_or_door") and parent_node.is_global_pos_wall_or_door(exp_pos):
-				exp_pos = global_position
-			explosion.set_deferred("global_position", exp_pos)
+			var explosion_offset = Vector2(cos(angle), sin(angle)) * 100.0
+			explosion.global_position = global_position + explosion_offset
 
 	await get_tree().create_timer(0.5).timeout
-	if not is_instance_valid(self) or not is_inside_tree() or is_dead:
+	if not is_inside_tree() or is_dead:
 		return
 
 	is_casting_special = false
@@ -255,7 +242,6 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 	elif anim.animation == "hurt":
 		if not is_dead and not is_casting_special:
 			anim.play("idle")
-			_cooldown_generation += 1
 			can_attack = true
 	elif anim.animation in ["attack_1", "attack_2"]:
 		is_attacking = false
@@ -264,20 +250,14 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		start_cooldown()
 
 func start_cooldown():
-	_cooldown_generation += 1
-	var my_gen := _cooldown_generation
 	await get_tree().create_timer(attack_cooldown).timeout
-	if not is_instance_valid(self) or not is_inside_tree() or is_dead or my_gen != _cooldown_generation:
+	if not is_inside_tree() or is_dead:
 		return
 	if not is_casting_special:
 		can_attack = true
 
 func _on_scythe_hitbox_area_entered(area: Area2D) -> void:
-	if is_dead or not is_active or not is_attacking:
-		return
 	if area.name == "PlayerHurtbox":
 		var target = area.get_parent()
-		if target == null or not is_instance_valid(target):
-			return
 		if target.has_method("take_damage"):
 			target.take_damage(melee_damage)

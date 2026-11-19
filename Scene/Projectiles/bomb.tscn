@@ -87,7 +87,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1vivr"]
-size = Vector2(72, 56)
+size = Vector2(35, 25)
 
 [node name="Bomb" type="Area2D" unique_id=745433419]
 script = ExtResource("1_erq1x")

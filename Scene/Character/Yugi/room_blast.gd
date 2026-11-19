@@ -2,7 +2,6 @@ extends Node2D
 
 const Sprites = preload("res://Scene/Character/Yugi/YugiSprites.gd")
 const Flash = preload("res://Scene/Character/Yugi/explosion_flash.gd")
-const CombatUtil = preload("res://Scene/Character/CombatUtil.gd")
 const RELEASE_TIME := 0.8
 const IMPACT_TIME := 1.3
 const DAMAGE_RATIO := 0.5
@@ -80,22 +79,16 @@ func _faces_left() -> bool:
 func _room_targets() -> Array[Node2D]:
 	var targets: Array[Node2D] = []
 	var world := get_parent()
-	if world == null: return targets
-	var has_room := room_rect.size != Vector2i.ZERO and world.has_method("local_to_map")
+	if room_rect.size == Vector2i.ZERO or not world.has_method("local_to_map"): return targets
 	# Spatial membership also includes boss summons absent from RoomManager.enemies.
 	for hurtbox in world.find_children("Hurtbox", "Area2D", true, false):
 		var target := hurtbox.get_parent()
 		if not target.has_method("take_damage"): target = target.get_parent()
 		if not target is Node2D or not target.has_method("take_damage"): continue
-		if target.is_in_group("player") or target.is_queued_for_deletion() or target.get("is_dead") == true or target.get("is_active") == false: continue
+		if target.is_in_group("player") or target.is_queued_for_deletion() or target.get("is_dead") == true: continue
 		if target.get("hp") == null or float(target.get("hp")) <= 0 or targets.has(target): continue
-		if has_room:
-			var cell: Vector2i = world.local_to_map(world.to_local(target.global_position))
-			if room_rect.has_point(cell): targets.append(target)
-		else:
-			if global_position.distance_to(target.global_position) <= 160.0:
-				if not world.has_method("has_line_of_sight") or world.has_line_of_sight(global_position, target.global_position):
-					targets.append(target)
+		var cell: Vector2i = world.local_to_map(world.to_local(target.global_position))
+		if room_rect.has_point(cell): targets.append(target)
 	return targets
 
 func _detonate() -> void:
@@ -105,8 +98,7 @@ func _detonate() -> void:
 	for target in targets: total_hp += float(target.get("hp"))
 	last_damage = maxi(1, floori(total_hp / targets.size() * DAMAGE_RATIO)) if not targets.is_empty() else 0
 	for target in targets:
-		if is_instance_valid(target):
-			CombatUtil.deal_player_damage(caster, target, last_damage)
+		if is_instance_valid(target): target.take_damage(last_damage)
 	var flash := Flash.new()
 	flash.radius = maxf(120.0, Vector2(room_rect.size).length() * 16.0)
 	get_parent().add_child(flash)

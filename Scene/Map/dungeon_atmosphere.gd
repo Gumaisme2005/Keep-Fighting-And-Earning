@@ -466,15 +466,12 @@ static func setup_dungeon_atmosphere(tilemap: TileMap, player: Node2D, rng_seed:
 		var num_cracks: int = atmo_rng.randi_range(2, 4)
 		for c_idx in range(num_cracks):
 			var cx: int = atmo_rng.randi_range(room.position.x + 1, room.end.x - 2)
-			var cy: int = room.position.y - 1 # Tường Bắc
+			var cy: int = room.position.y # Tường Bắc
 			if atmo_rng.randf() > 0.5:
-				cy = room.end.y # Tường Nam
-			var crack_cell := Vector2i(cx, cy)
-			if not _is_wall_tile(tilemap, crack_cell):
-				continue
+				cy = room.end.y - 1 # Tường Nam
 			var crack_sprite := Sprite2D.new()
 			crack_sprite.texture = TEX_WALL_CRACK_MAJOR if atmo_rng.randf() > 0.5 else TEX_WALL_CRACK_MINOR
-			crack_sprite.position = tilemap.map_to_local(crack_cell) + Vector2(atmo_rng.randf_range(-3, 3), atmo_rng.randf_range(-3, 3))
+			crack_sprite.position = tilemap.map_to_local(Vector2i(cx, cy)) + Vector2(atmo_rng.randf_range(-3, 3), atmo_rng.randf_range(-3, 3))
 			crack_sprite.flip_h = atmo_rng.randf() > 0.5
 			crack_sprite.flip_v = atmo_rng.randf() > 0.5
 			crack_sprite.modulate = Color(1.0, 1.0, 1.0, atmo_rng.randf_range(0.68, 0.90))
@@ -499,7 +496,7 @@ static func setup_dungeon_atmosphere(tilemap: TileMap, player: Node2D, rng_seed:
 		# G. Xiềng xích sắt trên tường (Iron Chains & Wall Shackles)
 		if atmo_rng.randf() < 0.55:
 			var chain_x: int = atmo_rng.randi_range(room.position.x + 2, room.end.x - 3)
-			var chain_cell := Vector2i(chain_x, room.position.y - 1)
+			var chain_cell := Vector2i(chain_x, room.position.y)
 			if _is_wall_tile(tilemap, chain_cell):
 				var chain_sprite := Sprite2D.new()
 				chain_sprite.texture = TEX_IRON_CHAINS

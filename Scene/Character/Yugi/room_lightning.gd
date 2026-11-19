@@ -41,7 +41,7 @@ func _physics_process(delta: float) -> void:
 	if not struck and elapsed >= strike_time:
 		struck = true
 		for target in _room_targets():
-			CombatUtil.deal_player_damage(caster, target, damage)
-			if is_instance_valid(target) and not target.is_queued_for_deletion() and target.get("is_dead") != true:
+			target.take_damage(damage)
+			if is_instance_valid(target) and not target.is_queued_for_deletion():
 				LightningHit.apply(target)
 	if elapsed >= total_time: queue_free()

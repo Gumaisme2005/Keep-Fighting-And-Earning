@@ -1,7 +1,5 @@
 extends Area2D
 
-const CombatUtil = preload("res://Scene/Character/CombatUtil.gd")
-
 var damage: int = 5
 var is_exploding: bool = false
 
@@ -28,8 +26,6 @@ func throw_bomb(start_pos: Vector2, end_pos: Vector2) -> void:
 	tween.tween_property(self, "global_position", safe_end, 0.4).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 	await tween.finished
-	if not is_instance_valid(self) or not is_inside_tree():
-		return
 	await get_tree().create_timer(0.5).timeout
 	if not is_instance_valid(self) or not is_inside_tree():
 		return
@@ -44,24 +40,18 @@ func explode() -> void:
 
 	var tmap = get_parent()
 	var overlapping_areas = get_overlapping_areas()
-	var hit_ids: Dictionary = {}
 	for area in overlapping_areas:
 		if area.name == "Hurtbox" and area.get_parent() != null:
 			var target = area.get_parent()
 			if not target.has_method("take_damage") and target.get_parent() != null:
 				target = target.get_parent()
 
-			if target != null and target.has_method("take_damage") and not target.is_in_group("player") and target.get("is_dead") != true:
-				var tid: int = target.get_instance_id()
-				if hit_ids.has(tid):
-					continue
+			if target.has_method("take_damage") and not target.is_in_group("player"):
 				# Không gây sát thương nổ xuyên qua tường hoặc cửa đóng
 				if tmap != null and tmap.has_method("has_line_of_sight"):
 					if not tmap.has_line_of_sight(global_position, target.global_position):
 						continue
-				hit_ids[tid] = true
-				CombatUtil.deal_player_damage(self, target, damage)
+				target.take_damage(damage)
 
 	await $AnimatedSprite2D.animation_finished
-	if is_instance_valid(self):
-		queue_free()
+	queue_free()

@@ -50,8 +50,7 @@ func _physics_process(delta: float) -> void:
 		var id: int = t.get_instance_id()
 		if hits.has(id):
 			continue
-		var p := Util.hit_point(t)
-		if p.distance_to(global_position) <= r + Util.ENEMY_RADIUS and Util.sees(world, global_position, p):
+		if Util.hit_point(t).distance_to(global_position) <= r + Util.ENEMY_RADIUS:
 			hits[id] = true
 			Util.hit(world, t, damage, freeze_time)
 

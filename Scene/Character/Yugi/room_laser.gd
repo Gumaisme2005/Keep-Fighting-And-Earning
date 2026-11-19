@@ -49,7 +49,7 @@ func _physics_process(delta: float) -> void:
 		if is_instance_valid(current_target):
 			tick_remaining -= maxf(0, elapsed - maxf(previous, start))
 			while tick_remaining <= 0 and is_instance_valid(current_target):
-				CombatUtil.deal_player_damage(caster, current_target, damage_per_tick)
+				current_target.take_damage(damage_per_tick)
 				tick_remaining += TICK_SECONDS
 				_refresh_target()
 	else:

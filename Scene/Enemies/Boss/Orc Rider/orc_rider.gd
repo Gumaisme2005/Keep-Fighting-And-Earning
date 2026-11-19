@@ -30,10 +30,6 @@ var is_preparing_spin: bool = false
 var show_charge_warning: bool = false
 var show_spin_warning: bool = false
 var flash_tween: Tween
-var hit_flash_tween: Tween
-var _action_gen: int = 0
-var _nav_timer: float = 0.0
-var _cached_nav_dir: Vector2 = Vector2.ZERO
 
 @onready var anim = $AnimatedSprite2D
 @onready var shape_1 = $Hitbox/Shape1
@@ -66,7 +62,7 @@ func _draw() -> void:
 	if show_spin_warning:
 		draw_circle(Vector2.ZERO, 65.0, Color(1.0, 0.2, 0.2, 0.4))
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if not is_active or is_dead or is_hurt:
 		return
 	if player == null or not is_instance_valid(player):
@@ -76,8 +72,8 @@ func _physics_process(delta: float) -> void:
 		else:
 			return
 
-	var distance: float = global_position.distance_to(player.global_position)
-	var direction: Vector2 = global_position.direction_to(player.global_position)
+	var distance = global_position.distance_to(player.global_position)
+	var direction = global_position.direction_to(player.global_position)
 
 	if not is_preparing_charge and not is_charging and not is_preparing_spin and not is_attacking:
 		anim.flip_h = direction.x < 0
@@ -98,21 +94,16 @@ func _physics_process(delta: float) -> void:
 			_stop_charge()
 		return
 
-	var tmap = get_parent()
-	var has_los: bool = (tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position))
-
-	if distance > 150.0 and can_charge and has_los:
+	if distance > 150.0 and can_charge:
 		prep_charge()
-	elif distance > 45.0 or not has_los:
-		_nav_timer -= delta
-		var move_dir: Vector2 = direction
-		if not has_los or is_on_wall():
-			if _nav_timer <= 0.0 or _cached_nav_dir == Vector2.ZERO or is_on_wall():
-				_nav_timer = 0.15
-				_cached_nav_dir = _get_boss_nav_direction(tmap, direction)
-			move_dir = _cached_nav_dir if _cached_nav_dir != Vector2.ZERO else direction
-		else:
-			_cached_nav_dir = direction
+	elif distance > 45.0:
+		var move_dir = direction
+		if is_on_wall():
+			var normal = get_wall_normal()
+			var tangent = Vector2(-normal.y, normal.x)
+			if tangent.dot(direction) < 0.0:
+				tangent = -tangent
+			move_dir = (direction + tangent * 1.5).normalized()
 		velocity = move_dir * current_speed
 		anim.play("walk")
 		move_and_slide()
@@ -120,51 +111,7 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector2.ZERO
 		perform_attack(2)
 
-func _get_boss_nav_direction(tmap: Node, fallback_dir: Vector2) -> Vector2:
-	if tmap != null and tmap.has_method("local_to_map") and tmap.has_method("map_to_local") and tmap.has_method("is_global_pos_wall_or_door"):
-		var start_cell: Vector2i = tmap.local_to_map(tmap.to_local(global_position))
-		var goal_cell: Vector2i = tmap.local_to_map(tmap.to_local(player.global_position))
-		if start_cell != goal_cell:
-			var queue: Array[Vector2i] = [start_cell]
-			var came_from: Dictionary = {start_cell: start_cell}
-			var head := 0
-			var found := false
-			var dirs: Array[Vector2i] = [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
-			while head < queue.size() and came_from.size() < 400:
-				var cur: Vector2i = queue[head]
-				head += 1
-				if cur == goal_cell:
-					found = true
-					break
-				for d in dirs:
-					var nxt: Vector2i = cur + d
-					if came_from.has(nxt):
-						continue
-					var nxt_global: Vector2 = tmap.to_global(tmap.map_to_local(nxt))
-					if nxt != goal_cell and tmap.is_global_pos_wall_or_door(nxt_global):
-						continue
-					came_from[nxt] = cur
-					queue.append(nxt)
-			if found:
-				var step_cell: Vector2i = goal_cell
-				while came_from.get(step_cell, start_cell) != start_cell:
-					step_cell = came_from[step_cell]
-				var target_pos: Vector2 = tmap.to_global(tmap.map_to_local(step_cell))
-				var bfs_dir: Vector2 = global_position.direction_to(target_pos)
-				if bfs_dir != Vector2.ZERO:
-					return bfs_dir
-	if is_on_wall():
-		var normal := get_wall_normal()
-		var tangent := Vector2(-normal.y, normal.x)
-		if tangent.dot(fallback_dir) < 0.0:
-			tangent = -tangent
-		return (fallback_dir + tangent * 1.5).normalized()
-	if tmap != null and tmap.has_method("get_smart_steer_direction"):
-		return tmap.get_smart_steer_direction(global_position, fallback_dir)
-	return fallback_dir
-
 func prep_charge() -> void:
-	var gen := _action_gen
 	is_preparing_charge = true
 	anim.play("idle")
 	charge_dir = global_position.direction_to(player.global_position)
@@ -174,7 +121,7 @@ func prep_charge() -> void:
 
 	_start_flash_effect()
 	await get_tree().create_timer(2.0).timeout
-	if not is_instance_valid(self) or not is_inside_tree() or is_dead or gen != _action_gen:
+	if not is_inside_tree() or is_dead:
 		return
 
 	show_charge_warning = false
@@ -187,12 +134,11 @@ func prep_charge() -> void:
 	start_charge()
 
 func start_charge() -> void:
-	var gen := _action_gen
 	is_charging = true
 	anim.play("walk")
 
 	await get_tree().create_timer(1.2).timeout
-	if not is_instance_valid(self) or not is_inside_tree() or is_dead or gen != _action_gen:
+	if not is_inside_tree() or is_dead:
 		return
 	if is_charging:
 		_stop_charge()
@@ -200,7 +146,6 @@ func start_charge() -> void:
 func _stop_charge() -> void:
 	if not is_charging:
 		return
-	var gen := _action_gen
 	is_charging = false
 	velocity = Vector2.ZERO
 
@@ -209,13 +154,11 @@ func _stop_charge() -> void:
 
 	can_charge = false
 	await get_tree().create_timer(5.0).timeout
-	if not is_instance_valid(self) or not is_inside_tree() or is_dead:
+	if not is_inside_tree() or is_dead:
 		return
-	if gen == _action_gen or not is_dead:
-		can_charge = true
+	can_charge = true
 
 func prep_spin_attack() -> void:
-	var gen := _action_gen
 	is_preparing_spin = true
 	anim.play("idle")
 
@@ -224,7 +167,7 @@ func prep_spin_attack() -> void:
 
 	_start_flash_effect()
 	await get_tree().create_timer(2.0).timeout
-	if not is_instance_valid(self) or not is_inside_tree() or is_dead or gen != _action_gen:
+	if not is_inside_tree() or is_dead:
 		return
 
 	show_spin_warning = false
@@ -237,7 +180,6 @@ func prep_spin_attack() -> void:
 	perform_attack(3)
 
 func perform_attack(type: int) -> void:
-	var gen := _action_gen
 	is_attacking = true
 	var active_shape = null
 
@@ -255,14 +197,14 @@ func perform_attack(type: int) -> void:
 		active_shape = shape_3
 
 	await get_tree().create_timer(0.3).timeout
-	if not is_instance_valid(self) or not is_inside_tree() or not is_attacking or is_dead or gen != _action_gen:
+	if not is_inside_tree() or not is_attacking or is_dead:
 		return
 
 	if active_shape:
 		active_shape.set_deferred("disabled", false)
 
 	await get_tree().create_timer(0.2).timeout
-	if not is_instance_valid(self) or not is_inside_tree() or is_dead or gen != _action_gen:
+	if not is_inside_tree() or is_dead:
 		return
 
 	if active_shape:
@@ -271,16 +213,14 @@ func perform_attack(type: int) -> void:
 		return
 
 	await get_tree().create_timer(0.6).timeout
-	if not is_instance_valid(self) or not is_inside_tree() or is_dead or gen != _action_gen:
+	if not is_inside_tree() or is_dead:
 		return
 
 	if not is_preparing_spin and not is_preparing_charge:
 		is_attacking = false
 
 func _start_flash_effect() -> void:
-	if hit_flash_tween and hit_flash_tween.is_valid():
-		hit_flash_tween.kill()
-	if flash_tween and flash_tween.is_valid():
+	if flash_tween:
 		flash_tween.kill()
 	flash_tween = create_tween()
 	flash_tween.set_loops(8)
@@ -298,9 +238,10 @@ func take_damage(amount: int) -> void:
 	hp = max(0, hp - amount)
 	if get_tree():
 		get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -30), amount, Color(1.0, 0.5, 0.2))
+	var phased = check_phase()
+	boss_hp_changed.emit(hp, max_hp, current_phase, BOSS_NAME)
 
 	if hp <= 0:
-		boss_hp_changed.emit(0, max_hp, current_phase, BOSS_NAME)
 		is_dead = true
 		if get_node_or_null("/root/GameManager") != null:
 			GameManager.register_enemy_kill(self, "orc_rider")
@@ -312,20 +253,15 @@ func take_damage(amount: int) -> void:
 		anim.play("death")
 		return
 
-	var phased = check_phase()
-	boss_hp_changed.emit(hp, max_hp, current_phase, BOSS_NAME)
-
 	if phased:
 		_cancel_all_actions()
 		prep_spin_attack()
 		return
 
 	# Boss Super Armor (Poise): Light ranged attacks do not stun-lock boss movement
-	if hit_flash_tween and hit_flash_tween.is_valid():
-		hit_flash_tween.kill()
-	hit_flash_tween = create_tween()
-	hit_flash_tween.tween_property(anim, "modulate", Color(1.5, 0.4, 0.4), 0.08)
-	hit_flash_tween.tween_property(anim, "modulate", Color.WHITE, 0.08)
+	var flash_hit = create_tween()
+	flash_hit.tween_property(anim, "modulate", Color(1.5, 0.4, 0.4), 0.08)
+	flash_hit.tween_property(anim, "modulate", Color.WHITE, 0.08)
 
 func _drop_boss_loot() -> void:
 	var floor_lvl := 1
@@ -359,7 +295,6 @@ func check_phase() -> bool:
 	return false
 
 func _cancel_all_actions() -> void:
-	_action_gen += 1
 	is_attacking = false
 	is_preparing_charge = false
 	is_charging = false
@@ -368,10 +303,8 @@ func _cancel_all_actions() -> void:
 	show_spin_warning = false
 	queue_redraw()
 
-	if flash_tween and flash_tween.is_valid():
+	if flash_tween:
 		flash_tween.kill()
-	if hit_flash_tween and hit_flash_tween.is_valid():
-		hit_flash_tween.kill()
 	anim.modulate = Color.WHITE
 	_disable_all_hitboxes()
 	velocity = Vector2.ZERO
@@ -385,15 +318,8 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		queue_free()
 
 func _on_hitbox_area_entered(area: Area2D) -> void:
-	if is_dead or not is_active or not is_attacking:
-		return
 	if area.name == "PlayerHurtbox":
 		var target = area.get_parent()
-		if target == null or not is_instance_valid(target):
-			return
-		var tmap = get_parent()
-		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
-			return
 		if target.has_method("take_damage"):
 			target.take_damage(active_damage)
 

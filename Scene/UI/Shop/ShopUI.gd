@@ -207,7 +207,7 @@ func sell(bag_index: int) -> String:
 	var value: int = catalog.sell_price(item)
 	var name_up := item.item_name.to_upper()
 	catalog.restock(item)
-	inventory.drop_item(bag_index, false, Vector2.ZERO, false)
+	inventory.drop_item(bag_index, false, Vector2.ZERO)
 	var gm := _gm()
 	if gm != null:
 		gm.add_coins(value)

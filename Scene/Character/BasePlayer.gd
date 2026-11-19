@@ -26,18 +26,7 @@ var q_cd_remaining: float = 0.0
 var rmb_cd_remaining: float = 0.0
 var rmb_cd_max: float = 0.0
 
-var _hurt_invincible: bool = false
-var _skill_invincible: bool = false
-var _manual_invincible: bool = false
-var _hurt_invincible_gen: int = 0
-var is_invincible: bool = false:
-	get:
-		return _hurt_invincible or _skill_invincible or _manual_invincible
-	set(value):
-		_manual_invincible = value
-		if not value:
-			_hurt_invincible = false
-			_skill_invincible = false
+var is_invincible: bool = false
 @export var invincibility_time: float = 0.95
 var hp: int = 4
 var max_armor: int = 4
@@ -108,7 +97,7 @@ func _ready() -> void:
 		inventory.equipment_changed.connect(_on_equipment_changed)
 
 	# Trang bị khởi đầu cân bằng: 1 Bình máu nhỏ
-	var starter_potion = preload("res://Scene/Items/Common/health_potion.tres").duplicate()
+	var starter_potion = preload("res://Scene/Items/Common/health_potion.tres")
 	if inventory != null and inventory.has_method("add_item"):
 		inventory.add_item(starter_potion)
 
@@ -127,16 +116,13 @@ func get_effective_q_cooldown() -> float:
 		cdr = PerkManager.get_cooldown_reduction()
 	return skill_cooldown * (1.0 - cdr)
 
-func _process(_delta: float) -> void:
-	pass
-
-func _step_cooldowns(delta: float) -> void:
+func _process(delta: float) -> void:
 	var updated := false
 	if q_cd_remaining > 0.0:
 		q_cd_remaining = maxf(0.0, q_cd_remaining - delta)
+		if q_cd_remaining <= 0.0 and not is_casting_skill:
+			can_use_skill = true
 		updated = true
-	if q_cd_remaining <= 0.0 and not is_casting_skill:
-		can_use_skill = true
 	if rmb_cd_remaining > 0.0:
 		rmb_cd_remaining = maxf(0.0, rmb_cd_remaining - delta)
 		updated = true
@@ -146,8 +132,6 @@ func _step_cooldowns(delta: float) -> void:
 func _physics_process(delta: float) -> void:
 	if is_dead:
 		return
-
-	_step_cooldowns(delta)
 
 	if is_hurt:
 		_hurt_timer -= delta
@@ -210,10 +194,6 @@ func _physics_process(delta: float) -> void:
 	if hotbar_to_use >= 0 and inventory != null and inventory.has_method("use_or_equip_item"):
 		inventory.use_or_equip_item(hotbar_to_use, self)
 
-	if is_casting_skill:
-		move_and_slide()
-		return
-
 	var aim_pos = global_position + current_aim_offset
 	if animated_sprite != null:
 		if aim_pos.x < global_position.x:
@@ -230,8 +210,12 @@ func _physics_process(delta: float) -> void:
 		use_special_skill()
 		return
 
-	if want_rmb and not is_casting_skill:
+	if want_rmb:
 		_on_rmb_skill_triggered()
+
+	if is_casting_skill:
+		move_and_slide()
+		return
 
 	if is_attacking:
 		velocity = direction * (effective_speed * 0.65)
@@ -268,21 +252,6 @@ func attack() -> void:
 
 func use_special_skill() -> void:
 	pass
-
-func set_skill_invincible(active: bool) -> void:
-	_skill_invincible = active
-
-func take_ranged_damage(amount: int) -> void:
-	if amount <= 0:
-		return
-	var reduced := amount
-	if get_node_or_null("/root/PerkManager") != null:
-		var reduction: int = PerkManager.get_ranged_damage_reduction()
-		if reduction > 0:
-			reduced = maxi(0, amount - reduction)
-			if reduced <= 0:
-				return
-	take_damage(reduced)
 
 func take_damage(amount: int) -> void:
 	if is_dead or is_invincible or amount <= 0:
@@ -331,8 +300,7 @@ func take_damage(amount: int) -> void:
 			if get_tree():
 				get_tree().call_group("game_ui", "show_banner", "IMMORTAL WILL - REVIVED!", Color(1.0, 0.85, 0.2))
 				get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -32), hp, Color(1.0, 0.85, 0.2))
-			var revive_inv_dur: float = PerkManager.get_second_chance_invincibility_duration() if PerkManager.has_method("get_second_chance_invincibility_duration") else 2.5
-			start_invincibility(revive_inv_dur)
+			start_invincibility()
 			return
 
 		if not is_dead:
@@ -355,21 +323,18 @@ func take_damage(amount: int) -> void:
 				return
 			get_tree().call_group("game_over_menu", "pause")
 
-func start_invincibility(duration_override: float = -1.0) -> void:
-	var duration := duration_override if duration_override > 0.0 else invincibility_time
-	_hurt_invincible = true
-	_hurt_invincible_gen += 1
-	var my_gen := _hurt_invincible_gen
+func start_invincibility() -> void:
+	is_invincible = true
 	if animated_sprite != null:
 		var tween = create_tween()
-		tween.set_loops(maxi(1, int(round(duration / 0.15))))
+		tween.set_loops(5)
 		tween.tween_property(animated_sprite, "modulate:a", 0.3, 0.075)
 		tween.tween_property(animated_sprite, "modulate:a", 1.0, 0.075)
 
-	await get_tree().create_timer(duration).timeout
-	if not is_instance_valid(self) or not is_inside_tree() or my_gen != _hurt_invincible_gen:
+	await get_tree().create_timer(invincibility_time).timeout
+	if not is_inside_tree():
 		return
-	_hurt_invincible = false
+	is_invincible = false
 	if animated_sprite != null:
 		animated_sprite.modulate.a = 1.0
 
@@ -392,12 +357,15 @@ func consume_potion(heal_amount: int, bonus_max_hp: int) -> void:
 func _on_equipment_changed() -> void:
 	if inventory == null:
 		return
-	# Chỉ cập nhật trần max_hp và kẹp hp; không cộng thêm hp khi mặc để tránh exploit mặc/tháo hồi máu.
+	var old_max_hp = max_hp
 	max_hp = base_max_hp + inventory.get_total_max_hp_bonus()
-	hp = mini(hp, max_hp)
+
+	if max_hp > old_max_hp:
+		hp += (max_hp - old_max_hp)
+	hp = min(hp, max_hp)
 
 	max_armor = base_armor + inventory.get_total_defense()
-	current_armor = mini(current_armor, max_armor)
+	current_armor = min(current_armor, max_armor)
 
 	if current_armor < max_armor and regen_delay_timer.is_stopped() and regen_tick_timer.is_stopped():
 		regen_delay_timer.start()
@@ -448,43 +416,13 @@ func get_raw_damage() -> float:
 				dmg *= (1.0 + float(missing_hp) * float(p.get_modifier("dmg_per_missing_hp", 0.15)))
 	return dmg
 
-func get_attack_speed_bonus() -> float:
-	var bonus := 0.0
-	if inventory != null and inventory.has_method("get_attack_speed_bonus"):
-		bonus += float(inventory.get_attack_speed_bonus())
-	if get_node_or_null("/root/PerkManager") != null:
-		bonus += PerkManager.get_attack_speed_bonus()
-	return clampf(bonus, 0.0, 2.0)
-
-func get_attack_speed_scale() -> float:
-	return 1.0 + get_attack_speed_bonus()
-
-func get_effective_attack_cooldown(base_cd: float) -> float:
-	return maxf(0.08, base_cd / get_attack_speed_scale())
-
-func get_display_damage() -> int:
-	var raw := get_raw_damage()
-	return maxi(1, int(floor(raw))) if raw > 0.0 else 0
-
 func get_total_damage() -> int:
 	var raw := get_raw_damage()
 	if get_node_or_null("/root/PerkManager") != null:
 		return PerkManagerScript.resolve_stochastic_damage(raw)
 	return int(round(raw))
 
-func deal_damage_to(target: Node2D, raw_damage: int, call_on_hit: bool = true) -> int:
-	if target == null or not is_instance_valid(target) or target.get("is_dead") == true:
-		return 0
-	if not target.has_method("take_damage"):
-		return 0
-	var final_dmg: int = apply_on_hit_effects(target, raw_damage) if call_on_hit else raw_damage
-	if is_instance_valid(target) and target.get("is_dead") != true:
-		target.take_damage(final_dmg)
-	return final_dmg
-
 func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
-	if target == null or not is_instance_valid(target) or target.get("is_dead") == true:
-		return in_damage
 	var final_dmg: int = in_damage
 	var pm = get_node_or_null("/root/PerkManager")
 	if pm == null:
@@ -514,11 +452,6 @@ func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
 						if get_tree():
 							get_tree().call_group("game_ui", "spawn_damage_number", target.global_position + Vector2(10, -20), burn_amt, Color(1.0, 0.45, 0.1))
 
-	# 2b. Frost Touch Slow On Hit
-	if pm.has_method("has_slow_on_hit") and pm.has_slow_on_hit():
-		var slow_params: Dictionary = pm.get_slow_on_hit_params()
-		_apply_slow_to_target(target, float(slow_params.get("ratio", 0.40)), float(slow_params.get("duration", 2.0)))
-
 	# 3. Chain Lightning
 	if pm.has_lightning_on_hit():
 		_trigger_chain_lightning(target)
@@ -543,48 +476,6 @@ func apply_on_hit_effects(target: Node2D, in_damage: int) -> int:
 
 	return final_dmg
 
-func _apply_slow_to_target(target: Node2D, slow_ratio: float, duration: float) -> void:
-	if target == null or not is_instance_valid(target) or target.get("is_dead") == true:
-		return
-	if duration <= 0.0 or slow_ratio <= 0.0:
-		return
-	var scale_mult := clampf(1.0 - slow_ratio, 0.15, 1.0)
-	var has_speed := "speed" in target
-	var has_cur_speed := "current_speed" in target
-	if not has_speed and not has_cur_speed:
-		return
-
-	if not target.has_meta("_frost_slow_applied"):
-		target.set_meta("_frost_slow_applied", true)
-		if has_speed:
-			var orig_spd: float = float(target.get("speed"))
-			target.set_meta("_frost_orig_speed", orig_spd)
-			target.set("speed", orig_spd * scale_mult)
-		if has_cur_speed:
-			var orig_cur: float = float(target.get("current_speed"))
-			target.set_meta("_frost_orig_current_speed", orig_cur)
-			target.set("current_speed", orig_cur * scale_mult)
-
-	var timer: Timer = target.get_node_or_null("_FrostSlowTimer") as Timer
-	if timer == null:
-		timer = Timer.new()
-		timer.name = "_FrostSlowTimer"
-		timer.one_shot = true
-		target.add_child(timer)
-		timer.timeout.connect(func():
-			if is_instance_valid(target):
-				if target.has_meta("_frost_orig_speed"):
-					target.set("speed", float(target.get_meta("_frost_orig_speed")))
-					target.remove_meta("_frost_orig_speed")
-				if target.has_meta("_frost_orig_current_speed"):
-					target.set("current_speed", float(target.get_meta("_frost_orig_current_speed")))
-					target.remove_meta("_frost_orig_current_speed")
-				target.remove_meta("_frost_slow_applied")
-			if is_instance_valid(timer):
-				timer.queue_free()
-		)
-	timer.start(duration)
-
 func _trigger_mythic_thorns(incoming_damage: int) -> void:
 	var reflect_dmg: int = maxi(3, int(incoming_damage * 0.75))
 	var enemies = get_tree().get_nodes_in_group("enemies")
@@ -598,44 +489,35 @@ func _trigger_mythic_thorns(incoming_damage: int) -> void:
 						get_tree().call_group("game_ui", "spawn_damage_number", e.global_position + Vector2(0, -22), reflect_dmg, Color(1.0, 0.3, 0.35))
 
 func _trigger_chain_lightning(primary_target: Node2D) -> void:
-	var pm = get_node_or_null("/root/PerkManager")
-	var params: Dictionary = pm.get_chain_lightning_params() if (pm != null and pm.has_method("get_chain_lightning_params")) else {"damage": 2, "chains": 2, "range": 95.0}
-	var l_dmg: int = int(params.get("damage", 2))
-	var max_chains: int = int(params.get("chains", 2))
-	var l_range: float = float(params.get("range", 95.0))
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	var chained := 0
 	for e in enemies:
-		if e != primary_target and is_instance_valid(e) and not bool(e.get("is_dead")) and e.get("is_active") != false:
+		if e != primary_target and is_instance_valid(e) and not bool(e.get("is_dead")):
 			var dist = primary_target.global_position.distance_to(e.global_position)
-			if dist <= l_range:
+			if dist <= 95.0:
 				if e.has_method("take_damage"):
-					e.take_damage(l_dmg)
+					e.take_damage(2)
 					if get_tree():
-						get_tree().call_group("game_ui", "spawn_damage_number", e.global_position + Vector2(0, -24), l_dmg, Color(0.4, 0.85, 1.0))
+						get_tree().call_group("game_ui", "spawn_damage_number", e.global_position + Vector2(0, -24), 2, Color(0.4, 0.85, 1.0))
 				chained += 1
-				if chained >= max_chains:
+				if chained >= 2:
 					break
 
 func _trigger_armor_break_blast() -> void:
 	if get_tree():
 		get_tree().call_group("game_ui", "show_banner", "AEGIS SHATTERED - SHOCKWAVE!", Color(0.6, 0.3, 0.9))
-	var pm = get_node_or_null("/root/PerkManager")
-	var params: Dictionary = pm.get_armor_break_blast_params() if (pm != null and pm.has_method("get_armor_break_blast_params")) else {"damage": 3, "radius": 90.0}
-	var blast_dmg: int = int(params.get("damage", 3))
-	var blast_radius: float = float(params.get("radius", 90.0))
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	for e in enemies:
-		if is_instance_valid(e) and not bool(e.get("is_dead")) and e.get("is_active") != false:
+		if is_instance_valid(e) and not bool(e.get("is_dead")):
 			var dist = global_position.distance_to(e.global_position)
-			if dist <= blast_radius:
+			if dist <= 90.0:
 				var push_dir = (e.global_position - global_position).normalized()
 				if e is CharacterBody2D:
 					e.velocity += push_dir * 180.0
 				if e.has_method("take_damage"):
-					e.take_damage(blast_dmg)
+					e.take_damage(3)
 					if get_tree():
-						get_tree().call_group("game_ui", "spawn_damage_number", e.global_position + Vector2(0, -24), blast_dmg, Color(0.7, 0.4, 1.0))
+						get_tree().call_group("game_ui", "spawn_damage_number", e.global_position + Vector2(0, -24), 3, Color(0.7, 0.4, 1.0))
 
 func _unhandled_input(event: InputEvent) -> void:
 	if is_dead:

@@ -280,11 +280,8 @@ func _on_anim_finished(anim: String) -> void:
 			anim_name = ""
 			_restore_camera()
 			queue_free()
-		"enrage", "slam", "cast":
+		"enrage", "slam", "cast", "hit":
 			_finish_action()
-		"hit":
-			action = ""
-			_play(_idle_anim())
 
 # ------------------------------------------------------------------ geometry
 func _col_x(col: int) -> float:
@@ -397,11 +394,8 @@ func _fire_laser_volley(force_pattern: String = "") -> void:
 func _summon_minions() -> void:
 	if not is_instance_valid(tilemap):
 		return
-	var raw_scenes: Variant = tilemap.get("enemy_scenes")
-	if not (raw_scenes is Array):
-		return
-	var scenes: Array = raw_scenes
-	if scenes.is_empty():
+	var scenes: Array = tilemap.get("enemy_scenes")
+	if scenes == null or scenes.is_empty():
 		return
 	var cap := summon_cap_enraged if enraged else summon_cap
 	var count := mini(rng.randi_range(3, 4) if enraged else rng.randi_range(2, 3), cap - minions.size())
@@ -413,22 +407,17 @@ func _summon_minions() -> void:
 		var enemy: Node2D = scene.instantiate()
 		if "loot_seed" in enemy:
 			enemy.loot_seed = rng.randi()
+		if level > 1 and "hp" in enemy:
+			enemy.hp += (level - 1) * 2
+			if "max_hp" in enemy:
+				enemy.max_hp = enemy.hp
+		if level >= 3 and "damage" in enemy:
+			enemy.damage += 1
 		enemy.z_index = 2
 		enemy.add_to_group("enemies")
 		enemy.add_to_group("skeleton_king_minions")
 		enemy.set_meta("summoned", true)
 		tilemap.add_child(enemy)
-		if level > 1 and "hp" in enemy:
-			enemy.hp += (level - 1) * 2
-			if "max_hp" in enemy:
-				enemy.max_hp = enemy.hp
-		if level >= 3:
-			if "damage" in enemy:
-				enemy.damage += 1
-			if "normal_damage" in enemy:
-				enemy.normal_damage += 1
-			if "rage_damage" in enemy:
-				enemy.rage_damage += 1
 		enemy.position = tilemap.map_to_local(cell)
 		enemy.is_active = true
 		minions.append(enemy)
@@ -627,7 +616,7 @@ func _restore_camera() -> void:
 	arena_camera = null
 
 func _exit_tree() -> void:
-	if is_instance_valid(arena_camera):
+	if is_instance_valid(arena_camera) and arena_camera.is_current():
 		_restore_camera()
 
 func _setup_arena_light() -> void:

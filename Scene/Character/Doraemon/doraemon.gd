@@ -232,7 +232,7 @@ func _physics_process(delta: float) -> void:
 		return
 	if _cast_move != "":
 		_step_cast(delta)
-		velocity = direction * get_effective_speed() * 0.35
+		velocity = direction * speed * 0.35
 		move_and_slide()
 		_refresh_ui()
 		return
@@ -389,8 +389,7 @@ func _use(move: String) -> void:
 		_:
 			_begin_cast(move, String(info[2]), float(info[3]), float(info[4]))
 	power -= float(info[5])
-	var base_cd := float(info[1])
-	cooldowns[move] = get_effective_attack_cooldown(base_cd) if move == String(current_page()["lmb"]) else base_cd
+	cooldowns[move] = float(info[1])
 
 func _begin_cast(move: String, pose: String, release: float, lock: float) -> void:
 	_cast_move = move
@@ -441,7 +440,7 @@ func _start_door() -> bool:
 	if target == global_position:
 		return false
 	_enter_mode("door", {"target": target, "fired": false})
-	set_skill_invincible(true)
+	is_invincible = true
 	_play("door_in")
 	return true
 
@@ -586,7 +585,7 @@ func _magic_hand_strike(start: Vector2, end: Vector2) -> void:
 func _start_screw() -> void:
 	var dest := Util.safe_point(_world(), global_position, _aim_dir(), 90.0, 8.0)
 	_enter_mode("screw", {"from": global_position, "to": dest, "hit": {}})
-	set_skill_invincible(true)
+	is_invincible = true
 	_play("screw")
 
 # --- Page 8 -------------------------------------------------------------
@@ -599,12 +598,11 @@ func _do_grenades() -> void:
 			"radius": 8.0, "explode_radius": 26.0, "explode_damage": _dmg() * 2, "explode_scale": 0.45, "spin": 10.0, "rotate_sprite": false})
 
 func _do_fishing_pond() -> void:
-	var cast_dir := _aim_dir()
-	var pond_at := Util.safe_point(_world(), global_position, cast_dir, 22.0, 6.0)
+	var pond_at := Util.safe_point(_world(), global_position, _aim_dir(), 22.0, 6.0)
 	_fx("pond", pond_at + Vector2(0, 2), 0.9, false, 1.6)
 	for i in range(4):
 		var ang := rng.randf_range(-0.7, 0.7)
-		_schedule(0.2 + i * 0.3, func(): _proj("fish", pond_at + Vector2(0, -6), cast_dir.rotated(ang) * 190.0, _dmg() * 2,
+		_schedule(0.2 + i * 0.3, func(): _proj("fish", pond_at + Vector2(0, -6), _aim_dir().rotated(ang) * 190.0, _dmg() * 2,
 			{"life": 0.9, "radius": 9.0, "hit_anim": "fish_puffed"}))
 
 # --- Page 9 -------------------------------------------------------------
@@ -719,16 +717,16 @@ func _start_super(sup: String) -> void:
 	match sup:
 		"uradoraman":
 			_enter_mode("uradora_dash", {"dir": _aim_dir()})
-			set_skill_invincible(true)
+			is_invincible = true
 			_play("summon")
 		"sl_chimney":
 			_enter_mode("sl", {"hit": {}, "smoke_t": 0.0})
-			set_skill_invincible(true)
+			is_invincible = true
 			_play("sl_run")
 		"friendship_controller":
 			_walker("suneo_ctrl", global_position + Vector2(-18 if _aim_dir().x >= 0.0 else 18, 4), Vector2.ZERO, 0, {"life": 3.2})
 			_enter_mode("punch", {"target": null, "punch_t": 0.0})
-			set_skill_invincible(true)
+			is_invincible = true
 			_play("punch_fly")
 		_:
 			_begin_cast("super_" + sup, String(info[1]), float(info[2]), float(info[3]))
@@ -754,11 +752,10 @@ func _do_super_dorami_balloon() -> void:
 	consume_potion(1, 0)
 
 func _do_super_gian_recital() -> void:
-	var cast_dir := _aim_dir()
-	var at := Util.safe_point(_world(), global_position, cast_dir, 30.0, 8.0)
-	_fx("gian_door", at, 0.9, cast_dir.x < 0.0)
+	var at := Util.safe_point(_world(), global_position, _aim_dir(), 30.0, 8.0)
+	_fx("gian_door", at, 0.9, _aim_dir().x < 0.0)
 	var bars := _cast_bars
-	_schedule(0.3, func(): _walker("gian_walk", at, cast_dir * 28.0, _dmg() * 2,
+	_schedule(0.3, func(): _walker("gian_walk", at, _aim_dir() * 28.0, _dmg() * 2,
 		{"life": 1.5 + 1.0 * bars, "radius": 14.0, "notes_every": 0.1, "note_damage": _dmg()}))
 
 func _do_super_junk_barrage() -> void:
@@ -776,7 +773,6 @@ func _do_super_junk_barrage() -> void:
 			"spin": 9.0, "rotate_sprite": false, "end_anim": "puff", "sprite_scale": 0.6}))
 
 func _do_super_everyone_takecopter() -> void:
-	var cast_dir := _aim_dir()
 	var picked: Array = []
 	for i in range(5):
 		var t := Util.nearest(_world(), global_position, 240.0, picked)
@@ -788,7 +784,7 @@ func _do_super_everyone_takecopter() -> void:
 		var tgt: Node2D = picked[i % picked.size()] if not picked.is_empty() else null
 		var spread := Vector2((i - 2) * 22.0, 0)
 		_schedule(i * 0.12, func():
-			var at: Vector2 = tgt.global_position if is_instance_valid(tgt) else global_position + cast_dir * 70.0 + spread
+			var at: Vector2 = tgt.global_position if is_instance_valid(tgt) else global_position + _aim_dir() * 70.0 + spread
 			_walker("friend_" + kind, at + Vector2(0, 70), Vector2(0, -170), _dmg() * 2,
 				{"fly": true, "life": 1.1, "radius": 12.0, "max_targets": 1, "stun_time": 0.8, "exit_anim": "exit_" + kind}))
 
@@ -819,7 +815,7 @@ func _end_mode() -> void:
 	_mode = ""
 	_mode_data = {}
 	is_casting_skill = false
-	set_skill_invincible(false)
+	is_invincible = false
 	if not is_dead:
 		_play("idle")
 
@@ -865,7 +861,7 @@ func _step_mode(delta: float, direction: Vector2) -> void:
 			if _mode_t >= Sprites.duration("eat"):
 				_end_mode()
 		"sl":
-			velocity = direction * get_effective_speed() * 2.2
+			velocity = direction * speed * 2.2
 			move_and_slide()
 			if direction.x != 0.0:
 				_set_flip(direction.x < 0.0)
@@ -905,9 +901,6 @@ func _step_mode(delta: float, direction: Vector2) -> void:
 			var t = _mode_data.get("target")
 			if is_instance_valid(t):
 				var goal := Util.hit_point(t) + Vector2(0, 10)
-				if not Util.sees(_world(), global_position, goal) or Util.is_wall(_world(), goal):
-					var d := global_position.distance_to(goal)
-					goal = Util.safe_point(_world(), global_position, (goal - global_position).normalized(), d, 0.0) if d > 1.0 else global_position
 				global_position = global_position.lerp(goal, clampf(_mode_t / 0.2, 0.0, 1.0))
 			if _mode_t >= 0.2 and not _mode_data.has("kicked"):
 				_mode_data["kicked"] = true
