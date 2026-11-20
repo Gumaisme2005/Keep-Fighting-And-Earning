@@ -243,6 +243,12 @@ func choose_perk(p, seed_text: String, floor_number: int, style: String) -> void
 		PerkManager.add_perk(best, p)
 		record_transition(p, before, "perk", {"perk": best.id, "choices": choices.map(func(perk): return perk.id)})
 
+func on_run_start() -> void:
+	pass
+
+func on_floor_start(_gen, _p, _stats: Dictionary, _floor_number: int) -> void:
+	pass
+
 func combat(p, gen, floor_number: int) -> Dictionary:
 	# Isolate combat fixtures from progression kills, pity and on-kill RNG.
 	var killed: int = GameManager.enemies_killed
@@ -311,6 +317,7 @@ func run() -> Array:
 	for number in range(SEED_COUNT):
 		var seed_text := "ISSUE75-DISTRIBUTION-%02d" % number
 		for style in STYLES:
+			on_run_start()
 			GameManager.start_new_run(seed_text)
 			PerkManager.reset()
 			var gen = ScenarioDungeon.new()
@@ -333,6 +340,7 @@ func run() -> Array:
 				tally.collected_by_source = source_counts()
 				tally.consumed_by_source = source_counts()
 				tally.discarded_by_source = source_counts()
+				on_floor_start(gen, p, tally, floor_number)
 				var spawned := 0
 				var defeated := 0
 				var planned := 0

@@ -2,6 +2,7 @@ extends "res://tests/test_enemy_floor_balance.gd"
 
 const SCENARIOS = preload("res://tests/issue75_progression_scenarios.gd")
 const ROOM = preload("res://Scene/Map/room_manager.gd")
+const TIMING = preload("res://tests/issue75_reward_timing_scenarios.gd")
 
 func _ready() -> void:
 	OS.add_logger(errors)
@@ -18,6 +19,11 @@ func run() -> void:
 	await probe_isolation()
 	var baseline := OS.get_environment("ISSUE75_BASELINE") == "1"
 	var scenarios = SCENARIOS.new(self, baseline)
+	var reward_experiment := OS.get_environment("ISSUE75_REWARD_EXPERIMENT")
+	if not reward_experiment.is_empty():
+		check(TIMING.MODES.has(reward_experiment), "Known test-only reward timing alternative")
+		scenarios = TIMING.new(self, baseline)
+		scenarios.reward_experiment = reward_experiment
 	scenarios.treasure_proposal = OS.get_environment("ISSUE75_TREASURE_PROPOSAL") == "1"
 	scenarios.loot_experiment = OS.get_environment("ISSUE75_LOOT_EXPERIMENT")
 	check(SCENARIOS.EXPERIMENTS.MODES.has(scenarios.loot_experiment), "Known test-only loot experiment")
@@ -34,6 +40,7 @@ func run() -> void:
 			check(is_equal_approx(stats.effective_damage, (c.hero_damage + c.weapon_damage + c.perk_damage) * c.berserk_multiplier), "Damage sources compose once at " + phase)
 	var data = {"schema": "issue75_distribution_v4", "historical_counterfactual": baseline, "specification_proposal": scenarios.treasure_proposal, "loot_experiment": scenarios.loot_experiment,
 		"classification": "Controlled production-system event scenarios; not autonomous or interactive playthroughs",
+		"reward_experiment": reward_experiment,
 		"seeds": range(30).map(func(i): return "ISSUE75-DISTRIBUTION-%02d" % i), "samples": samples}
 	var path := "user://issue75_progression_%s.json" % ("before" if baseline else "after")
 	var file := FileAccess.open(path, FileAccess.WRITE)

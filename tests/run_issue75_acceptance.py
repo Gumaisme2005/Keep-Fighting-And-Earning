@@ -77,11 +77,12 @@ def main():
     parser.add_argument('--fps', type=int, default=144)
     parser.add_argument('--label', default='final')
     parser.add_argument('--treasure-proposal', action='store_true')
+    parser.add_argument('--reward-experiment', choices=['boss_chest_lag', 'treasure_lock3', 'perk_lag', 'combined_lag'], default='')
     parser.add_argument('--loot-experiment', choices=['baseline', 'category_even', 'late_weapon_2', 'late_weapon_4', 'late_weapon_continuity', 'early_helm_bias', 'early_armor_to_helm', 'early_helm_only', 'early_common_continuity', 'early_common_weapon', 'opening_common_continuity'], default='')
     parser.add_argument('--suites', nargs='*', default=[])
     args = parser.parse_args()
-    if args.treasure_proposal and args.loot_experiment:
-        parser.error('Run treasure and ordinary-loot alternatives separately')
+    if sum(bool(value) for value in (args.treasure_proposal, args.loot_experiment, args.reward_experiment)) > 1:
+        parser.error('Run treasure, ordinary-loot and reward-timing alternatives separately')
     WORK.mkdir(parents=True, exist_ok=True)
     if args.prepare:
         prepare()
@@ -94,6 +95,7 @@ def main():
     env.pop('ISSUE75_BASELINE', None)
     env['ISSUE75_TREASURE_PROPOSAL'] = '1' if args.treasure_proposal else '0'
     env['ISSUE75_LOOT_EXPERIMENT'] = args.loot_experiment
+    env['ISSUE75_REWARD_EXPERIMENT'] = args.reward_experiment
     jobs = [('import', ['--editor', '--import', '--quit'])] if args.import_project else []
     for suite in args.suites:
         resource = 'res://tests/' + suite

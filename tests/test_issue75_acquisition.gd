@@ -4,6 +4,7 @@ extends "res://tests/test_issue75_progression_balance.gd"
 func run() -> void:
 	await trace_real_equipment()
 	candidate_contracts()
+	await reward_timing_contracts()
 	await get_tree().process_frame
 	OS.remove_logger(errors)
 	for message in errors.messages: printerr("[RUNTIME] ", message)
@@ -80,3 +81,79 @@ func candidate_contracts() -> void:
 			if mode in ["early_common_continuity", "opening_common_continuity"] and active_floor:
 				check(retained_common_body > 0, "Reduced Common body weight retains all equipment types")
 			print("[TRACE] candidate contract: ", mode, ":", floor_number, ":", dropped, ":", changed)
+
+func timing_stats() -> Dictionary:
+	return {"equipment": 0, "equipment_collected": 0, "equipment_rewards": [],
+		"picked_up": 0, "capacity_rejected": 0, "collected_by_source": SCENARIOS.new(self).source_counts()}
+
+func timing_drop(room, id: String, source: String):
+	var drop = preload("res://Scene/Items/WorldItem/WorldItem.tscn").instantiate()
+	drop.item_data = ItemDatabase.get_item(id)
+	drop.item_data.set_meta("reward_source", source)
+	drop.item_data.set_meta("acquired_floor", 1)
+	room.add_child(drop)
+	return drop
+
+func reward_timing_contracts() -> void:
+	for mode in TIMING.MODES:
+		GameManager.start_new_run("REWARD-TIMING-75")
+		PerkManager.reset()
+		var room := SCENARIOS.ScenarioDungeon.new()
+		add_child(room)
+		var sim = TIMING.new(self)
+		sim.reward_experiment = mode
+		sim.on_run_start()
+		sim.event_context = {"seed": "REWARD-TIMING-75", "style": "normal", "floor": 1, "room": 7, "stage": "room"}
+		var p = sim.player(room)
+		var stats := timing_stats()
+		var boss = timing_drop(room, "rare_helm", "boss_chest")
+		var treasure = timing_drop(room, "legendary_sword", "other_chest")
+		timing_drop(room, "common_armor", "ordinary")
+		var potion = timing_drop(room, "rare_potion_red", "boss_guaranteed")
+		check(sim.due_floor(potion.item_data) == 1, "Timing alternative never delays a guaranteed potion: " + mode)
+		var boss_due: int = sim.due_floor(boss.item_data)
+		var treasure_due: int = sim.due_floor(treasure.item_data)
+		check(boss_due == (2 if mode in ["boss_chest_lag", "combined_lag"] else 1), "Boss equipment timing boundary: " + mode)
+		check(treasure_due == (4 if mode in ["treasure_lock3", "combined_lag"] else 1), "Treasure equipment timing boundary: " + mode)
+		var direct := ItemDatabase.get_item("heroic_sword")
+		direct.set_meta("reward_source", "boss_drop")
+		direct.set_meta("acquired_floor", 1)
+		check(sim.due_floor(direct) == 1, "Direct boss reward remains independent of chest timing")
+		direct.set_meta("reward_source", "boss_chest")
+		direct.set_meta("acquired_floor", 4)
+		check(sim.due_floor(direct) == 4, "Later equipment timing stays unchanged")
+		var combat_rng: int = PerkManager.get_combat_rng().state
+		var hp_before: int = p.hp
+		sim.collect(room, p, stats)
+		check(stats.equipment == 3 and stats.equipment_rewards.size() == 3, "Deferred offers still counted once at generation")
+		check(stats.picked_up == 1 and p.inventory.get_potion_count() == 2, "Guaranteed potion can be picked up immediately")
+		check(p.hp == hp_before and PerkManager.get_combat_rng().state == combat_rng, "Deferral does not heal or consume combat RNG")
+		var generated: Array = stats.equipment_rewards.duplicate(true)
+		var pickups: int = stats.equipment_collected
+		sim.collect(room, p, stats)
+		check(stats.equipment_rewards == generated and stats.equipment_collected == pickups, "Repeated observation cannot duplicate pending rewards")
+		for floor_number in range(2, 5):
+			GameManager.current_level = floor_number
+			sim.event_context.floor = floor_number
+			var delivered := timing_stats()
+			sim.on_floor_start(room, p, delivered, floor_number)
+			check(delivered.equipment == 0 and delivered.equipment_rewards.is_empty(), "Delivery is not another generated offer")
+			var count: int = sim.released_count
+			sim.on_floor_start(room, p, delivered, floor_number)
+			check(sim.released_count == count, "Repeated delivery hook releases each item once")
+		check(sim.deferred_equipment.is_empty() and sim.deferred_count == sim.released_count, "Early cache is fully delivered by floor four")
+		check(p.hp == hp_before and p.get_raw_damage() == 6 and p.max_armor == 4, "Original item budgets arrive without healing or reward loss")
+		check(sim.snapshot(p).gear.all(func(item): return item.acquired_floor == 1), "Delivered equipment preserves original source floor")
+		# No perk already selected is silently rerolled: the offer itself moves.
+		for floor_number in range(1, 7):
+			sim.event_context.floor = floor_number
+			sim.choose_perk(p, "REWARD-TIMING-75", floor_number, "normal")
+			if floor_number == 1:
+				check(PerkManager.active_perks.size() == (0 if mode in ["perk_lag", "combined_lag"] else 1), "Opening perk timing is explicit")
+		check(PerkManager.active_perks.size() == 6 and sim.pending_perk_floors.is_empty(), "All six authored perk offers arrive by final descent")
+		sim.on_run_start()
+		check(sim.deferred_count == 0 and sim.released_count == 0, "New run clears timing counters without inherited rewards")
+		print("[TRACE] reward timing contract: ", mode, ":", JSON.stringify(sim.acquisition_events).sha256_text())
+		room.free()
+		PerkManager.reset()
+		await get_tree().process_frame
