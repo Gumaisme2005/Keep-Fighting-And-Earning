@@ -94,7 +94,7 @@ The 144 FPS progression suite completed **35,842 PASS / 0 FAIL** across 30 seeds
 
 Normal-policy medians at floor exit, before the portal perk/descent:
 
-| Floor | Max HP before → after | Current HP before → after | Armor | Damage | Orc primary hits |
+| Floor | Max HP before → after | Current HP before → after | Armor | Damage | Orc attack calls including procs |
 |---:|---|---|---:|---:|---:|
 | 1 | 6 → 6 | 6 → 4 | 5 | 3.5 | 1.5 |
 | 2 | 10 → 10 | 9.5 → 7.5 | 7 | 6 | 2 |
