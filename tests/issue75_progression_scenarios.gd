@@ -7,6 +7,7 @@ const RULES = preload("res://Scene/Balance/EnemyFloorBalance.gd")
 const ENEMY_IDS = ["orc", "skeleton", "vampire", "armored_orc", "skeleton_archer", "werewolf"]
 const STYLES = ["normal", "optimized", "conservative"]
 const SEED_COUNT = 30
+const EXPERIMENTS = preload("res://tests/issue75_loot_experiments.gd")
 
 class ScenarioDungeon extends OLD.ManualDungeon:
 	var portals := 0
@@ -32,6 +33,14 @@ var records: Array = []
 var historical := false
 var treasure_proposal := false # Explicit test-only specification alternative.
 var potion_lots: Array = []
+var loot_experiment := ""
+
+func item_identity(item: ItemData) -> String:
+	for key in ItemDatabase._catalog:
+		if ItemDatabase._catalog[key].item_name == item.item_name: return key
+	for path in ["Common/iron_sword.tres", "Common/iron_helmet.tres", "Rare/iron_armor.tres", "Legendary/mystic_sword.tres"]:
+		if load("res://Scene/Items/" + path).item_name == item.item_name: return "legacy:" + path
+	return "unregistered"
 
 func source_counts() -> Dictionary:
 	return {"starter": 0, "ordinary": 0, "pity": 0, "other_chest": 0, "boss_guaranteed": 0}
@@ -158,6 +167,9 @@ func collect(gen, p, stats: Dictionary) -> void:
 			stats.capacity_rejected += maxi(0, 1 - accepted)
 		else:
 			stats.equipment += 1
+			if stats.has("equipment_rewards"):
+				stats.equipment_rewards.append({"id": item_identity(data), "rarity": data.rarity, "type": data.type,
+					"source": data.get_meta("reward_source", "unattributed"), "acquired_floor": data.get_meta("acquired_floor", 0)})
 			var old = p.inventory.get_equipped_item(data.type)
 			var score: int = data.damage * 100 + data.armor * 10 + data.max_hp_bonus
 			if old == null or score > old.damage * 100 + old.armor * 10 + old.max_hp_bonus:
@@ -174,16 +186,24 @@ func snapshot(p) -> Dictionary:
 	var gear: Array = []
 	for item in p.inventory.equipment.values():
 		if item == null: continue
-		var id := "unregistered"
-		for key in ItemDatabase._catalog:
-			if ItemDatabase._catalog[key].item_name == item.item_name: id = key
-		if id == "unregistered":
-			for path in ["Common/iron_sword.tres", "Common/iron_helmet.tres", "Rare/iron_armor.tres", "Legendary/mystic_sword.tres"]:
-				if load("res://Scene/Items/" + path).item_name == item.item_name: id = "legacy:" + path
+		var id := item_identity(item)
 		gear.append({"id": id, "rarity": item.rarity, "source": item.get_meta("reward_source", "unattributed"),
 			"acquired_floor": item.get_meta("acquired_floor", 0), "catalog": not id.begins_with("legacy:"),
 			"damage": item.damage, "armor": item.armor, "hp": item.max_hp_bonus})
-	return {"max_hp": p.max_hp, "hp": p.hp, "armor": p.max_armor, "current_armor": p.current_armor,
+	var perk_armor := 0
+	var perk_damage := 0
+	for perk in PerkManager.active_perks:
+		perk_armor += int(perk.get_modifier("bonus_armor", 0))
+		perk_damage += int(perk.get_modifier("bonus_damage", 0))
+	var components := {"hero_armor": BalanceConfig.get_hero_stats("miyabi").armor,
+		"helmet_armor": 0, "body_armor": 0, "weapon_armor": 0, "perk_armor": perk_armor,
+		"hero_damage": BalanceConfig.get_hero_stats("miyabi").damage, "weapon_damage": p.inventory.get_weapon_damage(),
+		"perk_damage": perk_damage, "berserk_multiplier": 1.0 + PerkManager.get_berserk_bonuses(p.get_missing_hp_ratio()).damage,
+		"crit_chance": PerkManager.get_crit_chance(), "crit_multiplier": PerkManager.get_crit_multiplier()}
+	for entry in [[ItemData.ItemType.HELMET, "helmet_armor"], [ItemData.ItemType.ARMOR, "body_armor"], [ItemData.ItemType.WEAPON, "weapon_armor"]]:
+		var item = p.inventory.get_equipped_item(entry[0])
+		if item != null: components[entry[1]] = item.armor
+	return {"max_hp": p.max_hp, "hp": p.hp, "armor": p.max_armor, "current_armor": p.current_armor, "components": components,
 		"base_damage": p.base_damage, "effective_damage": p.get_raw_damage(), "gear": gear,
 		"perks": PerkManager.active_perks.map(func(perk): return perk.id), "potions": p.inventory.get_potion_count(),
 		"perk_modifiers": PerkManager.active_perks.map(func(perk): return {"id": perk.id, "modifiers": perk.modifiers.duplicate()}),
@@ -211,6 +231,11 @@ func combat(p, gen, floor_number: int) -> Dictionary:
 	var killed: int = GameManager.enemies_killed
 	var pity: int = GameManager.potion_kills_without_drop
 	var combat_state: int = PerkManager.get_combat_rng().state
+	var revival_used: bool = PerkManager.second_chance_used
+	var player_cooldowns := [p.potion_cooldown_remaining, p.thorns_cooldown_remaining, p.armor_break_cooldown_remaining, p.lightning_cooldown_remaining]
+	var spawn_order: int = GameManager._next_defensive_spawn_order
+	var history: Array = GameManager.run_history.duplicate(true)
+	var last_run: Dictionary = GameManager.last_recorded_run.duplicate(true)
 	# On-kill perks heal the first player in the group. Keep the measured hero
 	# outside that group during probes, rather than restoring artificially set HP.
 	p.remove_from_group("player")
@@ -253,6 +278,14 @@ func combat(p, gen, floor_number: int) -> Dictionary:
 	GameManager.enemies_killed = killed
 	GameManager.potion_kills_without_drop = pity
 	PerkManager.get_combat_rng().state = combat_state
+	PerkManager.second_chance_used = revival_used
+	GameManager._next_defensive_spawn_order = spawn_order
+	GameManager.run_history = history
+	GameManager.last_recorded_run = last_run
+	p.potion_cooldown_remaining = player_cooldowns[0]
+	p.thorns_cooldown_remaining = player_cooldowns[1]
+	p.armor_break_cooldown_remaining = player_cooldowns[2]
+	p.lightning_cooldown_remaining = player_cooldowns[3]
 	p._sync_potion_run_state()
 	p._sync_defensive_run_state()
 	return {"orc_hp": hp, "hits": hits, "incoming": incoming, "penetration": ratio, "first_hp_loss": first_loss, "idle_hits_to_death": accepted}
@@ -278,7 +311,7 @@ func run() -> Array:
 				var entry = snapshot(p)
 				var tally = {"ordinary": 0, "pity": 0, "boss_guaranteed": 0, "other_chest": 0,
 					"picked_up": 0, "capacity_rejected": 0, "consumed": 0, "ground": 0, "equipment": 0, "boss_equipment": 0, "boss_chests": 0,
-					"healing_restored": 0, "hp_granted": 0, "emergency_uses": 0, "hp_lost": 0, "equipment_collected": 0}
+					"healing_restored": 0, "hp_granted": 0, "emergency_uses": 0, "hp_lost": 0, "equipment_collected": 0, "equipment_rewards": []}
 				tally.collected_by_source = source_counts()
 				tally.consumed_by_source = source_counts()
 				tally.discarded_by_source = source_counts()
@@ -297,6 +330,7 @@ func run() -> Array:
 				for room_index in range(plan.types.size()):
 					if not visited.has(room_index): continue
 					var potion_sources: Array = []
+					var replacements: Array = []
 					if plan.types[room_index] == 1:
 						for spawn in plan.spawns[room_index]:
 							var enemy := BaseEnemy.new()
@@ -306,6 +340,9 @@ func run() -> Array:
 							gen.add_child(enemy)
 							enemy.set_physics_process(false)
 							enemy.is_active = true
+							if not loot_experiment.is_empty():
+								var selection := EXPERIMENTS.selection(floor_number, spawn.loot_seed, loot_experiment)
+								if not selection.is_empty(): replacements.append(selection)
 							var rng := RandomNumberGenerator.new()
 							rng.seed = (str(spawn.loot_seed) + ":potion").hash()
 							var forced: bool = GameManager.potion_kills_without_drop >= 44 and rng.randf() >= GameManager.get_potion_drop_chance(p)
@@ -334,6 +371,14 @@ func run() -> Array:
 						chest.spawn_loot()
 						chest.free()
 					await host.get_tree().process_frame
+					if not replacements.is_empty():
+						for item in gen.get_children():
+							if not item.is_in_group("world_items") or item.has_meta("scenario_seen") or item.item_data.type == ItemData.ItemType.POTION: continue
+							var replacement: Dictionary = replacements.pop_front()
+							host.check(item.item_data.item_name == replacement.original.item_name, "Candidate pairs the actual production item draw")
+							host.check(replacement.rng_state == replacement.production_rng_state, "Candidate preserves rarity/index RNG consumption")
+							item.item_data = replacement.candidate
+						host.check(replacements.is_empty(), "Every candidate item matches exactly one generated reward")
 					mark_rewards(gen, "other_chest" if plan.types[room_index] == 2 else "ordinary", floor_number, potion_sources)
 					if plan.types[room_index] == 2:
 						for item in gen.get_children():
@@ -351,6 +396,7 @@ func run() -> Array:
 						use_potion(p, tally, style == "conservative")
 						rest(p, 20.0)
 					if p.is_dead: break
+				var pre_boss = snapshot(p)
 				var completed: bool = not p.is_dead
 				if completed:
 					# One initial-stream boss drop: phase-dependent RNG consumption is
@@ -398,7 +444,7 @@ func run() -> Array:
 				var exit = snapshot(p)
 				host.check(exit.gear.all(func(item): return item.source in ["ordinary", "other_chest", "boss_chest", "boss_drop"] and item.acquired_floor > 0), "Every equipped item retains its original reward source and acquisition floor")
 				host.check(exit.gear.all(func(item): return item.id != "unregistered"), "Every equipped reward has a stable catalog or legacy identity")
-				var result = {"seed": seed_text, "style": style, "floor": floor_number, "reached": true, "entry": entry, "exit": exit,
+				var result = {"seed": seed_text, "style": style, "floor": floor_number, "reached": true, "entry": entry, "pre_boss": pre_boss, "exit": exit,
 					"potions": tally, "planned_enemies": planned, "spawned_enemies": spawned, "defeated_enemies": defeated, "completed": completed}
 				if completed: result["combat"] = await combat(p, gen, floor_number)
 				records.append(result)
@@ -408,6 +454,7 @@ func run() -> Array:
 				host.check(not completed or (tally.boss_chests == 2 and tally.boss_guaranteed == 2), "One encounter retains exactly two guaranteed Rare potions")
 				if completed:
 					choose_perk(p, seed_text, floor_number, style)
+					result["pre_descent"] = snapshot(p)
 					GameManager.register_level_advance(floor_number + 1)
 				# Remove floor contents, retaining the actual player/inventory.
 				for child in gen.get_children():

@@ -77,8 +77,11 @@ def main():
     parser.add_argument('--fps', type=int, default=144)
     parser.add_argument('--label', default='final')
     parser.add_argument('--treasure-proposal', action='store_true')
+    parser.add_argument('--loot-experiment', choices=['baseline', 'category_even', 'late_weapon_2', 'late_weapon_4', 'late_weapon_continuity'], default='')
     parser.add_argument('--suites', nargs='*', default=[])
     args = parser.parse_args()
+    if args.treasure_proposal and args.loot_experiment:
+        parser.error('Run treasure and ordinary-loot alternatives separately')
     WORK.mkdir(parents=True, exist_ok=True)
     if args.prepare:
         prepare()
@@ -90,6 +93,7 @@ def main():
         env[variable] = str(profile)
     env.pop('ISSUE75_BASELINE', None)
     env['ISSUE75_TREASURE_PROPOSAL'] = '1' if args.treasure_proposal else '0'
+    env['ISSUE75_LOOT_EXPERIMENT'] = args.loot_experiment
     jobs = [('import', ['--editor', '--import', '--quit'])] if args.import_project else []
     for suite in args.suites:
         resource = 'res://tests/' + suite
@@ -102,16 +106,16 @@ def main():
         started = time.monotonic()
         timed_out = False
         try:
-            process = subprocess.run(command, env=env, capture_output=True, timeout=660 if 'progression' in suite else 240)
+            process = subprocess.run(command, env=env, capture_output=True, timeout=660 if 'progression' in suite or 'combat_pacing' in suite else 240)
             output = (process.stdout + process.stderr).decode('utf-8', errors='replace')
             code = process.returncode
         except subprocess.TimeoutExpired as error:
             output = ((error.stdout or b'') + (error.stderr or b'')).decode('utf-8', errors='replace')
             code, timed_out = -1, True
         (WORK / (stem + '.log')).write_text(output, encoding='utf-8', newline='\n')
-        for artifact in ('issue75_progression_after.json', 'issue75_encounters.json'):
+        for artifact in ('issue75_progression_after.json', 'issue75_encounters.json', 'issue75_combat_pacing.json'):
             source = profile_root / 'roaming' / 'Godot' / 'app_userdata' / 'Issue75 Acceptance Isolated' / artifact
-            if source.exists() and (('progression' in suite and 'progression' in artifact) or ('acceptance' in suite and 'encounters' in artifact)):
+            if source.exists() and (('progression' in suite and 'progression' in artifact) or ('acceptance' in suite and 'encounters' in artifact) or ('combat_pacing' in suite and 'combat_pacing' in artifact)):
                 shutil.copy2(source, WORK / (stem + '_' + artifact))
         traces = '\n'.join(line for line in output.splitlines() if line.startswith('[TRACE]'))
         analysis = analyze_output(suite, output, code)

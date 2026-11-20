@@ -15,12 +15,24 @@ func run() -> void:
 	await room_rewards()
 	await idle_room_safety()
 	await on_kill_health_owner()
+	await probe_isolation()
 	var baseline := OS.get_environment("ISSUE75_BASELINE") == "1"
 	var scenarios = SCENARIOS.new(self, baseline)
 	scenarios.treasure_proposal = OS.get_environment("ISSUE75_TREASURE_PROPOSAL") == "1"
+	scenarios.loot_experiment = OS.get_environment("ISSUE75_LOOT_EXPERIMENT")
+	check(SCENARIOS.EXPERIMENTS.MODES.has(scenarios.loot_experiment), "Known test-only loot experiment")
 	var samples: Array = await scenarios.run()
 	check(samples.size() == 30 * 3 * 6, "All 30 deterministic seeds, three policies and six floors recorded")
-	var data = {"schema": "issue75_distribution_v3", "historical_counterfactual": baseline, "specification_proposal": scenarios.treasure_proposal,
+	for row in samples:
+		if not row.reached: continue
+		for phase in ["entry", "pre_boss", "exit", "pre_descent"]:
+			if not row.completed and phase == "pre_descent": continue
+			check(row.has(phase), "Explicit progression phase: " + phase)
+			var stats: Dictionary = row[phase]
+			var c: Dictionary = stats.components
+			check(stats.armor == mini(12, c.hero_armor + c.helmet_armor + c.body_armor + c.weapon_armor + c.perk_armor), "Armor sources compose once at " + phase)
+			check(is_equal_approx(stats.effective_damage, (c.hero_damage + c.weapon_damage + c.perk_damage) * c.berserk_multiplier), "Damage sources compose once at " + phase)
+	var data = {"schema": "issue75_distribution_v4", "historical_counterfactual": baseline, "specification_proposal": scenarios.treasure_proposal, "loot_experiment": scenarios.loot_experiment,
 		"classification": "Controlled production-system event scenarios; not autonomous or interactive playthroughs",
 		"seeds": range(30).map(func(i): return "ISSUE75-DISTRIBUTION-%02d" % i), "samples": samples}
 	var path := "user://issue75_progression_%s.json" % ("before" if baseline else "after")
@@ -34,6 +46,28 @@ func run() -> void:
 	print("[TRACE] progression: ", JSON.stringify(samples).sha256_text())
 	print("PROGRESSION RESULTS: %d PASSED, %d FAILED" % [passed, failed])
 	get_tree().quit(1 if failed else 0)
+
+func probe_isolation() -> void:
+	GameManager.start_new_run("PROBE-ISOLATION-75")
+	PerkManager.reset()
+	var gen = SCENARIOS.ScenarioDungeon.new()
+	add_child(gen)
+	var sim = SCENARIOS.new(self)
+	var p = sim.player(gen)
+	PerkManager.add_perk(PerkDatabase.get_perk_by_id("immortal_will"), p)
+	p.lightning_cooldown_remaining = 0.4
+	p._sync_defensive_run_state()
+	var history: Array = GameManager.run_history.duplicate(true)
+	var order: int = GameManager._next_defensive_spawn_order
+	var state: int = PerkManager.get_combat_rng().state
+	await sim.combat(p, gen, 1)
+	check(not PerkManager.second_chance_used, "Combat probe cannot consume the progression hero's revival")
+	check(p.lightning_cooldown_remaining == 0.4 and GameManager.lightning_cooldown_remaining == 0.4, "Combat probe restores the measured hero's cooldown")
+	check(GameManager.run_history == history and GameManager._next_defensive_spawn_order == order, "Combat probe cannot leak history or spawn-order state")
+	check(PerkManager.get_combat_rng().state == state, "Combat probe preserves combat RNG state")
+	gen.free()
+	PerkManager.reset()
+	await get_tree().process_frame
 
 func quiet(p) -> void:
 	p.set_process(false)
