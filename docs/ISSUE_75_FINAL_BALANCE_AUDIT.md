@@ -1,5 +1,7 @@
 # Issue #75: seventh corrective commit acceptance
 
+> Follow-up, 2026-11-20: the equipment anti-heal fix and current verification are in [PR #76 review fixes](PR_76_REVIEW_FIXES.md). The seventh-commit results below are historical: removing equipment healing changes current HP and potion use. Development integration remains blocked by open revert PR #99.
+
 **PASS WITH LIMITATIONS for the compatible correctness fixes. Full gameplay balance acceptance remains FAIL.** Numerical progression has not been tuned: actual starting-commit and corrected results match across all 540 phase-matched rows. Mandatory rules and earned +2 HP descents are preserved. Interactive floor-1-to-floor-6 fairness and remote CI on this unpushed commit remain NOT VERIFIED.
 
 ## Confirmed defects and production changes
