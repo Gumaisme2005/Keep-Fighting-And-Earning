@@ -34,6 +34,15 @@ var historical := false
 var treasure_proposal := false # Explicit test-only specification alternative.
 var potion_lots: Array = []
 var loot_experiment := ""
+var acquisition_events: Array = []
+var event_context: Dictionary = {}
+
+func record_transition(p, before: Dictionary, kind: String, detail: Dictionary = {}) -> void:
+	# Observation only: snapshots do not roll RNG, equip, heal or advance time.
+	var event := event_context.duplicate(true)
+	event.merge(detail)
+	event.merge({"index": acquisition_events.size(), "kind": kind, "before": before, "after": snapshot(p)})
+	acquisition_events.append(event)
 
 func item_identity(item: ItemData) -> String:
 	for key in ItemDatabase._catalog:
@@ -134,6 +143,7 @@ func use_potion(p, stats: Dictionary, survival: bool) -> void:
 		var bypass := maxi(1, floori(incoming * rate)) if rate > 0.0 else 0
 		var next_hp_damage := incoming - mini(p.current_armor, incoming - bypass)
 		var item_name: String = p.inventory.bag[best].item_name
+		var state_before := snapshot(p)
 		p.inventory.use_or_equip_item(best, p)
 		var used: int = before - p.inventory.get_potion_count()
 		stats.consumed += used
@@ -145,6 +155,7 @@ func use_potion(p, stats: Dictionary, survival: bool) -> void:
 						stats.consumed_by_source[lot.source] += 1
 						break
 		if used > 0:
+			record_transition(p, state_before, "potion", {"item_name": item_name})
 			stats.healing_restored += maxi(0, p.hp - hp_before - (p.max_hp - maximum_before))
 			stats.hp_granted += p.max_hp - maximum_before
 			if hp_before <= next_hp_damage: stats.emergency_uses += 1
@@ -178,7 +189,10 @@ func collect(gen, p, stats: Dictionary) -> void:
 				item._pickup_item()
 				if slot >= 0 and p.inventory.bag[slot] != null:
 					stats.equipment_collected += 1
+					var state_before := snapshot(p)
 					p.inventory.use_or_equip_item(slot, p)
+					record_transition(p, state_before, "equip", {"item": item_identity(data), "source": data.get_meta("reward_source", "unattributed"),
+						"replaced": item_identity(old) if old != null else "empty", "rarity": data.rarity, "type": data.type})
 					# Explicitly discard replaced equipment; no sale/reward conversion.
 					p.inventory.bag[slot] = null
 
@@ -224,7 +238,10 @@ func choose_perk(p, seed_text: String, floor_number: int, style: String) -> void
 		if value > score:
 			score = value
 			best = perk
-	if best != null: PerkManager.add_perk(best, p)
+	if best != null:
+		var before := snapshot(p)
+		PerkManager.add_perk(best, p)
+		record_transition(p, before, "perk", {"perk": best.id, "choices": choices.map(func(perk): return perk.id)})
 
 func combat(p, gen, floor_number: int) -> Dictionary:
 	# Isolate combat fixtures from progression kills, pity and on-kill RNG.
@@ -303,6 +320,7 @@ func run() -> Array:
 			potion_lots = [{"name": p.inventory.bag.filter(func(item): return item != null and item.type == ItemData.ItemType.POTION)[0].item_name, "source": "starter", "count": 1}]
 			gen.the_player = p
 			for floor_number in range(1, 7):
+				event_context = {"seed": seed_text, "style": style, "floor": floor_number, "room": -1, "stage": "entry"}
 				if p.is_dead:
 					records.append({"seed": seed_text, "style": style, "floor": floor_number, "reached": false, "completed": false, "entry": null, "exit": null})
 					continue
@@ -329,6 +347,8 @@ func run() -> Array:
 						for prerequisite in plan.paths[index]: visited[prerequisite] = true
 				for room_index in range(plan.types.size()):
 					if not visited.has(room_index): continue
+					event_context.room = room_index
+					event_context.stage = "room"
 					var potion_sources: Array = []
 					var replacements: Array = []
 					if plan.types[room_index] == 1:
@@ -391,7 +411,9 @@ func run() -> Array:
 						# room transition afterward, not full AI movement/dodge execution.
 						p.is_invincible = false
 						var hp_before: int = p.hp
+						var state_before := snapshot(p)
 						p.take_damage(2 + RULES.damage_bonus(floor_number), RULES.penetration(floor_number))
+						record_transition(p, state_before, "accepted_hit")
 						tally.hp_lost += maxi(0, hp_before - p.hp)
 						use_potion(p, tally, style == "conservative")
 						rest(p, 20.0)
@@ -399,6 +421,8 @@ func run() -> Array:
 				var pre_boss = snapshot(p)
 				var completed: bool = not p.is_dead
 				if completed:
+					event_context.room = -1
+					event_context.stage = "boss_reward"
 					# One initial-stream boss drop: phase-dependent RNG consumption is
 					# deliberately excluded, as this is not an automated boss fight.
 					var rng := RandomNumberGenerator.new()
@@ -453,9 +477,13 @@ func run() -> Array:
 				host.check(tally.ordinary + tally.pity + tally.boss_guaranteed + tally.other_chest == tally.picked_up + tally.ground, "Unique spawned potion units equal pickups plus ground remainder")
 				host.check(not completed or (tally.boss_chests == 2 and tally.boss_guaranteed == 2), "One encounter retains exactly two guaranteed Rare potions")
 				if completed:
+					event_context.stage = "portal_perk"
 					choose_perk(p, seed_text, floor_number, style)
 					result["pre_descent"] = snapshot(p)
+					event_context.stage = "descent"
+					var before := snapshot(p)
 					GameManager.register_level_advance(floor_number + 1)
+					record_transition(p, before, "descent")
 				# Remove floor contents, retaining the actual player/inventory.
 				for child in gen.get_children():
 					if child != p: child.free()

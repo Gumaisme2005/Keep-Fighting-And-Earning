@@ -1,5 +1,7 @@
 # Issue #75: implementation and acceptance results
 
+> This records the earlier late-weapon implementation. The subsequent [remaining-target investigation](ISSUE_75_EARLY_BALANCE_RESULTS.md) adds chronological acquisition evidence, six rejected early candidates and the latest regression gate. It makes no further production change; the late improvement below remains intact.
+
 Starting HEAD: `2264917fa5f6bed61aebf34a345a1ace9f8555ae`, clean branch `fix/issue-75-game-balance`, matching origin after fetch. Godot: `4.7.2.stable.official.ed1daf0bf`. The starting commit's [CI passed](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/44695216858). Both existing backup refs and both stashes were preserved. Development was not merged; its integration is separate from this work.
 
 **Outcome:** one focused production improvement addresses late weapon availability. Normal-policy floor-six raw damage median rises from **7.5 to 8**, coverage from **15/30 to 16/30**. Early damage and armor failures remain disclosed. The generated-potion goal still conflicts with mandatory rewards. Full interactive acceptance is **NOT VERIFIED**.

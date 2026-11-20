@@ -77,7 +77,7 @@ def main():
     parser.add_argument('--fps', type=int, default=144)
     parser.add_argument('--label', default='final')
     parser.add_argument('--treasure-proposal', action='store_true')
-    parser.add_argument('--loot-experiment', choices=['baseline', 'category_even', 'late_weapon_2', 'late_weapon_4', 'late_weapon_continuity'], default='')
+    parser.add_argument('--loot-experiment', choices=['baseline', 'category_even', 'late_weapon_2', 'late_weapon_4', 'late_weapon_continuity', 'early_helm_bias', 'early_armor_to_helm', 'early_helm_only', 'early_common_continuity', 'early_common_weapon', 'opening_common_continuity'], default='')
     parser.add_argument('--suites', nargs='*', default=[])
     args = parser.parse_args()
     if args.treasure_proposal and args.loot_experiment:
@@ -113,9 +113,9 @@ def main():
             output = ((error.stdout or b'') + (error.stderr or b'')).decode('utf-8', errors='replace')
             code, timed_out = -1, True
         (WORK / (stem + '.log')).write_text(output, encoding='utf-8', newline='\n')
-        for artifact in ('issue75_progression_after.json', 'issue75_encounters.json', 'issue75_combat_pacing.json'):
+        for artifact in ('issue75_progression_after.json', 'issue75_acquisition_events.json', 'issue75_encounters.json', 'issue75_combat_pacing.json'):
             source = profile_root / 'roaming' / 'Godot' / 'app_userdata' / 'Issue75 Acceptance Isolated' / artifact
-            if source.exists() and (('progression' in suite and 'progression' in artifact) or ('acceptance' in suite and 'encounters' in artifact) or ('combat_pacing' in suite and 'combat_pacing' in artifact)):
+            if source.exists() and (('progression' in suite and ('progression' in artifact or 'acquisition' in artifact)) or ('acceptance' in suite and 'encounters' in artifact) or ('combat_pacing' in suite and 'combat_pacing' in artifact)):
                 shutil.copy2(source, WORK / (stem + '_' + artifact))
         traces = '\n'.join(line for line in output.splitlines() if line.startswith('[TRACE]'))
         analysis = analyze_output(suite, output, code)

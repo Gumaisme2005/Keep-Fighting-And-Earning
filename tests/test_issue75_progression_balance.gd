@@ -39,11 +39,15 @@ func run() -> void:
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data))
 	file.close()
+	var events := FileAccess.open("user://issue75_acquisition_events.json", FileAccess.WRITE)
+	events.store_string(JSON.stringify({"classification": "Chronological observed production API transitions in controlled scenarios", "loot_experiment": scenarios.loot_experiment, "events": scenarios.acquisition_events}))
+	events.close()
 	await get_tree().process_frame
 	OS.remove_logger(errors)
 	for message in errors.messages: printerr("[RUNTIME] ", message)
 	check(errors.messages.is_empty(), "Progression produces no parser/runtime/freed-node errors")
 	print("[TRACE] progression: ", JSON.stringify(samples).sha256_text())
+	print("[TRACE] acquisitions: ", JSON.stringify(scenarios.acquisition_events).sha256_text())
 	print("PROGRESSION RESULTS: %d PASSED, %d FAILED" % [passed, failed])
 	get_tree().quit(1 if failed else 0)
 
