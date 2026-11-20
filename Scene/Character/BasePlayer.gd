@@ -424,12 +424,9 @@ func consume_potion(heal_amount: int, bonus_max_hp: int) -> bool:
 func _on_equipment_changed() -> void:
 	if inventory == null:
 		return
-	var old_max_hp = max_hp
+	# Equipment changes capacity only; potion and floor growth remain independent.
 	max_hp = base_max_hp + inventory.get_total_max_hp_bonus() + potion_max_hp_gained + floor_vitality_applied
-
-	if max_hp > old_max_hp:
-		hp += (max_hp - old_max_hp)
-	hp = min(hp, max_hp)
+	hp = mini(hp, max_hp)
 
 	max_armor = base_armor + inventory.get_total_defense()
 	current_armor = min(current_armor, max_armor)

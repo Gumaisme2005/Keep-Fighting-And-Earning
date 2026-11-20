@@ -38,6 +38,7 @@ func _ready() -> void:
 	test_dual_boss_chests_and_loot()
 	await test_damage_number_pool_and_reset()
 	test_deterministic_rng_isolation()
+	test_equip_unequip_does_not_heal()
 
 	print("\n========================================================")
 	print("  TEST RESULTS: ", tests_passed, " PASSED, ", tests_failed, " FAILED")
@@ -677,5 +678,76 @@ func test_deterministic_rng_isolation() -> void:
 
 	orc.queue_free()
 	archer.queue_free()
+
+func test_equip_unequip_does_not_heal() -> void:
+	print("\n--- Test Group 14: Equip/Unequip Max HP Gear Anti-Heal Regression ---")
+	GameManager.start_new_run("EQUIPMENT-ANTI-HEAL")
+	PerkManager.reset()
+	var player_scene = preload("res://Scene/Character/Player 1_Pyrois/player.tscn")
+	var player = player_scene.instantiate()
+	add_child(player)
+	player.set_physics_process(false)
+
+	# Adapt PR #88's real inventory equip/unequip regression for Issue #75 growth.
+	var armor_item = ITEM_DATA_SCRIPT.new()
+	armor_item.item_name = "Test Vigor Plate"
+	armor_item.type = ItemData.ItemType.ARMOR
+	armor_item.armor = 2
+	armor_item.max_hp_bonus = 3
+	assert_test(player.inventory.add_item(armor_item), "Test armor added to inventory bag")
+	var base_hp: int = player.base_max_hp
+	_check_equipment_hp_cycles(player, base_hp)
+
+	assert_test(player.consume_potion(0, 2), "Potion earns two max HP through production API")
+	assert_test(player.potion_max_hp_gained == 2, "Potion HP tracked separately from equipment")
+	_check_equipment_hp_cycles(player, base_hp + 2)
+
+	assert_test(GameManager.register_floor_clear(1), "Boss clear earns floor descent credit")
+	GameManager.register_level_advance(2)
+	assert_test(player.floor_vitality_applied == 2, "Descent grants two floor-earned max HP")
+	_check_equipment_hp_cycles(player, base_hp + 4)
+
+	# Recreate with equipped gear, as floor transitions restore run state and inventory.
+	var armor_slot: int = player.inventory.get_first_occupied_slot()
+	# The starter potion may occupy an earlier slot; locate the armor explicitly.
+	for i in range(player.inventory.bag.size()):
+		if player.inventory.bag[i] != null and player.inventory.bag[i].item_name == "Test Vigor Plate":
+			armor_slot = i
+	player.inventory.use_or_equip_item(armor_slot, player)
+	var replacement = player_scene.instantiate()
+	replacement.get_node("Inventory").equipment[ItemData.ItemType.ARMOR] = player.inventory.equipped_armor.duplicate()
+	player.free()
+	add_child(replacement)
+	replacement.set_physics_process(false)
+	assert_test(replacement.potion_max_hp_gained == 2 and replacement.floor_vitality_applied == 2,
+		"Recreated player restores potion and floor growth exactly once")
+	assert_test(replacement.max_hp == base_hp + 7, "Recreated max HP composes base, gear, potion and floor growth")
+	replacement.inventory.unequip_item(ItemData.ItemType.ARMOR)
+	assert_test(replacement.hp == base_hp + 4, "Removing restored gear clamps HP while retaining earned growth")
+	_check_equipment_hp_cycles(replacement, base_hp + 4)
+	replacement.free()
+	GameManager.start_new_run("EQUIPMENT-ANTI-HEAL-CLEANUP")
+
+func _check_equipment_hp_cycles(player, unequipped_max_hp: int) -> void:
+	var armor_slot := -1
+	for i in range(player.inventory.bag.size()):
+		if player.inventory.bag[i] != null and player.inventory.bag[i].item_name == "Test Vigor Plate":
+			armor_slot = i
+	assert_test(armor_slot >= 0, "Anti-heal armor remains in bag between cycles")
+	if armor_slot < 0:
+		return
+	player.hp = 1
+	for _cycle in range(3):
+		player.inventory.use_or_equip_item(armor_slot, player)
+		assert_test(player.max_hp == unequipped_max_hp + 3, "Equipping raises capacity without losing earned max HP")
+		assert_test(player.hp == 1, "Equipping max HP gear does not heal player HP")
+		player.inventory.unequip_item(ItemData.ItemType.ARMOR)
+		assert_test(player.max_hp == unequipped_max_hp, "Unequipping preserves base and earned max HP")
+		assert_test(player.hp == 1, "Repeated equip/unequip cannot grant free healing")
+
+	player.inventory.use_or_equip_item(armor_slot, player)
+	player.hp = player.max_hp
+	player.inventory.unequip_item(ItemData.ItemType.ARMOR)
+	assert_test(player.hp == unequipped_max_hp, "Removing equipment clamps HP to the new maximum")
 
 
