@@ -14,6 +14,47 @@ WORK = ROOT / '.godot' / 'issue75_acceptance'
 PROJECT = WORK / 'project'
 
 
+def analyze_output(suite, output, exit_code):
+    """Require a completed suite; progress fractions alone are not test results."""
+    lines = output.splitlines()
+    errors = [line for line in lines if re.match(
+        r'^\s*(?:SCRIPT ERROR:|ERROR:|\[FAIL\]|\[RUNTIME\]|FAIL[!:])', line)]
+    summaries = [line for line in lines if re.search(
+        r'RESULTS?:|\[SUMMARY\]|YUGI TESTS PASSED|TAT CA 5/5 TEST CASES|ALL NEW MECHANICS VERIFIED',
+        line, re.I)]
+    passed = failed = None
+    complete = False
+    for line in summaries:
+        counts = re.search(r'(\d+)\s+PASSED\s*[,|]\s*(\d+)\s+FAILED', line, re.I)
+        fraction = re.search(r'(\d+)/(\d+)\s+(?:PROPERTIES\s+)?PASSED', line, re.I)
+        if counts:
+            passed, failed = map(int, counts.groups())
+            complete = True
+        elif fraction:
+            passed, total = map(int, fraction.groups())
+            failed = total - passed
+            complete = True
+        elif re.search(r'Projectile obstacle failures:\s*(\d+)', line):
+            failed = int(re.search(r'failures:\s*(\d+)', line).group(1))
+            passed = len(re.findall(r'^\s*\[PASS\]', output, re.M))
+            complete = True
+        elif 'TAT CA 5/5 TEST CASES DEU PASSED' in line:
+            passed, failed, complete = 5, 0, True
+        elif 'YUGI TESTS PASSED' in line or 'ALL NEW MECHANICS VERIFIED 100%' in line:
+            # These suites have no aggregate assertion count. Keep it unknown.
+            failed, complete = 0, True
+        runtime = re.search(r'(\d+)\s+runtime errors', line, re.I)
+        if (failed is not None and failed != 0) or (runtime and int(runtime.group(1)) != 0):
+            errors.append(line)
+    if suite == 'import':
+        complete = exit_code == 0
+    elif suite == 'benchmark_dungeon_generator':
+        complete = all(re.search(r'\|\s*' + str(rooms) + r'\s*\|', output)
+                       for rooms in (10, 16, 25, 36, 50))
+    return dict(errors=errors, markers=summaries[-12:], passed_count=passed,
+                failed_count=failed, completion_marker=complete)
+
+
 def prepare():
     PROJECT.mkdir(parents=True, exist_ok=True)
     for name in ('Assets', 'Scene', 'Menu', 'tests', 'benchmark', 'docs'):
@@ -67,22 +108,19 @@ def main():
         except subprocess.TimeoutExpired as error:
             output = ((error.stdout or b'') + (error.stderr or b'')).decode('utf-8', errors='replace')
             code, timed_out = -1, True
-        (WORK / (stem + '.log')).write_text(output, encoding='utf-8')
+        (WORK / (stem + '.log')).write_text(output, encoding='utf-8', newline='\n')
         for artifact in ('issue75_progression_after.json', 'issue75_encounters.json'):
             source = profile_root / 'roaming' / 'Godot' / 'app_userdata' / 'Issue75 Acceptance Isolated' / artifact
             if source.exists() and (('progression' in suite and 'progression' in artifact) or ('acceptance' in suite and 'encounters' in artifact)):
                 shutil.copy2(source, WORK / (stem + '_' + artifact))
         traces = '\n'.join(line for line in output.splitlines() if line.startswith('[TRACE]'))
-        errors = re.findall(r'^(?:SCRIPT ERROR:|ERROR:|\[FAIL\]|\[RUNTIME\]).*', output, re.M)
-        markers = [line for line in output.splitlines() if re.search(r'RESULTS|SUMMARY|PASSED|ALL TESTS|Total.*[Pp]ass|[0-9]+/[0-9]+', line)]
-        complete = bool(markers) if suite != 'import' else code == 0
-        if suite == 'benchmark_dungeon_generator':
-            complete = all(re.search(r'\|\s*' + str(rooms) + r'\s*\|', output) for rooms in (10, 16, 25, 36, 50))
+        analysis = analyze_output(suite, output, code)
         result = dict(suite=suite, fps=args.fps, command=command, exit_code=code, timeout=timed_out,
-                      seconds=round(time.monotonic() - started, 2), errors=errors,
-                      markers=markers[-12:], pass_messages=len(re.findall(r'\[PASS\]', output)),
+                      seconds=round(time.monotonic() - started, 2), **analysis,
+                      pass_messages=len(re.findall(r'^\s*\[PASS\]', output, re.M)),
+                      log_sha256=hashlib.sha256(output.encode()).hexdigest(),
                       trace_sha256=hashlib.sha256(traces.encode()).hexdigest() if traces else None,
-                      completion_marker=complete, log=stem + '.log')
+                      log=stem + '.log')
         results.append(result)
         (WORK / f'{args.label}_{args.fps}_results.json').write_text(json.dumps(results, indent=2), encoding='utf-8')
         print(json.dumps(result), flush=True)

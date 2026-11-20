@@ -29,6 +29,9 @@ jobs:
           godot --version
           godot --headless --import
 
+      - name: Verify Issue 75 evidence runner rejects incomplete or failed suites
+        run: python3 -m unittest discover -s tests -p test_issue75_runner.py -v
+
       - name: 1. Run Dungeon Generator Unit Tests (UT-01 .. UT-13)
         run: |
           godot --headless "res://tests/test_dungeon_generator_unit.tscn"
