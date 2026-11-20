@@ -158,8 +158,29 @@ static func roll_rarity_for_floor(floor_level: int, is_boss: bool = false, rng: 
 	var roll: float = rng.randf() if rng != null else randf()
 	return rarity_from_roll(get_rarity_weights(floor_level, is_boss), roll)
 
+static func _select_equipment(pool: Array[ItemData], floor_level: int, is_boss: bool, draw: int) -> ItemData:
+	var original: ItemData = pool[draw % pool.size()]
+	if is_boss or floor_level < 5 or floor_level > 6:
+		return original
+	# Late ordinary drops can supply a missing weapon upgrade. Reuse the item
+	# draw, preserving the drop gate, rarity stream and all boss/chest rewards.
+	# Keep the original result unless a 1:1:2 helmet/armor/weapon ticket selects
+	# a weapon, so existing seeded weapon opportunities are never replaced.
+	var tickets: Array[ItemData] = []
+	for type in [ItemData.ItemType.HELMET, ItemData.ItemType.ARMOR, ItemData.ItemType.WEAPON]:
+		var group: Array[ItemData] = []
+		for item in pool:
+			if item.type == type: group.append(item)
+		if group.is_empty(): continue
+		# Six tickets divide evenly across the current one/two item variants.
+		for i in range(12 if type == ItemData.ItemType.WEAPON else 6):
+			tickets.append(group[i % group.size()])
+	if tickets.is_empty(): return original
+	var selected: ItemData = tickets[draw % tickets.size()]
+	return selected if selected.type == ItemData.ItemType.WEAPON else original
+
 ## Lấy ngẫu nhiên 1 vật phẩm chuẩn theo độ hiếm và tầng
-static func get_random_drop(floor_level: int, is_boss: bool = false, rng: RandomNumberGenerator = null) -> ItemData:
+static func get_random_drop(floor_level: int, is_boss: bool = false, rng: RandomNumberGenerator = null, is_enemy_drop: bool = false) -> ItemData:
 	_init_catalog()
 	var target_rarity := roll_rarity_for_floor(floor_level, is_boss, rng)
 	var pool := get_equipment_by_rarity(target_rarity)
@@ -176,5 +197,5 @@ static func get_random_drop(floor_level: int, is_boss: bool = false, rng: Random
 	if pool.is_empty():
 		return null
 
-	var idx: int = (rng.randi() % pool.size()) if rng != null else (randi() % pool.size())
-	return pool[idx].duplicate()
+	var draw: int = rng.randi() if rng != null else randi()
+	return (_select_equipment(pool, floor_level, is_boss, draw) if is_enemy_drop else pool[draw % pool.size()]).duplicate()

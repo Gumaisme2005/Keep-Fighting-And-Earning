@@ -129,7 +129,7 @@ func drop_loot() -> void:
 		var floor_lvl := 1
 		if get_node_or_null("/root/GameManager") != null:
 			floor_lvl = GameManager.current_level
-		var random_item: ItemData = ItemDatabase.get_random_drop(floor_lvl, false, rng)
+		var random_item: ItemData = ItemDatabase.get_random_drop(floor_lvl, false, rng, true)
 		if random_item == null and loot_table.size() > 0:
 			var equipment_pool: Array[ItemData] = []
 			var weights := ItemDatabase.get_rarity_weights(floor_lvl)

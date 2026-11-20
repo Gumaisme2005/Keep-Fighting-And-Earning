@@ -27,6 +27,8 @@ func _run() -> void:
 	test_all_resources()
 	test_inventory_and_perks()
 	test_rarity_tables()
+	test_late_weapon_continuity()
+	await test_late_weapon_live_drop()
 	await test_mythic_procs()
 	await test_invalid_primaries()
 	await test_loot_paths()
@@ -76,6 +78,74 @@ func enemy(f: Dictionary, at: Vector2, label: String = "Enemy") -> BaseEnemy:
 
 func flush() -> void:
 	await get_tree().process_frame
+	await get_tree().process_frame
+
+func test_late_weapon_continuity() -> void:
+	for boss in [false, true]:
+		for floor_level in range(1, 9):
+			var actual := RandomNumberGenerator.new()
+			var reference := RandomNumberGenerator.new()
+			var generic := RandomNumberGenerator.new()
+			actual.seed = 75000 + floor_level
+			reference.seed = actual.seed
+			generic.seed = actual.seed
+			var rarity_ok := true
+			var unchanged := true
+			var weapons_retained := true
+			var generic_unchanged := true
+			var swords := 0
+			for sample in range(2000):
+				var rarity := ItemDatabase.roll_rarity_for_floor(floor_level, boss, reference)
+				var pool := ItemDatabase.get_equipment_by_rarity(rarity)
+				var old: ItemData = pool[reference.randi() % pool.size()]
+				var result := ItemDatabase.get_random_drop(floor_level, boss, actual, true)
+				generic_unchanged = generic_unchanged and ItemDatabase.get_random_drop(floor_level, boss, generic).item_name == old.item_name
+				rarity_ok = rarity_ok and result.rarity == rarity and result.type != ItemData.ItemType.POTION
+				if boss or floor_level not in [5, 6]: unchanged = unchanged and result.item_name == old.item_name
+				if old.type == ItemData.ItemType.WEAPON: weapons_retained = weapons_retained and result.type == ItemData.ItemType.WEAPON and result.damage >= old.damage
+				if result.type == ItemData.ItemType.WEAPON: swords += 1
+			check(rarity_ok and actual.state == reference.state, "Late loot preserves exact rarity/index RNG draws: floor %d boss=%s" % [floor_level, boss])
+			check(unchanged, "Early floors, floor seven onward and boss rewards retain exact seeded identity")
+			check(generic_unchanged and generic.state == reference.state, "Generic/chest callers keep their original seeded rewards without opting into enemy pacing")
+			check(weapons_retained, "Existing seeded weapon opportunities cannot become defensive items")
+			if not boss and floor_level in [5, 6]:
+				check(swords > 1100 and swords < 1600, "Late ordinary drops improve weapon availability without eliminating defensive rewards")
+			trace.append(["late_weapon_continuity", floor_level, boss, swords])
+
+func test_late_weapon_live_drop() -> void:
+	var f := fixture()
+	GameManager.current_level = 6
+	var chosen_seed := -1
+	var expected: ItemData
+	for candidate_seed in range(1, 10000):
+		var baseline := RandomNumberGenerator.new()
+		baseline.seed = candidate_seed
+		if baseline.randf() >= 0.05: continue
+		var revised := RandomNumberGenerator.new()
+		revised.seed = candidate_seed
+		revised.randf()
+		var old := ItemDatabase.get_random_drop(6, false, baseline)
+		var next := ItemDatabase.get_random_drop(6, false, revised, true)
+		if old.type != ItemData.ItemType.WEAPON and next.type == ItemData.ItemType.WEAPON:
+			chosen_seed = candidate_seed
+			expected = next
+			break
+	check(chosen_seed > 0, "A valid 5% ordinary drop can supply a same-rarity late weapon upgrade")
+	var e := BaseEnemy.new()
+	e.enemy_balance_id = "orc"
+	e.combat_floor = 6
+	e.loot_seed = chosen_seed
+	f.room.add_child(e)
+	e.is_active = true
+	e.take_damage(e.hp)
+	e.drop_loot()
+	e.drop_loot()
+	await flush()
+	var gear: Array = []
+	for child in f.room.get_children():
+		if child.is_in_group("world_items") and child.item_data.type != ItemData.ItemType.POTION: gear.append(child.item_data)
+	check(gear.size() == 1 and gear[0].item_name == expected.item_name and gear[0].rarity == expected.rarity, "Real ordinary enemy uses late pacing exactly once through its production drop API")
+	f.room.free()
 	await get_tree().process_frame
 
 func test_original_defects() -> void:

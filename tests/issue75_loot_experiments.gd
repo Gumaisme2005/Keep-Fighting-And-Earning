@@ -35,5 +35,5 @@ static func selection(floor_number: int, loot_seed: int, mode: String) -> Dictio
 	var production_rng := RandomNumberGenerator.new()
 	production_rng.seed = loot_seed
 	production_rng.randf()
-	var production_item := ItemDatabase.get_random_drop(floor_number, false, production_rng)
+	var production_item := ItemDatabase.get_random_drop(floor_number, false, production_rng, true)
 	return {"original": production_item, "candidate": candidate, "rng_state": rng.state, "production_rng_state": production_rng.state}
