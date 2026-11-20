@@ -1,107 +1,52 @@
-## 1. Tổng quan
+## Mục tiêu và trạng thái
 
-PR triển khai các thay đổi cân bằng gameplay theo Issue #75, tập trung vào hệ thống potion, cơ chế phòng thủ, trang bị, sức mạnh quái và perk trong các tầng 1–6.
+Thực hiện cân bằng potion, phòng thủ, equipment/loot, enemy scaling và perk theo Issue #75 cho tầng 1–6. **Chưa đủ điều kiện merge; chưa có final Approve; không đóng Issue #75.**
 
-**Liên quan:** #75
+Lỗi equip/unequip hồi máu đã được sửa tại `76785b0`, giữ riêng HP từ potion và floor vitality. Các regression anti-heal tiếp tục PASS. CI của HEAD trước lượt thay đổi này, `2264917`, [đã PASS](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/44695216858). CI của HEAD mới phải được kiểm tra riêng sau push; không suy ra từ run cũ.
 
-## 2. Những thay đổi đã thực hiện
+## Thay đổi mới đã kiểm chứng
 
-### Potion
-- Điều chỉnh hồi máu theo độ hiếm: Common 3, Rare 5, Heroic 8, Legendary 12.
-- Giới hạn máu tối đa tăng từ potion là +4 mỗi lượt chơi.
-- Cooldown dùng potion chung 8 giây.
-- Giới hạn mang tối đa 4 potion.
-- Tỷ lệ rơi 2% mỗi quái, tăng thêm 2 điểm phần trăm khi máu dưới 40%.
-- Bổ sung cơ chế bảo hiểm sau 45 quái không rơi potion.
-- Rương boss bảo đảm có Rare potion.
+- `f3ec2a0`: sửa combat probe làm tiêu hao revival và để lại cooldown/history/spawn-order; giữ nguyên seed/policy. Bổ sung bốn mốc entry, trước boss reward, exit trước portal perk, sau perk trước descent; ghi thành phần chỉ số và toàn bộ equipment nhận được. Thêm matrix Miyabi/Orc bằng scene thật, tách primary, input/combo, crit/proc, Q, charged wave và spirit; tích hợp vào CI ở 30/144 FPS.
+- `c3aa2fa`: cải thiện cơ hội nâng vũ khí từ **quái thường tầng 5–6**, giữ kết quả cũ trừ khi ticket mới chọn vũ khí. Giữ nguyên cơ hội rơi 5%, rarity, ngân sách item, boss/rương, số lần gọi RNG và các tầng khác. Generic caller mặc định giữ hành vi cũ. Không sửa skill nhân vật, enemy AI/HP, perk hoặc luật potion.
+- Ba phương án mới bị loại vì regression; phương án continuity được chọn sau so sánh cùng 30 seed × 3 policy × 6 tầng. Có tradeoff nhỏ HP/giáp ở hai seed optimized tầng 6, ghi rõ trong báo cáo; không tuyên bố cải thiện trên mọi seed.
 
-### Thorns và Armor Break
-- Thorns chỉ kích hoạt khi người chơi mất máu thật.
-- Sát thương phản dựa trên 30% lượng máu mất, tối thiểu 1.
-- Giới hạn tối đa 2 quái gần nhất, bán kính 70px, cooldown 2 giây.
-- Boss chịu một nửa sát thương Thorns.
-- Điều chỉnh Armor Break Epic và Legendary theo sát thương, bán kính và cooldown trong Issue.
+## Kiểm thử
 
-### Trang bị và vật phẩm
-- Điều chỉnh chỉ số trang bị theo từng độ hiếm.
-- Cân bằng lại Excalibur, Godplate và Earendil.
-- Giảm tỷ lệ rơi trang bị từ quái thường xuống 5%.
-- Áp dụng bảng rarity riêng theo tầng và theo boss.
-- Giữ nguyên cơ chế phần thưởng rương kho báu và rương boss.
+- **24 suite × 2 mức 30/144 FPS = 48 lượt**, tất cả exit 0, không timeout/runtime/parser error trong gate cuối. Mỗi FPS: potion **124/0**, inventory/anti-heal **223/0**, equipment/loot/perk **387/0**, defensive **232/0**, enemy scaling **1.053/0**, acceptance regressions **61/0**, progression **42.327/0**, combat matrix **337/0**.
+- Hero, enemy AI, replay, lifecycle, navigation và projectile đều PASS. Yugi chỉ xuất marker PASS, không có tổng assertion; không tự đặt số.
+- **8 Python regression tests PASS**, exit 0. Probe RED/GREEN: code cũ **2/3, exit 1**; bản sửa **5/0, exit 0**.
+- **11 cặp trace giống nhau** giữa hai FPS. Toàn bộ **540 record bốn mốc** giống nhau; production khớp cả 540 record của candidate được chọn. Chế độ baseline trên code cuối cũng tái tạo đủ baseline cũ.
+- Matrix có 84 encounter mỗi FPS với scene Miyabi/Orc thật trong arena có mục tiêu được căn lại. Đây không phải playthrough sống sót sáu tầng. `full_kit` là Q + held combo + spirit; không tuyên bố dash/charged wave đồng thời.
+- Import cache mới ban đầu exit 0 nhưng có lỗi font cache nên runner đánh FAIL; lượt import sau sạch. Evidence giữ cả lần lỗi. Không cộng lần import lỗi vào 48 suite PASS.
+- **Chưa thực hiện manual interactive playtest tầng 1–6.** Có checklist tái lập. Wallet/merchant/Guild Hall/bug-bash trên cây tích hợp và completion contract #78 **NOT VERIFIED** vì chưa merge development.
 
-### Độ khó quái và dungeon
-- Điều chỉnh công thức HP của quái thường và boss theo tầng.
-- Tăng sát thương quái theo các mốc tầng 2, 4 và 6.
-- Bổ sung xuyên giáp từ tầng 4.
-- Điều chỉnh số lượng quái xuất hiện theo tầng.
+Số assertion PASS kiểm tra invariant không đồng nghĩa toàn bộ mục tiêu balance đã đạt.
 
-### Perk và giáp
-- Cân bằng Berserk theo tỷ lệ máu đã mất.
-- Giới hạn chí mạng tối đa 50%, hệ số chí mạng tối đa 2.5.
-- Điều chỉnh Chain Lightning.
-- Giới hạn giáp tối đa 12.
-- Hồi giáp sau 5 giây, mỗi 1.5 giây hồi 1 giáp.
+## Kết quả số học còn thiếu
 
-## 3. Trạng thái review hiện tại
+Median của normal policy tại exit, sau reward và trước portal perk; cùng 30 seed trước/sau:
 
-**Chưa đủ điều kiện merge. Chưa có final Approve. Không đóng Issue #75.**
-
-- Lỗi hồi máu khi tháo/lắp trang bị đã được sửa tại `76785b0`, giữ riêng HP từ potion và floor vitality.
-- `89cfbb7` sửa bộ ghi bằng chứng: không coi tiến độ `1/30` là hoàn tất, phát hiện lỗi có khoảng trắng đầu dòng, từ chối summary có FAIL/runtime error. Thêm 8 Python regression test vào CI.
-- Giữ nguyên seed, bảng rarity, chỉ số trang bị, phần thưởng boss và các thay đổi gameplay đã có.
-
-## 4. Kiểm thử và giới hạn
-
-- 23 suite Godot ở mỗi mức 30/144 FPS: **46 lượt**, tất cả exit 0; số PASS/FAIL và hash log/trace được ghi đầy đủ trong evidence.
-- Progression: **35.842 PASS / 0 FAIL mỗi FPS**; 30 seed × 3 policy × 6 tầng = 540 dòng, giống nhau ở hai FPS.
-- Potion 124/0; inventory/anti-heal 223/0; equipment/loot/perk 319/0; defensive combat 232/0; enemy scaling 1.053/0; acceptance regressions 61/0 ở mỗi FPS.
-- Hero, enemy AI, replay, lifecycle và projectile suites đã chạy. Yugi có marker PASS nhưng không xuất tổng assertion; không tự đặt số lượng.
-- 8 Python tests và 3 lượt smoke bằng runner đã sửa đều PASS. Phương án rương thử nghiệm chạy 35.842/0 nhưng bị loại vì hồi quy balance.
-- Đây là kiểm thử headless và kịch bản sự kiện production có giả định thắng boss. **Chưa thực hiện manual interactive playtest tầng 1–6.**
-- Wallet, merchant, Guild Hall, bug-bash và VT-074 completion chưa được kiểm thử trên cây tích hợp vì chưa merge development.
-
-CI đã xác minh PASS trên `229b4f3`: [run 44682471598](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/44682471598). CI cho commit sửa runner `89cfbb7` [đang chạy](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/44693957452); step 8 Python regression test đã PASS. Chưa khẳng định CI PASS trên HEAD tài liệu cuối cùng.
-
-## 5. Numerical acceptance còn FAIL
-
-Policy thường, đo cuối tầng sau phần thưởng boss/rương và trước perk/cộng HP khi xuống tầng:
-
-| Tầng | Max HP | Giáp | Damage | Lượt đánh Orc, gồm crit/proc |
+| Tầng | Max HP | Giáp | Raw damage trước → sau | Lượt đánh Orc có crit/proc |
 |---:|---:|---:|---:|---:|
-| 1 | 6 | 5 | 3.5 | 1.5 |
-| 2 | 10 | 7 | 6 | 2 |
-| 3 | 13 | 8 | 6 | 2 |
-| 4 | 16 | 9 | 7 | 3 |
-| 5 | 20 | 10 | 7 | 3 |
-| 6 | 23.5 | 12 | 7.5 | 3 |
+| 1 | 6 | 5 | 3,5 → 3,5 | 1,5 |
+| 2 | 10 | 7 | 6 → 6 | 2 |
+| 3 | 13 | 8 | 6 → 6 | 2 |
+| 4 | 16 | 9 | 7 → 7 | 3 |
+| 5 | 20 | 10 | 7 → 7 | 3 |
+| 6 | 23,5 | 12 | **7,5 → 8** | 3 |
 
-- Giáp trung vị cao hơn mục tiêu ở cả sáu tầng; damage còn lệch tầng 1–3 và 6; lượt đánh Orc còn thấp ở tầng 1–3.
-- Potion: **796 lọ sinh ra / 30 run**, trung vị **26 sinh ra / 9 nhặt / 6 dùng**; mục tiêu 10–12 chưa được làm rõ.
-- Thử thay kiếm Legendary trong rương thường giúp đầu game nhưng làm coverage damage tầng 5 giảm 26→21/30, damage tầng 6 giảm 7.5→7 và lượt đánh Orc tầng 6 tăng 3→4. **Không áp dụng vào production.**
-- Median đạt range không có nghĩa mọi seed đạt; evidence ghi đủ coverage, entry/exit và nguồn chỉ số.
+- Giáp median vẫn quá cao ở cả sáu tầng; raw damage và lượt đánh Orc vẫn lệch tầng 1–3. Damage tầng 6 đạt median mục tiêu nhưng coverage chỉ tăng **15 → 16/30**. Median đạt không có nghĩa mọi seed đạt.
+- Potion không đổi: **796 sinh ra / 267 nhặt / 184 dùng kể cả starter / 529 còn trên sàn** trên 30 run normal; median **26 sinh ra / 9 nhặt / 6 dùng**.
+- Với 307–402 ordinary kills/run, pity 45 và 12 potion bảo đảm từ hai rương boss × sáu tầng, tối thiểu đã là **18 sinh ra trước treasure**. Mục tiêu 10–12 sinh ra xung đột với các luật bắt buộc này. Không đổi tên collected/consumed để đánh PASS.
+- Không thấy cộng trùng giáp/damage trong bốn mốc. Miyabi 2 giáp nền + hai đồ Common hợp lệ đã thành 4, vượt target tầng 1 là 2–3. Boss/treasure được giữ nguyên cũng cho phép vũ khí mạnh sớm. Cần quyết định phase/coverage/acquisition trước khi đổi những luật này.
 
-## 6. Integration và quyết định còn chờ
+## Điều kiện còn cần trước merge
 
-- #79 và #98 đã merged. #99 vẫn mở; commit thực tế hoàn tác #98, chưa có quyết định giải quyết. **Chưa merge development.**
-- Merge-tree hiện có **20 file content conflict**. Chưa giải quyết hoặc kiểm thử một cây merge giả định.
-- #88 vẫn mở; khi tích hợp phải giữ công thức HP gồm base + gear + potion + floor vitality.
-- #78 vẫn mở. Phải giữ run_id/receipt/ledger, xử lý start_new_run() thất bại mà không reset lượt cũ, và cập nhật replay fixtures theo completion idempotent.
+1. Maintainer chốt phase đo, coverage trên seed, định nghĩa Orc metric và potion 10–12 là generated/collected/consumed. Nếu giữ generated, phải cho phép thay đổi đủ reward/drop/pity/route; chỉ giảm còn một guarantee mỗi boss cũng chưa đủ.
+2. Chốt giữ item budget/reward và sửa target hay cho phép đổi acquisition; giải quyết giáp/damage/pacing đầu game theo quyết định đó.
+3. Giải quyết hướng PR #99 và thực hiện tích hợp development đã được duyệt ở lượt riêng; giữ wallet, merchant, Guild Hall, replay, AI và bug-bash. #79/#98 đã merged; #78/#88/#99 còn mở ở lần kiểm tra này. Kiểm chứng contract idempotent completion #78 trên cây kết hợp.
+4. Chạy suite tích hợp, manual interactive sáu tầng, CI trên HEAD cuối; nhận re-review và final Approve.
 
-Maintainer cần chốt:
-1. Potion 10–12 là sinh ra, nhặt hay dùng; bảo đảm Rare theo mỗi rương hay mỗi boss victory.
-2. Bảng Miyabi đo entry, trước boss reward hay exit; coverage yêu cầu trên seed.
-3. Giữ nguyên ngân sách đồ/bảng boss/rương và sửa target, hay cho phép thay đổi acquisition/reward.
-4. Metric Orc là primary damage, lượt input có crit/proc hay toàn bộ combo/spirit/skill.
+Không merge development trong lượt balance này. Không merge PR #76 vào development.
 
-## 7. Điều kiện merge
-
-- [x] Sửa anti-heal và chạy lại regression.
-- [x] Kiểm chứng 30/144 FPS và phân loại bug, measurement, spec conflict, balance.
-- [ ] Giải quyết hướng revert #99 và tích hợp development đã được duyệt.
-- [ ] Chạy suite kết hợp wallet/merchant/Guild Hall/bug-bash và xác minh contract #78.
-- [ ] Chốt đặc tả và giải quyết các acceptance còn lệch.
-- [ ] Manual interactive playtest tầng 1–6.
-- [ ] CI PASS trên HEAD cuối cùng.
-- [ ] Thành viên nhóm re-review và submit Approve.
-
-Chi tiết: [current review](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/fix/issue-75-game-balance/docs/PR_76_CURRENT_REVIEW.md), [exact evidence](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/fix/issue-75-game-balance/docs/issue75_current_review_evidence.json).
+Báo cáo: [implementation results](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/fix/issue-75-game-balance/docs/ISSUE_75_IMPLEMENTATION_RESULTS.md), [exact evidence](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/fix/issue-75-game-balance/docs/issue75_implementation_evidence.json), [manual checklist](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/fix/issue-75-game-balance/docs/ISSUE_75_MANUAL_PLAYTEST.md).

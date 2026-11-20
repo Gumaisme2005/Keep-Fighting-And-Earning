@@ -1,5 +1,7 @@
 # PR #76: current integration and balance review — 2026-11-20
 
+> Historical integration snapshot. The later [implementation results](ISSUE_75_IMPLEMENTATION_RESULTS.md) and [implementation evidence](issue75_implementation_evidence.json) supersede this page's test counts and balance results. They include probe isolation, four phases, real-scene Orc measurements and the selected late weapon improvement (floor-six damage median 7.5 to 8). This older page remains as evidence of the earlier review; it is not a fresh integration audit.
+
 PR #76 is **not ready to merge**. The equipment anti-heal fix already exists in `76785b0`; the independent correction in this review is to test-result validation. Development integration remains blocked by unresolved PR #99. No interactive playtest or final approval is claimed.
 
 ## Verified repository and GitHub state
