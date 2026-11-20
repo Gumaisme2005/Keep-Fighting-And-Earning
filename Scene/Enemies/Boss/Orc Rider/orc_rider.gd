@@ -281,9 +281,9 @@ func _drop_boss_loot() -> void:
 		var item_scene = preload("res://Scene/Items/WorldItem/WorldItem.tscn")
 		var item_drop = item_scene.instantiate()
 		item_drop.item_data = boss_item
-		item_drop.global_position = global_position
 		var parent_node = get_parent() if get_parent() != null else get_tree().current_scene
 		parent_node.call_deferred("add_child", item_drop)
+		item_drop.set_deferred("global_position", global_position)
 
 func check_phase() -> bool:
 	if current_phase == 1 and hp <= max_hp * 0.66:

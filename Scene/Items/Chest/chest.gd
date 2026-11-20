@@ -60,8 +60,9 @@ func spawn_loot():
 				var item_drop = item_scene.instantiate()
 				item_drop.item_data = dropped_item
 				var offset: Vector2 = spread_offsets[i % spread_offsets.size()] if num_drops > 1 else Vector2(0, 20)
-				item_drop.global_position = global_position + offset
 				parent_node.call_deferred("add_child", item_drop)
+				# Resolve world coordinates after inheriting the parent's transform.
+				item_drop.set_deferred("global_position", global_position + offset)
 
 	# Guaranteed in addition to the two existing equipment rolls, with no RNG draw.
 	if is_boss_chest:
@@ -69,5 +70,5 @@ func spawn_loot():
 		if potion != null:
 			var item_drop = item_scene.instantiate()
 			item_drop.item_data = potion
-			item_drop.global_position = global_position + Vector2(0, 34)
 			parent_node.call_deferred("add_child", item_drop)
+			item_drop.set_deferred("global_position", global_position + Vector2(0, 34))

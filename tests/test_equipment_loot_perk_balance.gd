@@ -32,6 +32,7 @@ func _run() -> void:
 	await test_mythic_procs()
 	await test_invalid_primaries()
 	await test_loot_paths()
+	await test_transformed_loot_positions()
 	test_berserk_and_crit()
 	await test_lightning_lifecycle()
 	await test_armor_regeneration()
@@ -497,6 +498,71 @@ func test_loot_paths() -> void:
 		if child.is_in_group("world_items"): legacy_ok = child.item_data.damage == 5 and child.item_data.armor == 0
 	check(legacy_ok, "Explicit treasure-chest legacy loot uses corrected resource without changing acquisition path")
 	room.free()
+
+func test_transformed_loot_positions() -> void:
+	# World-space drops must stay beside their source after deferred parenting.
+	var sources := ["treasure", "boss_chest", "enemy_equipment", "enemy_potion", "necromancer", "orc_rider", "skeleton_king"]
+	var reference_items: Dictionary = {}
+	for transformed in [false, true]:
+		for source in sources:
+			GameManager.start_new_run("LOOT-WORLD-TRANSFORM")
+			PerkManager.reset()
+			var room := Node2D.new()
+			if transformed:
+				room.position = Vector2(350, -170)
+				room.rotation = 0.37
+				room.scale = Vector2(1.25, 0.8)
+			add_child(room)
+			var actor: Node2D
+			var offsets := [Vector2.ZERO]
+			if source in ["treasure", "boss_chest"]:
+				actor = load("res://Scene/Items/Chest/chest.tscn").instantiate()
+				actor.set("loot_seed", 777)
+				actor.set("drop_chance", 1.0)
+				actor.set("is_boss_chest", source == "boss_chest")
+				if source == "boss_chest":
+					offsets = [Vector2(-14, 20), Vector2(14, 20), Vector2(0, 34)]
+				else:
+					offsets = [Vector2(0, 20)]
+			elif source in ["enemy_equipment", "enemy_potion"]:
+				actor = BaseEnemy.new()
+				actor.set("loot_seed", 777)
+				actor.set("drop_chance", 1.0)
+				if source == "enemy_potion": offsets = [Vector2(0, 8)]
+			elif source == "skeleton_king":
+				actor = load("res://Scene/Enemies/Boss/Skeleton King/skeleton_king.gd").new()
+			else:
+				var folder: String = "Necromancer" if source == "necromancer" else "Orc Rider"
+				actor = load("res://Scene/Enemies/Boss/%s/%s.tscn" % [folder, source]).instantiate()
+			actor.position = Vector2(40, 60)
+			room.add_child(actor)
+			actor.set_physics_process(false)
+			actor.set_process(false)
+			var origin := actor.global_position
+			if source in ["treasure", "boss_chest"]:
+				actor.call("spawn_loot")
+			elif source == "enemy_equipment":
+				actor.set("is_dead", true)
+				actor.call("drop_loot")
+			elif source == "enemy_potion":
+				GameManager.potion_kills_without_drop = 44
+				actor.call("_die")
+			else:
+				actor.call("_drop_boss_loot")
+			await flush()
+			var positions: Array = []
+			var items: Array = []
+			for child in room.get_children():
+				if child.is_in_group("world_items"):
+					positions.append(child.global_position)
+					items.append([child.item_data.item_name, child.item_data.rarity, child.item_data.stack_count])
+			var positioned := positions.size() == offsets.size()
+			for i in range(mini(positions.size(), offsets.size())):
+				positioned = positioned and positions[i].is_equal_approx(origin + offsets[i])
+			check(positioned, "Loot remains at source world position: %s transformed=%s" % [source, transformed])
+			if not transformed: reference_items[source] = items
+			check(items == reference_items[source] and items.size() == offsets.size(), "Parent transform preserves seeded reward identity and quantity: %s transformed=%s" % [source, transformed])
+			room.free()
 
 func test_berserk_and_crit() -> void:
 	var f := fixture()

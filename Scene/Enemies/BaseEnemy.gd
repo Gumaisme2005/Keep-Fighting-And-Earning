@@ -142,10 +142,10 @@ func drop_loot() -> void:
 		if random_item != null:
 			var item_drop = item_scene.instantiate()
 			item_drop.item_data = random_item
-			item_drop.global_position = global_position
 			var parent_node = get_parent() if get_parent() != null else get_tree().current_scene
 			if parent_node != null:
 				parent_node.call_deferred("add_child", item_drop)
+				item_drop.set_deferred("global_position", global_position)
 			else:
 				item_drop.free()
 
@@ -168,5 +168,5 @@ func _drop_potion_loot() -> void:
 	var item_scene = world_item_scene if world_item_scene != null else preload("res://Scene/Items/WorldItem/WorldItem.tscn")
 	var item_drop = item_scene.instantiate()
 	item_drop.item_data = potion
-	item_drop.global_position = global_position + Vector2(0, 8)
 	parent_node.call_deferred("add_child", item_drop)
+	item_drop.set_deferred("global_position", global_position + Vector2(0, 8))
