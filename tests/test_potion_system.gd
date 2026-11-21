@@ -21,6 +21,7 @@ func _ready() -> void:
 	await test_legacy_rare_chest_pickup()
 	test_healing_and_cap()
 	await test_cooldown_and_inventory()
+	await test_queued_player_consumption()
 	test_potion_recording_and_playback()
 	await test_world_pickup()
 	test_ui_potion_inventory()
@@ -208,6 +209,29 @@ func test_cooldown_and_inventory() -> void:
 		await get_tree().physics_frame
 		check(hero.potion_cooldown_remaining < 8.0 and hero.potion_cooldown_remaining > 0.0, "Hero physics cooldown: " + hero.hero_balance_id)
 		hero.free()
+
+func test_queued_player_consumption() -> void:
+	for route in ["gameplay_api", "inventory_hotbar", "paused_menu"]:
+		var p := make_player()
+		p.inventory.add_item(ItemDatabase.get_item("heroic_potion_purple"))
+		var state_before := [p.hp, p.max_hp, p.potion_max_hp_gained,
+			p.potion_cooldown_remaining, p.inventory.get_potion_count(),
+			GameManager.potion_max_hp_gained, GameManager.potion_cooldown_remaining]
+		p.queue_free()
+		if route == "gameplay_api":
+			check(not p.consume_potion(8, 1), "Queued player rejects ordinary potion API")
+		elif route == "inventory_hotbar":
+			p.inventory.use_or_equip_item(0, p)
+		else:
+			get_tree().paused = true
+			check(not p.consume_potion_from_menu(8, 1), "Queued player rejects explicit paused menu potion API")
+			get_tree().paused = false
+		var state_after := [p.hp, p.max_hp, p.potion_max_hp_gained,
+			p.potion_cooldown_remaining, p.inventory.get_potion_count(),
+			GameManager.potion_max_hp_gained, GameManager.potion_cooldown_remaining]
+		check(state_after == state_before, "Queued potion use preserves inventory, HP and persistent run state: " + route)
+		await get_tree().process_frame
+		check(not is_instance_valid(p), "Rejected potion use does not interrupt queued teardown: " + route)
 
 func test_world_pickup() -> void:
 	var p := make_player()

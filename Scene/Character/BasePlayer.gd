@@ -458,7 +458,8 @@ func consume_potion_from_menu(heal_amount: int, bonus_max_hp: int) -> bool:
 	return _consume_potion(heal_amount, bonus_max_hp)
 
 func _consume_potion(heal_amount: int, bonus_max_hp: int) -> bool:
-	if is_dead or potion_cooldown_remaining > 0.0:
+	# A deferred teardown must not consume inventory or persist potion progression.
+	if is_dead or is_queued_for_deletion() or potion_cooldown_remaining > 0.0:
 		return false
 	var granted_bonus := clampi(bonus_max_hp, 0, maxi(0, POTION_MAX_HP_CAP - potion_max_hp_gained))
 	if granted_bonus == 0 and (heal_amount <= 0 or hp >= max_hp):
