@@ -1,0 +1,534 @@
+[
+	{
+		"enemy_attacks_received": 6,
+		"floor": 5,
+		"hp_lost": 17,
+		"initial_hp": 17,
+		"kind": "idle",
+		"max_armor": 7,
+		"orc_survivors": 9
+	},
+	{
+		"enemy_attacks_received": 6,
+		"floor": 6,
+		"hp_lost": 19,
+		"initial_hp": 19,
+		"kind": "idle",
+		"max_armor": 7,
+		"orc_survivors": 9
+	},
+	{
+		"effective_armor": 2,
+		"enemy_attack_attempts": 3,
+		"enemy_attacks_received": 2,
+		"fixture": "starter",
+		"floor": 1,
+		"input_attacks": 4,
+		"items": [],
+		"kind": "attack",
+		"orc_dead": true,
+		"orc_hp": 4,
+		"perks": [],
+		"player_armor_lost": 2,
+		"player_dead": false,
+		"player_hp_lost": 2,
+		"steps": [
+			{
+				"crit": false,
+				"input_attack": 1,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 1,
+				"primary_hp_reduction": 1,
+				"raw_damage": 1.0,
+				"true_hp_reduction": 1
+			},
+			{
+				"crit": false,
+				"input_attack": 2,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 1,
+				"primary_hp_reduction": 1,
+				"raw_damage": 1.0,
+				"true_hp_reduction": 1
+			},
+			{
+				"crit": false,
+				"input_attack": 3,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 1,
+				"primary_hp_reduction": 1,
+				"raw_damage": 1.0,
+				"true_hp_reduction": 1
+			},
+			{
+				"crit": false,
+				"input_attack": 4,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 1,
+				"primary_hp_reduction": 1,
+				"raw_damage": 1.0,
+				"true_hp_reduction": 1
+			}
+		]
+	},
+	{
+		"effective_armor": 2,
+		"enemy_attack_attempts": 1,
+		"enemy_attacks_received": 0,
+		"fixture": "common-only",
+		"floor": 1,
+		"input_attacks": 2,
+		"items": [
+			"common_sword_1"
+		],
+		"kind": "attack",
+		"orc_dead": true,
+		"orc_hp": 4,
+		"perks": [],
+		"player_armor_lost": 0,
+		"player_dead": false,
+		"player_hp_lost": 0,
+		"steps": [
+			{
+				"crit": false,
+				"input_attack": 1,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 2,
+				"primary_hp_reduction": 2,
+				"raw_damage": 2.0,
+				"true_hp_reduction": 2
+			},
+			{
+				"crit": false,
+				"input_attack": 2,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 2,
+				"primary_hp_reduction": 2,
+				"raw_damage": 2.0,
+				"true_hp_reduction": 2
+			}
+		]
+	},
+	{
+		"effective_armor": 2,
+		"enemy_attack_attempts": 1,
+		"enemy_attacks_received": 0,
+		"fixture": "rare-only",
+		"floor": 1,
+		"input_attacks": 2,
+		"items": [
+			"rare_sword"
+		],
+		"kind": "attack",
+		"orc_dead": true,
+		"orc_hp": 4,
+		"perks": [],
+		"player_armor_lost": 0,
+		"player_dead": false,
+		"player_hp_lost": 0,
+		"steps": [
+			{
+				"crit": false,
+				"input_attack": 1,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 3,
+				"primary_hp_reduction": 3,
+				"raw_damage": 3.0,
+				"true_hp_reduction": 3
+			},
+			{
+				"crit": false,
+				"input_attack": 2,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 3,
+				"primary_hp_reduction": 1,
+				"raw_damage": 3.0,
+				"true_hp_reduction": 1
+			}
+		]
+	},
+	{
+		"effective_armor": 2,
+		"enemy_attack_attempts": 0,
+		"enemy_attacks_received": 0,
+		"fixture": "legendary-outlier",
+		"floor": 1,
+		"input_attacks": 1,
+		"items": [
+			"legacy:Legendary/mystic_sword.tres"
+		],
+		"kind": "attack",
+		"orc_dead": true,
+		"orc_hp": 4,
+		"perks": [],
+		"player_armor_lost": 0,
+		"player_dead": false,
+		"player_hp_lost": 0,
+		"steps": [
+			{
+				"crit": false,
+				"input_attack": 1,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 6,
+				"primary_hp_reduction": 4,
+				"raw_damage": 6.0,
+				"true_hp_reduction": 4
+			}
+		]
+	},
+	{
+		"effective_armor": 2,
+		"enemy_attack_attempts": 2,
+		"enemy_attacks_received": 1,
+		"fixture": "crit-and-burn",
+		"floor": 3,
+		"input_attacks": 3,
+		"items": [
+			"rare_sword"
+		],
+		"kind": "attack",
+		"orc_dead": true,
+		"orc_hp": 12,
+		"perks": [
+			"sharpened_whetstone",
+			"blazing_edge"
+		],
+		"player_armor_lost": 2,
+		"player_dead": false,
+		"player_hp_lost": 1,
+		"steps": [
+			{
+				"crit": true,
+				"input_attack": 1,
+				"on_hit_hp_reduction": 2,
+				"primary_damage": 6,
+				"primary_hp_reduction": 6,
+				"raw_damage": 3.0,
+				"true_hp_reduction": 8
+			},
+			{
+				"crit": false,
+				"input_attack": 2,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 3,
+				"primary_hp_reduction": 3,
+				"raw_damage": 3.0,
+				"true_hp_reduction": 3
+			},
+			{
+				"crit": true,
+				"input_attack": 3,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 6,
+				"primary_hp_reduction": 1,
+				"raw_damage": 3.0,
+				"true_hp_reduction": 1
+			}
+		]
+	},
+	{
+		"effective_armor": 5,
+		"enemy_attack_attempts": 1,
+		"enemy_attacks_received": 0,
+		"fixture": "ISSUE75-DISTRIBUTION-00",
+		"floor": 1,
+		"input_attacks": 2,
+		"items": [
+			"rare_helm",
+			"rare_armor_1",
+			"rare_sword"
+		],
+		"kind": "attack",
+		"orc_dead": true,
+		"orc_hp": 4,
+		"perks": [],
+		"player_armor_lost": 0,
+		"player_dead": false,
+		"player_hp_lost": 0,
+		"steps": [
+			{
+				"crit": false,
+				"input_attack": 1,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 3,
+				"primary_hp_reduction": 3,
+				"raw_damage": 3.0,
+				"true_hp_reduction": 3
+			},
+			{
+				"crit": false,
+				"input_attack": 2,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 3,
+				"primary_hp_reduction": 1,
+				"raw_damage": 3.0,
+				"true_hp_reduction": 1
+			}
+		]
+	},
+	{
+		"effective_armor": 7,
+		"enemy_attack_attempts": 1,
+		"enemy_attacks_received": 0,
+		"fixture": "ISSUE75-DISTRIBUTION-27",
+		"floor": 2,
+		"input_attacks": 2,
+		"items": [
+			"heroic_helm",
+			"heroic_armor",
+			"legacy:Legendary/mystic_sword.tres"
+		],
+		"kind": "attack",
+		"orc_dead": true,
+		"orc_hp": 8,
+		"perks": [
+			"vitality_essence"
+		],
+		"player_armor_lost": 0,
+		"player_dead": false,
+		"player_hp_lost": 0,
+		"steps": [
+			{
+				"crit": false,
+				"input_attack": 1,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 6,
+				"primary_hp_reduction": 6,
+				"raw_damage": 6.0,
+				"true_hp_reduction": 6
+			},
+			{
+				"crit": false,
+				"input_attack": 2,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 6,
+				"primary_hp_reduction": 2,
+				"raw_damage": 6.0,
+				"true_hp_reduction": 2
+			}
+		]
+	},
+	{
+		"effective_armor": 7,
+		"enemy_attack_attempts": 1,
+		"enemy_attacks_received": 0,
+		"fixture": "ISSUE75-DISTRIBUTION-04",
+		"floor": 3,
+		"input_attacks": 2,
+		"items": [
+			"heroic_helm",
+			"heroic_armor",
+			"heroic_sword"
+		],
+		"kind": "attack",
+		"orc_dead": true,
+		"orc_hp": 12,
+		"perks": [
+			"sharpened_edge",
+			"fleet_foot"
+		],
+		"player_armor_lost": 0,
+		"player_dead": false,
+		"player_hp_lost": 0,
+		"steps": [
+			{
+				"crit": false,
+				"input_attack": 1,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 6,
+				"primary_hp_reduction": 6,
+				"raw_damage": 6.0,
+				"true_hp_reduction": 6
+			},
+			{
+				"crit": false,
+				"input_attack": 2,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 6,
+				"primary_hp_reduction": 6,
+				"raw_damage": 6.0,
+				"true_hp_reduction": 6
+			}
+		]
+	},
+	{
+		"effective_armor": 10,
+		"enemy_attack_attempts": 2,
+		"enemy_attacks_received": 1,
+		"fixture": "ISSUE75-DISTRIBUTION-15",
+		"floor": 4,
+		"input_attacks": 3,
+		"items": [
+			"legendary_helm",
+			"heroic_armor",
+			"legacy:Legendary/mystic_sword.tres"
+		],
+		"kind": "attack",
+		"orc_dead": true,
+		"orc_hp": 17,
+		"perks": [
+			"miner_fortitude",
+			"fatal_rend",
+			"sturdy_plating"
+		],
+		"player_armor_lost": 3,
+		"player_dead": false,
+		"player_hp_lost": 1,
+		"steps": [
+			{
+				"crit": false,
+				"input_attack": 1,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 7,
+				"primary_hp_reduction": 7,
+				"raw_damage": 7.0,
+				"true_hp_reduction": 7
+			},
+			{
+				"crit": false,
+				"input_attack": 2,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 7,
+				"primary_hp_reduction": 7,
+				"raw_damage": 7.0,
+				"true_hp_reduction": 7
+			},
+			{
+				"crit": false,
+				"input_attack": 3,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 7,
+				"primary_hp_reduction": 3,
+				"raw_damage": 7.0,
+				"true_hp_reduction": 3
+			}
+		]
+	},
+	{
+		"effective_armor": 12,
+		"enemy_attack_attempts": 3,
+		"enemy_attacks_received": 2,
+		"fixture": "ISSUE75-DISTRIBUTION-26",
+		"floor": 5,
+		"input_attacks": 4,
+		"items": [
+			"legendary_helm",
+			"heroic_armor",
+			"legendary_sword"
+		],
+		"kind": "attack",
+		"orc_dead": true,
+		"orc_hp": 22,
+		"perks": [
+			"vitality_essence",
+			"reinforced_aegis",
+			"overcharge_sigil",
+			"titan_blood"
+		],
+		"player_armor_lost": 6,
+		"player_dead": false,
+		"player_hp_lost": 2,
+		"steps": [
+			{
+				"crit": false,
+				"input_attack": 1,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 7,
+				"primary_hp_reduction": 7,
+				"raw_damage": 7.0,
+				"true_hp_reduction": 7
+			},
+			{
+				"crit": false,
+				"input_attack": 2,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 7,
+				"primary_hp_reduction": 7,
+				"raw_damage": 7.0,
+				"true_hp_reduction": 7
+			},
+			{
+				"crit": false,
+				"input_attack": 3,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 7,
+				"primary_hp_reduction": 7,
+				"raw_damage": 7.0,
+				"true_hp_reduction": 7
+			},
+			{
+				"crit": false,
+				"input_attack": 4,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 7,
+				"primary_hp_reduction": 1,
+				"raw_damage": 7.0,
+				"true_hp_reduction": 1
+			}
+		]
+	},
+	{
+		"effective_armor": 12,
+		"enemy_attack_attempts": 3,
+		"enemy_attacks_received": 2,
+		"fixture": "ISSUE75-DISTRIBUTION-26",
+		"floor": 6,
+		"input_attacks": 4,
+		"items": [
+			"legendary_helm",
+			"legendary_armor",
+			"legendary_sword"
+		],
+		"kind": "attack",
+		"orc_dead": true,
+		"orc_hp": 27,
+		"perks": [
+			"vitality_essence",
+			"reinforced_aegis",
+			"overcharge_sigil",
+			"titan_blood",
+			"iron_sinew"
+		],
+		"player_armor_lost": 6,
+		"player_dead": false,
+		"player_hp_lost": 4,
+		"steps": [
+			{
+				"crit": false,
+				"input_attack": 1,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 7,
+				"primary_hp_reduction": 7,
+				"raw_damage": 7.0,
+				"true_hp_reduction": 7
+			},
+			{
+				"crit": false,
+				"input_attack": 2,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 7,
+				"primary_hp_reduction": 7,
+				"raw_damage": 7.0,
+				"true_hp_reduction": 7
+			},
+			{
+				"crit": false,
+				"input_attack": 3,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 7,
+				"primary_hp_reduction": 7,
+				"raw_damage": 7.0,
+				"true_hp_reduction": 7
+			},
+			{
+				"crit": false,
+				"input_attack": 4,
+				"on_hit_hp_reduction": 0,
+				"primary_damage": 7,
+				"primary_hp_reduction": 6,
+				"raw_damage": 7.0,
+				"true_hp_reduction": 6
+			}
+		]
+	}
+]

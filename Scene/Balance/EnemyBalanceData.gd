@@ -12,7 +12,7 @@ extends Resource
 @export var damage: int = 2
 @export var speed: float = 75.0
 @export var attack_range: float = 20.0
-@export var drop_chance: float = 0.30
+@export var drop_chance: float = 0.05
 
 @export_group("Chỉ số riêng biệt (Custom Enemy Modifiers)")
 @export var custom_stats: Dictionary = {}

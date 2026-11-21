@@ -81,6 +81,63 @@ var run_start_time_msec: int = 0
 ## Guild Hall đang ở màn "Chọn nhân vật" (đầu run, chưa có nhân vật điều khiển): bấm vào anh hùng trong sảnh để chọn.
 var hall_selecting: bool = false
 
+# Earned only by clearing a boss room and descending, once per first five floors.
+# Separate from hero/perk/equipment HP and the unchanged +4 potion allowance.
+const FLOOR_VITALITY_PER_CLEAR: int = 2
+const FLOOR_VITALITY_MAX_CLEARS: int = 5
+var floor_vitality_gained: int = 0
+var _vitality_floor_clears: Dictionary = {}
+
+func register_floor_clear(floor_number: int) -> bool:
+	if floor_number != current_level or floor_number < 1 or floor_number > FLOOR_VITALITY_MAX_CLEARS or _vitality_floor_clears.has(floor_number):
+		return false
+	_vitality_floor_clears[floor_number] = false
+	return true
+
+# Potion progression belongs to the run, including when a player node is recreated.
+const POTION_BASE_DROP_CHANCE: float = 0.02
+const POTION_LOW_HP_BONUS: float = 0.02
+const POTION_LOW_HP_THRESHOLD: float = 0.4
+const POTION_PITY_KILLS: int = 45
+var potion_max_hp_gained: int = 0
+var potion_cooldown_remaining: float = 0.0
+var potion_kills_without_drop: int = 0
+var _recorded_potion_cooldown_active: bool = false
+var thorns_cooldown_remaining: float = 0.0
+var armor_break_cooldown_remaining: float = 0.0
+var lightning_cooldown_remaining: float = 0.0
+var _recorded_defensive_cooldown_active: bool = false
+var _next_defensive_spawn_order: int = 0
+
+func allocate_defensive_spawn_order() -> int:
+	# Run-local spawn order is reproducible and consumes neither RNG nor Object IDs.
+	var order := _next_defensive_spawn_order
+	_next_defensive_spawn_order += 1
+	return order
+
+func get_potion_drop_chance(player: Node2D = null) -> float:
+	var chance := POTION_BASE_DROP_CHANCE
+	if is_instance_valid(player) and player.get("max_hp") != null and player.get("hp") != null:
+		if player.max_hp > 0 and float(player.hp) / float(player.max_hp) < POTION_LOW_HP_THRESHOLD:
+			chance += POTION_LOW_HP_BONUS
+	# Apply the strongest existing perk multiplier AFTER the low-HP bonus; pity overrides both.
+	var pm = get_node_or_null("/root/PerkManager")
+	if pm != null:
+		chance *= pm.get_potion_drop_multiplier()
+	return clampf(chance, 0.0, 1.0)
+
+func roll_enemy_potion(rng: RandomNumberGenerator, player: Node2D = null) -> ItemData:
+	if rng == null:
+		return null
+	var roll := rng.randf()
+	if potion_kills_without_drop + 1 < POTION_PITY_KILLS and roll >= get_potion_drop_chance(player):
+		potion_kills_without_drop += 1
+		return null
+	var potion := ItemDatabase.get_random_potion(current_level, rng)
+	if potion != null:
+		potion_kills_without_drop = 0
+	return potion
+
 # --- DỮ LIỆU LƯU SEED & LỊCH SỬ RUN ---
 var saved_seeds: Array = []   # [{ "seed": String, "note": String, "hero_idx": int, "date": String }]
 var run_history: Array = []   # [{ "seed": String, "hero_idx": int, "hero_name": String, "floor": int, "kills": int, "date": String, "frames": Array }]
@@ -327,6 +384,20 @@ func start_new_run(custom_seed: String = "", replay_mode: bool = false, frames_t
 		current_seed = safe_curr if not safe_curr.is_empty() else generate_random_seed()
 	current_level = 1
 	enemies_killed = 0
+	floor_vitality_gained = 0
+	_vitality_floor_clears.clear()
+	get_tree().call_group("player", "sync_floor_vitality")
+	potion_max_hp_gained = 0
+	potion_cooldown_remaining = 0.0
+	potion_kills_without_drop = 0
+	_recorded_potion_cooldown_active = false
+	thorns_cooldown_remaining = 0.0
+	armor_break_cooldown_remaining = 0.0
+	lightning_cooldown_remaining = 0.0
+	_recorded_defensive_cooldown_active = false
+	_next_defensive_spawn_order = 0
+	get_tree().call_group("player", "reset_potion_progression")
+	get_tree().call_group("player", "reset_defensive_effects")
 	run_coins = 0   # ví KHÔNG reset: số dư giữ nguyên qua mọi lượt chơi
 	run_id += 1
 	run_start_time_msec = Time.get_ticks_msec()
@@ -351,6 +422,13 @@ func record_frame_input(frame_data: Dictionary) -> void:
 		return
 	if current_recording_frames.size() >= MAX_REPLAY_FRAMES:
 		return
+	# Keep idle physics ticks while a potion cools down, including its final tick.
+	# Otherwise idle-frame compression makes the replay's next potion arrive too early.
+	var keep_potion_tick := potion_cooldown_remaining > 0.0 or _recorded_potion_cooldown_active
+	_recorded_potion_cooldown_active = potion_cooldown_remaining > 0.0
+	var defensive_active := thorns_cooldown_remaining > 0.0 or armor_break_cooldown_remaining > 0.0 or lightning_cooldown_remaining > 0.0
+	var keep_defensive_tick := defensive_active or _recorded_defensive_cooldown_active
+	_recorded_defensive_cooldown_active = defensive_active
 
 	# Nén/khử trùng lặp trạng thái đứng yên (anti-DoS / memory ballooning) bằng RLE repeat count:
 	# Giữ đúng 1 entry trong mảng khi đứng yên liên tục nhưng bảo toàn thời lượng khi phát replay
@@ -376,7 +454,7 @@ func record_frame_input(frame_data: Dictionary) -> void:
 			and absf(float(last_f.get("ax", 0.0)) - float(frame_data.get("ax", 0.0))) < 1.0
 			and absf(float(last_f.get("ay", 0.0)) - float(frame_data.get("ay", 0.0))) < 1.0
 		)
-		if is_idle and last_idle:
+		if is_idle and last_idle and not keep_potion_tick and not keep_defensive_tick:
 			var rep := int(last_f.get("repeat", 1))
 			if rep < MAX_REPLAY_FRAMES:
 				last_f["repeat"] = rep + 1
@@ -577,7 +655,20 @@ func spawn_kill_coins(enemy: Node2D, reward_key: String) -> void:
 		coin.name = "Coin"
 		coin.setup(each + (1 if i < extra else 0), rng, run_id)
 		coin.position = spawn_pos
-		parent.call_deferred("add_child", coin, true)
+		_add_kill_coin.call_deferred(coin, weakref(parent), run_id)
+
+func _add_kill_coin(coin: Node2D, parent_ref: WeakRef, expected_run_id: int) -> void:
+	var parent: Node = parent_ref.get_ref()
+	if expected_run_id != run_id:
+		coin.free()
+		return
+	if not is_instance_valid(parent) or not parent.is_inside_tree() or parent.is_queued_for_deletion():
+		# Match Coin._exit_tree(): same-run floor cleanup retains the reward.
+		# add_coins() already prevents replay from touching the persistent wallet.
+		add_coins(coin.value, false)
+		coin.free()
+		return
+	parent.add_child(coin, true)
 
 func _play_coin_sfx() -> void:
 	var am = get_node_or_null("/root/AudioManager")
@@ -592,6 +683,11 @@ func _play_coin_sfx() -> void:
 	am.play_sfx("pickup", pitch, pitch + 0.03)
 
 func register_level_advance(new_level: int) -> void:
+	var previous := current_level
+	if new_level == previous + 1 and _vitality_floor_clears.has(previous) and not _vitality_floor_clears[previous]:
+		_vitality_floor_clears[previous] = true
+		floor_vitality_gained = mini(FLOOR_VITALITY_PER_CLEAR * FLOOR_VITALITY_MAX_CLEARS, floor_vitality_gained + FLOOR_VITALITY_PER_CLEAR)
+		get_tree().call_group("player", "sync_floor_vitality")
 	current_level = maxi(1, new_level)
 	stats_updated.emit(current_level, enemies_killed)
 	flush_wallet()

@@ -210,7 +210,7 @@ func _physics_process(delta: float) -> void:
 		_play("walk" if direction != Vector2.ZERO else "idle")
 
 func _step_move(delta: float, direction: Vector2, input: Dictionary) -> void:
-	move_t += delta
+	move_t += delta * (get_attack_speed_multiplier() if move == "combo" else 1.0)
 	match move:
 		"combo":
 			_step_swing(direction, input)
@@ -253,19 +253,20 @@ func _start_swing(step: int) -> void:
 func _step_swing(direction: Vector2, input: Dictionary) -> void:
 	var c: Array = COMBO[combo_step]
 	var anim := String(c[0])
-	var spd_scale := get_attack_speed_scale()
-	var hit_t := Sprites.at_frame(anim, int(c[1])) / spd_scale
+	# move_t is already measured in attack-speed-scaled time by _step_move().
+	var hit_t := Sprites.at_frame(anim, int(c[1]))
 	if input["atk_edge"]:
 		_combo_queued = true
 	var v := direction * get_effective_speed() * 0.35
 	if float(c[4]) > 0.0 and move_t <= hit_t:
-		v += Vector2(facing, 0.0) * float(c[4]) / hit_t
+		# Faster swings retain the authored lunge distance over their shorter windup.
+		v += Vector2(facing, 0.0) * float(c[4]) * get_attack_speed_multiplier() / hit_t
 	velocity = v
 	move_and_slide()
 	if not _event_done and move_t >= hit_t:
 		_event_done = true
 		_swing_hit(c)
-	if move_t >= Sprites.duration(anim) / spd_scale:
+	if move_t >= Sprites.duration(anim):
 		var last := combo_step >= COMBO.size() - 1
 		if not last and (_combo_queued or input["atk"]):
 			_start_swing(combo_step + 1)
@@ -415,11 +416,11 @@ func _step_special() -> void:
 		_end_move()
 
 # ------------------------------------------------------------------ damage
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	if _untouchable:
 		return
 	var before := hp + current_armor
-	super.take_damage(amount)
+	super.take_damage(amount, armor_piercing)
 	if hp + current_armor >= before:
 		return
 	if is_dead:

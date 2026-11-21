@@ -1,0 +1,4817 @@
+{
+  "date": "2026-11-20",
+  "timezone": "Asia/Saigon",
+  "tested_commit": "76785b0e2f2e59c91bc7961c2760ee384578553c",
+  "godot_version": "4.7.2.stable.official.ed1daf0bf",
+  "scope": "Independent anti-heal fix only; development integration blocked by open revert PR #99.",
+  "tests": [
+    {
+      "suite": "import",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "--editor",
+        "--import",
+        "--quit"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 9.54,
+      "errors": [],
+      "markers": [],
+      "pass_messages": 0,
+      "trace_sha256": null,
+      "completion_marker": true,
+      "log": "review_antiheal_import_144.log",
+      "warnings": [
+        "WARNING: UID duplicate detected between res://tests/test_archer_combat_lifecycle.tscn and res://tests/test_archer_combat_lifecycle.gd."
+      ],
+      "log_sha256": "c84ca89da30e98bbdcc242cb9bd941845976c7c14477fa68bd2086d4835c5ca4",
+      "result_counts": []
+    },
+    {
+      "suite": "test_potion_system",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_potion_system.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 5.15,
+      "errors": [],
+      "markers": [
+        "POTION RESULTS: 124 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 124,
+      "trace_sha256": "e864d821a87942403e5797d04858678fb7dbaae4189f9388033f531905ebdc61",
+      "completion_marker": true,
+      "log": "review_antiheal_test_potion_system_144.log",
+      "warnings": [],
+      "log_sha256": "d00f8228b18f00200d7a085df116d456b9a98280814f9d0b3f67aa5c35d9f4ed",
+      "result_counts": [
+        {
+          "passed": 124,
+          "failed": 0
+        }
+      ]
+    },
+    {
+      "suite": "test_defensive_combat_balance",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_defensive_combat_balance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 20.03,
+      "errors": [],
+      "markers": [
+        "DEFENSIVE RESULTS: 232 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 232,
+      "trace_sha256": "12aefdf81e913cfd897a98b4bffa35eb543b3264d0480334d9bfb4a50111d292",
+      "completion_marker": true,
+      "log": "review_antiheal_test_defensive_combat_balance_144.log",
+      "warnings": [],
+      "log_sha256": "a3d1dfd3ad32d341a9d5667f5a7e9688527ac3f654a7b70f5ab8bc362657f0be",
+      "result_counts": [
+        {
+          "passed": 232,
+          "failed": 0
+        }
+      ]
+    },
+    {
+      "suite": "test_equipment_loot_perk_balance",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_equipment_loot_perk_balance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 17.34,
+      "errors": [],
+      "markers": [
+        "EQUIPMENT RESULTS: 319 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 319,
+      "trace_sha256": "a518c20d051ac82b711342e96d8d7fe1281e576144e8087ac88081d6e458eceb",
+      "completion_marker": true,
+      "log": "review_antiheal_test_equipment_loot_perk_balance_144.log",
+      "warnings": [],
+      "log_sha256": "632e9fe55b023450c97779f2c49fad3abacb54439614b5c049f01f77812760ea",
+      "result_counts": [
+        {
+          "passed": 319,
+          "failed": 0
+        }
+      ]
+    },
+    {
+      "suite": "test_enemy_floor_balance",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_enemy_floor_balance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 26.32,
+      "errors": [],
+      "markers": [
+        "ENEMY FLOOR RESULTS: 1053 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 1053,
+      "trace_sha256": "3ffe7f152c1cec6aad88401459be3fc1d2ffbcd1e2288a33418b3947fbe171ae",
+      "completion_marker": true,
+      "log": "review_antiheal_test_enemy_floor_balance_144.log",
+      "warnings": [],
+      "log_sha256": "6b80ccdb2cbc01ad5f579aa4acb1ef82b48b56a9c284f030d776c4f34c756dbf",
+      "result_counts": [
+        {
+          "passed": 1053,
+          "failed": 0
+        }
+      ]
+    },
+    {
+      "suite": "test_issue75_acceptance",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_issue75_acceptance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 3.19,
+      "errors": [],
+      "markers": [
+        "ACCEPTANCE RESULTS: 61 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 61,
+      "trace_sha256": "a3fd8d06d114bb4f8441c74d7e6f7fbe4f39bf7dc433e2e89606502bbe278c5c",
+      "completion_marker": true,
+      "log": "review_antiheal_test_issue75_acceptance_144.log",
+      "warnings": [],
+      "log_sha256": "d716f655a12f5178a1abb50202fe046115dbfce506c3c4598c16fbe840cb00df",
+      "result_counts": [
+        {
+          "passed": 61,
+          "failed": 0
+        }
+      ]
+    },
+    {
+      "suite": "test_issue75_progression_balance",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_issue75_progression_balance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 108.09,
+      "errors": [],
+      "markers": [
+        "[PROGRESS] seed 20/30 complete",
+        "[PROGRESS] seed 21/30 complete",
+        "[PROGRESS] seed 22/30 complete",
+        "[PROGRESS] seed 23/30 complete",
+        "[PROGRESS] seed 24/30 complete",
+        "[PROGRESS] seed 25/30 complete",
+        "[PROGRESS] seed 26/30 complete",
+        "[PROGRESS] seed 27/30 complete",
+        "[PROGRESS] seed 28/30 complete",
+        "[PROGRESS] seed 29/30 complete",
+        "[PROGRESS] seed 30/30 complete",
+        "PROGRESSION RESULTS: 35842 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 35842,
+      "trace_sha256": "c89163d557304bd29bf5191f325178f24c2ba9eae0046281f32bff96ff337b63",
+      "completion_marker": true,
+      "log": "review_antiheal_test_issue75_progression_balance_144.log",
+      "warnings": [],
+      "log_sha256": "e61c9bc52801df43e929a65e3c2ac8e8cd9bc324a48ae5487b5df05fe9c08aef",
+      "result_counts": [
+        {
+          "passed": 35842,
+          "failed": 0
+        }
+      ]
+    },
+    {
+      "suite": "test_moba_hud_and_inventory",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_moba_hud_and_inventory.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 2.06,
+      "errors": [],
+      "markers": [
+        "  TEST RESULTS: 223 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 223,
+      "trace_sha256": null,
+      "completion_marker": true,
+      "log": "review_antiheal_test_moba_hud_and_inventory_144.log",
+      "warnings": [],
+      "log_sha256": "218c5787a244dabfe055d97142285f34f58ae7abbd326cf731ca9d2ba49f8121",
+      "result_counts": [
+        {
+          "passed": 223,
+          "failed": 0
+        }
+      ]
+    },
+    {
+      "suite": "test_perk_system",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_perk_system.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 1.96,
+      "errors": [],
+      "markers": [
+        "RESULT: 41/41 PASSED (0 FAILED)"
+      ],
+      "pass_messages": 41,
+      "trace_sha256": null,
+      "completion_marker": true,
+      "log": "review_antiheal_test_perk_system_144.log",
+      "warnings": [],
+      "log_sha256": "cebf299254c22a380bbf39fe48953b562c27d0f9de2a2ebf20a763317fcafa29",
+      "result_counts": []
+    },
+    {
+      "suite": "test_replay_security",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_replay_security.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 1.41,
+      "errors": [],
+      "markers": [
+        "  TEST RESULTS: 39 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 39,
+      "trace_sha256": null,
+      "completion_marker": true,
+      "log": "review_antiheal_test_replay_security_144.log",
+      "warnings": [],
+      "log_sha256": "34274444b6b42fddb744e80338a629e2781a4e3e41572a270de44a6e746e8689",
+      "result_counts": [
+        {
+          "passed": 39,
+          "failed": 0
+        }
+      ]
+    },
+    {
+      "suite": "test_enemy_ai_integration",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_enemy_ai_integration.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 31.48,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Enemy AI integration: 48 passed, 0 failed; 0 runtime errors"
+      ],
+      "pass_messages": 48,
+      "trace_sha256": "c554d0f6f6b8d44d030054c9ace5a4a6d6040db532163082c1b4aab1b71da407",
+      "completion_marker": true,
+      "log": "review_antiheal_test_enemy_ai_integration_144.log",
+      "warnings": [],
+      "log_sha256": "5d34af28afe8b29cb41748b6834725904c7f5a04c3e87b4c4f760b4af9fef87c",
+      "result_counts": []
+    },
+    {
+      "suite": "test_orc_tactical_ai",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_orc_tactical_ai.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 11.16,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Orc tactical AI: 82 passed, 0 failed"
+      ],
+      "pass_messages": 82,
+      "trace_sha256": "137b64474c7f16217a46272ae9d57d91fdad1d04a913c4f1db2eb16cb7c5f81c",
+      "completion_marker": true,
+      "log": "review_antiheal_test_orc_tactical_ai_144.log",
+      "warnings": [],
+      "log_sha256": "47790c84d141ea13adbd295da926c01d1f26250132c41ae0b2646fd4356e1eed",
+      "result_counts": []
+    },
+    {
+      "suite": "test_archer_tactical_ai",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_archer_tactical_ai.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 13.67,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Archer tactical AI: 120 passed, 0 failed"
+      ],
+      "pass_messages": 120,
+      "trace_sha256": "79f7df575fea9675bb7b80e60720d3fed5b280456723f05e280affe51fae78b4",
+      "completion_marker": true,
+      "log": "review_antiheal_test_archer_tactical_ai_144.log",
+      "warnings": [],
+      "log_sha256": "5101c27a0bfa922efa16a8fd659861035a990e8ad931e9ac968f5decc6e5253a",
+      "result_counts": []
+    },
+    {
+      "suite": "test_projectile_obstacles",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_projectile_obstacles.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 1.87,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Projectile obstacle failures: 0"
+      ],
+      "pass_messages": 11,
+      "trace_sha256": null,
+      "completion_marker": true,
+      "log": "review_antiheal_test_projectile_obstacles_144.log",
+      "warnings": [],
+      "log_sha256": "a80c565e152e8290217e08e48191ca67b45407620afc600243de283d285b4fd4",
+      "result_counts": []
+    },
+    {
+      "suite": "test_defensive_combat_balance",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_defensive_combat_balance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 24.73,
+      "errors": [],
+      "markers": [
+        "DEFENSIVE RESULTS: 232 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 232,
+      "trace_sha256": "12aefdf81e913cfd897a98b4bffa35eb543b3264d0480334d9bfb4a50111d292",
+      "completion_marker": true,
+      "log": "review_antiheal_test_defensive_combat_balance_30.log",
+      "warnings": [],
+      "log_sha256": "a3d1dfd3ad32d341a9d5667f5a7e9688527ac3f654a7b70f5ab8bc362657f0be",
+      "result_counts": [
+        {
+          "passed": 232,
+          "failed": 0
+        }
+      ]
+    },
+    {
+      "suite": "test_equipment_loot_perk_balance",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_equipment_loot_perk_balance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 36.05,
+      "errors": [],
+      "markers": [
+        "EQUIPMENT RESULTS: 319 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 319,
+      "trace_sha256": "a518c20d051ac82b711342e96d8d7fe1281e576144e8087ac88081d6e458eceb",
+      "completion_marker": true,
+      "log": "review_antiheal_test_equipment_loot_perk_balance_30.log",
+      "warnings": [],
+      "log_sha256": "632e9fe55b023450c97779f2c49fad3abacb54439614b5c049f01f77812760ea",
+      "result_counts": [
+        {
+          "passed": 319,
+          "failed": 0
+        }
+      ]
+    },
+    {
+      "suite": "test_enemy_floor_balance",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_enemy_floor_balance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 28.63,
+      "errors": [],
+      "markers": [
+        "ENEMY FLOOR RESULTS: 1053 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 1053,
+      "trace_sha256": "3ffe7f152c1cec6aad88401459be3fc1d2ffbcd1e2288a33418b3947fbe171ae",
+      "completion_marker": true,
+      "log": "review_antiheal_test_enemy_floor_balance_30.log",
+      "warnings": [],
+      "log_sha256": "6b80ccdb2cbc01ad5f579aa4acb1ef82b48b56a9c284f030d776c4f34c756dbf",
+      "result_counts": [
+        {
+          "passed": 1053,
+          "failed": 0
+        }
+      ]
+    },
+    {
+      "suite": "test_issue75_acceptance",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_issue75_acceptance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 4.08,
+      "errors": [],
+      "markers": [
+        "ACCEPTANCE RESULTS: 61 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 61,
+      "trace_sha256": "a3fd8d06d114bb4f8441c74d7e6f7fbe4f39bf7dc433e2e89606502bbe278c5c",
+      "completion_marker": true,
+      "log": "review_antiheal_test_issue75_acceptance_30.log",
+      "warnings": [],
+      "log_sha256": "d716f655a12f5178a1abb50202fe046115dbfce506c3c4598c16fbe840cb00df",
+      "result_counts": [
+        {
+          "passed": 61,
+          "failed": 0
+        }
+      ]
+    },
+    {
+      "suite": "test_issue75_progression_balance",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_issue75_progression_balance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 341.48,
+      "errors": [],
+      "markers": [
+        "[PROGRESS] seed 20/30 complete",
+        "[PROGRESS] seed 21/30 complete",
+        "[PROGRESS] seed 22/30 complete",
+        "[PROGRESS] seed 23/30 complete",
+        "[PROGRESS] seed 24/30 complete",
+        "[PROGRESS] seed 25/30 complete",
+        "[PROGRESS] seed 26/30 complete",
+        "[PROGRESS] seed 27/30 complete",
+        "[PROGRESS] seed 28/30 complete",
+        "[PROGRESS] seed 29/30 complete",
+        "[PROGRESS] seed 30/30 complete",
+        "PROGRESSION RESULTS: 35842 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 35842,
+      "trace_sha256": "c89163d557304bd29bf5191f325178f24c2ba9eae0046281f32bff96ff337b63",
+      "completion_marker": true,
+      "log": "review_antiheal_test_issue75_progression_balance_30.log",
+      "warnings": [],
+      "log_sha256": "e61c9bc52801df43e929a65e3c2ac8e8cd9bc324a48ae5487b5df05fe9c08aef",
+      "result_counts": [
+        {
+          "passed": 35842,
+          "failed": 0
+        }
+      ]
+    },
+    {
+      "suite": "test_moba_hud_and_inventory",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_moba_hud_and_inventory.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 2.17,
+      "errors": [],
+      "markers": [
+        "  TEST RESULTS: 223 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 223,
+      "trace_sha256": null,
+      "completion_marker": true,
+      "log": "review_antiheal_test_moba_hud_and_inventory_30.log",
+      "warnings": [],
+      "log_sha256": "218c5787a244dabfe055d97142285f34f58ae7abbd326cf731ca9d2ba49f8121",
+      "result_counts": [
+        {
+          "passed": 223,
+          "failed": 0
+        }
+      ]
+    },
+    {
+      "suite": "test_enemy_ai_integration",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_enemy_ai_integration.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 31.64,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Enemy AI integration: 48 passed, 0 failed; 0 runtime errors"
+      ],
+      "pass_messages": 48,
+      "trace_sha256": "c554d0f6f6b8d44d030054c9ace5a4a6d6040db532163082c1b4aab1b71da407",
+      "completion_marker": true,
+      "log": "review_antiheal_test_enemy_ai_integration_30.log",
+      "warnings": [],
+      "log_sha256": "5d34af28afe8b29cb41748b6834725904c7f5a04c3e87b4c4f760b4af9fef87c",
+      "result_counts": []
+    },
+    {
+      "suite": "test_orc_tactical_ai",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_orc_tactical_ai.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 11.03,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Orc tactical AI: 82 passed, 0 failed"
+      ],
+      "pass_messages": 82,
+      "trace_sha256": "137b64474c7f16217a46272ae9d57d91fdad1d04a913c4f1db2eb16cb7c5f81c",
+      "completion_marker": true,
+      "log": "review_antiheal_test_orc_tactical_ai_30.log",
+      "warnings": [],
+      "log_sha256": "47790c84d141ea13adbd295da926c01d1f26250132c41ae0b2646fd4356e1eed",
+      "result_counts": []
+    },
+    {
+      "suite": "test_archer_tactical_ai",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\issue75-review-godot-472\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_archer_tactical_ai.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 13.67,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Archer tactical AI: 120 passed, 0 failed"
+      ],
+      "pass_messages": 120,
+      "trace_sha256": "79f7df575fea9675bb7b80e60720d3fed5b280456723f05e280affe51fae78b4",
+      "completion_marker": true,
+      "log": "review_antiheal_test_archer_tactical_ai_30.log",
+      "warnings": [],
+      "log_sha256": "5101c27a0bfa922efa16a8fd659861035a990e8ad931e9ac968f5decc6e5253a",
+      "result_counts": []
+    }
+  ],
+  "deterministic_trace_pairs": [
+    {
+      "suite": "test_defensive_combat_balance",
+      "sha256": "12aefdf81e913cfd897a98b4bffa35eb543b3264d0480334d9bfb4a50111d292",
+      "identical": true
+    },
+    {
+      "suite": "test_equipment_loot_perk_balance",
+      "sha256": "a518c20d051ac82b711342e96d8d7fe1281e576144e8087ac88081d6e458eceb",
+      "identical": true
+    },
+    {
+      "suite": "test_enemy_floor_balance",
+      "sha256": "3ffe7f152c1cec6aad88401459be3fc1d2ffbcd1e2288a33418b3947fbe171ae",
+      "identical": true
+    },
+    {
+      "suite": "test_issue75_acceptance",
+      "sha256": "a3fd8d06d114bb4f8441c74d7e6f7fbe4f39bf7dc433e2e89606502bbe278c5c",
+      "identical": true
+    },
+    {
+      "suite": "test_issue75_progression_balance",
+      "sha256": "c89163d557304bd29bf5191f325178f24c2ba9eae0046281f32bff96ff337b63",
+      "identical": true
+    },
+    {
+      "suite": "test_enemy_ai_integration",
+      "sha256": "c554d0f6f6b8d44d030054c9ace5a4a6d6040db532163082c1b4aab1b71da407",
+      "identical": true
+    },
+    {
+      "suite": "test_orc_tactical_ai",
+      "sha256": "137b64474c7f16217a46272ae9d57d91fdad1d04a913c4f1db2eb16cb7c5f81c",
+      "identical": true
+    },
+    {
+      "suite": "test_archer_tactical_ai",
+      "sha256": "79f7df575fea9675bb7b80e60720d3fed5b280456723f05e280affe51fae78b4",
+      "identical": true
+    }
+  ],
+  "progression": {
+    "classification": "Controlled production-system event scenarios; not autonomous or interactive playthroughs",
+    "samples": 540,
+    "fps_samples_identical": true,
+    "baseline": "docs/issue75_acceptance_after.json at f7a20174c1964777fe23cad71f88676ec76c8435",
+    "baseline_sha256": "b30c1efbb4d5e279704fef7dc94162e74c57638454b88de913c5d8635b6f1d63",
+    "artifact": "review_antiheal_test_issue75_progression_balance_144_issue75_progression_after.json",
+    "artifact_sha256": "5f0bd155e18d7014919709dd17b66f59b0302e4137161fe1114fe75495b45fc7",
+    "changed_rows": 539,
+    "changed_field_counts": {
+      "combat.idle_hits_to_death": 494,
+      "exit.hp": 409,
+      "entry.hp": 323,
+      "exit.potions": 71,
+      "potions.consumed": 151,
+      "potions.consumed_by_source.boss_guaranteed": 124,
+      "potions.healing_restored": 206,
+      "potions.inventory_by_source.boss_guaranteed": 162,
+      "entry.potions": 51,
+      "exit.max_hp": 87,
+      "exit.potion_hp": 87,
+      "potions.capacity_rejected": 140,
+      "potions.collected_by_source.other_chest": 35,
+      "potions.collected_by_source.pity": 54,
+      "potions.consumed_by_source.pity": 53,
+      "potions.discarded_by_source.other_chest": 35,
+      "potions.discarded_by_source.pity": 54,
+      "potions.ground": 140,
+      "potions.hp_granted": 56,
+      "potions.inventory_by_source.other_chest": 85,
+      "potions.picked_up": 140,
+      "entry.max_hp": 46,
+      "entry.potion_hp": 46,
+      "potions.consumed_by_source.starter": 48,
+      "potions.inventory_by_source.starter": 46,
+      "potions.consumed_by_source.ordinary": 82,
+      "potions.inventory_by_source.ordinary": 110,
+      "potions.collected_by_source.boss_guaranteed": 93,
+      "potions.discarded_by_source.boss_guaranteed": 93,
+      "potions.consumed_by_source.other_chest": 56,
+      "potions.inventory_by_source.pity": 60,
+      "potions.collected_by_source.ordinary": 69,
+      "potions.discarded_by_source.ordinary": 69
+    },
+    "policies": {
+      "normal": {
+        "floors": [
+          {
+            "floor": 1,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 4.0,
+                  "maximum": 4,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 0
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 4.0,
+                  "maximum": 4,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 0
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 4.0,
+                  "maximum": 4
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 4.0,
+                  "maximum": 4
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 2,
+                  "median": 2.0,
+                  "maximum": 2,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 30
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 2,
+                  "median": 2.0,
+                  "maximum": 2,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 30
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1.0,
+                  "median": 1.0,
+                  "maximum": 1.0,
+                  "target": [
+                    1,
+                    2
+                  ],
+                  "inside": 30
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1.0,
+                  "median": 1.0,
+                  "maximum": 1.0,
+                  "target": [
+                    1,
+                    2
+                  ],
+                  "inside": 30
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 6.0,
+                  "maximum": 8,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 27
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 6.0,
+                  "maximum": 8,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 27
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 6.0,
+                  "maximum": 8
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 4.0,
+                  "maximum": 8
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 5.0,
+                  "maximum": 8,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 0
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 5.0,
+                  "maximum": 8,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 0
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1.0,
+                  "median": 3.5,
+                  "maximum": 6.0,
+                  "target": [
+                    1,
+                    2
+                  ],
+                  "inside": 7
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1.0,
+                  "median": 3.5,
+                  "maximum": 6.0,
+                  "target": [
+                    1,
+                    2
+                  ],
+                  "inside": 7
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 1.5,
+                  "maximum": 4,
+                  "target": [
+                    2,
+                    4
+                  ],
+                  "inside": 15
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 1.5,
+                  "maximum": 4,
+                  "target": [
+                    2,
+                    4
+                  ],
+                  "inside": 15
+                }
+              }
+            }
+          },
+          {
+            "floor": 2,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 9.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 23
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 9.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 23
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 9.0,
+                  "maximum": 12
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 7.0,
+                  "maximum": 12
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 5.5,
+                  "maximum": 9,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 4
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 5.5,
+                  "maximum": 9,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 4
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1.0,
+                  "median": 4.0,
+                  "maximum": 7.0,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 12
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1.0,
+                  "median": 4.0,
+                  "maximum": 7.0,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 12
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 10.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 20
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 10.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 20
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 9.5,
+                  "maximum": 12
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 7.5,
+                  "maximum": 12
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 7.0,
+                  "maximum": 9,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 0
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 7.0,
+                  "maximum": 9,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 0
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 3.0,
+                  "median": 6.0,
+                  "maximum": 7.0,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 3
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 3.0,
+                  "median": 6.0,
+                  "maximum": 7.0,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 3
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 2.0,
+                  "maximum": 3,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 2
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 2.0,
+                  "maximum": 3,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 2
+                }
+              }
+            }
+          },
+          {
+            "floor": 3,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 12.5,
+                  "maximum": 14,
+                  "target": [
+                    11,
+                    14
+                  ],
+                  "inside": 28
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 12.5,
+                  "maximum": 14,
+                  "target": [
+                    11,
+                    14
+                  ],
+                  "inside": 28
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 12.5,
+                  "maximum": 14
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 11.0,
+                  "maximum": 14
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 7.0,
+                  "maximum": 10,
+                  "target": [
+                    4,
+                    6
+                  ],
+                  "inside": 8
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 7.0,
+                  "maximum": 10,
+                  "target": [
+                    4,
+                    6
+                  ],
+                  "inside": 8
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 3.0,
+                  "median": 6.0,
+                  "maximum": 8.0,
+                  "target": [
+                    3,
+                    5
+                  ],
+                  "inside": 12
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 3.0,
+                  "median": 6.0,
+                  "maximum": 8.0,
+                  "target": [
+                    3,
+                    5
+                  ],
+                  "inside": 12
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 11,
+                  "median": 13.0,
+                  "maximum": 15,
+                  "target": [
+                    11,
+                    14
+                  ],
+                  "inside": 29
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 11,
+                  "median": 13.0,
+                  "maximum": 15,
+                  "target": [
+                    11,
+                    14
+                  ],
+                  "inside": 29
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 11,
+                  "median": 13.0,
+                  "maximum": 15
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 11.5,
+                  "maximum": 14
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 8.0,
+                  "maximum": 10,
+                  "target": [
+                    4,
+                    6
+                  ],
+                  "inside": 1
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 8.0,
+                  "maximum": 10,
+                  "target": [
+                    4,
+                    6
+                  ],
+                  "inside": 1
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 6.0,
+                  "maximum": 8.0,
+                  "target": [
+                    3,
+                    5
+                  ],
+                  "inside": 8
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 6.0,
+                  "maximum": 8.0,
+                  "target": [
+                    3,
+                    5
+                  ],
+                  "inside": 8
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 2.0,
+                  "maximum": 3,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 5
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 2.0,
+                  "maximum": 3,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 5
+                }
+              }
+            }
+          },
+          {
+            "floor": 4,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 13,
+                  "median": 15.0,
+                  "maximum": 17,
+                  "target": [
+                    15,
+                    19
+                  ],
+                  "inside": 24
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 13,
+                  "median": 15.0,
+                  "maximum": 17,
+                  "target": [
+                    15,
+                    19
+                  ],
+                  "inside": 24
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 13,
+                  "median": 15.0,
+                  "maximum": 17
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 14.0,
+                  "maximum": 16
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 9.0,
+                  "maximum": 11,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 8
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 9.0,
+                  "maximum": 11,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 8
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 7.0,
+                  "maximum": 8.0,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 24
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 7.0,
+                  "maximum": 8.0,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 24
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 13,
+                  "median": 16.0,
+                  "maximum": 18,
+                  "target": [
+                    15,
+                    19
+                  ],
+                  "inside": 26
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 13,
+                  "median": 16.0,
+                  "maximum": 18,
+                  "target": [
+                    15,
+                    19
+                  ],
+                  "inside": 26
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 11.0,
+                  "maximum": 13
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 10.0,
+                  "maximum": 13
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 9.0,
+                  "maximum": 11,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 3
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 9.0,
+                  "maximum": 11,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 3
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 7.0,
+                  "maximum": 8.0,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 22
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 7.0,
+                  "maximum": 8.0,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 22
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 3.0,
+                  "maximum": 4,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 21
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 3.0,
+                  "maximum": 4,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 21
+                }
+              }
+            }
+          },
+          {
+            "floor": 5,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 15,
+                  "median": 18.0,
+                  "maximum": 21,
+                  "target": [
+                    19,
+                    25
+                  ],
+                  "inside": 11
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 15,
+                  "median": 18.0,
+                  "maximum": 21,
+                  "target": [
+                    19,
+                    25
+                  ],
+                  "inside": 11
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 14.0,
+                  "maximum": 21
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 13.0,
+                  "maximum": 20
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 10.0,
+                  "maximum": 12,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 13
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 10.0,
+                  "maximum": 12,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 13
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 5.0,
+                  "median": 7.0,
+                  "maximum": 9.0,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 24
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 5.0,
+                  "median": 7.0,
+                  "maximum": 9.0,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 24
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 17,
+                  "median": 20.0,
+                  "maximum": 23,
+                  "target": [
+                    19,
+                    25
+                  ],
+                  "inside": 23
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 17,
+                  "median": 20.0,
+                  "maximum": 23,
+                  "target": [
+                    19,
+                    25
+                  ],
+                  "inside": 24
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 14.5,
+                  "maximum": 22
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 9,
+                  "median": 13.0,
+                  "maximum": 20
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 10.0,
+                  "maximum": 12,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 8
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 10.0,
+                  "maximum": 12,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 8
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 5.0,
+                  "median": 7.0,
+                  "maximum": 9.0,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 26
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 5.0,
+                  "median": 7.0,
+                  "maximum": 9.0,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 26
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 3.0,
+                  "maximum": 4,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 17
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 3.0,
+                  "maximum": 4,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 17
+                }
+              }
+            }
+          },
+          {
+            "floor": 6,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 20,
+                  "median": 22.0,
+                  "maximum": 25,
+                  "target": [
+                    23,
+                    30
+                  ],
+                  "inside": 14
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 20,
+                  "median": 22.0,
+                  "maximum": 25,
+                  "target": [
+                    23,
+                    30
+                  ],
+                  "inside": 12
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 12,
+                  "median": 17.0,
+                  "maximum": 24
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 12,
+                  "median": 15.0,
+                  "maximum": 24
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 9,
+                  "median": 11.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 11
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 9,
+                  "median": 11.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 11
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 6.0,
+                  "median": 7.0,
+                  "maximum": 10.0,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 14
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 6.0,
+                  "median": 7.0,
+                  "maximum": 10.0,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 14
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 20,
+                  "median": 23.5,
+                  "maximum": 27,
+                  "target": [
+                    23,
+                    30
+                  ],
+                  "inside": 20
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 20,
+                  "median": 23.5,
+                  "maximum": 27,
+                  "target": [
+                    23,
+                    30
+                  ],
+                  "inside": 19
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 11,
+                  "median": 15.5,
+                  "maximum": 25
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 11,
+                  "median": 15.0,
+                  "maximum": 25
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 9,
+                  "median": 12.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 9
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 9,
+                  "median": 12.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 9
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 6.0,
+                  "median": 7.5,
+                  "maximum": 10.0,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 15
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 6.0,
+                  "median": 7.5,
+                  "maximum": 10.0,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 15
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 2,
+                  "median": 3.0,
+                  "maximum": 4,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 8
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 2,
+                  "median": 3.0,
+                  "maximum": 4,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 8
+                }
+              }
+            }
+          }
+        ],
+        "potion_economy": {
+          "before": {
+            "sources": {
+              "starter": {
+                "generated": 30,
+                "collected": 30,
+                "consumed": 7,
+                "discarded": 0,
+                "inventory": 23
+              },
+              "ordinary": {
+                "generated": 220,
+                "collected": 65,
+                "consumed": 37,
+                "discarded": 155,
+                "inventory": 28
+              },
+              "pity": {
+                "generated": 127,
+                "collected": 34,
+                "consumed": 18,
+                "discarded": 93,
+                "inventory": 16
+              },
+              "boss_guaranteed": {
+                "generated": 360,
+                "collected": 119,
+                "consumed": 76,
+                "discarded": 241,
+                "inventory": 43
+              },
+              "other_chest": {
+                "generated": 89,
+                "collected": 21,
+                "consumed": 12,
+                "discarded": 68,
+                "inventory": 9
+              }
+            },
+            "generated_rewards_per_run": {
+              "n": 30,
+              "minimum": 24,
+              "median": 26.0,
+              "maximum": 35
+            },
+            "collected_rewards_per_run": {
+              "n": 30,
+              "minimum": 6,
+              "median": 8.0,
+              "maximum": 10
+            },
+            "consumed_rewards_per_run": {
+              "n": 30,
+              "minimum": 3,
+              "median": 5.0,
+              "maximum": 7
+            }
+          },
+          "after": {
+            "sources": {
+              "starter": {
+                "generated": 30,
+                "collected": 30,
+                "consumed": 14,
+                "discarded": 0,
+                "inventory": 16
+              },
+              "ordinary": {
+                "generated": 220,
+                "collected": 75,
+                "consumed": 49,
+                "discarded": 145,
+                "inventory": 26
+              },
+              "pity": {
+                "generated": 127,
+                "collected": 46,
+                "consumed": 27,
+                "discarded": 81,
+                "inventory": 19
+              },
+              "boss_guaranteed": {
+                "generated": 360,
+                "collected": 113,
+                "consumed": 68,
+                "discarded": 247,
+                "inventory": 45
+              },
+              "other_chest": {
+                "generated": 89,
+                "collected": 33,
+                "consumed": 26,
+                "discarded": 56,
+                "inventory": 7
+              }
+            },
+            "generated_rewards_per_run": {
+              "n": 30,
+              "minimum": 24,
+              "median": 26.0,
+              "maximum": 35
+            },
+            "collected_rewards_per_run": {
+              "n": 30,
+              "minimum": 6,
+              "median": 9.0,
+              "maximum": 11
+            },
+            "consumed_rewards_per_run": {
+              "n": 30,
+              "minimum": 3,
+              "median": 6.0,
+              "maximum": 7
+            }
+          }
+        }
+      },
+      "optimized": {
+        "floors": [
+          {
+            "floor": 1,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 4.0,
+                  "maximum": 4,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 0
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 4.0,
+                  "maximum": 4,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 0
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 4.0,
+                  "maximum": 4
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 4.0,
+                  "maximum": 4
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 2,
+                  "median": 2.0,
+                  "maximum": 2,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 30
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 2,
+                  "median": 2.0,
+                  "maximum": 2,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 30
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1.0,
+                  "median": 1.0,
+                  "maximum": 1.0,
+                  "target": [
+                    1,
+                    2
+                  ],
+                  "inside": 30
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1.0,
+                  "median": 1.0,
+                  "maximum": 1.0,
+                  "target": [
+                    1,
+                    2
+                  ],
+                  "inside": 30
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 6.0,
+                  "maximum": 8,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 27
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 6.0,
+                  "maximum": 8,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 27
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 6.0,
+                  "maximum": 8
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 4.0,
+                  "maximum": 8
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 5.5,
+                  "maximum": 8,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 0
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 5.5,
+                  "maximum": 8,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 0
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 2.0,
+                  "median": 4.0,
+                  "maximum": 6.0,
+                  "target": [
+                    1,
+                    2
+                  ],
+                  "inside": 5
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 2.0,
+                  "median": 4.0,
+                  "maximum": 6.0,
+                  "target": [
+                    1,
+                    2
+                  ],
+                  "inside": 5
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 1.0,
+                  "maximum": 2,
+                  "target": [
+                    2,
+                    4
+                  ],
+                  "inside": 12
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 1.0,
+                  "maximum": 2,
+                  "target": [
+                    2,
+                    4
+                  ],
+                  "inside": 12
+                }
+              }
+            }
+          },
+          {
+            "floor": 2,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 9.0,
+                  "maximum": 11,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 23
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 9.0,
+                  "maximum": 11,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 23
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 9.0,
+                  "maximum": 11
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 6.0,
+                  "maximum": 10
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 6.0,
+                  "maximum": 9,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 2
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 6.0,
+                  "maximum": 9,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 2
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 2.0,
+                  "median": 4.0,
+                  "maximum": 7.0,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 8
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 2.0,
+                  "median": 4.0,
+                  "maximum": 7.0,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 8
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 9.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 25
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 9.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 25
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 9.0,
+                  "maximum": 12
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 6.0,
+                  "maximum": 10
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 7.0,
+                  "maximum": 9,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 0
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 7.0,
+                  "maximum": 9,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 0
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 3.0,
+                  "median": 6.0,
+                  "maximum": 7.0,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 1
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 3.0,
+                  "median": 6.0,
+                  "maximum": 7.0,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 1
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 2.0,
+                  "maximum": 2,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 0
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 2.0,
+                  "maximum": 2,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 0
+                }
+              }
+            }
+          },
+          {
+            "floor": 3,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 12.0,
+                  "maximum": 14,
+                  "target": [
+                    11,
+                    14
+                  ],
+                  "inside": 26
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 12.0,
+                  "maximum": 14,
+                  "target": [
+                    11,
+                    14
+                  ],
+                  "inside": 26
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 12.0,
+                  "maximum": 14
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 9.0,
+                  "maximum": 12
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 7.0,
+                  "maximum": 11,
+                  "target": [
+                    4,
+                    6
+                  ],
+                  "inside": 9
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 7.0,
+                  "maximum": 11,
+                  "target": [
+                    4,
+                    6
+                  ],
+                  "inside": 9
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 6.0,
+                  "maximum": 8.0,
+                  "target": [
+                    3,
+                    5
+                  ],
+                  "inside": 9
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 6.0,
+                  "maximum": 8.0,
+                  "target": [
+                    3,
+                    5
+                  ],
+                  "inside": 9
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 12.0,
+                  "maximum": 15,
+                  "target": [
+                    11,
+                    14
+                  ],
+                  "inside": 27
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 12.0,
+                  "maximum": 15,
+                  "target": [
+                    11,
+                    14
+                  ],
+                  "inside": 27
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 12.0,
+                  "maximum": 15
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 10.0,
+                  "maximum": 13
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 8.0,
+                  "maximum": 12,
+                  "target": [
+                    4,
+                    6
+                  ],
+                  "inside": 2
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 8.0,
+                  "maximum": 12,
+                  "target": [
+                    4,
+                    6
+                  ],
+                  "inside": 2
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 7.0,
+                  "maximum": 8.0,
+                  "target": [
+                    3,
+                    5
+                  ],
+                  "inside": 7
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 7.0,
+                  "maximum": 8.0,
+                  "target": [
+                    3,
+                    5
+                  ],
+                  "inside": 7
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 2.0,
+                  "maximum": 3,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 5
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 2.0,
+                  "maximum": 3,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 5
+                }
+              }
+            }
+          },
+          {
+            "floor": 4,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 12,
+                  "median": 14.5,
+                  "maximum": 17,
+                  "target": [
+                    15,
+                    19
+                  ],
+                  "inside": 15
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 12,
+                  "median": 14.5,
+                  "maximum": 17,
+                  "target": [
+                    15,
+                    19
+                  ],
+                  "inside": 15
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 12,
+                  "median": 14.5,
+                  "maximum": 17
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 12.5,
+                  "maximum": 15
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 8.5,
+                  "maximum": 12,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 10
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 8.5,
+                  "maximum": 12,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 10
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 7.0,
+                  "maximum": 9.0,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 16
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 7.0,
+                  "maximum": 9.0,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 16
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 13,
+                  "median": 15.0,
+                  "maximum": 18,
+                  "target": [
+                    15,
+                    19
+                  ],
+                  "inside": 19
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 13,
+                  "median": 15.0,
+                  "maximum": 18,
+                  "target": [
+                    15,
+                    19
+                  ],
+                  "inside": 21
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 10.0,
+                  "maximum": 15
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 11.0,
+                  "maximum": 14
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 9.0,
+                  "maximum": 12,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 3
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 9.0,
+                  "maximum": 12,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 3
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 7.5,
+                  "maximum": 10.0,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 14
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 7.5,
+                  "maximum": 10.0,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 14
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 3.0,
+                  "maximum": 3,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 21
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 3.0,
+                  "maximum": 3,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 21
+                }
+              }
+            }
+          },
+          {
+            "floor": 5,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 15,
+                  "median": 18.0,
+                  "maximum": 20,
+                  "target": [
+                    19,
+                    25
+                  ],
+                  "inside": 6
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 15,
+                  "median": 18.0,
+                  "maximum": 20,
+                  "target": [
+                    19,
+                    25
+                  ],
+                  "inside": 7
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 13.0,
+                  "maximum": 18
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 14.0,
+                  "maximum": 20
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 10.0,
+                  "maximum": 12,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 14
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 10.0,
+                  "maximum": 12,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 14
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 5.0,
+                  "median": 8.0,
+                  "maximum": 10.0,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 24
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 5.0,
+                  "median": 8.0,
+                  "maximum": 10.0,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 24
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 16,
+                  "median": 19.0,
+                  "maximum": 23,
+                  "target": [
+                    19,
+                    25
+                  ],
+                  "inside": 17
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 16,
+                  "median": 20.0,
+                  "maximum": 24,
+                  "target": [
+                    19,
+                    25
+                  ],
+                  "inside": 19
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 14.0,
+                  "maximum": 22
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 15.0,
+                  "maximum": 21
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 10.5,
+                  "maximum": 12,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 10
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 10.5,
+                  "maximum": 12,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 10
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 6.0,
+                  "median": 8.0,
+                  "maximum": 10.0,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 26
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 6.0,
+                  "median": 8.0,
+                  "maximum": 10.0,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 26
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 3.0,
+                  "maximum": 4,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 17
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 3.0,
+                  "maximum": 4,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 17
+                }
+              }
+            }
+          },
+          {
+            "floor": 6,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 18,
+                  "median": 21.5,
+                  "maximum": 25,
+                  "target": [
+                    23,
+                    30
+                  ],
+                  "inside": 8
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 18,
+                  "median": 22.0,
+                  "maximum": 26,
+                  "target": [
+                    23,
+                    30
+                  ],
+                  "inside": 12
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 12,
+                  "median": 16.0,
+                  "maximum": 24
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 12,
+                  "median": 17.0,
+                  "maximum": 23
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 11.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 12
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 11.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 12
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 7.0,
+                  "median": 9.0,
+                  "maximum": 11.0,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 24
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 7.0,
+                  "median": 9.0,
+                  "maximum": 11.0,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 24
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 19,
+                  "median": 23.0,
+                  "maximum": 26,
+                  "target": [
+                    23,
+                    30
+                  ],
+                  "inside": 18
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 20,
+                  "median": 24.0,
+                  "maximum": 26,
+                  "target": [
+                    23,
+                    30
+                  ],
+                  "inside": 18
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 12,
+                  "median": 15.0,
+                  "maximum": 24
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 11,
+                  "median": 15.0,
+                  "maximum": 24
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 9,
+                  "median": 11.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 8
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 9,
+                  "median": 11.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 8
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 7.0,
+                  "median": 9.0,
+                  "maximum": 11.0,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 23
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 7.0,
+                  "median": 9.0,
+                  "maximum": 11.0,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 23
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 2,
+                  "median": 3.0,
+                  "maximum": 4,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 16
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 2,
+                  "median": 3.0,
+                  "maximum": 4,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 16
+                }
+              }
+            }
+          }
+        ],
+        "potion_economy": {
+          "before": {
+            "sources": {
+              "starter": {
+                "generated": 30,
+                "collected": 30,
+                "consumed": 21,
+                "discarded": 0,
+                "inventory": 9
+              },
+              "ordinary": {
+                "generated": 280,
+                "collected": 91,
+                "consumed": 66,
+                "discarded": 189,
+                "inventory": 25
+              },
+              "pity": {
+                "generated": 175,
+                "collected": 64,
+                "consumed": 39,
+                "discarded": 111,
+                "inventory": 25
+              },
+              "boss_guaranteed": {
+                "generated": 360,
+                "collected": 110,
+                "consumed": 67,
+                "discarded": 250,
+                "inventory": 43
+              },
+              "other_chest": {
+                "generated": 129,
+                "collected": 38,
+                "consumed": 29,
+                "discarded": 91,
+                "inventory": 9
+              }
+            },
+            "generated_rewards_per_run": {
+              "n": 30,
+              "minimum": 28,
+              "median": 31.0,
+              "maximum": 38
+            },
+            "collected_rewards_per_run": {
+              "n": 30,
+              "minimum": 7,
+              "median": 10.0,
+              "maximum": 12
+            },
+            "consumed_rewards_per_run": {
+              "n": 30,
+              "minimum": 3,
+              "median": 7.0,
+              "maximum": 10
+            }
+          },
+          "after": {
+            "sources": {
+              "starter": {
+                "generated": 30,
+                "collected": 30,
+                "consumed": 24,
+                "discarded": 0,
+                "inventory": 6
+              },
+              "ordinary": {
+                "generated": 280,
+                "collected": 102,
+                "consumed": 76,
+                "discarded": 178,
+                "inventory": 26
+              },
+              "pity": {
+                "generated": 175,
+                "collected": 74,
+                "consumed": 52,
+                "discarded": 101,
+                "inventory": 22
+              },
+              "boss_guaranteed": {
+                "generated": 360,
+                "collected": 112,
+                "consumed": 66,
+                "discarded": 248,
+                "inventory": 46
+              },
+              "other_chest": {
+                "generated": 129,
+                "collected": 45,
+                "consumed": 37,
+                "discarded": 84,
+                "inventory": 8
+              }
+            },
+            "generated_rewards_per_run": {
+              "n": 30,
+              "minimum": 28,
+              "median": 31.0,
+              "maximum": 38
+            },
+            "collected_rewards_per_run": {
+              "n": 30,
+              "minimum": 7,
+              "median": 11.0,
+              "maximum": 13
+            },
+            "consumed_rewards_per_run": {
+              "n": 30,
+              "minimum": 3,
+              "median": 8.0,
+              "maximum": 10
+            }
+          }
+        }
+      },
+      "conservative": {
+        "floors": [
+          {
+            "floor": 1,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 4.0,
+                  "maximum": 4,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 0
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 4.0,
+                  "maximum": 4,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 0
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 4.0,
+                  "maximum": 4
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 4.0,
+                  "maximum": 4
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 2,
+                  "median": 2.0,
+                  "maximum": 2,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 30
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 2,
+                  "median": 2.0,
+                  "maximum": 2,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 30
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1.0,
+                  "median": 1.0,
+                  "maximum": 1.0,
+                  "target": [
+                    1,
+                    2
+                  ],
+                  "inside": 30
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1.0,
+                  "median": 1.0,
+                  "maximum": 1.0,
+                  "target": [
+                    1,
+                    2
+                  ],
+                  "inside": 30
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 6.0,
+                  "maximum": 8,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 27
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 6.0,
+                  "maximum": 8,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 27
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 6.0,
+                  "maximum": 8
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 6.0,
+                  "maximum": 8
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 5.0,
+                  "maximum": 8,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 0
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 5.0,
+                  "maximum": 8,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 0
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1.0,
+                  "median": 3.0,
+                  "maximum": 6.0,
+                  "target": [
+                    1,
+                    2
+                  ],
+                  "inside": 7
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1.0,
+                  "median": 3.0,
+                  "maximum": 6.0,
+                  "target": [
+                    1,
+                    2
+                  ],
+                  "inside": 7
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 2.0,
+                  "maximum": 4,
+                  "target": [
+                    2,
+                    4
+                  ],
+                  "inside": 16
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 2.0,
+                  "maximum": 4,
+                  "target": [
+                    2,
+                    4
+                  ],
+                  "inside": 16
+                }
+              }
+            }
+          },
+          {
+            "floor": 2,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 9.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 21
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 9.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 21
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 9.0,
+                  "maximum": 12
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 9.0,
+                  "maximum": 12
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 5.0,
+                  "maximum": 9,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 6
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4,
+                  "median": 5.0,
+                  "maximum": 9,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 6
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1.0,
+                  "median": 4.0,
+                  "maximum": 7.0,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 12
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1.0,
+                  "median": 4.0,
+                  "maximum": 7.0,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 12
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 10.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 19
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 10.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 18
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 9.0,
+                  "maximum": 12
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 9.0,
+                  "maximum": 12
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 7.0,
+                  "maximum": 9,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 0
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 7.0,
+                  "maximum": 9,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 0
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 3.0,
+                  "median": 4.5,
+                  "maximum": 7.0,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 4
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 3.0,
+                  "median": 4.5,
+                  "maximum": 7.0,
+                  "target": [
+                    2,
+                    3
+                  ],
+                  "inside": 4
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 2.0,
+                  "maximum": 3,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 3
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 2.0,
+                  "maximum": 3,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 3
+                }
+              }
+            }
+          },
+          {
+            "floor": 3,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 13.0,
+                  "maximum": 14,
+                  "target": [
+                    11,
+                    14
+                  ],
+                  "inside": 28
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 13.0,
+                  "maximum": 14,
+                  "target": [
+                    11,
+                    14
+                  ],
+                  "inside": 28
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 9,
+                  "median": 12.0,
+                  "maximum": 14
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 9,
+                  "median": 12.0,
+                  "maximum": 14
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 7.0,
+                  "maximum": 10,
+                  "target": [
+                    4,
+                    6
+                  ],
+                  "inside": 6
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 5,
+                  "median": 7.0,
+                  "maximum": 10,
+                  "target": [
+                    4,
+                    6
+                  ],
+                  "inside": 6
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 3.0,
+                  "median": 5.5,
+                  "maximum": 7.0,
+                  "target": [
+                    3,
+                    5
+                  ],
+                  "inside": 15
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 3.0,
+                  "median": 5.5,
+                  "maximum": 7.0,
+                  "target": [
+                    3,
+                    5
+                  ],
+                  "inside": 15
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 11,
+                  "median": 13.0,
+                  "maximum": 15,
+                  "target": [
+                    11,
+                    14
+                  ],
+                  "inside": 29
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 11,
+                  "median": 13.0,
+                  "maximum": 16,
+                  "target": [
+                    11,
+                    14
+                  ],
+                  "inside": 27
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 11,
+                  "median": 13.0,
+                  "maximum": 15
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 10,
+                  "median": 12.0,
+                  "maximum": 16
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 8.0,
+                  "maximum": 10,
+                  "target": [
+                    4,
+                    6
+                  ],
+                  "inside": 1
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 8.0,
+                  "maximum": 10,
+                  "target": [
+                    4,
+                    6
+                  ],
+                  "inside": 1
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 3.0,
+                  "median": 6.0,
+                  "maximum": 7.0,
+                  "target": [
+                    3,
+                    5
+                  ],
+                  "inside": 13
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 3.0,
+                  "median": 6.0,
+                  "maximum": 7.0,
+                  "target": [
+                    3,
+                    5
+                  ],
+                  "inside": 13
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 2.0,
+                  "maximum": 3,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 11
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 2.0,
+                  "maximum": 3,
+                  "target": [
+                    3,
+                    4
+                  ],
+                  "inside": 11
+                }
+              }
+            }
+          },
+          {
+            "floor": 4,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 13,
+                  "median": 15.0,
+                  "maximum": 17,
+                  "target": [
+                    15,
+                    19
+                  ],
+                  "inside": 24
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 13,
+                  "median": 15.0,
+                  "maximum": 18,
+                  "target": [
+                    15,
+                    19
+                  ],
+                  "inside": 24
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 13,
+                  "median": 15.0,
+                  "maximum": 17
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 12,
+                  "median": 14.0,
+                  "maximum": 18
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 8.0,
+                  "maximum": 10,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 7
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 8.0,
+                  "maximum": 10,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 7
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 6.0,
+                  "maximum": 8.0,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 20
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 6.0,
+                  "maximum": 8.0,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 20
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 13,
+                  "median": 16.0,
+                  "maximum": 18,
+                  "target": [
+                    15,
+                    19
+                  ],
+                  "inside": 26
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 13,
+                  "median": 16.0,
+                  "maximum": 19,
+                  "target": [
+                    15,
+                    19
+                  ],
+                  "inside": 26
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 11,
+                  "median": 14.0,
+                  "maximum": 17
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 11,
+                  "median": 15.0,
+                  "maximum": 17
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 9.0,
+                  "maximum": 11,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 3
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 6,
+                  "median": 9.0,
+                  "maximum": 11,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 3
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 7.0,
+                  "maximum": 8.0,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 18
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 7.0,
+                  "maximum": 8.0,
+                  "target": [
+                    5,
+                    7
+                  ],
+                  "inside": 18
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 3.0,
+                  "maximum": 5,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 18
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 3.0,
+                  "maximum": 5,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 18
+                }
+              }
+            }
+          },
+          {
+            "floor": 5,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 15,
+                  "median": 18.0,
+                  "maximum": 22,
+                  "target": [
+                    19,
+                    25
+                  ],
+                  "inside": 11
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 15,
+                  "median": 18.0,
+                  "maximum": 22,
+                  "target": [
+                    19,
+                    25
+                  ],
+                  "inside": 11
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 13,
+                  "median": 17.0,
+                  "maximum": 22
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 13,
+                  "median": 17.0,
+                  "maximum": 22
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 9.0,
+                  "maximum": 12,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 16
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 7,
+                  "median": 9.0,
+                  "maximum": 12,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 16
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 7.0,
+                  "maximum": 9.0,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 22
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 7.0,
+                  "maximum": 9.0,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 22
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 17,
+                  "median": 19.5,
+                  "maximum": 24,
+                  "target": [
+                    19,
+                    25
+                  ],
+                  "inside": 21
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 17,
+                  "median": 20.0,
+                  "maximum": 26,
+                  "target": [
+                    19,
+                    25
+                  ],
+                  "inside": 22
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 14,
+                  "median": 17.5,
+                  "maximum": 22
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 13,
+                  "median": 18.0,
+                  "maximum": 22
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 10.0,
+                  "maximum": 12,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 10
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 8,
+                  "median": 10.0,
+                  "maximum": 12,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 10
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 8.0,
+                  "maximum": 10.0,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 23
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 8.0,
+                  "maximum": 10.0,
+                  "target": [
+                    7,
+                    9
+                  ],
+                  "inside": 23
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 3.0,
+                  "maximum": 6,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 15
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 1,
+                  "median": 3.0,
+                  "maximum": 6,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 15
+                }
+              }
+            }
+          },
+          {
+            "floor": 6,
+            "completed": 30,
+            "metrics": {
+              "entry.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 19,
+                  "median": 22.0,
+                  "maximum": 26,
+                  "target": [
+                    23,
+                    30
+                  ],
+                  "inside": 12
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 19,
+                  "median": 22.0,
+                  "maximum": 28,
+                  "target": [
+                    23,
+                    30
+                  ],
+                  "inside": 13
+                }
+              },
+              "entry.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 16,
+                  "median": 20.0,
+                  "maximum": 24
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 15,
+                  "median": 20.0,
+                  "maximum": 24
+                }
+              },
+              "entry.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 9,
+                  "median": 11.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 13
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 9,
+                  "median": 11.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 13
+                }
+              },
+              "entry.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 8.0,
+                  "maximum": 10.0,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 17
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 8.0,
+                  "maximum": 10.0,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 17
+                }
+              },
+              "exit.max_hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 19,
+                  "median": 23.0,
+                  "maximum": 28,
+                  "target": [
+                    23,
+                    30
+                  ],
+                  "inside": 16
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 19,
+                  "median": 23.0,
+                  "maximum": 28,
+                  "target": [
+                    23,
+                    30
+                  ],
+                  "inside": 18
+                }
+              },
+              "exit.hp": {
+                "before": {
+                  "n": 30,
+                  "minimum": 16,
+                  "median": 19.0,
+                  "maximum": 26
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 16,
+                  "median": 20.0,
+                  "maximum": 28
+                }
+              },
+              "exit.armor": {
+                "before": {
+                  "n": 30,
+                  "minimum": 9,
+                  "median": 11.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 12
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 9,
+                  "median": 11.0,
+                  "maximum": 12,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 12
+                }
+              },
+              "exit.effective_damage": {
+                "before": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 8.0,
+                  "maximum": 10.0,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 18
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 4.0,
+                  "median": 8.0,
+                  "maximum": 10.0,
+                  "target": [
+                    8,
+                    10
+                  ],
+                  "inside": 18
+                }
+              },
+              "combat.hits": {
+                "before": {
+                  "n": 30,
+                  "minimum": 2,
+                  "median": 4.0,
+                  "maximum": 5,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 7
+                },
+                "after": {
+                  "n": 30,
+                  "minimum": 2,
+                  "median": 4.0,
+                  "maximum": 5,
+                  "target": [
+                    3,
+                    3
+                  ],
+                  "inside": 7
+                }
+              }
+            }
+          }
+        ],
+        "potion_economy": {
+          "before": {
+            "sources": {
+              "starter": {
+                "generated": 30,
+                "collected": 30,
+                "consumed": 7,
+                "discarded": 0,
+                "inventory": 23
+              },
+              "ordinary": {
+                "generated": 148,
+                "collected": 54,
+                "consumed": 28,
+                "discarded": 94,
+                "inventory": 26
+              },
+              "pity": {
+                "generated": 89,
+                "collected": 36,
+                "consumed": 19,
+                "discarded": 53,
+                "inventory": 17
+              },
+              "boss_guaranteed": {
+                "generated": 360,
+                "collected": 126,
+                "consumed": 80,
+                "discarded": 234,
+                "inventory": 46
+              },
+              "other_chest": {
+                "generated": 58,
+                "collected": 18,
+                "consumed": 11,
+                "discarded": 40,
+                "inventory": 7
+              }
+            },
+            "generated_rewards_per_run": {
+              "n": 30,
+              "minimum": 18,
+              "median": 22.0,
+              "maximum": 26
+            },
+            "collected_rewards_per_run": {
+              "n": 30,
+              "minimum": 6,
+              "median": 7.5,
+              "maximum": 10
+            },
+            "consumed_rewards_per_run": {
+              "n": 30,
+              "minimum": 2,
+              "median": 4.0,
+              "maximum": 7
+            }
+          },
+          "after": {
+            "sources": {
+              "starter": {
+                "generated": 30,
+                "collected": 30,
+                "consumed": 11,
+                "discarded": 0,
+                "inventory": 19
+              },
+              "ordinary": {
+                "generated": 148,
+                "collected": 72,
+                "consumed": 40,
+                "discarded": 76,
+                "inventory": 32
+              },
+              "pity": {
+                "generated": 89,
+                "collected": 48,
+                "consumed": 33,
+                "discarded": 41,
+                "inventory": 15
+              },
+              "boss_guaranteed": {
+                "generated": 360,
+                "collected": 140,
+                "consumed": 99,
+                "discarded": 220,
+                "inventory": 41
+              },
+              "other_chest": {
+                "generated": 58,
+                "collected": 22,
+                "consumed": 15,
+                "discarded": 36,
+                "inventory": 7
+              }
+            },
+            "generated_rewards_per_run": {
+              "n": 30,
+              "minimum": 18,
+              "median": 22.0,
+              "maximum": 26
+            },
+            "collected_rewards_per_run": {
+              "n": 30,
+              "minimum": 7,
+              "median": 9.0,
+              "maximum": 13
+            },
+            "consumed_rewards_per_run": {
+              "n": 30,
+              "minimum": 3,
+              "median": 6.0,
+              "maximum": 10
+            }
+          }
+        }
+      }
+    }
+  },
+  "not_run": [
+    "test_bug_bash_regressions",
+    "test_wallet",
+    "test_wandering_merchant",
+    "test_guild_hall",
+    "Manual interactive floors 1-6"
+  ],
+  "note": "Raw logs and disposable profiles stay in ignored .godot/issue75_acceptance. Historical audit and baselines are preserved."
+}

@@ -1,5 +1,8 @@
 extends Area2D
 
+const FloorBalance = preload("res://Scene/Balance/EnemyFloorBalance.gd")
+var armor_piercing: float = 0.0
+
 var damage: int = 2
 var is_exploding: bool = false
 var _hit_targets: Dictionary = {}
@@ -47,10 +50,8 @@ func _on_area_entered(area: Area2D) -> void:
 		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
 			return
 		_hit_targets[tid] = true
-		if target.has_method("take_ranged_damage"):
-			target.take_ranged_damage(damage)
-		elif target.has_method("take_damage"):
-			target.take_damage(damage)
+		if target.has_method("take_damage"):
+			FloorBalance.ranged_hit(target, damage, armor_piercing)
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if anim.animation == "explode":

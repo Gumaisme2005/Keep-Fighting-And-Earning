@@ -238,7 +238,7 @@ func use_potion(bag_index: int) -> void:
 	var item := _bag_item(bag_index)
 	if item == null or item.type != ItemData.ItemType.POTION or hero == null:
 		return
-	inventory.use_or_equip_item(bag_index, hero)
+	inventory.use_or_equip_item(bag_index, hero, true)
 	_sfx("pickup", 1.2, 1.25)
 	_say("BOTTOMS UP! %s." % item.item_name.to_upper())
 	if _bag_item(bag_index) == null:

@@ -8,7 +8,7 @@ id = "armored_orc"
 name = "Armored Uruk-hai"
 hp = 5
 armor = 6
-drop_chance = 0.35
+drop_chance = 0.05
 custom_stats = {
 "rage_damage": 4
 }

@@ -1,0 +1,1450 @@
+{
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "final_results": [
+    {
+      "suite": "test_issue75_progression_balance",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_issue75_progression_balance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 144.19,
+      "errors": [],
+      "markers": [
+        "[PROGRESS] seed 20/30 complete",
+        "[PROGRESS] seed 21/30 complete",
+        "[PROGRESS] seed 22/30 complete",
+        "[PROGRESS] seed 23/30 complete",
+        "[PROGRESS] seed 24/30 complete",
+        "[PROGRESS] seed 25/30 complete",
+        "[PROGRESS] seed 26/30 complete",
+        "[PROGRESS] seed 27/30 complete",
+        "[PROGRESS] seed 28/30 complete",
+        "[PROGRESS] seed 29/30 complete",
+        "[PROGRESS] seed 30/30 complete",
+        "PROGRESSION RESULTS: 35842 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 35842,
+      "trace_sha256": "ed9e8a989ef4c300a8804ec9e832dea9394f8dc2df3338d0010c1d4a4a3e08cc",
+      "log": "final-progression_test_issue75_progression_balance_144.log",
+      "log_sha256": "617ef6883100691987c814efed7d10dc4e49fbacfa35f0009728bb12803833f2",
+      "completion_verified": true,
+      "reported_pass_count": 35842
+    },
+    {
+      "suite": "test_issue75_acceptance",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_issue75_acceptance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 4.48,
+      "errors": [],
+      "markers": [
+        "ACCEPTANCE RESULTS: 61 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 61,
+      "trace_sha256": "f537b792584ed557193ebeadd83161317c715ee9ef00983338c0de71e523ab1f",
+      "log": "verified_test_issue75_acceptance_144.log",
+      "log_sha256": "bcf95876efcc0d98939104e9a151e0ab830e4afb0947f0e2c015bd9bf50cb50a",
+      "completion_verified": true,
+      "reported_pass_count": 61
+    },
+    {
+      "suite": "test_potion_system",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_potion_system.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 3.11,
+      "errors": [],
+      "markers": [
+        "POTION RESULTS: 124 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 124,
+      "trace_sha256": "e864d821a87942403e5797d04858678fb7dbaae4189f9388033f531905ebdc61",
+      "log": "verified_test_potion_system_144.log",
+      "log_sha256": "df309373e464d9108a8a348321d8124105f829c1f7d6e6836b4e0f4d62ad21a3",
+      "completion_verified": true,
+      "reported_pass_count": 124
+    },
+    {
+      "suite": "test_defensive_combat_balance",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_defensive_combat_balance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 52.75,
+      "errors": [],
+      "markers": [
+        "DEFENSIVE RESULTS: 232 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 232,
+      "trace_sha256": "12aefdf81e913cfd897a98b4bffa35eb543b3264d0480334d9bfb4a50111d292",
+      "log": "corrected_test_defensive_combat_balance_144.log",
+      "log_sha256": "697832777eef27825644a3aee5eb571d4bfe889c83a7ada5b451d14023f0691f",
+      "completion_verified": true,
+      "reported_pass_count": 232
+    },
+    {
+      "suite": "test_equipment_loot_perk_balance",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_equipment_loot_perk_balance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 57.84,
+      "errors": [],
+      "markers": [
+        "EQUIPMENT RESULTS: 319 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 319,
+      "trace_sha256": "a518c20d051ac82b711342e96d8d7fe1281e576144e8087ac88081d6e458eceb",
+      "log": "corrected_test_equipment_loot_perk_balance_144.log",
+      "log_sha256": "421231fdc159cb21d7613b9aa6a0c4b3c7e195254b59a1c22af915deee070114",
+      "completion_verified": true,
+      "reported_pass_count": 319
+    },
+    {
+      "suite": "test_enemy_floor_balance",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_enemy_floor_balance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 24.64,
+      "errors": [],
+      "markers": [
+        "ENEMY FLOOR RESULTS: 1053 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 1053,
+      "trace_sha256": "cf155464abe09b00e8de3770917c5fa4606dab4a8f17af89974b43aa9a325821",
+      "log": "verified_test_enemy_floor_balance_144.log",
+      "log_sha256": "b677f9fbeaad2e5d230e8b800090faf03196ea734bf841c186170b8aaca1cc9b",
+      "completion_verified": true,
+      "reported_pass_count": 1053
+    },
+    {
+      "suite": "test_perk_system",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_perk_system.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 5.39,
+      "errors": [],
+      "markers": [
+        "RESULT: 41/41 PASSED (0 FAILED)"
+      ],
+      "pass_messages": 41,
+      "trace_sha256": null,
+      "log": "corrected_test_perk_system_144.log",
+      "log_sha256": "4cefca0966fbeb374324d5275aef165c5ba012633a570688d66bc982f7ebc435",
+      "completion_verified": true,
+      "reported_pass_count": 41
+    },
+    {
+      "suite": "test_moba_hud_and_inventory",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_moba_hud_and_inventory.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 4.8,
+      "errors": [],
+      "markers": [
+        "  TEST RESULTS: 159 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 159,
+      "trace_sha256": null,
+      "log": "corrected_test_moba_hud_and_inventory_144.log",
+      "log_sha256": "ed6e49c4905b920509f293ae0965b3b10d0edb6f62f83cad524c92375a253586",
+      "completion_verified": true,
+      "reported_pass_count": 159
+    },
+    {
+      "suite": "test_replay_security",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_replay_security.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 4.53,
+      "errors": [],
+      "markers": [
+        "  TEST RESULTS: 39 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 39,
+      "trace_sha256": null,
+      "log": "corrected_test_replay_security_144.log",
+      "log_sha256": "dc6763ff9ad2014c453b0147d67560b3b69888bb6b1734e39841ab19e89f5a42",
+      "completion_verified": true,
+      "reported_pass_count": 39
+    },
+    {
+      "suite": "test_miyabi",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_miyabi.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 29.59,
+      "errors": [],
+      "markers": [
+        "  [PASS] MY-08: Shift dash slash travels ~72px, cuts every enemy on the path (2x) and is untouchable - dash=77px hits=2/2/0",
+        "  [PASS] MY-11: Holding Right Click loops frost_charge; a full charge sends a big wave that pierces (3x) and freezes - level=2 damage=3/3 frozen=true",
+        "[SUMMARY] MIYABI: 18 PASSED | 0 FAILED"
+      ],
+      "pass_messages": 18,
+      "trace_sha256": null,
+      "log": "corrected_test_miyabi_144.log",
+      "log_sha256": "8c7a45a37a4134e558f4dd7ae41c87862bf51d4145e84dee5f3f395d54dca71c",
+      "completion_verified": true,
+      "reported_pass_count": 18
+    },
+    {
+      "suite": "test_luong_tho",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_luong_tho.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 25.72,
+      "errors": [],
+      "markers": [
+        "  [PASS] LT-08: Ground Smash hits every enemy around the impact in front of her - 2/2/0",
+        "  [PASS] LT-12: White form: Stab lands sooner for 2, rounds deal 2 each and pierce - stab=2 rounds=4/4",
+        "[SUMMARY] LUONG THO: 15 PASSED | 0 FAILED"
+      ],
+      "pass_messages": 15,
+      "trace_sha256": null,
+      "log": "corrected_test_luong_tho_144.log",
+      "log_sha256": "b556e2fcb1e047e77e1affbcefa53064c784274b8294d9566103e48ac91478ee",
+      "completion_verified": true,
+      "reported_pass_count": 15
+    },
+    {
+      "suite": "test_doraemon",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_doraemon.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 128.81,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] DORAEMON: 49 PASSED | 0 FAILED"
+      ],
+      "pass_messages": 49,
+      "trace_sha256": null,
+      "log": "corrected_test_doraemon_144.log",
+      "log_sha256": "bc65935a39d9f2ab506eabff0a88f409ab21efff3d643ea2e384d6d9de880d51",
+      "completion_verified": true,
+      "reported_pass_count": 49
+    },
+    {
+      "suite": "test_yugi",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_yugi.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 6.86,
+      "errors": [],
+      "markers": [
+        "YUGI TESTS PASSED"
+      ],
+      "pass_messages": 0,
+      "trace_sha256": null,
+      "log": "corrected_test_yugi_144.log",
+      "log_sha256": "e227b4ebe65da7f61c4ff403b93d11d126c21d863c1bfdb1f02a932fafe38912",
+      "completion_verified": true,
+      "reported_pass_count": null
+    },
+    {
+      "suite": "test_skeleton_king",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_skeleton_king.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 10.27,
+      "errors": [],
+      "markers": [
+        "  [PASS] SK-14: Shattering a Soul Crystal damages the King - hp=107/134",
+        "[SUMMARY] SKELETON KING: 22 PASSED | 0 FAILED"
+      ],
+      "pass_messages": 22,
+      "trace_sha256": null,
+      "log": "corrected_test_skeleton_king_144.log",
+      "log_sha256": "4259570550172c5bfdfa07a975b81ea5cbd44a18197016d4b0e2453eda88fe57",
+      "completion_verified": true,
+      "reported_pass_count": null
+    },
+    {
+      "suite": "test_orc_battle",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_orc_battle.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 2.95,
+      "errors": [],
+      "markers": [
+        "PASS! Orc chem trung sau 14 frames. Armor: 2/4",
+        "PASS! Orc chem trung sau 14 frames. Armor: 2/4",
+        "PASS! Orc chem trung sau 14 frames. Armor: 2/4",
+        "PASS! Orc chem trung sau 14 frames. Armor: 2/4",
+        "PASS! Orc chem trung sau 14 frames. Armor: 2/4",
+        ">>> TAT CA 5/5 TEST CASES DEU PASSED 100%! <<<"
+      ],
+      "pass_messages": 0,
+      "trace_sha256": null,
+      "log": "corrected_test_orc_battle_144.log",
+      "log_sha256": "56d37eb511790d711aa7a0c26cc8f4ac3860148ce332f2b9cc413a20ab7777b2",
+      "completion_verified": true,
+      "reported_pass_count": 5
+    },
+    {
+      "suite": "test_enemy_tactics",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "--script",
+        "res://tests/test_enemy_tactics.gd"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 1.55,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] EnemyTactics: 94 passed, 0 failed"
+      ],
+      "pass_messages": 94,
+      "trace_sha256": null,
+      "log": "corrected_test_enemy_tactics_144.log",
+      "log_sha256": "3516f200f533a091a299637ae891e7266d79ab0c00043556873dcdaa88012fd1",
+      "completion_verified": true,
+      "reported_pass_count": 94
+    },
+    {
+      "suite": "test_enemy_ai_integration",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_enemy_ai_integration.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 32.47,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Enemy AI integration: 48 passed, 0 failed; 0 runtime errors"
+      ],
+      "pass_messages": 48,
+      "trace_sha256": "c554d0f6f6b8d44d030054c9ace5a4a6d6040db532163082c1b4aab1b71da407",
+      "log": "verified_test_enemy_ai_integration_144.log",
+      "log_sha256": "691a5ef8238f37ebd6fa78ef311f356245aeb9d3ec10a55408803db96e1ef9dc",
+      "completion_verified": true,
+      "reported_pass_count": 48
+    },
+    {
+      "suite": "test_tactical_base_enemy_integration",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_tactical_base_enemy_integration.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 9.69,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Tactical BaseEnemy integration: 49 passed, 0 failed; 0 runtime errors"
+      ],
+      "pass_messages": 49,
+      "trace_sha256": null,
+      "log": "corrected_test_tactical_base_enemy_integration_144.log",
+      "log_sha256": "f5d57e4181e16b0f7021398424629b36a68116f14960382b18ca17f2a3520b5e",
+      "completion_verified": true,
+      "reported_pass_count": 49
+    },
+    {
+      "suite": "test_orc_tactical_ai",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_orc_tactical_ai.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 11.5,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Orc tactical AI: 82 passed, 0 failed"
+      ],
+      "pass_messages": 82,
+      "trace_sha256": "137b64474c7f16217a46272ae9d57d91fdad1d04a913c4f1db2eb16cb7c5f81c",
+      "log": "verified_test_orc_tactical_ai_144.log",
+      "log_sha256": "50a87f12690f95f6f9546107ed4b4aa20eb17c99f813c91409c86c6f9a722274",
+      "completion_verified": true,
+      "reported_pass_count": 82
+    },
+    {
+      "suite": "test_archer_tactical_ai",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_archer_tactical_ai.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 13.91,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Archer tactical AI: 120 passed, 0 failed"
+      ],
+      "pass_messages": 120,
+      "trace_sha256": "79f7df575fea9675bb7b80e60720d3fed5b280456723f05e280affe51fae78b4",
+      "log": "verified_test_archer_tactical_ai_144.log",
+      "log_sha256": "17ac96e2d30761948e219beb8c4dc1fd881cfc7a56540e0efdf8fb2c43a414b7",
+      "completion_verified": true,
+      "reported_pass_count": 120
+    },
+    {
+      "suite": "test_tactical_navigation_contract",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_tactical_navigation_contract.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 3.08,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Tactical navigation contract: 49 passed, 0 failed; 0 runtime errors"
+      ],
+      "pass_messages": 49,
+      "trace_sha256": "72c8689737ddda84b36bcec5c6b485630719a0da5efdefae7097ba2c57aafb38",
+      "log": "verified_test_tactical_navigation_contract_144.log",
+      "log_sha256": "5fabcb4ac43694bd6955a53cba8995797fa596b8b1cb9201ac2ab597e2abef66",
+      "completion_verified": true,
+      "reported_pass_count": 49
+    },
+    {
+      "suite": "test_werewolf",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_werewolf.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 1.98,
+      "errors": [],
+      "markers": [
+        "  TEST RESULTS: 50 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 50,
+      "trace_sha256": null,
+      "log": "verified_test_werewolf_144.log",
+      "log_sha256": "573c7e443b3cc9d70a50f9fa4773d7de76aded75825608d3fda05ab2922ab8fc",
+      "completion_verified": true,
+      "reported_pass_count": 50
+    },
+    {
+      "suite": "test_archer_combat_lifecycle",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_archer_combat_lifecycle.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 5.73,
+      "errors": [],
+      "markers": [
+        "  TEST RESULTS: 12 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 12,
+      "trace_sha256": null,
+      "log": "corrected_test_archer_combat_lifecycle_144.log",
+      "log_sha256": "16c281b3a46c8d2926ed9f39149f860eac1f9ef40817ecdbceec978c8054f880",
+      "completion_verified": true,
+      "reported_pass_count": 12
+    },
+    {
+      "suite": "test_projectile_obstacles",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_projectile_obstacles.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 2.06,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Projectile obstacle failures: 0"
+      ],
+      "pass_messages": 11,
+      "trace_sha256": null,
+      "log": "corrected_test_projectile_obstacles_144.log",
+      "log_sha256": "91cdf7acaad3b29b08b756c489e24ea1ed3ffb6899d1370d1844b32fe13b942a",
+      "completion_verified": true,
+      "reported_pass_count": null
+    },
+    {
+      "suite": "test_dungeon_generator_unit",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_dungeon_generator_unit.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 13.84,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] UNIT TESTS: 28 PASSED | 0 FAILED"
+      ],
+      "pass_messages": 28,
+      "trace_sha256": null,
+      "log": "corrected_test_dungeon_generator_unit_144.log",
+      "log_sha256": "4a538472c34c95043bf981d1c44f1c4233914969d52db897a5299bdc7c6a36aa",
+      "completion_verified": true,
+      "reported_pass_count": 28
+    },
+    {
+      "suite": "test_dungeon_properties",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_dungeon_properties.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 92.31,
+      "errors": [],
+      "markers": [
+        "  [PASS] PROP-01 [Seed Determinism: generate(s) == generate(s)] \u2014 Verified 100/100 seeds identical",
+        "  [PASS] PROP-02 [Graph Connectivity: all rooms reachable from START] \u2014 Verified 100/100 seeds connected",
+        "  [PASS] PROP-03 [Grid Tile Flood-Fill Walkability across all rooms] \u2014 Verified 100/100 seeds walkable on TileMap",
+        "  [PASS] PROP-04 [Boss Room Optimality: dist(START, BOSS) == max_v dist(START, v)] \u2014 Verified 100/100 seeds optimal",
+        "  [PASS] PROP-05 [Safe Spawn Invariant: 0 entities/centers overlap obstacles/traps] \u2014 Verified 100/100 seeds collision-free",
+        "[VARIANT PROPERTIES] 100 seeds distributed over 8/16/32 rooms x floors 1/2/3",
+        "[VARIANT PROGRESS] 20/100 seeds",
+        "[VARIANT PROGRESS] 40/100 seeds",
+        "[VARIANT PROGRESS] 60/100 seeds",
+        "[VARIANT PROGRESS] 80/100 seeds",
+        "[VARIANT PROGRESS] 100/100 seeds",
+        "[SUMMARY] PROPERTY TESTS: 11/11 PROPERTIES PASSED (original 100 seeds + 100 variant matrix cases)"
+      ],
+      "pass_messages": 11,
+      "trace_sha256": null,
+      "log": "corrected_test_dungeon_properties_144.log",
+      "log_sha256": "16fa427e6fa8e6af35182f8ae2f698c7ad76fb02ebe7495b6b58d4ee71788163",
+      "completion_verified": true,
+      "reported_pass_count": null
+    },
+    {
+      "suite": "benchmark_dungeon_generator",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/benchmark_dungeon_generator.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 32.3,
+      "errors": [],
+      "markers": [],
+      "pass_messages": 0,
+      "trace_sha256": null,
+      "log": "corrected_benchmark_dungeon_generator_144.log",
+      "log_sha256": "b22f8f996dbf923eb05a6e00f6bbd394fa5109cc380c8a169947ead82705cabf",
+      "completion_verified": true,
+      "reported_pass_count": null
+    },
+    {
+      "suite": "test_defensive_combat_balance",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_defensive_combat_balance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 26.3,
+      "errors": [],
+      "markers": [
+        "DEFENSIVE RESULTS: 232 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 232,
+      "trace_sha256": "12aefdf81e913cfd897a98b4bffa35eb543b3264d0480334d9bfb4a50111d292",
+      "log": "comparison_test_defensive_combat_balance_30.log",
+      "log_sha256": "697832777eef27825644a3aee5eb571d4bfe889c83a7ada5b451d14023f0691f",
+      "completion_verified": true,
+      "reported_pass_count": 232
+    },
+    {
+      "suite": "test_equipment_loot_perk_balance",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_equipment_loot_perk_balance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 38.09,
+      "errors": [],
+      "markers": [
+        "EQUIPMENT RESULTS: 319 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 319,
+      "trace_sha256": "a518c20d051ac82b711342e96d8d7fe1281e576144e8087ac88081d6e458eceb",
+      "log": "comparison_test_equipment_loot_perk_balance_30.log",
+      "log_sha256": "421231fdc159cb21d7613b9aa6a0c4b3c7e195254b59a1c22af915deee070114",
+      "completion_verified": true,
+      "reported_pass_count": 319
+    },
+    {
+      "suite": "test_enemy_floor_balance",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_enemy_floor_balance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 32.56,
+      "errors": [],
+      "markers": [
+        "ENEMY FLOOR RESULTS: 1053 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 1053,
+      "trace_sha256": "cf155464abe09b00e8de3770917c5fa4606dab4a8f17af89974b43aa9a325821",
+      "log": "comparison_test_enemy_floor_balance_30.log",
+      "log_sha256": "b677f9fbeaad2e5d230e8b800090faf03196ea734bf841c186170b8aaca1cc9b",
+      "completion_verified": true,
+      "reported_pass_count": 1053
+    },
+    {
+      "suite": "test_issue75_acceptance",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_issue75_acceptance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 4.69,
+      "errors": [],
+      "markers": [
+        "ACCEPTANCE RESULTS: 61 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 61,
+      "trace_sha256": "f537b792584ed557193ebeadd83161317c715ee9ef00983338c0de71e523ab1f",
+      "log": "verified_test_issue75_acceptance_30.log",
+      "log_sha256": "bcf95876efcc0d98939104e9a151e0ab830e4afb0947f0e2c015bd9bf50cb50a",
+      "completion_verified": true,
+      "reported_pass_count": 61
+    },
+    {
+      "suite": "test_issue75_progression_balance",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_issue75_progression_balance.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 344.92,
+      "errors": [],
+      "markers": [
+        "[PROGRESS] seed 20/30 complete",
+        "[PROGRESS] seed 21/30 complete",
+        "[PROGRESS] seed 22/30 complete",
+        "[PROGRESS] seed 23/30 complete",
+        "[PROGRESS] seed 24/30 complete",
+        "[PROGRESS] seed 25/30 complete",
+        "[PROGRESS] seed 26/30 complete",
+        "[PROGRESS] seed 27/30 complete",
+        "[PROGRESS] seed 28/30 complete",
+        "[PROGRESS] seed 29/30 complete",
+        "[PROGRESS] seed 30/30 complete",
+        "PROGRESSION RESULTS: 35842 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 35842,
+      "trace_sha256": "ed9e8a989ef4c300a8804ec9e832dea9394f8dc2df3338d0010c1d4a4a3e08cc",
+      "log": "comparison_test_issue75_progression_balance_30.log",
+      "log_sha256": "617ef6883100691987c814efed7d10dc4e49fbacfa35f0009728bb12803833f2",
+      "completion_verified": true,
+      "reported_pass_count": 35842
+    },
+    {
+      "suite": "test_orc_tactical_ai",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_orc_tactical_ai.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 11.23,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Orc tactical AI: 82 passed, 0 failed"
+      ],
+      "pass_messages": 82,
+      "trace_sha256": "137b64474c7f16217a46272ae9d57d91fdad1d04a913c4f1db2eb16cb7c5f81c",
+      "log": "verified_test_orc_tactical_ai_30.log",
+      "log_sha256": "50a87f12690f95f6f9546107ed4b4aa20eb17c99f813c91409c86c6f9a722274",
+      "completion_verified": true,
+      "reported_pass_count": 82
+    },
+    {
+      "suite": "test_archer_tactical_ai",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_archer_tactical_ai.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 14.09,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Archer tactical AI: 120 passed, 0 failed"
+      ],
+      "pass_messages": 120,
+      "trace_sha256": "79f7df575fea9675bb7b80e60720d3fed5b280456723f05e280affe51fae78b4",
+      "log": "verified_test_archer_tactical_ai_30.log",
+      "log_sha256": "17ac96e2d30761948e219beb8c4dc1fd881cfc7a56540e0efdf8fb2c43a414b7",
+      "completion_verified": true,
+      "reported_pass_count": 120
+    },
+    {
+      "suite": "test_enemy_ai_integration",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_enemy_ai_integration.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 32.2,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Enemy AI integration: 48 passed, 0 failed; 0 runtime errors"
+      ],
+      "pass_messages": 48,
+      "trace_sha256": "c554d0f6f6b8d44d030054c9ace5a4a6d6040db532163082c1b4aab1b71da407",
+      "log": "verified_test_enemy_ai_integration_30.log",
+      "log_sha256": "691a5ef8238f37ebd6fa78ef311f356245aeb9d3ec10a55408803db96e1ef9dc",
+      "completion_verified": true,
+      "reported_pass_count": 48
+    },
+    {
+      "suite": "test_tactical_navigation_contract",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_tactical_navigation_contract.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 3.0,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Tactical navigation contract: 49 passed, 0 failed; 0 runtime errors"
+      ],
+      "pass_messages": 49,
+      "trace_sha256": "72c8689737ddda84b36bcec5c6b485630719a0da5efdefae7097ba2c57aafb38",
+      "log": "verified_test_tactical_navigation_contract_30.log",
+      "log_sha256": "5fabcb4ac43694bd6955a53cba8995797fa596b8b1cb9201ac2ab597e2abef66",
+      "completion_verified": true,
+      "reported_pass_count": 49
+    },
+    {
+      "suite": "test_tactical_base_enemy_integration",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_tactical_base_enemy_integration.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 9.03,
+      "errors": [],
+      "markers": [
+        "[SUMMARY] Tactical BaseEnemy integration: 49 passed, 0 failed; 0 runtime errors"
+      ],
+      "pass_messages": 49,
+      "trace_sha256": null,
+      "log": "comparison_test_tactical_base_enemy_integration_30.log",
+      "log_sha256": "f5d57e4181e16b0f7021398424629b36a68116f14960382b18ca17f2a3520b5e",
+      "completion_verified": true,
+      "reported_pass_count": 49
+    },
+    {
+      "suite": "test_werewolf",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_werewolf.tscn"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 1.97,
+      "errors": [],
+      "markers": [
+        "  TEST RESULTS: 50 PASSED, 0 FAILED"
+      ],
+      "pass_messages": 50,
+      "trace_sha256": null,
+      "log": "verified_test_werewolf_30.log",
+      "log_sha256": "573c7e443b3cc9d70a50f9fa4773d7de76aded75825608d3fda05ab2922ab8fc",
+      "completion_verified": true,
+      "reported_pass_count": 50
+    },
+    {
+      "suite": "import",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "--editor",
+        "--import",
+        "--quit"
+      ],
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 13.75,
+      "errors": [],
+      "markers": [],
+      "pass_messages": 0,
+      "trace_sha256": null,
+      "completion_marker": true,
+      "log": "final_import_144.log",
+      "log_sha256": "cd46a1c577c87bd28e6d9a9f6d123c81b0604269e8b9731d415bbd5d3de2d57b",
+      "completion_verified": true,
+      "reported_pass_count": null
+    }
+  ],
+  "trace_pairs": [
+    {
+      "suite": "test_defensive_combat_balance",
+      "matched": true,
+      "normalized_trace_sha256": "12aefdf81e913cfd897a98b4bffa35eb543b3264d0480334d9bfb4a50111d292"
+    },
+    {
+      "suite": "test_equipment_loot_perk_balance",
+      "matched": true,
+      "normalized_trace_sha256": "a518c20d051ac82b711342e96d8d7fe1281e576144e8087ac88081d6e458eceb"
+    },
+    {
+      "suite": "test_enemy_floor_balance",
+      "matched": true,
+      "normalized_trace_sha256": "cf155464abe09b00e8de3770917c5fa4606dab4a8f17af89974b43aa9a325821"
+    },
+    {
+      "suite": "test_issue75_acceptance",
+      "matched": true,
+      "normalized_trace_sha256": "f537b792584ed557193ebeadd83161317c715ee9ef00983338c0de71e523ab1f"
+    },
+    {
+      "suite": "test_issue75_progression_balance",
+      "matched": true,
+      "normalized_trace_sha256": "ed9e8a989ef4c300a8804ec9e832dea9394f8dc2df3338d0010c1d4a4a3e08cc"
+    },
+    {
+      "suite": "test_orc_tactical_ai",
+      "matched": true,
+      "normalized_trace_sha256": "137b64474c7f16217a46272ae9d57d91fdad1d04a913c4f1db2eb16cb7c5f81c"
+    },
+    {
+      "suite": "test_archer_tactical_ai",
+      "matched": true,
+      "normalized_trace_sha256": "79f7df575fea9675bb7b80e60720d3fed5b280456723f05e280affe51fae78b4"
+    },
+    {
+      "suite": "test_enemy_ai_integration",
+      "matched": true,
+      "normalized_trace_sha256": "c554d0f6f6b8d44d030054c9ace5a4a6d6040db532163082c1b4aab1b71da407"
+    },
+    {
+      "suite": "test_tactical_navigation_contract",
+      "matched": true,
+      "normalized_trace_sha256": "72c8689737ddda84b36bcec5c6b485630719a0da5efdefae7097ba2c57aafb38"
+    }
+  ],
+  "superseded_failures": [
+    {
+      "suite": "test_issue75_progression_balance",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_issue75_progression_balance.tscn"
+      ],
+      "exit_code": 4294967295,
+      "timeout": false,
+      "seconds": 611.34,
+      "errors": [
+        "SCRIPT ERROR: Parse Error: Cannot infer the type of \"replacement\" variable because the value doesn't have a set type.\r",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.\r",
+        "ERROR: Failed to load script \"res://tests/test_issue75_progression_balance.gd\" with error \"Compilation failed\".\r",
+        "SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.\r",
+        "SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.\r",
+        "SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.\r",
+        "[FAIL] On-kill healing skips grouped hitboxes and finds the real health owner\r",
+        "SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.\r"
+      ],
+      "markers": [],
+      "pass_messages": 36,
+      "trace_sha256": null,
+      "log": "corrected_test_issue75_progression_balance_144.log"
+    },
+    {
+      "suite": "test_enemy_ai_integration",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_enemy_ai_integration.tscn"
+      ],
+      "exit_code": 1,
+      "timeout": false,
+      "seconds": 32.28,
+      "errors": [
+        "[FAIL] A surviving Archer reacquires the player and attacks after cooldown\r",
+        "[FAIL] Healthy attack emits exactly one arrow and restores availability\r",
+        "[FAIL] A second healthy attack still emits an arrow after the full cooldown\r"
+      ],
+      "markers": [
+        "[SUMMARY] Enemy AI integration: 45 passed, 3 failed; 0 runtime errors"
+      ],
+      "pass_messages": 45,
+      "trace_sha256": "c554d0f6f6b8d44d030054c9ace5a4a6d6040db532163082c1b4aab1b71da407",
+      "log": "corrected_test_enemy_ai_integration_144.log"
+    },
+    {
+      "suite": "test_orc_tactical_ai",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_orc_tactical_ai.tscn"
+      ],
+      "exit_code": 1,
+      "timeout": false,
+      "seconds": 11.58,
+      "errors": [
+        "[FAIL] Floor 1 keeps movement speed\r",
+        "[FAIL] Tier 0 preserves direct pursuit\r",
+        "[FAIL] Floor 3 keeps movement speed\r",
+        "[FAIL] Floor 3 uses a seeded approach angle\r",
+        "[FAIL] Floor 5 keeps movement speed\r",
+        "[FAIL] Floor 5 uses a seeded approach angle\r",
+        "[FAIL] Floor 7 keeps movement speed\r",
+        "[FAIL] Floor 7 uses a seeded approach angle\r",
+        "[FAIL] Real RoomManager activation enables the first tactical decision\r",
+        "[FAIL] Floor 3 can change state when the hold expires\r",
+        "[FAIL] Floor 5 can change state when the hold expires\r",
+        "[FAIL] Floor 7 can change state when the hold expires\r",
+        "[FAIL] Tier 2 chooses the clear flank around a wall\r",
+        "[FAIL] Real steering and collision physics make progress past the wall\r",
+        "[FAIL] Tier 2 avoids an Orc occupying the preferred flank\r",
+        "[FAIL] Orc makes progress around another collision body\r",
+        "[FAIL] Tier 3 predicts bounded observed motion without reading target velocity\r",
+        "[FAIL] A freed/replaced target cannot carry stale observed prediction\r",
+        "[FAIL] Floor 1 retains immediate attack/hitbox activation at range boundary\r",
+        "[FAIL] Floor 1 keeps melee damage unchanged\r",
+        "[FAIL] Floor 1 rejects out-of-range hitbox contact\r",
+        "[FAIL] Floor 1 rechecks LoS at damage time\r",
+        "[FAIL] Floor 3 retains immediate attack/hitbox activation at range boundary\r",
+        "[FAIL] Floor 3 keeps melee damage unchanged\r",
+        "[FAIL] Floor 3 rejects out-of-range hitbox contact\r",
+        "[FAIL] Floor 3 rechecks LoS at damage time\r",
+        "[FAIL] Floor 5 retains immediate attack/hitbox activation at range boundary\r",
+        "[FAIL] Floor 5 keeps melee damage unchanged\r",
+        "[FAIL] Floor 5 rejects out-of-range hitbox contact\r",
+        "[FAIL] Floor 5 rechecks LoS at damage time\r",
+        "[FAIL] Floor 7 retains immediate attack/hitbox activation at range boundary\r",
+        "[FAIL] Floor 7 keeps melee damage unchanged\r",
+        "[FAIL] Floor 7 rejects out-of-range hitbox contact\r",
+        "[FAIL] Floor 7 rechecks LoS at damage time\r"
+      ],
+      "markers": [
+        "[SUMMARY] Orc tactical AI: 48 passed, 34 failed"
+      ],
+      "pass_messages": 48,
+      "trace_sha256": "3c15d866e17fc235fd53a90305261fe1595f01448599aa3705bbbd34d7a1a1c3",
+      "log": "corrected_test_orc_tactical_ai_144.log"
+    },
+    {
+      "suite": "test_archer_tactical_ai",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_archer_tactical_ai.tscn"
+      ],
+      "exit_code": 1,
+      "timeout": false,
+      "seconds": 13.83,
+      "errors": [
+        "[FAIL] Freed/replaced player does not retain stale motion\r"
+      ],
+      "markers": [
+        "[SUMMARY] Archer tactical AI: 119 passed, 1 failed"
+      ],
+      "pass_messages": 119,
+      "trace_sha256": "79f7df575fea9675bb7b80e60720d3fed5b280456723f05e280affe51fae78b4",
+      "log": "corrected_test_archer_tactical_ai_144.log"
+    },
+    {
+      "suite": "test_tactical_navigation_contract",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_tactical_navigation_contract.tscn"
+      ],
+      "exit_code": 1,
+      "timeout": false,
+      "seconds": 3.08,
+      "errors": [
+        "[FAIL] Target replacement invalidates navigation and observed prediction\r",
+        "[FAIL] Deactivation invalidates movement while preserving the tactical state\r",
+        "[FAIL] Target replacement invalidates navigation and observed prediction\r",
+        "[FAIL] Deactivation invalidates movement while preserving the tactical state\r",
+        "[FAIL] Reactivation immediately produces usable movement without cache initialization\r",
+        "[FAIL] Reactivation immediately produces usable movement without cache initialization\r"
+      ],
+      "markers": [
+        "[SUMMARY] Tactical navigation contract: 43 passed, 6 failed; 0 runtime errors"
+      ],
+      "pass_messages": 43,
+      "trace_sha256": "72c8689737ddda84b36bcec5c6b485630719a0da5efdefae7097ba2c57aafb38",
+      "log": "corrected_test_tactical_navigation_contract_144.log"
+    },
+    {
+      "suite": "test_werewolf",
+      "fps": 144,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "144",
+        "res://tests/test_werewolf.tscn"
+      ],
+      "exit_code": 1,
+      "timeout": false,
+      "seconds": 1.97,
+      "errors": [],
+      "markers": [
+        "  TEST RESULTS: 47 PASSED, 3 FAILED"
+      ],
+      "pass_messages": 47,
+      "trace_sha256": null,
+      "log": "corrected_test_werewolf_144.log"
+    },
+    {
+      "suite": "test_orc_tactical_ai",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_orc_tactical_ai.tscn"
+      ],
+      "exit_code": 1,
+      "timeout": false,
+      "seconds": 11.34,
+      "errors": [
+        "[FAIL] Floor 1 keeps movement speed\r",
+        "[FAIL] Tier 0 preserves direct pursuit\r",
+        "[FAIL] Floor 3 keeps movement speed\r",
+        "[FAIL] Floor 3 uses a seeded approach angle\r",
+        "[FAIL] Floor 5 keeps movement speed\r",
+        "[FAIL] Floor 5 uses a seeded approach angle\r",
+        "[FAIL] Floor 7 keeps movement speed\r",
+        "[FAIL] Floor 7 uses a seeded approach angle\r",
+        "[FAIL] Real RoomManager activation enables the first tactical decision\r",
+        "[FAIL] Floor 3 can change state when the hold expires\r",
+        "[FAIL] Floor 5 can change state when the hold expires\r",
+        "[FAIL] Floor 7 can change state when the hold expires\r",
+        "[FAIL] Tier 2 chooses the clear flank around a wall\r",
+        "[FAIL] Real steering and collision physics make progress past the wall\r",
+        "[FAIL] Tier 2 avoids an Orc occupying the preferred flank\r",
+        "[FAIL] Orc makes progress around another collision body\r",
+        "[FAIL] Tier 3 predicts bounded observed motion without reading target velocity\r",
+        "[FAIL] A freed/replaced target cannot carry stale observed prediction\r",
+        "[FAIL] Floor 1 retains immediate attack/hitbox activation at range boundary\r",
+        "[FAIL] Floor 1 keeps melee damage unchanged\r",
+        "[FAIL] Floor 1 rejects out-of-range hitbox contact\r",
+        "[FAIL] Floor 1 rechecks LoS at damage time\r",
+        "[FAIL] Floor 3 retains immediate attack/hitbox activation at range boundary\r",
+        "[FAIL] Floor 3 keeps melee damage unchanged\r",
+        "[FAIL] Floor 3 rejects out-of-range hitbox contact\r",
+        "[FAIL] Floor 3 rechecks LoS at damage time\r",
+        "[FAIL] Floor 5 retains immediate attack/hitbox activation at range boundary\r",
+        "[FAIL] Floor 5 keeps melee damage unchanged\r",
+        "[FAIL] Floor 5 rejects out-of-range hitbox contact\r",
+        "[FAIL] Floor 5 rechecks LoS at damage time\r",
+        "[FAIL] Floor 7 retains immediate attack/hitbox activation at range boundary\r",
+        "[FAIL] Floor 7 keeps melee damage unchanged\r",
+        "[FAIL] Floor 7 rejects out-of-range hitbox contact\r",
+        "[FAIL] Floor 7 rechecks LoS at damage time\r"
+      ],
+      "markers": [
+        "[SUMMARY] Orc tactical AI: 48 passed, 34 failed"
+      ],
+      "pass_messages": 48,
+      "trace_sha256": "3c15d866e17fc235fd53a90305261fe1595f01448599aa3705bbbd34d7a1a1c3",
+      "log": "comparison_test_orc_tactical_ai_30.log"
+    },
+    {
+      "suite": "test_archer_tactical_ai",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_archer_tactical_ai.tscn"
+      ],
+      "exit_code": 1,
+      "timeout": false,
+      "seconds": 13.67,
+      "errors": [
+        "[FAIL] Freed/replaced player does not retain stale motion\r"
+      ],
+      "markers": [
+        "[SUMMARY] Archer tactical AI: 119 passed, 1 failed"
+      ],
+      "pass_messages": 119,
+      "trace_sha256": "79f7df575fea9675bb7b80e60720d3fed5b280456723f05e280affe51fae78b4",
+      "log": "comparison_test_archer_tactical_ai_30.log"
+    },
+    {
+      "suite": "test_enemy_ai_integration",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_enemy_ai_integration.tscn"
+      ],
+      "exit_code": 1,
+      "timeout": false,
+      "seconds": 31.58,
+      "errors": [
+        "[FAIL] A surviving Archer reacquires the player and attacks after cooldown\r",
+        "[FAIL] Healthy attack emits exactly one arrow and restores availability\r",
+        "[FAIL] A second healthy attack still emits an arrow after the full cooldown\r"
+      ],
+      "markers": [
+        "[SUMMARY] Enemy AI integration: 45 passed, 3 failed; 0 runtime errors"
+      ],
+      "pass_messages": 45,
+      "trace_sha256": "c554d0f6f6b8d44d030054c9ace5a4a6d6040db532163082c1b4aab1b71da407",
+      "log": "comparison_test_enemy_ai_integration_30.log"
+    },
+    {
+      "suite": "test_tactical_navigation_contract",
+      "fps": 30,
+      "command": [
+        "C:\\Users\\ADMIN\\Desktop\\Godot_v4.7.2-stable_win64.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\ADMIN\\Documents\\GitHub\\Keep-Fighting-And-Earning\\.godot\\issue75_acceptance\\project",
+        "--max-fps",
+        "30",
+        "res://tests/test_tactical_navigation_contract.tscn"
+      ],
+      "exit_code": 1,
+      "timeout": false,
+      "seconds": 2.91,
+      "errors": [
+        "[FAIL] Target replacement invalidates navigation and observed prediction\r",
+        "[FAIL] Deactivation invalidates movement while preserving the tactical state\r",
+        "[FAIL] Target replacement invalidates navigation and observed prediction\r",
+        "[FAIL] Deactivation invalidates movement while preserving the tactical state\r",
+        "[FAIL] Reactivation immediately produces usable movement without cache initialization\r",
+        "[FAIL] Reactivation immediately produces usable movement without cache initialization\r"
+      ],
+      "markers": [
+        "[SUMMARY] Tactical navigation contract: 43 passed, 6 failed; 0 runtime errors"
+      ],
+      "pass_messages": 43,
+      "trace_sha256": "72c8689737ddda84b36bcec5c6b485630719a0da5efdefae7097ba2c57aafb38",
+      "log": "comparison_test_tactical_navigation_contract_30.log"
+    }
+  ],
+  "superseded_failure_explanation": "Test-only replacement variable needed an explicit String type; initial player filtering was too narrow for the existing spatial-target interface. Both corrected; final runs replace these failures.",
+  "initial_environment_failures": "Sandbox certificate/settings access failed before execution was retried outside the sandbox with disposable saves. Logs remain in .godot/issue75_acceptance.",
+  "log_directory": ".godot/issue75_acceptance",
+  "actual_before_matches_prior_evidence": true,
+  "all_540_rows_match_across_fps": true,
+  "all_numeric_before_after_stats_and_combat_unchanged": true
+}

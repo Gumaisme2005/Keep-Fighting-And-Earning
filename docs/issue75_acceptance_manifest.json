@@ -1,0 +1,67 @@
+{
+  "schema": "issue75_acceptance_manifest_v3",
+  "seeds": [
+    "ISSUE75-DISTRIBUTION-00",
+    "ISSUE75-DISTRIBUTION-01",
+    "ISSUE75-DISTRIBUTION-02",
+    "ISSUE75-DISTRIBUTION-03",
+    "ISSUE75-DISTRIBUTION-04",
+    "ISSUE75-DISTRIBUTION-05",
+    "ISSUE75-DISTRIBUTION-06",
+    "ISSUE75-DISTRIBUTION-07",
+    "ISSUE75-DISTRIBUTION-08",
+    "ISSUE75-DISTRIBUTION-09",
+    "ISSUE75-DISTRIBUTION-10",
+    "ISSUE75-DISTRIBUTION-11",
+    "ISSUE75-DISTRIBUTION-12",
+    "ISSUE75-DISTRIBUTION-13",
+    "ISSUE75-DISTRIBUTION-14",
+    "ISSUE75-DISTRIBUTION-15",
+    "ISSUE75-DISTRIBUTION-16",
+    "ISSUE75-DISTRIBUTION-17",
+    "ISSUE75-DISTRIBUTION-18",
+    "ISSUE75-DISTRIBUTION-19",
+    "ISSUE75-DISTRIBUTION-20",
+    "ISSUE75-DISTRIBUTION-21",
+    "ISSUE75-DISTRIBUTION-22",
+    "ISSUE75-DISTRIBUTION-23",
+    "ISSUE75-DISTRIBUTION-24",
+    "ISSUE75-DISTRIBUTION-25",
+    "ISSUE75-DISTRIBUTION-26",
+    "ISSUE75-DISTRIBUTION-27",
+    "ISSUE75-DISTRIBUTION-28",
+    "ISSUE75-DISTRIBUTION-29"
+  ],
+  "starting_commit": "2d8ffe5d808087d63b5499da976efd249dd60740",
+  "styles": {
+    "normal": "Boss shortest route plus 50% independently selected optional targets, including every prerequisite room; balanced fixed perk weights.",
+    "optimized": "All generated rooms and all drops; stronger damage weighting for portal perk choices.",
+    "conservative": "Boss shortest route plus 20% optional targets and prerequisites; stronger health-perk weighting, healing threshold 75% rather than 50%."
+  },
+  "shared_policy": "Pick up each generated potion once through WorldItem; preserve four-unit capacity and unaccepted ground units. Equip stronger sampled equipment, discard replaced gear. No stat assignment to reach targets.",
+  "clock": "Controlled accepted Orc hit per visited combat room, then 20 simulated seconds using production cooldown/regen callbacks. Potion consumption uses its real eight-second cooldown.",
+  "measurement": "Entry before that floor rewards; exit after boss/chest rewards but before current portal perk and descent vitality.",
+  "limits": [
+    "Successful room and boss clears assumed for reward sampling, not automated AI combat.",
+    "Reward-only ordinary enemies use BaseEnemy with authoritative enemy IDs and actual death/drop code.",
+    "Boss loot uses its initial source RNG, without phase-dependent RNG consumption.",
+    "Combat measurements are isolated open-arena callbacks; no spirit, combo finisher or skills included in basic-hit counts.",
+    "No autonomous or interactive playthrough; rest and accepted-hit clock are explicit scenarios."
+  ],
+  "actual_before": "issue75_acceptance_before.json: actual execution of starting production and original scenario harness; does not disable floor vitality",
+  "corrected": "issue75_acceptance_after.json: extended source telemetry, identical policy and scenario clock",
+  "proposal": "issue75_acceptance_proposal.json: test-only legacy Legendary sword entry replacement, Common/Rare/Heroic/Heroic on floors 1/2/3/4; unchanged from floor 5",
+  "potion_source_convention": "FIFO for identical potion names after inventory stack merging; units interchangeable. Starter separately tracked; rejected ground units counted once.",
+  "production_files": [
+    "Scene/Enemies/BaseEnemy.gd",
+    "Scene/Character/Miyabi/miyabi_util.gd"
+  ],
+  "artifact_sha256": {
+    "issue75_acceptance_after.json": "b30c1efbb4d5e279704fef7dc94162e74c57638454b88de913c5d8635b6f1d63",
+    "issue75_acceptance_before.json": "8da75381763340a3e058c4d2915ca9c913a038a7768848d3334bad1788c4605c",
+    "issue75_acceptance_encounters.json": "1f19a718cebd6ed4bfe5f0c99b4d44349fc3676c2670e77aa2ecf1d3789379a3",
+    "issue75_acceptance_proposal.json": "dd313053522ec10f65a1dee1cfab8ddacfc2ab1aaddc3fe58ac6f3647afef015",
+    "issue75_acceptance_regressions.json": "cd957811f3b2b3c31cfb482279a9bf131acd64d8fd5dc3826b29556cff07d0a4",
+    "issue75_acceptance_statistics.json": "e929e973d96f381cf291d29a1861e3c50f7e2d7b868916c796a446d73818a049"
+  }
+}

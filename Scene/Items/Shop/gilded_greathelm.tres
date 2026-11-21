@@ -14,5 +14,5 @@ rarity = 1
 type = 0
 icon = SubResource("AtlasTexture_icon")
 description = "A crested helm of gilded steel that turns aside blows meant for the skull."
-armor = 2
+armor = 1
 max_hp_bonus = 1

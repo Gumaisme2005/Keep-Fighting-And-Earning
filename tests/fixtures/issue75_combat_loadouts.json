@@ -1,0 +1,543 @@
+{
+  "selection": "Lower central damage row (index 14 of 30), normal-policy exit after rewards, before portal perk/descent",
+  "baseline": [
+    {
+      "seed": "ISSUE75-DISTRIBUTION-24",
+      "floor": 1,
+      "exit": {
+        "max_hp": 5,
+        "hp": 4,
+        "effective_damage": 3.0,
+        "potion_hp": 0,
+        "gear": [
+          {
+            "acquired_floor": 1,
+            "armor": 2,
+            "catalog": true,
+            "damage": 0,
+            "hp": 1,
+            "id": "heroic_helm",
+            "rarity": 2,
+            "source": "boss_drop"
+          },
+          {
+            "acquired_floor": 1,
+            "armor": 0,
+            "catalog": true,
+            "damage": 2,
+            "hp": 0,
+            "id": "rare_sword",
+            "rarity": 1,
+            "source": "boss_chest"
+          }
+        ],
+        "perks": []
+      }
+    },
+    {
+      "seed": "ISSUE75-DISTRIBUTION-01",
+      "floor": 2,
+      "exit": {
+        "max_hp": 12,
+        "hp": 10,
+        "effective_damage": 6.0,
+        "potion_hp": 0,
+        "gear": [
+          {
+            "acquired_floor": 2,
+            "armor": 2,
+            "catalog": true,
+            "damage": 0,
+            "hp": 1,
+            "id": "heroic_helm",
+            "rarity": 2,
+            "source": "boss_chest"
+          },
+          {
+            "acquired_floor": 2,
+            "armor": 3,
+            "catalog": true,
+            "damage": 0,
+            "hp": 2,
+            "id": "heroic_armor",
+            "rarity": 2,
+            "source": "boss_chest"
+          },
+          {
+            "acquired_floor": 2,
+            "armor": 0,
+            "catalog": true,
+            "damage": 5,
+            "hp": 0,
+            "id": "legendary_sword",
+            "rarity": 3,
+            "source": "boss_drop"
+          }
+        ],
+        "perks": [
+          "titan_blood"
+        ]
+      }
+    },
+    {
+      "seed": "ISSUE75-DISTRIBUTION-18",
+      "floor": 3,
+      "exit": {
+        "max_hp": 14,
+        "hp": 12,
+        "effective_damage": 6.0,
+        "potion_hp": 0,
+        "gear": [
+          {
+            "acquired_floor": 1,
+            "armor": 2,
+            "catalog": true,
+            "damage": 0,
+            "hp": 1,
+            "id": "heroic_helm",
+            "rarity": 2,
+            "source": "boss_chest"
+          },
+          {
+            "acquired_floor": 3,
+            "armor": 4,
+            "catalog": true,
+            "damage": 0,
+            "hp": 3,
+            "id": "legendary_armor",
+            "rarity": 3,
+            "source": "boss_chest"
+          },
+          {
+            "acquired_floor": 3,
+            "armor": 0,
+            "catalog": false,
+            "damage": 5,
+            "hp": 0,
+            "id": "legacy:Legendary/mystic_sword.tres",
+            "rarity": 3,
+            "source": "other_chest"
+          }
+        ],
+        "perks": [
+          "frost_touch",
+          "vitality_essence"
+        ]
+      }
+    },
+    {
+      "seed": "ISSUE75-DISTRIBUTION-09",
+      "floor": 4,
+      "exit": {
+        "max_hp": 15,
+        "hp": 9,
+        "effective_damage": 7.0,
+        "potion_hp": 0,
+        "gear": [
+          {
+            "acquired_floor": 3,
+            "armor": 2,
+            "catalog": true,
+            "damage": 0,
+            "hp": 1,
+            "id": "heroic_helm",
+            "rarity": 2,
+            "source": "ordinary"
+          },
+          {
+            "acquired_floor": 1,
+            "armor": 3,
+            "catalog": true,
+            "damage": 0,
+            "hp": 2,
+            "id": "heroic_armor",
+            "rarity": 2,
+            "source": "boss_drop"
+          },
+          {
+            "acquired_floor": 2,
+            "armor": 0,
+            "catalog": false,
+            "damage": 5,
+            "hp": 0,
+            "id": "legacy:Legendary/mystic_sword.tres",
+            "rarity": 3,
+            "source": "other_chest"
+          }
+        ],
+        "perks": [
+          "vitality_essence",
+          "venomous_strike",
+          "iron_aegis_core"
+        ]
+      }
+    },
+    {
+      "seed": "ISSUE75-DISTRIBUTION-24",
+      "floor": 5,
+      "exit": {
+        "max_hp": 17,
+        "hp": 9,
+        "effective_damage": 7.0,
+        "potion_hp": 0,
+        "gear": [
+          {
+            "acquired_floor": 5,
+            "armor": 3,
+            "catalog": true,
+            "damage": 0,
+            "hp": 2,
+            "id": "legendary_helm",
+            "rarity": 3,
+            "source": "boss_drop"
+          },
+          {
+            "acquired_floor": 5,
+            "armor": 4,
+            "catalog": true,
+            "damage": 0,
+            "hp": 3,
+            "id": "legendary_armor",
+            "rarity": 3,
+            "source": "boss_chest"
+          },
+          {
+            "acquired_floor": 2,
+            "armor": 0,
+            "catalog": true,
+            "damage": 3,
+            "hp": 0,
+            "id": "heroic_sword",
+            "rarity": 2,
+            "source": "boss_chest"
+          }
+        ],
+        "perks": [
+          "deadly_precision",
+          "immortal_will",
+          "wrath_of_valhalla",
+          "vampiric_fang"
+        ]
+      }
+    },
+    {
+      "seed": "ISSUE75-DISTRIBUTION-26",
+      "floor": 6,
+      "exit": {
+        "max_hp": 26,
+        "hp": 21,
+        "effective_damage": 7.0,
+        "potion_hp": 1,
+        "gear": [
+          {
+            "acquired_floor": 5,
+            "armor": 3,
+            "catalog": true,
+            "damage": 0,
+            "hp": 2,
+            "id": "legendary_helm",
+            "rarity": 3,
+            "source": "ordinary"
+          },
+          {
+            "acquired_floor": 6,
+            "armor": 4,
+            "catalog": true,
+            "damage": 0,
+            "hp": 3,
+            "id": "legendary_armor",
+            "rarity": 3,
+            "source": "boss_chest"
+          },
+          {
+            "acquired_floor": 4,
+            "armor": 0,
+            "catalog": true,
+            "damage": 5,
+            "hp": 0,
+            "id": "legendary_sword",
+            "rarity": 3,
+            "source": "boss_chest"
+          }
+        ],
+        "perks": [
+          "vitality_essence",
+          "reinforced_aegis",
+          "overcharge_sigil",
+          "titan_blood",
+          "iron_sinew"
+        ]
+      }
+    }
+  ],
+  "candidate": [
+    {
+      "seed": "ISSUE75-DISTRIBUTION-24",
+      "floor": 1,
+      "exit": {
+        "max_hp": 5,
+        "hp": 4,
+        "effective_damage": 3.0,
+        "potion_hp": 0,
+        "gear": [
+          {
+            "acquired_floor": 1,
+            "armor": 2,
+            "catalog": true,
+            "damage": 0,
+            "hp": 1,
+            "id": "heroic_helm",
+            "rarity": 2,
+            "source": "boss_drop"
+          },
+          {
+            "acquired_floor": 1,
+            "armor": 0,
+            "catalog": true,
+            "damage": 2,
+            "hp": 0,
+            "id": "rare_sword",
+            "rarity": 1,
+            "source": "boss_chest"
+          }
+        ],
+        "perks": []
+      }
+    },
+    {
+      "seed": "ISSUE75-DISTRIBUTION-01",
+      "floor": 2,
+      "exit": {
+        "max_hp": 12,
+        "hp": 10,
+        "effective_damage": 6.0,
+        "potion_hp": 0,
+        "gear": [
+          {
+            "acquired_floor": 2,
+            "armor": 2,
+            "catalog": true,
+            "damage": 0,
+            "hp": 1,
+            "id": "heroic_helm",
+            "rarity": 2,
+            "source": "boss_chest"
+          },
+          {
+            "acquired_floor": 2,
+            "armor": 3,
+            "catalog": true,
+            "damage": 0,
+            "hp": 2,
+            "id": "heroic_armor",
+            "rarity": 2,
+            "source": "boss_chest"
+          },
+          {
+            "acquired_floor": 2,
+            "armor": 0,
+            "catalog": true,
+            "damage": 5,
+            "hp": 0,
+            "id": "legendary_sword",
+            "rarity": 3,
+            "source": "boss_drop"
+          }
+        ],
+        "perks": [
+          "titan_blood"
+        ]
+      }
+    },
+    {
+      "seed": "ISSUE75-DISTRIBUTION-18",
+      "floor": 3,
+      "exit": {
+        "max_hp": 14,
+        "hp": 12,
+        "effective_damage": 6.0,
+        "potion_hp": 0,
+        "gear": [
+          {
+            "acquired_floor": 1,
+            "armor": 2,
+            "catalog": true,
+            "damage": 0,
+            "hp": 1,
+            "id": "heroic_helm",
+            "rarity": 2,
+            "source": "boss_chest"
+          },
+          {
+            "acquired_floor": 3,
+            "armor": 4,
+            "catalog": true,
+            "damage": 0,
+            "hp": 3,
+            "id": "legendary_armor",
+            "rarity": 3,
+            "source": "boss_chest"
+          },
+          {
+            "acquired_floor": 3,
+            "armor": 0,
+            "catalog": false,
+            "damage": 5,
+            "hp": 0,
+            "id": "legacy:Legendary/mystic_sword.tres",
+            "rarity": 3,
+            "source": "other_chest"
+          }
+        ],
+        "perks": [
+          "frost_touch",
+          "vitality_essence"
+        ]
+      }
+    },
+    {
+      "seed": "ISSUE75-DISTRIBUTION-09",
+      "floor": 4,
+      "exit": {
+        "max_hp": 15,
+        "hp": 9,
+        "effective_damage": 7.0,
+        "potion_hp": 0,
+        "gear": [
+          {
+            "acquired_floor": 3,
+            "armor": 2,
+            "catalog": true,
+            "damage": 0,
+            "hp": 1,
+            "id": "heroic_helm",
+            "rarity": 2,
+            "source": "ordinary"
+          },
+          {
+            "acquired_floor": 1,
+            "armor": 3,
+            "catalog": true,
+            "damage": 0,
+            "hp": 2,
+            "id": "heroic_armor",
+            "rarity": 2,
+            "source": "boss_drop"
+          },
+          {
+            "acquired_floor": 2,
+            "armor": 0,
+            "catalog": false,
+            "damage": 5,
+            "hp": 0,
+            "id": "legacy:Legendary/mystic_sword.tres",
+            "rarity": 3,
+            "source": "other_chest"
+          }
+        ],
+        "perks": [
+          "vitality_essence",
+          "venomous_strike",
+          "iron_aegis_core"
+        ]
+      }
+    },
+    {
+      "seed": "ISSUE75-DISTRIBUTION-24",
+      "floor": 5,
+      "exit": {
+        "max_hp": 17,
+        "hp": 9,
+        "effective_damage": 7.0,
+        "potion_hp": 0,
+        "gear": [
+          {
+            "acquired_floor": 5,
+            "armor": 3,
+            "catalog": true,
+            "damage": 0,
+            "hp": 2,
+            "id": "legendary_helm",
+            "rarity": 3,
+            "source": "boss_drop"
+          },
+          {
+            "acquired_floor": 5,
+            "armor": 4,
+            "catalog": true,
+            "damage": 0,
+            "hp": 3,
+            "id": "legendary_armor",
+            "rarity": 3,
+            "source": "boss_chest"
+          },
+          {
+            "acquired_floor": 2,
+            "armor": 0,
+            "catalog": true,
+            "damage": 3,
+            "hp": 0,
+            "id": "heroic_sword",
+            "rarity": 2,
+            "source": "boss_chest"
+          }
+        ],
+        "perks": [
+          "deadly_precision",
+          "immortal_will",
+          "wrath_of_valhalla",
+          "vampiric_fang"
+        ]
+      }
+    },
+    {
+      "seed": "ISSUE75-DISTRIBUTION-00",
+      "floor": 6,
+      "exit": {
+        "max_hp": 24,
+        "hp": 16,
+        "effective_damage": 8.0,
+        "potion_hp": 2,
+        "gear": [
+          {
+            "acquired_floor": 3,
+            "armor": 3,
+            "catalog": true,
+            "damage": 0,
+            "hp": 2,
+            "id": "legendary_helm",
+            "rarity": 3,
+            "source": "ordinary"
+          },
+          {
+            "acquired_floor": 2,
+            "armor": 4,
+            "catalog": true,
+            "damage": 0,
+            "hp": 3,
+            "id": "legendary_armor",
+            "rarity": 3,
+            "source": "boss_chest"
+          },
+          {
+            "acquired_floor": 2,
+            "armor": 0,
+            "catalog": false,
+            "damage": 5,
+            "hp": 0,
+            "id": "legacy:Legendary/mystic_sword.tres",
+            "rarity": 3,
+            "source": "other_chest"
+          }
+        ],
+        "perks": [
+          "sharpened_edge",
+          "vampiric_fang",
+          "iron_aegis_core",
+          "titan_blood",
+          "sturdy_plating"
+        ]
+      }
+    }
+  ]
+}
