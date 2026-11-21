@@ -1,4 +1,5 @@
 extends Node
+const GameManagerScript = preload("res://Scene/GameManager.gd")
 ## Hoshimi Miyabi hero: roster wiring, sprites, and every move of the frost kit -
 ## 3-hit combo, dash slash, charged Frost Wave, Frost Bloom ice spikes and the ice spirit.
 
@@ -27,13 +28,13 @@ var p
 var home: Vector2
 var dummies: Array = []
 
-func _check(cond: bool, name: String, detail: String = "") -> void:
+func _check(cond: bool, check_name: String, detail: String = "") -> void:
 	if cond:
 		passed += 1
-		print("  [PASS] ", name, (" - " + detail) if detail != "" else "")
+		print("  [PASS] ", check_name, (" - " + detail) if detail != "" else "")
 	else:
 		failed += 1
-		print("  [FAIL] ", name, (" - " + detail) if detail != "" else "")
+		print("  [FAIL] ", check_name, (" - " + detail) if detail != "" else "")
 
 func _frames(n: int) -> void:
 	for i in range(n):
@@ -238,7 +239,7 @@ func _ready() -> void:
 		_reset_field([Vector2(40, 0), Vector2(110, 10)])
 		await _play(150, {"shift": [0], "atk": [30, 38, 46], "rmb": range(80, 110)}, Vector2(60, 5), Vector2(1, 0), 1)
 		results.append([p.global_position, _total()])
-	var safe: Array = GameManager._sanitize_replay_frames([{"dx": 1, "dy": 0, "ax": 5, "ay": 0, "atk": true, "rmb": true, "shift": true, "q": false, "slot": -1}], 10)
+	var safe: Array = GameManagerScript._sanitize_replay_frames([{"dx": 1, "dy": 0, "ax": 5, "ay": 0, "atk": true, "rmb": true, "shift": true, "q": false, "slot": -1}], 10)
 	_check(results[0] == results[1] and int(results[0][1]) > 0 and bool(safe[0]["shift"]) and bool(safe[0]["rmb"]) and bool(safe[0]["atk"]),
 		"MY-16: Replays are deterministic and keep Miyabi's inputs (Shift / held clicks)", str(results))
 

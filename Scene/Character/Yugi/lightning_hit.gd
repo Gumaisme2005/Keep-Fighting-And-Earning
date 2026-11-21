@@ -1,9 +1,10 @@
 extends Node2D
 
 const Sprites = preload("res://Scene/Character/Yugi/YugiSprites.gd")
+const CombatUtil = preload("res://Scene/Character/CombatUtil.gd")
 const STUN_SECONDS := 2.0
 var remaining := STUN_SECONDS
-var restore_physics := false
+var _locked := false
 var target: Node2D
 
 static func apply(enemy: Node2D) -> void:
@@ -17,11 +18,10 @@ static func apply(enemy: Node2D) -> void:
 
 func _ready() -> void:
 	target = get_parent() as Node2D
-	restore_physics = target.is_physics_processing()
 	# Rooted targets (Skeleton King crystals) still show the strike but are never frozen.
 	if target.get("is_immovable") != true:
-		target.set_physics_process(false)
-	if target is CharacterBody2D: target.velocity = Vector2.ZERO
+		CombatUtil.acquire_stun_lock(target)
+		_locked = true
 	var sprite := AnimatedSprite2D.new()
 	var frames := SpriteFrames.new()
 	frames.set_animation_speed("default", 12.0)
@@ -55,10 +55,14 @@ func _physics_process(delta: float) -> void:
 	remaining -= delta
 	if target is CharacterBody2D: target.velocity = Vector2.ZERO
 	if remaining <= 0:
-		if target.get("is_dead") != true:
-			target.set_physics_process(restore_physics)
+		_release()
 		queue_free()
 
+func _release() -> void:
+	if not _locked:
+		return
+	_locked = false
+	CombatUtil.release_stun_lock(target)
+
 func _exit_tree() -> void:
-	if is_instance_valid(target) and not target.is_queued_for_deletion() and target.get("is_dead") != true:
-		target.set_physics_process(restore_physics)
+	_release()

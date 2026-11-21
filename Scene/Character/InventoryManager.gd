@@ -8,6 +8,7 @@ const MAX_POTION_UNITS: int = 4
 
 @export var max_slots: int = 16 # Cố định 16 ô (4x4) trong giao diện Balo, chống dồn phím tắt
 var bag: Array[ItemData] = []
+var last_add_remaining: int = 0
 
 # Quản lý Đa hình ô trang bị bằng Dictionary (Data-Driven Equipment Slots)
 var equipment: Dictionary = {
@@ -102,6 +103,7 @@ func get_potion_count() -> int:
 # Runtime input stacks are transfer objects: stack_count becomes the unaccepted remainder.
 # File-backed definitions are templates and must never have their quantity mutated.
 func add_item(item: ItemData, count: int = -1) -> bool:
+	last_add_remaining = count if count >= 0 else (item.stack_count if item != null else 0)
 	if item == null or bag.has(item) or equipment.values().has(item):
 		return false
 	if not item.resource_path.is_empty():
@@ -137,12 +139,15 @@ func add_item(item: ItemData, count: int = -1) -> bool:
 		remaining_count -= stack_amt
 	var accepted := allowed_count - remaining_count
 	item.stack_count = total_count - accepted
+	last_add_remaining = item.stack_count
 	if accepted > 0:
 		inventory_changed.emit()
 	return item.stack_count == 0
 
 # 2. SỬ DỤNG HOẶC TRANG BỊ VẬT PHẨM (SWAP CHUẨN, KHÔNG DỒN LỆCH Ô)
-func use_or_equip_item(index: int, player: Node2D) -> void:
+func use_or_equip_item(index: int, player: Node2D, menu_potion: bool = false) -> void:
+	if player == null or not is_instance_valid(player) or player.get("is_dead") == true:
+		return
 	_ensure_bag_size()
 	if index < 0 or index >= max_slots:
 		print("[INVENTORY] Hotkey slot ", index + 1, " is out of bounds.")
@@ -156,7 +161,8 @@ func use_or_equip_item(index: int, player: Node2D) -> void:
 	if item.type == ItemData.ItemType.POTION:
 		if not is_instance_valid(player) or not player.has_method("consume_potion"):
 			return
-		if not player.consume_potion(item.heal_amount, item.max_hp_bonus):
+		var consumed: bool = player.consume_potion_from_menu(item.heal_amount, item.max_hp_bonus) if menu_potion and player.has_method("consume_potion_from_menu") else player.consume_potion(item.heal_amount, item.max_hp_bonus)
+		if not consumed:
 			return
 		item.stack_count -= 1
 		if item.stack_count <= 0:
@@ -190,7 +196,7 @@ func unequip_item(type: ItemData.ItemType) -> void:
 		inventory_changed.emit()
 
 # 4. VỨT ĐỒ RA SÀN / XÓA KHỎI TÚI (ITEM DROP)
-func drop_item(index: int, drop_all: bool = false, drop_world_pos: Vector2 = Vector2.ZERO) -> bool:
+func drop_item(index: int, drop_all: bool = false, drop_world_pos: Vector2 = Vector2.ZERO, spawn_world_item: Variant = null) -> bool:
 	_ensure_bag_size()
 	if index < 0 or index >= max_slots:
 		return false
@@ -202,16 +208,17 @@ func drop_item(index: int, drop_all: bool = false, drop_world_pos: Vector2 = Vec
 	var drop_amt: int = item.stack_count if drop_all else 1
 	item.stack_count -= drop_amt
 
-	# Sinh vật thể WorldItem rơi trên sàn nếu có vị trí
-	if WORLD_ITEM_SCENE != null and drop_world_pos != Vector2.ZERO:
+	var should_spawn: bool = bool(spawn_world_item) if spawn_world_item != null else (drop_world_pos != Vector2.ZERO)
+	# Sinh vật thể WorldItem rơi trên sàn nếu có yêu cầu
+	if WORLD_ITEM_SCENE != null and should_spawn:
 		var parent_scene = get_tree().current_scene if get_tree() != null else null
 		if parent_scene != null:
 			var world_item = WORLD_ITEM_SCENE.instantiate()
 			var dropped_data: ItemData = item.duplicate()
 			dropped_data.stack_count = drop_amt
 			world_item.item_data = dropped_data
-			world_item.global_position = drop_world_pos
 			parent_scene.add_child(world_item)
+			world_item.global_position = drop_world_pos
 
 	if item.stack_count <= 0:
 		bag[index] = null

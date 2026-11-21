@@ -112,6 +112,7 @@ static func build_sprite_frames() -> SpriteFrames:
 		for i in range(int(info[1])):
 			var atlas := AtlasTexture.new()
 			atlas.atlas = tex
+			@warning_ignore("integer_division")
 			atlas.region = Rect2(Vector2(i % int(info[2]), i / int(info[2])) * FRAME_SIZE, FRAME_SIZE)
 			atlas.filter_clip = true
 			frames.add_frame(anim, atlas)
@@ -283,8 +284,11 @@ func _on_anim_finished(anim: String) -> void:
 			anim_name = ""
 			_restore_camera()
 			queue_free()
-		"enrage", "slam", "cast", "hit":
+		"enrage", "slam", "cast":
 			_finish_action()
+		"hit":
+			action = ""
+			_play(_idle_anim())
 
 # ------------------------------------------------------------------ geometry
 func _col_x(col: int) -> float:
@@ -345,9 +349,11 @@ func _fire_shockwave(force_pattern: String = "") -> void:
 	else:
 		# Vertical beams, 3 columns apart, rippling out from the centre to both walls.
 		var step := 0.15 if enraged else 0.2
+		@warning_ignore("integer_division")
 		var center := room_rect.position.x + room_rect.size.x / 2
 		for col in get_parallel_lines(true, 3, (center - room_rect.position.x) % 3):
 			var line := _vertical(col)
+			@warning_ignore("integer_division")
 			volley.add_line(line[0], line[1], absi(col - center) / 3 * step, warn, active)
 	_add_volley(volley)
 
@@ -396,8 +402,11 @@ func _fire_laser_volley(force_pattern: String = "") -> void:
 func _summon_minions() -> void:
 	if not is_instance_valid(tilemap):
 		return
-	var scenes: Array = tilemap.get("enemy_scenes")
-	if scenes == null or scenes.is_empty():
+	var raw_scenes: Variant = tilemap.get("enemy_scenes")
+	if not (raw_scenes is Array):
+		return
+	var scenes: Array = raw_scenes
+	if scenes.is_empty():
 		return
 	var cap := summon_cap_enraged if enraged else summon_cap
 	var count := mini(rng.randi_range(3, 4) if enraged else rng.randi_range(2, 3), cap - minions.size())
@@ -413,6 +422,7 @@ func _summon_minions() -> void:
 		enemy.z_index = 2
 		enemy.add_to_group("enemies")
 		enemy.add_to_group("skeleton_king_minions")
+		enemy.set_meta("summoned", true)
 		tilemap.add_child(enemy)
 		enemy.position = tilemap.map_to_local(cell)
 		enemy.is_active = true
@@ -536,7 +546,7 @@ func _die() -> void:
 				node.queue_free()
 		list.clear()
 	if get_node_or_null("/root/GameManager") != null:
-		GameManager.register_enemy_kill()
+		GameManager.register_enemy_kill(self, "skeleton_king")
 	_drop_boss_loot()
 	shake_left = 0.8
 	_play("death")
@@ -612,7 +622,7 @@ func _restore_camera() -> void:
 	arena_camera = null
 
 func _exit_tree() -> void:
-	if is_instance_valid(arena_camera) and arena_camera.is_current():
+	if is_instance_valid(arena_camera):
 		_restore_camera()
 
 func _setup_arena_light() -> void:

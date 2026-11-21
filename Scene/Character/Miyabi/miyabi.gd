@@ -228,7 +228,8 @@ func _begin(m: String, anim: String) -> void:
 	move_t = 0.0
 	_event_done = false
 	is_casting_skill = true
-	animated_sprite.play(anim, get_attack_speed_multiplier() if m == "combo" else 1.0)
+	animated_sprite.speed_scale = get_attack_speed_scale() if m == "combo" else 1.0
+	animated_sprite.play(anim)
 
 func _end_move() -> void:
 	move = ""
@@ -236,7 +237,8 @@ func _end_move() -> void:
 	is_casting_skill = false
 	_untouchable = false
 	velocity = Vector2.ZERO
-	animated_sprite.modulate = Color.WHITE
+	animated_sprite.speed_scale = 1.0
+	animated_sprite.modulate = Color(1.0, 1.0, 1.0, animated_sprite.modulate.a)
 	if not is_dead:
 		_play("idle")
 
@@ -251,10 +253,11 @@ func _start_swing(step: int) -> void:
 func _step_swing(direction: Vector2, input: Dictionary) -> void:
 	var c: Array = COMBO[combo_step]
 	var anim := String(c[0])
+	# move_t is already measured in attack-speed-scaled time by _step_move().
 	var hit_t := Sprites.at_frame(anim, int(c[1]))
 	if input["atk_edge"]:
 		_combo_queued = true
-	var v := direction * speed * 0.35
+	var v := direction * get_effective_speed() * 0.35
 	if float(c[4]) > 0.0 and move_t <= hit_t:
 		# Faster swings retain the authored lunge distance over their shorter windup.
 		v += Vector2(facing, 0.0) * float(c[4]) * get_attack_speed_multiplier() / hit_t
@@ -323,6 +326,8 @@ func _dash_cut() -> void:
 		var p := Util.hit_point(t)
 		if p.distance_to(Geometry2D.get_closest_point_to_segment(p, a, b)) > DASH_WIDTH + Util.ENEMY_RADIUS:
 			continue
+		if not Util.sees(world, b, p):
+			continue
 		_dash_hits[id] = true
 		Util.hit(world, t, _dmg() * dash_damage_mult)
 
@@ -341,9 +346,10 @@ func _step_charge(delta: float, direction: Vector2, input: Dictionary) -> void:
 	if not _charge_flash and charge_time >= float(WAVE_LEVELS[WAVE_LEVELS.size() - 1][0]):
 		_charge_flash = true
 		Util.Fx.spawn(_world(), "frost_hit", from_centre(Vector2(-12, 14)), Sprites.SCALE * 1.4)
-	# Fully charged: the blade glows.
-	animated_sprite.modulate = Color(1.15, 1.25, 1.6) if _charge_flash and int(charge_time * 8.0) % 2 == 0 else Color.WHITE
-	velocity = direction * speed * 0.4
+	# Fully charged: the blade glows (preserve alpha so hurt i-frame blink stays intact).
+	var glow := _charge_flash and int(charge_time * 8.0) % 2 == 0
+	animated_sprite.modulate = Color(1.15, 1.25, 1.6, animated_sprite.modulate.a) if glow else Color(1.0, 1.0, 1.0, animated_sprite.modulate.a)
+	velocity = direction * get_effective_speed() * 0.4
 	move_and_slide()
 	if not input["rmb"]:
 		_start_release()
@@ -355,13 +361,13 @@ func _start_release() -> void:
 			wave_level = i
 	var cdr := PerkManager.get_cooldown_reduction() if get_node_or_null("/root/PerkManager") != null else 0.0
 	rmb_cd = rmb_cooldown * (1.0 - cdr)
-	animated_sprite.modulate = Color.WHITE
+	animated_sprite.modulate = Color(1.0, 1.0, 1.0, animated_sprite.modulate.a)
 	if absf(current_aim_offset.x) > 0.5:
 		_set_facing(current_aim_offset.x)
 	_begin("release", "frost_release")
 
 func _step_release(direction: Vector2) -> void:
-	velocity = direction * speed * 0.3
+	velocity = direction * get_effective_speed() * 0.3
 	move_and_slide()
 	if not _event_done and move_t >= Sprites.at_frame("frost_release", WAVE_RELEASE_FRAME):
 		_event_done = true

@@ -7,6 +7,7 @@ extends BaseEnemy
 var can_attack: bool = true
 var strafe_timer: float = 0.0
 var strafe_sign: float = 1.0
+var _attack_generation: int = 0
 
 @onready var bite_hitbox = $BiteHitbox
 @onready var bite_collision = $BiteHitbox/CollisionShape2D
@@ -60,8 +61,9 @@ func _physics_process(delta: float) -> void:
 
 	var tmap = get_parent()
 	_ai_tick_timer -= delta
-	if _ai_tick_timer <= 0.0:
+	if _ai_tick_timer <= 0.0 or not _has_observed_los:
 		_ai_tick_timer = _ai_tick_interval
+		_has_observed_los = true
 		_cached_has_los = (tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position))
 		if not _cached_has_los or distance > attack_range:
 			_cached_steer_dir = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
@@ -106,6 +108,8 @@ func _physics_process(delta: float) -> void:
 				strafe_sign = -strafe_sign
 
 func attack() -> void:
+	_attack_generation += 1
+	var my_gen := _attack_generation
 	is_attacking = true
 	can_attack = false
 	if player != null and is_instance_valid(player):
@@ -117,16 +121,16 @@ func attack() -> void:
 
 	# Nhịp vỗ cánh phát động ma pháp (bắn chưởng pháp sư)
 	await get_tree().create_timer(0.35).timeout
-	if not is_inside_tree() or is_dead:
+	if not is_instance_valid(self) or not is_inside_tree() or is_dead or my_gen != _attack_generation:
 		return
 
-	if player != null and is_instance_valid(player):
+	if is_attacking and player != null and is_instance_valid(player):
 		var tmap = get_parent()
 		if tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position):
 			shoot_magic_spell()
 
 	await get_tree().create_timer(0.35).timeout
-	if not is_inside_tree() or is_dead:
+	if not is_instance_valid(self) or not is_inside_tree() or is_dead or my_gen != _attack_generation:
 		return
 
 	if is_attacking:
@@ -135,7 +139,7 @@ func attack() -> void:
 		animated_sprite.play("idle")
 
 	await get_tree().create_timer(maxf(0.1, attack_cooldown - 0.70)).timeout
-	if not is_inside_tree() or is_dead:
+	if not is_instance_valid(self) or not is_inside_tree() or is_dead or my_gen != _attack_generation:
 		return
 	can_attack = true
 
@@ -157,11 +161,20 @@ func shoot_magic_spell() -> void:
 	spell.global_position = spawn_pos
 
 func _on_hurt() -> void:
+	_attack_generation += 1
+	var cur_gen := _attack_generation
 	bite_collision.set_deferred("disabled", true)
+	await get_tree().create_timer(maxf(0.2, attack_cooldown * 0.5)).timeout
+	if is_instance_valid(self) and is_inside_tree() and not is_dead and cur_gen == _attack_generation:
+		can_attack = true
 
 func _die() -> void:
+	_attack_generation += 1
 	super._die()
 	bite_collision.set_deferred("disabled", true)
+
+func _exit_tree() -> void:
+	_attack_generation += 1
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if animated_sprite == null:
@@ -178,8 +191,12 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		animated_sprite.play("idle")
 
 func _on_bite_hitbox_area_entered(area: Area2D) -> void:
+	if is_dead or not is_active or not is_attacking:
+		return
 	if area.name == "PlayerHurtbox":
 		var target = area.get_parent()
+		if target == null or not is_instance_valid(target):
+			return
 		var tmap = get_parent()
 		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
 			return

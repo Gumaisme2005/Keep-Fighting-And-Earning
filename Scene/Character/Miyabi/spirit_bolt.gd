@@ -5,6 +5,7 @@ extends Node2D
 const Sprites = preload("res://Scene/Character/Miyabi/MiyabiSprites.gd")
 const Util = preload("res://Scene/Character/Miyabi/miyabi_util.gd")
 const Fx = preload("res://Scene/Character/Miyabi/miyabi_fx.gd")
+const CombatUtil = preload("res://Scene/Character/CombatUtil.gd")
 
 var dir: Vector2 = Vector2.RIGHT
 var speed: float = 220.0
@@ -42,7 +43,7 @@ func _physics_process(delta: float) -> void:
 	global_position += step
 	for t in Util.enemies(world):
 		if Util.hit_point(t).distance_to(global_position) <= 5.0 + Util.ENEMY_RADIUS:
-			t.take_damage(damage)
+			CombatUtil.deal_player_damage(self, t, damage)
 			_burst(world)
 			return
 

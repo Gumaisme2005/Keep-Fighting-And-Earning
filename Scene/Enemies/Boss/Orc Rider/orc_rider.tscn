@@ -405,13 +405,13 @@ height = 38.0
 size = Vector2(38, 49)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8vrlf"]
-size = Vector2(36.25, 36)
+size = Vector2(40, 56)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v5gy4"]
-size = Vector2(98.5, 72.5)
+size = Vector2(98.5, 108)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_qbdty"]
-size = Vector2(157.03125, 45.5)
+[sub_resource type="CircleShape2D" id="CircleShape2D_qbdty"]
+radius = 65.0
 
 [node name="OrcRider" type="CharacterBody2D" unique_id=1307738042]
 script = ExtResource("1_n6h30")
@@ -437,18 +437,17 @@ shape = SubResource("RectangleShape2D_1vivr")
 [node name="Hitbox" type="Area2D" parent="." unique_id=1093423055]
 
 [node name="Shape1" type="CollisionShape2D" parent="Hitbox" unique_id=589613444]
-position = Vector2(37, -13)
+position = Vector2(37, -5)
 shape = SubResource("RectangleShape2D_8vrlf")
 disabled = true
 
 [node name="Shape2" type="CollisionShape2D" parent="Hitbox" unique_id=1170060085]
-position = Vector2(30.75, -31.75)
+position = Vector2(26, -12)
 shape = SubResource("RectangleShape2D_v5gy4")
 disabled = true
 
 [node name="Shape3" type="CollisionShape2D" parent="Hitbox" unique_id=286701261]
-position = Vector2(1.515625, -21.25)
-shape = SubResource("RectangleShape2D_qbdty")
+shape = SubResource("CircleShape2D_qbdty")
 disabled = true
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]

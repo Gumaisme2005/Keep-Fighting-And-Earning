@@ -5,6 +5,7 @@ const PerkDatabase = preload("res://Scene/Perks/PerkDatabase.gd")
 const PERK_MANAGER_SCRIPT = preload("res://Scene/Perks/PerkManager.gd")
 
 class MockPlayerForPerks extends Node2D:
+	@warning_ignore("unused_signal")
 	signal stats_changed(hp, max_hp, armor, max_armor)
 
 	var base_max_hp: int = 4
@@ -170,16 +171,16 @@ func test_apply_perk_to_mock_player() -> void:
 	_assert_test(player.max_hp == 5 and player.hp == 5, "Bonus HP applied (+1 HP -> 5)")
 	_assert_test(player.max_armor == 3 and player.current_armor == 3, "Bonus Armor applied (+1 Armor -> 3)")
 
-	# 2. Thêm Bộ Pháp Tật Phong (+15 Tốc độ sau khi người dùng tinh chỉnh)
+	# 2. Thêm Bộ Pháp Tật Phong (+15 Tốc độ, được truy vấn qua query hook, không ghi đè player.speed để tránh cộng 2 lần)
 	var perk_speed := PerkDatabase.get_perk_by_id("swift_stride")
 	manager.add_perk(perk_speed, player)
-	var expected_spd = 150.0 + float(perk_speed.get_modifier("speed_bonus", 15.0))
-	_assert_test(player.speed == expected_spd, "Speed bonus applied (+%d -> %d)" % [int(perk_speed.get_modifier("speed_bonus", 15.0)), int(expected_spd)])
+	var expected_spd_bonus := float(perk_speed.get_modifier("speed_bonus", 15.0))
+	_assert_test(is_equal_approx(player.speed, 150.0 + expected_spd_bonus) and is_equal_approx(manager.get_total_speed_bonus(), expected_spd_bonus), "Speed bonus applied once to base speed (bonus=%.1f)" % manager.get_total_speed_bonus())
 
-	# 3. Thêm Lưỡi Kiếm Tôi Rèn (+1 Sát thương)
+	# 3. Thêm Lưỡi Kiếm Tôi Rèn (+1 Sát thương, được truy vấn qua query hook)
 	var perk_dmg := PerkDatabase.get_perk_by_id("sharpened_edge")
 	manager.add_perk(perk_dmg, player)
-	_assert_test(player.base_damage == 2, "Base damage applied (+1 -> 2)")
+	_assert_test(player.base_damage == 2 and manager.get_total_bonus_damage() == 1, "Bonus damage applied once to base_damage")
 
 	player.queue_free()
 	manager.queue_free()
@@ -288,17 +289,17 @@ func test_flat_damage_application_once() -> void:
 func test_stochastic_damage_resolution() -> void:
 	print("\n[TEST 8] Testing Stochastic Damage Resolution (Way 1)...")
 	# 1. Số nguyên thuần túy không bị biến đổi
-	_assert_test(PerkManager.resolve_stochastic_damage(3.0) == 3, "Integer damage 3.0 resolves exactly to 3")
-	_assert_test(PerkManager.resolve_stochastic_damage(0.0) == 0, "Zero damage resolves to 0")
+	_assert_test(PERK_MANAGER_SCRIPT.resolve_stochastic_damage(3.0) == 3, "Integer damage 3.0 resolves exactly to 3")
+	_assert_test(PERK_MANAGER_SCRIPT.resolve_stochastic_damage(0.0) == 0, "Zero damage resolves to 0")
 
 	# 2. Số lẻ 2.5 luôn cho ra 2 hoặc 3 (không bao giờ < 2 hoặc > 3)
-	var val_2_5 := PerkManager.resolve_stochastic_damage(2.5)
+	var val_2_5 := PERK_MANAGER_SCRIPT.resolve_stochastic_damage(2.5)
 	_assert_test(val_2_5 == 2 or val_2_5 == 3, "2.5 damage resolves to either 2 or 3")
 
 	# 3. Phân phối xác suất 2.5 sau 1000 lần thử phải có trung bình ~ 2.5
 	var sum := 0
 	for i in range(1000):
-		sum += PerkManager.resolve_stochastic_damage(2.5)
+		sum += PERK_MANAGER_SCRIPT.resolve_stochastic_damage(2.5)
 	var avg := float(sum) / 1000.0
 	_assert_test(avg >= 2.4 and avg <= 2.6, "Stochastic average of 2.5 dmg across 1000 hits is ~ 2.5 (Observed: %.3f)" % avg)
 

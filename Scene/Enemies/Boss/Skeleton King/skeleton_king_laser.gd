@@ -47,7 +47,7 @@ func _physics_process(delta: float) -> void:
 		var p := to_local(player.global_position)
 		for beam in beams:
 			if is_beam_active(beam) and _point_on_beam(beam, p):
-				FloorBalance.hit(player, damage, armor_piercing)
+				FloorBalance.ranged_hit(player, damage, armor_piercing)
 				player_hits += 1
 				hit_cooldown = PLAYER_HIT_COOLDOWN
 				break

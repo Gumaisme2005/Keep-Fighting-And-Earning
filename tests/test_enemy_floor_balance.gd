@@ -413,6 +413,7 @@ func test_sources() -> void:
 			p.current_armor = 12
 			var e = ordinary(f.room, id, floor_number)
 			e.player = p
+			e.is_attacking = true
 			e.position = Vector2(10, 0)
 			if id == "orc":
 				e.is_attacking = true
@@ -467,6 +468,7 @@ func test_sources() -> void:
 		hurtbox.name = "PlayerHurtbox"
 		f.p.add_child(hurtbox)
 		if id == "necromancer":
+			e.is_attacking = true
 			e._on_scythe_hitbox_area_entered(hurtbox)
 			check(f.p.hp == 98 and f.p.current_armor == 9, "Necromancer real scythe transmits 40% of five damage")
 			e.attack_poison()

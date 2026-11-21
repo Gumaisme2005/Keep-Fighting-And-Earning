@@ -3,6 +3,9 @@ extends RefCounted
 
 ## DungeonSpawner — Chuyên trách quy hoạch và khởi tạo thực thể (Player, Quái, Boss, Rương, Bẫy gai, Portal).
 
+## Thương nhân lang thang (hiệp sĩ Joanna / pháp sư Eleonore) có thể đứng ở phòng xuất phát tầng 3, 6, 9, 12…
+const WANDERING_MERCHANT = preload("res://Scene/Map/Merchants/wandering_merchant.gd")
+
 static func plan_traps(gen: TileMap) -> void:
 	gen.reserved_trap_positions.clear()
 
@@ -148,7 +151,7 @@ static func spawn_entities(gen: TileMap) -> void:
 			manager.tilemap = gen
 
 			var shape = RectangleShape2D.new()
-			shape.size = Vector2((room.size.x - 4) * 16, (room.size.y - 4) * 16)
+			shape.size = Vector2(room.size.x * 16, room.size.y * 16)
 			manager.get_node("CollisionShape2D").shape = shape
 			manager.global_position = gen.to_global(gen.map_to_local(room.get_center()))
 
@@ -183,7 +186,7 @@ static func spawn_entities(gen: TileMap) -> void:
 			manager.tilemap = gen
 
 			var shape = RectangleShape2D.new()
-			shape.size = Vector2((room.size.x - 4) * 16, (room.size.y - 4) * 16)
+			shape.size = Vector2(room.size.x * 16, room.size.y * 16)
 			manager.get_node("CollisionShape2D").shape = shape
 			manager.global_position = gen.to_global(gen.map_to_local(room.get_center()))
 
@@ -237,6 +240,8 @@ static func spawn_entities(gen: TileMap) -> void:
 		var trap = gen.SPIKE_TRAP.instantiate()
 		gen.add_child(trap)
 		trap.global_position = gen.to_global(gen.map_to_local(pos))
+
+	WANDERING_MERCHANT.spawn_on_floor(gen)
 
 	gen.DUNGEON_ATMOSPHERE.setup_dungeon_atmosphere(gen, gen.the_player, gen.get_effective_seed_string().hash())
 	if gen.is_inside_tree() and gen.get_node_or_null("/root/AudioManager") != null:

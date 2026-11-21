@@ -18,11 +18,13 @@ func _ready() -> void:
 	bomb_damage_mult = int(cfg.get("bomb_damage_mult", 2))
 	bomb_bonus_damage = int(cfg.get("bomb_bonus_damage", 1))
 	super._ready()
+	_can_shoot_arrow = true
+	_pending_arrow = false
 	if animated_sprite != null:
 		if not animated_sprite.frame_changed.is_connected(_on_animated_sprite_frame_changed):
 			animated_sprite.frame_changed.connect(_on_animated_sprite_frame_changed)
-		if not animated_sprite.animation_finished.is_connected(_on_animated_sprite_animation_finished):
-			animated_sprite.animation_finished.connect(_on_animated_sprite_animation_finished)
+		if not animated_sprite.animation_finished.is_connected(_on_animated_sprite_2d_animation_finished):
+			animated_sprite.animation_finished.connect(_on_animated_sprite_2d_animation_finished)
 
 func _on_animated_sprite_frame_changed() -> void:
 	# Frames 0..4: Rút cung và kéo căng dây cung (wind-up draw)
@@ -32,24 +34,41 @@ func _on_animated_sprite_frame_changed() -> void:
 		_pending_arrow = false
 		_fire_arrow()
 
-func _on_animated_sprite_animation_finished() -> void:
+func _on_animated_sprite_2d_animation_finished() -> void:
+	if animated_sprite == null:
+		return
 	if animated_sprite.animation == "attack_1":
 		if _pending_arrow:
 			_pending_arrow = false
 			_fire_arrow()
-		if is_attacking:
-			is_attacking = false
-			if not is_dead and not is_hurt and not is_casting_skill:
-				animated_sprite.play("idle")
+		is_attacking = false
+		animated_sprite.speed_scale = 1.0
+		if not is_dead and not is_hurt and not is_casting_skill:
+			animated_sprite.play("idle")
+		return
+	if animated_sprite.animation == "hurt":
+		_can_shoot_arrow = true
+		_pending_arrow = false
+	super._on_animated_sprite_2d_animation_finished()
+
+func _on_attack_timer_expired() -> void:
+	_can_shoot_arrow = true
+	if animated_sprite != null:
+		animated_sprite.speed_scale = 1.0
+	if not is_dead and not is_hurt and not is_casting_skill and animated_sprite != null and animated_sprite.animation == "attack_1":
+		animated_sprite.play("idle")
+	super._on_attack_timer_expired()
 
 func attack() -> void:
 	if not _can_shoot_arrow:
 		return
 	_can_shoot_arrow = false
 	is_attacking = true
-	var attack_rate := get_attack_speed_multiplier()
-	_attack_timer = attack_cooldown_time / attack_rate
-	animated_sprite.play("attack_1", attack_rate)
+	var spd_scale: float = get_attack_speed_scale()
+	var eff_cd: float = get_effective_attack_cooldown(attack_cooldown_time)
+	_attack_timer = eff_cd
+	animated_sprite.speed_scale = spd_scale
+	animated_sprite.play("attack_1")
 
 	# Trong chế độ headless (chạy test CI/CD tự động), sinh mũi tên ngay lập tức để đồng bộ với UT-12
 	if DisplayServer.get_name() == "headless":
@@ -58,20 +77,11 @@ func attack() -> void:
 	else:
 		_pending_arrow = true
 		# Timer dự phòng an toàn nếu sự kiện frame_changed bị bỏ qua do giật lag
-		get_tree().create_timer(0.26 / attack_rate).timeout.connect(func():
+		get_tree().create_timer(0.26 / spd_scale).timeout.connect(func():
 			if is_instance_valid(self) and is_inside_tree() and _pending_arrow:
 				_pending_arrow = false
 				_fire_arrow()
 		)
-
-	get_tree().create_timer(attack_cooldown_time / attack_rate).timeout.connect(func():
-		if is_instance_valid(self) and is_inside_tree():
-			_can_shoot_arrow = true
-			if is_attacking:
-				is_attacking = false
-				if not is_dead and not is_hurt and not is_casting_skill:
-					animated_sprite.play("idle")
-	)
 
 func _fire_arrow() -> void:
 	if is_dead or is_hurt:
@@ -123,7 +133,9 @@ func use_special_skill() -> void:
 
 	start_skill_cooldown()
 	is_casting_skill = true
-	animated_sprite.play("skill")
+	if animated_sprite != null:
+		animated_sprite.speed_scale = 1.0
+		animated_sprite.play("skill")
 
 	if bomb_scene != null:
 		var parent_node = get_parent() if get_parent() != null else (get_tree().current_scene if get_tree() != null else null)
@@ -135,7 +147,7 @@ func use_special_skill() -> void:
 			bomb.throw_bomb(global_position, aim_pos)
 
 	await get_tree().create_timer(0.45).timeout
-	if not is_inside_tree():
+	if not is_instance_valid(self) or not is_inside_tree():
 		return
 
 	is_casting_skill = false

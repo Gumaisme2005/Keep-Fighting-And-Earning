@@ -14,6 +14,7 @@ extends "res://Scene/Character/Player 1_Pyrois/player.gd"
 const Sprites = preload("res://Scene/Character/LuongTho/LTSprites.gd")
 const Util = preload("res://Scene/Character/LuongTho/lt_util.gd")
 const Bullet = preload("res://Scene/Character/LuongTho/lt_bullet.gd")
+const CombatUtil = preload("res://Scene/Character/CombatUtil.gd")
 
 const FEET_Y := 3.0
 const TORSO_Y := -14.0
@@ -94,7 +95,8 @@ func _world() -> Node:
 	return get_parent()
 
 func _rate() -> float:
-	return (UPGRADED_ATTACK_RATE if form == "upgraded" else 1.0) * get_attack_speed_multiplier()
+	var base_rate := UPGRADED_ATTACK_RATE if form == "upgraded" else 1.0
+	return base_rate * get_attack_speed_scale()
 
 ## Damage of one hit: weapon damage, +1 in the white-haired form.
 func hit_damage(mult: int = 1) -> int:
@@ -237,7 +239,8 @@ func _begin(m: String, anim: String) -> void:
 	is_casting_skill = true
 	stance = "combat"
 	stance_t = 0.0
-	animated_sprite.play(anim, get_attack_speed_multiplier() if m in ["combo", "shoot"] else 1.0)
+	animated_sprite.speed_scale = _rate() if (m == "combo" or m == "shoot") else 1.0
+	animated_sprite.play(anim)
 
 func _end_move() -> void:
 	move = ""
@@ -246,6 +249,7 @@ func _end_move() -> void:
 	_untouchable = false
 	velocity = Vector2.ZERO
 	stance_t = 0.0
+	animated_sprite.speed_scale = UPGRADED_ATTACK_RATE if form == "upgraded" else 1.0
 	if not is_dead:
 		_play("ready" if stance == "combat" else "idle")
 
@@ -263,7 +267,7 @@ func _step_swing(direction: Vector2, input: Dictionary) -> void:
 	var anim := String(c["anim"])
 	if input["atk_edge"]:
 		_combo_queued = true
-	velocity = Vector2.ZERO if anim == "smash" else direction * speed * 0.3
+	velocity = Vector2.ZERO if anim == "smash" else direction * get_effective_speed() * 0.3
 	move_and_slide()
 	var hits: Array = c["hits"]
 	while _next_hit < hits.size() and move_t >= _t(anim, int(hits[_next_hit])):
@@ -295,9 +299,9 @@ func _swing_hit(c: Dictionary) -> void:
 			inside = p.distance_to(centre) <= float(ci[2]) + Util.ENEMY_RADIUS
 		if not inside or not Util.sees(world, torso, p):
 			continue
-		t.take_damage(dmg)
+		CombatUtil.deal_player_damage(self, t, dmg)
 		Bullet.spawn_hit(world, form, p)
-		if float(c["daze"]) > 0.0:
+		if float(c["daze"]) > 0.0 and is_instance_valid(t) and t.get("is_dead") != true:
 			Util.stun(t, float(c["daze"]))
 
 # ------------------------------------------------------------------ Right Click: Twin Barrels
@@ -309,7 +313,7 @@ func _start_shoot() -> void:
 	_begin("shoot", "shoot")
 
 func _step_shoot(direction: Vector2) -> void:
-	velocity = direction * speed * 0.3
+	velocity = direction * get_effective_speed() * 0.3
 	move_and_slide()
 	if not _fired and move_t >= _t("shoot", Sprites.SHOOT_FIRE_FRAME):
 		_fired = true
@@ -318,10 +322,15 @@ func _step_shoot(direction: Vector2) -> void:
 		_end_move()
 
 func _fire() -> void:
+	var world := _world()
+	var torso := global_position + Vector2(0, TORSO_Y)
 	var dir := current_aim_offset.normalized()
 	if dir == Vector2.ZERO or signf(dir.x) == -facing:
 		dir = Vector2(facing, dir.y).normalized() if dir != Vector2.ZERO else Vector2(facing, 0.0)
 	for spawn in Sprites.BULLET_SPAWNS:
+		var spawn_pos := frame_point(spawn)
+		if Util.is_wall(world, spawn_pos) or not Util.sees(world, torso, spawn_pos):
+			spawn_pos = torso
 		var b: Node2D = Bullet.new()
 		b.form = form
 		b.dir = dir
@@ -329,8 +338,8 @@ func _fire() -> void:
 		b.max_range = bullet_range
 		b.damage = hit_damage()
 		b.pierce = form == "upgraded"
-		_world().add_child(b)
-		b.global_position = frame_point(spawn)
+		world.add_child(b)
+		b.global_position = spawn_pos
 	shots_fired += 1
 
 # ------------------------------------------------------------------ Q: White Moon transformation

@@ -1,0 +1,709 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scene/UI/Shop/MageShopUI.gd" id="1_d8o2c"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/button_disabled.png" id="2_nga73"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/button_hover.png" id="3_g81ak"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/button_pressed.png" id="4_7gyc1"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/button.png" id="5_vnr6h"]
+[ext_resource type="FontFile" path="res://Assets/UI/Shop/forge5vn.fnt" id="6_tw2r6"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/panel.png" id="7_w6uij"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/banner.png" id="8_bscwh"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/card.png" id="9_lut45"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/seer_portrait.png" id="10_x6g6e"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/tag.png" id="11_yx5ud"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/coin_big.png" id="12_vf4sa"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/rarity_frame.png" id="13_v1bva"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/well.png" id="14_7horm"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/sold_out.png" id="15_l55rh"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Shop/coin.png" id="16_hsblh"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_v3hux"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+texture = ExtResource("2_nga73")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_clkyx"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+texture = ExtResource("3_g81ak")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r6v6l"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+texture = ExtResource("3_g81ak")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fp0m2"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+texture = ExtResource("4_7gyc1")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hv82v"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+texture = ExtResource("5_vnr6h")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7j8h0"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+texture = ExtResource("4_7gyc1")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="Theme" id="Theme_u8vod"]
+default_font = ExtResource("6_tw2r6")
+default_font_size = 10
+BannerLabel/base_type = &"Label"
+BannerLabel/colors/font_shadow_color = Color(0.3019608, 0.19215687, 0.2901961, 1)
+BannerLabel/constants/shadow_offset_x = 1
+BannerLabel/constants/shadow_offset_y = 1
+BannerLabel/constants/shadow_outline_size = 0
+Button/colors/font_color = Color(1, 1, 1, 1)
+Button/colors/font_disabled_color = Color(0.7882353, 0.6392157, 0.56078434, 1)
+Button/colors/font_focus_color = Color(1, 1, 1, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(1, 1, 1, 1)
+Button/font_sizes/font_size = 10
+Button/styles/disabled = SubResource("StyleBoxTexture_v3hux")
+Button/styles/focus = SubResource("StyleBoxTexture_clkyx")
+Button/styles/hover = SubResource("StyleBoxTexture_r6v6l")
+Button/styles/hover_pressed = SubResource("StyleBoxTexture_fp0m2")
+Button/styles/normal = SubResource("StyleBoxTexture_hv82v")
+Button/styles/pressed = SubResource("StyleBoxTexture_7j8h0")
+Label/colors/font_color = Color(1, 1, 1, 1)
+Label/constants/line_spacing = 0
+
+[node name="MageShopUI" type="CanvasLayer" unique_id=2047069253]
+script = ExtResource("1_d8o2c")
+
+[node name="Root" type="Control" parent="." unique_id=492043981]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Dim" type="ColorRect" parent="Root" unique_id=1573472533]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.06, 0.03, 0.07, 0.62)
+
+[node name="Window" type="Control" parent="Root" unique_id=1721980085]
+texture_filter = 1
+anchors_preset = 0
+offset_right = 424.0
+offset_bottom = 236.0
+theme = SubResource("Theme_u8vod")
+
+[node name="Frame" type="NinePatchRect" parent="Root/Window" unique_id=1103215815]
+layout_mode = 0
+offset_top = 10.0
+offset_right = 424.0
+offset_bottom = 236.0
+texture = ExtResource("7_w6uij")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+
+[node name="TitleBanner" type="NinePatchRect" parent="Root/Window" unique_id=1541291105]
+layout_mode = 0
+offset_left = 132.0
+offset_right = 292.0
+offset_bottom = 25.0
+texture = ExtResource("8_bscwh")
+patch_margin_left = 6
+patch_margin_top = 4
+patch_margin_right = 6
+patch_margin_bottom = 5
+axis_stretch_horizontal = 2
+
+[node name="Text" type="Label" parent="Root/Window/TitleBanner" unique_id=873611201]
+layout_mode = 0
+offset_left = 4.0
+offset_right = 156.0
+offset_bottom = 22.0
+theme_type_variation = &"BannerLabel"
+theme_override_font_sizes/font_size = 20
+text = "THE MAGE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PortraitCard" type="NinePatchRect" parent="Root/Window" unique_id=943345298]
+clip_children = 1
+layout_mode = 0
+offset_left = 10.0
+offset_top = 30.0
+offset_right = 92.0
+offset_bottom = 104.0
+texture = ExtResource("9_lut45")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="Portrait" type="TextureRect" parent="Root/Window/PortraitCard" unique_id=2002265050]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 9.0
+offset_top = 10.0
+offset_right = 73.0
+offset_bottom = 74.0
+mouse_filter = 2
+texture = ExtResource("10_x6g6e")
+
+[node name="NamePlate" type="NinePatchRect" parent="Root/Window" unique_id=519740115]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 96.0
+offset_right = 90.0
+offset_bottom = 113.0
+texture = ExtResource("8_bscwh")
+patch_margin_left = 6
+patch_margin_top = 4
+patch_margin_right = 6
+patch_margin_bottom = 5
+axis_stretch_horizontal = 2
+
+[node name="Text" type="Label" parent="Root/Window/NamePlate" unique_id=812917344]
+layout_mode = 0
+offset_left = 4.0
+offset_right = 74.0
+offset_bottom = 14.0
+theme_type_variation = &"BannerLabel"
+text = "THE SEERS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpeechCard" type="NinePatchRect" parent="Root/Window" unique_id=1212684054]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 117.0
+offset_right = 92.0
+offset_bottom = 182.0
+texture = ExtResource("9_lut45")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="Speech" type="Label" parent="Root/Window/SpeechCard" unique_id=1250291003]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 79.0
+offset_bottom = 63.0
+autowrap_mode = 3
+
+[node name="WalletPlate" type="NinePatchRect" parent="Root/Window" unique_id=1558722872]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 186.0
+offset_right = 92.0
+offset_bottom = 201.0
+texture = ExtResource("11_yx5ud")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="Coin" type="TextureRect" parent="Root/Window/WalletPlate" unique_id=421389664]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 13.0
+offset_bottom = 12.0
+texture = ExtResource("12_vf4sa")
+
+[node name="WalletTitle" type="Label" parent="Root/Window/WalletPlate" unique_id=1057959085]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 1.0
+offset_right = 56.0
+offset_bottom = 11.0
+theme_override_colors/font_color = Color(0.9098039, 0.7882353, 0.627451, 1)
+text = "COINS"
+
+[node name="Wallet" type="Label" parent="Root/Window/WalletPlate" unique_id=822801891]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 38.0
+offset_top = 1.0
+offset_right = 78.0
+offset_bottom = 11.0
+theme_override_colors/font_color = Color(0.9529412, 0.8901961, 0.627451, 1)
+text = "0"
+horizontal_alignment = 2
+
+[node name="Card0" type="NinePatchRect" parent="Root/Window" unique_id=397541951]
+layout_mode = 0
+offset_left = 98.0
+offset_top = 26.0
+offset_right = 198.0
+offset_bottom = 208.0
+texture = ExtResource("9_lut45")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="Frame" type="NinePatchRect" parent="Root/Window/Card0" unique_id=1235634254]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 182.0
+texture = ExtResource("13_v1bva")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="Rarity" type="Label" parent="Root/Window/Card0" unique_id=402805731]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 3.0
+offset_right = 98.0
+offset_bottom = 13.0
+horizontal_alignment = 1
+
+[node name="IconBox" type="NinePatchRect" parent="Root/Window/Card0" unique_id=1814522341]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 14.0
+offset_right = 68.0
+offset_bottom = 50.0
+texture = ExtResource("14_7horm")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="Icon" type="TextureRect" parent="Root/Window/Card0/IconBox" unique_id=1499540385]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 34.0
+offset_bottom = 34.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Sold" type="TextureRect" parent="Root/Window/Card0/IconBox" unique_id=554770248]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 34.0
+offset_bottom = 34.0
+mouse_filter = 2
+texture = ExtResource("15_l55rh")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameBanner" type="NinePatchRect" parent="Root/Window/Card0" unique_id=1617459949]
+layout_mode = 0
+offset_top = 52.0
+offset_right = 100.0
+offset_bottom = 77.0
+texture = ExtResource("8_bscwh")
+patch_margin_left = 6
+patch_margin_top = 4
+patch_margin_right = 6
+patch_margin_bottom = 5
+axis_stretch_horizontal = 2
+
+[node name="Text" type="Label" parent="Root/Window/Card0/NameBanner" unique_id=120098141]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 1.0
+offset_right = 95.0
+offset_bottom = 21.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Desc" type="Label" parent="Root/Window/Card0" unique_id=1168158167]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 79.0
+offset_right = 96.0
+offset_bottom = 160.0
+theme_override_colors/font_color = Color(0.95686275, 0.89411765, 0.83137256, 1)
+horizontal_alignment = 1
+autowrap_mode = 3
+clip_text = true
+
+[node name="Buy" type="Button" parent="Root/Window/Card0" unique_id=335449712]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 163.0
+offset_right = 92.0
+offset_bottom = 179.0
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/Card0/Buy" unique_id=1030912787]
+layout_mode = 0
+offset_top = 3.0
+offset_right = 84.0
+offset_bottom = 13.0
+mouse_filter = 2
+theme_override_constants/separation = 3
+alignment = 1
+
+[node name="Text" type="Label" parent="Root/Window/Card0/Buy/Price" unique_id=1135648002]
+layout_mode = 2
+text = "BUY"
+
+[node name="Coin" type="TextureRect" parent="Root/Window/Card0/Buy/Price" unique_id=731729539]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("16_hsblh")
+stretch_mode = 3
+
+[node name="Amount" type="Label" parent="Root/Window/Card0/Buy/Price" unique_id=311061621]
+layout_mode = 2
+
+[node name="Card1" type="NinePatchRect" parent="Root/Window" unique_id=487382345]
+layout_mode = 0
+offset_left = 206.0
+offset_top = 26.0
+offset_right = 306.0
+offset_bottom = 208.0
+texture = ExtResource("9_lut45")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="Frame" type="NinePatchRect" parent="Root/Window/Card1" unique_id=144594976]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 182.0
+texture = ExtResource("13_v1bva")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="Rarity" type="Label" parent="Root/Window/Card1" unique_id=610034538]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 3.0
+offset_right = 98.0
+offset_bottom = 13.0
+horizontal_alignment = 1
+
+[node name="IconBox" type="NinePatchRect" parent="Root/Window/Card1" unique_id=237175310]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 14.0
+offset_right = 68.0
+offset_bottom = 50.0
+texture = ExtResource("14_7horm")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="Icon" type="TextureRect" parent="Root/Window/Card1/IconBox" unique_id=1251016453]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 34.0
+offset_bottom = 34.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Sold" type="TextureRect" parent="Root/Window/Card1/IconBox" unique_id=1002846776]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 34.0
+offset_bottom = 34.0
+mouse_filter = 2
+texture = ExtResource("15_l55rh")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameBanner" type="NinePatchRect" parent="Root/Window/Card1" unique_id=207263922]
+layout_mode = 0
+offset_top = 52.0
+offset_right = 100.0
+offset_bottom = 77.0
+texture = ExtResource("8_bscwh")
+patch_margin_left = 6
+patch_margin_top = 4
+patch_margin_right = 6
+patch_margin_bottom = 5
+axis_stretch_horizontal = 2
+
+[node name="Text" type="Label" parent="Root/Window/Card1/NameBanner" unique_id=2107982280]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 1.0
+offset_right = 95.0
+offset_bottom = 21.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Desc" type="Label" parent="Root/Window/Card1" unique_id=1863639862]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 79.0
+offset_right = 96.0
+offset_bottom = 160.0
+theme_override_colors/font_color = Color(0.95686275, 0.89411765, 0.83137256, 1)
+horizontal_alignment = 1
+autowrap_mode = 3
+clip_text = true
+
+[node name="Buy" type="Button" parent="Root/Window/Card1" unique_id=2001745323]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 163.0
+offset_right = 92.0
+offset_bottom = 179.0
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/Card1/Buy" unique_id=194587994]
+layout_mode = 0
+offset_top = 3.0
+offset_right = 84.0
+offset_bottom = 13.0
+mouse_filter = 2
+theme_override_constants/separation = 3
+alignment = 1
+
+[node name="Text" type="Label" parent="Root/Window/Card1/Buy/Price" unique_id=333255318]
+layout_mode = 2
+text = "BUY"
+
+[node name="Coin" type="TextureRect" parent="Root/Window/Card1/Buy/Price" unique_id=1940608254]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("16_hsblh")
+stretch_mode = 3
+
+[node name="Amount" type="Label" parent="Root/Window/Card1/Buy/Price" unique_id=674421100]
+layout_mode = 2
+
+[node name="Card2" type="NinePatchRect" parent="Root/Window" unique_id=981691781]
+layout_mode = 0
+offset_left = 314.0
+offset_top = 26.0
+offset_right = 414.0
+offset_bottom = 208.0
+texture = ExtResource("9_lut45")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="Frame" type="NinePatchRect" parent="Root/Window/Card2" unique_id=459272878]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 182.0
+texture = ExtResource("13_v1bva")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="Rarity" type="Label" parent="Root/Window/Card2" unique_id=1684505077]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 3.0
+offset_right = 98.0
+offset_bottom = 13.0
+horizontal_alignment = 1
+
+[node name="IconBox" type="NinePatchRect" parent="Root/Window/Card2" unique_id=1101123867]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 14.0
+offset_right = 68.0
+offset_bottom = 50.0
+texture = ExtResource("14_7horm")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="Icon" type="TextureRect" parent="Root/Window/Card2/IconBox" unique_id=304548353]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 34.0
+offset_bottom = 34.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Sold" type="TextureRect" parent="Root/Window/Card2/IconBox" unique_id=1256126134]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 34.0
+offset_bottom = 34.0
+mouse_filter = 2
+texture = ExtResource("15_l55rh")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameBanner" type="NinePatchRect" parent="Root/Window/Card2" unique_id=257091567]
+layout_mode = 0
+offset_top = 52.0
+offset_right = 100.0
+offset_bottom = 77.0
+texture = ExtResource("8_bscwh")
+patch_margin_left = 6
+patch_margin_top = 4
+patch_margin_right = 6
+patch_margin_bottom = 5
+axis_stretch_horizontal = 2
+
+[node name="Text" type="Label" parent="Root/Window/Card2/NameBanner" unique_id=1345994359]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 1.0
+offset_right = 95.0
+offset_bottom = 21.0
+theme_type_variation = &"BannerLabel"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Desc" type="Label" parent="Root/Window/Card2" unique_id=1167358428]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 79.0
+offset_right = 96.0
+offset_bottom = 160.0
+theme_override_colors/font_color = Color(0.95686275, 0.89411765, 0.83137256, 1)
+horizontal_alignment = 1
+autowrap_mode = 3
+clip_text = true
+
+[node name="Buy" type="Button" parent="Root/Window/Card2" unique_id=975582255]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 163.0
+offset_right = 92.0
+offset_bottom = 179.0
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/Card2/Buy" unique_id=1126357652]
+layout_mode = 0
+offset_top = 3.0
+offset_right = 84.0
+offset_bottom = 13.0
+mouse_filter = 2
+theme_override_constants/separation = 3
+alignment = 1
+
+[node name="Text" type="Label" parent="Root/Window/Card2/Buy/Price" unique_id=754289090]
+layout_mode = 2
+text = "BUY"
+
+[node name="Coin" type="TextureRect" parent="Root/Window/Card2/Buy/Price" unique_id=869109813]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("16_hsblh")
+stretch_mode = 3
+
+[node name="Amount" type="Label" parent="Root/Window/Card2/Buy/Price" unique_id=2094155336]
+layout_mode = 2
+
+[node name="RerollButton" type="Button" parent="Root/Window" unique_id=1531729952]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 98.0
+offset_top = 211.0
+offset_right = 248.0
+offset_bottom = 227.0
+
+[node name="Price" type="HBoxContainer" parent="Root/Window/RerollButton" unique_id=965390653]
+layout_mode = 0
+offset_top = 3.0
+offset_right = 150.0
+offset_bottom = 13.0
+mouse_filter = 2
+theme_override_constants/separation = 3
+alignment = 1
+
+[node name="Text" type="Label" parent="Root/Window/RerollButton/Price" unique_id=1372761056]
+layout_mode = 2
+text = "REROLL"
+
+[node name="Coin" type="TextureRect" parent="Root/Window/RerollButton/Price" unique_id=1101297092]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("16_hsblh")
+stretch_mode = 3
+
+[node name="Amount" type="Label" parent="Root/Window/RerollButton/Price" unique_id=954902471]
+layout_mode = 2
+text = "15"
+
+[node name="Hint" type="Label" parent="Root/Window" unique_id=1165900906]
+layout_mode = 0
+offset_left = 254.0
+offset_top = 211.0
+offset_right = 324.0
+offset_bottom = 227.0
+theme_override_colors/font_color = Color(0.3019608, 0.19215687, 0.2901961, 1)
+text = "3 NEW BOONS"
+vertical_alignment = 1
+
+[node name="ExitButton" type="Button" parent="Root/Window" unique_id=977733082]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 330.0
+offset_top = 211.0
+offset_right = 414.0
+offset_bottom = 227.0
+text = "EXIT"

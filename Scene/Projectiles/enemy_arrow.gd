@@ -34,6 +34,8 @@ func _on_area_entered(area: Area2D) -> void:
 		return
 	if area.name == "PlayerHurtbox":
 		var target = area.get_parent()
+		if target == null or not is_instance_valid(target):
+			return
 		var tmap = get_parent()
 		if tmap != null and tmap.has_method("has_line_of_sight"):
 			var check_from: Vector2 = global_position - direction * 8.0
@@ -42,12 +44,11 @@ func _on_area_entered(area: Area2D) -> void:
 				is_broken = true
 				queue_free()
 				return
-		if target.has_method("take_damage"):
-			is_broken = true
-			FloorBalance.hit(target, damage, armor_piercing)
+		is_broken = true
+		FloorBalance.ranged_hit(target, damage, armor_piercing)
 		queue_free()
 
 func _on_body_entered(body: Node2D) -> void:
-	if body is TileMap:
+	if body is TileMap or body is StaticBody2D:
 		is_broken = true
 		queue_free()

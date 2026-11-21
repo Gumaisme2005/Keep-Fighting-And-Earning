@@ -228,7 +228,7 @@ func test_all_resources() -> void:
 		if item.rarity >= ItemData.Rarity.LEGENDARY and (item.type == ItemData.ItemType.WEAPON or item.attack_speed_bonus > 0.0):
 			check(is_equal_approx(item.attack_speed_bonus, 0.15 if item.rarity == ItemData.Rarity.LEGENDARY else 0.20), "Attack-speed budget: " + path.get_file())
 		check(item.get_tooltip_text().contains("+%d" % maxi(item.damage, item.armor)), "Tooltip uses current resource stats: " + path.get_file())
-	check(checked == 21, "All 21 equipment resources, including four legacy items, audited")
+	check(checked == 26, "All 26 equipment resources, including five shop and four legacy items, audited")
 	for item in ItemDatabase.get_all_items():
 		if item.type != ItemData.ItemType.POTION:
 			check(item.damage == weapons[item.rarity] if item.type == ItemData.ItemType.WEAPON else item.damage == 0, "Registered item primary/off-role damage: " + item.item_name)
@@ -739,7 +739,7 @@ func test_hero_attack_rates() -> void:
 				check(is_equal_approx(p._attack_timer, p.attack_cooldown_time / 1.15), "Miya shot cooldown scales once with equipment")
 			1, 2, 3:
 				p.attack()
-				check(is_equal_approx(p._attack_timer, 0.32 / 1.15), "Inherited melee attack timing scales once: " + p.hero_balance_id)
+				check(is_equal_approx(p._attack_timer, p.base_attack_cooldown / 1.15), "Configured melee attack timing scales once: " + p.hero_balance_id)
 			4:
 				p.intro_active = false
 				p._cast("left-click", 1, 0.5)

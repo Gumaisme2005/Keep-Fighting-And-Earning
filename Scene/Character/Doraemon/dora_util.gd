@@ -5,6 +5,7 @@ extends RefCounted
 
 const ENEMY_RADIUS := 8.0
 const Stun = preload("res://Scene/Character/Doraemon/dora_stun.gd")
+const CombatUtil = preload("res://Scene/Character/CombatUtil.gd")
 
 static var _frame_cache: int = -1
 static var _cached: Array = []
@@ -12,28 +13,24 @@ static var _cached: Array = []
 ## Living enemies in the dungeon (cached once per physics frame).
 static func enemies(world: Node) -> Array:
 	var frame := Engine.get_physics_frames()
-	if frame == _frame_cache and world != null:
-		var alive: Array = []
-		for t in _cached:
-			if is_instance_valid(t) and not t.is_queued_for_deletion() and t.get("is_dead") != true:
-				alive.append(t)
-		return alive
-	var result: Array = []
-	if world == null:
-		return result
-	for hb in world.find_children("Hurtbox", "Area2D", true, false):
-		var t = hb.get_parent()
-		if t != null and not t.has_method("take_damage"):
-			t = t.get_parent()
-		if t == null or not (t is Node2D) or not t.has_method("take_damage"):
-			continue
-		if t.is_in_group("player") or t.is_queued_for_deletion() or t.get("is_dead") == true:
-			continue
-		if not result.has(t):
+	if frame != _frame_cache and world != null:
+		var result: Array = []
+		for hb in world.find_children("Hurtbox", "Area2D", true, false):
+			var t = hb.get_parent()
+			if t != null and not t.has_method("take_damage"):
+				t = t.get_parent()
+			if t == null or not (t is Node2D) or not t.has_method("take_damage"):
+				continue
+			if t.is_in_group("player") or result.has(t):
+				continue
 			result.append(t)
-	_frame_cache = frame
-	_cached = result
-	return result.duplicate()
+		_frame_cache = frame
+		_cached = result
+	var alive: Array = []
+	for t in _cached:
+		if is_instance_valid(t) and not t.is_queued_for_deletion() and t.get("is_dead") != true and t.get("is_active") != false:
+			alive.append(t)
+	return alive
 
 ## Centre of an enemy's hurtbox (falls back to slightly above its feet).
 static func hit_point(t: Node2D) -> Vector2:
@@ -84,12 +81,12 @@ static func is_wall(world: Node, p: Vector2) -> bool:
 
 ## Deals damage and feeds the caster's power gauge.
 static func hit(caster: Node, target: Node, amount: int, stun_time: float = 0.0) -> void:
-	if not is_instance_valid(target) or amount <= 0 or target.get("is_dead") == true:
+	if not is_instance_valid(target) or amount <= 0 or target.get("is_dead") == true or target.get("is_active") == false:
 		return
-	target.take_damage(amount)
+	CombatUtil.deal_player_damage(caster, target, amount)
 	if is_instance_valid(caster) and caster.has_method("add_power"):
 		caster.add_power(3)
-	if stun_time > 0.0 and is_instance_valid(target) and not target.is_queued_for_deletion():
+	if stun_time > 0.0 and is_instance_valid(target) and not target.is_queued_for_deletion() and target.get("is_dead") != true:
 		stun(target, stun_time)
 
 ## Freezes an enemy's AI for a moment (rooted objects such as Skeleton King crystals are skipped).
@@ -149,7 +146,7 @@ static func safe_point(world: Node, from: Vector2, dir: Vector2, max_dist: float
 	while d >= min_dist:
 		var c := from + dir * d
 		var ok := true
-		for probe in [Vector2.ZERO, Vector2(6, 0), Vector2(-6, 0), Vector2(0, -8), Vector2(0, 4)]:
+		for probe in [Vector2.ZERO, Vector2(8, 0), Vector2(-8, 0), Vector2(0, -10), Vector2(0, 6)]:
 			if is_wall(world, c + probe):
 				ok = false
 				break

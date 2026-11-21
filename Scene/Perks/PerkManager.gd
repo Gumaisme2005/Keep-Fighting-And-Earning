@@ -53,11 +53,12 @@ func on_enemy_killed() -> void:
 					continue
 				# Deferred retaliation may kill an enemy after its owner has died.
 				if p.get("is_dead") != true and p.hp < p.max_hp:
-					p.hp = mini(p.max_hp, p.hp + 1)
+					var before_hp: int = p.hp
+					p.hp = mini(p.max_hp, p.hp + get_on_kill_heal_amount())
 					if p.has_signal("stats_changed"):
 						p.stats_changed.emit(p.hp, p.max_hp, p.current_armor, p.max_armor)
 					if get_tree():
-						get_tree().call_group("game_ui", "spawn_damage_number", p.global_position + Vector2(0, -24), 1, Color(0.2, 1.0, 0.4))
+						get_tree().call_group("game_ui", "spawn_damage_number", p.global_position + Vector2(0, -24), p.hp - before_hp, Color(0.2, 1.0, 0.4))
 				break
 
 # -----------------------------------------------------------------------------
@@ -181,11 +182,9 @@ func _apply_perk_to_player(perk: PerkData, player: Node2D) -> void:
 		player.max_armor += armor_bonus
 		player.current_armor += armor_bonus
 
-	if mods.has("speed_bonus"):
-		player.speed += float(mods["speed_bonus"])
-
-	if mods.has("bonus_damage"):
-		player.base_damage += int(mods["bonus_damage"])
+	# #75 reads the applied base values; applied_perks guards repeated application.
+	player.speed += float(mods.get("speed_bonus", 0.0))
+	player.base_damage += int(mods.get("bonus_damage", 0))
 
 	if mods.has("heal_instant"):
 		var heal: int = int(mods["heal_instant"])
@@ -338,6 +337,85 @@ func get_potion_drop_multiplier() -> float:
 		if m > mult:
 			mult = m
 	return mult
+
+func get_attack_speed_bonus() -> float:
+	var bonus := 0.0
+	for p in active_perks:
+		bonus += float(p.get_modifier("attack_speed_bonus", 0.0))
+	return bonus
+
+func get_on_kill_heal_amount() -> int:
+	var amt := 1
+	for p in active_perks:
+		if float(p.get_modifier("on_kill_heal_chance", 0.0)) > 0.0:
+			amt = maxi(amt, int(p.get_modifier("on_kill_heal_amt", 1)))
+	return amt
+
+func has_slow_on_hit() -> bool:
+	for p in active_perks:
+		if bool(p.get_modifier("on_hit_slow", false)):
+			return true
+	return false
+
+func get_slow_on_hit_params() -> Dictionary:
+	var ratio := 0.0
+	var duration := 0.0
+	for p in active_perks:
+		if bool(p.get_modifier("on_hit_slow", false)):
+			ratio = maxf(ratio, float(p.get_modifier("slow_ratio", 0.40)))
+			duration = maxf(duration, float(p.get_modifier("slow_duration", 2.0)))
+	return {"ratio": clampf(ratio, 0.0, 0.85), "duration": duration}
+
+func get_ranged_damage_reduction() -> int:
+	var reduction := 0
+	for p in active_perks:
+		reduction += int(p.get_modifier("ranged_damage_reduction", 0))
+	return maxi(0, reduction)
+
+func get_second_chance_invincibility_duration() -> float:
+	var dur := 2.5
+	for p in active_perks:
+		if bool(p.get_modifier("second_chance", false)):
+			dur = maxf(dur, float(p.get_modifier("invincibility_duration", 2.5)))
+	return dur
+
+func get_armor_break_blast_params() -> Dictionary:
+	var dmg := 3
+	var radius := 90.0
+	var found := false
+	for p in active_perks:
+		if bool(p.get_modifier("armor_break_blast", false)):
+			var d := int(p.get_modifier("blast_damage", 3))
+			var r := float(p.get_modifier("blast_radius", 90.0))
+			if not found:
+				dmg = d
+				radius = r
+				found = true
+			else:
+				dmg = maxi(dmg, d)
+				radius = maxf(radius, r)
+	return {"damage": dmg, "radius": radius}
+
+func get_chain_lightning_params() -> Dictionary:
+	var dmg := 2
+	var chains := 2
+	var rng_dist := 95.0
+	var found := false
+	for p in active_perks:
+		if bool(p.get_modifier("on_hit_lightning", false)):
+			var d := int(p.get_modifier("lightning_damage", 2))
+			var c := int(p.get_modifier("lightning_chain_count", 2))
+			var r := float(p.get_modifier("lightning_range", 95.0))
+			if not found:
+				dmg = d
+				chains = c
+				rng_dist = r
+				found = true
+			else:
+				dmg = maxi(dmg, d)
+				chains = maxi(chains, c)
+				rng_dist = maxf(rng_dist, r)
+	return {"damage": dmg, "chains": chains, "range": rng_dist}
 
 ## Chuyển đổi sát thương dạng số thực sang số nguyên theo cơ chế xác suất (Stochastic Damage).
 ## Phần nguyên luôn được gây ra, phần thập phân lẻ trở thành tỉ lệ phần trăm nảy thêm +1 sát thương.

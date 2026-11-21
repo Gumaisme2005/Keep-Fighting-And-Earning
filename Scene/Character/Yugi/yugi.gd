@@ -75,10 +75,31 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	if is_dead: return
+	if intro_active:
+		pressed_left = false
+		pressed_right = false
+		released_left = false
+		released_right = false
+		pending_q_skill = false
+		pending_hotbar_slot = -1
+		velocity = Vector2.ZERO
+		left_hold = -1
+		right_hold = -1
+		return
+	_step_cooldowns(delta)
 	var f: Dictionary
 	if GameManager.is_replaying:
 		if replay_frame_idx >= GameManager.replay_frames.size():
+			GameManager.is_replaying = false
+			pressed_left = false
+			pressed_right = false
+			released_left = false
+			released_right = false
+			pending_q_skill = false
+			pending_hotbar_slot = -1
 			velocity = Vector2.ZERO
+			if get_tree() != null:
+				get_tree().call_group("game_ui", "show_banner", "COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6))
 			return
 		f = GameManager.replay_frames[replay_frame_idx]
 		replay_frame_idx += 1
@@ -96,11 +117,6 @@ func _physics_process(delta: float) -> void:
 	released_right = false
 	pending_q_skill = false
 	pending_hotbar_slot = -1
-	if intro_active:
-		velocity = Vector2.ZERO
-		left_hold = -1
-		right_hold = -1
-		return
 	current_aim_offset = Vector2(float(f.get("ax", 32)), float(f.get("ay", 0)))
 	animated_sprite.flip_h = current_aim_offset.x < 0
 	# Keep the (inherited) sword hitbox on the side Yugi faces, like the base hero does.
@@ -127,13 +143,16 @@ func _physics_process(delta: float) -> void:
 			elif left: left_hold = 0
 			else: right_hold = 0
 		if action_left <= 0 and bool(f.get("lr", false)) and left_hold >= 0:
-			_cast("hold&release-left-click" if left_hold >= CHARGE_SECONDS else "left-click", 2 if left_hold >= CHARGE_SECONDS else 1, 0.6)
+			var is_charged := left_hold >= CHARGE_SECONDS
+			_cast("hold&release-left-click" if is_charged else "left-click", 2 if is_charged else 1, 0.6)
 		elif action_left <= 0 and bool(f.get("rr", false)) and right_hold >= 0:
 			_cast("hold&release-right-click" if right_hold >= CHARGE_SECONDS else "right-click", 3 if right_hold >= CHARGE_SECONDS else 1, 0.8)
 	if bool(f.get("lr", false)): left_hold = -1
 	if bool(f.get("rr", false)): right_hold = -1
 	velocity = move * get_effective_speed() * (0.25 if guarding else 0.65 if action_left > 0 else 1.0)
 	move_and_slide()
+	if action_left <= 0:
+		animated_sprite.speed_scale = 1.0
 	if action_left <= 0 and not is_hurt:
 		if not guarding:
 			animated_sprite.play("walk" if move != Vector2.ZERO else "idle")
@@ -168,13 +187,21 @@ func _set_guarding(active: bool) -> void:
 
 func _cast(move: String, multiplier: int, duration: float) -> void:
 	if intro_active: return
+	var rmb_spawn := global_position
+	var summon_dir := current_aim_offset.normalized()
+	if summon_dir == Vector2.ZERO: summon_dir = Vector2.RIGHT
+	if move in ["right-click", "hold&release-right-click"]:
+		rmb_spawn = _right_click_summon_position(summon_dir)
+		if rmb_spawn == global_position:
+			return
 	_set_guarding(false)
 	suppress_guard = true
 	left_hold = -1
 	right_hold = -1
 	var attack_rate := 1.0 if move.begins_with("result") else get_attack_speed_multiplier()
 	action_left = duration / attack_rate
-	animated_sprite.play("skill" if move.begins_with("result") else "attack_1" if move == "left-click" else move, attack_rate)
+	animated_sprite.speed_scale = attack_rate
+	animated_sprite.play("skill" if move.begins_with("result") else "attack_1" if move == "left-click" else move)
 	if move == "result-5":
 		var fire := RoomFire.new()
 		fire.caster = self
@@ -234,17 +261,12 @@ func _cast(move: String, multiplier: int, duration: float) -> void:
 	summon.move_name = move
 	summon.damage = get_total_damage() * multiplier
 	summon.caster = self
-	summon.direction = current_aim_offset.normalized()
-	if summon.direction == Vector2.ZERO: summon.direction = Vector2.RIGHT
+	summon.direction = summon_dir
 	summon.position = position
 	if move in ["right-click", "hold&release-right-click"]:
-		var spawn_position := _right_click_summon_position(summon.direction)
-		if spawn_position == global_position:
-			summon.free()
-			return
-		summon.position = spawn_position
+		summon.position = rmb_spawn
 		if get_parent() is Node2D:
-			summon.position = (get_parent() as Node2D).to_local(spawn_position)
+			summon.position = (get_parent() as Node2D).to_local(rmb_spawn)
 	get_parent().add_child(summon)
 
 func _nearest_ring_targets(limit: int = 2) -> Array[Node2D]:

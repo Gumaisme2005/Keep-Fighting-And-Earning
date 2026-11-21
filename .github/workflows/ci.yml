@@ -199,6 +199,24 @@ jobs:
           done
           diff -u "$RUNNER_TEMP/enemy_floor_30.trace" "$RUNNER_TEMP/enemy_floor_144.trace"
 
+      - name: Run Development Integration and Chest Contracts at 30 and 144 FPS
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/issue75-integration-data
+        run: |
+          set -euo pipefail
+          for fps in 30 144; do
+            godot --headless --max-fps "$fps" "res://tests/test_issue75_development_integration.tscn" 2>&1 | tee "$RUNNER_TEMP/integration_${fps}.log"
+            if grep -Eq '^[[:space:]]*(SCRIPT ERROR:|ERROR:|\[FAIL\]|\[RUNTIME\])' "$RUNNER_TEMP/integration_${fps}.log"; then exit 1; fi
+            grep -Eq '^INTEGRATION RESULTS: [0-9]+ PASSED, 0 FAILED$' "$RUNNER_TEMP/integration_${fps}.log"
+            grep '^\[TRACE\]' "$RUNNER_TEMP/integration_${fps}.log" > "$RUNNER_TEMP/integration_${fps}.trace"
+            godot --headless --max-fps "$fps" "res://tests/test_bug_bash_regressions.tscn" 2>&1 | tee "$RUNNER_TEMP/bug_bash_${fps}.log"
+            if grep -Eq '^[[:space:]]*(SCRIPT ERROR:|ERROR:|\[FAIL\]|\[RUNTIME\])' "$RUNNER_TEMP/bug_bash_${fps}.log"; then exit 1; fi
+            grep -Eq 'BUG BASH REGRESSION RESULTS: [0-9]+ PASSED, 0 FAILED$' "$RUNNER_TEMP/bug_bash_${fps}.log"
+          done
+          diff -u "$RUNNER_TEMP/integration_30.trace" "$RUNNER_TEMP/integration_144.trace"
+
       - name: Run Issue 75 Progression Distributions at 30 and 144 Render FPS
         timeout-minutes: 20
         shell: bash

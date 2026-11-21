@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://tests/test_bug_bash_regressions.gd" id="1_reg"]
+
+[node name="TestBugBashRegressions" type="Node"]
+script = ExtResource("1_reg")

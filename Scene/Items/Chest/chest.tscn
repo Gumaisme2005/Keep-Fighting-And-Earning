@@ -72,7 +72,7 @@ size = Vector2(16, 15)
 [node name="Chest" type="Area2D" unique_id=527873296]
 script = ExtResource("1_n7fmx")
 world_item_scene = ExtResource("2_df87b")
-loot_table = Array[ExtResource("3_kmyyh")]([ExtResource("4_w8u5x"), ExtResource("5_ykt7f"), ExtResource("6_wymtn"), ExtResource("7_kmyyh"), ExtResource("8_w8u5x"), ExtResource("9_wymtn")])
+loot_table = Array[ExtResource("3_kmyyh")]([])
 drop_chance = 0.8
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2097262699]

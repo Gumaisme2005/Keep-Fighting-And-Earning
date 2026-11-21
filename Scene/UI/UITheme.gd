@@ -111,14 +111,14 @@ static func get_icon(icon_name: String) -> Texture2D:
 	return atlas
 
 static func create_icon_rect(icon_name: String, size_px: int = 18) -> TextureRect:
-	var tr := TextureRect.new()
-	tr.texture = get_icon(icon_name)
-	tr.custom_minimum_size = Vector2(size_px, size_px)
-	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	tr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	return tr
+	var icon_rect := TextureRect.new()
+	icon_rect.texture = get_icon(icon_name)
+	icon_rect.custom_minimum_size = Vector2(size_px, size_px)
+	icon_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	icon_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return icon_rect
 
 static func create_icon_header(icon_name: String, text: String, font_size: int = 15, color: Color = COLOR_TEXT_GOLD, icon_size: int = 20) -> HBoxContainer:
 	var hbox := HBoxContainer.new()

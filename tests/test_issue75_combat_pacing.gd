@@ -8,7 +8,7 @@ class MeasuredHero extends "res://Scene/Character/Miyabi/miyabi.gd":
 	var hit_resolutions: Array = []
 	func apply_on_hit_effects(target: Variant, amount: int) -> int:
 		var resolved := super.apply_on_hit_effects(target, amount)
-		hit_resolutions.append({"primary": amount, "resolved": resolved, "critical_extra": resolved - amount})
+		hit_resolutions.append({"source": target.get("source"), "primary": amount, "resolved": resolved, "critical_extra": resolved - amount})
 		return resolved
 
 class MeasuredOrc extends "res://Scene/Enemies/Orc/orc.gd":
@@ -132,10 +132,13 @@ func measure(row: Dictionary, mode: String, variant: String) -> void:
 		events[event.source] += 1
 	check(e.is_dead and losses.values().reduce(func(a, b): return a + b, 0) == initial, "Actual Orc HP is conserved and encounter terminates: " + mode)
 	check(mode != "primary_only" or input_edges == 0, "API primary probe is not mislabeled as player input")
-	check(mode != "spirit_only" or (input_edges == 0 and events.spirit == initial), "Spirit-only damage uses real constant-one bolts")
+	check(mode != "spirit_only" or (input_edges == 0 and events.spirit > 0
+		and not p.hit_resolutions.is_empty()
+		and p.hit_resolutions.all(func(hit): return hit.primary == 1)
+		and losses.spirit + losses.on_hit_proc == initial), "Spirit-only bolts retain base damage one and account for #98 crit/procs separately")
 	measurements.append({"floor": row.floor, "seed": row.seed, "variant": variant, "mode": mode, "raw_damage": row.exit.effective_damage,
 		"orc_hp": initial, "input_attack_edges": input_edges, "skill_input_edges": skill_edges, "swings": swings,
-		"damage_events": events, "hp_lost_by_source": losses, "primary_critical_resolutions": p.hit_resolutions,
+		"damage_events": events, "hp_lost_by_source": losses, "hit_resolutions_by_source": p.hit_resolutions,
 		"spirit_shots": p.spirit.shots_fired, "fixed_ticks": tick, "target_died": e.is_dead})
 	room.free()
 	PerkManager.reset()

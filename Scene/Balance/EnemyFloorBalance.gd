@@ -27,3 +27,11 @@ static func hit(target: Node, amount: int, piercing: float) -> void:
 		target.take_damage(amount, piercing)
 	elif target.has_method("take_damage"):
 		target.take_damage(amount)
+
+static func ranged_hit(target: Node, amount: int, piercing: float) -> void:
+	if target is BasePlayer:
+		target.take_ranged_damage(amount, piercing)
+	elif target.has_method("take_ranged_damage"):
+		target.take_ranged_damage(amount)
+	else:
+		hit(target, amount, piercing)

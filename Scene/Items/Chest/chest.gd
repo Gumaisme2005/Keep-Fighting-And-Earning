@@ -39,7 +39,12 @@ func spawn_loot():
 	else:
 		rng.seed = int(global_position.x * 73856093) ^ int(global_position.y * 19349663)
 
-	if rng.randf() <= drop_chance:
+	var effective_drop_chance := drop_chance
+	var pm = get_node_or_null("/root/PerkManager")
+	if pm != null and pm.has_method("get_potion_drop_multiplier"):
+		effective_drop_chance = minf(1.0, drop_chance * float(pm.get_potion_drop_multiplier()))
+
+	if rng.randf() <= effective_drop_chance:
 		var floor_lvl := 1
 		if get_node_or_null("/root/GameManager") != null:
 			floor_lvl = GameManager.current_level
@@ -49,6 +54,7 @@ func spawn_loot():
 
 		for i in range(num_drops):
 			var dropped_item: ItemData = null
+			# Default treasure is floor-aware; only intentionally authored tables opt out.
 			if is_boss_chest or loot_table.is_empty():
 				dropped_item = ItemDatabase.get_random_drop(floor_lvl, is_boss_chest, rng)
 			else:

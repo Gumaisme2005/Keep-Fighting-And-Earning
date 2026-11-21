@@ -1,7 +1,6 @@
 extends Node
 
 const WEREWOLF_SCENE = preload("res://Scene/Enemies/Werewolf/werewolf.tscn")
-const BalanceConfig = preload("res://Scene/BalanceConfig.gd")
 
 var tests_passed: int = 0
 var tests_failed: int = 0

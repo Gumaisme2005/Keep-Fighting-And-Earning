@@ -5,6 +5,7 @@ var armor_piercing: float = 0.0
 
 var damage: int = 2
 var is_exploding: bool = false
+var _hit_targets: Dictionary = {}
 
 @onready var anim = $AnimatedSprite2D
 @onready var collision = $CollisionShape2D
@@ -20,6 +21,8 @@ func _ready() -> void:
 	explode()
 
 func explode():
+	if not is_instance_valid(self) or not is_inside_tree():
+		return
 	is_exploding = true
 	queue_redraw() # Dừng vẽ vòng đỏ cảnh báo
 	
@@ -30,14 +33,25 @@ func explode():
 	
 	# Chỉ bật sát thương xẹt qua 0.2s để tránh người chơi bị trừ máu nhiều lần
 	await get_tree().create_timer(0.2).timeout
+	if not is_instance_valid(self) or not is_inside_tree():
+		return
 	collision.set_deferred("disabled", true)
 
 # --- XỬ LÝ SÁT THƯƠNG ---
 func _on_area_entered(area: Area2D) -> void:
 	if area.name == "PlayerHurtbox":
 		var target = area.get_parent()
+		if target == null or not is_instance_valid(target):
+			return
+		var tid := target.get_instance_id()
+		if _hit_targets.has(tid):
+			return
+		var tmap = get_parent()
+		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
+			return
+		_hit_targets[tid] = true
 		if target.has_method("take_damage"):
-			FloorBalance.hit(target, damage, armor_piercing)
+			FloorBalance.ranged_hit(target, damage, armor_piercing)
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if anim.animation == "explode":

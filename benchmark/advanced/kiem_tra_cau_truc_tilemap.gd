@@ -54,8 +54,8 @@ func _run() -> void:
 			return
 		tilemap.set("num_rooms", room_total)
 		for trial in range(TESTS_PER_CONFIG):
-			var seed: String = "%s%05d" % [SEED_PREFIX, trial]
-			tilemap.set("map_seed", seed)
+			var trial_seed: String = "%s%05d" % [SEED_PREFIX, trial]
+			tilemap.set("map_seed", trial_seed)
 			tilemap.call("generate_dungeon")
 			var result: Dictionary = _validate(tilemap, room_total)
 			var hard_ok: bool = bool(result["hard_pass"])
@@ -65,7 +65,7 @@ func _run() -> void:
 				warnings += 1
 			completed += 1
 			f.store_csv_line(PackedStringArray([
-				str(room_total), str(trial + 1), seed,
+				str(room_total), str(trial + 1), trial_seed,
 				str(result["room_count"]), str(result["edge_count"]), str(result["graph_connected"]),
 				str(result["overlap_pairs"]), str(result["floor_cells"]), str(result["floor_components"]),
 				str(result["floor_unreachable_rooms"]), str(result["physics_layers"]),

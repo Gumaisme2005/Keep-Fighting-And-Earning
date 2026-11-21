@@ -3,6 +3,7 @@ extends Area2D
 ## every enemy it touches once, then wanders off. Stops at walls / closed gates.
 
 const Sprites = preload("res://Scene/Character/Doraemon/DoraemonSprites.gd")
+const CombatUtil = preload("res://Scene/Character/CombatUtil.gd")
 const RUN_TIME := 1.5
 const FADE_TIME := 0.3
 const SCALE := 0.75
@@ -81,6 +82,6 @@ func _on_area_entered(area: Area2D) -> void:
 	if hit_ids.has(id) or target.get("is_dead") == true:
 		return
 	hit_ids[id] = true
-	target.take_damage(damage)
+	CombatUtil.deal_player_damage(caster, target, damage)
 	if is_instance_valid(caster) and caster.has_method("add_power"):
 		caster.add_power(3)

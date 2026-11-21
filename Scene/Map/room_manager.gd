@@ -40,8 +40,8 @@ func _is_player_deep_inside_room(p: Node2D) -> bool:
 	if tilemap == null or not is_instance_valid(p) or room_rect.size == Vector2i.ZERO:
 		return false
 	var cell: Vector2i = tilemap.local_to_map(tilemap.to_local(p.global_position))
-	# Cửa nằm ở viền ngoài room_rect (position - 1 và end), nên bước vào room_rect.grow(-1) là đã qua hẳn cửa 2 ô gạch
-	return room_rect.grow(-1).has_point(cell)
+	# Cửa nằm ở viền ngoài room_rect (position - 1 và end), nên bước vào bên trong room_rect (kể cả sát mép tường) là đã vào phòng
+	return room_rect.has_point(cell) and not entrances.has(cell)
 
 func _keep_combatants_inside_locked_room(p: Node2D) -> void:
 	if room_rect.size == Vector2i.ZERO or tilemap == null:
@@ -108,6 +108,8 @@ func lock_room() -> void:
 			get_tree().call_group("game_ui", "show_banner", "GATES SEALED — VANQUISH THE HORDE!", Color(1.0, 0.75, 0.2))
 
 func _on_enemy_died() -> void:
+	if not is_inside_tree() or is_queued_for_deletion():
+		return
 	var all_dead := true
 	for enemy in enemies:
 		if is_instance_valid(enemy) and not enemy.is_queued_for_deletion() and not enemy.get("is_dead"):

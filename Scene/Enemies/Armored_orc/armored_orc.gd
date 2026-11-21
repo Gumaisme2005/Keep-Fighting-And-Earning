@@ -52,8 +52,9 @@ func _physics_process(delta: float) -> void:
 
 	var tmap = get_parent()
 	_ai_tick_timer -= delta
-	if _ai_tick_timer <= 0.0:
+	if _ai_tick_timer <= 0.0 or not _has_observed_los:
 		_ai_tick_timer = _ai_tick_interval
+		_has_observed_los = true
 		_cached_has_los = (tmap == null or not tmap.has_method("has_line_of_sight") or tmap.has_line_of_sight(global_position, player.global_position))
 		if distance > attack_range or not _cached_has_los:
 			_cached_steer_dir = tmap.get_smart_steer_direction(global_position, direction) if (tmap != null and tmap.has_method("get_smart_steer_direction")) else direction
@@ -90,7 +91,6 @@ func take_damage(damage_amount: int) -> void:
 	if current_armor > 0:
 		current_armor -= damage_amount
 		_spawn_damage_popup(damage_amount, Color(0.5, 0.85, 1.0))
-		animated_sprite.play("block")
 		is_attacking = false
 		axe_collision.set_deferred("disabled", true)
 		rage_collision.set_deferred("disabled", true)
@@ -99,6 +99,10 @@ func take_damage(damage_amount: int) -> void:
 			var overflow_damage = abs(current_armor)
 			current_armor = 0
 			hp -= overflow_damage
+			if hp > 0:
+				animated_sprite.play("hurt")
+		else:
+			animated_sprite.play("block")
 	else:
 		hp -= damage_amount
 		_spawn_damage_popup(damage_amount, Color(1.0, 0.9, 0.3))
@@ -132,8 +136,12 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		animated_sprite.play("idle")
 
 func _on_axe_hitbox_area_entered(area: Area2D) -> void:
+	if is_dead or not is_active or not is_attacking:
+		return
 	if area.name == "PlayerHurtbox":
 		var target = area.get_parent()
+		if target == null or not is_instance_valid(target):
+			return
 		var tmap = get_parent()
 		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
 			return
@@ -141,8 +149,12 @@ func _on_axe_hitbox_area_entered(area: Area2D) -> void:
 			FloorBalance.hit(target, normal_damage, armor_piercing)
 
 func _on_rage_hitbox_area_entered(area: Area2D) -> void:
+	if is_dead or not is_active or not is_attacking:
+		return
 	if area.name == "PlayerHurtbox":
 		var target = area.get_parent()
+		if target == null or not is_instance_valid(target):
+			return
 		var tmap = get_parent()
 		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
 			return

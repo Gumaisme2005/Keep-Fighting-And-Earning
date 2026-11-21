@@ -70,10 +70,18 @@ func test_legacy_rare_chest_pickup() -> void:
 	room.position = Vector2(4000, 4000)
 	add_child(room)
 	var chest = CHEST.instantiate()
+	# Legacy potions remain legal in explicitly authored special tables. The
+	# default scene now follows the authorized #87/#98 ItemDatabase contract.
+	chest.loot_table.assign([load("res://Scene/Items/Rare/iron_armor.tres"),
+		load("res://Scene/Items/Common/iron_helmet.tres"),
+		load("res://Scene/Items/Common/health_potion.tres"),
+		load("res://Scene/Items/Rare/big_health_potion.tres"),
+		load("res://Scene/Items/Legendary/mystic_sword.tres"),
+		load("res://Scene/Items/Common/iron_sword.tres")])
 	room.add_child(chest)
 	var legacy_path := "res://Scene/Items/Rare/big_health_potion.tres"
 	var chosen_seed := -1
-	# Find a seed that selects the legacy resource from the unmodified scene table.
+	# Find a seed that selects the legacy resource from this explicit special table.
 	for candidate_seed in range(1, 1000):
 		var rng := RandomNumberGenerator.new()
 		rng.seed = candidate_seed
@@ -82,7 +90,7 @@ func test_legacy_rare_chest_pickup() -> void:
 			if template.resource_path == legacy_path:
 				chosen_seed = candidate_seed
 				break
-	check(chosen_seed != -1, "Real ordinary chest can still select legacy Rare potion")
+	check(chosen_seed != -1, "Explicit custom chest can still select legacy Rare potion")
 	chest.loot_seed = chosen_seed
 	chest._on_body_entered(p)
 	chest._on_body_entered(p)

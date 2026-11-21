@@ -32,7 +32,7 @@ static func enemies(world: Node) -> Array:
 		_cached_world = weakref(world)
 	var alive: Array = []
 	for t in _cached:
-		if is_instance_valid(t) and not t.is_queued_for_deletion() and t.get("is_dead") != true:
+		if is_instance_valid(t) and not t.is_queued_for_deletion() and t.get("is_dead") != true and t.get("is_active") != false:
 			alive.append(t)
 	return alive
 

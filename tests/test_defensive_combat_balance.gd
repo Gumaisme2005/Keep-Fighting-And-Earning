@@ -4,7 +4,7 @@ const INVENTORY = preload("res://Scene/Character/InventoryManager.gd")
 
 class Player extends BasePlayer:
 	var scans: int = 0
-	func start_invincibility() -> void:
+	func start_invincibility(_duration: float = -1.0) -> void:
 		# Keep the real damage rejection rule without asynchronous flashing in fixtures.
 		is_invincible = true
 	func _get_defensive_targets(radius: float) -> Array[Node2D]:
