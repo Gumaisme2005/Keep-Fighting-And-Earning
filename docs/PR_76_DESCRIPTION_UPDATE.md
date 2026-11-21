@@ -1,56 +1,56 @@
-## Mục tiêu và trạng thái
+## Issue #75 — triển khai và trạng thái nghiệm thu, chưa đủ điều kiện merge
 
-Triển khai Issue #75 cho potion, phòng thủ, equipment/loot, enemy scaling và perk, tầng 1–6. **Chưa đủ điều kiện merge; chưa có final Approve; không đóng Issue #75.**
+Đã triển khai năm nhóm potion, Thorns/Armor Break, equipment/loot, enemy scaling và perk/armor tầng 1–6. Giữ budget trang bị, bảng rarity, gate equipment 5%, potion 2% (+2 điểm phần trăm khi HP <40%), pity 45, túi 4 potion, cooldown 8 giây và Rare potion mỗi rương boss.
 
-Anti-heal equip/unequip đã được sửa tại `76785b0`; potion HP và floor vitality vẫn tách riêng. Late ordinary weapon continuity tại `c3aa2fa` nâng damage normal tầng 6 từ 7,5 lên **8**, coverage **16/30**.
+Các fix production: equip/unequip không tự hồi HP (`76785b0`); HP potion và floor vitality tách riêng; late weapon continuity (`c3aa2fa`); loot world position sau deferred parenting (`b1f1e74`). Anti-heal đã sửa; damage median tầng 6 đã đạt 8, coverage 16/30.
 
-[CI của HEAD đầu lượt `d208c538` đã PASS](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/44751588021). Commit mới cần CI riêng; không suy ra từ run cũ.
+**HEAD feature:** `b1f1e74c54ee54ff0f368376045a1dfd57f07f95`.
+[Actions 44784340643](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/44784340643) **SUCCESS**; checkout log xác nhận đúng SHA. Đây là CI của feature, không chứng nhận cây tích hợp local.
 
-## Kết quả mới: thời điểm nhận phần thưởng
+## Numerical acceptance
 
-**Không thay đổi production.** Bốn giả thuyết mới chạy trong test harness; không lặp lại sáu ordinary-weight candidate hoặc treasure sword downgrade đã bị loại. Mỗi candidate đo cùng 30 seed × 3 policy × 6 tầng. Boss/treasure/perk timing chưa được cho phép thay đổi trong gameplay.
+30 seed, policy normal; **exit sau boss/hai rương, trước portal perk**. HP bên dưới là max HP; Orc calls gồm crit/proc, không phải primary hit thuần hoặc full kit.
 
-| Candidate test-only | Kết quả normal và lý do loại khỏi production |
-|---|---|
-| `boss_chest_lag`: đồ rương boss tầng 1–3 nhận ở đầu tầng sau | Damage tầng 1 về 2; giáp vẫn 5. HP coverage tầng 6 giảm 19→18/30; seed 26 mất 7 HP cuối run. |
-| `treasure_lock3`: đồ treasure đầu game giữ đến tầng 4 | Damage/Orc tầng 3 về 5/3; tầng 1–2 và giáp vẫn fail. HP coverage conservative tầng 6 giảm 18→17/30. |
-| `perk_lag`: dời offer perk đầu game một tầng | Không sửa median damage sớm; Orc tầng 6 tăng 3→3,5; seed 12 tầng 5 HP 19→12. |
-| `combined_lag`: kết hợp cả ba | Damage 1–3 về 2/3/4, Orc 2/3/3, nhưng giáp vẫn 4/6/7 vượt target; có mất 7 HP cuối run và pacing tầng 6 xấu đi. |
+| Tầng | HP target → actual | Armor target → actual | Damage target → actual | Orc HP | Orc calls target → actual | Coverage HP/A/D/O, /30 |
+|---:|---|---|---|---:|---|---|
+| 1 | 5–7 → 6 | 2–3 → 5 | 1–2 → 3,5 | 4 | 2–4 → 1,5 | 27/0/7/15 |
+| 2 | 8–10 → 10 | 3–4 → 7 | 2–3 → 6 | 8 | 3–4 → 2 | 20/0/3/2 |
+| 3 | 11–14 → 13 | 4–6 → 8 | 3–5 → 6 | 12 | 3–4 → 2 | 29/1/8/5 |
+| 4 | 15–19 → 16 | 5–7 → 9 | 5–7 → 7 | 17 | ~3 → 3 | 26/3/22/21 |
+| 5 | 19–25 → 20 | 7–9 → 10 | 7–9 → 7 | 22 | ~3 → 3 | 24/8/26/17 |
+| 6 | 23–30 → 23,5 | 8–10 → 12 | 8–10 → 8 | 27 | ~3 → 3 | 19/9/16/8 |
 
-Giữ nguyên identity/count/rarity/budget của đồ sinh ra và route ở cả 540 hàng cho mỗi candidate. Potion boss nhận ngay; cache giao đúng một lần, không tính lại là generated offer, không tự hồi HP. Perk giữ nguyên modifier và floor seed key; dời thời điểm offer có thể đổi lựa chọn do trạng thái hiện tại. Không reroll perk đã chọn.
+Armor FAIL cả sáu tầng; damage/pacing FAIL tầng 1–3. Orc coverage tầng 4–6 dùng đúng 3 làm tham khảo; mức coverage nghiệm thu chưa được chốt. Không áp dụng các reward/timing candidate đã bị loại.
 
-Không tìm thấy bug production mới về cộng trùng modifier, reward/potion duplication, pity reset, stack hay failed pickup. Bốn candidate đều giữ damage normal tầng 6 **8 và 16/30**, nhưng không có candidate hợp lệ để áp dụng.
+Potion normal: **796 generated / 267 collected / 184 consumed / 529 ground**, 30 run; median **26 / 9 / 6 / 17**. Generated/collected không gồm starter; consumed gồm starter (14 starter được dùng trong 30 run). Có một starter/run. Generated: ordinary 220, pity 127, guarantee 360, treasure 89.
 
-## Kiểm thử và giới hạn
+Hai rương × sáu boss bảo đảm 12 potion; route ít nhất 307 eligible kills cùng pity buộc ít nhất 6 potion quái trước treasure. **10–12 generated là SPECIFICATION CONFLICT**. Maintainer cần chọn rõ: giữ mechanics và sửa target; hoặc cho phép đủ thay đổi drop/guarantee/pity/route; hoặc định nghĩa metric khác và starter. Collected/consumed không thay thế generated.
 
-**25 suite × 30/144 FPS = 50 process exit 0**, có completion marker, không timeout/runtime/parser error. Mỗi cap: **45.605 assertion PASS / 0 FAIL**, cộng Yugi có PASS marker nhưng không xuất tổng assertion. Acquisition mở rộng **62→162/0**; progression **42.327/0**; real-scene matrix **337/0**. Potion, inventory/anti-heal, equipment, defensive, scaling, perk, hero, AI, replay, navigation và projectile đều PASS.
+## Development integration và regression
 
-Bốn progression candidate tại **cả 30 và 144 FPS** đều **42.688/0**, tám process exit 0. **12 cặp trace baseline + 4 cặp candidate** khớp; mỗi dataset khớp cả 540 record bốn phase và event stream giữa hai cap. Baseline giữ nguyên 540 record và 7.235 transition cũ. **8 Python tests PASS**, exit 0; import sạch. Lần focused test đầu có lỗi khai báo kiểu trong mã test, đã sửa; log lỗi được giữ lại, không tính vào gate PASS cuối.
+Fetch + direct origin xác nhận development `0667ee7e6fc808acf7353d75de31f4e342d4581d`; feature vẫn `b1f1e74`. #98/#88/#79 đã merge; #99 đóng **không merge**; #78 còn mở và không được nhập vào rehearsal.
 
-PASS assertion xác nhận invariant và phép đo; không thay thế numerical acceptance. Real-scene matrix dùng Miyabi/Orc thật trong arena stationary-target, tách input, swing, crit/proc/skill/spirit. Controlled scenarios giả định clear boss, không chứng minh survival sáu tầng. **Chưa thực hiện manual interactive playtest sáu tầng.**
+Detached rehearsal có **21 file conflict**; đã xử lý/stage 20. Còn quyết định ở `chest.gd::spawn_loot()` và `chest.tscn::loot_table`: #75 giữ legacy treasure identity/count/RNG; #98 đổi default sang ItemDatabase, loại legacy potion/sword và đổi RNG consumption. Hai contract không cùng đúng cho cùng default chest.
 
-## Numerical acceptance chưa đạt
+Cây local **tạm giữ legacy pool để kiểm tra**, không phải lựa chọn production; bug-bash `#87.2` vẫn FAIL. Không bỏ assertion này. Chưa commit/push combined tree; production feature nguyên HEAD.
 
-Production trước/sau lượt này giữ nguyên; normal exit sau reward, trước portal perk:
+Recovery xác nhận [#87](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/issues/87), được #98 đóng, yêu cầu actual ordinary treasure dùng ItemDatabase theo tầng. Chỉ để default rỗng rồi gán lại pool cũ trong spawner sẽ cần một ngoại lệ được maintainer phê duyệt, dù assertion default-scene có thể xanh. `treasure_favor` của #98 còn nhân gate rương 0,8 lên tối đa 1; cần chốt rõ tác động này khi bảo toàn seeded legacy outcomes.
 
-| Tầng | Max HP | Giáp | Raw damage | Orc attack calls có crit/proc | Coverage HP/A/D/O trên 30 |
-|---:|---:|---:|---:|---:|---|
-| 1 | 6 | 5 | 3,5 | 1,5 | 27/0/7/15 |
-| 2 | 10 | 7 | 6 | 2 | 20/0/3/2 |
-| 3 | 13 | 8 | 6 | 2 | 29/1/8/5 |
-| 4 | 16 | 9 | 7 | 3 | 26/3/22/21 |
-| 5 | 20 | 10 | 7 | 3 | 24/8/26/17 |
-| 6 | 23,5 | 12 | 8 | 3 | 19/9/16/8 |
+Maintainer cần chọn: (1) legacy #75 và phê duyệt thay thế contract #87; (2) ItemDatabase #98 và cho phép đổi treasure identity/RNG/baseline #75; hoặc (3) hybrid ghi rõ mapping từng source/caller, gate và RNG. **Khuyến nghị kỹ thuật là (2), chưa được phê duyệt**: giữ fix đã merge và rarity theo tầng. Boss hiện vẫn hai equipment rolls + một Rare potion mỗi rương; per-victory là quyết định riêng. Không có phép tính median mới hoặc tuyên bố cân bằng PASS cho phương án chưa chạy.
 
-Giáp median **FAIL tầng 1–6**; damage và Orc pacing **FAIL tầng 1–3**. Damage tầng 6 đạt median nhưng chỉ **16/30 seed** trong range. Không đổi phase, metric hoặc làm tròn để che failure; coverage bắt buộc vẫn cần nhóm quy định.
+Đã sửa các lỗi rehearsal với regression evidence: inventory remainder/pickup; flat perk/reset một lần; double timing Miyabi; ranged reduction + penetration; deferred coin giữ đúng giá trị cùng run và không credit old-run/replay; shop USE khi pause; budget của bốn shop resources. Fixtures giữ formula #75 và attack lifecycle #98.
 
-Potion normal: **796 generated / 267 collected / 184 consumed kể cả starter / 529 ground**; median **26/9/6**. Pity 45 với ít nhất 307 eligible kills buộc tối thiểu 6 potion từ quái; hai guarantee mỗi boss × sáu tầng thêm 12, đã thành **18 trước treasure**. Mục tiêu 10–12 generated là **SPECIFICATION CONFLICT**. Một guarantee mỗi victory chỉ giảm median có điều kiện xuống 20, vẫn chưa đủ. Không đổi nhãn collected/consumed thành PASS.
+Recovery đã chạy lại đầy đủ **39 suite × 30/144 FPS = 76 PASS / 2 FAIL** trên 78 lượt matrix; mỗi cap **46.208 assertion PASS / 1 FAIL**, cộng Yugi có PASS marker nhưng không có aggregate count. Hai FAIL đều là chest #87.2 (43/1, exit 1). Các suite cuối còn lại exit 0, có completion marker, không parser/runtime/lifecycle error hoặc timeout. Giữ riêng logs RED/timeout và các attempt chưa import bị dừng. Guild Hall dùng budget harness 660 giây, hoàn tất 105/0 trong 230,53 giây tại 30 FPS và 230,78 giây tại 144 FPS. Hai lượt tái hiện trực tiếp worktree cũng giữ đúng 43/1; không gộp vào 78 lượt matrix. Equipment 430/0, enemy-floor 1053/0, contract 19/0, progression 42.327/0; 12 cặp trace và 84 phép đo combat khớp. 540 record và 7.235 event khớp giữa hai cap và candidate trước; so feature chỉ khác metadata revival #98 ở 54 record/596 event, không khác stat/reward. Không sửa source/assertion để đạt số liệu này. **Combined gate vẫn FAIL**. Chi tiết nằm trong báo cáo tích hợp local; CI feature không thay thế gate này.
 
-## Quyết định và điều kiện merge
+#78 chưa được kiểm chứng trên combined branch: chỉ reset potion/vitality sau khi `start_new_run()` thực sự được chấp nhận; duplicate finish không được thêm history/signal/save/reward/transaction. API `void` hiện tại chưa chứng minh hợp đồng đó.
 
-1. Chốt coverage và giữ/revise exit targets hoặc cho phép rõ acquisition rules được thay đổi. Các timing candidate đo được chưa giải quyết toàn bộ gate và có durability tradeoff; không tự nerf budget, perk, hero hoặc tăng HP Orc.
-2. Chốt metric potion và thay đổi yêu cầu đủ để khả thi: giữ cơ chế thì revise target, hoặc cho phép thay guarantee/drop/pity/treasure/route; phải quy định starter/coverage.
-3. Development hiện chứa #79, #98 và #88; #78/#99 còn mở. Lượt này không merge development. Khi tích hợp sau, giữ potion/vitality trong công thức HP anti-heal và kiểm chứng wallet/merchant/Guild Hall/bug-bash cùng contract completion #78 trên cây kết hợp.
-4. Hoàn tất numerical acceptance, manual sáu tầng, regression/CI HEAD cuối và re-review/final Approve trước merge.
+## Điều kiện còn thiếu
 
-Chi tiết: [reward timing report](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/fix/issue-75-game-balance/docs/ISSUE_75_REWARD_TIMING_RESULTS.md), [earlier acquisition evidence](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/fix/issue-75-game-balance/docs/ISSUE_75_EARLY_BALANCE_RESULTS.md), [manual checklist](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/fix/issue-75-game-balance/docs/ISSUE_75_MANUAL_PLAYTEST.md). Raw logs/JSON/profile mới chỉ ở `.godot`; không thêm evidence dump lớn vào PR.
+- Maintainer chốt default treasure algorithm và identity/count/potion/RNG của #75/#98.
+- Chốt numerical targets/coverage và quyền đổi acquisition/reward nếu cần; giữ requirements bắt buộc đến khi có quyết định.
+- Chốt potion metric và cách xử lý mâu thuẫn nêu trên.
+- Combined regression PASS, exact-HEAD CI sau tích hợp và re-review.
+- **Manual sáu tầng: NOT VERIFIED.** Dùng [checklist hiện có](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/fix/issue-75-game-balance/docs/ISSUE_75_MANUAL_PLAYTEST.md), Miyabi, seed `ISSUE75-DISTRIBUTION-14`, rồi `04`/`20`; ghi commit/build, bốn phase/tầng và survival thật. Không thực hiện interactive playthrough trong lượt này.
+- **Reviewer approval: chưa có review Approve** tại kiểm tra 21/11/2026. Chưa được nhóm xác nhận đủ điều kiện merge.
+
+Không tự merge PR hoặc đóng Issue #75.
