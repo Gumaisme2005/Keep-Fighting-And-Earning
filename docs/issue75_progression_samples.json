@@ -1,0 +1,544 @@
+{
+  "schema": "issue75_controlled_progression_v1",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "classification": "Automated production-system reward and combat scenarios; not interactive or autonomous playthroughs.",
+  "seeds": [
+    "MIYABI-75-A",
+    "MIYABI-75-B",
+    "MIYABI-75-C"
+  ],
+  "method": [
+    "Start actual Miyabi at configured 4 HP / 2 armor / 1 damage, with her production starter potion.",
+    "Generate each 16-room floor with production density, variants, planned enemy types and loot seeds.",
+    "Assume successful defeat of all planned ordinary enemies. Invoke real death/equipment/potion code, with no incoming combat during reward collection.",
+    "Open all actual treasure chests and two actual victory chests using production seed derivation. Sample one boss equipment reward from its initial source RNG; boss phase RNG consumption is not modeled.",
+    "Greedily equip the strongest sampled weapon, armor and helmet using real inventory APIs. Discard replaced gear; prioritize max-HP potions while respecting four-potion capacity.",
+    "Use max-HP potions through real consumption code; simulate eight seconds of cooldown callbacks between successful uses. Simulate safe armor recovery through production regeneration callbacks.",
+    "Measure repeated single basic damage hits through real effective damage, on-hit procs and actual Orc damage/death handlers; exclude combo finishers, spirit shots, skills and Orc test-fight loot from rewards. Its discarded reward does not enter equipment/potion totals; the extra eligible Orc defeat still advances production kill/pity accounting.",
+    "Reconstruct a fresh real Miyabi combat probe from earned equipment, active perks and run potion progression. Measure actual Orc hit callbacks and repeated accepted hits until death; no regeneration gap, healing or counterattack. Accepted-hit sequence models spaced invulnerability windows, not wall-clock combat.",
+    "Choose the first of three production portal perk offers after each floor for the next floor. No player HP, maximum HP, armor capacity or damage stats are assigned to hit targets."
+  ],
+  "samples": [
+    {
+      "armor": 5,
+      "armor_after_hit": 3,
+      "current_armor": 5,
+      "equipment_found": 7,
+      "floor": 1,
+      "hit_damage": [
+        2,
+        2
+      ],
+      "hits": 2,
+      "idle_hits_to_death": 5,
+      "kills": 58,
+      "max_hp": 5,
+      "orc_hp": 4,
+      "orc_incoming_damage": 2,
+      "penetration": 0.0,
+      "perks": [],
+      "potion_hp": 0,
+      "potions_found": 4,
+      "potions_used_total": 0,
+      "raw_damage": 2.0,
+      "received_hp": 0,
+      "seed": "MIYABI-75-A"
+    },
+    {
+      "armor": 6,
+      "armor_after_hit": 3,
+      "current_armor": 6,
+      "equipment_found": 5,
+      "floor": 2,
+      "hit_damage": [
+        3,
+        3,
+        2
+      ],
+      "hits": 3,
+      "idle_hits_to_death": 4,
+      "kills": 58,
+      "max_hp": 6,
+      "orc_hp": 8,
+      "orc_incoming_damage": 3,
+      "penetration": 0.0,
+      "perks": [
+        "quick_reflexes"
+      ],
+      "potion_hp": 0,
+      "potions_found": 5,
+      "potions_used_total": 0,
+      "raw_damage": 3.0,
+      "received_hp": 0,
+      "seed": "MIYABI-75-A"
+    },
+    {
+      "armor": 7,
+      "armor_after_hit": 4,
+      "current_armor": 7,
+      "equipment_found": 10,
+      "floor": 3,
+      "hit_damage": [
+        4,
+        4,
+        2
+      ],
+      "hits": 3,
+      "idle_hits_to_death": 5,
+      "kills": 65,
+      "max_hp": 8,
+      "orc_hp": 12,
+      "orc_incoming_damage": 3,
+      "penetration": 0.0,
+      "perks": [
+        "quick_reflexes",
+        "blazing_edge"
+      ],
+      "potion_hp": 0,
+      "potions_found": 5,
+      "potions_used_total": 0,
+      "raw_damage": 4.0,
+      "received_hp": 0,
+      "seed": "MIYABI-75-A"
+    },
+    {
+      "armor": 8,
+      "armor_after_hit": 5,
+      "current_armor": 8,
+      "equipment_found": 11,
+      "floor": 4,
+      "hit_damage": [
+        6,
+        6,
+        1
+      ],
+      "hits": 3,
+      "idle_hits_to_death": 5,
+      "kills": 82,
+      "max_hp": 10,
+      "orc_hp": 17,
+      "orc_incoming_damage": 4,
+      "penetration": 0.3,
+      "perks": [
+        "quick_reflexes",
+        "blazing_edge",
+        "vitality_essence"
+      ],
+      "potion_hp": 0,
+      "potions_found": 6,
+      "potions_used_total": 0,
+      "raw_damage": 6.0,
+      "received_hp": 1,
+      "seed": "MIYABI-75-A"
+    },
+    {
+      "armor": 8,
+      "armor_after_hit": 5,
+      "current_armor": 8,
+      "equipment_found": 7,
+      "floor": 5,
+      "hit_damage": [
+        7,
+        7,
+        6
+      ],
+      "hits": 3,
+      "idle_hits_to_death": 5,
+      "kills": 90,
+      "max_hp": 12,
+      "orc_hp": 22,
+      "orc_incoming_damage": 4,
+      "penetration": 0.3,
+      "perks": [
+        "quick_reflexes",
+        "blazing_edge",
+        "vitality_essence",
+        "fleet_foot"
+      ],
+      "potion_hp": 2,
+      "potions_found": 7,
+      "potions_used_total": 1,
+      "raw_damage": 7.0,
+      "received_hp": 1,
+      "seed": "MIYABI-75-A"
+    },
+    {
+      "armor": 9,
+      "armor_after_hit": 6,
+      "current_armor": 9,
+      "equipment_found": 10,
+      "floor": 6,
+      "hit_damage": [
+        7,
+        7,
+        7,
+        6
+      ],
+      "hits": 4,
+      "idle_hits_to_death": 5,
+      "kills": 96,
+      "max_hp": 15,
+      "orc_hp": 27,
+      "orc_incoming_damage": 5,
+      "penetration": 0.4,
+      "perks": [
+        "quick_reflexes",
+        "blazing_edge",
+        "vitality_essence",
+        "fleet_foot",
+        "sharpened_whetstone"
+      ],
+      "potion_hp": 4,
+      "potions_found": 7,
+      "potions_used_total": 2,
+      "raw_damage": 7.0,
+      "received_hp": 2,
+      "seed": "MIYABI-75-A"
+    },
+    {
+      "armor": 6,
+      "armor_after_hit": 4,
+      "current_armor": 6,
+      "equipment_found": 9,
+      "floor": 1,
+      "hit_damage": [
+        4
+      ],
+      "hits": 1,
+      "idle_hits_to_death": 6,
+      "kills": 62,
+      "max_hp": 6,
+      "orc_hp": 4,
+      "orc_incoming_damage": 2,
+      "penetration": 0.0,
+      "perks": [],
+      "potion_hp": 0,
+      "potions_found": 3,
+      "potions_used_total": 0,
+      "raw_damage": 6.0,
+      "received_hp": 0,
+      "seed": "MIYABI-75-B"
+    },
+    {
+      "armor": 7,
+      "armor_after_hit": 4,
+      "current_armor": 7,
+      "equipment_found": 11,
+      "floor": 2,
+      "hit_damage": [
+        8
+      ],
+      "hits": 1,
+      "idle_hits_to_death": 5,
+      "kills": 68,
+      "max_hp": 8,
+      "orc_hp": 8,
+      "orc_incoming_damage": 3,
+      "penetration": 0.0,
+      "perks": [
+        "sharpened_whetstone"
+      ],
+      "potion_hp": 1,
+      "potions_found": 5,
+      "potions_used_total": 1,
+      "raw_damage": 6.0,
+      "received_hp": 0,
+      "seed": "MIYABI-75-B"
+    },
+    {
+      "armor": 9,
+      "armor_after_hit": 6,
+      "current_armor": 9,
+      "equipment_found": 7,
+      "floor": 3,
+      "hit_damage": [
+        6,
+        6
+      ],
+      "hits": 2,
+      "idle_hits_to_death": 6,
+      "kills": 84,
+      "max_hp": 9,
+      "orc_hp": 12,
+      "orc_incoming_damage": 3,
+      "penetration": 0.0,
+      "perks": [
+        "sharpened_whetstone",
+        "reinforced_aegis"
+      ],
+      "potion_hp": 2,
+      "potions_found": 7,
+      "potions_used_total": 2,
+      "raw_damage": 6.0,
+      "received_hp": 0,
+      "seed": "MIYABI-75-B"
+    },
+    {
+      "armor": 9,
+      "armor_after_hit": 6,
+      "current_armor": 9,
+      "equipment_found": 10,
+      "floor": 4,
+      "hit_damage": [
+        7,
+        7,
+        3
+      ],
+      "hits": 3,
+      "idle_hits_to_death": 5,
+      "kills": 83,
+      "max_hp": 11,
+      "orc_hp": 17,
+      "orc_incoming_damage": 4,
+      "penetration": 0.3,
+      "perks": [
+        "sharpened_whetstone",
+        "reinforced_aegis",
+        "vampiric_fang"
+      ],
+      "potion_hp": 4,
+      "potions_found": 7,
+      "potions_used_total": 3,
+      "raw_damage": 7.0,
+      "received_hp": 1,
+      "seed": "MIYABI-75-B"
+    },
+    {
+      "armor": 10,
+      "armor_after_hit": 7,
+      "current_armor": 10,
+      "equipment_found": 7,
+      "floor": 5,
+      "hit_damage": [
+        8,
+        8,
+        5
+      ],
+      "hits": 3,
+      "idle_hits_to_death": 6,
+      "kills": 83,
+      "max_hp": 12,
+      "orc_hp": 22,
+      "orc_incoming_damage": 4,
+      "penetration": 0.3,
+      "perks": [
+        "sharpened_whetstone",
+        "reinforced_aegis",
+        "vampiric_fang",
+        "venomous_strike"
+      ],
+      "potion_hp": 4,
+      "potions_found": 4,
+      "potions_used_total": 3,
+      "raw_damage": 8.0,
+      "received_hp": 1,
+      "seed": "MIYABI-75-B"
+    },
+    {
+      "armor": 10,
+      "armor_after_hit": 7,
+      "current_armor": 10,
+      "equipment_found": 12,
+      "floor": 6,
+      "hit_damage": [
+        8,
+        8,
+        8
+      ],
+      "hits": 3,
+      "idle_hits_to_death": 5,
+      "kills": 101,
+      "max_hp": 12,
+      "orc_hp": 27,
+      "orc_incoming_damage": 5,
+      "penetration": 0.4,
+      "perks": [
+        "sharpened_whetstone",
+        "reinforced_aegis",
+        "vampiric_fang",
+        "venomous_strike",
+        "quick_reflexes"
+      ],
+      "potion_hp": 4,
+      "potions_found": 6,
+      "potions_used_total": 3,
+      "raw_damage": 8.0,
+      "received_hp": 2,
+      "seed": "MIYABI-75-B"
+    },
+    {
+      "armor": 5,
+      "armor_after_hit": 3,
+      "current_armor": 5,
+      "equipment_found": 7,
+      "floor": 1,
+      "hit_damage": [
+        4
+      ],
+      "hits": 1,
+      "idle_hits_to_death": 6,
+      "kills": 51,
+      "max_hp": 7,
+      "orc_hp": 4,
+      "orc_incoming_damage": 2,
+      "penetration": 0.0,
+      "perks": [],
+      "potion_hp": 1,
+      "potions_found": 6,
+      "potions_used_total": 1,
+      "raw_damage": 6.0,
+      "received_hp": 0,
+      "seed": "MIYABI-75-C"
+    },
+    {
+      "armor": 7,
+      "armor_after_hit": 4,
+      "current_armor": 7,
+      "equipment_found": 10,
+      "floor": 2,
+      "hit_damage": [
+        6,
+        2
+      ],
+      "hits": 2,
+      "idle_hits_to_death": 5,
+      "kills": 53,
+      "max_hp": 8,
+      "orc_hp": 8,
+      "orc_incoming_damage": 3,
+      "penetration": 0.0,
+      "perks": [
+        "swift_stride"
+      ],
+      "potion_hp": 1,
+      "potions_found": 3,
+      "potions_used_total": 1,
+      "raw_damage": 6.0,
+      "received_hp": 0,
+      "seed": "MIYABI-75-C"
+    },
+    {
+      "armor": 10,
+      "armor_after_hit": 7,
+      "current_armor": 10,
+      "equipment_found": 11,
+      "floor": 3,
+      "hit_damage": [
+        6,
+        6
+      ],
+      "hits": 2,
+      "idle_hits_to_death": 7,
+      "kills": 65,
+      "max_hp": 9,
+      "orc_hp": 12,
+      "orc_incoming_damage": 3,
+      "penetration": 0.0,
+      "perks": [
+        "swift_stride",
+        "sturdy_plating"
+      ],
+      "potion_hp": 1,
+      "potions_found": 5,
+      "potions_used_total": 1,
+      "raw_damage": 6.0,
+      "received_hp": 0,
+      "seed": "MIYABI-75-C"
+    },
+    {
+      "armor": 11,
+      "armor_after_hit": 8,
+      "current_armor": 11,
+      "equipment_found": 7,
+      "floor": 4,
+      "hit_damage": [
+        6,
+        6,
+        5
+      ],
+      "hits": 3,
+      "idle_hits_to_death": 6,
+      "kills": 89,
+      "max_hp": 10,
+      "orc_hp": 17,
+      "orc_incoming_damage": 4,
+      "penetration": 0.3,
+      "perks": [
+        "swift_stride",
+        "sturdy_plating",
+        "treasure_favor"
+      ],
+      "potion_hp": 1,
+      "potions_found": 4,
+      "potions_used_total": 1,
+      "raw_damage": 6.0,
+      "received_hp": 1,
+      "seed": "MIYABI-75-C"
+    },
+    {
+      "armor": 11,
+      "armor_after_hit": 8,
+      "current_armor": 11,
+      "equipment_found": 8,
+      "floor": 5,
+      "hit_damage": [
+        7,
+        7,
+        7,
+        1
+      ],
+      "hits": 4,
+      "idle_hits_to_death": 6,
+      "kills": 96,
+      "max_hp": 10,
+      "orc_hp": 22,
+      "orc_incoming_damage": 4,
+      "penetration": 0.3,
+      "perks": [
+        "swift_stride",
+        "sturdy_plating",
+        "treasure_favor",
+        "sharpened_edge"
+      ],
+      "potion_hp": 1,
+      "potions_found": 8,
+      "potions_used_total": 1,
+      "raw_damage": 7.0,
+      "received_hp": 1,
+      "seed": "MIYABI-75-C"
+    },
+    {
+      "armor": 12,
+      "armor_after_hit": 9,
+      "current_armor": 12,
+      "equipment_found": 10,
+      "floor": 6,
+      "hit_damage": [
+        8,
+        8,
+        8,
+        1
+      ],
+      "hits": 4,
+      "idle_hits_to_death": 6,
+      "kills": 90,
+      "max_hp": 14,
+      "orc_hp": 27,
+      "orc_incoming_damage": 5,
+      "penetration": 0.4,
+      "perks": [
+        "swift_stride",
+        "sturdy_plating",
+        "treasure_favor",
+        "sharpened_edge",
+        "blazing_edge"
+      ],
+      "potion_hp": 3,
+      "potions_found": 5,
+      "potions_used_total": 2,
+      "raw_damage": 8.0,
+      "received_hp": 2,
+      "seed": "MIYABI-75-C"
+    }
+  ]
+}

@@ -82,26 +82,26 @@ func test_minecraft_item_stacking() -> void:
 	potion.heal_amount = 2
 	potion.max_stack = 16
 
-	# Add 8 health potions
+	# Only four of eight units fit; rejected units remain on the source stack.
 	var ok1 = inv.add_item(potion, 8)
-	assert_test(ok1, "Adding 8 potions succeeded")
+	assert_test(not ok1 and potion.stack_count == 4, "Adding 8 potions accepts 4 and retains 4")
 	assert_test(inv.bag.size() == 16, "Inventory maintains fixed 16 slots invariant")
-	assert_test(inv.get_occupied_slots_count() == 1, "8 potions occupy exactly 1 inventory slot (Minecraft-style)")
-	assert_test(inv.bag[0] != null and inv.bag[0].stack_count == 8, "Slot 0 stack_count equals 8")
+	assert_test(inv.get_occupied_slots_count() == 1, "4 potions occupy exactly 1 inventory slot")
+	assert_test(inv.bag[0] != null and inv.bag[0].stack_count == 4, "Slot 0 stack_count equals 4")
 
-	# Add 5 more health potions -> total 13
+	# Additional potions remain outside the full four-unit allowance.
 	var ok2 = inv.add_item(potion, 5)
-	assert_test(ok2, "Adding 5 more potions succeeded")
+	assert_test(not ok2 and potion.stack_count == 5, "Adding 5 more potions fails without losing any")
 	assert_test(inv.get_occupied_slots_count() == 1, "Still occupies exactly 1 slot")
-	assert_test(inv.bag[0].stack_count == 13, "Slot 0 stack_count merged to 13")
+	assert_test(inv.bag[0].stack_count == 4, "Potion total remains capped at 4")
 
-	# Add 5 more health potions -> total 18 (should cap slot 0 at 16, create slot 1 with 2)
+	# Repeating the pickup must not overflow into another slot.
 	var ok3 = inv.add_item(potion, 5)
-	assert_test(ok3, "Adding 5 more potions (exceeding max_stack 16) succeeded")
+	assert_test(not ok3, "Repeated addition cannot bypass potion capacity")
 	assert_test(inv.bag.size() == 16, "Inventory size remains fixed at 16")
-	assert_test(inv.get_occupied_slots_count() == 2, "Overflow created exactly 2nd slot")
-	assert_test(inv.bag[0].stack_count == 16, "First slot capped at max_stack 16")
-	assert_test(inv.bag[1] != null and inv.bag[1].stack_count == 2, "Second slot contains remainder 2")
+	assert_test(inv.get_occupied_slots_count() == 1, "Capacity does not overflow into a second slot")
+	assert_test(inv.bag[0].stack_count == 4, "First slot remains at 4")
+	assert_test(inv.bag[1] == null, "Second slot remains available for equipment")
 
 	inv.queue_free()
 
@@ -283,13 +283,13 @@ func test_anti_duplicate_partial_pickup() -> void:
 		junk.stack_count = 1
 		inv.bag[i] = junk
 
-	# 2. Slot 15 đặt 14 bình Health Potion (max stack = 16, chỉ còn chứa thêm được 2 bình)
+	# 2. Slot 15 has two potions; the global four-unit limit leaves room for two more.
 	var pot_slot = ITEM_DATA_SCRIPT.new()
 	pot_slot.item_name = "Health Potion"
 	pot_slot.type = ItemData.ItemType.POTION
 	pot_slot.heal_amount = 2
 	pot_slot.max_stack = 16
-	pot_slot.stack_count = 14
+	pot_slot.stack_count = 2
 	inv.bag[15] = pot_slot
 
 	assert_test(inv.get_occupied_slots_count() == 16, "All 16 slots are occupied")
@@ -306,9 +306,9 @@ func test_anti_duplicate_partial_pickup() -> void:
 	# 4. Nhặt đồ: Chỉ nhặt được 2 bình vào slot 15, còn dư 3 bình trên sàn
 	var fully_added = inv.add_item(floor_drop, floor_drop.stack_count)
 	assert_test(not fully_added, "add_item returned false due to partial capacity")
-	assert_test(inv.bag[15].stack_count == 16, "Slot 15 stack filled to exactly max_stack 16 (took 2 potions)")
+	assert_test(inv.bag[15].stack_count == 4, "Slot 15 reached total potion cap 4 (took 2 potions)")
 	assert_test(floor_drop.stack_count == 3, "Floor item stack_count reduced strictly to remainder 3 (Anti-Duplicate Guard)")
-	assert_test((inv.bag[15].stack_count - 14) + floor_drop.stack_count == 5, "Total item quantity strictly conserved (2 in bag + 3 on floor == 5)")
+	assert_test((inv.bag[15].stack_count - 2) + floor_drop.stack_count == 5, "Total item quantity strictly conserved (2 in bag + 3 on floor == 5)")
 
 	# 5. Khi balo đầy 100% không còn ô nào và không thể gộp thêm:
 	var sword = ITEM_DATA_SCRIPT.new()
@@ -500,24 +500,24 @@ func test_mythic_secondary_stats() -> void:
 	print("\n--- Test Group 8: Mythic Special Effects & Secondary Stats Verification ---")
 	var mythic_w := ItemDatabase.get_item("mythic_weapon")
 	assert_test(mythic_w != null, "Mythic weapon exists")
-	assert_test(mythic_w.damage == 12, "Mythic weapon has primary DMG = 12")
-	assert_test(mythic_w.attack_speed_bonus > 0.0, "Mythic weapon secondary stat: Attack Speed = +%d%%" % int(mythic_w.attack_speed_bonus * 100))
-	assert_test(mythic_w.armor > 0, "Mythic weapon secondary stat: Physical Armor = +%d" % mythic_w.armor)
-	assert_test(mythic_w.max_hp_bonus > 0, "Mythic weapon secondary stat: Max HP = +%d" % mythic_w.max_hp_bonus)
+	assert_test(mythic_w.damage == 6, "Mythic weapon has primary DMG = 6")
+	assert_test(mythic_w.attack_speed_bonus == 0.20, "Mythic weapon secondary stat: Attack Speed = +20%")
+	assert_test(mythic_w.armor == 2, "Mythic weapon secondary stat: Physical Armor = +2")
+	assert_test(mythic_w.max_hp_bonus == 2, "Mythic weapon secondary stat: Max HP = +2")
 	assert_test(mythic_w.special_effect.contains("Solar Ignite"), "Mythic weapon has special effect: Solar Ignite")
 
 	var mythic_a := ItemDatabase.get_item("mythic_armor")
 	assert_test(mythic_a != null, "Mythic armor exists")
-	assert_test(mythic_a.armor == 10, "Mythic armor primary Armor = 10")
-	assert_test(mythic_a.max_hp_bonus >= 10, "Mythic armor secondary stat: Max HP = +%d" % mythic_a.max_hp_bonus)
-	assert_test(mythic_a.damage >= 2, "Mythic armor secondary stat: Attack Damage = +%d" % mythic_a.damage)
+	assert_test(mythic_a.armor == 5, "Mythic armor primary Armor = 5")
+	assert_test(mythic_a.max_hp_bonus == 5, "Mythic armor secondary stat: Max HP = +5")
+	assert_test(mythic_a.damage == 0, "Mythic armor has no off-role attack damage")
 	assert_test(mythic_a.special_effect.contains("Divine Retaliation"), "Mythic armor has special effect: Divine Retaliation")
 
 	var mythic_h := ItemDatabase.get_item("mythic_helm")
 	assert_test(mythic_h != null, "Mythic helm exists")
-	assert_test(mythic_h.armor == 7, "Mythic helm primary Armor = 7")
-	assert_test(mythic_h.damage >= 3, "Mythic helm secondary stat: Attack Damage = +%d" % mythic_h.damage)
-	assert_test(mythic_h.max_hp_bonus >= 8, "Mythic helm secondary stat: Max HP = +%d" % mythic_h.max_hp_bonus)
+	assert_test(mythic_h.armor == 4, "Mythic helm primary Armor = 4")
+	assert_test(mythic_h.damage == 0, "Mythic helm has no off-role attack damage")
+	assert_test(mythic_h.max_hp_bonus == 3, "Mythic helm secondary stat: Max HP = +3")
 	assert_test(mythic_h.special_effect.contains("Celestial Smite"), "Mythic helm has special effect: Celestial Smite")
 
 func test_potions_and_stacking() -> void:
@@ -527,11 +527,11 @@ func test_potions_and_stacking() -> void:
 	var purple_pot := ItemDatabase.get_item("heroic_potion_purple")
 	var blue_pot := ItemDatabase.get_item("legendary_potion_blue")
 
-	assert_test(red_pot != null and red_pot.heal_amount == 4, "Red potion heals 4 HP")
-	assert_test(green_pot != null and green_pot.max_hp_bonus == 1, "Green tonic fortifies 1 Max HP")
-	assert_test(purple_pot != null and purple_pot.heal_amount == 6 and purple_pot.max_hp_bonus == 3, "Purple draught grants 6 HP + 3 Max HP")
-	assert_test(blue_pot != null and blue_pot.heal_amount == 10 and blue_pot.max_hp_bonus >= 4, "Blue phial grants 10 HP + 5 Max HP")
-	assert_test(red_pot.get_is_stackable() and red_pot.max_stack == 16, "Potions are Minecraft-style stackable up to 16")
+	assert_test(red_pot != null and red_pot.heal_amount == 5 and red_pot.max_hp_bonus == 0, "Red potion heals 5 HP with no Max HP bonus")
+	assert_test(green_pot != null and green_pot.heal_amount == 3 and green_pot.max_hp_bonus == 0, "Green tonic heals 3 HP with no Max HP bonus")
+	assert_test(purple_pot != null and purple_pot.heal_amount == 8 and purple_pot.max_hp_bonus == 1, "Purple draught grants 8 HP + 1 Max HP")
+	assert_test(blue_pot != null and blue_pot.heal_amount == 12 and blue_pot.max_hp_bonus == 2, "Blue phial grants 12 HP + 2 Max HP")
+	assert_test(red_pot.get_is_stackable() and red_pot.max_stack == 4, "Potion resource stack limit is 4; global limit is enforced by inventory")
 
 func test_floor_drop_scaling_and_boss_bonus() -> void:
 	print("\n--- Test Group 10: Floor Drop Scaling & Boss Chest Guarantee ---")
@@ -681,42 +681,73 @@ func test_deterministic_rng_isolation() -> void:
 
 func test_equip_unequip_does_not_heal() -> void:
 	print("\n--- Test Group 14: Equip/Unequip Max HP Gear Anti-Heal Regression ---")
+	GameManager.start_new_run("EQUIPMENT-ANTI-HEAL")
+	PerkManager.reset()
 	var player_scene = preload("res://Scene/Character/Player 1_Pyrois/player.tscn")
 	var player = player_scene.instantiate()
 	add_child(player)
+	player.set_physics_process(false)
 
+	# Adapt PR #88's real inventory equip/unequip regression for Issue #75 growth.
 	var armor_item = ITEM_DATA_SCRIPT.new()
 	armor_item.item_name = "Test Vigor Plate"
 	armor_item.type = ItemData.ItemType.ARMOR
 	armor_item.armor = 2
 	armor_item.max_hp_bonus = 3
-
+	assert_test(player.inventory.add_item(armor_item), "Test armor added to inventory bag")
 	var base_hp: int = player.base_max_hp
-	player.hp = 1
-	player.inventory.add_item(armor_item)
-	var armor_slot: int = -1
+	_check_equipment_hp_cycles(player, base_hp)
+
+	assert_test(player.consume_potion(0, 2), "Potion earns two max HP through production API")
+	assert_test(player.potion_max_hp_gained == 2, "Potion HP tracked separately from equipment")
+	_check_equipment_hp_cycles(player, base_hp + 2)
+
+	assert_test(GameManager.register_floor_clear(1), "Boss clear earns floor descent credit")
+	GameManager.register_level_advance(2)
+	assert_test(player.floor_vitality_applied == 2, "Descent grants two floor-earned max HP")
+	_check_equipment_hp_cycles(player, base_hp + 4)
+
+	# Recreate with equipped gear, as floor transitions restore run state and inventory.
+	var armor_slot: int = player.inventory.get_first_occupied_slot()
+	# The starter potion may occupy an earlier slot; locate the armor explicitly.
 	for i in range(player.inventory.bag.size()):
 		if player.inventory.bag[i] != null and player.inventory.bag[i].item_name == "Test Vigor Plate":
 			armor_slot = i
-			break
+	player.inventory.use_or_equip_item(armor_slot, player)
+	var replacement = player_scene.instantiate()
+	replacement.get_node("Inventory").equipment[ItemData.ItemType.ARMOR] = player.inventory.equipped_armor.duplicate()
+	player.free()
+	add_child(replacement)
+	replacement.set_physics_process(false)
+	assert_test(replacement.potion_max_hp_gained == 2 and replacement.floor_vitality_applied == 2,
+		"Recreated player restores potion and floor growth exactly once")
+	assert_test(replacement.max_hp == base_hp + 7, "Recreated max HP composes base, gear, potion and floor growth")
+	replacement.inventory.unequip_item(ItemData.ItemType.ARMOR)
+	assert_test(replacement.hp == base_hp + 4, "Removing restored gear clamps HP while retaining earned growth")
+	_check_equipment_hp_cycles(replacement, base_hp + 4)
+	replacement.free()
+	GameManager.start_new_run("EQUIPMENT-ANTI-HEAL-CLEANUP")
 
-	assert_test(armor_slot >= 0, "Test armor added to inventory bag")
-
-	# Mặc rồi tháo 3 lần liên tiếp: HP không được hồi lên
+func _check_equipment_hp_cycles(player, unequipped_max_hp: int) -> void:
+	var armor_slot := -1
+	for i in range(player.inventory.bag.size()):
+		if player.inventory.bag[i] != null and player.inventory.bag[i].item_name == "Test Vigor Plate":
+			armor_slot = i
+	assert_test(armor_slot >= 0, "Anti-heal armor remains in bag between cycles")
+	if armor_slot < 0:
+		return
+	player.hp = 1
 	for _cycle in range(3):
 		player.inventory.use_or_equip_item(armor_slot, player)
-		assert_test(player.max_hp == base_hp + 3, "Equipping armor raises max_hp by +3")
-		assert_test(player.hp == 1, "Equipping max_hp gear does not heal player hp")
+		assert_test(player.max_hp == unequipped_max_hp + 3, "Equipping raises capacity without losing earned max HP")
+		assert_test(player.hp == 1, "Equipping max HP gear does not heal player HP")
 		player.inventory.unequip_item(ItemData.ItemType.ARMOR)
-		assert_test(player.max_hp == base_hp, "Unequipping armor restores base max_hp")
-		assert_test(player.hp == 1, "Unequipping armor keeps hp at 1 (no free heal exploit)")
+		assert_test(player.max_hp == unequipped_max_hp, "Unequipping preserves base and earned max HP")
+		assert_test(player.hp == 1, "Repeated equip/unequip cannot grant free healing")
 
-	# Nếu máu đang cao hơn max_hp gốc rồi tháo đồ thì phải kẹp về max_hp mới
 	player.inventory.use_or_equip_item(armor_slot, player)
-	player.hp = base_hp + 3
+	player.hp = player.max_hp
 	player.inventory.unequip_item(ItemData.ItemType.ARMOR)
-	assert_test(player.hp == base_hp, "Unequipping armor clamps hp to new max_hp")
-
-	player.queue_free()
+	assert_test(player.hp == unequipped_max_hp, "Removing equipment clamps HP to the new maximum")
 
 

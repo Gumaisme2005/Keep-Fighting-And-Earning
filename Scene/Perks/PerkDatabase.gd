@@ -224,10 +224,10 @@ static func _init_catalog() -> void:
 	_register(_build_perk(
 		"armor_burst",
 		"Phản Chấn Khiên Kính",
-		"Khi Giáp bị vỡ hoàn toàn, phát nổ một làn sóng xung kích đẩy lùi kẻ thù và gây 3 sát thương.",
+		"Khi Giáp bị vỡ hoàn toàn, gây 1 sát thương và đẩy lùi kẻ thù trong 70px. Hồi chiêu chung: 6 giây.",
 		PerkData.Rarity.EPIC,
 		"24.png",
-		{"armor_break_blast": true, "blast_damage": 3, "blast_radius": 90.0}
+		{"armor_break_blast": true, "blast_damage": 1, "blast_radius": 70.0, "blast_cooldown": 6.0}
 	))
 
 	_register(_build_perk(
@@ -272,10 +272,10 @@ static func _init_catalog() -> void:
 	_register(_build_perk(
 		"chain_lightning",
 		"Lôi Thần Trừng Phạt",
-		"Đòn đánh trúng mục tiêu phóng tia sét lan sang 2 kẻ địch kế bên gây 2 sát thương điện.",
+		"Đòn đánh trúng phóng sét sang 1 kẻ địch gần nhất trong 95px, gây 1 sát thương. Hồi chiêu chung: 0.5 giây.",
 		PerkData.Rarity.LEGENDARY,
 		"26.png",
-		{"on_hit_lightning": true, "lightning_damage": 2, "lightning_chain_count": 2, "lightning_range": 95.0}
+		{"on_hit_lightning": true, "lightning_damage": 1, "lightning_chain_count": 1, "lightning_range": 95.0, "lightning_cooldown": 0.5}
 	))
 
 	_register(_build_perk(
@@ -290,10 +290,10 @@ static func _init_catalog() -> void:
 	_register(_build_perk(
 		"berserk_frenzy",
 		"Cuồng Chiến Đồ Đao",
-		"Càng ít Máu càng mạnh: Mỗi 1 điểm Máu bị mất tăng thêm +15% Sát thương và +8 Tốc độ chạy.",
+		"Theo tỉ lệ Máu đã mất: tăng tối đa +100% Sát thương và +40 Tốc độ chạy khi mất toàn bộ Máu.",
 		PerkData.Rarity.LEGENDARY,
 		"103.png",
-		{"low_hp_scaling": true, "dmg_per_missing_hp": 0.15, "speed_per_missing_hp": 8.0}
+		{"low_hp_scaling": true, "dmg_per_missing_hp_ratio": 1.0, "speed_per_missing_hp_ratio": 40.0}
 	))
 
 	_register(_build_perk(
@@ -308,10 +308,10 @@ static func _init_catalog() -> void:
 	_register(_build_perk(
 		"celestial_barrier",
 		"Thiên Cầu Hộ Mệnh",
-		"Kết giới thần thánh: +4 Giáp tối đa, thời gian chờ hồi giáp giảm cực nhanh (-1.5s), và nổ chấn động gây 4 sát thương đẩy lùi khi vỡ giáp.",
+		"Kết giới thần thánh: +4 Giáp tối đa, giảm 1.5s chờ hồi giáp. Khi vỡ giáp, gây 2 sát thương và đẩy lùi kẻ thù trong 80px. Hồi chiêu chung: 6 giây; ưu tiên hơn Phản Chấn Khiên Kính.",
 		PerkData.Rarity.LEGENDARY,
 		"46.png",
-		{"bonus_armor": 4, "armor_regen_delay_reduction": 1.5, "armor_break_blast": true, "blast_damage": 4, "blast_radius": 110.0}
+		{"bonus_armor": 4, "armor_regen_delay_reduction": 1.5, "armor_break_blast": true, "blast_damage": 2, "blast_radius": 80.0, "blast_cooldown": 6.0}
 	))
 
 	_catalog_initialized = true

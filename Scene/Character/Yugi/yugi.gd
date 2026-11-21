@@ -144,7 +144,7 @@ func _physics_process(delta: float) -> void:
 			else: right_hold = 0
 		if action_left <= 0 and bool(f.get("lr", false)) and left_hold >= 0:
 			var is_charged := left_hold >= CHARGE_SECONDS
-			_cast("hold&release-left-click" if is_charged else "left-click", 2 if is_charged else 1, 0.6 if is_charged else get_effective_attack_cooldown(0.6))
+			_cast("hold&release-left-click" if is_charged else "left-click", 2 if is_charged else 1, 0.6)
 		elif action_left <= 0 and bool(f.get("rr", false)) and right_hold >= 0:
 			_cast("hold&release-right-click" if right_hold >= CHARGE_SECONDS else "right-click", 3 if right_hold >= CHARGE_SECONDS else 1, 0.8)
 	if bool(f.get("lr", false)): left_hold = -1
@@ -198,8 +198,9 @@ func _cast(move: String, multiplier: int, duration: float) -> void:
 	suppress_guard = true
 	left_hold = -1
 	right_hold = -1
-	action_left = duration
-	animated_sprite.speed_scale = get_attack_speed_scale() if move == "left-click" else 1.0
+	var attack_rate := 1.0 if move.begins_with("result") else get_attack_speed_multiplier()
+	action_left = duration / attack_rate
+	animated_sprite.speed_scale = attack_rate
 	animated_sprite.play("skill" if move.begins_with("result") else "attack_1" if move == "left-click" else move)
 	if move == "result-5":
 		var fire := RoomFire.new()
@@ -298,9 +299,9 @@ func _right_click_summon_position(aim_direction: Vector2) -> Vector2:
 		return candidate
 	return global_position
 
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	if guarding or intro_active: return
-	super.take_damage(amount)
+	super.take_damage(amount, armor_piercing)
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if intro_active and animated_sprite.animation == "intro":

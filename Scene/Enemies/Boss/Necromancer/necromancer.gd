@@ -2,6 +2,10 @@ extends CharacterBody2D
 
 signal boss_hp_changed(current_hp: int, max_hp: int, phase: int, boss_name: String)
 
+const FloorBalance = preload("res://Scene/Balance/EnemyFloorBalance.gd")
+var combat_floor: int = 1
+var armor_piercing: float = 0.0
+
 const BalanceData = preload("res://Scene/BalanceConfig.gd")
 const BOSS_NAME: String = "NECROMANCER OF DOL GULDUR — AVATAR OF SAURON"
 
@@ -38,11 +42,12 @@ var player: Node2D = null
 
 func _ready() -> void:
 	var cfg: Dictionary = BalanceData.get_boss_stats("necromancer")
-	max_hp = int(cfg.get("hp", max_hp))
+	max_hp = FloorBalance.health(int(cfg.get("hp", max_hp)), combat_floor, true)
+	armor_piercing = FloorBalance.penetration(combat_floor)
 	hp = max_hp
 	speed = float(cfg.get("speed", speed))
-	melee_damage = int(cfg.get("melee_damage", melee_damage))
-	poison_damage = int(cfg.get("poison_damage", poison_damage))
+	melee_damage = int(cfg.get("melee_damage", melee_damage)) + FloorBalance.damage_bonus(combat_floor)
+	poison_damage = int(cfg.get("poison_damage", poison_damage)) + FloorBalance.damage_bonus(combat_floor)
 	melee_range = float(cfg.get("melee_range", melee_range))
 	poison_range = float(cfg.get("poison_range", poison_range))
 	attack_cooldown = float(cfg.get("attack_cooldown", attack_cooldown))
@@ -114,6 +119,7 @@ func attack_poison():
 		var target_pos = player.global_position
 		var explosion = poison_explosion_scene.instantiate()
 		explosion.damage = poison_damage
+		explosion.armor_piercing = armor_piercing
 		get_parent().call_deferred("add_child", explosion)
 		explosion.global_position = target_pos
 
@@ -176,9 +182,9 @@ func _drop_boss_loot() -> void:
 		var item_scene = preload("res://Scene/Items/WorldItem/WorldItem.tscn")
 		var item_drop = item_scene.instantiate()
 		item_drop.item_data = boss_item
-		item_drop.global_position = global_position
 		var parent_node = get_parent() if get_parent() != null else get_tree().current_scene
 		parent_node.call_deferred("add_child", item_drop)
+		item_drop.set_deferred("global_position", global_position)
 
 func _cleanup_summoned_minions() -> void:
 	for minion in summoned_minions:
@@ -211,6 +217,7 @@ func cast_summon_skill():
 		var num_mobs = rng.randi_range(4, 6)
 		for i in range(num_mobs):
 			var minion = summon_enemy_scene.instantiate()
+			minion.combat_floor = combat_floor
 			minion.set_meta("summoned", true)
 			parent_node.call_deferred("add_child", minion)
 			var angle = i * (TAU / num_mobs)
@@ -232,6 +239,7 @@ func cast_summon_skill():
 		for i in range(8):
 			var explosion = poison_explosion_scene.instantiate()
 			explosion.damage = poison_damage
+			explosion.armor_piercing = armor_piercing
 			parent_node.call_deferred("add_child", explosion)
 
 			var angle = i * (PI / 4.0)
@@ -280,4 +288,4 @@ func _on_scythe_hitbox_area_entered(area: Area2D) -> void:
 		if target == null or not is_instance_valid(target):
 			return
 		if target.has_method("take_damage"):
-			target.take_damage(melee_damage)
+			FloorBalance.hit(target, melee_damage, armor_piercing)

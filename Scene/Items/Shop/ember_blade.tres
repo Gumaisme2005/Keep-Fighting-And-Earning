@@ -14,5 +14,4 @@ rarity = 2
 type = 2
 icon = SubResource("AtlasTexture_icon")
 description = "Quenched in dragonfire. The blade still glows with the heat of the forge."
-damage = 5
-max_hp_bonus = 1
+damage = 3

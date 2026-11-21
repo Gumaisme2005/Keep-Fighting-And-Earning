@@ -113,7 +113,7 @@ func _test_floor_scaling_after_ready() -> void:
 			var bid: String = String(child.enemy_balance_id)
 			if not bid.is_empty():
 				var base_cfg: Dictionary = BalanceData.get_enemy_stats(bid)
-				assert_test(child.hp == int(base_cfg["hp"]) + 4, "#81.1 Regular enemy on floor 3 keeps +4 HP scaling after _ready()")
+				assert_test(child.hp == roundi(float(base_cfg["hp"]) * pow(1.25, 2)) + 6, "#81.1 Regular enemy retains Issue #75 floor-3 HP scaling after _ready()")
 				assert_test(child.damage == int(base_cfg["damage"]) + 1, "#81.1 Regular enemy on floor 3 keeps +1 damage scaling after _ready()")
 				checked_enemy = true
 				break
@@ -131,7 +131,7 @@ func _test_floor_scaling_after_ready() -> void:
 	assert_test(is_instance_valid(boss), "#81.1 Floor 2 boss (OrcRider) spawned")
 	if is_instance_valid(boss):
 		var bcfg: Dictionary = BalanceData.get_boss_stats("orc_rider")
-		assert_test(boss.hp == int(bcfg["hp"]) + 20, "#81.1 Boss on floor 2 keeps +20 HP scaling after _ready()")
+		assert_test(boss.hp == roundi(float(bcfg["hp"]) * 1.25) + 20, "#81.1 Boss retains Issue #75 floor-2 HP scaling after _ready()")
 		assert_test(boss.active_damage == int(bcfg["damage"]) + 1, "#81.1 Boss on floor 2 keeps +1 damage scaling after _ready()")
 	w2.queue_free()
 	await get_tree().process_frame

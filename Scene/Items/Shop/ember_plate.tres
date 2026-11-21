@@ -14,5 +14,5 @@ rarity = 1
 type = 1
 icon = SubResource("AtlasTexture_icon")
 description = "Red-lacquered plates riveted over chainmail in the guild's own fire."
-armor = 3
+armor = 2
 max_hp_bonus = 1

@@ -14,4 +14,4 @@ rarity = 1
 type = 2
 icon = SubResource("AtlasTexture_icon")
 description = "A gold-inlaid saber with a razor edge, favored by guild captains."
-damage = 3
+damage = 2

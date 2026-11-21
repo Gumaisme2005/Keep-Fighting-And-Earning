@@ -12,5 +12,6 @@ script = ExtResource("1_ecocj")
 item_name = "Flask of Athelas"
 icon = SubResource("AtlasTexture_28578")
 description = "Extract of Kingsfoil that restores vitality and soothes battle wounds."
-heal_amount = 2
+heal_amount = 3
+max_stack = 4
 metadata/_custom_type_script = "uid://cfc0cqlwptxu6"

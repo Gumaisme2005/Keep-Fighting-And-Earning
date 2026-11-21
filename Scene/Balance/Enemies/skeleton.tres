@@ -11,5 +11,5 @@ armor = 0
 damage = 1
 speed = 110.0
 attack_range = 18.0
-drop_chance = 0.25
+drop_chance = 0.05
 custom_stats = {}

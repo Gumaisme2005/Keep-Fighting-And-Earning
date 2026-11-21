@@ -161,7 +161,7 @@ func test_buy_sell_equip() -> void:
 	assert_test(ui.get_node("%EquipButton").visible, "EQUIP button shows for gear in the bag")
 	ui.equip(saber_idx)
 	assert_test(inv.equipped_weapon != null and inv.equipped_weapon.item_name == "Gilded Saber", "EQUIP puts the saber in the weapon slot")
-	assert_test(inv.get_weapon_damage() == 3, "weapon damage counts the saber")
+	assert_test(inv.get_weapon_damage() == 2, "weapon damage counts the Issue #75 Rare saber budget (+2)")
 	assert_test(ui._sel.get("src", "") == "equip", "the equipped slot is selected after equipping")
 	# armor raises the hero's armor
 	var armor_before: int = hero.max_armor

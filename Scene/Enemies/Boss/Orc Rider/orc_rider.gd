@@ -2,6 +2,10 @@ extends CharacterBody2D
 
 signal boss_hp_changed(current_hp: int, max_hp: int, phase: int, boss_name: String)
 
+const FloorBalance = preload("res://Scene/Balance/EnemyFloorBalance.gd")
+var combat_floor: int = 1
+var armor_piercing: float = 0.0
+
 const BalanceData = preload("res://Scene/BalanceConfig.gd")
 const BOSS_NAME: String = "WARG RIDER CHIEFTAIN — WARLORD OF MORIA"
 
@@ -44,9 +48,10 @@ var player: Node2D = null
 
 func _ready() -> void:
 	var cfg: Dictionary = BalanceData.get_boss_stats("orc_rider")
-	max_hp = int(cfg.get("hp", max_hp))
+	max_hp = FloorBalance.health(int(cfg.get("hp", max_hp)), combat_floor, true)
+	armor_piercing = FloorBalance.penetration(combat_floor)
 	base_speed = float(cfg.get("speed", base_speed))
-	base_damage = int(cfg.get("damage", base_damage))
+	base_damage = int(cfg.get("damage", base_damage)) + FloorBalance.damage_bonus(combat_floor)
 	hp = max_hp
 	current_speed = base_speed
 	active_damage = base_damage
@@ -340,9 +345,9 @@ func _drop_boss_loot() -> void:
 		var item_scene = preload("res://Scene/Items/WorldItem/WorldItem.tscn")
 		var item_drop = item_scene.instantiate()
 		item_drop.item_data = boss_item
-		item_drop.global_position = global_position
 		var parent_node = get_parent() if get_parent() != null else get_tree().current_scene
 		parent_node.call_deferred("add_child", item_drop)
+		item_drop.set_deferred("global_position", global_position)
 
 func check_phase() -> bool:
 	if current_phase == 1 and hp <= max_hp * 0.66:
@@ -395,7 +400,7 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 		if tmap != null and tmap.has_method("has_line_of_sight") and not tmap.has_line_of_sight(global_position, target.global_position):
 			return
 		if target.has_method("take_damage"):
-			target.take_damage(active_damage)
+			FloorBalance.hit(target, active_damage, armor_piercing)
 
 func _disable_all_hitboxes() -> void:
 	shape_1.set_deferred("disabled", true)

@@ -112,7 +112,7 @@ func _play(anim: String) -> void:
 func _set_form(f: String) -> void:
 	form = f
 	animated_sprite.sprite_frames = Sprites.character_frames(f)
-	animated_sprite.speed_scale = _rate()
+	animated_sprite.speed_scale = UPGRADED_ATTACK_RATE if form == "upgraded" else 1.0
 
 # ------------------------------------------------------------------ main loop
 func _process(_delta: float) -> void:
@@ -390,7 +390,7 @@ func _flash_block() -> void:
 func is_immune() -> bool:
 	return _untouchable or form == "upgraded"
 
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	if is_dead:
 		return
 	if is_immune():
@@ -398,7 +398,7 @@ func take_damage(amount: int) -> void:
 			_flash_block()
 		return
 	var before := hp + current_armor
-	super.take_damage(amount)
+	super.take_damage(amount, armor_piercing)
 	if is_dead:
 		move = ""
 		is_casting_skill = false

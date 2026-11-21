@@ -75,7 +75,7 @@ func _is_nearest_pickup_candidate() -> bool:
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_player_near or get_tree() == null or get_tree().paused:
 		return
-	if not is_instance_valid(player_node) or player_node.get("is_dead") == true:
+	if not is_instance_valid(player_node) or player_node.is_queued_for_deletion() or player_node.get("is_dead") == true:
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_E:
 		if _is_nearest_pickup_candidate():
@@ -83,9 +83,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			_pickup_item()
 
 func _pickup_item() -> void:
-	if get_tree() != null and get_tree().paused:
+	if is_queued_for_deletion() or (get_tree() != null and get_tree().paused):
 		return
-	if is_instance_valid(player_node) and player_node.get("is_dead") != true and player_node.has_node("Inventory") and item_data != null:
+	if is_instance_valid(player_node) and not player_node.is_queued_for_deletion() and player_node.get("is_dead") != true and player_node.has_node("Inventory") and item_data != null and item_data.stack_count > 0:
 		var inventory = player_node.get_node("Inventory")
 		var initial_count: int = item_data.stack_count if item_data.stack_count > 0 else 1
 		var fully_added: bool = inventory.add_item(item_data.duplicate(), initial_count)
@@ -107,9 +107,10 @@ func _pickup_item() -> void:
 				if get_node_or_null("/root/AudioManager") != null:
 					AudioManager.play_sfx("pickup")
 				if get_tree():
-					get_tree().call_group("game_ui", "show_toast", "Acquired x%d %s (Backpack full!)" % [taken, item_data.item_name])
+					get_tree().call_group("game_ui", "show_toast", "Acquired x%d %s (Carry limit reached)" % [taken, item_data.item_name])
 				if prompt_label != null:
 					prompt_label.text = _get_prompt_text()
 			else:
 				if get_tree():
-					get_tree().call_group("game_ui", "show_toast", "Backpack full: 16 / 16 items!")
+					var message := "Potion limit: 4 total!" if item_data.type == ItemData.ItemType.POTION and inventory.get_potion_count() >= inventory.MAX_POTION_UNITS else "Backpack full: 16 / 16 items!"
+					get_tree().call_group("game_ui", "show_toast", message)

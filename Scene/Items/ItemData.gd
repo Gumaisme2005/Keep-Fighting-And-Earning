@@ -10,6 +10,7 @@ enum Rarity { COMMON, RARE, HEROIC, LEGENDARY, MYTHIC }
 @export var icon: Texture2D
 @export_multiline var description: String = "A mysterious artifact from the Elder Days."
 @export var special_effect: String = ""     # Hiệu ứng đặc biệt (dành cho đồ Mythic / Cổ vật)
+@export var combat_effect: StringName = &"" # Stable effect identity survives resource duplication.
 
 @export_group("Chỉ số cộng thêm (Stats)")
 @export var damage: int = 0                 # Sát thương vật lý (Vũ khí/Cung)
@@ -41,6 +42,8 @@ func get_stats_description() -> String:
 		stats_lines.append("• Physical Armor: +%d" % armor)
 	if max_hp_bonus > 0:
 		stats_lines.append("• Max Health: +%d" % max_hp_bonus)
+	if type == ItemType.POTION:
+		stats_lines.append("• Potion max HP: +4 per run cap; shared cooldown: 8s; carry limit: 4 total")
 	if heal_amount > 0:
 		stats_lines.append("• Restores Health: +%d" % heal_amount)
 	if attack_speed_bonus > 0.0:
