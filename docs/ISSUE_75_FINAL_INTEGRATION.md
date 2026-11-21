@@ -1,3 +1,62 @@
+# Issue #75 — Task 1/5: contract rương và tích hợp development
+
+**Task 1: functional integration PASS, đã có merge commit `57ebb80095bde80e12348b9997822e89e09e65a6` trên `fix/issue-75-game-balance`.** Commit giữ first parent `bbd3d55586e8a87ec0124c1534d422268b057ad7` (checkpoint tài liệu của user) và development `0667ee7e6fc808acf7353d75de31f4e342d4581d`. Giữ nguyên worktree, patch cũ, stash và backup; không force push, không nhập #78/#99, không merge PR #76 vào development.
+
+## Contract được chọn và thay đổi thực thi
+
+Owner cho phép Task 1 dùng hành vi #87/#98: default `chest.tscn::loot_table` rỗng, `spawn_loot()` chọn equipment qua ItemDatabase theo floor. Custom table nonempty được hỗ trợ khi tác giả chỉ định rõ. Đây là adaptation có chủ đích so pool sáu resource của #75; chưa phải final maintainer Approve hoặc nghiệm thu toàn Issue.
+
+Legacy ordinary treasure dùng gate + một index draw; default mới dùng gate + rarity draw + index draw. Default không còn hai potion legacy hoặc Legendary sword tầng 1–2. Boss giữ hai equipment rolls theo boss weights và **một Rare potion mỗi rương**, kể cả khi gate equipment trượt; guarantee không rút RNG. Idempotency, resource duplicate và world-space offsets sau deferred parenting được giữ.
+
+`treasure_favor` giữ đúng #98: nhân chance 0,8 × 2 rồi clamp 1; không thêm draw để tính perk. Seed 4/6 có gate draws 0,900177/0,908949: không perk thì miss, có perk thì chọn reward và tiêu thụ các selection draws của nhánh đã mở. Regression kiểm tra floor 1–8, seed 0–8 (gồm fallback seed theo vị trí), cả hai trạng thái perk, default/custom/boss, lặp cùng seed và lặp callbacks; parent có translation/rotation/scale.
+
+Files mới so rehearsal: `chest.tscn`, comment contract trong `chest.gd`, `WorldItem.gd`, `test_potion_system.gd`, `test_issue75_development_integration.gd`, `.github/workflows/ci.yml`. Fixture legacy Rare được chuyển thành **custom table explicit**, giữ mọi assertion resource/pickup/consume. CI thêm contract suite và bug-bash ở 30/144 FPS, kiểm marker/error và so trace.
+
+Phát hiện thêm pickup thật: queued player vẫn nhận đồ trước khi bị hủy, làm mất ground reward. Guard mới trong input/callback WorldItem chặn player queued. RED **72/1, exit 1** → GREEN **73/0, exit 0**. Paused/dead/queued-item guards và partial/full inventory conservation giữ nguyên. Hai mươi resolution cũ và các fix HP/armor, inventory, perk, hero timing/lifecycle, shop, coin và equipment budget được bảo toàn; không chỉnh chỉ số Miyabi/Orc, potion rates/pity hoặc guarantee.
+
+## Regression và bằng chứng
+
+Godot `4.7.2.stable.official.ed1daf0bf`, physics 60, render 30/144 FPS. **39 suite/cap = 78/78 PASS**; mỗi cap **46.263 assertion PASS, 0 FAIL**, cộng Yugi có PASS marker nhưng không aggregate count. Tất cả exit 0, completion marker, không unexpected parser/runtime/lifecycle error hoặc timeout. Contract 73/0; potion 124/0; bug-bash **44/0** (RED trước sửa 43/1); equipment 430/0; enemy floor 1053/0; progression 42327/0. Python evidence parser 8/8 PASS.
+
+**13 trace pair khớp** (12 cặp cũ + chest source mới), **540 progression record**, **7.290 acquisition event** và **84 phép đo fixed-loadout combat** khớp giữa hai cap. Acquisition cũ 7.235 → mới 7.290; không ép bằng baseline cũ. Trace enemy-floor đổi ở reward walk; 59 prefix record enemy/layout/boss giữ nguyên. Chỉ enemy-floor/progression trong 12 trace cũ đổi theo contract; 10 trace cũ còn lại giữ nguyên. Fixed-loadout combat là regression loadout đã định nghĩa, không thay cho progression tự nhiên hoặc playtest.
+
+Đối chiếu 540 record trước/sau: ordinary equipment 1.619, boss-chest equipment 1.632, boss-drop equipment 540 giữ cùng identity/rarity/source cho từng record; perk progression không đổi. Treasure equipment offers 486 → 762; treasure potion 276 → 0. Enemy natural potion 648, pity 391, guarantee 1.080 giữ nguyên trên 90 run. Tác động số liệu được giới hạn rõ ở nguồn treasure và quá trình nhận/dùng đồ phát sinh từ nguồn đó.
+
+Evidence local: `.godot/issue75_final_20261121/task1_summary.json`, `task1_source_manifest.json`, `task1_diff_classification.json`, `task1_snapshot/task1_matrix_{30,144}_results.json` cùng raw logs/artifacts/profiles. `task1_gate.py` chạy matrix, `task1_analyze.py` xác minh gate/hash/determinism/before-after. Snapshot 1.473 source file khớp worktree; bootstrap/project settings được kiểm tra riêng (chỉ tên ứng dụng khác để cô lập save). Giữ mọi attempt RED, lỗi typed-array fixture ban đầu và cold-cache font import; không tính chúng PASS.
+
+## Numerical impact: baseline cũ → contract mới
+
+Normal, cùng 30 seed và phase **exit sau reward, trước portal perk**; controlled production-event scenarios, không phải survival playthrough. Đủ 30 seed × 3 policy × 6 floor; chi tiết bốn phase, identities, perks và distributions của mọi policy có trong summary local.
+
+| Tầng | Max HP | HP hiện tại | Giáp capacity | Giáp hiện tại | Raw damage | Orc HP | Orc calls |
+|---:|---|---|---|---|---|---|---|
+| 1 | 6 → 6 | 4 → 4 | 5 → 5 | 4 → 4 | 3,5 → 3 | 4 → 4 | 1,5 → 2 |
+| 2 | 10 → 10 | 7,5 → 7 | 7 → 7 | 6 → 6 | 6 → 4 | 8 → 8 | 2 → 2 |
+| 3 | 13 → 13 | 11,5 → 11 | 8 → 8 | 7 → 7,5 | 6 → 5 | 12 → 12 | 2 → 3 |
+| 4 | 16 → 16 | 10 → 10 | 9 → 9 | 9 → 9 | 7 → 6 | 17 → 17 | 3 → 3 |
+| 5 | 20 → 20 | 13 → 13 | 10 → 10,5 | 10 → 10 | 7 → 7 | 22 → 22 | 3 → 3 |
+| 6 | 23,5 → 23,5 | 15 → 15 | 12 → 12 | 11 → 11 | 8 → 7,5 | 27 → 27 | 3 → 4 |
+
+Max HP medians vẫn trong target. Giáp capacity vẫn cao cả sáu tầng. Damage còn lệch tầng 1 (3 so 1–2), tầng 2 (4 so 2–3) và tầng 6 (7,5 so 8–10); tầng 3 hiện đạt median 5. Orc calls tầng 2 vẫn 2 so 3–4; tầng 6 hiện 4 so mốc tham khảo ~3. Calls có crit/proc, không đổi thành primary hit thuần. **Numerical acceptance chưa PASS; không tuning trong Task 1.**
+
+| Policy | Generated median / total | Collected median / total | Consumed median / total | Ground median / total |
+|---|---|---|---|---|
+| normal | 26 → 24 / 796 → 707 | 9 → 9 / 267 → 263 | 6 → 6 / 184 → 182 | 17 → 15 / 529 → 444 |
+| optimized | 31 → 27 / 944 → 815 | 11 → 11 / 333 → 323 | 9 → 8 / 255 → 249 | 20 → 16 / 611 → 492 |
+| conservative | 22 → 20 / 655 → 597 | 9 → 9 / 282 → 276 | 6,5 → 6 / 198 → 191 | 12 → 10 / 373 → 321 |
+
+Generated/collected không gồm starter; consumed gồm starter như baseline. Normal generated median **26 → 24**, vẫn vượt target 10–12. Mỗi run vẫn có 12 guaranteed boss potion; không đổi thành per-victory. Potion economy dành cho task sau.
+
+## Trạng thái PR và bước tiếp theo
+
+Commit gameplay: `57ebb80095bde80e12348b9997822e89e09e65a6`; báo cáo này là checkpoint tài liệu sau merge. Chưa có kết quả CI cho HEAD mới tại thời điểm ghi checkpoint; CI feature cũ không thay thế gate mới. Xác minh push/remote HEAD/exact-HEAD CI trong kết quả thực thi cuối. PR #76 vẫn cần maintainer review; không tự Approve/merge/close Issue. API sửa mô tả từng bị 403 nên chỉ chuẩn bị bản sẵn để author dán.
+
+**MANUAL NOT VERIFIED.** Giữ [checklist sáu tầng](ISSUE_75_MANUAL_PLAYTEST.md). Task 1 hoàn tất tích hợp chức năng; bước kế tiếp là **Task 2/5 — Miyabi armor, early damage và Orc pacing**, dùng baseline mới và ghi rõ damage tầng 6 7,5. Chưa thực hiện Task 2/3 hoặc tuyên bố toàn Issue #75 hoàn thành.
+
+## Lịch sử rehearsal trước Task 1
+
+Phần sau lưu bằng chứng trước khi owner chọn contract; các trạng thái BLOCKED và số liệu cũ được giữ theo thời điểm của chúng.
+
 # Issue #75 — báo cáo tích hợp và nghiệm thu, 21/11/2026
 
 **Kết luận: CASE B, chưa tích hợp production, chưa đủ điều kiện merge PR #76.** Đã thực hiện merge rehearsal và sửa lỗi thật trong detached worktree. Còn một quyết định reward semantic bắt buộc của maintainer. Không commit/push cây kết hợp chưa đạt gate.
