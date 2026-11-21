@@ -1,5 +1,13 @@
 # Seventh-commit acceptance distributions
 
+## CURRENT STATUS — 2026-11-21, Task 5A
+
+**Historical v2/v3 distributions.** Các bảng và JSON liên quan giữ nguyên baseline/experiment lịch sử; không thay chúng bằng medians post-integration. Kết quả hiện hành dùng phase C, normal 30 seeds: max HP 6/10/13/16/20/23,5; armor 5/7/8/9/10,5/12; raw damage 3/4/5/6/7/7,5. Đây là simulation, không phải manual run.
+
+Nguồn tổng hợp hiện hành: [PR #76 current review](PR_76_CURRENT_REVIEW.md); [manual checklist/F8](ISSUE_75_MANUAL_PLAYTEST.md). Checkpoint CI `209ab53` đã success, không thay CI của HEAD mới hơn. Numerical/specification/manual/approval acceptance vẫn chưa hoàn tất. Historical evidence/JSON/hashes không bị sửa trong Task 5A.
+
+## Historical report — original results retained
+
 Actual starting production versus corrected production, using the original 30 seeds and unchanged policies. Values are minimum / median / maximum; both entry and exit phases appear below. These are controlled reward/combat scenarios, with successful boss clears assumed, not played survival runs.
 
 The treasure proposal is test-only and changes the single legacy Legendary sword entry to Common on floor 1, Rare on floor 2, Heroic on floors 3–4, then preserves it from floor 5. All six entry weights, the 80% gate, chest counts, visuals, potions and boss rewards remain unchanged. **This conflicts with preserved treasure rewards and is not enabled in gameplay.**

@@ -1,5 +1,13 @@
 # PR #76 review fixes — 2026-11-20
 
+## CURRENT STATUS — 2026-11-21, Task 5A
+
+**Historical anti-heal review.** Equipment anti-heal đã triển khai và có regression; queued potion use cũng đã sửa ở `1e1266e`. Development integration không còn bị chặn bởi PR #99. Giữ nguyên bảng, CI và kết luận ở thời điểm review cũ bên dưới.
+
+Nguồn tổng hợp hiện hành: [PR #76 current review](PR_76_CURRENT_REVIEW.md); [manual checklist/F8](ISSUE_75_MANUAL_PLAYTEST.md). Checkpoint CI `209ab53` đã success, không thay CI của HEAD mới hơn. Numerical/specification/manual/approval acceptance vẫn chưa hoàn tất. Historical evidence/JSON/hashes không bị sửa trong Task 5A.
+
+## Historical report — original results retained
+
 Independent anti-heal fix on `fix/issue-75-game-balance`. Development integration is blocked by the unresolved revert in PR #99. Full Issue #75 gameplay acceptance remains incomplete.
 
 ## Preflight and integration decision

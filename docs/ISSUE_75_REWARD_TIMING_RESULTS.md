@@ -1,5 +1,13 @@
 # Issue #75: protected reward timing experiments
 
+## CURRENT STATUS — 2026-11-21, Task 5A
+
+**Historical reward-timing counterfactuals.** Các experiment bên dưới không được bật trong production. Task 1 sau đó được owner cho phép đổi default treasure sang floor-aware ItemDatabase; không suy ra các thay đổi reward timing/per-victory guarantee khác đã được phê duyệt.
+
+Nguồn tổng hợp hiện hành: [PR #76 current review](PR_76_CURRENT_REVIEW.md); [manual checklist/F8](ISSUE_75_MANUAL_PLAYTEST.md). Checkpoint CI `209ab53` đã success, không thay CI của HEAD mới hơn. Numerical/specification/manual/approval acceptance vẫn chưa hoàn tất. Historical evidence/JSON/hashes không bị sửa trong Task 5A.
+
+## Historical report — original results retained
+
 Starting HEAD and fetched origin: `d208c5381394e08e26a5ea35ace9945bba3e6ba3`, clean `fix/issue-75-game-balance`. Godot reports `4.7.2.stable.official.ed1daf0bf`. [CI for that exact starting HEAD passed](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/44751588021). Both existing backup refs and both stashes remain preserved.
 
 **No production change is justified by this investigation.** These are explicit specification counterfactuals, confined to `tests/`. Boss/treasure reward timing is protected; moving perk offers is also a design change requiring authorization. None is enabled in gameplay. The six previously rejected ordinary-weight experiments and the rejected treasure sword downgrade were not repeated.

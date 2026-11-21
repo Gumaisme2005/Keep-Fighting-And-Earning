@@ -1,5 +1,13 @@
 # Issue #75: remaining armor, early damage and Orc pacing
 
+## CURRENT STATUS — 2026-11-21, Task 5A
+
+**Historical pre-integration experiments.** Các candidate bị reject và số liệu giữ nguyên tại source `53664cf`; floor-six damage 8/potion 26 không phải baseline hiện hành sau Task 1. Không tái áp dụng rejected experiments hoặc tự đổi acceptance threshold.
+
+Nguồn tổng hợp hiện hành: [PR #76 current review](PR_76_CURRENT_REVIEW.md); [manual checklist/F8](ISSUE_75_MANUAL_PLAYTEST.md). Checkpoint CI `209ab53` đã success, không thay CI của HEAD mới hơn. Numerical/specification/manual/approval acceptance vẫn chưa hoàn tất. Historical evidence/JSON/hashes không bị sửa trong Task 5A.
+
+## Historical report — original results retained
+
 Starting state: clean `fix/issue-75-game-balance`, HEAD and fetched origin both `53664cf2e14c014edb0d334a05114400453b5300`. Godot reports `4.7.2.stable.official.ed1daf0bf`. [CI for that exact starting HEAD passed](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/44722722113). No development merge, branch replacement, force push, stash deletion or backup-ref change was performed.
 
 **Outcome: six new ordinary-drop experiments were rejected. No production file was changed.** The prior late weapon fix remains intact: normal floor-six raw damage median **8**, coverage **16/30**. This is an evidence/measurement improvement, not a claim that a remaining gameplay target was fixed.

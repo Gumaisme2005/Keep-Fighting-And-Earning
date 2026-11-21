@@ -1,5 +1,13 @@
 # Issue #75: implementation and acceptance results
 
+## CURRENT STATUS — 2026-11-21, Task 5A
+
+**Historical late-weapon implementation.** Late-weapon code vẫn được giữ; kết quả floor-six raw damage 8 và potion median 26 bên dưới là trước Task 1 treasure integration. Normal hiện hành: damage 3/4/5/6/7/7,5; potion generated/collected/consumed 24/9/6; không dùng gate/CI cũ để chứng nhận HEAD mới.
+
+Nguồn tổng hợp hiện hành: [PR #76 current review](PR_76_CURRENT_REVIEW.md); [manual checklist/F8](ISSUE_75_MANUAL_PLAYTEST.md). Checkpoint CI `209ab53` đã success, không thay CI của HEAD mới hơn. Numerical/specification/manual/approval acceptance vẫn chưa hoàn tất. Historical evidence/JSON/hashes không bị sửa trong Task 5A.
+
+## Historical report — original results retained
+
 > This records the earlier late-weapon implementation. The subsequent [remaining-target investigation](ISSUE_75_EARLY_BALANCE_RESULTS.md) adds chronological acquisition evidence, six rejected early candidates and the latest regression gate. It makes no further production change; the late improvement below remains intact.
 
 Starting HEAD: `2264917fa5f6bed61aebf34a345a1ace9f8555ae`, clean branch `fix/issue-75-game-balance`, matching origin after fetch. Godot: `4.7.2.stable.official.ed1daf0bf`. The starting commit's [CI passed](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/44695216858). Both existing backup refs and both stashes were preserved. Development was not merged; its integration is separate from this work.

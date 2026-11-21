@@ -1,5 +1,13 @@
 # Issue #75: seventh corrective commit acceptance
 
+## CURRENT STATUS — 2026-11-21, Task 5A
+
+**Historical seventh-commit audit.** Anti-heal và queued potion use đã sửa; development integration đã hoàn tất. Nhận định PR #99 còn chặn integration, CI chưa push và các số liệu pre-integration bên dưới là lịch sử, không mô tả HEAD hiện hành.
+
+Nguồn tổng hợp hiện hành: [PR #76 current review](PR_76_CURRENT_REVIEW.md); [manual checklist/F8](ISSUE_75_MANUAL_PLAYTEST.md). Checkpoint CI `209ab53` đã success, không thay CI của HEAD mới hơn. Numerical/specification/manual/approval acceptance vẫn chưa hoàn tất. Historical evidence/JSON/hashes không bị sửa trong Task 5A.
+
+## Historical report — original results retained
+
 > Follow-up, 2026-11-20: the equipment anti-heal fix and current verification are in [PR #76 review fixes](PR_76_REVIEW_FIXES.md). The seventh-commit results below are historical: removing equipment healing changes current HP and potion use. Development integration remains blocked by open revert PR #99.
 
 **PASS WITH LIMITATIONS for the compatible correctness fixes. Full gameplay balance acceptance remains FAIL.** Numerical progression has not been tuned: actual starting-commit and corrected results match across all 540 phase-matched rows. Mandatory rules and earned +2 HP descents are preserved. Interactive floor-1-to-floor-6 fairness and remote CI on this unpushed commit remain NOT VERIFIED.

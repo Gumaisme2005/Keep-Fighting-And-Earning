@@ -1,3 +1,121 @@
+# PR #76 — technical review and evidence status
+
+## CURRENT STATUS — 2026-11-21, Task 5A
+
+**PR có thể review kỹ thuật; chưa đủ điều kiện merge hoặc nghiệm thu toàn Issue #75.** Task 1 COMPLETE; Task 2 SPECIFICATION BLOCKED; Task 3 PARTIALLY COMPLETE; Task 4 PARTIALLY VERIFIED **chỉ menu/Guild Hall**. Dungeon playthrough vẫn **NOT PERFORMED**. Đây là trang tổng hợp hiện hành; các báo cáo trong phần lịch sử giữ nguyên kết quả của từng thời điểm.
+
+Checkpoint trước thay đổi tài liệu Task 5A: local/origin/PR head cùng `209ab53ce7a1207b7590d69e364a57ac0b74aa70`, branch `fix/issue-75-game-balance`, working tree sạch. Gameplay được kiểm tra tại `1e1266e322427aa51aa3d5408110818997a71af5`; sau đó chỉ có cập nhật checklist Task 4.
+
+- [PR #76](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/pull/76) OPEN, không draft, chưa merge; base `development` tại `0667ee7e6fc808acf7353d75de31f4e342d4581d` đã là ancestor của feature (0 commit development còn thiếu). Merge `57ebb80095bde80e12348b9997822e89e09e65a6` đã hoàn tất tích hợp. Không cần merge/rebase mới trong Task 5A.
+- GitHub tại checkpoint trả `mergeable=true`, `mergeable_state=clean`; đây là tình trạng conflict/checks, không phải phê duyệt gameplay. PR có 138 file thay đổi, +233.221/−502 dòng tại checkpoint này.
+- CI **đúng SHA `209ab53`**: [push 44904003106](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/44904003106) và [pull_request 44904007373](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/44904007373) đều completed/success. Kết quả này không chứng nhận CI của commit Task 5A hoặc HEAD mới hơn; phải kiểm tra lại sau push.
+- Requested reviewers: `bao222cld`, `Bravee9`, `Gumaisme2005`; API trả **0 submitted reviews**, chưa có Approve. [Comment maintainer](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/pull/76#issuecomment-6888443622) yêu cầu anti-heal, quyết định specification, manual sáu tầng và re-review/Approve; comment không phải approval.
+
+## A. Implementation defects đã sửa
+
+- Equipment anti-heal (`76785b0`): thay gear chỉ đổi capacity và clamp HP hiện tại; không cộng HP khi tăng capacity. Giữ `base_max_hp + gear + potion_max_hp_gained + floor_vitality_applied`. [Regression inventory/HUD](../tests/test_moba_hud_and_inventory.gd) kiểm tra equip/unequip lặp lại, gear mạnh/yếu và giữ HP đã kiếm được.
+- Queued-player potion use (`1e1266e`): central `_consume_potion()` từ chối player đang chờ hủy; regression gameplay API, hotbar/inventory và shop-menu giữ nguyên HP/bag/cooldown/progression. RED 129 PASS/3 FAIL → GREEN 132/0. [Source](../Scene/Character/BasePlayer.gd), [regression](../tests/test_potion_system.gd).
+- Task 1 bảo toàn các fix integration: queued-player pickup, partial/full ground-unit conservation, world-space loot offsets sau deferred parenting, perk apply/reset, timing/lifecycle, shop USE lúc pause và deferred coins đúng run. Chi tiết nằm trong [báo cáo Task 1](ISSUE_75_FINAL_INTEGRATION.md); không coi lỗi anti-heal đã sửa là blocker chưa xử lý.
+
+Contract source đã đối chiếu: default ordinary treasure có `loot_table` rỗng, chọn equipment qua ItemDatabase theo floor; custom table nonempty chỉ dùng khi authored explicit. Đây là implementation được owner cho phép trong Task 1, thay legacy pool và RNG selection của treasure có chủ đích. Boss vẫn có hai chest mỗi victory, mỗi chest giữ hai equipment rolls sau gate và **một Rare potion guarantee riêng, không rút RNG**. Không mô tả toàn bộ seeded treasure outcome là giống baseline cũ. Final interpretation per-chest/per-victory của Issue vẫn cần maintainer xác nhận.
+
+## B. Regression đã xác minh
+
+Gate Task 3 tại gameplay `1e1266e`: Godot `4.7.2.stable.official.ed1daf0bf`, Windows, profile/project cô lập, physics 60, render caps 30/144. **39 suite/cap = 78/78 PASS**, 46.271 assertion PASS/0 FAIL mỗi cap, cộng Yugi có completion marker nhưng không có aggregate count. Đủ native exit 0, completion markers; không timeout hoặc unexpected parser/runtime/lifecycle error trong gate được chấp nhận. Potion 132/0, inventory/HUD 223/0, integration 73/0, bug-bash 44/0, equipment 430/0, enemy-floor 1053/0, progression 42327/0, combat pacing 337/0, acquisition 162/0 mỗi cap.
+
+Task 5A **audit lại bằng chứng, không chạy lại 78 suite**: xác minh hash 78 raw logs, tính lại 13 cặp trace khớp, so 540 progression records giữa FPS, đối chiếu 1.492 tracked file ngoài docs với snapshot gameplay đã kiểm tra. Tính lại potion ledger và xác minh conservation. Task 4 đã recheck potion 132/0 ở hai cap và startup menu có viewport render, physics 60, cap đúng 30/144. Các số PASS là implementation/regression checks, không phải tỷ lệ thắng hay numerical acceptance.
+
+Local evidence hiện hành, **ignored và không được GitHub phân phối cùng repo**:
+
+- `.godot/issue75_task3/gate_summary.json`, `source_manifest.json`, `potion_summary.json` và raw logs; progression raw `matrix_g0_test_issue75_progression_balance_30_issue75_progression_after.json` / `matrix_g1_test_issue75_progression_balance_144_issue75_progression_after.json` có cùng SHA-256 `edcd504a94d370d86224e6a13371889376dabe4c81fd22fe26bb35d8cc73e1dd`.
+- `.godot/issue75_task5a/current_evidence_audit.json`, `historical_reproduction.json`, `evidence_inventory.json` lưu audit tính lại, dependency và hash. Các file lớn tracked bên dưới là **lịch sử**, không thay thế raw post-integration này.
+- Reviewer ở checkout mới có thể tái chạy tracked [runner](../tests/run_issue75_acceptance.py) trên source hiện hành: `python tests/run_issue75_acceptance.py --godot <Godot-4.7.2-executable> --prepare --import-project --label review_current_144 --fps 144 --suites test_issue75_progression_balance test_issue75_acquisition test_issue75_combat_pacing`; sau đó dùng label mới và cap 30, không bật experiment overrides. Runner dùng project/save cô lập. Đây là lệnh tái lập được chuẩn bị, không phải một lần chạy mới trong Task 5A. Nếu cần review raw evidence từ xa, phải chọn nơi lưu được duyệt; không giả định reviewer truy cập được `.godot/` của tác giả.
+
+## C. Numerical balance hiện tại
+
+Controlled production-event simulation, **30 seeds × 3 policies × 6 floors = 540 rows**. Bảng dưới là **normal policy**, median tại **phase C: exit sau boss/chest rewards, trước portal perk/descent**. Armor là capacity, damage là raw float; `combat.hits` là attack calls gồm crit/proc, không phải số press của held combo. Boss/room clears được giả định cho sampling; đây không phải manual survival.
+
+| Tầng | Max HP / target | Armor capacity / target | Raw damage / target | Orc HP | Attack calls / target |
+|---:|---|---|---|---:|---|
+| 1 | 6 / 5–7 | 5 / 2–3 | 3 / 1–2 | 4 | 2 / 2–4 |
+| 2 | 10 / 8–10 | 7 / 3–4 | 4 / 2–3 | 8 | 2 / 3–4 |
+| 3 | 13 / 11–14 | 8 / 4–6 | 5 / 3–5 | 12 | 3 / 3–4 |
+| 4 | 16 / 15–19 | 9 / 5–7 | 6 / 5–7 | 17 | 3 / ~3 |
+| 5 | 20 / 19–25 | 10,5 / 7–9 | 7 / 7–9 | 22 | 3 / ~3 |
+| 6 | 23,5 / 23–30 | 12 / 8–10 | 7,5 / 8–10 | 27 | 4 / ~3 |
+
+Max-HP medians nằm trong dải cả sáu tầng; điều này không có nghĩa mọi seed đều đạt. Armor medians lệch cả sáu tầng; raw damage lệch **1, 2, 6**. Orc HP khớp; pacing tầng 2 không đạt range 3–4. Tầng 1/3 có median trong range; tầng 4–6 báo 3/3/4, chưa kết luận formal PASS/FAIL theo `~3` khi chưa có dung sai được phê duyệt. Không thay metric để nhận PASS.
+
+Potion normal: **generated median 24 / collected 9 / consumed 6**, totals **707 / 263 / 182** trên 30 routes. Generated/collected không gồm starter; consumed gồm starter. Starter là một unit/run, được theo dõi riêng. Generated sources: ordinary 220, pity 127, boss guarantees 360, other chest 0; ground total 444, final inventory 111. Median 26/total 796 và floor-six damage 8 trong báo cáo trước Task 1 đã được supersede bởi treasure integration; không phải số liệu mới của manual run. Target 10–12 generated chưa đạt; không đổi sang collected/consumed để tuyên bố đạt.
+
+## D. Specification decisions cần maintainer
+
+1. Phạm vi thay đổi armor/damage progression, equipment/acquisition/rewards được phép để xử lý các median lệch; giữ nguyên threshold hiện tại cho đến khi có quyết định, không tự thêm floor caps hoặc sửa item budgets.
+2. 10–12 potion nghĩa là generated, collected hay consumed; starter/shop/custom rewards, route/policy, measurement phase và minimum seed coverage/dung sai phải được ghi rõ.
+3. Final Rare guarantee theo **mỗi boss chest** hay **mỗi boss victory**. Source hiện giữ per-chest; thử nghiệm per-victory của Task 3 chỉ là counterfactual, không được áp dụng và không tự giải quyết generated target.
+4. Metric attack calls/input edges/swings/hit events và dung sai chính thức cho `~3`; user đã giữ `~3` là mốc tham khảo, chưa chấp nhận formal PASS/FAIL cho median 4.
+5. Tiêu chí human gameplay acceptance, seed/route coverage, survival/death reporting và cách thu đủ bốn phase. Một manual run hoặc CI xanh không hoàn tất các quyết định này.
+
+## E. Manual gameplay chưa xác minh
+
+[Checklist và kết quả Task 4](ISSUE_75_MANUAL_PLAYTEST.md) là nguồn chuẩn cho manual scope và F8 workflow. Run A `ISSUE75-DISTRIBUTION-14` chỉ có UI/Guild Hall, Miyabi 4/4 HP, 2/2 armor, raw damage 1, một Common potion; chưa vào dungeon. Run B `...-04` và C `...-20` chưa chạy. **Toàn bộ A/B/C/D của tầng 1–6 vẫn NOT VERIFIED**, chưa có actual Orc/boss, potion ledger hoặc survival sáu tầng. Không dùng nhãn Floor 1 của hub để ghi đã đạt dungeon tầng 1.
+
+Giữ nguyên `.godot/issue75_task4/` và bộ ghi F8/profile riêng. Phase-D hook chỉ mới chuẩn bị từ source, chưa được manual perk selection chứng minh. Không đưa raw screenshot/video/log lớn vào Git khi chưa có storage plan được duyệt.
+
+## F. Review và approval còn thiếu
+
+Anti-heal và queued potion consumption đã sửa; regression đã có bằng chứng. Những việc còn lại là numerical failures, quyết định specification, manual sáu tầng và reviewer re-review/Approve. Development integration không còn bị chặn bởi PR #99 như trong báo cáo cũ; PR #78 không được nhập trong Task 1/5A và không có claim compatibility mới với nhánh đó.
+
+- [ ] Nhóm chốt các quyết định specification và đánh giá lại numerical acceptance.
+- [ ] Hoàn thành manual gameplay đúng checklist và ghi kết quả các floor tới được.
+- [ ] Reviewer re-review và submit Approve.
+- [ ] Được nhóm xác nhận đủ điều kiện merge.
+- [ ] CI success trên chính HEAD cuối cùng cần merge; kiểm tra lại conflict/branch state tại thời điểm đó.
+
+## Large evidence-file retention audit
+
+Audit tại checkpoint `209ab53`: bốn file dưới đây có **6.120.462 bytes / 208.236 dòng**, đều là file mới so với development, chiếm khoảng **89,3%** số dòng thêm của PR tại checkpoint. Không xóa, move, nén, reformat hoặc sửa JSON/hash trong Task 5A. Tất cả hiện vẫn tracked; các nhãn là khuyến nghị, không phải authorization thay storage.
+
+| File | Bytes / dòng | Purpose và report phụ thuộc | Test/CI consumer dữ liệu | Khuyến nghị |
+|---|---:|---|---|---|
+| [early balance evidence](issue75_early_balance_evidence.json) | 3.536.443 / 119.373 | Baseline + 6 rejected early candidates, first-excess acquisitions, 50-suite gate; [early report](ISSUE_75_EARLY_BALANCE_RESULTS.md), source `53664cf` | Không có consumer trực tiếp; tracked summarizer là **writer**, CI không gọi nó | **KEEP TRACKED**: snapshot có kết quả/causal comparisons riêng; archive phải giữ raw inputs và producer |
+| [implementation evidence](issue75_implementation_evidence.json) | 1.428.369 / 50.402 | Late-weapon baseline/final/4 experiments, probe RED/GREEN, combat matrix và 48-suite gate; [implementation report](ISSUE_75_IMPLEMENTATION_RESULTS.md), source `c3aa2fa` | Không có consumer trực tiếp; không được CI parse | **REQUIRED FOR REPRODUCIBILITY** của audit lịch sử: producer và raw data chỉ có local; snapshot này cần được giữ, nhưng tự nó chưa tái lập toàn bộ gate từ clean clone |
+| [acceptance statistics](issue75_acceptance_statistics.json) | 785.165 / 25.165 | V3 before/after/test-only treasure proposal, distributions và potion conservation; [historical audit](ISSUE_75_FINAL_BALANCE_AUDIT.md), [distribution report](ISSUE_75_PROGRESSION_DISTRIBUTIONS.md), acceptance manifest | Không có consumer trực tiếp; có report link và manifest SHA-256 | **ARCHIVE AFTER APPROVAL**: deterministic derived output; chỉ archive sau khi sửa dependency links/manifest resolution theo storage plan được duyệt |
+| [progression statistics](issue75_progression_statistics.json) | 370.485 / 13.296 | V2 before/after vitality counterfactual, distributions; [historical audit](ISSUE_75_FINAL_BALANCE_AUDIT.md); v2 seed manifest | Không có consumer trực tiếp; report và generator phụ thuộc input raw riêng | **POSSIBLE REDUNDANCY**: tái sinh được từ hai tracked raw JSON và trùng nhiều nội dung MD; chưa được phép bỏ file |
+
+Không tìm thấy test hoặc CI assertion parse **bốn summary file này** qua literal path hoặc caller generator; checkout/project-copy vẫn mang chúng theo. Có dependency CI khác rất quan trọng: [test_issue75_acceptance.gd](../tests/test_issue75_acceptance.gd) **đọc trực tiếp** [issue75_progression_distribution_after.json](issue75_progression_distribution_after.json) để tạo representative loadouts, và CI chạy suite đó ở 30/144. Không archive raw fixture này theo suy luận rằng mọi JSON evidence đều chỉ là tài liệu.
+
+Reproducibility/integrity đã kiểm tra, không chạy lại gameplay:
+
+- `tests/summarize_issue75_acceptance.py` và `tests/summarize_issue75_progression.py` chạy trên **bản copy input trong ignored mirror**, tái tạo hai statistics file khớp **từng byte**. Script cũng ghi MD nên không chạy trực tiếp trên docs gốc. Acceptance input là tracked before/after/proposal; progression input là tracked distribution_before/after. [Acceptance manifest](issue75_acceptance_manifest.json) hash cả acceptance statistics và năm artifact liên quan; sáu hash hiện đều hợp lệ. [V2 seed manifest](issue75_progression_seed_manifest.json) ghi seeds/policies/clock nhưng không có whole-file hash của progression statistics.
+- Tracked `tests/summarize_issue75_early_balance.py`: import pure summarization functions, đối chiếu 7 scenario summaries, 6 paired comparisons, first-excess events và 50 raw-log hashes. Raw inputs nằm ở ignored `.godot/issue75_early_gate/`. Không gọi nhánh final-verification có side effect ghi lại `python_gate.log`; không nhận đây là full-file regeneration.
+- Producer implementation tìm thấy ở ignored `.godot/summarize_implementation.py`, **không tracked**. Import pure `describe()` đối chiếu baseline/final/4 experiment summaries, input hashes và 48 raw-log hashes; không gọi `build()` ghi docs. Raw inputs nằm ở `.godot/issue75_acceptance/` và `.godot/issue75_final_gate/`. Một clean clone thiếu producer/raw logs; cần approved archive hoặc một tác vụ tái lập riêng trước khi thay storage.
+- Hai file evidence lớn có raw-data/log/trace hashes bên trong; không có manifest tracked độc lập hash toàn bộ chính hai file đó. Bảng SHA-256 Task 5A dưới đây ghi identity hiện tại, không thay hash lịch sử:
+
+| File | SHA-256 |
+|---|---|
+| `issue75_early_balance_evidence.json` | `bef4f46f9b47b41de2fc6fc170b9e5fe78dd0df8a62a02164a957b48864f11fe` |
+| `issue75_implementation_evidence.json` | `71de856d9d408b17475070ab9c2134897ec9c871698fb41a08e9c29e2c9e463b` |
+| `issue75_acceptance_statistics.json` | `e929e973d96f381cf291d29a1861e3c50f7e2d7b868916c796a446d73818a049` |
+| `issue75_progression_statistics.json` | `90a0bf0b91dc17027611ecac9aa108742afeaa7b1af3546c8b64219633809863` |
+
+Một storage plan có thể review phải chỉ rõ nơi archive bất biến, access/retention của reviewer, producer + raw inputs + seeds/source SHA/engine + hash index, cách giữ report/manifest links và raw CI fixture. Chỉ sau khi được duyệt mới thay Git tracking; không giảm assertions hoặc làm CI pass bằng cách bỏ dữ liệu.
+
+## PR description maintenance
+
+[PR_76_DESCRIPTION_UPDATE.md](PR_76_DESCRIPTION_UPDATE.md) là body tiếng Việt sẵn dán với tám section yêu cầu. Nó sửa potion 26→24, damage failures 1/2/6, Orc range failure tầng 2, trạng thái hai bug đã sửa, default treasure integration, CI checkpoint và manual/approval scope.
+
+<!-- TASK5A_PR_BODY_STATUS -->
+Task 5A đã thử cập nhật body của PR #76 qua GitHub connector; API trả **403 — Resource not accessible by integration**. **Remote PR body chưa được cập nhật**, gồm cả checkbox merge sai trong body cũ. [PR_76_DESCRIPTION_UPDATE.md](PR_76_DESCRIPTION_UPDATE.md) là bản hoàn chỉnh sẵn dán; author/maintainer có quyền cần thay body bằng nội dung file này. Không tạo PR hoặc comment mới và không coi bản local là remote update thành công.
+<!-- /TASK5A_PR_BODY_STATUS -->
+
+## Historical review — retained unchanged
+
+Các số 26 potion, floor-six damage 8 và nhận định integration/conflict/CI ở các report cũ chỉ có giá trị tại source/measurement commit của chúng. Header CURRENT STATUS trên các report chỉ trỏ về trang này; không sửa historical experiments, không coi dữ liệu lịch sử là kết quả hiện hành.
+
+<details>
+<summary>Review trước Task 1 integration — nội dung lịch sử giữ nguyên</summary>
+
 # PR #76: current integration and balance review — 2026-11-20
 
 > Historical integration snapshot. The later [implementation results](ISSUE_75_IMPLEMENTATION_RESULTS.md) and [implementation evidence](issue75_implementation_evidence.json) supersede this page's test counts and balance results. They include probe isolation, four phases, real-scene Orc measurements and the selected late weapon improvement (floor-six damage median 7.5 to 8). This older page remains as evidence of the earlier review; it is not a fresh integration audit.
@@ -131,3 +249,5 @@ The GitHub integration rejected `update_pull_request` for PR #76 with **403 — 
 - Existing replay-security tests synthesize multiple `finish_run()` calls without starting a new run. Adapt those fixtures to independent `run_id` sessions when #78 is integrated; do not weaken the pending completion contract to satisfy old fixtures. Its VT-074 suites have not run on this unintegrated branch.
 
 The next required maintainer action is to resolve #99's revert direction. Then fetch the approved development HEAD, resolve all conflicts function by function, run the combined suites, decide the specification items above, complete an interactive floors 1–6 playtest, and request final re-review/Approve. PR #76 must not be merged before these steps.
+
+</details>

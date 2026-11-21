@@ -1,5 +1,13 @@
 # Issue #75 — Task 1/5: contract rương và tích hợp development
 
+## CURRENT STATUS — 2026-11-21, Task 5A
+
+**Task 1 integration report.** Task 1 COMPLETE; development đã tích hợp bằng `57ebb80`. Các câu “task tiếp theo/chưa thực hiện Task 2/3” phía dưới là checkpoint Task 1, không phải trạng thái hiện hành. Task 2 SPECIFICATION BLOCKED, Task 3 PARTIALLY COMPLETE, Task 4 PARTIALLY VERIFIED chỉ menu/Guild Hall.
+
+Nguồn tổng hợp hiện hành: [PR #76 current review](PR_76_CURRENT_REVIEW.md); [manual checklist/F8](ISSUE_75_MANUAL_PLAYTEST.md). Checkpoint CI `209ab53` đã success, không thay CI của HEAD mới hơn. Numerical/specification/manual/approval acceptance vẫn chưa hoàn tất. Historical evidence/JSON/hashes không bị sửa trong Task 5A.
+
+## Historical report — original results retained
+
 **Task 1: functional integration PASS, đã có merge commit `57ebb80095bde80e12348b9997822e89e09e65a6` trên `fix/issue-75-game-balance`.** Commit giữ first parent `bbd3d55586e8a87ec0124c1534d422268b057ad7` (checkpoint tài liệu của user) và development `0667ee7e6fc808acf7353d75de31f4e342d4581d`. Giữ nguyên worktree, patch cũ, stash và backup; không force push, không nhập #78/#99, không merge PR #76 vào development.
 
 ## Contract được chọn và thay đổi thực thi
