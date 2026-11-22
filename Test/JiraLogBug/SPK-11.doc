@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>[#SPK-11] [UI] Combat Controls &amp; Mechanics modal overflows the screen and clips the Close button</title>
+    <meta http-equiv="Content-Type" Content="application/vnd.ms-word; charset=UTF-8">
+        <style type="text/css">
+
+.tableBorder, .grid
+{
+    background-color: #fff;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tableBorder td, .grid td
+{
+    vertical-align: top;
+    padding: 2px;
+    border: 1px solid #ccc;
+}
+
+.noPadding
+{
+    padding: 0 !important;
+}
+
+h3 .subText
+{
+    font-size: 60%;
+    font-weight: normal;
+}
+
+.tabLabel
+{
+    font-weight: bold;
+    border: 1px solid #ccc;
+    border-bottom:none;
+    padding: 2px;
+    display: inline;
+}
+
+td.blank
+{
+    padding: 0;
+    margin: 0;
+}
+
+.blank td
+{
+    border: none;
+}
+
+#descriptionArea
+{
+    margin: 0;
+    padding: 2px;
+    border: 1px solid #ccc;
+}
+
+hr
+{
+    border-top:1px solid #aaa;
+}
+
+hr.fullcontent
+{
+  height: 15px;
+  padding: 10px 0;
+  background: #fff url('https://lengocbaonguyen622.atlassian.net/images/icons/hr.gif') no-repeat scroll center;
+}
+
+</style>
+
+</head>
+<body>
+
+<table class="tableBorder" cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td bgcolor="#f0f0f0" width="100%" colspan="2" valign="top">
+                            <h3 class="formtitle">
+                        [SPK-11]&nbsp;<a href="https://lengocbaonguyen622.atlassian.net/browse/SPK-11">[UI] Combat Controls &amp; Mechanics modal overflows the screen and clips the Close button</a>
+            <span class="subText">
+               Created: 22/Nov/26                   &nbsp;Updated: 22/Nov/26
+
+                                            </span>
+            </h3>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%"><b>Status:</b></td>
+        <td width="80%">To Do</td>
+    </tr>
+    <tr>
+        <td width="20%"><b>Project:</b></td>
+        <td width="80%"><a href="https://lengocbaonguyen622.atlassian.net/secure/BrowseProject.jspa?id=10072">SE_Project_K2026</a></td>
+    </tr>
+
+        <tr>
+            <td><b>Components:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+
+        <tr>
+            <td><b>Affects versions:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+
+        <tr>
+            <td><b>Fix versions:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+    
+    </table>
+
+<br />
+<table class="grid" cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td bgcolor="#f0f0f0" valign="top" width="20%">
+            <b>Type:</b>
+        </td>
+        <td bgcolor="#ffffff" valign="top"  width="30%" >
+            Bug
+        </td>
+
+                    <td bgcolor="#f0f0f0">
+                <b>Priority:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" nowrap>
+                Medium
+            </td>
+            </tr>
+    <tr>
+                        <td bgcolor="#f0f0f0" valign="top" width="20%">
+                <b>Reporter:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top"  width="30%" >
+                                        
+                
+        
+            <a class="user-hover" rel="712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                id="word_reporter_712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                href="https://lengocbaonguyen622.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3Aeb99c4f8-79be-40c7-b727-b6f526e38ae2">
+                    Lê Ngọc Bảo Nguyễn
+                </a>
+
+                            </td>
+        
+                    <td bgcolor="#f0f0f0" width="20%">
+                <b>Assignee:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" nowrap  width="30%" >
+                                        
+                
+        
+            <a class="user-hover" rel="712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                id="word_assignee_712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                href="https://lengocbaonguyen622.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3Aeb99c4f8-79be-40c7-b727-b6f526e38ae2">
+                    Lê Ngọc Bảo Nguyễn
+                </a>
+
+                            </td>
+            </tr>
+    	<tr>
+		<td bgcolor="#f0f0f0" width="20%">
+			<b>Resolution:</b>
+		</td>
+		<td bgcolor="#ffffff" valign="top" width="30%" nowrap>
+            				Unresolved
+                    </td>
+                    <td bgcolor="#f0f0f0" width="20%">
+                <b>Votes:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" width="30%" nowrap>
+                0
+            </td>
+        
+    </tr>
+    
+        <tr>
+        <td bgcolor="#f0f0f0" width="20%">
+            <b>Labels:</b>
+        </td>
+        <td id="labels-10134-value" class="value" bgcolor="#ffffff" valign="top" colspan="3" nowrap>
+                            None
+                    </td>
+    </tr>
+    
+    	<tr>
+        		<td bgcolor="#f0f0f0" width="20%"><b>Remaining Estimate:</b></td>
+        <td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+    </tr>
+    <tr>
+                <td bgcolor="#f0f0f0" width="20%"><b>Time Spent:</b></td>
+		<td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+	</tr>
+    <tr>
+                <td bgcolor="#f0f0f0" width="20%"><b>Original estimate:</b></td>
+		<td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+    </tr>
+    
+    </table>
+
+
+
+    <br />
+
+    	<table class="grid" cellpadding="0" cellspacing="0" border="0" width="100%">
+            
+
+                <tr>
+            <td bgcolor="#f0f0f0" width=20% valign=top>
+                <b>Attachments:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top">
+                                    <img src="https://lengocbaonguyen622.atlassian.net/images/icons/attach/image.gif" height="16" width="16" border="0" alt="PNG File">
+                    [UI] Combat Controls &amp; Mechanics modal overflows the screen and clips the Close button.png &nbsp;&nbsp;&nbsp;
+                            </td>
+        </tr>
+        
+    
+
+
+    
+                        <tr>
+                <td bgcolor="#f0f0f0" width="20%" valign="top"><b>Start date:</b></td>
+                <td id="customfield_10015-10134-value" class="value" bgcolor="#ffffff" width="80%">          <span title="22/Nov/26"><time datetime="2026-11-22">22/Nov/26</time></span>
+    </td>
+            </tr>
+                                <tr>
+                <td bgcolor="#f0f0f0" width="20%" valign="top"><b>Rank:</b></td>
+                <td id="customfield_10019-10134-value" class="value" bgcolor="#ffffff" width="80%">      0|i000d3:
+  </td>
+            </tr>
+            </table>
+
+    <br/>
+
+    <table cellpadding="2" cellspacing="0" border="0" width="100%" align="center">
+    <tr>
+        <td bgcolor="#bbbbbb" width="1%" nowrap align="center">
+            &nbsp;<font color="#ffffff"><b>Description</b></font>&nbsp;
+        </td>
+        <td>&nbsp;</td>
+    </tr>
+    </table>
+
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td id="descriptionArea">
+            <p><b>Bug Type:</b> Visual / UI Layout / Responsive Design</p>
+
+<p><b>Priority:</b> Medium</p>
+
+<p><b>Preconditions:</b></p>
+
+<ul>
+	<li>Game is running.</li>
+	<li>The player is on the Main Menu.</li>
+	<li>The CONTROLS &amp; MECHANICS button is available.</li>
+</ul>
+
+
+<p><b>Steps to Reproduce:</b></p>
+
+<ol>
+	<li>Launch Keep Fighting &amp; Earning.</li>
+	<li>Stay on the Main Menu.</li>
+	<li>Click <b>CONTROLS &amp; MECHANICS</b>.</li>
+	<li>Observe the modal's width, text layout, and Close button.</li>
+	<li>Check the long control descriptions for Doraemon, Miyabi, and Lương Thơ.</li>
+	<li>Observe whether the modal fits within the game window.</li>
+</ol>
+
+
+<p><b>Expected Result:</b></p>
+
+<ul>
+	<li>The Controls &amp; Mechanics modal is centered and fully visible within the game window.</li>
+	<li>All control descriptions are displayed correctly.</li>
+	<li>Long text automatically wraps to the next line.</li>
+	<li>The Close button remains fully visible and accessible.</li>
+	<li>The modal adjusts to the available screen space without clipping its content.</li>
+</ul>
+
+
+<p><b>Actual Result:</b></p>
+
+<ul>
+	<li>The modal extends beyond the right edge of the game window.</li>
+	<li>Long control descriptions are displayed on a single line instead of wrapping.</li>
+	<li>Some text is clipped and cannot be read completely.</li>
+	<li>The Close button is partially outside the visible area.</li>
+	<li>The modal layout does not properly fit the available screen space.</li>
+</ul>
+
+
+<p><b>Test Case Result:</b></p>
+
+<ul>
+	<li><b>FAIL</b></li>
+	<li><b>Testing Type:</b> Exploratory Testing</li>
+	<li><b>Related Module:</b> Main Menu / Controls &amp; Mechanics</li>
+	<li><b>Regression Testing:</b> Required after the UI layout is corrected.</li>
+</ul>
+
+
+<p><b>Notes:</b></p>
+
+<ul>
+	<li>The issue appears to be related to improper text wrapping and modal size constraints.</li>
+	<li>Long character-specific control descriptions may cause the content container to expand beyond the intended width.</li>
+	<li>Check whether the text Label has automatic wrapping enabled.</li>
+	<li>Verify the layout and size constraints of the modal's containers.</li>
+	<li>Consider using a ScrollContainer to accommodate long instructions.</li>
+	<li>Check whether the issue occurs at multiple screen resolutions.</li>
+	<li>Ensure that the Close button remains accessible after resizing the game window.</li>
+	<li>Verify that all control descriptions remain readable after the fix.</li>
+</ul>
+
+            <br/>
+        </td>
+    </tr>
+    </table>
+
+Generated at Sun Nov 22 16:06:47 UTC 2026 by Lê Ngọc Bảo Nguyễn using Jira 1001.0.0-SNAPSHOT#100296-rev:400f33c97b3888480984ddbf9c6c9198743aa955.
+
+</body>
+</html>
