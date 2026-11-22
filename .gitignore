@@ -2,24 +2,16 @@
 .godot/
 /android/
 .codegraph/
+/build/
 
-# Documents & Assignment artifacts
-*.pdf
-*VT-075*
-*vt075*
-docs/vt075/
-tests/vt075/
-__pycache__/
-*.pyc
+/.editorconfig
+/Scene/Character/Yugi/README.md
+*.aseprite
 
-# Asset packs & temporary archives (Do not commit source asset packs)
-*Tiny RPG Character*
-*tiny RPG Character*
+# Archives, backups, temp & OS files
 *.zip
 *.tar.gz
 *.rar
-
-# Backup & temporary files
 *_backup.*
 *.tmp
 *.bak
@@ -27,4 +19,3 @@ __pycache__/
 *~
 .DS_Store
 Thumbs.db
-

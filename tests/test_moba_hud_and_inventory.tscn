@@ -1,6 +1,0 @@
-[gd_scene format=3]
-
-[ext_resource type="Script" path="res://tests/test_moba_hud_and_inventory.gd" id="1_test_script"]
-
-[node name="TestMobaHudAndInventory" type="Node"]
-script = ExtResource("1_test_script")
