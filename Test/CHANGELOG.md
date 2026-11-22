@@ -206,3 +206,36 @@
 - Previously reported Jira issues remain subject to retesting and verification; their resolution status has not been changed.
 - No gameplay source code was modified, and no changes were pushed or merged into the shared GitHub repository.
 - The updated test suite will serve as the baseline for future functional testing and regression testing of the `development` branch.
+## 2026-11-22
+
+### QA
+- **23:11** - Performed exploratory UI testing on the **Combat Controls & Mechanics** modal in the Main Menu.
+- Identified a layout issue where the modal extends beyond the right edge of the game window.
+- Observed that long character-specific control descriptions are not automatically wrapped, causing the modal to expand beyond the visible screen area.
+- Confirmed that some instructional text is clipped and the **Close** button is only partially visible.
+- Reviewed the relevant UI implementation and identified a possible issue with text wrapping and container size constraints.
+- Captured a screenshot documenting the incorrect modal layout.
+
+### Bug
+- **Jira Bug:** [SPK-11 — [UI] Combat Controls & Mechanics modal overflows the screen and clips the Close button](https://lengocbaonguyen622.atlassian.net/browse/SPK-11)
+- **Bug Type:** Visual / UI Layout / Responsive Design.
+- **Priority:** Medium.
+- **Affected Module:** Main Menu / Controls & Mechanics.
+- **Testing Type:** Exploratory / UI Testing.
+- **Test Result:** FAIL.
+- **Status:** To Do.
+
+### Evidence
+- **Screenshot:** [[UI] Combat Controls & Mechanics modal overflows the screen and clips the Close button.png](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/blob/qa/test-suite/Test/Evidence/%5BUI%5D%20Combat%20Controls%20%26%20Mechanics%20modal%20overflows%20the%20screen%20and%20clips%20the%20Close%20button.png)
+- **QA Branch:** [qa/test-suite](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/tree/qa/test-suite)
+- **Source Code Reference:** `Menu/main menu/main_menu.gd`
+
+### Progress
+- Identified and documented **1 additional UI layout issue**.
+- Added screenshot evidence to the `Test/Evidence/` directory on the QA branch.
+- Recorded the issue in Jira as **SPK-11**.
+- Prepared a structured GitHub Issue report with reproduction steps, expected and actual results, and a regression testing checklist.
+- Identified text wrapping and modal sizing as potential causes requiring developer verification.
+- Regression testing is required after the UI layout is corrected, including checks at multiple screen resolutions.
+- The existing QA test suite remains at **420 test cases**; no execution statuses were changed during this exploratory testing activity.
+- No gameplay source code was modified as part of this QA documentation update.
