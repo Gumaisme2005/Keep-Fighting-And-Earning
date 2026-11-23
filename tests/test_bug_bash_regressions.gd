@@ -62,9 +62,6 @@ class MockNavTileMap extends Node2D:
 		var c := local_to_map(to_local(gpos))
 		return blocked.has(c)
 
-class MockLockTileMap extends Node2D:
-	var room_managers: Dictionary = {}
-
 class TrapMockPlayer extends CharacterBody2D:
 	var is_dead: bool = false
 	var damage_hits: int = 0
@@ -336,26 +333,12 @@ func _test_replay_save_and_modal_guards() -> void:
 	GameManager.hall_selecting = true
 	GameManager.record_frame_input({"dx": 1.0, "dy": 0.0, "slot": -1})
 	assert_test(GameManager.current_recording_frames.is_empty(), "#82.4 Hall selection prevents recording stray replay frames")
-	assert_test(not GameManager.teleport_to_guild_hall(), "#86.1 teleport_to_guild_hall blocked while hall_selecting=true")
 	GameManager.hall_selecting = false
 
-	# Locked RoomManager blocks T-key teleport
-	var lock_world := Node.new()
-	var mock_tmap := MockLockTileMap.new()
-	mock_tmap.name = "TileMap"
-	var fake_mgr := RoomManagerScript.new()
-	fake_mgr.is_locked = true
-	mock_tmap.room_managers = {0: fake_mgr}
-	lock_world.add_child(mock_tmap)
-	var dummy_hero := TrapMockPlayer.new()
-	lock_world.add_child(dummy_hero)
-	mock_tmap.add_child(fake_mgr)
-	var prev_scene := get_tree().current_scene
-	get_tree().root.add_child(lock_world)
-	get_tree().current_scene = lock_world
-	assert_test(not GameManager.teleport_to_guild_hall(), "#86.1 Locked RoomManager blocks T-key teleport to Guild Hall")
-	get_tree().current_scene = prev_scene
-	lock_world.queue_free()
+	# #86.1: phím T (dịch chuyển về Guild Hall giữa run, kể cả lúc phòng đang khoá) đã bỏ hẳn —
+	# Guild Hall chỉ vào được lúc bắt đầu run, nên không còn đường nào thoát khỏi trận đang khoá để về sảnh.
+	assert_test(not GameManager.has_method("teleport_to_guild_hall") and not InputMap.has_action("teleport_hall"),
+		"#86.1 T-key teleport to the Guild Hall is removed (no escape from a locked room)")
 
 	# Backup real save if present, verify compact JSON + date/reason reload
 	var had_save := FileAccess.file_exists(GameManager.SAVE_FILE_PATH)

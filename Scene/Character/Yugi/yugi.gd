@@ -11,6 +11,22 @@ const RoomFire = preload("res://Scene/Character/Yugi/room_fire.gd")
 const CHARGE_SECONDS := 0.65
 const RIGHT_CLICK_SUMMON_DISTANCE := 36.0
 const INTRO_FPS := 5.0
+## Tiếng khi tung chiêu (trích từ nhân vật MUGEN "Yami Yugi"): [hiệu ứng, lời thoại, thoại luôn phát].
+## Lời thoại thường có thời gian chờ VOICE_COOLDOWN để không nói liên tục; chiêu Q luôn nói tên lá bài.
+const CAST_AUDIO := {
+	"left-click": ["yugi_slash", "", false],
+	"right-click": ["yugi_summon", "", false],
+	"hold&release-left-click": ["yugi_gaia", "yugi_v_draw", false],
+	"hold&release-right-click": ["yugi_summon", "yugi_v_draw", false],
+	"shift+left+click": ["yugi_combo", "yugi_v_draw", false],
+	"shift+right+click": ["yugi_circle", "yugi_v_circle", false],
+	"result-1": ["yugi_summon", "yugi_v_swords", true],
+	"result-2": ["yugi_summon", "yugi_v_twin_burst", true],
+	"result-3": ["yugi_god_summon", "yugi_v_slifer", true],
+	"result-4": ["yugi_god_summon", "yugi_v_obelisk", true],
+	"result-5": ["yugi_god_summon", "yugi_v_ra", true],
+}
+const VOICE_COOLDOWN := 2.5
 var intro_active := true
 var guard_summon: AnimatedSprite2D
 var guarding := false
@@ -23,6 +39,7 @@ var released_left := false
 var released_right := false
 var action_left := 0.0
 var special_rng := RandomNumberGenerator.new()
+var next_voice_msec := 0
 
 func _ready() -> void:
 	hero_balance_id = "yugi"
@@ -53,6 +70,7 @@ func _ready() -> void:
 	animated_sprite.scale = Vector2(0.45, 0.45)
 	animated_sprite.position = Vector2(0, -36)
 	animated_sprite.play("intro")
+	_voice("yugi_v_intro", true)
 	velocity = Vector2.ZERO
 
 func _input(event: InputEvent) -> void:
@@ -184,6 +202,8 @@ func _set_guarding(active: bool) -> void:
 	guard_summon.position = Vector2(22, -40)
 	add_child(guard_summon)
 	guard_summon.play("default")
+	_sfx("yugi_guard")
+	_voice("yugi_v_guard")
 
 func _cast(move: String, multiplier: int, duration: float) -> void:
 	if intro_active: return
@@ -202,6 +222,9 @@ func _cast(move: String, multiplier: int, duration: float) -> void:
 	action_left = duration / attack_rate
 	animated_sprite.speed_scale = attack_rate
 	animated_sprite.play("skill" if move.begins_with("result") else "attack_1" if move == "left-click" else move)
+	var audio: Array = CAST_AUDIO.get(move, ["", "", false])
+	_sfx(audio[0])
+	_voice(audio[1], audio[2])
 	if move == "result-5":
 		var fire := RoomFire.new()
 		fire.caster = self
@@ -301,7 +324,25 @@ func _right_click_summon_position(aim_direction: Vector2) -> Vector2:
 
 func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	if guarding or intro_active: return
+	var hp_before := hp
+	var was_dead := is_dead
 	super.take_damage(amount, armor_piercing)
+	if is_dead and not was_dead: _voice("yugi_v_death", true)
+	elif hp < hp_before: _voice("yugi_v_hurt", true)
+
+func _sfx(key: String) -> void:
+	var am := get_node_or_null("/root/AudioManager")
+	if am != null and not key.is_empty():
+		am.play_sfx(key, 0.97, 1.03)
+
+## Lời thoại: force = luôn nói (chiêu Q, bị đánh, ngã xuống, intro); còn lại chờ hết VOICE_COOLDOWN.
+func _voice(key: String, force: bool = false) -> void:
+	var am := get_node_or_null("/root/AudioManager")
+	if am == null or key.is_empty(): return
+	var now := Time.get_ticks_msec()
+	if not force and now < next_voice_msec: return
+	next_voice_msec = now + int(VOICE_COOLDOWN * 1000)
+	am.play_voice(key)
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if intro_active and animated_sprite.animation == "intro":

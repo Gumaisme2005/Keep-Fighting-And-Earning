@@ -4,6 +4,136 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 
 ---
 
+## [2026-11-23] — Sửa Chữ "Vũ Khí" Tràn Viền Ở Màn Chọn Nhân Vật
+
+- **Lỗi**: ở bảng CHỈ SỐ của màn chọn nhân vật (`Scene/UI/HeroSelectUI.gd`), vũ khí của Doraemon ("4D POCKET - 20 GADGETS, 6 FRIENDS, 10 SUPERS") xuống 4 dòng; dòng cuối ("SUPERS") nằm ở y = 153–163 trong bảng cao 164 px, đè lên viền dưới (viền của `panel.png` bắt đầu từ y = 158).
+- **Sửa**:
+  - Các dòng chỉ số cách nhau 22 px (trước 23). Tiêu đề "VŨ KHÍ" lên y = 106, chữ vũ khí từ y = 116, tối đa 4 dòng nên dừng ở y = 156, trước viền.
+  - Vũ khí quá 4 dòng (anh hùng sau này) được rút gọn bằng "..." (`fit_lines()`) thay vì tràn ra ngoài.
+  - Chữ của 7 anh hùng còn lại không đổi.
+- **Kiểm thử**: `test_hall_select` **63/63**:
+  - Kiểm tra chữ vũ khí của cả 8 anh hùng nằm trong lòng bảng và hiển thị đủ.
+  - Kiểm tra tên vũ khí rất dài được rút gọn còn 4 dòng.
+  - Với bố cục cũ, test này FAIL (Doraemon: chữ xuống tới y = 163, giới hạn 157).
+
+---
+
+## [2026-11-23] — Sửa Theo Review PR #101
+
+- **CI** (`.github/workflows/ci.yml`): thêm bước 20–31 để GitHub Actions chạy đủ:
+  - 9 bộ test của PR #79: xu, Guild Hall, màn chọn nhân vật, cổng rune, thợ rèn, pháp sư, giả kim, ví, thương nhân.
+  - 3 bộ test mới: `test_main_menu_modals`, `test_yugi_audio`, `test_hero_sfx`.
+  - Mỗi bước dùng dữ liệu lưu riêng (`XDG_DATA_HOME` dùng một lần) và báo lỗi nếu log có `SCRIPT ERROR:` / `ERROR:`. Bước Guild Hall (~4 phút) có `timeout-minutes: 10`.
+  - Bỏ các ghi chú "cần chép `ci.yml` thủ công" trong CHANGELOG.
+- **Test không còn ghi bẩn file save thật** (`run_tests.bat` chạy trên `user://` thật):
+  - Thêm `tests/save_guard.gd`: chụp `GameManager.SAVE_FILE_PATH` (và seed / lịch sử run trong bộ nhớ) lúc bắt đầu, ghi lại đúng nội dung cũ khi xong, giống cách `test_bug_bash_regressions.gd` đang làm.
+  - Dùng trong `test_main_menu_modals` (`save_seed_entry`), `test_yugi_audio` và `test_hero_sfx` (nhân vật gục → `finish_run` ghi lịch sử run), `test_coins` và `test_wallet` (cũng ghi lịch sử run). Mỗi test tự kiểm tra cuối cùng là file save y hệt lúc đầu.
+  - Đã chạy từng test trên một file save và ví "thật" có sẵn: sau khi chạy, cả hai không đổi một byte.
+- **Bỏ nhạc nền Guild Hall** ("Medieval Traveler's Journey" của Dream Woven Tales): bản nhạc ghi "© All rights reserved… Unauthorized copying, reproduction, or re-uploading is prohibited", nên không được đưa vào repo.
+  - Xoá `Assets/Audio/bgm_guild_hall.ogg` (+ `.import`, `CREDITS_guild_hall_bgm.txt`), khoá `"hall"` và hàm đọc Ogg trong `AudioManager`.
+  - Màn chọn nhân vật và Guild Hall dùng lại nhạc menu như trước (`guild_hall.gd` `HALL_BGM = "menu"`). Nhạc đang phát thì chạy tiếp, không phát lại từ đầu.
+  - `test_dungeon_generator_unit` trở về như `development` (3 bản nhạc nền); `test_hall_select` / `test_rune_portal` kiểm tra nhạc menu ở sảnh.
+- **Ghi công Yugi**: `Assets/Audio/Yugi/CREDITS_yugi_audio.txt` thêm đủ danh sách ghi công của nhân vật MUGEN "Yami Yugi" (Shiruzato / Mythos, HTDD, kaithehedgefox10, XmayGrrr, Justin kaiser, Fresh Prince, Dr.Animation, InSeph, SoulFire, Salah).
+  - Ghi rõ **chỉ dùng phi thương mại** (không bán, không thu tiền, không quảng cáo, giữ ghi công) cho nhân vật Yugi / Atem (sprite, tiếng, lời thoại, tên lá bài) ở đầu file CREDITS, trong `Scene/Character/Yugi/README.md` và mục Yugi của `README.md`. `test_yugi_audio` kiểm tra file CREDITS có dòng này.
+- `AudioManager.toggle_mute()`: tắt tiếng thì dừng luôn mọi tiếng hiệu ứng và lời thoại đang phát dở (trước chỉ dừng lời thoại).
+- **Màn chọn nhân vật**:
+  - `GameManager.hall_select_session` tăng mỗi lần `start_run_in_hall()` mở màn chọn mới.
+  - `hall_select._exit_tree()` chỉ tắt `hall_selecting` khi chưa có màn chọn mới nào mở sau nó. Gọi `start_run_in_hall()` khi đang ở màn chọn (vd. một nút "chơi lại" sau này) giờ mở lại đúng màn chọn thay vì thả sẵn một nhân vật.
+- **Kiểm thử**:
+  - Số test mới: `test_hall_select` **61/61** (+1: gọi lại `start_run_in_hall()` khi đang chọn), `test_hero_sfx` **33/33** (+ tắt tiếng dừng tiếng đang phát), `test_main_menu_modals` **151/151**, `test_yugi_audio` **49/49**, `test_coins` **38/38**, `test_wallet` **47/47**.
+  - Bỏ phần sửa tương ứng thì các test mới FAIL.
+  - Mô phỏng toàn bộ `ci.yml` mới (bash `-eo pipefail`, import từ đầu, dữ liệu lưu dùng một lần): **43/43 bước PASS**, 0 dòng `ERROR`.
+
+---
+
+## [2026-11-23] — Tiếng Hiệu Ứng Cho Hoshimi Miyabi & Lương Thơ
+
+- **Tự tổng hợp hoàn toàn** (nhiễu lọc, sóng sin, partial kim loại / thuỷ tinh, reverb ngắn; không dùng mẫu âm thanh nào) bằng `tools/gen_hero_sfx.py` (numpy + scipy, seed cố định nên chạy lại ra đúng các file). 20 file 32 kHz mono 16-bit trong `Assets/Audio/Miyabi/` (11) và `Assets/Audio/LuongTho/` (9), âm lượng khớp bộ tiếng Yugi; mỗi thư mục có file CREDITS mô tả từng tiếng. Chỉ có hiệu ứng, không có giọng nói.
+- **Miyabi** (`miyabi.gd`, `ice_spikes.gd`, `miyabi_spirit.gd`):
+  - Combo click trái: mỗi nhát chém kêu đúng khung trúng đòn (nhát 3 nặng hơn, có tiếng nứt băng).
+  - Shift: tiếng lướt chém.
+  - Chuột phải: tiếng tụ lực đi lên (dừng ngay khi thả chuột hoặc khi ngã xuống); đủ 1 giây thì ba tiếng chuông băng báo đã tụ đủ. Frost Wave cấp 1 / 2 cùng một tiếng, khác cao độ; cấp 3 (đóng băng) có tiếng riêng.
+  - Q Frost Bloom: cắm kiếm + 6 đợt gai băng trồi lên, rồi tiếng hàng gai vỡ vụn đúng khung 8.
+  - Linh hồn băng: tiếng bắn rất nhỏ (2 giây một lần).
+- **Lương Thơ** (`luong_tho.gd`):
+  - Combo: Đâm, Quét đôi (2 nhát, nhát sau cao hơn), Đập đất (nổ trầm + kim loại + đá vụn), đúng khung trúng đòn.
+  - Twin Barrels: hai nòng nổ cách nhau 45 ms + tiếng lên đạn. Dạng White Moon có tiếng bắn sáng hơn.
+  - Q White Moon: âm thanh dâng lên trong 1 giây biến hình rồi ngân tiếng chuông. Hết 12 giây: tiếng lấp lánh đi xuống.
+  - Dạng White Moon đỡ một đòn: tiếng "ting" (tối đa 1 lần / 0.2 s).
+  - Bắt đầu chạy khi đang cất vũ khí: tiếng rút vũ khí rất nhỏ.
+- `AudioManager`: thêm 20 khoá vào `HERO_SFX_PATHS` và `stop_sfx()` (dừng mọi kênh đang phát một tiếng).
+- **Kiểm thử**: thêm `tests/test_hero_sfx.tscn` — **30/30 PASS**:
+  - Chơi thật trong `world.tscn` bằng luồng replay, kiểm tra từng chiêu phát đúng tiếng, đúng thứ tự và đúng thời điểm (im trước khung trúng đòn).
+  - Kiểm tra cắt tiếng tụ lực, giới hạn tiếng "ting", tiếng rút vũ khí chỉ một lần.
+  - File đủ, đúng định dạng, có `.import` và CREDITS.
+  - Bỏ một hook thì test FAIL. `test_miyabi` (18/18), `test_luong_tho` (15/15), `test_yugi_audio` (47/47) vẫn PASS.
+- CI: thêm bước 31 vào `.github/workflows/ci.yml`; `run_tests.bat` thêm bước [26/26].
+
+---
+
+## [2026-11-23] — Tiếng Cho Yugi (Trích Từ Nhân Vật MUGEN "Yami Yugi")
+
+- **Nguồn**: `Yugi.snd` của nhân vật MUGEN "Yami Yugi" (tác giả HTDD, dựa trên bản của Shiruzato / Mythos; ghi công đầy đủ trong `CREDITS_yugi_audio.txt`). Tách cả 255 đoạn WAV, tra lệnh `PlaySnd` trong `Yugi.cns` / `Especiales.cns` / `Supers.cns` để biết đoạn nào thuộc chiêu nào, rồi chọn 33 file cho các chiêu của Yugi trong game. Một số file trộn nhiều đoạn theo đúng thời điểm trong state MUGEN (rút bài + quái hiện ra + đòn đánh). Tất cả đổi sang 32 kHz mono 16-bit, cắt khoảng lặng, chuẩn hoá âm lượng (~3.1 MB, `Assets/Audio/Yugi/`). Nguồn và bảng ghép từng file ghi trong `Assets/Audio/Yugi/CREDITS_yugi_audio.txt`.
+- **Gán vào chiêu** (`yugi.gd` `CAST_AUDIO`):
+  - Click trái (Celtic Guardian) tiếng chém; click phải (Dark Magician Girl) tiếng triệu hồi, lúc bắn cầu năng lượng có tiếng phép riêng (`summon.gd`).
+  - Giữ & thả trái (Gaia) tiếng lao tới; giữ & thả phải (Dark Magician) lúc nổ có tiếng ma thuật bóng tối. Hai chiêu nạp và Shift + trái kèm một câu rút bài (4 biến thể).
+  - Shift + phải: tiếng Spellbinding Circle + câu thoại; đỡ (Shift): tiếng úp bài + câu thoại úp bài.
+  - Q (câu thoại lấy đúng câu mà bản MUGEN phát cho chiêu tương ứng): kết quả 1 dùng câu của Swords of Revealing Light, có tiếng nổ khi quả cầu chạm giữa phòng; 2 dùng câu của Dark Magic Twin Burst, có tiếng tia lúc bắn (không có mục tiêu thì không có tia nên im); 3, 4, 5 có tiếng thần xuất hiện và câu lúc gọi Slifer / Obelisk / Ra, kèm sét / đòn đánh / lửa đúng lúc ra đòn (`room_*.gd`).
+  - Intro: câu mở màn. Mất máu: tiếng kêu đau (6 biến thể). Đỡ được hoặc giáp chịu hết thì không kêu. Ngã xuống: tiếng KO.
+- **Lời thoại không nói liên tục**: câu thường chờ 2.5 s giữa hai lần; chiêu Q, intro, bị đánh và ngã xuống luôn nói.
+- `AudioManager`:
+  - `HERO_SFX_PATHS` / `VOICE_PATHS` (mỗi khoá nhiều biến thể, phát ngẫu nhiên một cái), `play_voice()` trên kênh thoại riêng (câu mới thay câu cũ, tắt tiếng thì dừng), 6 kênh SFX (trước 4) để tiếng dài của chiêu Q không bị cắt.
+  - Bản đọc WAV dự phòng (khi chưa import) đọc tần số / số kênh từ header thay vì luôn coi là 22050 Hz.
+  - `played_log` ghi các khoá vừa phát để kiểm thử.
+- **Kiểm thử**: thêm `tests/test_yugi_audio.tscn` — **47/47 PASS**:
+  - File đủ, đúng định dạng, có `.import` và ghi công.
+  - Bản đọc dự phòng giữ đúng 32 kHz / 22050 Hz.
+  - Từng chiêu phát đúng tiếng và câu thoại; thời gian chờ của lời thoại; trong intro không có tiếng chiêu.
+  - Đỡ / giáp không kêu, mất máu kêu, ngã xuống phát tiếng KO.
+  - Cầu của Dark Magician Girl, vụ nổ của Dark Magician và 5 hiệu ứng Q phát đúng một lần, đúng thời điểm.
+  - Bỏ một hook thì test FAIL. `test_yugi` vẫn PASS.
+- CI: thêm bước 30 vào `.github/workflows/ci.yml`; `run_tests.bat` thêm bước [25/25].
+- **Lưu ý bản quyền**: giọng nói và tên lá bài thuộc Yu-Gi-Oh! (Konami / Kazuki Takahashi…). Giống phần sprite Yugi, chỉ nên dùng phi thương mại; cân nhắc trước khi phát hành hoặc để công khai trong repo.
+
+---
+
+## [2026-11-23] — Sửa Lỗi SPK-11: Modal "Controls & Mechanics" Tràn Ra Ngoài Màn Hình
+
+- **Nguyên nhân** (`Menu/main menu/main_menu.gd`, `_build_help_modal()`): nội dung hướng dẫn là một `Label` không tự xuống dòng; chiều rộng tối thiểu của nó bằng dòng dài nhất (dòng Doraemon ~950 px), nên `PanelContainer` 620 px bị kéo giãn thành 980 px và lệch sang phải (đo được: modal 980 px trong khung nhìn 1152–1293 px), cắt chữ và nút Close.
+- **Sửa modal Controls & Mechanics**:
+  - Nội dung đặt trong `ScrollContainer` chỉ cuộn dọc, `Label` bật `autowrap_mode = AUTOWRAP_WORD_SMART`: dòng dài tự xuống dòng theo bề ngang modal; màn hình thấp thì cuộn để đọc hết. Giữ nguyên đủ 13 dòng hướng dẫn.
+  - Tiêu đề modal cắt bớt (…) khi quá hẹp, nên nút Close luôn nằm trong modal.
+- **Cả ba modal của Main Menu** (Controls, Lore, Saved Seeds & Replays) dùng chung `fit_modals()`: kích thước thiết kế (680×460 / 700×440 / 720×430), thu nhỏ theo khung nhìn (chừa 16 px mỗi cạnh), luôn căn giữa và tự tính lại khi đổi cỡ cửa sổ lúc modal đang mở.
+- **Modal Saved Seeds & Replays** có lỗi tương tự: dòng ghi chú dài làm cột SAVED SEEDS cuộn ngang và cắt nút Del. Mỗi thẻ giờ có chữ ở trên (tự xuống dòng) và hàng nút Play / Retry / Replay / Del ở dưới căn phải; hai cột chỉ cuộn dọc.
+- **Kiểm thử**: thêm `tests/test_main_menu_modals.tscn` — **150/150 PASS**. Menu dựng trong SubViewport ở 1152×648 (cửa sổ 16:9: 1280×720, 1600×900, 1920×1080 sau co giãn `canvas_items`), 1293×648 (cửa sổ 1917×960 như ảnh lỗi), 1280×720, 1600×900, 1920×1080, 800×480 và 640×360. Mỗi cỡ kiểm tra cả ba modal: nằm trong màn hình, căn giữa, nút Close thấy đủ và đóng được, không nút nào bị đẩy khỏi cột, chữ tự xuống dòng, đủ 13 dòng hướng dẫn, cuộn được khi màn hình thấp, đổi cỡ cửa sổ khi modal đang mở. Trên code cũ test này FAIL (modal 980 px, nút Close bị cắt).
+- CI: thêm bước 29 vào `.github/workflows/ci.yml`; `run_tests.bat` thêm bước [24/24].
+
+---
+
+## [2026-11-22] — Hoàn Tất Review PR #79: Bỏ Phím T, Test Minimap, Xu, Màn Chọn Nhân Vật, Kho Shop, CI
+
+Áp dụng lên `development` (sau PR #76 / #88 / #98). Hai mục review đã có sẵn từ PR #98 nên chỉ bổ sung test: sửa `GameUI._connect_to_player_and_map()` (`dungeon_map = null` khi rời hầm ngục) và chặn `record_frame_input` trong Guild Hall + xoá bộ ghi khi xuống tầng 1.
+
+- **Bỏ phím T** (dịch chuyển về Guild Hall giữa run) vì Guild Hall đã hoàn thiện: xoá action `teleport_hall` khỏi `project.godot`, xoá `GameManager.teleport_to_guild_hall()` / `_swap_to_guild_hall()` và phần chặn T khi phòng đang khoá (không còn cần). Guild Hall chỉ vào được lúc bắt đầu run (màn chọn nhân vật) hoặc chạy thẳng scene (F6).
+- **Thanh kiếm rune** (`enter_dungeon_from_hall()`): về tầng 1 qua `register_level_advance(1)` (cập nhật HUD + lưu ví), tắt `hall_selecting`. Không còn phím T nên không thể quay lại sảnh giữa run để về tầng 1 mà vẫn giữ máu / chấn / xu, và bộ ghi replay không bị xoá giữa run.
+- **Action Replay**: gom điều kiện "đang ở Guild Hall" vào `GameManager.is_in_guild_hall()` (dùng trong `record_frame_input`).
+- **Xu** (`coin_pickup._exit_tree()`): xu bị xoá trước khi bay tới (vd. chuyển tầng) chỉ được cộng khi người chơi **còn sống**; người chơi đã gục thì xu nằm trên sàn mất theo màn chơi.
+- **Màn chọn nhân vật** (`hall_select.gd`):
+  - ESC ở màn nhìn toàn sảnh = nút MENU CHÍNH (về menu chính). Khi đang mở bảng thông tin, ESC vẫn chỉ đóng bảng. Menu tạm dừng không mở ở màn chọn (đã có từ PR #98).
+  - Cờ `hall_selecting` được tắt khi rời màn chọn bằng bất kỳ đường nào (đổi scene, đóng sảnh) và khi bắt đầu run khác (`start_new_run`).
+- **Kho shop**: `GameManager.reset_shop_stock()` (gọi trong `start_new_run`) làm đầy lại hàng thợ rèn, nhóm giả kim và 3 chấn của nhóm pháp sư ở mỗi run mới.
+- **CI / run_tests.bat**:
+  - `.github/workflows/ci.yml`: thêm bước 20–28 cho 9 bộ test của PR (xu, Guild Hall, màn chọn, cổng rune, thợ rèn, pháp sư, giả kim, ví, thương nhân), mỗi bước dùng dữ liệu lưu riêng (`XDG_DATA_HOME`) và báo lỗi nếu log có `SCRIPT ERROR:` / `ERROR:`. Bước Guild Hall (~4 phút) có `timeout-minutes: 10`.
+  - `run_tests.bat`: 23 bước (thêm 7 bộ còn thiếu).
+- **Kiểm thử** (Godot 4.7.2 headless):
+  - `test_guild_hall` (**89/89**): bỏ nhóm phím T, thêm "phím T không còn tác dụng" và nhóm minimap (sảnh, TileMap hầm ngục cũ bị bỏ, chuyển từ hầm ngục sang sảnh).
+  - `test_hall_select` (**56/56**: ESC về menu chính, cờ `hall_selecting`, menu tạm dừng không mở), `test_rune_portal` (**69/69**) (không ghi replay trong sảnh, bộ ghi xoá khi xuống tầng 1), `test_coins` (**37/37**: xu không cộng khi người chơi đã gục), `test_shop` (**52/52**) (kho đầy lại mỗi run).
+  - `test_bug_bash_regressions` (**43/43** ở cả 30 và 144 FPS): kiểm tra #86.1 đổi thành "phím T đã bỏ" (không còn đường thoát khỏi phòng đang khoá về sảnh).
+  - Mô phỏng toàn bộ `ci.yml` (bash `-eo pipefail`, import từ đầu, dữ liệu lưu dùng một lần): cả 40 bước chạy đều PASS, gồm các bước Issue #75 và 9 bước mới, 0 dòng `ERROR`. Ngoài CI: Perk System **41/41**, New Mechanics, Visual Backdrop PASS.
+- **Còn lại (chưa xử lý)**: đồ, thuốc và chấn mua trong sảnh trước khi xuống hầm ngục chưa được lưu vào bản ghi replay; replay của một run có mua sắm trong sảnh vẫn có thể lệch so với lúc chơi.
+
+---
+
 ## [2026-11-14] — Thương Nhân Lang Thang: Hiệp Sĩ Joanna & Pháp Sư Eleonore
 
 - **Xuất hiện trong hầm ngục** (`Scene/Map/Merchants/wandering_merchant.gd`, gọi từ `DungeonSpawner.spawn_entities`):
@@ -20,7 +150,7 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 - `ShopUI.gd`: `catalog` nhận thêm đối tượng hàng riêng của từng thương nhân (chỉ đổi kiểu biến).
 - **Kiểm thử**: thêm `tests/test_wandering_merchant.tscn` — **56/56 PASS** (chỉ tầng 3, 6, 9… mới có thể gặp, tỉ lệ xuất hiện, tầng 4–5 không có ai, seed cố định, 3 món đúng loại, độ hiếm theo tầng, vị trí đứng, mở shop bằng E, mua bằng ví, hết hàng, mặc đồ / uống thuốc, replay không mua được, sang tầng mới).
 - Hồi quy Godot 4.7.2 headless: toàn bộ test khác giữ nguyên kết quả (Wallet 46/46, Shop 48/48, Potion Shop 19/19, Rune Portal 63/63, Guild Hall 105/105, Replay Security 39/39, MOBA HUD 159/159, …; benchmark hoàn tất). `test_perk_system` vẫn **35/37** như trước (lỗi có sẵn, không liên quan).
-- Thêm bước [16/16] vào `run_tests.bat`. Bước CI tương ứng (bước 21) cần thêm thủ công vào `.github/workflows/ci.yml`.
+- Thêm bước [16/16] vào `run_tests.bat`. Bước CI tương ứng: bước 28 trong `.github/workflows/ci.yml` (thêm ở bản 2026-11-23).
 
 ---
 
@@ -56,7 +186,7 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
   - Replay không đổi ví và không ghi file.
   - Save cũ chưa có ví → 0; khôi phục từ bản dự phòng / file tạm; mọi bản đều hỏng → 0; từ chối giá trị sai.
   - HUD hiển thị số dư.
-- Thêm bước [15/15] vào `run_tests.bat`. Bước CI tương ứng (chạy `test_wallet.tscn` với `XDG_DATA_HOME` dùng một lần) cần thêm thủ công vào `.github/workflows/ci.yml`.
+- Thêm bước [15/15] vào `run_tests.bat`. Bước CI tương ứng: bước 27 trong `.github/workflows/ci.yml` (chạy `test_wallet.tscn` với `XDG_DATA_HOME` dùng một lần; thêm ở bản 2026-11-23).
 - Cập nhật `tests/test_coins.gd` (**36/36**) và `tests/test_hall_select.gd` (**48/48**): lượt mới giữ số dư thay vì về 0.
 - Kiểm thử thực tế hai tiến trình: nhặt xu rồi thoát ngay (chưa hết 1.5 giây) → mở lại game vẫn 212.
 - Hồi quy bằng Godot 4.7.2 headless, tất cả PASS:

@@ -13,6 +13,7 @@ var tick_left := 0.0
 var attack_start := 0
 var beams: Dictionary = {}
 var face_left := false
+var fire_sound_played := false
 
 func _ready() -> void:
 	var world := get_parent()
@@ -47,6 +48,9 @@ func _physics_process(delta: float) -> void:
 	if elapsed < start_time:
 		monster.frame = int(elapsed * FPS)
 	elif fire_active:
+		if not fire_sound_played:
+			fire_sound_played = true
+			_play_sfx("yugi_ra_fire")
 		var phase := int((elapsed - start_time) * 10) % 2
 		monster.frame = attack_start + 3 + phase
 		var targets := _room_targets()

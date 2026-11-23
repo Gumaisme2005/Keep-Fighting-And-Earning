@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://tests/test_main_menu_modals.gd" id="1_test"]
+
+[node name="TestMainMenuModals" type="Node"]
+script = ExtResource("1_test")

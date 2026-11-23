@@ -4,6 +4,7 @@ extends Node2D
 ## save cũ / file hỏng được xử lý đúng.
 ## Dùng file ví riêng của bài test (user://wallet_unit_test.json) nên không ảnh hưởng ví thật của người chơi.
 
+const SaveGuard = preload("res://tests/save_guard.gd")
 const GM_SCRIPT := preload("res://Scene/GameManager.gd")
 const GAME_UI_SCENE := preload("res://Scene/UI/GameUI.tscn")
 const TEST_WALLET := "user://wallet_unit_test.json"
@@ -22,6 +23,8 @@ func assert_test(cond: bool, test_name: String) -> void:
 		failed_count += 1
 
 func _ready() -> void:
+	# không để lại gì trong file save thật (run_tests.bat chạy trên user:// thật)
+	var save_guard = SaveGuard.new()
 	print("\n========================================================")
 	print("  RUNNING PERSISTENT WALLET TESTS")
 	print("========================================================\n")
@@ -42,6 +45,8 @@ func _ready() -> void:
 	_cleanup()
 	GameManager.wallet_path = _saved_path
 	GameManager.load_wallet()
+	save_guard.restore()
+	assert_test(save_guard.is_restored(), "the real save file is left exactly as it was")
 	print("\n========================================================")
 	print("  TEST RESULTS: ", passed_count, " PASSED, ", failed_count, " FAILED")
 	print("========================================================\n")
