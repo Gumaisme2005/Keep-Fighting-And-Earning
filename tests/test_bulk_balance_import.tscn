@@ -1,0 +1,6 @@
+﻿[gd_scene format=3]
+
+[ext_resource type="Script" path="res://tests/test_bulk_balance_import.gd" id="1_vt076"]
+
+[node name="TestBulkBalanceImport" type="Node"]
+script = ExtResource("1_vt076")

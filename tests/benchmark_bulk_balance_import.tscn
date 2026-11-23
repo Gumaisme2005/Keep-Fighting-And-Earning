@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://tests/benchmark_bulk_balance_import.gd" id="1_perf"]
+
+[node name="BenchmarkBulkBalanceImport" type="Node"]
+script = ExtResource("1_perf")
