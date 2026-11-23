@@ -4,6 +4,20 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 
 ---
 
+## [2026-11-23] — Sửa Chữ "Vũ Khí" Tràn Viền Ở Màn Chọn Nhân Vật
+
+- **Lỗi**: ở bảng CHỈ SỐ của màn chọn nhân vật (`Scene/UI/HeroSelectUI.gd`), vũ khí của Doraemon ("4D POCKET - 20 GADGETS, 6 FRIENDS, 10 SUPERS") xuống 4 dòng; dòng cuối ("SUPERS") nằm ở y = 153–163 trong bảng cao 164 px, đè lên viền dưới (viền của `panel.png` bắt đầu từ y = 158).
+- **Sửa**:
+  - Các dòng chỉ số cách nhau 22 px (trước 23). Tiêu đề "VŨ KHÍ" lên y = 106, chữ vũ khí từ y = 116, tối đa 4 dòng nên dừng ở y = 156, trước viền.
+  - Vũ khí quá 4 dòng (anh hùng sau này) được rút gọn bằng "..." (`fit_lines()`) thay vì tràn ra ngoài.
+  - Chữ của 7 anh hùng còn lại không đổi.
+- **Kiểm thử**: `test_hall_select` **63/63**:
+  - Kiểm tra chữ vũ khí của cả 8 anh hùng nằm trong lòng bảng và hiển thị đủ.
+  - Kiểm tra tên vũ khí rất dài được rút gọn còn 4 dòng.
+  - Với bố cục cũ, test này FAIL (Doraemon: chữ xuống tới y = 163, giới hạn 157).
+
+---
+
 ## [2026-11-23] — Sửa Theo Review PR #101
 
 - **CI** (`.github/workflows/ci.yml`): thêm bước 20–31 để GitHub Actions chạy đủ:

@@ -184,6 +184,7 @@ func test_panel() -> void:
 	var f: Font = load("res://Assets/UI/Shop/forge5vn.fnt")
 	var bad := []
 	var overflow := []
+	var weapon_overflow := []
 	for i in 8:
 		ui.show_hero(i)
 		await _frames(2)
@@ -195,10 +196,24 @@ func test_panel() -> void:
 		var bottom := 0.0
 		for c in ui.skills_box.get_children():
 			bottom = maxf(bottom, c.position.y + c.size.y)
-		if bottom > 140.0 or ui.weapon_label.get_line_count() > 4:
+		if bottom > 140.0:
 			overflow.append(i)
+		# chữ vũ khí nằm trong lòng bảng chỉ số: viền dưới của panel.png dày 6px (từ y = size.y - 6),
+		# chừa 1px; vũ khí của mọi anh hùng hiện có hiển thị đủ, không bị cắt
+		var wl: Label = ui.weapon_label
+		var card: Control = wl.get_parent()
+		var text_bottom := wl.position.y + wl.get_line_count() * wl.get_line_height()
+		if text_bottom > card.size.y - 7.0 or wl.text != ui.clean(String(d.get("weapon", ""))):
+			weapon_overflow.append("%d (%.0f / %.0f, %s)" % [i, text_bottom, card.size.y - 7.0, wl.text])
 	assert_test(bad.is_empty(), "all hero texts fit the pixel font (%s)" % str(bad))
 	assert_test(overflow.is_empty(), "the how-to-play text fits its card for every hero (%s)" % str(overflow))
+	assert_test(weapon_overflow.is_empty(), "every hero's full weapon text stays inside the stats card, above its bottom border (%s)" % str(weapon_overflow))
+	# một vũ khí quá dài bị rút gọn bằng "..." thay vì tràn ra viền
+	var long_text: String = ui.clean("A Very Long Legendary Weapon Name With Many Words That Never Ends And Keeps Going On And On")
+	var fitted: String = ui.fit_lines(ui.weapon_label, long_text, ui.WEAPON_LINES)
+	assert_test(fitted.ends_with("...") and ui.weapon_label.get_line_count() <= ui.WEAPON_LINES and fitted.length() < long_text.length(),
+		"an over-long weapon name is shortened with ... to %d lines (%s)" % [ui.WEAPON_LINES, fitted])
+	ui.show_hero(ui.index)
 	await _leave(hall)
 
 func test_start() -> void:
