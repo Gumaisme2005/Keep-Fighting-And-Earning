@@ -1,0 +1,24 @@
+[
+ {
+  "id": "M9",
+  "exit": 1,
+  "killed": true,
+  "failed_tests": [
+   "TC-19"
+  ],
+  "parse_error": false,
+  "kind": "validation",
+  "desc": "update_note: bo sanitize_note (ghi chu khong duoc lam sach)"
+ },
+ {
+  "id": "M10",
+  "exit": 1,
+  "killed": true,
+  "failed_tests": [
+   "TC-20"
+  ],
+  "parse_error": false,
+  "kind": "validation",
+  "desc": "add_record: bo gioi han MAX_RECORDS"
+ }
+]

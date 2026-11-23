@@ -1,0 +1,13 @@
+﻿diff --git a/Scene/Review/review_service.gd b/Scene/Review/review_service.gd
+index 73514e5..6fe4282 100644
+--- a/Scene/Review/review_service.gd
++++ b/Scene/Review/review_service.gd
+@@ -177,8 +177,6 @@ func update_note(role: String, record_id: String, note: String) -> Dictionary:
+ 	return res
+ 
+ func _update_note_locked(role: String, record_id: String, note: String) -> Dictionary:
+-	if role != ROLE_PLAYER:
+-		return _result(ERR_FORBIDDEN)
+ 	if not _valid_id(record_id):
+ 		return _result(ERR_INVALID_INPUT)
+ 	var rec: Dictionary = _read_record(record_id)
