@@ -309,9 +309,7 @@ func _test_ut10_minimap_door_zindex_atmosphere_and_audio() -> void:
 					break
 	var atmo_audio_ok: bool = (
 		atmo_node != null and torch_count >= 16 and torches_on_walls
-		# menu, dungeon, boss + "hall" (nhạc Guild Hall); 4 tiếng dùng chung - mọi file đều tải được
-		and audio_mgr != null and audio_mgr.bgm_streams.size() == 4 and audio_mgr.bgm_streams.size() == audio_mgr.TRACK_PATHS.size()
-		and audio_mgr.sfx_streams.size() == 4 and audio_mgr.sfx_streams.size() == audio_mgr.SFX_PATHS.size()
+		and audio_mgr != null and audio_mgr.bgm_streams.size() == 3 and audio_mgr.sfx_streams.size() == 4
 	)
 	_assert_true(
 		atmo_audio_ok,

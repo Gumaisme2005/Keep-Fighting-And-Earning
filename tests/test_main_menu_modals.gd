@@ -3,6 +3,7 @@ extends Node
 ## màn hình ở mọi cỡ cửa sổ, chữ dài tự xuống dòng / cuộn dọc, nút Close luôn thấy và bấm được (SPK-11).
 ## Menu được dựng trong SubViewport có kích thước cố định để giả lập từng cỡ khung nhìn.
 
+const SaveGuard = preload("res://tests/save_guard.gd")
 const MENU_SCENE := "res://Menu/main menu/main_menu.tscn"
 const MODALS := [
 	["help_modal", "CONTROLS & MECHANICS"],
@@ -42,6 +43,8 @@ func assert_test(cond: bool, test_name: String) -> void:
 		failed_count += 1
 
 func _ready() -> void:
+	# không để lại gì trong file save thật (run_tests.bat chạy trên user:// thật)
+	var save_guard = SaveGuard.new()
 	print("\n========================================================")
 	print("  RUNNING MAIN MENU MODAL LAYOUT TESTS")
 	print("========================================================\n")
@@ -51,6 +54,8 @@ func _ready() -> void:
 	for s in SIZES:
 		await test_size(s)
 	await test_resize_while_open()
+	save_guard.restore()
+	assert_test(save_guard.is_restored(), "the real save file is left exactly as it was")
 	print("\n========================================================")
 	print("  TEST RESULTS: ", passed_count, " PASSED, ", failed_count, " FAILED")
 	print("========================================================\n")

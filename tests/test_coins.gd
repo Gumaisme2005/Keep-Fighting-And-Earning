@@ -2,6 +2,7 @@ extends Node2D
 ## Hệ thống tiền tệ: quái chết rơi xu, xu tự bay về người chơi, HUD hiển thị số xu.
 ## Ví lưu lâu dài (xem tests/test_wallet.gd): lượt mới KHÔNG reset số dư.
 
+const SaveGuard = preload("res://tests/save_guard.gd")
 const BalanceData = preload("res://Scene/BalanceConfig.gd")
 const ORC_SCENE = preload("res://Scene/Enemies/Orc/orc.tscn")
 const GAME_UI_SCENE = preload("res://Scene/UI/GameUI.tscn")
@@ -28,6 +29,8 @@ func assert_test(cond: bool, test_name: String) -> void:
 		failed_count += 1
 
 func _ready() -> void:
+	# không để lại gì trong file save thật (run_tests.bat chạy trên user:// thật)
+	var save_guard = SaveGuard.new()
 	print("\n========================================================")
 	print("  RUNNING COIN / CURRENCY SYSTEM TESTS")
 	print("========================================================\n")
@@ -42,6 +45,8 @@ func _ready() -> void:
 	await test_new_run_resets_and_history()
 	await test_hud_counter()
 
+	save_guard.restore()
+	assert_test(save_guard.is_restored(), "the real save file is left exactly as it was")
 	print("\n========================================================")
 	print("  TEST RESULTS: ", passed_count, " PASSED, ", failed_count, " FAILED")
 	print("========================================================\n")

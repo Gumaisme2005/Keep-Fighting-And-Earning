@@ -1,10 +1,27 @@
 Tiếng của Yugi (Assets/Audio/Yugi/*.wav)
 =========================================
+CHỈ DÙNG PHI THƯƠNG MẠI - NON-COMMERCIAL USE ONLY
+Nhân vật Yugi / Atem (sprite, tiếng, lời thoại, tên lá bài) là nội dung fan dựa trên Yu-Gi-Oh!
+(© Kazuki Takahashi / Konami / Shueisha / TV Tokyo / NAS). Chỉ được dùng trong dự án phi thương mại,
+không bán, không thu tiền, không dùng để quảng cáo, và phải giữ nguyên ghi công bên dưới.
+The Yugi / Atem character (sprites, sounds, voice lines, card names) is fan content based on
+Yu-Gi-Oh!. It may only be used in non-commercial projects - no sale, no paid access, no advertising -
+and the credits below must be kept.
+
 Nguồn: file Yugi.snd của nhân vật M.U.G.E.N "Yami Yugi" (theo "Yami Yugi.def": tác giả HTDD,
 dựa trên bản của Shiruzato / Mythos). Lời thoại (nhóm 0, 11, 5000 trong Yugi.snd) là giọng nhân vật
 Yami Yugi mà tác giả MUGEN lấy từ Yu-Gi-Oh!; nhân vật, tên lá bài và giọng nói thuộc bản quyền của
 chủ sở hữu Yu-Gi-Oh! (Kazuki Takahashi / Konami / Shueisha / TV Tokyo / NAS). Hiệu ứng âm thanh lấy
-từ cùng file SND. Chỉ nên dùng trong dự án phi thương mại, giống phần sprite Yugi; giữ ghi công này.
+từ cùng file SND. Chỉ dùng phi thương mại (xem trên), giống phần sprite Yugi; giữ ghi công này.
+
+Ghi công đầy đủ của nhân vật "Yami Yugi" (theo mô tả video giới thiệu của tác giả HTDD,
+https://www.youtube.com/watch?v=xoz-THrqjME; bản tải: https://www.mediafire.com/file/02xcnxg252xytyw/Yami_Yugi.rar/file):
+- Nhân vật gốc: Shiruzato / Mythos. Bản Yami Yugi (versiondate 23/04/2023): HTDD.
+- Sprite Tristan, Jaden, Yusei, Yuma: kaithehedgefox10 (https://www.deviantart.com/kaithehedgefox10)
+- Sprite Pegasus, Joey và các quái thú: XmayGrrr (https://www.deviantart.com/xmaygrrr)
+- Code và quái thú của Jaden: Justin kaiser (https://www.youtube.com/watch?v=9ZRzeu-sdyk)
+- Một số code, FX và hiệu ứng: Fresh Prince, Dr.Animation, InSeph, SoulFire, Salah
+- Nhân vật khác trong video: Kaiba (Shiruzato / Mythos, HTDD chỉnh sửa), Joey (HTDD), Jaden (Justin kaiser)
 
 Cách làm: tách 255 đoạn WAV từ Yugi.snd, tra lệnh PlaySnd trong Yugi.cns / Especiales.cns /
 Supers.cns để biết mỗi đoạn thuộc chiêu nào, rồi chọn đoạn hợp với chiêu tương ứng trong game.

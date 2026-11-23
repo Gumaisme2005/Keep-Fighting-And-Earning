@@ -4,6 +4,34 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 
 ---
 
+## [2026-11-23] — Sửa Theo Review PR #101
+
+- **CI** (`.github/workflows/ci.yml`): thêm bước 20–31 để GitHub Actions chạy đủ:
+  - 9 bộ test của PR #79: xu, Guild Hall, màn chọn nhân vật, cổng rune, thợ rèn, pháp sư, giả kim, ví, thương nhân.
+  - 3 bộ test mới: `test_main_menu_modals`, `test_yugi_audio`, `test_hero_sfx`.
+  - Mỗi bước dùng dữ liệu lưu riêng (`XDG_DATA_HOME` dùng một lần) và báo lỗi nếu log có `SCRIPT ERROR:` / `ERROR:`. Bước Guild Hall (~4 phút) có `timeout-minutes: 10`.
+  - Bỏ các ghi chú "cần chép `ci.yml` thủ công" trong CHANGELOG.
+- **Test không còn ghi bẩn file save thật** (`run_tests.bat` chạy trên `user://` thật):
+  - Thêm `tests/save_guard.gd`: chụp `GameManager.SAVE_FILE_PATH` (và seed / lịch sử run trong bộ nhớ) lúc bắt đầu, ghi lại đúng nội dung cũ khi xong, giống cách `test_bug_bash_regressions.gd` đang làm.
+  - Dùng trong `test_main_menu_modals` (`save_seed_entry`), `test_yugi_audio` và `test_hero_sfx` (nhân vật gục → `finish_run` ghi lịch sử run), `test_coins` và `test_wallet` (cũng ghi lịch sử run). Mỗi test tự kiểm tra cuối cùng là file save y hệt lúc đầu.
+  - Đã chạy từng test trên một file save và ví "thật" có sẵn: sau khi chạy, cả hai không đổi một byte.
+- **Bỏ nhạc nền Guild Hall** ("Medieval Traveler's Journey" của Dream Woven Tales): bản nhạc ghi "© All rights reserved… Unauthorized copying, reproduction, or re-uploading is prohibited", nên không được đưa vào repo.
+  - Xoá `Assets/Audio/bgm_guild_hall.ogg` (+ `.import`, `CREDITS_guild_hall_bgm.txt`), khoá `"hall"` và hàm đọc Ogg trong `AudioManager`.
+  - Màn chọn nhân vật và Guild Hall dùng lại nhạc menu như trước (`guild_hall.gd` `HALL_BGM = "menu"`). Nhạc đang phát thì chạy tiếp, không phát lại từ đầu.
+  - `test_dungeon_generator_unit` trở về như `development` (3 bản nhạc nền); `test_hall_select` / `test_rune_portal` kiểm tra nhạc menu ở sảnh.
+- **Ghi công Yugi**: `Assets/Audio/Yugi/CREDITS_yugi_audio.txt` thêm đủ danh sách ghi công của nhân vật MUGEN "Yami Yugi" (Shiruzato / Mythos, HTDD, kaithehedgefox10, XmayGrrr, Justin kaiser, Fresh Prince, Dr.Animation, InSeph, SoulFire, Salah).
+  - Ghi rõ **chỉ dùng phi thương mại** (không bán, không thu tiền, không quảng cáo, giữ ghi công) cho nhân vật Yugi / Atem (sprite, tiếng, lời thoại, tên lá bài) ở đầu file CREDITS, trong `Scene/Character/Yugi/README.md` và mục Yugi của `README.md`. `test_yugi_audio` kiểm tra file CREDITS có dòng này.
+- `AudioManager.toggle_mute()`: tắt tiếng thì dừng luôn mọi tiếng hiệu ứng và lời thoại đang phát dở (trước chỉ dừng lời thoại).
+- **Màn chọn nhân vật**:
+  - `GameManager.hall_select_session` tăng mỗi lần `start_run_in_hall()` mở màn chọn mới.
+  - `hall_select._exit_tree()` chỉ tắt `hall_selecting` khi chưa có màn chọn mới nào mở sau nó. Gọi `start_run_in_hall()` khi đang ở màn chọn (vd. một nút "chơi lại" sau này) giờ mở lại đúng màn chọn thay vì thả sẵn một nhân vật.
+- **Kiểm thử**:
+  - Số test mới: `test_hall_select` **61/61** (+1: gọi lại `start_run_in_hall()` khi đang chọn), `test_hero_sfx` **33/33** (+ tắt tiếng dừng tiếng đang phát), `test_main_menu_modals` **151/151**, `test_yugi_audio` **49/49**, `test_coins` **38/38**, `test_wallet` **47/47**.
+  - Bỏ phần sửa tương ứng thì các test mới FAIL.
+  - Mô phỏng toàn bộ `ci.yml` mới (bash `-eo pipefail`, import từ đầu, dữ liệu lưu dùng một lần): **43/43 bước PASS**, 0 dòng `ERROR`.
+
+---
+
 ## [2026-11-23] — Tiếng Hiệu Ứng Cho Hoshimi Miyabi & Lương Thơ
 
 - **Tự tổng hợp hoàn toàn** (nhiễu lọc, sóng sin, partial kim loại / thuỷ tinh, reverb ngắn; không dùng mẫu âm thanh nào) bằng `tools/gen_hero_sfx.py` (numpy + scipy, seed cố định nên chạy lại ra đúng các file). 20 file 32 kHz mono 16-bit trong `Assets/Audio/Miyabi/` (11) và `Assets/Audio/LuongTho/` (9), âm lượng khớp bộ tiếng Yugi; mỗi thư mục có file CREDITS mô tả từng tiếng. Chỉ có hiệu ứng, không có giọng nói.
@@ -25,13 +53,13 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
   - Kiểm tra cắt tiếng tụ lực, giới hạn tiếng "ting", tiếng rút vũ khí chỉ một lần.
   - File đủ, đúng định dạng, có `.import` và CREDITS.
   - Bỏ một hook thì test FAIL. `test_miyabi` (18/18), `test_luong_tho` (15/15), `test_yugi_audio` (47/47) vẫn PASS.
-- CI: thêm bước 31 (cần chép `ci.yml` thủ công); `run_tests.bat` thêm bước [26/26].
+- CI: thêm bước 31 vào `.github/workflows/ci.yml`; `run_tests.bat` thêm bước [26/26].
 
 ---
 
 ## [2026-11-23] — Tiếng Cho Yugi (Trích Từ Nhân Vật MUGEN "Yami Yugi")
 
-- **Nguồn**: `Yugi.snd` của nhân vật MUGEN "Yami Yugi" (tác giả HTDD, dựa trên bản của Shiruzato / Mythos). Tách cả 255 đoạn WAV, tra lệnh `PlaySnd` trong `Yugi.cns` / `Especiales.cns` / `Supers.cns` để biết đoạn nào thuộc chiêu nào, rồi chọn 33 file cho các chiêu của Yugi trong game. Một số file trộn nhiều đoạn theo đúng thời điểm trong state MUGEN (rút bài + quái hiện ra + đòn đánh). Tất cả đổi sang 32 kHz mono 16-bit, cắt khoảng lặng, chuẩn hoá âm lượng (~3.1 MB, `Assets/Audio/Yugi/`). Nguồn và bảng ghép từng file ghi trong `Assets/Audio/Yugi/CREDITS_yugi_audio.txt`.
+- **Nguồn**: `Yugi.snd` của nhân vật MUGEN "Yami Yugi" (tác giả HTDD, dựa trên bản của Shiruzato / Mythos; ghi công đầy đủ trong `CREDITS_yugi_audio.txt`). Tách cả 255 đoạn WAV, tra lệnh `PlaySnd` trong `Yugi.cns` / `Especiales.cns` / `Supers.cns` để biết đoạn nào thuộc chiêu nào, rồi chọn 33 file cho các chiêu của Yugi trong game. Một số file trộn nhiều đoạn theo đúng thời điểm trong state MUGEN (rút bài + quái hiện ra + đòn đánh). Tất cả đổi sang 32 kHz mono 16-bit, cắt khoảng lặng, chuẩn hoá âm lượng (~3.1 MB, `Assets/Audio/Yugi/`). Nguồn và bảng ghép từng file ghi trong `Assets/Audio/Yugi/CREDITS_yugi_audio.txt`.
 - **Gán vào chiêu** (`yugi.gd` `CAST_AUDIO`):
   - Click trái (Celtic Guardian) tiếng chém; click phải (Dark Magician Girl) tiếng triệu hồi, lúc bắn cầu năng lượng có tiếng phép riêng (`summon.gd`).
   - Giữ & thả trái (Gaia) tiếng lao tới; giữ & thả phải (Dark Magician) lúc nổ có tiếng ma thuật bóng tối. Hai chiêu nạp và Shift + trái kèm một câu rút bài (4 biến thể).
@@ -43,26 +71,15 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
   - `HERO_SFX_PATHS` / `VOICE_PATHS` (mỗi khoá nhiều biến thể, phát ngẫu nhiên một cái), `play_voice()` trên kênh thoại riêng (câu mới thay câu cũ, tắt tiếng thì dừng), 6 kênh SFX (trước 4) để tiếng dài của chiêu Q không bị cắt.
   - Bản đọc WAV dự phòng (khi chưa import) đọc tần số / số kênh từ header thay vì luôn coi là 22050 Hz.
   - `played_log` ghi các khoá vừa phát để kiểm thử.
-- **Sửa test cũ**: `test_dungeon_generator_unit` UT-10c vẫn đòi đúng 3 bản nhạc nền nên FAIL từ khi thêm nhạc Guild Hall. Giờ kiểm tra 4 bản (menu, dungeon, boss, hall) và 4 tiếng dùng chung đều tải được.
 - **Kiểm thử**: thêm `tests/test_yugi_audio.tscn` — **47/47 PASS**:
   - File đủ, đúng định dạng, có `.import` và ghi công.
   - Bản đọc dự phòng giữ đúng 32 kHz / 22050 Hz.
   - Từng chiêu phát đúng tiếng và câu thoại; thời gian chờ của lời thoại; trong intro không có tiếng chiêu.
   - Đỡ / giáp không kêu, mất máu kêu, ngã xuống phát tiếng KO.
   - Cầu của Dark Magician Girl, vụ nổ của Dark Magician và 5 hiệu ứng Q phát đúng một lần, đúng thời điểm.
-  - Bỏ một hook thì test FAIL. `test_yugi` vẫn PASS; UT-10c PASS (28/28).
-- CI: thêm bước 30 (cần chép `ci.yml` thủ công); `run_tests.bat` thêm bước [25/25].
+  - Bỏ một hook thì test FAIL. `test_yugi` vẫn PASS.
+- CI: thêm bước 30 vào `.github/workflows/ci.yml`; `run_tests.bat` thêm bước [25/25].
 - **Lưu ý bản quyền**: giọng nói và tên lá bài thuộc Yu-Gi-Oh! (Konami / Kazuki Takahashi…). Giống phần sprite Yugi, chỉ nên dùng phi thương mại; cân nhắc trước khi phát hành hoặc để công khai trong repo.
-
----
-
-## [2026-11-23] — Nhạc Nền Trung Cổ Cho Guild Hall & Màn Chọn Nhân Vật
-
-- **Nhạc mới** `Assets/Audio/bgm_guild_hall.ogg` (AudioManager key `"hall"`): lấy từ file người dùng cung cấp ("Medieval Traveler's Journey", bản gốc 1:33:24). Chỉ dùng đoạn 0:00–6:48 (hai bài đầu, cắt đúng chỗ chuyển bài, fade 0.02 s / 0.35 s) để vòng lặp liền mạch và file nhẹ (Ogg Vorbis 44.1 kHz stereo, ~5 MB). Import với `loop=true`. Nguồn ghi trong `Assets/Audio/CREDITS_guild_hall_bgm.txt`.
-- **Phát ở đâu**: màn "Chọn nhân vật" và khi đi dạo trong Guild Hall (`guild_hall.gd` `_play_hall_bgm()`, trước đây dùng nhạc menu). Bấm BẮT ĐẦU ở màn chọn thì nhạc chạy tiếp, không phát lại từ đầu. Qua thanh kiếm rune xuống hầm ngục thì đổi sang nhạc hầm ngục; về menu chính thì đổi lại nhạc menu.
-- `AudioManager`: đọc được nhạc nền Ogg Vorbis (`_load_ogg_stream()`: bản đã import, hoặc đọc thẳng file `.ogg` khi chưa import), bật lặp. Nhạc WAV cũ giữ nguyên cách tải.
-- **Kiểm thử**: `test_hall_select` (**60/60**) kiểm tra nhạc menu → nhạc sảnh ở màn chọn (Ogg, lặp, dài 408 s) → vẫn nhạc sảnh sau BẮT ĐẦU → nhạc menu khi về menu chính; `test_rune_portal` (**73/73**) kiểm tra nhạc sảnh rồi nhạc hầm ngục sau khi qua cổng. Chạy thật (driver âm thanh dummy): nhạc phát ở màn chọn và vị trí phát tiếp tục tăng sau BẮT ĐẦU (2.2 s → 3.5 s).
-- **Lưu ý**: bản nhạc lấy từ YouTube; cần kiểm tra quyền sử dụng trước khi phát hành hoặc để công khai trong repo.
 
 ---
 
@@ -75,7 +92,7 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 - **Cả ba modal của Main Menu** (Controls, Lore, Saved Seeds & Replays) dùng chung `fit_modals()`: kích thước thiết kế (680×460 / 700×440 / 720×430), thu nhỏ theo khung nhìn (chừa 16 px mỗi cạnh), luôn căn giữa và tự tính lại khi đổi cỡ cửa sổ lúc modal đang mở.
 - **Modal Saved Seeds & Replays** có lỗi tương tự: dòng ghi chú dài làm cột SAVED SEEDS cuộn ngang và cắt nút Del. Mỗi thẻ giờ có chữ ở trên (tự xuống dòng) và hàng nút Play / Retry / Replay / Del ở dưới căn phải; hai cột chỉ cuộn dọc.
 - **Kiểm thử**: thêm `tests/test_main_menu_modals.tscn` — **150/150 PASS**. Menu dựng trong SubViewport ở 1152×648 (cửa sổ 16:9: 1280×720, 1600×900, 1920×1080 sau co giãn `canvas_items`), 1293×648 (cửa sổ 1917×960 như ảnh lỗi), 1280×720, 1600×900, 1920×1080, 800×480 và 640×360. Mỗi cỡ kiểm tra cả ba modal: nằm trong màn hình, căn giữa, nút Close thấy đủ và đóng được, không nút nào bị đẩy khỏi cột, chữ tự xuống dòng, đủ 13 dòng hướng dẫn, cuộn được khi màn hình thấp, đổi cỡ cửa sổ khi modal đang mở. Trên code cũ test này FAIL (modal 980 px, nút Close bị cắt).
-- CI: thêm bước 29 (cần chép `ci.yml` thủ công); `run_tests.bat` thêm bước [24/24].
+- CI: thêm bước 29 vào `.github/workflows/ci.yml`; `run_tests.bat` thêm bước [24/24].
 
 ---
 
@@ -119,7 +136,7 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
 - `ShopUI.gd`: `catalog` nhận thêm đối tượng hàng riêng của từng thương nhân (chỉ đổi kiểu biến).
 - **Kiểm thử**: thêm `tests/test_wandering_merchant.tscn` — **56/56 PASS** (chỉ tầng 3, 6, 9… mới có thể gặp, tỉ lệ xuất hiện, tầng 4–5 không có ai, seed cố định, 3 món đúng loại, độ hiếm theo tầng, vị trí đứng, mở shop bằng E, mua bằng ví, hết hàng, mặc đồ / uống thuốc, replay không mua được, sang tầng mới).
 - Hồi quy Godot 4.7.2 headless: toàn bộ test khác giữ nguyên kết quả (Wallet 46/46, Shop 48/48, Potion Shop 19/19, Rune Portal 63/63, Guild Hall 105/105, Replay Security 39/39, MOBA HUD 159/159, …; benchmark hoàn tất). `test_perk_system` vẫn **35/37** như trước (lỗi có sẵn, không liên quan).
-- Thêm bước [16/16] vào `run_tests.bat`. Bước CI tương ứng (bước 21) cần thêm thủ công vào `.github/workflows/ci.yml`.
+- Thêm bước [16/16] vào `run_tests.bat`. Bước CI tương ứng: bước 28 trong `.github/workflows/ci.yml` (thêm ở bản 2026-11-23).
 
 ---
 
@@ -155,7 +172,7 @@ Tất cả các thay đổi, sửa lỗi và cập nhật của dự án **Keep 
   - Replay không đổi ví và không ghi file.
   - Save cũ chưa có ví → 0; khôi phục từ bản dự phòng / file tạm; mọi bản đều hỏng → 0; từ chối giá trị sai.
   - HUD hiển thị số dư.
-- Thêm bước [15/15] vào `run_tests.bat`. Bước CI tương ứng (chạy `test_wallet.tscn` với `XDG_DATA_HOME` dùng một lần) cần thêm thủ công vào `.github/workflows/ci.yml`.
+- Thêm bước [15/15] vào `run_tests.bat`. Bước CI tương ứng: bước 27 trong `.github/workflows/ci.yml` (chạy `test_wallet.tscn` với `XDG_DATA_HOME` dùng một lần; thêm ở bản 2026-11-23).
 - Cập nhật `tests/test_coins.gd` (**36/36**) và `tests/test_hall_select.gd` (**48/48**): lượt mới giữ số dư thay vì về 0.
 - Kiểm thử thực tế hai tiến trình: nhặt xu rồi thoát ngay (chưa hết 1.5 giây) → mở lại game vẫn 212.
 - Hồi quy bằng Godot 4.7.2 headless, tất cả PASS:

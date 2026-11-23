@@ -297,6 +297,114 @@ jobs:
             if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/tactical_base_enemy_${fps}.log"; then exit 1; fi
           done
 
+      - name: 20. Run Coin Drops & Pickup Tests with Disposable Save Data
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/coins-data
+        run: |
+          godot --headless "res://tests/test_coins.tscn" 2>&1 | tee "$RUNNER_TEMP/coins.log"
+          if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/coins.log"; then exit 1; fi
+
+      - name: 21. Run Guild Hall Scene, Walls & Minimap Tests with Disposable Save Data
+        timeout-minutes: 10
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/guild_hall-data
+        run: |
+          godot --headless "res://tests/test_guild_hall.tscn" 2>&1 | tee "$RUNNER_TEMP/guild_hall.log"
+          if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/guild_hall.log"; then exit 1; fi
+
+      - name: 22. Run Guild Hall Character Select Tests with Disposable Save Data
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/hall_select-data
+        run: |
+          godot --headless "res://tests/test_hall_select.tscn" 2>&1 | tee "$RUNNER_TEMP/hall_select.log"
+          if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/hall_select.log"; then exit 1; fi
+
+      - name: 23. Run Rune Sword Portal (Guild Hall -> Floor 1) Tests with Disposable Save Data
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/rune_portal-data
+        run: |
+          godot --headless "res://tests/test_rune_portal.tscn" 2>&1 | tee "$RUNNER_TEMP/rune_portal.log"
+          if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/rune_portal.log"; then exit 1; fi
+
+      - name: 24. Run Blacksmith Shop Tests with Disposable Save Data
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/shop-data
+        run: |
+          godot --headless "res://tests/test_shop.tscn" 2>&1 | tee "$RUNNER_TEMP/shop.log"
+          if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/shop.log"; then exit 1; fi
+
+      - name: 25. Run Mage Perk Shop Tests with Disposable Save Data
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/mage_shop-data
+        run: |
+          godot --headless "res://tests/test_mage_shop.tscn" 2>&1 | tee "$RUNNER_TEMP/mage_shop.log"
+          if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/mage_shop.log"; then exit 1; fi
+
+      - name: 26. Run Alchemist Potion Shop Tests with Disposable Save Data
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/potion_shop-data
+        run: |
+          godot --headless "res://tests/test_potion_shop.tscn" 2>&1 | tee "$RUNNER_TEMP/potion_shop.log"
+          if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/potion_shop.log"; then exit 1; fi
+
+      - name: 27. Run Persistent Wallet Tests with Disposable Save Data
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/wallet-data
+        run: |
+          godot --headless "res://tests/test_wallet.tscn" 2>&1 | tee "$RUNNER_TEMP/wallet.log"
+          if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/wallet.log"; then exit 1; fi
+
+      - name: 28. Run Wandering Merchant Tests (Joanna / Eleonore) with Disposable Save Data
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/merchant-data
+        run: |
+          godot --headless "res://tests/test_wandering_merchant.tscn" 2>&1 | tee "$RUNNER_TEMP/merchant.log"
+          if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/merchant.log"; then exit 1; fi
+
+      - name: 29. Run Main Menu Modal Layout Tests (SPK-11) with Disposable Save Data
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/main-menu-data
+        run: |
+          godot --headless "res://tests/test_main_menu_modals.tscn" 2>&1 | tee "$RUNNER_TEMP/main_menu_modals.log"
+          if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/main_menu_modals.log"; then exit 1; fi
+
+      - name: 30. Run Yugi Audio Tests (MUGEN Yami Yugi sounds) with Disposable Save Data
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/yugi-audio-data
+        run: |
+          godot --headless "res://tests/test_yugi_audio.tscn" 2>&1 | tee "$RUNNER_TEMP/yugi_audio.log"
+          if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/yugi_audio.log"; then exit 1; fi
+
+      - name: 31. Run Miyabi & Luong Tho Sound Effect Tests with Disposable Save Data
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/hero-sfx-data
+        run: |
+          godot --headless "res://tests/test_hero_sfx.tscn" 2>&1 | tee "$RUNNER_TEMP/hero_sfx.log"
+          if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/hero_sfx.log"; then exit 1; fi
+
       - name: Upload Benchmark Evidence Artifact
         uses: actions/upload-artifact@v4
         with:

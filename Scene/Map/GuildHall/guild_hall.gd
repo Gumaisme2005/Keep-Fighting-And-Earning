@@ -22,7 +22,8 @@ const PAUSE_MENU: PackedScene = preload("res://Menu/pause menu/pause_menu.tscn")
 const GAME_OVER_MENU: PackedScene = preload("res://Menu/game over menu/game_over_menu.tscn")
 const SELECT_SCRIPT := preload("res://Scene/Map/GuildHall/hall_select.gd")
 const CAMERA_MARGIN := 8.0
-const HALL_BGM := "hall"
+## Nhạc nền của sảnh: dùng lại nhạc menu (bản nhạc trung cổ "Medieval Traveler's Journey" đã bỏ vì bản quyền).
+const HALL_BGM := "menu"
 
 var hero: Node2D = null
 
@@ -94,7 +95,7 @@ func _ensure_menus() -> void:
 	layer.add_child(go)
 
 ## Nhạc nền của sảnh (cả màn "Chọn nhân vật"): AudioManager key HALL_BGM. Đang phát rồi thì không phát lại từ đầu,
-## nên bấm BẮT ĐẦU ở màn chọn, nhạc vẫn chạy tiếp liền mạch.
+## nên từ menu chính vào màn chọn rồi bấm BẮT ĐẦU, nhạc vẫn chạy tiếp liền mạch.
 func _play_hall_bgm() -> void:
 	var am := get_node_or_null("/root/AudioManager")
 	if am != null and am.has_method("play_bgm"):

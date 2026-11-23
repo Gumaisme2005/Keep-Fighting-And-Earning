@@ -83,6 +83,9 @@ var _coin_sfx_streak: int = 0
 var run_start_time_msec: int = 0
 ## Guild Hall đang ở màn "Chọn nhân vật" (đầu run, chưa có nhân vật điều khiển): bấm vào anh hùng trong sảnh để chọn.
 var hall_selecting: bool = false
+## Tăng mỗi lần start_run_in_hall() mở một màn chọn mới. Màn chọn cũ khi bị xoá chỉ tắt hall_selecting nếu
+## chưa có màn chọn mới nào được mở sau nó (xem hall_select._exit_tree()).
+var hall_select_session: int = 0
 
 # Earned only by clearing a boss room and descending, once per first five floors.
 # Separate from hero/perk/equipment HP and the unchanged +4 potion allowance.
@@ -310,6 +313,7 @@ func _swap_to_dungeon(hero: Node2D) -> void:
 func start_run_in_hall(seed_str: String = "") -> void:
 	start_new_run(seed_str if not seed_str.is_empty() else current_seed, false, [])
 	hall_selecting = true
+	hall_select_session += 1
 	get_tree().paused = false
 	get_tree().change_scene_to_file(GUILD_HALL_SCENE)
 

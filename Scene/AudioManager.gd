@@ -5,9 +5,7 @@ signal mute_changed(is_muted: bool)
 const TRACK_PATHS: Dictionary = {
 	"menu": "res://Assets/Audio/bgm_menu.wav",
 	"dungeon": "res://Assets/Audio/bgm_dungeon.wav",
-	"boss": "res://Assets/Audio/bgm_boss.wav",
-	# Guild Hall + màn "Chọn nhân vật" (nhạc trung cổ, Ogg Vorbis, lặp lại liên tục)
-	"hall": "res://Assets/Audio/bgm_guild_hall.ogg"
+	"boss": "res://Assets/Audio/bgm_boss.wav"
 }
 
 const SFX_PATHS: Dictionary = {
@@ -123,12 +121,7 @@ func _ready() -> void:
 
 func _load_all_streams() -> void:
 	for k in TRACK_PATHS.keys():
-		var path: String = TRACK_PATHS[k]
-		var st: AudioStream = null
-		if path.get_extension().to_lower() == "ogg":
-			st = _load_ogg_stream(path, true)
-		else:
-			st = _load_wav_stream(path, true)
+		var st := _load_wav_stream(TRACK_PATHS[k], true)
 		if st != null:
 			bgm_streams[k] = st
 
@@ -186,18 +179,6 @@ func _load_wav_stream(res_path: String, loop: bool) -> AudioStreamWAV:
 			return wav
 
 	return null
-
-## Nhạc nền dạng Ogg Vorbis (bản dài, nén): tải bản đã import; chưa import (chạy thẳng từ mã nguồn) thì đọc file .ogg.
-func _load_ogg_stream(res_path: String, loop: bool) -> AudioStreamOggVorbis:
-	var st: AudioStreamOggVorbis = null
-	if ResourceLoader.exists(res_path):
-		st = ResourceLoader.load(res_path) as AudioStreamOggVorbis
-	if st == null and FileAccess.file_exists(res_path):
-		st = AudioStreamOggVorbis.load_from_file(res_path)
-	if st != null:
-		st.loop = loop
-		st.loop_offset = 0.0
-	return st
 
 func play_bgm(track_key: String) -> void:
 	if not bgm_streams.has(track_key):
@@ -269,8 +250,12 @@ func _log_played(key: String) -> void:
 
 func toggle_mute() -> bool:
 	is_muted = not is_muted
-	if is_muted and voice_player != null:
-		voice_player.stop()
+	if is_muted:
+		# tắt tiếng thì im ngay: dừng cả các tiếng hiệu ứng / lời thoại đang phát dở
+		for p in sfx_players:
+			p.stop()
+		if voice_player != null:
+			voice_player.stop()
 	if bgm_player != null:
 		bgm_player.volume_db = -80.0 if is_muted else bgm_volume_db
 		if not is_muted and not current_bgm_key.is_empty() and not bgm_player.playing and DisplayServer.get_name() != "headless":

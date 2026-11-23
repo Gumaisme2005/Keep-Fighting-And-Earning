@@ -5,6 +5,11 @@ are copied into Assets/Character/Yugi without alteration. YugiSprites extracts
 atlas regions and pads to a bottom-center origin; key_green removes the flat
 green background at render time. Keep the source artist attribution with assets.
 
+**Non-commercial use only.** Yugi / Atem, his monsters, card names, sprites and sounds are fan
+content based on Yu-Gi-Oh! (© Kazuki Takahashi / Konami / Shueisha / TV Tokyo / NAS). They may only
+be used in a non-commercial project (no sale, paid access or advertising), with the credits kept
+(Assets/Audio/Yugi/CREDITS_yugi_audio.txt for the sounds).
+
 Controls:
 - WASD: move; mouse: aim.
 - Click left/right: release to cast the corresponding summon.

@@ -145,7 +145,7 @@ func test_teleport(idx: int) -> void:
 	if ui == null:
 		hall.queue_free()
 		return
-	assert_test(AudioManager.current_bgm_key == "hall", "the Guild Hall plays its medieval music")
+	assert_test(AudioManager.current_bgm_key == "menu", "the Guild Hall plays the menu music")
 	# Action Replay: không ghi thao tác trong sảnh
 	GameManager.current_recording_frames.clear()
 	GameManager.record_frame_input({"dx": 1.0, "dy": 0.0, "ax": 10.0, "ay": 0.0, "atk": true})
@@ -182,7 +182,7 @@ func test_teleport(idx: int) -> void:
 	assert_test(is_instance_valid(hero) and gen.the_player == hero and hero.get_parent() == gen, "the same hero is used in the dungeon")
 	assert_test(get_tree().get_nodes_in_group("player").filter(func(n): return n is CharacterBody2D).size() == 1, "only one hero exists")
 	assert_test(GameManager.current_level == 1 and gen.current_level == 1, "floor 1")
-	assert_test(AudioManager.current_bgm_key == "dungeon" or AudioManager.current_bgm_key == "boss", "the Guild Hall music gives way to the dungeon music (%s)" % AudioManager.current_bgm_key)
+	assert_test(AudioManager.current_bgm_key == "dungeon" or AudioManager.current_bgm_key == "boss", "the hall music gives way to the dungeon music (%s)" % AudioManager.current_bgm_key)
 	assert_test(GameManager.current_seed == "RUNE-GO" and gen.map_seed == "RUNE-GO", "same run seed")
 	assert_test(hero.hp == hp_before, "HP kept (%d)" % hero.hp)
 	assert_test(GameManager.coins == 321, "coins kept (%d)" % GameManager.coins)

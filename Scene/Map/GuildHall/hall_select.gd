@@ -26,8 +26,12 @@ var ring: Node2D = null
 var hovered: Node2D = null
 var _ring_t := 0.0
 var _cam_tween: Tween = null
+var _session: int = -1               # GameManager.hall_select_session lúc màn chọn này được mở
 
 func _ready() -> void:
+	var gm := get_node_or_null("/root/GameManager")
+	if gm != null:
+		_session = int(gm.get("hall_select_session"))
 	hall = get_parent() as Node2D
 	camera = Camera2D.new()
 	camera.name = "SelectCamera"
@@ -207,9 +211,10 @@ func back_to_menu() -> void:
 
 ## Rời màn chọn bằng bất kỳ đường nào (đổi scene, đóng sảnh...) thì tắt cờ hall_selecting, để lần vào sảnh sau
 ## (F6, test, scene khác) không mở nhầm màn chọn. start_with_hero() đã tắt cờ trước khi xoá màn chọn.
+## Nếu start_run_in_hall() được gọi khi màn chọn này còn mở (cờ đã thuộc về màn chọn mới) thì giữ nguyên cờ.
 func _exit_tree() -> void:
 	var gm := get_node_or_null("/root/GameManager")
-	if gm != null and gm.get("hall_selecting") == true:
+	if gm != null and gm.get("hall_selecting") == true and int(gm.get("hall_select_session")) == _session:
 		gm.set("hall_selecting", false)
 
 # ------------------------------------------------------------------ HUD (pixel UI, 424 x 236 phóng to theo số nguyên)

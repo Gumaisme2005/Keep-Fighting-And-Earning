@@ -19,6 +19,7 @@ class Dummy extends Node2D:
 	func take_damage(amount: int) -> void:
 		received += amount
 
+const SaveGuard = preload("res://tests/save_guard.gd")
 const MIYABI_KEYS := ["miyabi_slash_1", "miyabi_slash_2", "miyabi_slash_3", "miyabi_dash", "miyabi_charge", "miyabi_charge_full",
 	"miyabi_wave", "miyabi_wave_full", "miyabi_ice_spikes", "miyabi_ice_shatter", "miyabi_spirit_bolt"]
 const LT_KEYS := ["lt_stab", "lt_swing", "lt_smash", "lt_shot", "lt_shot_moon", "lt_transform", "lt_revert", "lt_block", "lt_draw"]
@@ -40,6 +41,8 @@ func assert_test(cond: bool, test_name: String) -> void:
 		failed_count += 1
 
 func _ready() -> void:
+	# không để lại gì trong file save thật (run_tests.bat chạy trên user:// thật)
+	var save_guard = SaveGuard.new()
 	print("\n========================================================")
 	print("  RUNNING MIYABI / LUONG THO SOUND EFFECT TESTS")
 	print("========================================================\n")
@@ -47,6 +50,8 @@ func _ready() -> void:
 	test_files()
 	await test_miyabi()
 	await test_luong_tho()
+	save_guard.restore()
+	assert_test(save_guard.is_restored(), "the real save file is left exactly as it was")
 	print("\n========================================================")
 	print("  TEST RESULTS: ", passed_count, " PASSED, ", failed_count, " FAILED")
 	print("========================================================\n")
@@ -114,6 +119,18 @@ func test_files() -> void:
 	AudioManager.played_log.clear()
 	AudioManager.stop_sfx("not_a_sound")
 	assert_test(_log().is_empty(), "stopping an unknown sound does nothing")
+	# tắt tiếng thì các tiếng đang phát dở (hiệu ứng + lời thoại) cũng dừng ngay
+	# (play_sfx() không phát khi headless nên bật thẳng hai kênh ở đây)
+	var sp: AudioStreamPlayer = AudioManager.sfx_players[0]
+	sp.stream = AudioManager.hero_sfx_streams["miyabi_charge"][0]
+	sp.play()
+	AudioManager.voice_player.stream = AudioManager.hero_sfx_streams["lt_transform"][0]
+	AudioManager.voice_player.play()
+	var was_playing := sp.playing and AudioManager.voice_player.playing
+	var muted: bool = AudioManager.toggle_mute()
+	assert_test(was_playing and muted and not sp.playing and not AudioManager.voice_player.playing, "muting stops the sounds that are already playing")
+	AudioManager.toggle_mute()
+	assert_test(not AudioManager.is_muted, "(cleanup) sound back on")
 
 func _spawn_world(index: int) -> void:
 	if world != null:

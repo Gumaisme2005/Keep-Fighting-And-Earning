@@ -16,6 +16,7 @@ class BlastRoom extends Node2D:
 	func get_player_room_index() -> int: return 0
 	func local_to_map(point: Vector2) -> Vector2i: return Vector2i((point / 16.0).floor())
 
+const SaveGuard = preload("res://tests/save_guard.gd")
 const CASTS := {
 	"left-click": ["yugi_slash", ""],
 	"right-click": ["yugi_summon", ""],
@@ -42,6 +43,8 @@ func assert_test(cond: bool, test_name: String) -> void:
 		failed_count += 1
 
 func _ready() -> void:
+	# không để lại gì trong file save thật (run_tests.bat chạy trên user:// thật)
+	var save_guard = SaveGuard.new()
 	print("\n========================================================")
 	print("  RUNNING YUGI AUDIO TESTS")
 	print("========================================================\n")
@@ -50,6 +53,8 @@ func _ready() -> void:
 	test_fallback_reads_header()
 	await test_casts()
 	test_effect_hooks()
+	save_guard.restore()
+	assert_test(save_guard.is_restored(), "the real save file is left exactly as it was")
 	print("\n========================================================")
 	print("  TEST RESULTS: ", passed_count, " PASSED, ", failed_count, " FAILED")
 	print("========================================================\n")
@@ -103,6 +108,9 @@ func test_files() -> void:
 			ids[cfg.get_value("remap", "uid", "")] = true
 	assert_test(ids.size() == 33 and not ids.has(""), "every Yugi sound has an .import file with its own uid (%d)" % ids.size())
 	assert_test(FileAccess.file_exists("res://Assets/Audio/Yugi/CREDITS_yugi_audio.txt"), "the source credits are kept next to the sounds")
+	var credits := FileAccess.get_file_as_string("res://Assets/Audio/Yugi/CREDITS_yugi_audio.txt")
+	assert_test(credits.contains("NON-COMMERCIAL USE ONLY") and credits.contains("HTDD") and credits.contains("Shiruzato"),
+		"the credits state non-commercial use only and name the MUGEN authors")
 
 func test_fallback_reads_header() -> void:
 	print("--- Fallback WAV reader ---")

@@ -108,9 +108,9 @@ func test_menu_start() -> void:
 	await _frames(3)
 	assert_test(GameManager.hall_selecting and GameManager.coins == 77 and GameManager.current_level == 1, "a fresh run in character-select mode (wallet kept)")
 	assert_test(_players().is_empty() and hall.hero == null, "nobody is controlled yet")
-	var hall_bgm = AudioManager.bgm_streams.get("hall")
-	assert_test(AudioManager.current_bgm_key == "hall" and hall_bgm is AudioStreamOggVorbis and hall_bgm.loop
-		and hall_bgm.get_length() > 400.0, "the character select plays the medieval Guild Hall music (looping, %.0f s)" % (hall_bgm.get_length() if hall_bgm != null else 0.0))
+	# bản nhạc trung cổ của sảnh đã bỏ (bản quyền): sảnh dùng lại nhạc menu, đang phát thì chạy tiếp
+	assert_test(AudioManager.current_bgm_key == "menu" and AudioManager.bgm_player.stream == AudioManager.bgm_streams.get("menu")
+		and not AudioManager.bgm_streams.has("hall"), "the character select keeps the main menu music (the copyrighted hall track is gone)")
 	var sel = hall.get_node_or_null("HeroSelect")
 	assert_test(sel != null and sel.camera.is_current(), "the select camera is active")
 	var vr: Rect2 = sel.VIEW_RECT
@@ -216,7 +216,7 @@ func test_start() -> void:
 	assert_test(hero.global_position.distance_to(spot) < 1.0, "he starts where his hall copy stood")
 	assert_test(not hall.hall_hero_node(5).visible and hall.hall_hero_node(2).visible, "his hall copy is hidden, the others stay")
 	assert_test(GameManager.selected_character_index == 5 and not GameManager.hall_selecting, "choice saved, select mode over")
-	assert_test(AudioManager.current_bgm_key == "hall", "the Guild Hall music keeps playing after BẮT ĐẦU")
+	assert_test(AudioManager.current_bgm_key == "menu", "the same music keeps playing after BẮT ĐẦU")
 	assert_test(hall.get_node_or_null("HeroSelect") == null or hall.get_node("HeroSelect").is_queued_for_deletion(), "select screen removed")
 	var cam: Camera2D = hero.get_node_or_null("Camera2D")
 	assert_test(cam != null and cam.is_current(), "the hero's own camera takes over")
@@ -325,6 +325,23 @@ func test_esc_and_flag() -> void:
 	GameManager.start_new_run("HALL-SELECT", false, [])
 	assert_test(not GameManager.hall_selecting, "starting any other run clears hall_selecting")
 	await _leave(hall)
+	# start_run_in_hall() gọi lại khi màn chọn còn mở (vd. một nút "chơi lại" sau này): màn chọn cũ bị xoá
+	# không được tắt cờ của màn chọn mới, sảnh mới phải mở lại màn chọn chứ không thả sẵn một nhân vật
+	hall = await _open_selecting(3)
+	GameManager.start_run_in_hall("HALL-SELECT")
+	var hall_again: Node = null
+	for i in 90:
+		await get_tree().process_frame
+		var cs2 := get_tree().current_scene
+		if cs2 != null and cs2 != hall and cs2.scene_file_path == HALL_PATH and cs2.is_node_ready():
+			hall_again = cs2
+			break
+	await _frames(3)
+	assert_test(hall_again != null and GameManager.hall_selecting and hall_again.get_node_or_null("HeroSelect") != null and _players().is_empty(),
+		"start_run_in_hall() while choosing reopens the character select (the old screen keeps its hands off the new flag)")
+	if hall_again != null:
+		await _leave(hall_again)
+	GameManager.hall_selecting = false
 
 func _esc_event() -> InputEventAction:
 	var ev := InputEventAction.new()
