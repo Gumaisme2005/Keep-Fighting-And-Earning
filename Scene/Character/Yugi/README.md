@@ -28,6 +28,12 @@ The large special sheets use selected attack rows rather than their full cinemat
 summoning sequences. Hurt currently uses a brief idle pose. Death uses the four frames from death.png,
 plays once at 10 FPS, and holds the final frame without fading out.
 
+Audio: sounds and voice lines come from the M.U.G.E.N character "Yami Yugi" (Yugi.snd, by HTDD
+after Shiruzato / Mythos), mapped through its PlaySnd states; see Assets/Audio/Yugi/CREDITS_yugi_audio.txt.
+yugi.gd CAST_AUDIO lists the effect and line for each move; summon.gd and room_*.gd play the hit
+sounds at the moment the effect lands. Ordinary lines wait 2.5 seconds between each other; Q cards,
+intro, hurt and KO always speak. Covered by res://tests/test_yugi_audio.tscn.
+
 Headless regression scene: res://tests/test_yugi.tscn. Covers registration,
 animation extraction, guard, guard cancellation, quick clicks, charging, special
 selection and replay field preservation. Manual visual/gameplay balancing remains

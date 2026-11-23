@@ -30,6 +30,7 @@ func _ready() -> void:
 	await test_panel()
 	await test_start()
 	await test_back_and_list()
+	await test_esc_and_flag()
 	await test_game_over_retry()
 	await test_direct_hall_unchanged()
 	print("\n========================================================")
@@ -98,6 +99,7 @@ func test_menu_start() -> void:
 	get_tree().root.add_child(menu)
 	get_tree().current_scene = menu
 	await _frames(3)
+	assert_test(AudioManager.current_bgm_key == "menu", "(setup) the main menu plays its own music")
 	menu._on_start_button_pressed()
 	var hall := await _wait_hall()
 	assert_test(hall != null, "START opens the Guild Hall instead of the old select screen")
@@ -106,6 +108,9 @@ func test_menu_start() -> void:
 	await _frames(3)
 	assert_test(GameManager.hall_selecting and GameManager.coins == 77 and GameManager.current_level == 1, "a fresh run in character-select mode (wallet kept)")
 	assert_test(_players().is_empty() and hall.hero == null, "nobody is controlled yet")
+	var hall_bgm = AudioManager.bgm_streams.get("hall")
+	assert_test(AudioManager.current_bgm_key == "hall" and hall_bgm is AudioStreamOggVorbis and hall_bgm.loop
+		and hall_bgm.get_length() > 400.0, "the character select plays the medieval Guild Hall music (looping, %.0f s)" % (hall_bgm.get_length() if hall_bgm != null else 0.0))
 	var sel = hall.get_node_or_null("HeroSelect")
 	assert_test(sel != null and sel.camera.is_current(), "the select camera is active")
 	var vr: Rect2 = sel.VIEW_RECT
@@ -211,6 +216,7 @@ func test_start() -> void:
 	assert_test(hero.global_position.distance_to(spot) < 1.0, "he starts where his hall copy stood")
 	assert_test(not hall.hall_hero_node(5).visible and hall.hall_hero_node(2).visible, "his hall copy is hidden, the others stay")
 	assert_test(GameManager.selected_character_index == 5 and not GameManager.hall_selecting, "choice saved, select mode over")
+	assert_test(AudioManager.current_bgm_key == "hall", "the Guild Hall music keeps playing after BẮT ĐẦU")
 	assert_test(hall.get_node_or_null("HeroSelect") == null or hall.get_node("HeroSelect").is_queued_for_deletion(), "select screen removed")
 	var cam: Camera2D = hero.get_node_or_null("Camera2D")
 	assert_test(cam != null and cam.is_current(), "the hero's own camera takes over")
@@ -268,7 +274,63 @@ func test_back_and_list() -> void:
 			break
 	var cs := get_tree().current_scene
 	assert_test(cs != null and cs.scene_file_path.ends_with("main_menu.tscn") and not GameManager.hall_selecting, "MENU CHÍNH returns to the main menu")
+	assert_test(AudioManager.current_bgm_key == "menu", "back in the main menu its own music plays again")
 	await _leave(cs)
+
+func _press_esc() -> void:
+	var ev := InputEventAction.new()
+	ev.action = "esc"
+	ev.pressed = true
+	get_viewport().push_input(ev)
+	var up := InputEventAction.new()
+	up.action = "esc"
+	up.pressed = false
+	get_viewport().push_input(up)
+
+func test_esc_and_flag() -> void:
+	print("--- Group 4b: ESC / hall_selecting on the character select ---")
+	var hall := await _open_selecting(3)
+	var sel = hall.get_node("HeroSelect")
+	var pm: Node = hall.get_node_or_null("CanvasLayer/pause_menu")
+	assert_test(GameManager.hall_selecting and sel.panel == null and pm != null, "(setup) hall view, nothing opened")
+	_press_esc()
+	var cs: Node = null
+	for i in 30:
+		await get_tree().process_frame
+		cs = get_tree().current_scene
+		if cs != null and cs.scene_file_path.ends_with("main_menu.tscn"):
+			break
+	assert_test(cs != null and cs.scene_file_path.ends_with("main_menu.tscn"), "ESC in the hall view goes back to the main menu (like MENU CHÍNH)")
+	assert_test(not GameManager.hall_selecting and not get_tree().paused, "hall_selecting is cleared and the game is not paused")
+	await _leave(cs)
+	# rời màn chọn bằng đường khác (scene bị xoá) cũng tắt cờ, lần mở sảnh trực tiếp sau đó không mở nhầm màn chọn
+	hall = await _open_selecting(3)
+	assert_test(GameManager.hall_selecting and hall.get_node_or_null("HeroSelect") != null, "(setup) selecting again")
+	hall.queue_free()
+	await _frames(3)
+	get_tree().current_scene = self
+	assert_test(not GameManager.hall_selecting, "freeing the select screen clears hall_selecting")
+	var direct: Node = load(HALL_PATH).instantiate()
+	add_child(direct)
+	await _frames(3)
+	assert_test(direct.hero != null and direct.get_node_or_null("HeroSelect") == null, "a hall opened afterwards spawns the hero (no stale select screen)")
+	direct.queue_free()
+	await _frames(2)
+	# menu tạm dừng của run không mở ở màn chọn
+	hall = await _open_selecting(3)
+	pm = hall.get_node_or_null("CanvasLayer/pause_menu")
+	if pm != null:
+		pm._unhandled_input(_esc_event())
+	assert_test(pm != null and not pm.visible and not get_tree().paused, "the run's pause menu ignores ESC while choosing a hero")
+	GameManager.start_new_run("HALL-SELECT", false, [])
+	assert_test(not GameManager.hall_selecting, "starting any other run clears hall_selecting")
+	await _leave(hall)
+
+func _esc_event() -> InputEventAction:
+	var ev := InputEventAction.new()
+	ev.action = "esc"
+	ev.pressed = true
+	return ev
 
 func test_game_over_retry() -> void:
 	print("--- Group 5: game over -> choose again ---")
@@ -302,6 +364,6 @@ func test_direct_hall_unchanged() -> void:
 	var hall: Node = load(HALL_PATH).instantiate()
 	add_child(hall)
 	await _frames(3)
-	assert_test(hall.hero != null and hall.get_node_or_null("HeroSelect") == null, "hall opened directly (F6 / T key) spawns the hero, no select screen")
+	assert_test(hall.hero != null and hall.get_node_or_null("HeroSelect") == null, "hall opened directly (F6) spawns the hero, no select screen")
 	hall.queue_free()
 	await _frames(2)

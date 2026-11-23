@@ -145,6 +145,12 @@ func test_teleport(idx: int) -> void:
 	if ui == null:
 		hall.queue_free()
 		return
+	assert_test(AudioManager.current_bgm_key == "hall", "the Guild Hall plays its medieval music")
+	# Action Replay: không ghi thao tác trong sảnh
+	GameManager.current_recording_frames.clear()
+	GameManager.record_frame_input({"dx": 1.0, "dy": 0.0, "ax": 10.0, "ay": 0.0, "atk": true})
+	assert_test(GameManager.current_recording_frames.is_empty(), "no replay frames are recorded in the Guild Hall")
+	GameManager.current_recording_frames.append({"dx": 1.0, "dy": 0.0})   # giả lập bản ghi cũ còn sót
 	var started := [false]
 	sword.teleport_started.connect(func(_h): started[0] = true)
 	_press("interact")   # E on CÓ
@@ -176,6 +182,7 @@ func test_teleport(idx: int) -> void:
 	assert_test(is_instance_valid(hero) and gen.the_player == hero and hero.get_parent() == gen, "the same hero is used in the dungeon")
 	assert_test(get_tree().get_nodes_in_group("player").filter(func(n): return n is CharacterBody2D).size() == 1, "only one hero exists")
 	assert_test(GameManager.current_level == 1 and gen.current_level == 1, "floor 1")
+	assert_test(AudioManager.current_bgm_key == "dungeon" or AudioManager.current_bgm_key == "boss", "the Guild Hall music gives way to the dungeon music (%s)" % AudioManager.current_bgm_key)
 	assert_test(GameManager.current_seed == "RUNE-GO" and gen.map_seed == "RUNE-GO", "same run seed")
 	assert_test(hero.hp == hp_before, "HP kept (%d)" % hero.hp)
 	assert_test(GameManager.coins == 321, "coins kept (%d)" % GameManager.coins)
@@ -192,6 +199,11 @@ func test_teleport(idx: int) -> void:
 	assert_test(uis.is_empty() or uis[0].dungeon_map == gen, "HUD / minimap follow the new dungeon")
 	assert_test(uis.is_empty() or (uis[0].minimap_title.text == "DUNGEON MAP" and uis[0].minimap_control.hall == null and uis[0].minimap_control.tilemap == gen),
 		"minimap is the dungeon map again")
+	var leftover: Array = GameManager.current_recording_frames.filter(func(f): return not f.has("ax"))
+	assert_test(leftover.is_empty(), "the replay buffer starts fresh on floor 1 (frames from before are cleared)")
+	GameManager.current_recording_frames.clear()
+	GameManager.record_frame_input({"dx": 1.0, "dy": 0.0, "ax": 10.0, "ay": 0.0, "atk": true})
+	assert_test(GameManager.current_recording_frames.size() == 1, "frames are recorded again in the dungeon")
 	await get_tree().create_timer(1.0).timeout
 	assert_test(get_tree().root.get_node_or_null("PortalFlash") == null, "screen flash fades away")
 	world.queue_free()

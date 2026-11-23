@@ -64,6 +64,12 @@ func _process(delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if panel != null:
 		return
+	# ESC ở màn nhìn toàn sảnh (chưa mở bảng nào) = nút MENU CHÍNH. Bảng HeroSelectUI tự xử lý ESC (quay lại sảnh).
+	# Menu tạm dừng của run (seed / tầng / chơi lại) không mở ở màn chọn nhân vật.
+	if event.is_action_pressed("esc") and not event.is_echo():
+		get_viewport().set_input_as_handled()
+		back_to_menu()
+		return
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		var p: Vector2 = get_canvas_transform().affine_inverse() * (event as InputEventMouseButton).position
 		var h := hero_at(p)
@@ -196,7 +202,15 @@ func _move_camera(target: Vector2, zoom: float) -> void:
 
 func back_to_menu() -> void:
 	GameManager.hall_selecting = false
+	get_tree().paused = false
 	get_tree().change_scene_to_file("res://Menu/main menu/main_menu.tscn")
+
+## Rời màn chọn bằng bất kỳ đường nào (đổi scene, đóng sảnh...) thì tắt cờ hall_selecting, để lần vào sảnh sau
+## (F6, test, scene khác) không mở nhầm màn chọn. start_with_hero() đã tắt cờ trước khi xoá màn chọn.
+func _exit_tree() -> void:
+	var gm := get_node_or_null("/root/GameManager")
+	if gm != null and gm.get("hall_selecting") == true:
+		gm.set("hall_selecting", false)
 
 # ------------------------------------------------------------------ HUD (pixel UI, 424 x 236 phóng to theo số nguyên)
 

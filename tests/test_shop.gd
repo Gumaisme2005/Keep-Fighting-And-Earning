@@ -4,6 +4,8 @@ extends Node2D
 const HALL = preload("res://Scene/Map/GuildHall/guild_hall.tscn")
 const SHOP_UI = preload("res://Scene/UI/Shop/ShopUI.gd")
 const ShopCatalog = preload("res://Scene/UI/Shop/shop_catalog.gd")
+const PotionCatalog = preload("res://Scene/UI/Shop/potion_catalog.gd")
+const MageOffers = preload("res://Scene/UI/Shop/mage_offers.gd")
 
 var passed_count: int = 0
 var failed_count: int = 0
@@ -25,6 +27,7 @@ func _ready() -> void:
 	await test_open_close()
 	await test_buy_sell_equip()
 	await test_blacksmith_interaction()
+	test_stock_resets_each_run()
 	print("\n========================================================")
 	print("  TEST RESULTS: ", passed_count, " PASSED, ", failed_count, " FAILED")
 	print("========================================================\n")
@@ -224,3 +227,24 @@ func test_blacksmith_interaction() -> void:
 	assert_test(smith.shop == null and not get_tree().paused, "E again closes it")
 	hall.queue_free()
 	await _frames(2)
+
+## Hàng của thợ rèn, nhóm giả kim và nhóm pháp sư đủ lại ở mỗi run mới (không mang số hàng đã mua sang run sau).
+func test_stock_resets_each_run() -> void:
+	print("--- Group 5: Shop stock resets for each new run ---")
+	GameManager.start_new_run("STOCK-RUN-1", false, [])
+	var full_smith: int = ShopCatalog.get_stock(0)
+	var full_potion: int = PotionCatalog.get_stock(0)
+	ShopCatalog.take_one(0)
+	PotionCatalog.take_one(0)
+	MageOffers.ensure()
+	MageOffers.reroll()
+	var had_offers := not MageOffers.offers.is_empty()
+	if had_offers:
+		MageOffers.sold[0] = true
+	assert_test(ShopCatalog.get_stock(0) == full_smith - 1 and PotionCatalog.get_stock(0) == full_potion - 1 and MageOffers.rerolls == 1,
+		"(setup) one sword and one potion bought, mage offers rerolled once")
+	GameManager.start_new_run("STOCK-RUN-2", false, [])
+	assert_test(ShopCatalog.get_stock(0) == full_smith, "a new run restocks the blacksmith (%d)" % ShopCatalog.get_stock(0))
+	assert_test(PotionCatalog.get_stock(0) == full_potion, "a new run restocks the alchemists (%d)" % PotionCatalog.get_stock(0))
+	MageOffers.ensure()
+	assert_test(MageOffers.rerolls == 0 and not MageOffers.sold.has(true), "a new run gives the mages fresh offers (no rerolls, nothing sold)")

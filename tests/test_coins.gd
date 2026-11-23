@@ -141,19 +141,33 @@ func test_summoned_and_dead_player() -> void:
 	hero.is_dead = false
 	await _wait(1.5)
 	assert_test(GameManager.coins == before + 1, "coin is collected once the hero is back")
-	# Freed before pickup (e.g. floor change): still credited to this run
+	# Freed before pickup while the hero is alive (e.g. floor change): still credited to this run
 	var orc2 := _spawn_orc(Vector2(0, 80))
 	await get_tree().physics_frame
 	var expected := _expected_reward("orc", GameManager.enemies_killed + 1, false)
-	hero.is_dead = true
 	orc2.take_damage(999)
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var pending := GameManager.coins
-	for c in get_tree().get_nodes_in_group("coin_pickups"):
+	var flying: Array = get_tree().get_nodes_in_group("coin_pickups")
+	var none_picked := flying.all(func(c): return not c.is_collected())
+	for c in flying:
 		c.queue_free()
 	await get_tree().process_frame
-	assert_test(GameManager.coins == pending + expected, "uncollected coins freed by a floor change are still credited")
+	assert_test(none_picked and GameManager.coins == pending + expected, "uncollected coins freed by a floor change are still credited")
+	# Freed while the hero is down (game over -> leaving the run): the coins on the floor are lost
+	var orc3 := _spawn_orc(Vector2(0, 110))
+	await get_tree().physics_frame
+	hero.is_dead = true
+	orc3.take_damage(999)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var lying: Array = get_tree().get_nodes_in_group("coin_pickups")
+	var before_dead := GameManager.coins
+	for c in lying:
+		c.queue_free()
+	await get_tree().process_frame
+	assert_test(lying.size() >= 1 and GameManager.coins == before_dead, "coins freed while the hero is dead are not credited (%d coin(s))" % lying.size())
 	hero.queue_free()
 	await get_tree().process_frame
 

@@ -1,0 +1,15 @@
+Tiếng của Lương Thơ (Assets/Audio/LuongTho/*.wav)
+=================================================
+Tự tổng hợp hoàn toàn bằng numpy / scipy (nhiễu lọc, sóng sin, partial kim loại, reverb ngắn) -
+không dùng mẫu âm thanh nào. Tạo lại: python3 tools/gen_hero_sfx.py Assets/Audio (seed cố định).
+32 kHz mono 16-bit, âm lượng khớp bộ tiếng Yugi.
+
+lt_stab        Đâm (combo 1): tiếng vút ngắn, gọn + lưỡi kim loại
+lt_swing       Quét đôi (combo 2, 2 nhát; nhát thứ hai cao hơn một chút)
+lt_smash       Đập đất (combo 3): tiếng nổ trầm, kim loại va, đá nứt và vụn rơi
+lt_shot        Twin Barrels: hai nòng nổ cách nhau 45 ms + tiếng lên đạn
+lt_shot_moon   Twin Barrels trong dạng White Moon: sáng hơn, có vòng ngân năng lượng
+lt_transform   Q White Moon (1 giây): âm thanh dâng lên lấp lánh rồi ngân tiếng chuông trăng
+lt_revert      Hết White Moon: tiếng lấp lánh đi xuống
+lt_block       Dạng White Moon đỡ một đòn: tiếng "ting" pha lê (tối đa 1 lần / 0.2 s)
+lt_draw        Rút vũ khí từ sau lưng khi bắt đầu chạy (rất nhỏ)

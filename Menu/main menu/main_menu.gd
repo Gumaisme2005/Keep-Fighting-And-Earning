@@ -15,6 +15,16 @@ var seed_modal: PanelContainer = null
 var lore_modal: PanelContainer = null
 var help_modal: PanelContainer = null
 var history_hdr_label: Label = null
+var help_scroll: ScrollContainer = null
+var help_body: Label = null
+
+## Các modal (lưu trữ seed, cốt truyện, điều khiển) luôn nằm gọn trong màn hình: kích thước thiết kế dưới đây,
+## nhưng thu nhỏ khi cửa sổ hẹp / thấp hơn (chừa MODAL_MARGIN mỗi cạnh), căn giữa, tự tính lại khi đổi cỡ cửa sổ.
+## Nội dung dài tự xuống dòng và cuộn dọc bên trong modal, nên không đẩy modal hay nút Close ra ngoài.
+const MODAL_MARGIN := 16.0
+const SEED_MODAL_SIZE := Vector2(720, 430)
+const LORE_MODAL_SIZE := Vector2(700, 440)
+const HELP_MODAL_SIZE := Vector2(680, 460)
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -186,6 +196,39 @@ func _enhance_main_menu_ui() -> void:
 	_build_seed_and_replay_modal()
 	_build_lore_modal()
 	_build_help_modal()
+	fit_modals()
+	if not get_viewport().size_changed.is_connected(fit_modals):
+		get_viewport().size_changed.connect(fit_modals)
+
+## Đặt lại kích thước + vị trí của cả ba modal theo khung nhìn hiện tại.
+func fit_modals() -> void:
+	_fit_modal(seed_modal, SEED_MODAL_SIZE)
+	_fit_modal(lore_modal, LORE_MODAL_SIZE)
+	_fit_modal(help_modal, HELP_MODAL_SIZE)
+
+## Căn giữa `modal` với kích thước `design`, kẹp trong khung nhìn (trừ MODAL_MARGIN mỗi cạnh).
+func _fit_modal(modal: Control, design: Vector2) -> void:
+	if modal == null:
+		return
+	var vp: Vector2 = get_viewport_rect().size
+	var w: float = floorf(minf(design.x, maxf(0.0, vp.x - MODAL_MARGIN * 2.0)))
+	var h: float = floorf(minf(design.y, maxf(0.0, vp.y - MODAL_MARGIN * 2.0)))
+	modal.anchor_left = 0.5
+	modal.anchor_right = 0.5
+	modal.anchor_top = 0.5
+	modal.anchor_bottom = 0.5
+	modal.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	modal.grow_vertical = Control.GROW_DIRECTION_BOTH
+	modal.offset_left = -floorf(w / 2.0)
+	modal.offset_right = w - floorf(w / 2.0)
+	modal.offset_top = -floorf(h / 2.0)
+	modal.offset_bottom = h - floorf(h / 2.0)
+
+## Tiêu đề modal: chữ dài thì cắt bớt (…) thay vì đẩy nút Close ra ngoài.
+func _style_modal_title(lbl: Label) -> void:
+	lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	lbl.clip_text = true
+	lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
 func _set_seed_status(msg: String) -> void:
 	if seed_status_lbl != null:
@@ -194,14 +237,6 @@ func _set_seed_status(msg: String) -> void:
 
 func _build_seed_and_replay_modal() -> void:
 	seed_modal = PanelContainer.new()
-	seed_modal.anchor_left = 0.5
-	seed_modal.anchor_right = 0.5
-	seed_modal.anchor_top = 0.5
-	seed_modal.anchor_bottom = 0.5
-	seed_modal.offset_left = -360.0
-	seed_modal.offset_right = 360.0
-	seed_modal.offset_top = -215.0
-	seed_modal.offset_bottom = 215.0
 	seed_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_PANEL, UITheme.COLOR_GOLD_BORDER, 2, 6, 16, 14))
 	seed_modal.visible = false
 	add_child(seed_modal)
@@ -216,7 +251,7 @@ func _build_seed_and_replay_modal() -> void:
 	var title_lbl := Label.new()
 	title_lbl.text = "DUNGEON ARCHIVES & COMBAT REPLAYS"
 	UITheme.style_header_label(title_lbl, 16, UITheme.COLOR_TEXT_GOLD)
-	title_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_style_modal_title(title_lbl)
 	header.add_child(title_lbl)
 
 	var close_btn := UITheme.create_danger_button("Close", "", Vector2(84, 30), 12)
@@ -245,6 +280,7 @@ func _build_seed_and_replay_modal() -> void:
 
 	var l_scroll := ScrollContainer.new()
 	l_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	l_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	left_vbox.add_child(l_scroll)
 
 	saved_list_vbox = VBoxContainer.new()
@@ -265,10 +301,12 @@ func _build_seed_and_replay_modal() -> void:
 	history_hdr_label = Label.new()
 	history_hdr_label.text = "EXPEDITION HISTORY & REPLAYS (Saved: 0/10):"
 	UITheme.style_header_label(history_hdr_label, 13, UITheme.COLOR_TEXT_GOLD)
+	history_hdr_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	right_vbox.add_child(history_hdr_label)
 
 	var r_scroll := ScrollContainer.new()
 	r_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	r_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	right_vbox.add_child(r_scroll)
 
 	history_list_vbox = VBoxContainer.new()
@@ -290,19 +328,12 @@ func _refresh_seed_lists() -> void:
 	for item in GameManager.saved_seeds:
 		var card := PanelContainer.new()
 		card.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_DARK, UITheme.COLOR_GOLD_BORDER_MUTED, 1, 4, 8, 6))
-		var row := HBoxContainer.new()
-		row.add_theme_constant_override("separation", 6)
-		card.add_child(row)
+		var row := _make_card_body(card)
 
 		var s_val: String = String(item.get("seed", "ALOALO1234"))
 		var h_idx: int = int(item.get("hero_idx", 2))
 
-		var lbl := Label.new()
-		lbl.text = "%s\n%s" % [s_val, String(item.get("note", ""))]
-		lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		lbl.add_theme_font_size_override("font_size", 12)
-		lbl.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
-		row.add_child(lbl)
+		_add_card_label(card, "%s\n%s" % [s_val, String(item.get("note", ""))])
 
 		var play_btn := UITheme.create_button("Play", "", Vector2(76, 28), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 12)
 		play_btn.pressed.connect(func():
@@ -322,6 +353,7 @@ func _refresh_seed_lists() -> void:
 	if GameManager.run_history.is_empty():
 		var empty_lbl := Label.new()
 		empty_lbl.text = "No combat history recorded.\nComplete an expedition to record a replay."
+		empty_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		empty_lbl.add_theme_font_size_override("font_size", 12)
 		empty_lbl.add_theme_color_override("font_color", UITheme.COLOR_TEXT_MUTED)
 		history_list_vbox.add_child(empty_lbl)
@@ -329,9 +361,7 @@ func _refresh_seed_lists() -> void:
 		for run_item in GameManager.run_history:
 			var card := PanelContainer.new()
 			card.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_DARK, UITheme.COLOR_GOLD_BORDER_MUTED, 1, 4, 8, 6))
-			var row := HBoxContainer.new()
-			row.add_theme_constant_override("separation", 6)
-			card.add_child(row)
+			var row := _make_card_body(card)
 
 			var s_val: String = String(run_item.get("seed", "ALOALO1234"))
 			var h_idx: int = int(run_item.get("hero_idx", 2))
@@ -340,12 +370,7 @@ func _refresh_seed_lists() -> void:
 			var kills: int = int(run_item.get("kills", 0))
 			var run_coins: int = int(run_item.get("coins", 0))
 
-			var lbl := Label.new()
-			lbl.text = "%s • Seed: %s\nFloor: %d • Foes Slain: %d • Coins: %d" % [h_name, s_val, flr, kills, run_coins]
-			lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			lbl.add_theme_font_size_override("font_size", 12)
-			lbl.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
-			row.add_child(lbl)
+			_add_card_label(card, "%s • Seed: %s\nFloor: %d • Foes Slain: %d • Coins: %d" % [h_name, s_val, flr, kills, run_coins])
 
 			var seed_btn := UITheme.create_button("Retry", "", Vector2(76, 28), UITheme.COLOR_GOLD_BORDER, UITheme.COLOR_BG_DARK, 11)
 			seed_btn.pressed.connect(func():
@@ -373,16 +398,33 @@ func _refresh_seed_lists() -> void:
 	if history_hdr_label != null:
 		history_hdr_label.text = "EXPEDITION HISTORY & REPLAYS (Saved: %d/10):" % GameManager.get_saved_replays_count()
 
+## Thẻ trong danh sách seed / lịch sử: chữ ở trên (tự xuống dòng theo bề ngang cột), hàng nút ở dưới căn phải,
+## để dòng chữ dài không đẩy nút Play / Retry / Replay / Del ra ngoài cột. Trả về hàng nút.
+func _make_card_body(card: PanelContainer) -> HBoxContainer:
+	var box := VBoxContainer.new()
+	box.name = "Body"
+	box.add_theme_constant_override("separation", 4)
+	card.add_child(box)
+	var row := HBoxContainer.new()
+	row.name = "Buttons"
+	row.alignment = BoxContainer.ALIGNMENT_END
+	row.add_theme_constant_override("separation", 6)
+	box.add_child(row)
+	return row
+
+func _add_card_label(card: PanelContainer, text: String) -> void:
+	var lbl := Label.new()
+	lbl.text = text
+	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	lbl.add_theme_font_size_override("font_size", 12)
+	lbl.add_theme_color_override("font_color", UITheme.COLOR_TEXT_PRIMARY)
+	var box: Node = card.get_node("Body")
+	box.add_child(lbl)
+	box.move_child(lbl, 0)
+
 func _build_lore_modal() -> void:
 	lore_modal = PanelContainer.new()
-	lore_modal.anchor_left = 0.5
-	lore_modal.anchor_right = 0.5
-	lore_modal.anchor_top = 0.5
-	lore_modal.anchor_bottom = 0.5
-	lore_modal.offset_left = -350.0
-	lore_modal.offset_right = 350.0
-	lore_modal.offset_top = -220.0
-	lore_modal.offset_bottom = 220.0
 	lore_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_PANEL, UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
 	lore_modal.visible = false
 	add_child(lore_modal)
@@ -396,7 +438,7 @@ func _build_lore_modal() -> void:
 	var h_title := Label.new()
 	h_title.text = "CHRONICLES OF MIDDLE-EARTH: MINES OF MORIA"
 	UITheme.style_header_label(h_title, 15, UITheme.COLOR_TEXT_GOLD)
-	h_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_style_modal_title(h_title)
 	header.add_child(h_title)
 
 	var close_btn := UITheme.create_danger_button("Close", "", Vector2(84, 30), 12)
@@ -405,6 +447,7 @@ func _build_lore_modal() -> void:
 
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	vbox.add_child(scroll)
 
 	var content_vbox := VBoxContainer.new()
@@ -433,14 +476,6 @@ func _build_lore_modal() -> void:
 
 func _build_help_modal() -> void:
 	help_modal = PanelContainer.new()
-	help_modal.anchor_left = 0.5
-	help_modal.anchor_right = 0.5
-	help_modal.anchor_top = 0.5
-	help_modal.anchor_bottom = 0.5
-	help_modal.offset_left = -310.0
-	help_modal.offset_right = 310.0
-	help_modal.offset_top = -200.0
-	help_modal.offset_bottom = 200.0
 	help_modal.add_theme_stylebox_override("panel", UITheme.make_panel_style(UITheme.COLOR_BG_PANEL, UITheme.COLOR_GOLD_BORDER, 2, 6, 18, 14))
 	help_modal.visible = false
 	add_child(help_modal)
@@ -454,14 +489,26 @@ func _build_help_modal() -> void:
 	var h_title := Label.new()
 	h_title.text = "COMBAT CONTROLS & MECHANICS"
 	UITheme.style_header_label(h_title, 15, UITheme.COLOR_TEXT_GOLD)
-	h_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_style_modal_title(h_title)
 	header.add_child(h_title)
 
 	var close_top := UITheme.create_danger_button("Close", "", Vector2(84, 30), 12)
 	close_top.pressed.connect(func(): help_modal.visible = false)
 	header.add_child(close_top)
 
+	# Nội dung cuộn dọc (không cuộn ngang) + tự xuống dòng: dòng dài của Yugi / Doraemon / Miyabi / Lương Thơ
+	# không còn kéo giãn modal ra ngoài màn hình.
+	help_scroll = ScrollContainer.new()
+	help_scroll.name = "HelpScroll"
+	help_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	help_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	vbox.add_child(help_scroll)
+
 	var body := Label.new()
+	body.name = "HelpBody"
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	body.add_theme_constant_override("line_spacing", 4)
 	body.add_theme_font_size_override("font_size", 13)
 	body.add_theme_color_override("font_color", Color(0.92, 0.95, 0.98))
 	body.text = """• W, A, S, D: Move your champion in 4 directions
@@ -477,7 +524,8 @@ func _build_help_modal() -> void:
 • Key I or Tab: Toggle Backpack & Equipment screen
 • Key M: Expand or minimize the tactical Minimap
 • Key ESC: Pause expedition, save seed, or retry"""
-	vbox.add_child(body)
+	help_scroll.add_child(body)
+	help_body = body
 
 func on_start_pressed() -> void:
 	_on_start_button_pressed()

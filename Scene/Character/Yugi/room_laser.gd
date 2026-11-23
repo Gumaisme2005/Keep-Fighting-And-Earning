@@ -12,6 +12,7 @@ var beam_active := false
 var tick_remaining := 0.0
 var beam_origin := Vector2.ZERO
 var face_left := false
+var beam_sound_played := false
 
 func _ready() -> void:
 	var world := get_parent()
@@ -47,6 +48,9 @@ func _physics_process(delta: float) -> void:
 		monster.frame = PEAK_FRAME
 		_refresh_target()
 		if is_instance_valid(current_target):
+			if not beam_sound_played:
+				beam_sound_played = true
+				_play_sfx("yugi_laser")
 			tick_remaining -= maxf(0, elapsed - maxf(previous, start))
 			while tick_remaining <= 0 and is_instance_valid(current_target):
 				CombatUtil.deal_player_damage(caster, current_target, damage_per_tick)

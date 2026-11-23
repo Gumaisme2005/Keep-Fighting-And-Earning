@@ -1,5 +1,6 @@
 extends Node2D
-## Guild Hall: cấu trúc scene, va chạm tường, nhân vật không thể ra khỏi sảnh, và phím T dịch chuyển về sảnh.
+## Guild Hall: cấu trúc scene, va chạm tường, nhân vật không thể ra khỏi sảnh, bản đồ nhỏ (GameUI) ở sảnh,
+## và phím T (dịch chuyển về sảnh giữa run) đã bỏ.
 
 const HALL = preload("res://Scene/Map/GuildHall/guild_hall.tscn")
 
@@ -21,8 +22,8 @@ func _ready() -> void:
 	await test_structure()
 	await test_hero_stays_inside(2)   # Pyrois
 	await test_hero_stays_inside(5)   # Doraemon
-	await test_teleport_key(5)        # Doraemon: dungeon -> hall with the T key
-	await test_teleport_key(2)        # Pyrois
+	await test_no_teleport_key(2)     # T key removed: nothing happens in the dungeon
+	await test_minimap_in_hall()      # GameUI minimap: hall map, stale dungeon TileMap dropped
 	print("\n========================================================")
 	print("  TEST RESULTS: ", passed_count, " PASSED, ", failed_count, " FAILED")
 	print("========================================================\n")
@@ -353,22 +354,24 @@ func _walkable(hall: Node, p: Vector2, fr: Rect2) -> bool:
 	# the doorway between the two areas
 	return p.x >= -8 and p.x <= 40 and p.y >= 156 and p.y <= 212
 
-func _press_t() -> void:
-	var ev := InputEventAction.new()
-	ev.action = "teleport_hall"
+func _press_key(code: Key) -> void:
+	var ev := InputEventKey.new()
+	ev.physical_keycode = code
+	ev.keycode = code
 	ev.pressed = true
 	Input.parse_input_event(ev)
 	await get_tree().process_frame
-	var up := InputEventAction.new()
-	up.action = "teleport_hall"
+	var up := InputEventKey.new()
+	up.physical_keycode = code
+	up.keycode = code
 	up.pressed = false
 	Input.parse_input_event(up)
 	await _frames(3)
 
-func test_teleport_key(idx: int) -> void:
-	print("\n--- Group: T key teleports hero #%d from the dungeon ---" % idx)
-	assert_test(InputMap.has_action("teleport_hall") and InputMap.action_get_events("teleport_hall").size() > 0 \
-		and (InputMap.action_get_events("teleport_hall")[0] as InputEventKey).physical_keycode == KEY_T, "T is bound to teleport_hall")
+func test_no_teleport_key(idx: int) -> void:
+	print("\n--- Group: the T key no longer teleports hero #%d to the hall ---" % idx)
+	assert_test(not InputMap.has_action("teleport_hall"), "the teleport_hall action is removed from the input map")
+	assert_test(not GameManager.has_method("teleport_to_guild_hall"), "GameManager has no teleport_to_guild_hall() any more")
 	GameManager.set_character_by_index(idx)
 	GameManager.start_new_run("TP-TEST", false, [])
 	var world: Node = load("res://world.tscn").instantiate()
@@ -377,35 +380,68 @@ func test_teleport_key(idx: int) -> void:
 	await _frames(40)
 	var hero: Node2D = GameManager._find_hero()
 	assert_test(hero != null and world.is_ancestor_of(hero), "hero is in the dungeon")
-	if hero == null:
-		return
-	hero.hp = maxi(1, hero.max_hp - 1)
-	var hp_before: int = hero.hp
-	GameManager.replay_frames = []
-	for i in range(300):
-		GameManager.replay_frames.append({})
-	hero.set("replay_frame_idx", 0)
-	GameManager.is_replaying = true
-	await _press_t()
-	assert_test(get_tree().current_scene == world, "T does nothing while watching a replay")
-	GameManager.is_replaying = false
-	GameManager.replay_frames = []
-	await _press_t()
+	await _press_key(KEY_T)
 	await _frames(5)
-	var hall: Node = get_tree().current_scene
-	assert_test(hall != null and hall.scene_file_path == "res://Scene/Map/GuildHall/guild_hall.tscn", "T switches to the Guild Hall")
-	assert_test(not is_instance_valid(world), "the dungeon scene is freed")
-	assert_test(is_instance_valid(hero) and hall.get_node("Props").is_ancestor_of(hero), "the same hero is moved into the hall")
-	assert_test(is_instance_valid(hero) and hero.hp == hp_before, "HP is kept (%d)" % (hero.hp if is_instance_valid(hero) else -1))
-	assert_test(get_tree().get_nodes_in_group("player").filter(func(n): return n is CharacterBody2D).size() == 1, "only one hero exists")
-	assert_test(hall.get_floor_rect().has_point(hero.global_position), "hero stands on the hall floor")
-	assert_test(hero.get_node_or_null("PlayerSoulLight") == null or hero.get_node("PlayerSoulLight").is_queued_for_deletion(), "dungeon light is removed in the hall")
-	assert_test(hall.get_node_or_null("CanvasLayer/pause_menu") != null and hall.get_node_or_null("CanvasLayer/game_over_menu") != null, "pause and game-over menus work in the hall")
-	var cam := hero.get_node_or_null("Camera2D") as Camera2D
-	assert_test(cam == null or (cam.limit_right <= 600 and cam.limit_left >= -470), "camera limited to the hall and field")
-	hero.global_position += Vector2(120, 40)
-	await _press_t()
-	assert_test(hero.global_position.distance_to(hall.get_node("PlayerSpawn").global_position) < 1.0, "T inside the hall returns the hero to the spawn point")
+	assert_test(get_tree().current_scene == world and is_instance_valid(hero) and world.is_ancestor_of(hero), "pressing T in the dungeon does nothing")
+	world.queue_free()
+	await _frames(3)
+	get_tree().current_scene = self
+
+## Bản đồ nhỏ trong Guild Hall. Lỗi cũ: rời hầm ngục sang sảnh (trước đây bằng phím T) thì GameUI giữ nguyên
+## dungeon_map trỏ vào TileMap của hầm ngục (chưa bị xoá hẳn) -> minimap vẫn là DUNGEON MAP rồi đọc vào node đã xoá.
+func test_minimap_in_hall() -> void:
+	print("\n--- Group: GameUI minimap in the Guild Hall ---")
+	GameManager.set_character_by_index(2)   # Pyrois (có HUD GameUI)
+	GameManager.start_new_run("HALL-MAP", false, [])
+	GameManager.hall_selecting = false
+	var hall: Node = HALL.instantiate()
+	get_tree().root.add_child(hall)
+	get_tree().current_scene = hall
+	await _frames(6)
+	var gui = get_tree().get_first_node_in_group("game_ui")
+	assert_test(gui != null, "(setup) the hero has a GameUI HUD")
+	if gui == null:
+		hall.queue_free()
+		await _frames(3)
+		get_tree().current_scene = self
+		return
+	assert_test(gui.dungeon_map == null and gui.minimap_control.hall == hall and gui.minimap_control.tilemap == null
+		and gui.minimap_title.text == "GUILD HALL", "the minimap shows the Guild Hall (no dungeon map)")
+	# một TileMap hầm ngục "cũ" vẫn còn hợp lệ: phải bị bỏ khi nối lại HUD ở sảnh
+	var stale := TileMap.new()
+	gui.dungeon_map = stale
+	gui.minimap_control.tilemap = stale
+	gui._connect_to_player_and_map()
+	assert_test(gui.dungeon_map == null and gui.minimap_control.tilemap == null and gui.minimap_control.hall == hall
+		and gui.minimap_title.text == "GUILD HALL", "a stale dungeon TileMap is dropped when the HUD reconnects in the hall")
+	stale.free()
 	hall.queue_free()
+	await _frames(3)
+	# đường cũ của phím T: nhân vật đang ở hầm ngục được chuyển sang sảnh, hầm ngục queue_free cùng khung hình
+	var world: Node = load("res://world.tscn").instantiate()
+	get_tree().root.add_child(world)
+	get_tree().current_scene = world
+	await _frames(40)
+	var hero: Node2D = GameManager._find_hero()
+	gui = get_tree().get_first_node_in_group("game_ui")
+	assert_test(hero != null and gui != null and gui.dungeon_map == world.get_node("TileMap") and gui.minimap_title.text == "DUNGEON MAP",
+		"(setup) in the dungeon the minimap is the dungeon map")
+	if hero == null or gui == null:
+		world.queue_free()
+		await _frames(3)
+		get_tree().current_scene = self
+		return
+	var hall2: Node = HALL.instantiate()
+	hall2.set("spawn_hero", false)
+	hero.get_parent().remove_child(hero)
+	get_tree().root.add_child(hall2)
+	get_tree().current_scene = hall2
+	world.queue_free()
+	hall2.place_hero(hero)
+	await _frames(6)
+	assert_test(not is_instance_valid(world), "(setup) the dungeon is freed")
+	assert_test(gui.dungeon_map == null and gui.minimap_control.hall == hall2 and gui.minimap_control.tilemap == null
+		and gui.minimap_title.text == "GUILD HALL", "moving from the dungeon into the hall switches the minimap to the hall")
+	hall2.queue_free()
 	await _frames(3)
 	get_tree().current_scene = self

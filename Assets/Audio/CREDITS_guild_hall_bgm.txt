@@ -1,0 +1,6 @@
+bgm_guild_hall.ogg - nhạc nền Guild Hall và màn "Chọn nhân vật" (AudioManager key "hall", phát lặp lại).
+Nguồn: file người dùng cung cấp - "Medieval Traveler's Journey - Medieval Music for Relaxation & Adventure"
+(YouTube, video id o4UC3UUvXBw; bản gốc dài 1:33:24, AAC 128 kbps).
+Chỉ dùng đoạn 0:00 - 6:48.35 (hai bài đầu, cắt đúng chỗ chuyển bài), thêm fade-in 0.02 s / fade-out 0.35 s cho vòng lặp liền mạch,
+chuyển sang Ogg Vorbis 44.1 kHz stereo (q3, ~98 kb/s) để Godot đọc được.
+Trước khi phát hành, cần kiểm tra quyền sử dụng bản nhạc này với tác giả / kênh gốc.

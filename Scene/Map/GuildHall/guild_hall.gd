@@ -10,7 +10,7 @@ extends Node2D
 ##                                nối với sảnh qua lối mở ở tường trái (hàng ô 10..12)
 ## Chạy thẳng scene này (F6) để đi dạo: nhân vật đang chọn sẽ xuất hiện ở PlayerSpawn.
 ## Đầu run (START ở menu chính) sảnh mở ở màn "Chọn nhân vật" (hall_select.gd) thay cho màn chọn nhân vật cũ.
-## Trong game, phím T (action "teleport_hall", xử lý ở GameManager) đưa nhân vật đang chơi về đây.
+## Chỉ vào sảnh lúc bắt đầu run; đi qua thanh kiếm rune là xuống hầm ngục tầng 1 (không còn phím T quay về giữa chừng).
 
 ## Tự sinh nhân vật đang chọn khi scene chạy độc lập (tắt nếu một scene khác tự đưa người chơi vào).
 @export var spawn_hero: bool = true
@@ -22,13 +22,12 @@ const PAUSE_MENU: PackedScene = preload("res://Menu/pause menu/pause_menu.tscn")
 const GAME_OVER_MENU: PackedScene = preload("res://Menu/game over menu/game_over_menu.tscn")
 const SELECT_SCRIPT := preload("res://Scene/Map/GuildHall/hall_select.gd")
 const CAMERA_MARGIN := 8.0
+const HALL_BGM := "hall"
 
 var hero: Node2D = null
 
 func _ready() -> void:
-	var am := get_node_or_null("/root/AudioManager")
-	if am != null and am.has_method("play_bgm"):
-		am.play_bgm("menu")
+	_play_hall_bgm()
 	var exit_area := get_node_or_null("ExitArea") as Area2D
 	if exit_area != null:
 		exit_area.body_entered.connect(_on_exit_body_entered)
@@ -94,7 +93,14 @@ func _ensure_menus() -> void:
 	go.name = "game_over_menu"
 	layer.add_child(go)
 
-## Đặt một nhân vật có sẵn (vd. dịch chuyển bằng phím T) vào sảnh, tại PlayerSpawn.
+## Nhạc nền của sảnh (cả màn "Chọn nhân vật"): AudioManager key HALL_BGM. Đang phát rồi thì không phát lại từ đầu,
+## nên bấm BẮT ĐẦU ở màn chọn, nhạc vẫn chạy tiếp liền mạch.
+func _play_hall_bgm() -> void:
+	var am := get_node_or_null("/root/AudioManager")
+	if am != null and am.has_method("play_bgm"):
+		am.play_bgm(HALL_BGM)
+
+## Đặt một nhân vật có sẵn (nhân vật vừa chọn ở màn chọn, hoặc do một scene khác đưa vào) vào sảnh, tại PlayerSpawn.
 func place_hero(node: Node2D) -> void:
 	hero = node
 	if node.get_parent() != $Props:
@@ -111,9 +117,7 @@ func place_hero(node: Node2D) -> void:
 		node.velocity = Vector2.ZERO
 	_fit_camera(node)
 	update_hall_heroes()
-	var am := get_node_or_null("/root/AudioManager")
-	if am != null and am.has_method("play_bgm"):
-		am.play_bgm("menu")
+	_play_hall_bgm()
 	# HUD của nhân vật (GameUI) chuyển bản đồ nhỏ sang bản đồ sảnh
 	if is_inside_tree():
 		get_tree().call_group_flags(SceneTree.GROUP_CALL_DEFERRED, "game_ui", "_connect_to_player_and_map")
