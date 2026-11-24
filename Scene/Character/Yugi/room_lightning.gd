@@ -40,6 +40,7 @@ func _physics_process(delta: float) -> void:
 	monster.frame = mini(int(elapsed * FPS), monster.sprite_frames.get_frame_count("default") - 1)
 	if not struck and elapsed >= strike_time:
 		struck = true
+		_play_sfx("yugi_thunder")
 		for target in _room_targets():
 			CombatUtil.deal_player_damage(caster, target, damage)
 			if is_instance_valid(target) and not target.is_queued_for_deletion() and target.get("is_dead") != true:

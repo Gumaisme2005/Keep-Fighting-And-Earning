@@ -5,6 +5,11 @@ are copied into Assets/Character/Yugi without alteration. YugiSprites extracts
 atlas regions and pads to a bottom-center origin; key_green removes the flat
 green background at render time. Keep the source artist attribution with assets.
 
+**Non-commercial use only.** Yugi / Atem, his monsters, card names, sprites and sounds are fan
+content based on Yu-Gi-Oh! (© Kazuki Takahashi / Konami / Shueisha / TV Tokyo / NAS). They may only
+be used in a non-commercial project (no sale, paid access or advertising), with the credits kept
+(Assets/Audio/Yugi/CREDITS_yugi_audio.txt for the sounds).
+
 Controls:
 - WASD: move; mouse: aim.
 - Click left/right: release to cast the corresponding summon.
@@ -27,6 +32,12 @@ are not independent AI companions.
 The large special sheets use selected attack rows rather than their full cinematic
 summoning sequences. Hurt currently uses a brief idle pose. Death uses the four frames from death.png,
 plays once at 10 FPS, and holds the final frame without fading out.
+
+Audio: sounds and voice lines come from the M.U.G.E.N character "Yami Yugi" (Yugi.snd, by HTDD
+after Shiruzato / Mythos), mapped through its PlaySnd states; see Assets/Audio/Yugi/CREDITS_yugi_audio.txt.
+yugi.gd CAST_AUDIO lists the effect and line for each move; summon.gd and room_*.gd play the hit
+sounds at the moment the effect lands. Ordinary lines wait 2.5 seconds between each other; Q cards,
+intro, hurt and KO always speak. Covered by res://tests/test_yugi_audio.tscn.
 
 Headless regression scene: res://tests/test_yugi.tscn. Covers registration,
 animation extraction, guard, guard cancellation, quick clicks, charging, special

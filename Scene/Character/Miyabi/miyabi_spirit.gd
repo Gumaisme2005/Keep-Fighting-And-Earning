@@ -88,6 +88,9 @@ func _shoot() -> void:
 	var dir := Vector2(f, 0.0)
 	if is_instance_valid(_target) and _target.get("is_dead") != true:
 		dir = (Util.hit_point(_target) - from).normalized()
+	var am := get_node_or_null("/root/AudioManager")
+	if am != null:
+		am.play_sfx("miyabi_spirit_bolt", 0.95, 1.08)
 	var b: Node2D = Bolt.new()
 	b.dir = dir
 	b.damage = damage

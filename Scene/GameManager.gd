@@ -21,6 +21,9 @@ const ALLOWED_SEED_CHARS: String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqr
 const BalanceData = preload("res://Scene/BalanceConfig.gd")
 const GUILD_HALL_SCENE: String = "res://Scene/Map/GuildHall/guild_hall.tscn"
 const DUNGEON_SCENE: String = "res://world.tscn"
+const SHOP_CATALOG_PATH: String = "res://Scene/UI/Shop/shop_catalog.gd"
+const POTION_CATALOG_PATH: String = "res://Scene/UI/Shop/potion_catalog.gd"
+const MAGE_OFFERS_PATH: String = "res://Scene/UI/Shop/mage_offers.gd"
 const COIN_PICKUP_SCRIPT = preload("res://Scene/Items/Coin/coin_pickup.gd")
 const PerkManagerScript = preload("res://Scene/Perks/PerkManager.gd")
 
@@ -80,6 +83,9 @@ var _coin_sfx_streak: int = 0
 var run_start_time_msec: int = 0
 ## Guild Hall đang ở màn "Chọn nhân vật" (đầu run, chưa có nhân vật điều khiển): bấm vào anh hùng trong sảnh để chọn.
 var hall_selecting: bool = false
+## Tăng mỗi lần start_run_in_hall() mở một màn chọn mới. Màn chọn cũ khi bị xoá chỉ tắt hall_selecting nếu
+## chưa có màn chọn mới nào được mở sau nó (xem hall_select._exit_tree()).
+var hall_select_session: int = 0
 
 # Earned only by clearing a boss room and descending, once per first five floors.
 # Separate from hero/perk/equipment HP and the unchanged +4 potion allowance.
@@ -239,55 +245,19 @@ static func _expand_replay_frames(sanitized: Array, max_count: int) -> Array:
 			expanded.append(base)
 	return expanded
 
-# --- PHÍM T: DỊCH CHUYỂN VỀ GUILD HALL ---
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("teleport_hall") and not event.is_echo():
-		if teleport_to_guild_hall():
-			get_viewport().set_input_as_handled()
-
-## Đưa nhân vật đang chơi (giữ nguyên máu, đồ, hồi chiêu) sang Guild Hall.
-## Không làm gì khi chưa có nhân vật (menu), nhân vật đã gục, đang xem replay hoặc game đang tạm dừng.
-func teleport_to_guild_hall() -> bool:
-	if is_replaying or hall_selecting or get_tree().paused:
-		return false
-	var hero := _find_hero()
-	if hero == null or hero.get("is_dead") == true:
-		return false
-	var current := get_tree().current_scene
-	if current != null and current.has_method("place_hero") and current.scene_file_path == GUILD_HALL_SCENE:
-		current.place_hero(hero)
+## Đang ở Guild Hall (màn chọn nhân vật hoặc đi dạo trong sảnh trước khi xuống hầm ngục)?
+## Guild Hall chỉ vào được lúc bắt đầu run (phím T dịch chuyển về sảnh giữa chừng đã bỏ).
+func is_in_guild_hall() -> bool:
+	if hall_selecting:
 		return true
-	if current != null and current.has_node("TileMap"):
-		var gen := current.get_node("TileMap")
-		var managers = gen.get("room_managers")
-		if managers is Dictionary:
-			for mgr in managers.values():
-				if is_instance_valid(mgr) and mgr.get("is_locked") == true:
-					get_tree().call_group("game_ui", "show_toast", "Cannot teleport during locked combat!")
-					return false
-	hall_selecting = false
-	call_deferred("_swap_to_guild_hall", hero)
-	return true
-
-func _swap_to_guild_hall(hero: Node2D) -> void:
-	if not is_instance_valid(hero):
-		return
-	if hero.has_method("set_skill_invincible"):
-		hero.set_skill_invincible(false)
 	var tree := get_tree()
-	var old_scene := tree.current_scene
-	var hall: Node = load(GUILD_HALL_SCENE).instantiate()
-	hall.set("spawn_hero", false)
-	if hero.get_parent() != null:
-		hero.get_parent().remove_child(hero)
-	tree.root.add_child(hall)
-	tree.current_scene = hall
-	if old_scene != null and old_scene != hall:
-		old_scene.queue_free()
-	hall.place_hero(hero)
+	var current: Node = tree.current_scene if tree != null else null
+	return current != null and current.scene_file_path == GUILD_HALL_SCENE
 
 ## Thanh kiếm rune trong Guild Hall: đưa nhân vật (giữ nguyên máu, đồ, xu, chấn) xuống hầm ngục tầng 1.
 ## Seed của run giữ nguyên nên tầng 1 vẫn là tầng 1 của seed đang chơi.
+## Action Replay luôn bắt đầu ở tầng 1 (start_action_replay mở thẳng world.tscn), nên bộ ghi thao tác được xoá tại đây:
+## những bước đi trong sảnh không lọt vào bản ghi và không làm replay lệch nhịp.
 func enter_dungeon_from_hall(hero: Node2D = null) -> bool:
 	if is_replaying:
 		return false
@@ -295,11 +265,11 @@ func enter_dungeon_from_hall(hero: Node2D = null) -> bool:
 		hero = _find_hero()
 	if hero == null or hero.get("is_dead") == true:
 		return false
-	current_level = 1
-	current_recording_frames.clear()
 	if sanitize_seed(current_seed).is_empty():
 		current_seed = generate_random_seed()
-	flush_wallet()   # xuống hầm ngục = chuyển tầng: lưu ví ngay
+	hall_selecting = false
+	current_recording_frames.clear()
+	register_level_advance(1)   # tầng 1 + cập nhật HUD + lưu ví ngay (xuống hầm ngục = chuyển tầng)
 	call_deferred("_swap_to_dungeon", hero)
 	return true
 
@@ -343,6 +313,7 @@ func _swap_to_dungeon(hero: Node2D) -> void:
 func start_run_in_hall(seed_str: String = "") -> void:
 	start_new_run(seed_str if not seed_str.is_empty() else current_seed, false, [])
 	hall_selecting = true
+	hall_select_session += 1
 	get_tree().paused = false
 	get_tree().change_scene_to_file(GUILD_HALL_SCENE)
 
@@ -400,6 +371,8 @@ func start_new_run(custom_seed: String = "", replay_mode: bool = false, frames_t
 	get_tree().call_group("player", "reset_defensive_effects")
 	run_coins = 0   # ví KHÔNG reset: số dư giữ nguyên qua mọi lượt chơi
 	run_id += 1
+	hall_selecting = false   # start_run_in_hall bật lại ngay sau đó; mọi lối vào run khác không còn ở màn chọn
+	reset_shop_stock()
 	run_start_time_msec = Time.get_ticks_msec()
 	is_replaying = replay_mode
 	if replay_mode:
@@ -414,11 +387,19 @@ func start_new_run(custom_seed: String = "", replay_mode: bool = false, frames_t
 	coins_changed.emit(coins, 0)
 	flush_wallet()
 
+## Hàng của thợ rèn, nhóm giả kim và 3 chấn của nhóm pháp sư trong Guild Hall: đủ hàng lại ở mỗi run mới.
+func reset_shop_stock() -> void:
+	for path in [SHOP_CATALOG_PATH, POTION_CATALOG_PATH]:
+		var catalog = load(path)
+		if catalog != null:
+			catalog.reset_stock()
+	var mage = load(MAGE_OFFERS_PATH)
+	if mage != null:
+		mage.reset()
+
 func record_frame_input(frame_data: Dictionary) -> void:
-	if is_replaying or hall_selecting:
-		return
-	var cs := get_tree().current_scene if get_tree() != null else null
-	if cs != null and cs.scene_file_path == GUILD_HALL_SCENE:
+	# Replay bắt đầu ở tầng 1 của hầm ngục: không ghi thao tác trong Guild Hall (sẽ làm lệch nhịp replay)
+	if is_replaying or is_in_guild_hall():
 		return
 	if current_recording_frames.size() >= MAX_REPLAY_FRAMES:
 		return
