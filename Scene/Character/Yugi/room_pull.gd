@@ -53,6 +53,7 @@ func _physics_process(delta: float) -> void:
 		if enemy is CharacterBody2D: enemy.velocity = Vector2.ZERO
 	if not hit_once and elapsed >= hit_time:
 		hit_once = true
+		_play_sfx("yugi_obelisk_hit")
 		for entry in locked:
 			var enemy = entry.target
 			if is_instance_valid(enemy) and enemy.get("is_dead") != true:

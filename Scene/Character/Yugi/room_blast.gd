@@ -98,7 +98,14 @@ func _room_targets() -> Array[Node2D]:
 					targets.append(target)
 	return targets
 
+## Tiếng của chiêu (AudioManager, trích từ nhân vật MUGEN "Yami Yugi"); các chiêu Q khác kế thừa hàm này.
+func _play_sfx(key: String) -> void:
+	var am := get_node_or_null("/root/AudioManager")
+	if am != null:
+		am.play_sfx(key, 0.97, 1.03)
+
 func _detonate() -> void:
+	_play_sfx("yugi_blast")
 	var targets := _room_targets()
 	# Snapshot all HP before applying any hits; death callbacks cannot change the mean.
 	var total_hp := 0.0

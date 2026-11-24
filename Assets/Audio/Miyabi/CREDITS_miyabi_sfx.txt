@@ -1,0 +1,16 @@
+Tiếng của Hoshimi Miyabi (Assets/Audio/Miyabi/*.wav)
+====================================================
+Tự tổng hợp hoàn toàn bằng numpy / scipy (nhiễu lọc, sóng sin, partial kim loại / thuỷ tinh,
+reverb ngắn) - không dùng mẫu âm thanh nào. Tạo lại: python3 tools/gen_hero_sfx.py Assets/Audio
+(seed cố định nên ra đúng các file này). 32 kHz mono 16-bit, âm lượng khớp bộ tiếng Yugi.
+
+miyabi_slash_1 / _2   Nhát chém 1 / 2 của combo click trái: gió lạnh vụt qua + tiếng lưỡi kiếm + lấp lánh băng
+miyabi_slash_3        Nhát 3 (nặng, đóng băng): gió trầm hơn, tiếng nứt băng
+miyabi_dash           Shift lướt chém: tiếng vút rất nhanh xuyên qua
+miyabi_charge         Giữ chuột phải tụ lực: hơi lạnh tụ lại, tiếng ngân pha lê đi lên (dừng ngay khi thả chuột)
+miyabi_charge_full    Tụ đủ lực (1 giây): ba tiếng chuông băng - báo sẵn sàng
+miyabi_wave           Thả Frost Wave cấp 1 / 2 (cao độ 1.08 / 0.97)
+miyabi_wave_full      Frost Wave cấp 3 (đóng băng): thêm thân trầm và tiếng băng lách tách
+miyabi_ice_spikes     Q Frost Bloom: cắm kiếm xuống đất + 6 đợt gai băng trồi lên theo từng khung hình
+miyabi_ice_shatter    Hàng gai băng vỡ vụn (khung 8)
+miyabi_spirit_bolt    Linh hồn băng bắn (2 giây một lần, nên rất nhỏ)

@@ -23,6 +23,7 @@ const SHEATHE_AFTER := 2.0          # seconds standing still in combat stance be
 const UPGRADED_ATTACK_RATE := 1.25
 const UPGRADED_SPEED := 1.2
 const REVERT_RATE := 2.0
+const BLOCK_SFX_GAP := 0.2          # White Moon block "ting": at most one every 0.2s
 
 # Left Click combo. "box" = [ahead from, ahead to, centre y, half height] in game units from her
 # feet; "circle" = [ahead, y, radius]. "chain" = frame from which a queued next step may start.
@@ -55,6 +56,7 @@ var _fired: bool = false
 var _untouchable: bool = false
 var _prev_atk: bool = false
 var _ui_sent: Array = [-1.0, -1.0]
+var _block_sfx_cd: float = 0.0
 
 func _ready() -> void:
 	hero_balance_id = "luong_tho"
@@ -132,6 +134,7 @@ func _physics_process(delta: float) -> void:
 	q_cd = maxf(0.0, q_cd - delta)
 	rmb_cd = maxf(0.0, rmb_cd - delta)
 	combo_chain = maxf(0.0, combo_chain - delta)
+	_block_sfx_cd = maxf(0.0, _block_sfx_cd - delta)
 	can_use_skill = q_cd <= 0.0
 	if form == "upgraded" and move != "revert":
 		form_time = maxf(0.0, form_time - delta)
@@ -200,6 +203,7 @@ func _step_stance(delta: float, direction: Vector2) -> void:
 				stance = "drawing"
 				stance_t = 0.0
 				animated_sprite.play("draw")
+				_sfx("lt_draw")
 			elif stance == "sheathing" and stance_t >= Sprites.duration("draw") / animated_sprite.speed_scale:
 				stance = "sheathed"
 				animated_sprite.play("idle")
@@ -272,6 +276,8 @@ func _step_swing(direction: Vector2, input: Dictionary) -> void:
 	var hits: Array = c["hits"]
 	while _next_hit < hits.size() and move_t >= _t(anim, int(hits[_next_hit])):
 		_next_hit += 1
+		# Twin Swing's second blade sounds a little higher than the first.
+		_sfx("lt_" + anim, 1.08 if _next_hit == 2 else -1.0)
 		_swing_hit(c)
 	var last := combo_step >= COMBO.size() - 1
 	if not last and move_t >= _t(anim, int(c["chain"])) and (_combo_queued or input["atk"]):
@@ -324,6 +330,7 @@ func _step_shoot(direction: Vector2) -> void:
 func _fire() -> void:
 	var world := _world()
 	var torso := global_position + Vector2(0, TORSO_Y)
+	_sfx("lt_shot_moon" if form == "upgraded" else "lt_shot")
 	var dir := current_aim_offset.normalized()
 	if dir == Vector2.ZERO or signf(dir.x) == -facing:
 		dir = Vector2(facing, dir.y).normalized() if dir != Vector2.ZERO else Vector2(facing, 0.0)
@@ -352,6 +359,7 @@ func _start_transform() -> void:
 	animated_sprite.speed_scale = 1.0
 	_begin("transform", "transform")
 	stance = "sheathed"
+	_sfx("lt_transform")
 
 func _step_transform() -> void:
 	velocity = Vector2.ZERO
@@ -371,6 +379,7 @@ func _start_revert() -> void:
 	move_t = 0.0
 	is_casting_skill = true
 	animated_sprite.play_backwards("transform")
+	_sfx("lt_revert")
 
 func _step_revert() -> void:
 	velocity = Vector2.ZERO
@@ -378,6 +387,17 @@ func _step_revert() -> void:
 		animated_sprite.speed_scale = 1.0
 		stance = "sheathed"
 		_end_move()
+
+# ------------------------------------------------------------------ sound
+## Sound effects (Assets/Audio/LuongTho, synthesised - see CREDITS_luong_tho_sfx.txt).
+## pitch < 0: the usual small random variation (0.97 - 1.03); otherwise that exact pitch.
+func _sfx(key: String, pitch: float = -1.0) -> void:
+	var am := get_node_or_null("/root/AudioManager")
+	if am != null:
+		if pitch > 0.0:
+			am.play_sfx(key, pitch, pitch)
+		else:
+			am.play_sfx(key, 0.97, 1.03)
 
 # ------------------------------------------------------------------ damage
 ## Visual only: a short pale-blue flash when the White Moon form shrugs off a hit.
@@ -396,6 +416,9 @@ func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	if is_immune():
 		if amount > 0 and form == "upgraded":
 			_flash_block()
+			if _block_sfx_cd <= 0.0:
+				_block_sfx_cd = BLOCK_SFX_GAP
+				_sfx("lt_block")
 		return
 	var before := hp + current_armor
 	super.take_damage(amount, armor_piercing)

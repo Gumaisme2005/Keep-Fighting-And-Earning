@@ -39,6 +39,10 @@ const WAVE_RELEASE_FRAME := 2
 # Q Frost Bloom
 const BLOOM_ERUPT_FRAME := 5
 
+# Sound effects (Assets/Audio/Miyabi, synthesised - see CREDITS_miyabi_sfx.txt)
+const SWING_SFX: Array = ["miyabi_slash_1", "miyabi_slash_2", "miyabi_slash_3"]
+const WAVE_PITCH: Array = [1.08, 0.97, 1.0]   # charge levels 1 / 2 use the normal wave, level 3 its own sound
+
 var rmb_cooldown: float = 2.0
 var dash_cooldown: float = 1.2
 var dash_distance: float = 72.0
@@ -265,6 +269,7 @@ func _step_swing(direction: Vector2, input: Dictionary) -> void:
 	move_and_slide()
 	if not _event_done and move_t >= hit_t:
 		_event_done = true
+		_sfx(SWING_SFX[combo_step])
 		_swing_hit(c)
 	if move_t >= Sprites.duration(anim):
 		var last := combo_step >= COMBO.size() - 1
@@ -299,6 +304,7 @@ func _start_dash(direction: Vector2) -> void:
 	_dash_hits.clear()
 	_untouchable = true
 	_begin("dash", "frost_dash")
+	_sfx("miyabi_dash")
 
 func _step_dash() -> void:
 	var start := Sprites.at_frame("frost_dash", DASH_START_FRAME)
@@ -336,6 +342,7 @@ func _start_charge() -> void:
 	charge_time = 0.0
 	_charge_flash = false
 	_begin("charge", "frost_charge_start")
+	_sfx("miyabi_charge", 1.0)
 
 func _step_charge(delta: float, direction: Vector2, input: Dictionary) -> void:
 	charge_time += delta
@@ -346,6 +353,7 @@ func _step_charge(delta: float, direction: Vector2, input: Dictionary) -> void:
 	if not _charge_flash and charge_time >= float(WAVE_LEVELS[WAVE_LEVELS.size() - 1][0]):
 		_charge_flash = true
 		Util.Fx.spawn(_world(), "frost_hit", from_centre(Vector2(-12, 14)), Sprites.SCALE * 1.4)
+		_sfx("miyabi_charge_full")
 	# Fully charged: the blade glows (preserve alpha so hurt i-frame blink stays intact).
 	var glow := _charge_flash and int(charge_time * 8.0) % 2 == 0
 	animated_sprite.modulate = Color(1.15, 1.25, 1.6, animated_sprite.modulate.a) if glow else Color(1.0, 1.0, 1.0, animated_sprite.modulate.a)
@@ -364,6 +372,7 @@ func _start_release() -> void:
 	animated_sprite.modulate = Color(1.0, 1.0, 1.0, animated_sprite.modulate.a)
 	if absf(current_aim_offset.x) > 0.5:
 		_set_facing(current_aim_offset.x)
+	_stop_sfx("miyabi_charge")
 	_begin("release", "frost_release")
 
 func _step_release(direction: Vector2) -> void:
@@ -380,6 +389,10 @@ func _spawn_wave() -> void:
 	var dir := current_aim_offset.normalized()
 	if dir == Vector2.ZERO:
 		dir = Vector2(facing, 0.0)
+	if wave_level >= WAVE_LEVELS.size() - 1:
+		_sfx("miyabi_wave_full")
+	else:
+		_sfx("miyabi_wave", float(WAVE_PITCH[wave_level]))
 	var w: Node2D = FrostWave.new()
 	w.dir = dir
 	w.speed = wave_speed
@@ -405,6 +418,7 @@ func _step_special() -> void:
 	if not _event_done and move_t >= Sprites.at_frame("frost_special", BLOOM_ERUPT_FRAME):
 		_event_done = true
 		_untouchable = false
+		_sfx("miyabi_ice_spikes")
 		var s: Node2D = IceSpikes.new()
 		s.facing = facing
 		s.damage = _dmg() * bloom_damage_mult
@@ -414,6 +428,21 @@ func _step_special() -> void:
 		s.global_position = from_centre(Sprites.SPIKES_OFFSET)
 	if move_t >= Sprites.duration("frost_special"):
 		_end_move()
+
+# ------------------------------------------------------------------ sound
+## pitch < 0: the usual small random variation (0.97 - 1.03); otherwise that exact pitch.
+func _sfx(key: String, pitch: float = -1.0) -> void:
+	var am := get_node_or_null("/root/AudioManager")
+	if am != null:
+		if pitch > 0.0:
+			am.play_sfx(key, pitch, pitch)
+		else:
+			am.play_sfx(key, 0.97, 1.03)
+
+func _stop_sfx(key: String) -> void:
+	var am := get_node_or_null("/root/AudioManager")
+	if am != null:
+		am.stop_sfx(key)
 
 # ------------------------------------------------------------------ damage
 func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
@@ -426,6 +455,7 @@ func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	if is_dead:
 		move = ""
 		is_casting_skill = false
+		_stop_sfx("miyabi_charge")
 		if spirit != null:
 			spirit.on_hero_died()
 	elif spirit != null:

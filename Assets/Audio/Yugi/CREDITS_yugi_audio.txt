@@ -1,0 +1,75 @@
+Tiếng của Yugi (Assets/Audio/Yugi/*.wav)
+=========================================
+CHỈ DÙNG PHI THƯƠNG MẠI - NON-COMMERCIAL USE ONLY
+Nhân vật Yugi / Atem (sprite, tiếng, lời thoại, tên lá bài) là nội dung fan dựa trên Yu-Gi-Oh!
+(© Kazuki Takahashi / Konami / Shueisha / TV Tokyo / NAS). Chỉ được dùng trong dự án phi thương mại,
+không bán, không thu tiền, không dùng để quảng cáo, và phải giữ nguyên ghi công bên dưới.
+The Yugi / Atem character (sprites, sounds, voice lines, card names) is fan content based on
+Yu-Gi-Oh!. It may only be used in non-commercial projects - no sale, no paid access, no advertising -
+and the credits below must be kept.
+
+Nguồn: file Yugi.snd của nhân vật M.U.G.E.N "Yami Yugi" (theo "Yami Yugi.def": tác giả HTDD,
+dựa trên bản của Shiruzato / Mythos). Lời thoại (nhóm 0, 11, 5000 trong Yugi.snd) là giọng nhân vật
+Yami Yugi mà tác giả MUGEN lấy từ Yu-Gi-Oh!; nhân vật, tên lá bài và giọng nói thuộc bản quyền của
+chủ sở hữu Yu-Gi-Oh! (Kazuki Takahashi / Konami / Shueisha / TV Tokyo / NAS). Hiệu ứng âm thanh lấy
+từ cùng file SND. Chỉ dùng phi thương mại (xem trên), giống phần sprite Yugi; giữ ghi công này.
+
+Ghi công đầy đủ của nhân vật "Yami Yugi" (theo mô tả video giới thiệu của tác giả HTDD,
+https://www.youtube.com/watch?v=xoz-THrqjME; bản tải: https://www.mediafire.com/file/02xcnxg252xytyw/Yami_Yugi.rar/file):
+- Nhân vật gốc: Shiruzato / Mythos. Bản Yami Yugi (versiondate 23/04/2023): HTDD.
+- Sprite Tristan, Jaden, Yusei, Yuma: kaithehedgefox10 (https://www.deviantart.com/kaithehedgefox10)
+- Sprite Pegasus, Joey và các quái thú: XmayGrrr (https://www.deviantart.com/xmaygrrr)
+- Code và quái thú của Jaden: Justin kaiser (https://www.youtube.com/watch?v=9ZRzeu-sdyk)
+- Một số code, FX và hiệu ứng: Fresh Prince, Dr.Animation, InSeph, SoulFire, Salah
+- Nhân vật khác trong video: Kaiba (Shiruzato / Mythos, HTDD chỉnh sửa), Joey (HTDD), Jaden (Justin kaiser)
+
+Cách làm: tách 255 đoạn WAV từ Yugi.snd, tra lệnh PlaySnd trong Yugi.cns / Especiales.cns /
+Supers.cns để biết mỗi đoạn thuộc chiêu nào, rồi chọn đoạn hợp với chiêu tương ứng trong game.
+Mỗi file: đổi sang 32 kHz mono 16-bit (header WAV 44 byte), cắt khoảng lặng cuối, fade 4 ms / 30 ms,
+chuẩn hoá âm lượng (hiệu ứng RMS 0.17, lời thoại RMS 0.20, đỉnh <= 0.89). Một số file trộn nhiều đoạn
+theo đúng thời điểm trong state MUGEN (60 tick = 1 giây). "S<nhóm>,<số>@t" = đoạn trong Yugi.snd, phát lúc t.
+
+File                   Loại  Ghép từ
+yugi_summon.wav        sfx   S5,5 + S6,22@0.10s + S6,12@0.12s
+yugi_slash.wav         sfx   S5,5 + S6,22@0.10s + S1,20@0.25s
+yugi_gaia.wav          sfx   S5,5 + S6,22@0.10s + S6,18@0.15s + S5,9@0.20s + S6,17@0.40s
+yugi_combo.wav         sfx   S5,5 + S6,22@0.10s + S1,22@0.20s + S1,20@0.42s
+yugi_circle.wav        sfx   S6,21 + S6,37@0.10s + S5,3@0.33s
+yugi_guard.wav         sfx   S5,5 + S6,21@0.10s
+yugi_dmg_ball.wav      sfx   S5,28 + S5,30@0.05s
+yugi_dark_magic.wav    sfx   S6,7 + S6,4 + S6,3@0.17s
+yugi_blast.wav         sfx   S5,19
+yugi_laser.wav         sfx   S6,51
+yugi_god_summon.wav    sfx   S6,59 + S6,54 + S6,55@0.33s
+yugi_thunder.wav       sfx   S6,53 + S5,29 + S6,56@0.10s
+yugi_obelisk_hit.wav   sfx   S6,53 + S5,29
+yugi_ra_fire.wav       sfx   S6,53 + S5,29 + S5,18@0.10s
+yugi_v_intro.wav       voice S0,0
+yugi_v_draw_1.wav      voice S0,4
+yugi_v_draw_2.wav      voice S0,5
+yugi_v_draw_3.wav      voice S0,19
+yugi_v_draw_4.wav      voice S0,62
+yugi_v_guard.wav       voice S0,3
+yugi_v_circle.wav      voice S0,21
+yugi_v_swords.wav      voice S0,20
+yugi_v_twin_burst.wav  voice S0,23
+yugi_v_slifer.wav      voice S0,32
+yugi_v_obelisk.wav     voice S0,50 + S0,51@0.50s
+yugi_v_ra.wav          voice S0,54
+yugi_v_hurt_1.wav      voice S5000,1
+yugi_v_hurt_2.wav      voice S5000,2
+yugi_v_hurt_3.wav      voice S5000,3
+yugi_v_hurt_4.wav      voice S5000,4
+yugi_v_hurt_5.wav      voice S5000,5
+yugi_v_hurt_6.wav      voice S5000,6
+yugi_v_death.wav       voice S11,0
+Gán vào chiêu (yugi.gd CAST_AUDIO, summon.gd, room_*.gd):
+- Click trái (Celtic Guardian): yugi_slash.  Click phải (Dark Magician Girl): yugi_summon, bắn cầu: yugi_dmg_ball.
+- Giữ & thả trái (Gaia): yugi_gaia + yugi_v_draw.  Giữ & thả phải (Dark Magician): yugi_summon + yugi_v_draw, nổ: yugi_dark_magic.
+- Shift + trái: yugi_combo + yugi_v_draw.  Shift + phải (Spellbinding Circle): yugi_circle + yugi_v_circle.
+- Đỡ (Shift): yugi_guard + yugi_v_guard.
+- Q: 1 yugi_v_swords (nổ giữa phòng: yugi_blast); 2 yugi_v_twin_burst (tia: yugi_laser);
+  3 Slifer: yugi_god_summon + yugi_v_slifer (sét: yugi_thunder); 4 Obelisk: yugi_god_summon + yugi_v_obelisk
+  (đòn đánh: yugi_obelisk_hit); 5 Ra: yugi_god_summon + yugi_v_ra (lửa: yugi_ra_fire).
+- Intro: yugi_v_intro.  Mất máu: yugi_v_hurt (6 biến thể).  Ngã xuống: yugi_v_death.
+Lời thoại thường chờ 2.5 giây giữa hai câu; câu của chiêu Q, intro, bị đánh và ngã xuống luôn phát.

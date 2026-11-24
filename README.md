@@ -75,6 +75,7 @@ The roster features 8 distinct heroes, selectable from the character selection s
 - **Secondary Action (RMB - Shadow Step)**: Dashes forward at 400 px/s with invulnerability frames, followed by 4 piercing stabs (cooldown: 5.0s).
 
 #### Index 4: Yugi / Atem (Pharaoh Summoner)
+> **Non-commercial use only / Chỉ dùng phi thương mại**: Yugi / Atem (sprites, sounds, voice lines, card names) is fan content based on *Yu-Gi-Oh!* (© Kazuki Takahashi / Konami). Sounds come from the M.U.G.E.N character "Yami Yugi" (HTDD, after Shiruzato / Mythos) — full credits in [`Assets/Audio/Yugi/CREDITS_yugi_audio.txt`](Assets/Audio/Yugi/CREDITS_yugi_audio.txt).
 - **Playstyle**: Tactical summoner combining directional monster attacks, guard stance, and room-wide spells.
 - **Primary Attack (LMB)**: Quick monster strike (1x damage); holding for 0.65s charges a 2x damage attack.
 - **Secondary Action (RMB)**: Target-location summon (1x damage); holding for 0.65s charges a 3x damage summon.

@@ -96,7 +96,14 @@ func _physics_process(delta: float) -> void:
 		return
 	global_position = next
 
+## Tiếng của chiêu (AudioManager, trích từ nhân vật MUGEN "Yami Yugi").
+func _play_sfx(key: String) -> void:
+	var am := get_node_or_null("/root/AudioManager")
+	if am != null:
+		am.play_sfx(key, 0.97, 1.03)
+
 func _explode() -> void:
+	_play_sfx("yugi_dark_magic")
 	var center := caster.global_position
 	var flash := ExplosionFlash.new()
 	flash.radius = EXPLOSION_RADIUS
@@ -108,6 +115,7 @@ func _explode() -> void:
 			CombatUtil.deal_player_damage(caster, target, damage)
 
 func _fire_energy_ball() -> void:
+	_play_sfx("yugi_dmg_ball")
 	var ball := EnergyBall.new()
 	ball.damage = damage
 	ball.direction = direction

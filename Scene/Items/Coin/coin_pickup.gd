@@ -150,10 +150,24 @@ func collect() -> void:
 	queue_free()
 
 func _exit_tree() -> void:
-	# Bị xoá trước khi bay tới nơi (ví dụ chuyển tầng ngay lúc đó): vẫn cộng xu, miễn là cùng một run.
+	# Bị xoá trước khi bay tới nơi (ví dụ chuyển tầng ngay lúc đó): vẫn cộng xu, miễn là cùng một run
+	# và người chơi còn sống. Người chơi đã gục thì xu nằm yên trên sàn và mất theo màn chơi (không cộng khi
+	# chuyển sang Game Over / menu).
 	if _collected:
 		return
 	_collected = true
+	if _hero_is_dead():
+		return
 	var gm = get_node_or_null("/root/GameManager")
 	if gm != null and gm.has_method("add_coins") and int(gm.get("run_id")) == run_id:
 		gm.add_coins(value, false)
+
+## Người chơi (đã nhắm tới, hoặc tìm trong nhóm "player") đã gục chưa.
+func _hero_is_dead() -> bool:
+	var hero: Node = _target if is_instance_valid(_target) else null
+	if hero == null and is_inside_tree():
+		for n in get_tree().get_nodes_in_group("player"):
+			if n is CharacterBody2D:
+				hero = n
+				break
+	return hero != null and hero.get("is_dead") == true

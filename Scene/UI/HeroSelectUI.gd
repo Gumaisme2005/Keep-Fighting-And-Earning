@@ -20,6 +20,9 @@ const STAGE_CENTRE_X := 61.0
 const THUMB := 22                              # ô nhân vật trong băng chọn
 const BAR_W := 74.0                            # thanh chỉ số
 const TEXT_W := 178                            # bề rộng chữ ở cột "cách chơi"
+const STAT_STEP := 22                          # khoảng cách giữa các dòng chỉ số (bảng trái)
+const WEAPON_Y := 116                          # chữ "vũ khí" ở bảng trái: tối đa WEAPON_LINES dòng (10px mỗi dòng),
+const WEAPON_LINES := 4                        # dừng ở y = 156, trước viền dưới của bảng (bắt đầu từ y = 158)
 
 ## [nhãn, khoá trong CHARACTER_INFO, giá trị tối đa của thanh, màu]
 const STATS := [
@@ -168,7 +171,7 @@ func _fill() -> void:
 		var v := float(d.get(STATS[i][1], 0))
 		stat_values[i].text = str(int(round(v)))
 		stat_fills[i].size.x = roundf(clampf(v / float(STATS[i][2]), 0.04, 1.0) * BAR_W)
-	weapon_label.text = clean(String(d.get("weapon", "")))
+	weapon_label.text = fit_lines(weapon_label, clean(String(d.get("weapon", ""))), WEAPON_LINES)
 	for c in skills_box.get_children():
 		skills_box.remove_child(c)
 		c.queue_free()
@@ -288,7 +291,7 @@ func _build() -> void:
 	lh.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lh.add_theme_color_override("font_color", COL_GOLD)
 	for i in STATS.size():
-		var y := 18 + i * 23
+		var y := 18 + i * STAT_STEP
 		var l := label(left, "Stat%d" % i, Rect2(7, y, 70, 10), String(STATS[i][0]))
 		l.add_theme_color_override("font_color", COL_LABEL)
 		var v := label(left, "Value%d" % i, Rect2(49, y, 36, 10), "0")
@@ -316,10 +319,11 @@ func _build() -> void:
 		fill.position = Vector2(2, 2)
 		fill.size = Vector2(0, 4)
 		stat_fills.append(fill)
-	var wh := label(left, "WeaponHeader", Rect2(7, 112, 78, 10), "VŨ KHÍ")
+	var wh := label(left, "WeaponHeader", Rect2(7, WEAPON_Y - 10, 78, 10), "VŨ KHÍ")
 	wh.add_theme_color_override("font_color", COL_GOLD)
-	weapon_label = label(left, "Weapon", Rect2(7, 123, 78, 38), "", true)
+	weapon_label = label(left, "Weapon", Rect2(7, WEAPON_Y, 78, WEAPON_LINES * 10), "", true)
 	weapon_label.add_theme_color_override("font_color", COL_SOFT)
+	weapon_label.max_lines_visible = WEAPON_LINES
 
 	# --- giữa: nhân vật cỡ lớn (trong suốt để thấy sảnh phía sau, như Soul Knight)
 	var stage := Control.new()
@@ -388,6 +392,20 @@ func _build() -> void:
 		thumbs.append(b)
 	start_button = button(win, "StartButton", Rect2(348, 208, 70, 18), "BẮT ĐẦU")
 	start_button.pressed.connect(start)
+
+## Đặt `text` vào nhãn tự xuống dòng `l`; quá `max_lines` dòng thì bỏ bớt từ cuối và thêm "..." để chữ không tràn
+## ra ngoài khung (vd. vũ khí của Doraemon dài 4 dòng từng đè lên viền dưới của bảng chỉ số).
+static func fit_lines(l: Label, text: String, max_lines: int) -> String:
+	l.text = text
+	if l.get_line_count() <= max_lines:
+		return text
+	var words := text.split(" ", false)
+	while words.size() > 1:
+		words.remove_at(words.size() - 1)
+		l.text = " ".join(words).rstrip(",;:-") + "..."
+		if l.get_line_count() <= max_lines:
+			return l.text
+	return l.text
 
 func _wrap_label(parent: Control, n: String, text: String, color: Color) -> Label:
 	var l := Label.new()
