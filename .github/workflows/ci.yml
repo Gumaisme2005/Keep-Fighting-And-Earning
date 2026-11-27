@@ -44,6 +44,22 @@ jobs:
         run: |
           godot --headless "res://tests/test_orc_battle.tscn"
 
+      - name: Verify Orc directional contacts at 30 and 144 FPS (Issue 89)
+        timeout-minutes: 5
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/orc-directional-data
+        run: |
+          set -euo pipefail
+          for fps in 30 144; do
+            godot --headless --max-fps "$fps" "res://tests/test_orc_directional_attack.tscn" 2>&1 | tee "$RUNNER_TEMP/orc_directional_${fps}.log"
+            if grep -Eq '^[[:space:]]*(SCRIPT ERROR:|ERROR:|\[FAIL\]|\[RUNTIME\])' "$RUNNER_TEMP/orc_directional_${fps}.log"; then exit 1; fi
+            grep -Eq '^ORC DIRECTIONAL RESULTS: [0-9]+ PASSED, 0 FAILED$' "$RUNNER_TEMP/orc_directional_${fps}.log"
+            grep '^\[TRACE\]' "$RUNNER_TEMP/orc_directional_${fps}.log" > "$RUNNER_TEMP/orc_directional_${fps}.trace"
+            test -s "$RUNNER_TEMP/orc_directional_${fps}.trace"
+          done
+          diff -u "$RUNNER_TEMP/orc_directional_30.trace" "$RUNNER_TEMP/orc_directional_144.trace"
+
       - name: 4. Run Dungeon Generator Performance Benchmark
         run: |
           godot --headless "res://tests/benchmark_dungeon_generator.tscn" | tee benchmark_output.log

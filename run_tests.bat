@@ -53,6 +53,29 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 echo.
+echo [Orc #89] Running directional contacts at 30 and 144 FPS...
+set "ORC_DIRECTIONAL_LOG_DIR=%TEMP%\orc-directional-%RANDOM%"
+mkdir "!ORC_DIRECTIONAL_LOG_DIR!"
+for %%F in (30 144) do (
+    "!GODOT_BIN!" --headless --path . --max-fps %%F "res://tests/test_orc_directional_attack.tscn" > "!ORC_DIRECTIONAL_LOG_DIR!\%%F.log" 2>&1
+    if !ERRORLEVEL! NEQ 0 (
+        type "!ORC_DIRECTIONAL_LOG_DIR!\%%F.log"
+        exit /b 1
+    )
+    findstr /C:"SCRIPT ERROR:" /C:"ERROR:" /C:"[FAIL]" /C:"[RUNTIME]" "!ORC_DIRECTIONAL_LOG_DIR!\%%F.log" >nul
+    if !ERRORLEVEL! EQU 0 exit /b 1
+    findstr /R /C:"^ORC DIRECTIONAL RESULTS: [0-9][0-9]* PASSED, 0 FAILED$" "!ORC_DIRECTIONAL_LOG_DIR!\%%F.log"
+    if !ERRORLEVEL! NEQ 0 exit /b 1
+    findstr /B /C:"[TRACE]" "!ORC_DIRECTIONAL_LOG_DIR!\%%F.log" > "!ORC_DIRECTIONAL_LOG_DIR!\%%F.trace"
+    if !ERRORLEVEL! NEQ 0 exit /b 1
+)
+fc /B "!ORC_DIRECTIONAL_LOG_DIR!\30.trace" "!ORC_DIRECTIONAL_LOG_DIR!\144.trace" >nul
+if !ERRORLEVEL! NEQ 0 (
+    echo [FAILED] Orc directional traces differ. Logs: !ORC_DIRECTIONAL_LOG_DIR!
+    exit /b 1
+)
+
+echo.
 echo [4/26] Running Dungeon Generator Performance Benchmark...
 "!GODOT_BIN!" --headless --path . "res://tests/benchmark_dungeon_generator.tscn"
 if !ERRORLEVEL! NEQ 0 (
