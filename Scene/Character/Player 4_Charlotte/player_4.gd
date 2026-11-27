@@ -17,13 +17,13 @@ func _ready() -> void:
 
 func get_effective_q_cooldown() -> float:
 	var cdr: float = 0.0
-	if get_node_or_null("/root/PerkManager") != null:
+	if gameplay_perks() != null:
 		cdr = PerkManager.get_cooldown_reduction()
 	return q_skill_cooldown * (1.0 - cdr)
 
 func get_effective_rmb_cooldown() -> float:
 	var cdr: float = 0.0
-	if get_node_or_null("/root/PerkManager") != null:
+	if gameplay_perks() != null:
 		cdr = PerkManager.get_cooldown_reduction()
 	return right_click_cooldown * (1.0 - cdr)
 
@@ -54,7 +54,7 @@ func _on_rmb_skill_triggered() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if is_dead:
 		return
-	if get_node_or_null("/root/GameManager") != null and GameManager.is_replaying:
+	if gameplay_manager() != null and GameManager.is_replaying:
 		return
 
 	if event.is_action_pressed("skill_1"):
@@ -71,6 +71,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	super._unhandled_input(event)
 
 func perform_attack_2():
+	training_action(&"skill")
 	start_cooldown("q")
 	is_casting_skill = true
 	velocity = Vector2.ZERO
@@ -84,7 +85,7 @@ func perform_attack_2():
 
 		if sword_collision != null:
 			sword_collision.set_deferred("disabled", false)
-		await get_tree().create_timer(0.1).timeout
+		await get_tree().create_timer(0.1, true, is_training()).timeout
 		if not is_instance_valid(self) or not is_inside_tree():
 			return
 
@@ -95,7 +96,7 @@ func perform_attack_2():
 
 		if sword_collision != null:
 			sword_collision.set_deferred("disabled", true)
-		await get_tree().create_timer(0.18).timeout
+		await get_tree().create_timer(0.18, true, is_training()).timeout
 		if not is_instance_valid(self) or not is_inside_tree():
 			return
 
@@ -112,7 +113,7 @@ func perform_attack_3():
 
 	var face_direction = -1 if (animated_sprite != null and animated_sprite.flip_h) else 1
 	velocity = Vector2(face_direction * 400.0, 0.0)
-	await get_tree().create_timer(0.10).timeout
+	await get_tree().create_timer(0.10, true, is_training()).timeout
 	if not is_instance_valid(self) or not is_inside_tree():
 		return
 
@@ -131,7 +132,7 @@ func perform_attack_3():
 
 		if sword_collision != null:
 			sword_collision.set_deferred("disabled", false)
-		await get_tree().create_timer(0.1).timeout
+		await get_tree().create_timer(0.1, true, is_training()).timeout
 		if not is_instance_valid(self) or not is_inside_tree():
 			return
 
@@ -142,7 +143,7 @@ func perform_attack_3():
 
 		if sword_collision != null:
 			sword_collision.set_deferred("disabled", true)
-		await get_tree().create_timer(0.15).timeout
+		await get_tree().create_timer(0.15, true, is_training()).timeout
 		if not is_instance_valid(self) or not is_inside_tree():
 			return
 

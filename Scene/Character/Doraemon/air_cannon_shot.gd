@@ -70,7 +70,7 @@ func _on_area_entered(area: Area2D) -> void:
 		var origin := shooter_origin if shooter_origin != Vector2.ZERO else global_position - direction * 8.0
 		if not tmap.has_line_of_sight(origin, target.global_position):
 			return
-	CombatUtil.deal_player_damage(caster, target, damage)
+	CombatUtil.deal_player_damage(CombatUtil.damage_source(self, caster), target, damage)
 	if is_instance_valid(caster) and caster.has_method("add_power"):
 		caster.add_power(3)
 	_burst()

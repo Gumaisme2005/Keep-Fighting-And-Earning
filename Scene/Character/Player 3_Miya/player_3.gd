@@ -41,7 +41,9 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		if _pending_arrow:
 			_pending_arrow = false
 			_fire_arrow()
-		is_attacking = false
+		# Keep the cooldown timer ticking if the animation finishes first. Otherwise
+		# BasePlayer stops ticking it and _can_shoot_arrow stays false after a miss.
+		is_attacking = _attack_timer > 0.0
 		animated_sprite.speed_scale = 1.0
 		if not is_dead and not is_hurt and not is_casting_skill:
 			animated_sprite.play("idle")
@@ -63,6 +65,7 @@ func attack() -> void:
 	if not _can_shoot_arrow:
 		return
 	_can_shoot_arrow = false
+	training_action(&"basic")
 	is_attacking = true
 	var spd_scale: float = get_attack_speed_scale()
 	var eff_cd: float = get_effective_attack_cooldown(attack_cooldown_time)
@@ -120,6 +123,7 @@ func _fire_arrow() -> void:
 		arrow.rotation = shoot_direction.angle()
 		arrow.damage = get_total_damage()
 
+		tag_training_effect(arrow)
 		get_parent().add_child(arrow)
 		arrow.global_position = spawn_pos
 
@@ -132,6 +136,7 @@ func use_special_skill() -> void:
 		return
 
 	start_skill_cooldown()
+	training_action(&"skill")
 	is_casting_skill = true
 	if animated_sprite != null:
 		animated_sprite.speed_scale = 1.0
@@ -141,12 +146,13 @@ func use_special_skill() -> void:
 		var parent_node = get_parent() if get_parent() != null else (get_tree().current_scene if get_tree() != null else null)
 		if parent_node != null:
 			var bomb = bomb_scene.instantiate()
+			tag_training_effect(bomb)
 			parent_node.add_child(bomb)
 			bomb.damage = get_total_damage() * bomb_damage_mult + bomb_bonus_damage
 			var aim_pos = get_aim_world_position()
 			bomb.throw_bomb(global_position, aim_pos)
 
-	await get_tree().create_timer(0.45).timeout
+	await get_tree().create_timer(0.45, true, is_training()).timeout
 	if not is_instance_valid(self) or not is_inside_tree():
 		return
 

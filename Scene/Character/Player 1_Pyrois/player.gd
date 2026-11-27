@@ -31,6 +31,7 @@ func _on_attack_timer_expired() -> void:
 		sword_collision.set_deferred("disabled", true)
 
 func attack() -> void:
+	training_action(&"basic")
 	is_attacking = true
 	_attack_timer = get_effective_attack_cooldown(base_attack_cooldown)
 	if animated_sprite != null and animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation("attack_1"):
@@ -42,6 +43,7 @@ func attack() -> void:
 		AudioManager.play_sfx("slash")
 
 func use_special_skill() -> void:
+	training_action(&"skill")
 	start_skill_cooldown()
 	is_casting_skill = true
 	set_skill_invincible(true)
@@ -55,7 +57,7 @@ func use_special_skill() -> void:
 	if animated_sprite != null and animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation("attack_2"):
 		animated_sprite.play("attack_2")
 
-	await get_tree().create_timer(0.3).timeout
+	await get_tree().create_timer(0.3, true, is_training()).timeout
 	if not is_instance_valid(self) or not is_inside_tree():
 		return
 
@@ -63,7 +65,7 @@ func use_special_skill() -> void:
 	if sword_collision != null:
 		sword_collision.set_deferred("disabled", false)
 
-	await get_tree().create_timer(0.2).timeout
+	await get_tree().create_timer(0.2, true, is_training()).timeout
 	if not is_instance_valid(self) or not is_inside_tree():
 		return
 
@@ -117,6 +119,9 @@ func _on_sword_hitbox_area_entered(area: Area2D) -> void:
 				if not tmap.has_line_of_sight(global_position, target.global_position):
 					return
 
+			if target.has_method("receive_training_contact"):
+				target.receive_training_contact(self, get_total_damage())
+				return
 			var total_dmg = get_total_damage()
 			if hero_balance_id == "pyrois" and animated_sprite != null and animated_sprite.animation == "attack_2":
 				total_dmg += 2

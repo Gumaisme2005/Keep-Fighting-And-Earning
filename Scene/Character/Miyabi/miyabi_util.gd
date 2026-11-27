@@ -14,6 +14,8 @@ static var _cached: Array = []
 
 ## Living enemies in the dungeon (scanned once per physics frame).
 static func enemies(world: Node) -> Array:
+	if is_instance_valid(world) and world.has_method("training_targets"):
+		return world.training_targets()
 	if world == null:
 		return []
 	var frame := Engine.get_physics_frames()
@@ -69,8 +71,11 @@ static func is_heavy(target: Node) -> bool:
 	return s != null and String(s.resource_path).contains("/Boss/")
 
 ## Deals damage, bursts a frost_hit on the target and optionally freezes it.
-static func hit(world: Node, target: Node, amount: int, freeze_time: float = 0.0) -> void:
+static func hit(world: Node, target: Node, amount: int, freeze_time: float = 0.0, source: Node = null) -> void:
 	if not is_instance_valid(target) or amount <= 0 or target.get("is_dead") == true:
+		return
+	if target.has_method("receive_training_contact"):
+		target.receive_training_contact(source, amount)
 		return
 	var at := hit_point(target as Node2D)
 	var final_amt := amount

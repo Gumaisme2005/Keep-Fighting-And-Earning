@@ -39,6 +39,10 @@ jobs:
         timeout-minutes: 10
         run: python3 tests/run_tutorial_verification.py --godot godot --suites test_tutorial_framework
 
+      - name: Run Tutorial Movement and Combat at 30 and 144 FPS
+        timeout-minutes: 20
+        run: python3 tests/run_tutorial_verification.py --godot godot --cross-fps --suites test_tutorial_movement test_tutorial_combat test_tutorial_hero_skills
+
       - name: 1. Run Dungeon Generator Unit Tests (UT-01 .. UT-13)
         run: |
           godot --headless "res://tests/test_dungeon_generator_unit.tscn"

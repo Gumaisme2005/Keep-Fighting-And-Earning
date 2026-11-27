@@ -121,7 +121,7 @@ func _ready() -> void:
 		cooldowns[m] = 0.0
 	super._ready()
 	var seed_str := "DORAEMON"
-	if get_node_or_null("/root/GameManager") != null:
+	if gameplay_manager() != null:
 		seed_str = GameManager.current_seed + ":" + str(GameManager.current_level)
 	rng.seed = hash(seed_str + ":doraemon")
 	var anims: Array = ["idle", "walk", "hurt", "death", "attack_1", "kick", "glove", "pistol", "ataru", "shockwave", "pocket",
@@ -160,7 +160,7 @@ func _set_flip(left: bool) -> void:
 # ------------------------------------------------------------------ input
 func _unhandled_input(event: InputEvent) -> void:
 	super._unhandled_input(event)
-	if is_dead or (get_node_or_null("/root/GameManager") != null and GameManager.is_replaying):
+	if is_dead or (gameplay_manager() != null and GameManager.is_replaying):
 		return
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
@@ -195,7 +195,7 @@ func _physics_process(delta: float) -> void:
 	eat_cd = maxf(0.0, eat_cd - delta)
 	_tick_events(delta)
 
-	var gm = get_node_or_null("/root/GameManager")
+	var gm = gameplay_manager()
 	var replaying: bool = gm != null and gm.is_replaying
 	var f: Dictionary = {}
 	if replaying:
@@ -208,7 +208,7 @@ func _physics_process(delta: float) -> void:
 				get_tree().call_group("game_ui", "show_banner", "COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6))
 	else:
 		var dir_in := Input.get_vector("move_left", "move_right", "move_up", "move_down")
-		var aim := get_global_mouse_position() - global_position
+		var aim := get_aim_world_position() - global_position
 		f = {"dx": snappedf(dir_in.x, 0.01), "dy": snappedf(dir_in.y, 0.01), "ax": snappedf(aim.x, 0.5), "ay": snappedf(aim.y, 0.5),
 			"atk": Input.is_action_pressed("attack"), "rmb": Input.is_action_pressed("skill_2"), "q": pending_q_skill,
 			"slot": pending_hotbar_slot, "pg": pending_page, "eat": pending_eat}
@@ -393,6 +393,7 @@ func _use(move: String) -> void:
 	cooldowns[move] = get_effective_attack_cooldown(base_cd) if move == String(current_page()["lmb"]) else base_cd
 
 func _begin_cast(move: String, pose: String, release: float, lock: float) -> void:
+	training_action(&"basic" if move == "air_cannon" else &"skill" if move.begins_with("friend_") else &"other")
 	_cast_move = move
 	_cast_t = 0.0
 	_cast_fired = false
@@ -668,7 +669,7 @@ func _on_q() -> void:
 		_cast_aim = current_aim_offset
 		var friend := String(FRIENDS[friend_index])
 		friend_index = (friend_index + 1) % FRIENDS.size()
-		var cdr := PerkManager.get_cooldown_reduction() if get_node_or_null("/root/PerkManager") != null else 0.0
+		var cdr := PerkManager.get_cooldown_reduction() if gameplay_perks() != null else 0.0
 		friend_cd = FRIEND_COOLDOWN * (1.0 - cdr)
 		_begin_cast("friend_" + friend, "summon", 0.15, 0.4)
 

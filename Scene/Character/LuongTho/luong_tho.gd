@@ -139,7 +139,7 @@ func _physics_process(delta: float) -> void:
 	if form == "upgraded" and move != "revert":
 		form_time = maxf(0.0, form_time - delta)
 
-	var gm = get_node_or_null("/root/GameManager")
+	var gm = gameplay_manager()
 	var replaying: bool = gm != null and gm.is_replaying
 	var f: Dictionary = {}
 	if replaying:
@@ -152,7 +152,7 @@ func _physics_process(delta: float) -> void:
 				get_tree().call_group("game_ui", "show_banner", "COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6))
 	else:
 		var dir_in := Input.get_vector("move_left", "move_right", "move_up", "move_down")
-		var aim := get_global_mouse_position() - global_position
+		var aim := get_aim_world_position() - global_position
 		f = {"dx": snappedf(dir_in.x, 0.01), "dy": snappedf(dir_in.y, 0.01), "ax": snappedf(aim.x, 0.5), "ay": snappedf(aim.y, 0.5),
 			"atk": Input.is_action_pressed("attack"), "rmb": Input.is_action_pressed("skill_2"), "q": pending_q_skill,
 			"slot": pending_hotbar_slot}
@@ -238,6 +238,7 @@ func _step_move(delta: float, direction: Vector2, input: Dictionary) -> void:
 			_step_revert()
 
 func _begin(m: String, anim: String) -> void:
+	training_action(&"basic" if m == "combo" else &"skill" if m == "transform" else &"other")
 	move = m
 	move_t = 0.0
 	is_casting_skill = true
@@ -313,7 +314,7 @@ func _swing_hit(c: Dictionary) -> void:
 # ------------------------------------------------------------------ Right Click: Twin Barrels
 func _start_shoot() -> void:
 	_fired = false
-	var cdr := PerkManager.get_cooldown_reduction() if get_node_or_null("/root/PerkManager") != null else 0.0
+	var cdr := PerkManager.get_cooldown_reduction() if gameplay_perks() != null else 0.0
 	rmb_cd = (shoot_cooldown * (1.0 - cdr)) / _rate()
 	_face_aim()
 	_begin("shoot", "shoot")
@@ -351,7 +352,7 @@ func _fire() -> void:
 
 # ------------------------------------------------------------------ Q: White Moon transformation
 func _start_transform() -> void:
-	var cdr := PerkManager.get_cooldown_reduction() if get_node_or_null("/root/PerkManager") != null else 0.0
+	var cdr := PerkManager.get_cooldown_reduction() if gameplay_perks() != null else 0.0
 	q_cd = skill_cooldown * (1.0 - cdr)
 	can_use_skill = false
 	_untouchable = true

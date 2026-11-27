@@ -108,7 +108,7 @@ func _check_hits(world: Node) -> void:
 			targets_hit += 1
 		hits[id] = [int(rec[0]) + 1, age]
 		total_hits += 1
-		Util.hit(caster, t, damage, stun_time)
+		Util.hit(caster, t, damage, stun_time, self)
 		if relocate_to != null and is_instance_valid(relocate_to) and is_instance_valid(t) and t.get("is_immovable") != true and t.get("is_dead") != true:
 			_throw_behind(world, t)
 		if (targets_hit >= max_targets and int(hits[id][0]) >= max_hits_per_target) or (max_total_hits > 0 and total_hits >= max_total_hits):

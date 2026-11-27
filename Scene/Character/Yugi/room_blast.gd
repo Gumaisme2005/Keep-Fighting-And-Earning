@@ -113,7 +113,7 @@ func _detonate() -> void:
 	last_damage = maxi(1, floori(total_hp / targets.size() * DAMAGE_RATIO)) if not targets.is_empty() else 0
 	for target in targets:
 		if is_instance_valid(target):
-			CombatUtil.deal_player_damage(caster, target, last_damage)
+			CombatUtil.deal_player_damage(CombatUtil.damage_source(self, caster), target, last_damage)
 	var flash := Flash.new()
 	flash.radius = maxf(120.0, Vector2(room_rect.size).length() * 16.0)
 	get_parent().add_child(flash)

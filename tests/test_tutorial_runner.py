@@ -3,8 +3,10 @@ import unittest
 from unittest.mock import patch
 import subprocess
 import sys
+from pathlib import Path
+import tempfile
 
-from run_tutorial_verification import inspect_result, run_process, main
+from run_tutorial_verification import inspect_result, run_process, main, prepare, compare_traces
 
 
 class TutorialRunnerTests(unittest.TestCase):
@@ -47,6 +49,43 @@ class TutorialRunnerTests(unittest.TestCase):
             self.assertEqual(error.exception.code, 2)
             prepare.assert_not_called()
             run.assert_not_called()
+
+    def test_each_invocation_excludes_deleted_source_and_old_fixtures(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            for name in ('Assets', 'Scene', 'Menu', 'tests', 'benchmark', 'tools', 'docs'):
+                (root / name).mkdir()
+            (root / 'project.godot').write_text('config/name="Keep Fighting And Earning"')
+            (root / 'world.tscn').write_text('[gd_scene format=3]')
+            deleted = root / 'Scene' / 'removed.gd'
+            deleted.write_text('extends Node')
+            with patch('run_tutorial_verification.ROOT', root), patch('run_tutorial_verification.WORK', root / '.godot' / 'owned'):
+                first = prepare()
+                (first / 'project' / 'tests' / 'stale_fixture.gd').write_text('extends Node')
+                deleted.unlink()
+                second = prepare()
+            self.assertNotEqual(first, second)
+            self.assertTrue((first / 'project' / 'Scene' / 'removed.gd').is_file())
+            self.assertFalse((second / 'project' / 'Scene' / 'removed.gd').exists())
+            self.assertFalse((second / 'project' / 'tests' / 'stale_fixture.gd').exists())
+
+    def test_trace_must_exist_and_match(self):
+        self.assertTrue(compare_traces(['[TRACE] verified'], ['[TRACE] verified']))
+        for first, second in [(None, None), ([], []), (['hit'], []), (['hit'], ['miss'])]:
+            self.assertFalse(compare_traces(first, second))
+
+    def test_deleted_asset_cannot_be_resurrected_from_import_cache(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            for name in ('Assets', 'Scene', 'Menu', 'tests', 'benchmark', 'tools', 'docs', '.godot/imported'):
+                (root / name).mkdir(parents=True)
+            (root / 'project.godot').write_text('config/name="Keep Fighting And Earning"')
+            (root / 'world.tscn').write_text('[gd_scene format=3]')
+            (root / 'Assets/deleted.png.import').write_text('path="res://.godot/imported/deleted.ctex"')
+            (root / '.godot/imported/deleted.ctex').write_text('stale converted resource')
+            with patch('run_tutorial_verification.ROOT', root), patch('run_tutorial_verification.WORK', root / '.godot/owned'):
+                invocation = prepare()
+            self.assertFalse((invocation / 'project/.godot/imported/deleted.ctex').exists())
 
 
 if __name__ == '__main__':

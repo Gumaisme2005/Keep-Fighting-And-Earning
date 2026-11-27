@@ -18,6 +18,7 @@ func use_special_skill() -> void:
 		return
 
 	start_skill_cooldown()
+	training_action(&"skill")
 	is_casting_skill = true
 	velocity = Vector2.ZERO
 	animated_sprite.speed_scale = 1.0
@@ -30,7 +31,7 @@ func use_special_skill() -> void:
 	is_berserking = true
 	stats_changed.emit(hp, max_hp, current_armor, max_armor)
 
-	await get_tree().create_timer(0.6).timeout
+	await get_tree().create_timer(0.6, true, is_training()).timeout
 	if not is_instance_valid(self) or not is_inside_tree():
 		return
 	is_casting_skill = false

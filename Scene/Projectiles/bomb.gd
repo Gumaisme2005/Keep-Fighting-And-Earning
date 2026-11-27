@@ -25,12 +25,15 @@ func throw_bomb(start_pos: Vector2, end_pos: Vector2) -> void:
 	$AnimatedSprite2D.play("idle")
 
 	var tween = create_tween()
+	var training: bool = get_parent() != null and get_parent().has_method("training_targets")
+	if training:
+		tween.set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 	tween.tween_property(self, "global_position", safe_end, 0.4).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 	await tween.finished
 	if not is_instance_valid(self) or not is_inside_tree():
 		return
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(0.5, true, training).timeout
 	if not is_instance_valid(self) or not is_inside_tree():
 		return
 	explode()

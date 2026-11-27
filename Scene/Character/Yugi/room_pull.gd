@@ -57,7 +57,7 @@ func _physics_process(delta: float) -> void:
 		for entry in locked:
 			var enemy = entry.target
 			if is_instance_valid(enemy) and enemy.get("is_dead") != true:
-				CombatUtil.deal_player_damage(caster, enemy, damage)
+				CombatUtil.deal_player_damage(CombatUtil.damage_source(self, caster), enemy, damage)
 	if elapsed >= end_time:
 		_release_targets()
 		queue_free()

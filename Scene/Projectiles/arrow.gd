@@ -12,7 +12,8 @@ func _ready() -> void:
 	if has_node("AnimatedSprite2D"):
 		$AnimatedSprite2D.play("fly")
 
-	await get_tree().create_timer(2.0).timeout
+	var training: bool = get_parent() != null and get_parent().has_method("training_targets")
+	await get_tree().create_timer(2.0, true, training).timeout
 	if is_instance_valid(self) and is_inside_tree():
 		queue_free()
 
@@ -61,6 +62,10 @@ func _on_area_entered(area: Area2D) -> void:
 
 		if target.has_method("take_damage") and target.get("is_dead") != true:
 			is_broken = true
+			if target.has_method("receive_training_contact"):
+				target.receive_training_contact(self, damage)
+				queue_free()
+				return
 			var final_dmg = damage
 			var players = get_tree().get_nodes_in_group("player")
 			if not players.is_empty() and players[0].has_method("apply_on_hit_effects"):

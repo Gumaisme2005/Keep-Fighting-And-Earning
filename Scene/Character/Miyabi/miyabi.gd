@@ -152,7 +152,7 @@ func _physics_process(delta: float) -> void:
 	combo_chain = maxf(0.0, combo_chain - delta)
 	can_use_skill = q_cd <= 0.0
 
-	var gm = get_node_or_null("/root/GameManager")
+	var gm = gameplay_manager()
 	var replaying: bool = gm != null and gm.is_replaying
 	var f: Dictionary = {}
 	if replaying:
@@ -165,7 +165,7 @@ func _physics_process(delta: float) -> void:
 				get_tree().call_group("game_ui", "show_banner", "COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6))
 	else:
 		var dir_in := Input.get_vector("move_left", "move_right", "move_up", "move_down")
-		var aim := get_global_mouse_position() - global_position
+		var aim := get_aim_world_position() - global_position
 		f = {"dx": snappedf(dir_in.x, 0.01), "dy": snappedf(dir_in.y, 0.01), "ax": snappedf(aim.x, 0.5), "ay": snappedf(aim.y, 0.5),
 			"atk": Input.is_action_pressed("attack"), "rmb": Input.is_action_pressed("skill_2"), "q": pending_q_skill,
 			"shift": Input.is_physical_key_pressed(KEY_SHIFT), "slot": pending_hotbar_slot}
@@ -228,6 +228,7 @@ func _step_move(delta: float, direction: Vector2, input: Dictionary) -> void:
 			_step_special()
 
 func _begin(m: String, anim: String) -> void:
+	training_action(&"basic" if m == "combo" else &"skill" if m == "special" else &"other")
 	move = m
 	move_t = 0.0
 	_event_done = false
@@ -290,7 +291,7 @@ func _swing_hit(c: Array) -> void:
 			continue
 		if not Util.sees(world, o, Util.hit_point(t)):
 			continue
-		Util.hit(world, t, _dmg() * int(c[3]), float(c[5]))
+		Util.hit(world, t, _dmg() * int(c[3]), float(c[5]), self)
 
 # ------------------------------------------------------------------ Shift: dash slash
 func _start_dash(direction: Vector2) -> void:
@@ -367,7 +368,7 @@ func _start_release() -> void:
 	for i in range(WAVE_LEVELS.size()):
 		if charge_time >= float(WAVE_LEVELS[i][0]):
 			wave_level = i
-	var cdr := PerkManager.get_cooldown_reduction() if get_node_or_null("/root/PerkManager") != null else 0.0
+	var cdr := PerkManager.get_cooldown_reduction() if gameplay_perks() != null else 0.0
 	rmb_cd = rmb_cooldown * (1.0 - cdr)
 	animated_sprite.modulate = Color(1.0, 1.0, 1.0, animated_sprite.modulate.a)
 	if absf(current_aim_offset.x) > 0.5:
@@ -405,7 +406,7 @@ func _spawn_wave() -> void:
 
 # ------------------------------------------------------------------ Q: Frost Bloom
 func _start_special() -> void:
-	var cdr := PerkManager.get_cooldown_reduction() if get_node_or_null("/root/PerkManager") != null else 0.0
+	var cdr := PerkManager.get_cooldown_reduction() if gameplay_perks() != null else 0.0
 	q_cd = skill_cooldown * (1.0 - cdr)
 	can_use_skill = false
 	_set_facing(current_aim_offset.x if absf(current_aim_offset.x) > 0.5 else facing)
@@ -420,6 +421,7 @@ func _step_special() -> void:
 		_untouchable = false
 		_sfx("miyabi_ice_spikes")
 		var s: Node2D = IceSpikes.new()
+		tag_training_effect(s)
 		s.facing = facing
 		s.damage = _dmg() * bloom_damage_mult
 		s.shatter_damage = _dmg()

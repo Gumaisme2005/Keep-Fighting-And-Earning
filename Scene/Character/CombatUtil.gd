@@ -43,6 +43,9 @@ static func resolve_player(source: Node) -> Node:
 	return null
 
 static func deal_player_damage(source: Node, target: Node, raw_damage: int, call_on_hit: bool = true) -> int:
+	# Training contact is resolved before perks/RNG and never enters enemy death.
+	if is_instance_valid(target) and target.has_method("receive_training_contact"):
+		return target.receive_training_contact(source, raw_damage)
 	if not is_instance_valid(target) or target.is_queued_for_deletion() or target.get("is_dead") == true:
 		return 0
 	if not target.has_method("take_damage"):
@@ -55,3 +58,8 @@ static func deal_player_damage(source: Node, target: Node, raw_damage: int, call
 	if is_instance_valid(target) and not target.is_queued_for_deletion() and target.get("is_dead") != true:
 		target.take_damage(final_dmg)
 	return final_dmg
+
+## Preserve the actual effect's immutable fact, while keeping production caster
+## resolution unchanged. A delayed summon must not borrow a newer hero action.
+static func damage_source(effect: Node, caster: Node) -> Node:
+	return effect if effect.has_meta("training_fact") else caster

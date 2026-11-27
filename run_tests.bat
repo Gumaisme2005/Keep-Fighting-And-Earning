@@ -28,7 +28,7 @@ echo ==================================================================
 echo.
 echo [Tutorial] Running Tutorial Framework in an isolated project and save profile...
 if not defined PYTHON_BIN set "PYTHON_BIN=python"
-"!PYTHON_BIN!" tests\run_tutorial_verification.py --godot "!GODOT_BIN!" --suites test_tutorial_framework
+"!PYTHON_BIN!" tests\run_tutorial_verification.py --godot "!GODOT_BIN!" --cross-fps --suites test_tutorial_framework test_tutorial_movement test_tutorial_combat test_tutorial_hero_skills
 if !ERRORLEVEL! NEQ 0 (
     echo [FAILED] Tutorial Framework failed or did not complete.
     exit /b 1

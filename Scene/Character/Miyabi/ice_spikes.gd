@@ -66,14 +66,14 @@ func _physics_process(delta: float) -> void:
 			if struck.has(id):
 				continue
 			struck[id] = true
-			Util.hit(world, t, damage, freeze_time)
+			Util.hit(world, t, damage, freeze_time, self)
 	if frame >= SHATTER_FRAME and not shattered:
 		shattered = true
 		var am := get_node_or_null("/root/AudioManager")
 		if am != null:
 			am.play_sfx("miyabi_ice_shatter", 0.97, 1.03)
 		for t in _zone(world, minf(FULL_REACH, wall_limit)):
-			Util.hit(world, t, shatter_damage)
+			Util.hit(world, t, shatter_damage, 0.0, self)
 	if age >= Sprites.duration("ice_spikes"):
 		queue_free()
 

@@ -8,6 +8,28 @@ class_name BasePlayer
 signal stats_changed(current_hp: int, max_hp: int, current_armor: int, max_armor: int)
 signal skill_cooldown_changed(skill_q_left: float, skill_q_max: float, skill_rmb_left: float, skill_rmb_max: float)
 
+## Set only on a disposable training clone, before entering the tree.
+var training_context: Node = null
+var training_aim: Vector2 = Vector2(100, -10)
+
+func is_training() -> bool:
+	return is_instance_valid(training_context)
+
+func gameplay_manager() -> Node:
+	return null if is_training() else get_node_or_null("/root/GameManager")
+
+func gameplay_perks() -> Node:
+	return null if is_training() else get_node_or_null("/root/PerkManager")
+
+func training_action(kind: StringName) -> void:
+	if is_training():
+		training_context.begin_action(self, kind)
+
+func tag_training_effect(effect: Node) -> void:
+	if is_training():
+		effect.set_meta("training_owner", weakref(self))
+		effect.set_meta("training_fact", get_meta("training_fact", ""))
+
 # --- CHỈ SỐ CƠ BẢN ---
 @export var speed: float = 150.0
 @export var max_speed_cap: float = 260.0 # Trần tốc độ chạy tối đa, tránh lỗi va chạm tường và mất kiểm soát
@@ -100,9 +122,9 @@ func _apply_balance_config() -> void:
 func _ready() -> void:
 	name = "Player"
 	z_index = 2
-	add_to_group("player")
+	add_to_group("training_player" if is_training() else "player")
 	_apply_balance_config()
-	var gm = get_node_or_null("/root/GameManager")
+	var gm = gameplay_manager()
 	if gm != null:
 		floor_vitality_applied = gm.floor_vitality_gained
 		potion_max_hp_gained = gm.potion_max_hp_gained
@@ -146,17 +168,19 @@ func _ready() -> void:
 		inventory.add_item(starter_potion)
 
 	# Tự động nạp lại các Perk đang kích hoạt khi chuyển sang tầng mới
-	if get_node_or_null("/root/PerkManager") != null:
+	if gameplay_perks() != null:
 		PerkManager.apply_all_perks_to_player(self)
 
 func get_aim_world_position() -> Vector2:
-	if get_node_or_null("/root/GameManager") != null and GameManager.is_replaying:
+	if is_training():
+		return global_position + training_aim
+	if gameplay_manager() != null and GameManager.is_replaying:
 		return global_position + current_aim_offset
 	return get_global_mouse_position()
 
 func get_effective_q_cooldown() -> float:
 	var cdr: float = 0.0
-	if get_node_or_null("/root/PerkManager") != null:
+	if gameplay_perks() != null:
 		cdr = PerkManager.get_cooldown_reduction()
 	return skill_cooldown * (1.0 - cdr)
 
@@ -193,7 +217,7 @@ func _physics_process(delta: float) -> void:
 			is_attacking = false
 			_on_attack_timer_expired()
 
-	var gm = get_node_or_null("/root/GameManager")
+	var gm = gameplay_manager()
 	var replaying: bool = gm != null and gm.is_replaying
 
 	var direction := Vector2.ZERO
@@ -219,7 +243,7 @@ func _physics_process(delta: float) -> void:
 				get_tree().call_group("game_ui", "show_banner", "COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6))
 	else:
 		direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-		current_aim_offset = get_global_mouse_position() - global_position
+		current_aim_offset = get_aim_world_position() - global_position
 		want_attack = Input.is_action_just_pressed("attack")
 		want_q = pending_q_skill
 		want_rmb = pending_rmb_skill
@@ -309,7 +333,7 @@ func take_ranged_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	if amount <= 0:
 		return
 	var reduced := amount
-	if get_node_or_null("/root/PerkManager") != null:
+	if gameplay_perks() != null:
 		var reduction: int = PerkManager.get_ranged_damage_reduction()
 		if reduction > 0:
 			reduced = maxi(0, amount - reduction)
@@ -361,7 +385,7 @@ func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 			animated_sprite.play("hurt")
 		start_invincibility()
 	else:
-		if get_node_or_null("/root/PerkManager") != null and PerkManager.has_second_chance():
+		if gameplay_perks() != null and PerkManager.has_second_chance():
 			PerkManager.consume_second_chance()
 			hp = maxi(1, int(max_hp * 0.5))
 			current_armor = max_armor
@@ -382,7 +406,7 @@ func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 			set_physics_process(false)
 			print("[DEATH] Champion has fallen. Expedition Over.")
 
-			if get_node_or_null("/root/GameManager") != null:
+			if gameplay_manager() != null:
 				GameManager.finish_run("Fallen upon Floor " + str(GameManager.current_level))
 
 			if has_node("PlayerHurtbox/CollisionShape2D"):
@@ -412,7 +436,7 @@ func start_invincibility(duration_override: float = -1.0) -> void:
 		animated_sprite.modulate.a = 1.0
 
 func _sync_potion_run_state() -> void:
-	var gm = get_node_or_null("/root/GameManager")
+	var gm = gameplay_manager()
 	if gm != null:
 		gm.potion_max_hp_gained = potion_max_hp_gained
 		gm.potion_cooldown_remaining = potion_cooldown_remaining
@@ -487,7 +511,7 @@ func _on_equipment_changed() -> void:
 	stats_changed.emit(hp, max_hp, current_armor, max_armor)
 
 func sync_floor_vitality() -> void:
-	var gm = get_node_or_null("/root/GameManager")
+	var gm = gameplay_manager()
 	var earned: int = gm.floor_vitality_gained if gm != null else 0
 	var delta := earned - floor_vitality_applied
 	if delta == 0:
@@ -515,13 +539,13 @@ func _regen_one_armor() -> void:
 		regen_tick_timer.stop()
 
 func is_spike_immune() -> bool:
-	if get_node_or_null("/root/PerkManager") != null:
+	if gameplay_perks() != null:
 		return PerkManager.is_spike_immune()
 	return false
 
 func get_effective_speed() -> float:
 	var eff: float = speed * 1.15 if is_invincible else speed
-	if get_node_or_null("/root/PerkManager") != null:
+	if gameplay_perks() != null:
 		# Flat speed is already applied to speed, just as flat damage is to base_damage.
 		eff += PerkManager.get_berserk_bonuses(get_missing_hp_ratio()).speed
 	return minf(eff, max_speed_cap)
@@ -532,7 +556,7 @@ func get_missing_hp_ratio() -> float:
 func get_attack_speed_multiplier() -> float:
 	# Aggregate equipment once; callers scale only their attack timing, not physics time.
 	var bonus: float = inventory.get_attack_speed_bonus() if inventory != null else 0.0
-	var pm = get_node_or_null("/root/PerkManager")
+	var pm = gameplay_perks()
 	if pm != null:
 		for perk in pm.get_active_perks():
 			bonus += float(perk.get_modifier("attack_speed_bonus", 0.0))
@@ -543,7 +567,7 @@ func get_raw_damage() -> float:
 	if inventory != null and inventory.has_method("get_weapon_damage"):
 		wep_dmg = inventory.get_weapon_damage()
 	var dmg: float = float(base_damage + wep_dmg)
-	if get_node_or_null("/root/PerkManager") != null:
+	if gameplay_perks() != null:
 		# Flat perk damage is already applied to base_damage by PerkManager.
 		dmg *= 1.0 + float(PerkManager.get_berserk_bonuses(get_missing_hp_ratio()).damage)
 	return dmg
@@ -552,7 +576,7 @@ func get_attack_speed_bonus() -> float:
 	var bonus := 0.0
 	if inventory != null and inventory.has_method("get_attack_speed_bonus"):
 		bonus += float(inventory.get_attack_speed_bonus())
-	if get_node_or_null("/root/PerkManager") != null:
+	if gameplay_perks() != null:
 		bonus += PerkManager.get_attack_speed_bonus()
 	return clampf(bonus, 0.0, 2.0)
 
@@ -568,7 +592,7 @@ func get_display_damage() -> int:
 
 func get_total_damage() -> int:
 	var raw := get_raw_damage()
-	if get_node_or_null("/root/PerkManager") != null:
+	if gameplay_perks() != null:
 		return PerkManagerScript.resolve_stochastic_damage(raw)
 	return int(round(raw))
 
@@ -584,10 +608,12 @@ func deal_damage_to(target: Node2D, raw_damage: int, call_on_hit: bool = true) -
 
 func apply_on_hit_effects(target: Variant, in_damage: int) -> int:
 	var final_dmg: int = in_damage
+	if is_training():
+		return final_dmg
 	# A typed Node2D argument rejects freed objects before validity checks can run.
 	if not is_instance_valid(target) or not target is Node2D or is_dead or not is_inside_tree() or not can_process() or not _is_defensive_target_valid(target) or in_damage <= 0:
 		return final_dmg
-	var pm = get_node_or_null("/root/PerkManager")
+	var pm = gameplay_perks()
 	if pm == null:
 		return final_dmg
 
@@ -677,7 +703,7 @@ func _apply_slow_to_target(target: Node2D, slow_ratio: float, duration: float) -
 	timer.start(duration)
 
 func _sync_defensive_run_state() -> void:
-	var gm = get_node_or_null("/root/GameManager")
+	var gm = gameplay_manager()
 	if gm != null:
 		gm.thorns_cooldown_remaining = thorns_cooldown_remaining
 		gm.armor_break_cooldown_remaining = armor_break_cooldown_remaining
@@ -756,14 +782,14 @@ func _get_defensive_targets(radius: float) -> Array[Node2D]:
 	return targets
 
 func _queue_defensive_damage(target: Node2D, amount: int, push: Vector2 = Vector2.ZERO) -> void:
-	var gm = get_node_or_null("/root/GameManager")
+	var gm = gameplay_manager()
 	var floor_level: int = gm.current_level if gm != null else 0
 	_apply_defensive_damage.call_deferred(weakref(target), weakref(target.get_parent()), amount, push, _defensive_effect_generation, floor_level)
 
 func _apply_defensive_damage(target_ref: WeakRef, parent_ref: WeakRef, amount: int, push: Vector2, generation: int, floor_level: int) -> void:
 	if not is_inside_tree() or is_queued_for_deletion() or generation != _defensive_effect_generation:
 		return
-	var gm = get_node_or_null("/root/GameManager")
+	var gm = gameplay_manager()
 	if gm != null and gm.current_level != floor_level:
 		return
 	var target: Node2D = target_ref.get_ref()
@@ -809,7 +835,7 @@ func _trigger_chain_lightning(primary_target: Node2D) -> void:
 func _trigger_armor_break_blast() -> void:
 	if armor_break_cooldown_remaining > 0.0:
 		return
-	var pm = get_node_or_null("/root/PerkManager")
+	var pm = gameplay_perks()
 	if pm == null:
 		return
 	var config: Dictionary = pm.get_armor_break_blast_config()
@@ -825,7 +851,7 @@ func _trigger_armor_break_blast() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if is_dead:
 		return
-	if get_node_or_null("/root/GameManager") != null and GameManager.is_replaying:
+	if gameplay_manager() != null and GameManager.is_replaying:
 		return
 
 	if event is InputEventKey and event.pressed and not event.echo:

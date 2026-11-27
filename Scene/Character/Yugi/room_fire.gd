@@ -71,7 +71,7 @@ func _physics_process(delta: float) -> void:
 		while tick_left <= 0:
 			for target in targets:
 				if is_instance_valid(target) and target.get("is_dead") != true:
-					CombatUtil.deal_player_damage(caster, target, damage_per_tick)
+					CombatUtil.deal_player_damage(CombatUtil.damage_source(self, caster), target, damage_per_tick)
 			tick_left += TICK
 	else:
 		for beam in beams.values(): beam.queue_free()

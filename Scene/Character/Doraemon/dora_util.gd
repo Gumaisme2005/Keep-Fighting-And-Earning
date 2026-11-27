@@ -12,6 +12,8 @@ static var _cached: Array = []
 
 ## Living enemies in the dungeon (cached once per physics frame).
 static func enemies(world: Node) -> Array:
+	if is_instance_valid(world) and world.has_method("training_targets"):
+		return world.training_targets()
 	var frame := Engine.get_physics_frames()
 	if frame != _frame_cache and world != null:
 		var result: Array = []
@@ -80,10 +82,10 @@ static func is_wall(world: Node, p: Vector2) -> bool:
 	return world != null and world.has_method("is_global_pos_wall_or_door") and world.is_global_pos_wall_or_door(p)
 
 ## Deals damage and feeds the caster's power gauge.
-static func hit(caster: Node, target: Node, amount: int, stun_time: float = 0.0) -> void:
+static func hit(caster: Node, target: Node, amount: int, stun_time: float = 0.0, origin: Node = null) -> void:
 	if not is_instance_valid(target) or amount <= 0 or target.get("is_dead") == true or target.get("is_active") == false:
 		return
-	CombatUtil.deal_player_damage(caster, target, amount)
+	CombatUtil.deal_player_damage(CombatUtil.damage_source(origin, caster) if origin != null else caster, target, amount)
 	if is_instance_valid(caster) and caster.has_method("add_power"):
 		caster.add_power(3)
 	if stun_time > 0.0 and is_instance_valid(target) and not target.is_queued_for_deletion() and target.get("is_dead") != true:

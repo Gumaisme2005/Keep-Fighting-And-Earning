@@ -136,6 +136,9 @@ func _hit(area: Area2D) -> void:
 	var world := get_parent()
 	if world.has_method("has_line_of_sight") and not world.has_line_of_sight(global_position, target.global_position): return
 	hit[target.get_instance_id()] = true
+	if target.has_method("receive_training_contact"):
+		target.receive_training_contact(self, damage)
+		return
 	var final_dmg = damage
 	var players = get_tree().get_nodes_in_group("player")
 	if not players.is_empty() and players[0].has_method("apply_on_hit_effects"):

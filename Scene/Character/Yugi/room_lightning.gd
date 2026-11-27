@@ -42,7 +42,7 @@ func _physics_process(delta: float) -> void:
 		struck = true
 		_play_sfx("yugi_thunder")
 		for target in _room_targets():
-			CombatUtil.deal_player_damage(caster, target, damage)
+			CombatUtil.deal_player_damage(CombatUtil.damage_source(self, caster), target, damage)
 			if is_instance_valid(target) and not target.is_queued_for_deletion() and target.get("is_dead") != true:
 				LightningHit.apply(target)
 	if elapsed >= total_time: queue_free()

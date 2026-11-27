@@ -82,7 +82,7 @@ func _input(event: InputEvent) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if intro_active: return
 	super._unhandled_input(event)
-	if is_dead or GameManager.is_replaying: return
+	if is_dead or (not is_training() and GameManager.is_replaying): return
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed: pressed_left = true
@@ -106,7 +106,7 @@ func _physics_process(delta: float) -> void:
 		return
 	_step_cooldowns(delta)
 	var f: Dictionary
-	if GameManager.is_replaying:
+	if not is_training() and GameManager.is_replaying:
 		if replay_frame_idx >= GameManager.replay_frames.size():
 			GameManager.is_replaying = false
 			pressed_left = false
@@ -123,12 +123,13 @@ func _physics_process(delta: float) -> void:
 		replay_frame_idx += 1
 	else:
 		var input_direction := Input.get_vector("move_left", "move_right", "move_up", "move_down")
-		var aim := get_global_mouse_position() - global_position
+		var aim := get_aim_world_position() - global_position
 		f = {"dx": input_direction.x, "dy": input_direction.y, "ax": aim.x, "ay": aim.y,
 			"shift": Input.is_physical_key_pressed(KEY_SHIFT), "lp": pressed_left, "lr": released_left,
 			"rp": pressed_right, "rr": released_right, "q": pending_q_skill, "slot": pending_hotbar_slot,
 			"result": special_rng.randi_range(1, 5) if pending_q_skill and can_use_skill else 0}
-		GameManager.record_frame_input(f)
+		if not is_training():
+			GameManager.record_frame_input(f)
 	pressed_left = false
 	pressed_right = false
 	released_left = false
@@ -216,6 +217,7 @@ func _cast(move: String, multiplier: int, duration: float) -> void:
 			return
 	_set_guarding(false)
 	suppress_guard = true
+	training_action(&"skill" if move.begins_with("result-") else &"basic" if move == "left-click" else &"other")
 	left_hold = -1
 	right_hold = -1
 	var attack_rate := 1.0 if move.begins_with("result") else get_attack_speed_multiplier()

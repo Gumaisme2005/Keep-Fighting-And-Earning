@@ -10,6 +10,8 @@ static var _cached: Array = []
 
 ## Living enemies in the dungeon (scanned once per physics frame).
 static func enemies(world: Node) -> Array:
+	if is_instance_valid(world) and world.has_method("training_targets"):
+		return world.training_targets()
 	if world == null:
 		return []
 	var frame := Engine.get_physics_frames()

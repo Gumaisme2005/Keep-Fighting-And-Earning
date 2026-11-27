@@ -1,4 +1,8 @@
-# Interactive Tutorial — Task 1
+# Interactive Tutorial — Tasks 1–2
+
+Task 1 below records the foundation and its original verification. The Task 2
+section supersedes the movement/combat roadmap; Guild Hall UI, inventory/survival
+training and persistence remain designed only.
 
 ## Scope and repository audit
 
@@ -240,3 +244,259 @@ runner, this document, and the two requested runner configuration files are in
 scope. Cache, logs and disposable saves are ignored and excluded from the commit.
 The post-push GitHub Actions URL/status is reported in the delivery, since that
 run cannot exist until the feature commit is pushed. No PR is created.
+
+## Task 2 — implemented architecture
+
+`tutorial_session.gd`, `tutorial_steps.gd` and the original framework tests remain
+unchanged. Task 1 CI run [46015585553](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/46015585553)
+completed SUCCESS before final Task 2 verification. Fetch still found development
+at the original baseline; no competing tutorial PR was open. PR #104 and the
+UI/FPS branch remain separate; no BT3 branch is checked out or merged.
+
+Implemented modules:
+
+- `tutorial_training_context.gd`: owns a **new instance of the production hero
+  scene**, a private SubViewport/World2D, action facts, source permissions and
+  disposal. It never accepts or alters the player's run hero. `bind(session)` is
+  called after start returns; restart builds a new arena through deferred binding
+  after rechecking session ID, ACTIVE state and node lifetime.
+- `tutorial_movement_observer.gd`: samples real CharacterBody2D movement after the
+  hero's physics update. Grants only `movement_verified` for its captured session.
+- `training_target.{gd,tscn}`: reuses the Guild Hall dummy atlas region 17x26 and
+  its 11x6 foot collision, plus a Hurtbox. No enemy/boss membership, AI, death,
+  drops, kill/pity/perk reward or room-clear integration exists. Local HP never
+  reaches zero; the sprite flashes for 0.12 physics seconds and can be reset.
+- `training_world.gd`: local target lookup and wall/line-of-sight interface used
+  by the **existing** attack/effect paths. Its transform remains identity inside
+  the private viewport. Physics, procedural generation and run state are separate.
+
+The Guild Hall scene/layout is untouched. Existing TrainingDummy remains at
+(32,159), ArcheryTarget at (24,120), under y-sorted Props, with default layer/mask
+1 StaticBody2D collisions. Their existing structure tests remain applicable.
+
+### Walking and event identity
+
+Walking requires 24 world pixels (1.5 hall tiles) in each of three distinct
+cardinal directions. Distance is net displacement along one continuous intent,
+not frames, button presses or accumulated jitter. The observer compares global
+displacement with `get_position_delta()`, the current parent and speed/tick bound.
+It rejects stationary/blocked input, relocation, reparenting, camera changes,
+diagonals, hurt/stun/invulnerability/attack/skill movement and forced dashes.
+Invalid samples rebase the segment. Each direction produces one stable
+`walk:x:y` fact per session. Physics priority places sampling after movement.
+
+An accepted production attack/skill activation allocates an action fact. It does
+**not** grant progress. Facts include the session generation, action serial,
+originating step and previous buff/form state. A delayed effect from an earlier
+step cannot complete a later step; an already-active buff is not a new effect.
+Melee contact uses that hero's action; projectiles/summons retain the immutable
+fact captured at spawn, with weak source identity. Owner-less projectiles are
+explicitly tagged by their emitter before entering the tree. A whitelist of
+representative effect scripts and event kinds excludes passive spirit bolts,
+other gadgets, supers and unrelated casts. Unknown/freed/queued/revoked sources,
+wrong targets, wrong steps, old sessions and repeated action facts are rejected.
+
+Damage dispatch reaches `receive_training_contact(source, amount)` **before**
+global player lookup, perks or stochastic/on-hit effects. Direct `take_damage()`
+on the prop is ignored. Each action can count once across all its hits/targets.
+The session is the final authority for progression and deduplication.
+
+### Eight production paths and skill profiles
+
+| Index / hero | Actual basic path | Q representative / actual evidence | Timing/resource/RNG considerations |
+| --- | --- | --- | --- |
+| 0 Miya | `attack` → `_fire_arrow` → Arrow Area2D contact, with production wall checks | Orthanc Fire: `use_special_skill` → thrown Bomb → actual explosion overlap/LOS | Arrow cooldown and local bomb timers; global Perk RNG bypassed only in training |
+| 1 Olaf | inherited SwordHitbox → area contact | Durin's Wrath: inactive→`is_berserking`, raw damage multiplier actually applied | Buff/cooldown lives on disposable clone; no hit required for a buff |
+| 2 Pyrois | SwordHitbox → `_on_sword_hitbox_area_entered` | Sovereign Rush: actual dash, then enabled sword contact | Forced dash is excluded from walking; invulnerability and timers disposed |
+| 3 Charlotte | inherited sword contact | Triple Flurry: `perform_attack_2`, three real enable/disable hit windows | All contacts share one activation fact; Q cooldown rejects repeats |
+| 4 Yugi/Atem | LMB press/release → `_cast(left-click)` → Summon contact | Q → random result 1–5 → RoomBlast/Laser/Lightning/Pull/Fire actual damage | Own `special_rng`; all five seeded outcomes tested. Basic summons, guard/charge and Q facts stay distinct |
+| 5 Doraemon | page-0 Air Cannon cast/release → AirShot collision | Q with power <100 → Companion Assist → actual friend walker hit | Own RNG, gadget cooldowns, friend rotation and power on clone; super/unrelated gadget is not equivalent evidence |
+| 6 Miyabi | physics combo hit frame → geometry/LOS → `Util.hit` | Q Frost Bloom → IceSpikes growth/shatter zone contact | Passive spirit bolts cannot count. Clone owns combo, charge, dash and freeze state |
+| 7 Luong Tho | physics Stab/Twin Swing/Smash hit geometry → CombatUtil | White Moon: base→upgraded form, positive form duration, +1 hit damage and increased attack rate actually applied | Form, invulnerability rule, attack/movement modifiers and cooldown disappear with clone; no damage hit required |
+
+Q/LMB input is delivered to the existing hero handlers/physics loops in tests.
+No successful integration check calls target damage directly. Synthetic events
+are confined to the unchanged Task 1 state-machine tests. Miya's existing
+headless branch fires an arrow immediately; its graphical wind-up still needs
+manual playtesting. Other gadgets/skills are outside the representative profile.
+
+One pre-existing Miya bug was found while testing miss→retry: animation completion
+cleared `is_attacking` before `_attack_timer` expired, preventing the base timer
+from reopening `_can_shoot_arrow`. The fix preserves `is_attacking` until that
+existing cooldown expires, without changing the configured cooldown or damage.
+Repeated actual shots are covered at both render rates; existing suites are kept.
+
+Contact traces also record physics ticks since activation. This detected a real
+one-tick Sovereign Rush discrepancy between 30/144 render FPS from idle timers.
+Practice hero timers and the practice bomb tween/lifetime now use physics time;
+normal production timers retain their original idle processing mode.
+
+### Isolation and lifecycle contract
+
+The clone is registered as `training_player`, not `player`; authored sword player
+groups and global GameUI nodes are removed before it enters the tree. Training
+manager/perk lookups return null, preventing replay recording, run cooldown sync,
+perk application and combat RNG consumption at their source. Inventory/starter
+items, HP/armor, hero RNG, charges, transformation, gauge/rotation, projectiles
+and summons belong solely to this fresh arena. No snapshot/restore mechanism is
+used in the production training implementation.
+
+Skip, cancel, completion, restart, hero removal and context teardown immediately
+revoke acceptance and defer physics-safe disposal. A successful Q advances to
+PICKUP_ITEM and disposes combat; later steps receive no fabricated events.
+Teardown frees the entire viewport and its effects, including still-flying arrows
+and pending summons. A weak ownership reference also destroys a clone reparented
+outside its viewport, so a practice buff cannot escape into the run. The
+detached/removed arena can be rebuilt by explicit restart.
+Signal callbacks do not register sources or submit events during dispatch.
+
+Tests keep a disabled production hero with real inventory/equipment and an active
+100% critical-hit/bonus-stat perk as sentinels. Every sampled physics tick compares
+GameManager script state, Wallet balance/dirty flag, production Perk RNG/state,
+seed/history/replay/pity/progression, original hero vitals/cooldown and item values,
+plus root save-file bytes before, during and after practice. Weak references prove
+old hero/world disposal. SaveGuard is test-only and acts within a disposable
+profile. Real run transactions are never rolled back by the training module.
+
+### Runner, verification and remaining integration
+
+Each invocation now owns a new `.godot/tutorial_verification/run-*` project and
+profile. No existing directory is deleted. Import-cache seeding includes only
+assets whose original sources still exist, so orphan .import metadata cannot
+resurrect deleted assets. Contract tests verify deleted scripts, stale fixtures,
+deleted converted assets (RED→GREEN), missing suites, exit/error/assertion/marker
+failure, timeout, and missing/mismatched traces.
+
+`--cross-fps` runs the three training suites at 30 and 144 render FPS with unchanged
+60 Hz physics, identical input schedules, seed ALOALO1234 and target geometry.
+Nonempty traces include hero/profile setup, movement facts/ticks, action start,
+actual effect, contact age/progress, five Yugi seeded outcomes and protected
+cleanup. Session/instance IDs are omitted from trace formatting; gameplay timing
+is retained. Trace absence/mismatch fails the runner, CI and local integration.
+This verifies these controlled fixtures, not whole-game determinism.
+
+### Task 2 executed verification
+
+All final gates below returned exit code 0 with zero detected runtime/script
+errors. Counts are assertions unless a different unit is stated. These are
+headless gameplay integration results, not manual graphical playtests.
+
+| Gate | Result |
+| --- | --- |
+| Unchanged Task 1 framework | 56 PASS |
+| Movement | 27 PASS at each of 30/144 FPS; matching nonempty traces |
+| Combat, final expanded suite | 98 PASS at each of 30/144 FPS; matching nonempty traces |
+| Eight-hero skills / all five Yugi outcomes | 115 PASS at each of 30/144 FPS; matching nonempty traces |
+| Python runner/evidence contracts | 17 tests PASS (9 tutorial runner + 8 existing analyzer) |
+| Existing regression | All 43 suites PASS at 144 FPS; individual results below |
+| Existing CI cross-FPS groups | All 14 PASS at 30/144 FPS; all 12 required nonempty trace pairs match |
+| Production dungeon/projectile follow-up | Unit 28 and projectile obstacles 11 PASS after physics-timer fix |
+
+Ignored local evidence directories under `.godot/tutorial_verification/`:
+`run-ppl2vm7y` (43 existing suites + framework, 144 FPS), `run-nc926t7s`
+(14 existing cross-FPS groups, 30 FPS), `run-0yhob3pi` (framework, movement,
+skills, timer fix and production follow-up), and `run-kl83qzgk` (final expanded
+combat suite including stale-step/buff/reparenting negatives). The final combat
+trace SHA-256 at both render rates is
+`f1d1f8a00be7bf1080e5ea3dcf19de67c0ae3cd65d0126bf5c55c26e78257813`.
+Full regression preceded the final rejection/cleanup guards; those guards have
+dedicated real-gameplay coverage in the final combat run. No generated logs,
+temporary projects, profiles or caches are committed.
+
+An initial cold import reported an engine RID/texture error despite exit 0;
+the runner correctly rejected it. Later fresh imports completed without errors.
+An earlier skill run passed its assertions but failed the required trace match:
+Sovereign Rush contacted at physics age 18 versus 19. Training-only physics timers
+fixed that discrepancy; the subsequent 30/144 skill traces match. Miya's actual
+miss/retry test also exposed the cooldown bug described above. These failures
+were investigated, not suppressed or accepted as successful evidence.
+
+Bug-bash and tactical-base-enemy suites have no trace contract in existing CI;
+both pass at each render rate, while the other 12 groups supply matching traces.
+The benchmark and Yugi suite use completion markers rather than assertion totals.
+
+### Task 2 source audit and change manifest
+
+Audit covered `tutorial_session.gd` source registration/submission and lifecycle,
+`tutorial_steps.gd` profiles/order, `BasePlayer` physics/input/aim, sword contact,
+damage/perk/potion/replay paths, and the eight hero/effect paths in the table above.
+`BaseEnemy._die`, `drop_loot`, `_drop_potion_loot`,
+`GameManager.register_enemy_kill`, `roll_enemy_potion`, `spawn_kill_coins`, wallet
+save/recording methods and `room_manager._on_enemy_died`/`unlock_room` were checked
+for reward/progression consequences. The new prop never inherits or calls those
+enemy/reward paths and is never registered with RoomManager. Guild Hall prop
+placement, collision and y-sort remain unchanged.
+
+The feature changes 49 source/configuration/documentation files:
+
+| Files (paths relative to repository) | Reason |
+| --- | --- |
+| `Scene/Tutorial/tutorial_training_context.gd`, `tutorial_movement_observer.gd`, `training_world.gd`, `training_target.gd`, `training_target.tscn` | New disposable arena, real movement/contact evidence and target feedback |
+| `Scene/Character/BasePlayer.gd`, `CombatUtil.gd` | Restricted action hooks, training-only global-state isolation and contact routing |
+| `Scene/Character/Player 1_Pyrois/player.gd`, `Player 2_Olaf/player_2.gd`, `Player 3_Miya/player_3.gd`, `Player 4_Charlotte/player_4.gd` | Accepted basic/Q hooks, real sword contact routing, physics timers in practice; Miya retry fix |
+| `Scene/Character/Yugi/yugi.gd`, `summon.gd`, `room_blast.gd`, `room_fire.gd`, `room_laser.gd`, `room_lightning.gd`, `room_pull.gd` | Keep basic/Q facts distinct, bypass run replay only for clone, preserve effect identity through actual contact |
+| `Scene/Character/Doraemon/doraemon.gd`, `dora_util.gd`, `dora_walker.gd`, `air_cannon_shot.gd` | Local aim/manager access, practice target lookup and immutable source routing |
+| `Scene/Character/Miyabi/miyabi.gd`, `miyabi_util.gd`, `ice_spikes.gd` | Combo/Q hooks, exclude passive skill evidence, local targets and emitter ownership |
+| `Scene/Character/LuongTho/luong_tho.gd`, `lt_util.gd` | Combo/transform hooks, local aim/perks and target lookup |
+| `Scene/Projectiles/arrow.gd`, `bomb.gd` | Real collision routing, physics lifetime/tween only during practice |
+| `tests/test_tutorial_movement.gd`, `.tscn`; `test_tutorial_combat.gd`, `.tscn`; `test_tutorial_hero_skills.gd`, `.tscn`; `tutorial_test_support.gd` | Integration fixtures, production sentinels, positive/negative/lifecycle coverage |
+| Eight matching `.gd.uid` files for the four new modules and four new test scripts | Normal Godot source identity metadata, not generated import caches |
+| `tests/run_tutorial_verification.py`, `tests/test_tutorial_runner.py` | Fresh invocation/profile, safe cache seeding, strict cross-FPS/error contracts |
+| `.github/workflows/ci.yml`, `run_tests.bat` | Register all three new suites and cross-FPS gate |
+| `docs/INTERACTIVE_TUTORIAL_DESIGN.md` | Architecture, audit, results, limitations and later-task boundary |
+
+### Existing regression results (144 FPS)
+
+| Suite | Result |
+| --- | --- |
+| `test_dungeon_generator_unit` | PASS (28); exit 0; errors 0 |
+| `test_dungeon_properties` | PASS (11 properties); exit 0; errors 0 |
+| `test_orc_battle` | PASS (5 cases); exit 0; errors 0 |
+| `benchmark_dungeon_generator` | PASS (completion marker); exit 0; errors 0 |
+| `test_skeleton_king` | PASS (22); exit 0; errors 0 |
+| `test_doraemon` | PASS (49); exit 0; errors 0 |
+| `test_yugi` | PASS (completion marker); exit 0; errors 0 |
+| `test_werewolf` | PASS (50); exit 0; errors 0 |
+| `test_moba_hud_and_inventory` | PASS (223); exit 0; errors 0 |
+| `test_miyabi` | PASS (18); exit 0; errors 0 |
+| `test_luong_tho` | PASS (15); exit 0; errors 0 |
+| `test_projectile_obstacles` | PASS (11); exit 0; errors 0 |
+| `test_archer_combat_lifecycle` | PASS (12); exit 0; errors 0 |
+| `test_enemy_tactics` | PASS (94); exit 0; errors 0 |
+| `test_orc_tactical_ai` | PASS (82); exit 0; errors 0 |
+| `test_archer_tactical_ai` | PASS (120); exit 0; errors 0 |
+| `test_enemy_ai_integration` | PASS (48); exit 0; errors 0 |
+| `test_replay_security` | PASS (39); exit 0; errors 0 |
+| `test_potion_system` | PASS (132); exit 0; errors 0 |
+| `test_defensive_combat_balance` | PASS (232); exit 0; errors 0 |
+| `test_equipment_loot_perk_balance` | PASS (430); exit 0; errors 0 |
+| `test_enemy_floor_balance` | PASS (1053); exit 0; errors 0 |
+| `test_issue75_development_integration` | PASS (73); exit 0; errors 0 |
+| `test_bug_bash_regressions` | PASS (43); exit 0; errors 0 |
+| `test_issue75_progression_balance` | PASS (42327); exit 0; errors 0 |
+| `test_issue75_acceptance` | PASS (61); exit 0; errors 0 |
+| `test_issue75_combat_pacing` | PASS (337); exit 0; errors 0 |
+| `test_issue75_acquisition` | PASS (162); exit 0; errors 0 |
+| `test_tactical_navigation_contract` | PASS (49); exit 0; errors 0 |
+| `test_tactical_base_enemy_integration` | PASS (49); exit 0; errors 0 |
+| `test_coins` | PASS (38); exit 0; errors 0 |
+| `test_guild_hall` | PASS (89); exit 0; errors 0 |
+| `test_hall_select` | PASS (63); exit 0; errors 0 |
+| `test_rune_portal` | PASS (73); exit 0; errors 0 |
+| `test_shop` | PASS (52); exit 0; errors 0 |
+| `test_mage_shop` | PASS (33); exit 0; errors 0 |
+| `test_potion_shop` | PASS (19); exit 0; errors 0 |
+| `test_wallet` | PASS (47); exit 0; errors 0 |
+| `test_wandering_merchant` | PASS (56); exit 0; errors 0 |
+| `test_main_menu_modals` | PASS (151); exit 0; errors 0 |
+| `test_yugi_audio` | PASS (49); exit 0; errors 0 |
+| `test_hero_sfx` | PASS (33); exit 0; errors 0 |
+| `test_perk_system` | PASS (41); exit 0; errors 0 |
+
+**DESIGNED ONLY:** Task 3 starts a separate isolated inventory/survival context at
+PICKUP_ITEM. Task 4 owns display/input mapping for the practice viewport, suspends
+the run hero while it has input focus, offers opt-in/skip/restart, and adds separate
+tutorial persistence. It must preserve optional dungeon entry and coordinate
+handoff/teardown. No automatic production hall integration is installed here.
+Task 5 covers UI polish and manual graphical playtests, including wind-up, sprite
+feedback and controls. Those graphical/manual checks are **NOT VERIFIED** here.
