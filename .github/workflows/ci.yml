@@ -32,6 +32,13 @@ jobs:
       - name: Verify Issue 75 evidence runner rejects incomplete or failed suites
         run: python3 -m unittest discover -s tests -p test_issue75_runner.py -v
 
+      - name: Verify Tutorial evidence runner rejects incomplete or failed suites
+        run: python3 -m unittest discover -s tests -p test_tutorial_runner.py -v
+
+      - name: Run Tutorial Framework with Disposable Save Data
+        timeout-minutes: 10
+        run: python3 tests/run_tutorial_verification.py --godot godot --suites test_tutorial_framework
+
       - name: 1. Run Dungeon Generator Unit Tests (UT-01 .. UT-13)
         run: |
           godot --headless "res://tests/test_dungeon_generator_unit.tscn"

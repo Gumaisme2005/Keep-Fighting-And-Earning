@@ -4,13 +4,13 @@ cd /d "%~dp0"
 
 title Keep Fighting And Earning - Automated Test Suite
 
-set "GODOT_BIN=B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe"
+if not defined GODOT_BIN set "GODOT_BIN=B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64_console.exe"
 if not exist "!GODOT_BIN!" (
     set "GODOT_BIN=B:\EnvironmentDev\Godot\Godot_v4.7.2-stable_win64.exe"
 )
 if not exist "!GODOT_BIN!" (
     for %%I in (godot.exe godot4.exe) do (
-        if not "!GODOT_BIN!"=="" set "GODOT_BIN=%%~$PATH:I"
+        if not "%%~$PATH:I"=="" set "GODOT_BIN=%%~$PATH:I"
     )
 )
 if not exist "!GODOT_BIN!" (
@@ -26,6 +26,14 @@ echo   Godot: !GODOT_BIN!
 echo ==================================================================
 
 echo.
+echo [Tutorial] Running Tutorial Framework in an isolated project and save profile...
+if not defined PYTHON_BIN set "PYTHON_BIN=python"
+"!PYTHON_BIN!" tests\run_tutorial_verification.py --godot "!GODOT_BIN!" --suites test_tutorial_framework
+if !ERRORLEVEL! NEQ 0 (
+    echo [FAILED] Tutorial Framework failed or did not complete.
+    exit /b 1
+)
+
 echo [1/26] Running Unit Tests (UT-01 .. UT-13)...
 "!GODOT_BIN!" --headless --path . "res://tests/test_dungeon_generator_unit.tscn"
 if !ERRORLEVEL! NEQ 0 (
