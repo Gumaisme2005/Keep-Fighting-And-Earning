@@ -18,7 +18,9 @@ from run_issue75_acceptance import analyze_output
 
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / '.godot' / 'tutorial_verification'
-TRACE_SUITES = {'test_tutorial_movement', 'test_tutorial_combat', 'test_tutorial_hero_skills',
+INTEGRATION_SUITES = {'test_tutorial_hall_integration', 'test_tutorial_ui', 'test_tutorial_input_isolation',
+                      'test_tutorial_persistence', 'test_tutorial_dungeon_entry', 'test_tutorial_recovery'}
+TRACE_SUITES = INTEGRATION_SUITES | {'test_tutorial_movement', 'test_tutorial_combat', 'test_tutorial_hero_skills',
                 'test_tutorial_inventory', 'test_tutorial_survival',
                 'test_tutorial_inventory_isolation', 'test_tutorial_end_to_end'}
 MARKERS = {'test_tutorial_framework': '[TUTORIAL_FRAMEWORK_COMPLETE]',
@@ -26,11 +28,40 @@ MARKERS = {'test_tutorial_framework': '[TUTORIAL_FRAMEWORK_COMPLETE]',
               for name in TRACE_SUITES}}
 DEFAULT_SUITES = ['test_tutorial_framework', *sorted(TRACE_SUITES), 'test_guild_hall', 'test_hall_select',
                   'test_rune_portal', 'test_wallet', 'test_replay_security']
+REQUIRED_EVIDENCE = {
+    'test_tutorial_hall_integration': ['[TRACE] tutorial consent;', '[TRACE] tutorial production input restored'],
+    'test_tutorial_ui': ['[TRACE] UI responsive mapping/inventory/focus/controls/local feedback verified'],
+    'test_tutorial_input_isolation': ['[TRACE] tutorial production input restored'],
+    'test_tutorial_recovery': ['[TRACE] recovery target/item/drop/armor/potion/death/cast restart verified'],
+    'test_tutorial_persistence': ['[TRACE] persistence missing/corrupt/types/version/atomic/idempotency/failure/isolation verified'],
+    'test_tutorial_dungeon_entry': ['[TRACE] tutorial portal request;', '[TRACE] tutorial actual dungeon handoff;', '[TRACE] tutorial COMPLETED; persistence='],
+}
+HERO_EVIDENCE = {
+    'test_tutorial_hall_integration': '[TRACE] hall hero=',
+    'test_tutorial_input_isolation': '[TRACE] input hero=',
+    'test_tutorial_dungeon_entry': '[TRACE] full eight-step hero=',
+}
+
+
+def source_manifest():
+    files = {}
+    suffixes = {'.gd', '.uid', '.tscn', '.tres', '.gdshader', '.py'}
+    for folder in ('Scene', 'Menu', 'tests', 'benchmark', 'tools'):
+        for path in (ROOT / folder).rglob('*'):
+            if path.is_file() and path.suffix in suffixes and '__pycache__' not in path.parts:
+                files[path.relative_to(ROOT).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
+    for name in ('project.godot', 'world.tscn', 'run_tests.bat', '.github/workflows/ci.yml'):
+        path = ROOT / name
+        if path.is_file():
+            files[name] = hashlib.sha256(path.read_bytes()).hexdigest()
+    payload = json.dumps(files, sort_keys=True, separators=(',', ':'))
+    return {'sha256': hashlib.sha256(payload.encode()).hexdigest(), 'files': files}
 
 
 def prepare():
     WORK.mkdir(parents=True, exist_ok=True)
     invocation = Path(tempfile.mkdtemp(prefix='run-', dir=WORK))
+    (invocation / 'source_manifest.json').write_text(json.dumps(source_manifest(), indent=2), encoding='utf-8')
     project = invocation / 'project'
     # Each invocation owns a fresh directory. Deleted source files and old save
     # fixtures cannot survive into a later verification; no deletion is needed.
@@ -74,7 +105,11 @@ def inspect_result(suite, output, code):
         result['completion_marker'] = (
             output.splitlines().count(MARKERS[suite]) == 1
             and bool(re.search(r'^TEST RESULTS: [1-9]\d* PASSED, 0 FAILED$', output, re.M)))
-    result['ok'] = code == 0 and result['completion_marker'] and not result['errors']
+    required = list(REQUIRED_EVIDENCE.get(suite, []))
+    if suite in HERO_EVIDENCE:
+        required += [HERO_EVIDENCE[suite] + str(hero) + ' ' for hero in range(8)]
+    result['evidence_complete'] = all(token in output for token in required)
+    result['ok'] = code == 0 and result['completion_marker'] and not result['errors'] and result['evidence_complete']
     return result
 
 
@@ -99,6 +134,8 @@ def main():
     parser.add_argument('--suites', nargs='+', default=DEFAULT_SUITES)
     parser.add_argument('--timeout', type=int, default=600)
     parser.add_argument('--fps', type=int, default=144)
+    parser.add_argument('--graphical', action='store_true', help='Run actual window rendering instead of headless')
+    parser.add_argument('--capture', action='store_true', help='Save GUI-assisted screenshots inside disposable user data')
     parser.add_argument('--cross-fps', action='store_true', help='Require matching nonempty 30/144 FPS traces for training suites')
     args = parser.parse_args()
     godot = args.godot
@@ -124,16 +161,27 @@ def main():
     invocation = prepare()
     print('Evidence directory: ' + str(invocation), flush=True)
     PROJECT = invocation / 'project'
-    env = os.environ.copy()
-    for key, folder in [('APPDATA', 'roaming'), ('LOCALAPPDATA', 'local'), ('XDG_DATA_HOME', 'xdg')]:
-        directory = invocation / 'profile' / folder
-        directory.mkdir(parents=True, exist_ok=True)
-        env[key] = str(directory)
+    base_env = os.environ.copy()
+    profiles = []
     jobs.insert(0, ('import', args.fps, ['--editor', '--import', '--quit']))
     results = []
     traces = {}
     for suite, fps, extra in jobs:
-        command = [godot, '--headless', '--path', str(PROJECT), '--max-fps', str(fps)] + extra
+        # Completion intentionally persists. Never let an earlier suite/FPS job
+        # turn a first-time fixture into a returning-player fixture.
+        # Short Windows GUI paths also avoid the GLES shader cache MAX_PATH.
+        profile = (Path(tempfile.mkdtemp(prefix='kfae-tut-')) if args.graphical and os.name == 'nt'
+                   else invocation / 'profiles' / str(len(results)))
+        profiles.append({'suite': suite, 'fps': fps, 'path': str(profile)})
+        (invocation / 'profile.json').write_text(json.dumps(profiles, indent=2), encoding='utf-8')
+        env = base_env.copy()
+        for key, folder in [('APPDATA', 'roaming'), ('LOCALAPPDATA', 'local'), ('XDG_DATA_HOME', 'xdg')]:
+            directory = profile / folder
+            directory.mkdir(parents=True, exist_ok=True)
+            env[key] = str(directory)
+        command = [godot] + (['--headless'] if suite == 'import' or not args.graphical else []) + ['--path', str(PROJECT), '--max-fps', str(fps)] + extra
+        if args.capture and suite != 'import':
+            command += ['--', '--tutorial-capture']
         started = time.monotonic()
         output, code = run_process(command, env, args.timeout)
         result = dict(suite=suite, fps=fps, exit_code=code, seconds=round(time.monotonic() - started, 2),

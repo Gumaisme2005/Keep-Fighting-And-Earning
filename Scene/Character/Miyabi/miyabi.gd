@@ -164,11 +164,11 @@ func _physics_process(delta: float) -> void:
 			if get_tree():
 				gameplay_feedback(&"show_banner", ["COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6)])
 	else:
-		var dir_in := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+		var dir_in := input_direction()
 		var aim := get_aim_world_position() - global_position
 		f = {"dx": snappedf(dir_in.x, 0.01), "dy": snappedf(dir_in.y, 0.01), "ax": snappedf(aim.x, 0.5), "ay": snappedf(aim.y, 0.5),
-			"atk": Input.is_action_pressed("attack"), "rmb": Input.is_action_pressed("skill_2"), "q": pending_q_skill,
-			"shift": Input.is_physical_key_pressed(KEY_SHIFT), "slot": pending_hotbar_slot}
+			"atk": input_pressed(&"attack"), "rmb": input_pressed(&"skill_2"), "q": pending_q_skill,
+			"shift": input_shift(), "slot": pending_hotbar_slot}
 		pending_q_skill = false
 		pending_rmb_skill = false
 		pending_hotbar_slot = -1

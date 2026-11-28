@@ -95,6 +95,8 @@ var room_managers: Dictionary = {}
 var visited_rooms: Dictionary = {0: true}
 var active_boss: Node2D = null
 var skeleton_king_room_index: int = -1
+signal entities_initialized
+var entities_ready: bool = false
 var the_player: Node2D = null
 
 func _ready() -> void:
@@ -168,7 +170,11 @@ func plan_enemy_spawns() -> void:
 	Spawner.plan_enemy_spawns(self)
 
 func spawn_entities() -> void:
+	entities_ready = false
 	Spawner.spawn_entities(self)
+	entities_ready = not generated_rooms.is_empty() and is_instance_valid(the_player) and is_ancestor_of(the_player)
+	if entities_ready:
+		entities_initialized.emit()
 
 func spawn_portal(pos: Vector2) -> void:
 	Spawner.spawn_portal(self, pos)

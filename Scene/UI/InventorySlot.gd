@@ -15,6 +15,11 @@ var key_label: Label = null
 var count_label: Label = null
 var current_item: ItemData = null
 
+func _get_tooltip(_at_position: Vector2) -> String:
+	# The Tutorial supplies a bounded local tooltip. Its set_item refresh must
+	# never briefly create a native popup that outlives the practice context.
+	return "" if get_meta("tutorial_custom_tooltip", false) == true else tooltip_text
+
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	if item_icon != null:

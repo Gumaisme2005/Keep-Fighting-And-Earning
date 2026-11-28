@@ -106,7 +106,7 @@ func _on_retry_button_pressed() -> void:
 	get_tree().paused = false
 	# chọn lại nhân vật ở Guild Hall (run mới, cùng seed)
 	if get_node_or_null("/root/GameManager") != null:
-		GameManager.start_run_in_hall(GameManager.current_seed)
+		GameManager.start_run_in_hall(GameManager.current_seed, true)
 	else:
 		get_tree().change_scene_to_file("res://Scene/Map/GuildHall/guild_hall.tscn")
 

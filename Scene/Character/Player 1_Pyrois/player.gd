@@ -57,7 +57,7 @@ func use_special_skill() -> void:
 	if animated_sprite != null and animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation("attack_2"):
 		animated_sprite.play("attack_2")
 
-	await get_tree().create_timer(0.3, true, is_training()).timeout
+	await gameplay_timer(0.3, is_training()).timeout
 	if not is_instance_valid(self) or not is_inside_tree():
 		return
 
@@ -65,7 +65,7 @@ func use_special_skill() -> void:
 	if sword_collision != null:
 		sword_collision.set_deferred("disabled", false)
 
-	await get_tree().create_timer(0.2, true, is_training()).timeout
+	await gameplay_timer(0.2, is_training()).timeout
 	if not is_instance_valid(self) or not is_inside_tree():
 		return
 

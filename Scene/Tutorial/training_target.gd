@@ -16,6 +16,7 @@ func receive_training_contact(source: Node, amount: int) -> int:
 	hp = maxi(1, hp - mini(amount, hp - 1))
 	feedback_left = 0.12
 	$Sprite.modulate = Color(1.5, 1.5, 1.5)
+	owner_context.feedback(&"spawn_damage_number", [global_position, amount, Color("f4d58c")])
 	return amount
 
 ## Unattributed damage is not gameplay evidence, and cannot enter enemy death.

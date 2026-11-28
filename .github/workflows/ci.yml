@@ -47,6 +47,10 @@ jobs:
         timeout-minutes: 25
         run: python3 tests/run_tutorial_verification.py --godot godot --cross-fps --suites test_tutorial_inventory test_tutorial_survival test_tutorial_inventory_isolation test_tutorial_end_to_end
 
+      - name: Run Tutorial Hall, UI, Input, Recovery, Persistence and Dungeon Entry at 30 and 144 FPS
+        timeout-minutes: 30
+        run: python3 tests/run_tutorial_verification.py --godot godot --cross-fps --suites test_tutorial_hall_integration test_tutorial_ui test_tutorial_input_isolation test_tutorial_recovery test_tutorial_persistence test_tutorial_dungeon_entry
+
       - name: 1. Run Dungeon Generator Unit Tests (UT-01 .. UT-13)
         run: |
           godot --headless "res://tests/test_dungeon_generator_unit.tscn"

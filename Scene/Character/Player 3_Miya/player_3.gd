@@ -80,7 +80,7 @@ func attack() -> void:
 	else:
 		_pending_arrow = true
 		# Timer dự phòng an toàn nếu sự kiện frame_changed bị bỏ qua do giật lag
-		get_tree().create_timer(0.26 / spd_scale).timeout.connect(func():
+		gameplay_timer(0.26 / spd_scale).timeout.connect(func():
 			if is_instance_valid(self) and is_inside_tree() and _pending_arrow:
 				_pending_arrow = false
 				_fire_arrow()
@@ -152,7 +152,7 @@ func use_special_skill() -> void:
 			var aim_pos = get_aim_world_position()
 			bomb.throw_bomb(global_position, aim_pos)
 
-	await get_tree().create_timer(0.45, true, is_training()).timeout
+	await gameplay_timer(0.45, is_training()).timeout
 	if not is_instance_valid(self) or not is_inside_tree():
 		return
 

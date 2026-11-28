@@ -538,7 +538,7 @@ func _on_start_button_pressed() -> void:
 	if get_node_or_null("/root/GameManager") != null:
 		if seed_input != null:
 			GameManager.set_seed(seed_input.text)
-		GameManager.start_run_in_hall(GameManager.current_seed)
+		GameManager.start_run_in_hall(GameManager.current_seed, true)
 	else:
 		get_tree().change_scene_to_file("res://Scene/Map/GuildHall/guild_hall.tscn")
 

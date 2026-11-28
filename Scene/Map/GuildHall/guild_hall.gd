@@ -25,9 +25,16 @@ const CAMERA_MARGIN := 8.0
 ## Nhạc nền của sảnh: dùng lại nhạc menu (bản nhạc trung cổ "Medieval Traveler's Journey" đã bỏ vì bản quyền).
 const HALL_BGM := "menu"
 
+const TUTORIAL_HOST = preload("res://Scene/Tutorial/guild_tutorial_host.gd")
+var tutorial_feature_enabled: bool = false
+var tutorial_host: Node
 var hero: Node2D = null
 
 func _ready() -> void:
+	var tutorial_gm := get_node_or_null("/root/GameManager")
+	if tutorial_gm != null and tutorial_gm.hall_tutorial_visit > 0 and tutorial_gm.hall_tutorial_visit == tutorial_gm.hall_select_session:
+		tutorial_feature_enabled = true
+		tutorial_gm.hall_tutorial_visit = -1
 	_play_hall_bgm()
 	var exit_area := get_node_or_null("ExitArea") as Area2D
 	if exit_area != null:
@@ -71,6 +78,8 @@ func start_with_hero(index: int) -> Node2D:
 	if cam != null:
 		cam.make_current()
 		cam.reset_smoothing()
+	if tutorial_feature_enabled:
+		call_deferred("_attach_tutorial_host")
 	return hero
 
 ## Bản đứng trong sảnh của anh hùng `index` (AnimatedSprite2D có meta "hero_index").
@@ -229,3 +238,19 @@ func is_in_field_clearing(p: Vector2) -> bool:
 ## Phần sàn đi lại được.
 func get_floor_rect() -> Rect2:
 	return get_meta("floor_rect", Rect2(32, 64, 512, 256))
+
+## Fixtures/editor previews explicitly opt in; production arms this in start_run_in_hall.
+func enable_tutorial_feature() -> void:
+	tutorial_feature_enabled = true
+	if is_instance_valid(hero): call_deferred("_attach_tutorial_host")
+
+func _attach_tutorial_host() -> void:
+	if not tutorial_feature_enabled or is_queued_for_deletion() or not is_instance_valid(hero) or hero.is_dead or GameManager.is_replaying:
+		return
+	if is_instance_valid(tutorial_host):
+		if tutorial_host.production_hero == hero: return
+		tutorial_host.free()
+	tutorial_host = TUTORIAL_HOST.new()
+	tutorial_host.name = "GuildTutorialHost"
+	add_child(tutorial_host)
+	tutorial_host.configure(self, hero, GameManager.selected_character_index)

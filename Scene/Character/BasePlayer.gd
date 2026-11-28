@@ -12,6 +12,33 @@ signal skill_cooldown_changed(skill_q_left: float, skill_q_max: float, skill_rmb
 var training_context: Node = null
 var training_aim: Vector2 = Vector2(100, -10)
 
+## Owned timers preserve the existing always-running pause policy, while a
+## Tutorial lease can freeze them together with their production owner.
+func gameplay_timer(seconds: float, physics: bool = false) -> Timer:
+	var timer := Timer.new()
+	timer.one_shot = true
+	timer.process_mode = Node.PROCESS_MODE_INHERIT if is_training() else Node.PROCESS_MODE_ALWAYS
+	timer.process_callback = Timer.TIMER_PROCESS_PHYSICS if physics else Timer.TIMER_PROCESS_IDLE
+	add_child(timer)
+	timer.timeout.connect(timer.queue_free)
+	timer.start(maxf(0.000001, seconds))
+	return timer
+
+func input_direction() -> Vector2:
+	if is_training() and training_context.input_adapter != null:
+		return training_context.input_adapter.direction()
+	return Input.get_vector("move_left", "move_right", "move_up", "move_down")
+
+func input_pressed(action: StringName, just: bool = false) -> bool:
+	if is_training() and training_context.input_adapter != null:
+		return training_context.input_adapter.pressed(action, just)
+	return Input.is_action_just_pressed(action) if just else Input.is_action_pressed(action)
+
+func input_shift() -> bool:
+	if is_training() and training_context.input_adapter != null:
+		return training_context.input_adapter.shift()
+	return Input.is_physical_key_pressed(KEY_SHIFT)
+
 func is_training() -> bool:
 	return is_instance_valid(training_context)
 
@@ -257,9 +284,9 @@ func _physics_process(delta: float) -> void:
 			if get_tree():
 				gameplay_feedback(&"show_banner", ["COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6)])
 	else:
-		direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+		direction = input_direction()
 		current_aim_offset = get_aim_world_position() - global_position
-		want_attack = Input.is_action_just_pressed("attack")
+		want_attack = input_pressed(&"attack", true)
 		want_q = pending_q_skill
 		want_rmb = pending_rmb_skill
 		hotbar_to_use = pending_hotbar_slot
@@ -430,7 +457,7 @@ func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 				training_context.on_practice_death(self)
 				return
 
-			await get_tree().create_timer(2.0).timeout
+			await gameplay_timer(2.0).timeout
 			if not is_inside_tree():
 				return
 			get_tree().call_group("game_over_menu", "pause")
@@ -448,7 +475,7 @@ func start_invincibility(duration_override: float = -1.0) -> void:
 		tween.tween_property(animated_sprite, "modulate:a", 0.3, 0.075)
 		tween.tween_property(animated_sprite, "modulate:a", 1.0, 0.075)
 
-	await get_tree().create_timer(duration, true, is_training()).timeout
+	await gameplay_timer(duration, is_training()).timeout
 	if not is_instance_valid(self) or not is_inside_tree() or my_gen != _hurt_invincible_gen:
 		return
 	_hurt_invincible = false
@@ -874,12 +901,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if gameplay_manager() != null and GameManager.is_replaying:
 		return
+	if event.is_action_pressed("skill_1") and not event.is_echo():
+		pending_q_skill = true
 
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode >= KEY_1 and event.keycode <= KEY_9:
 			pending_hotbar_slot = event.keycode - KEY_1
-		elif event.keycode == KEY_Q:
-			pending_q_skill = true
 
 func start_skill_cooldown() -> void:
 	can_use_skill = false

@@ -31,7 +31,7 @@ func use_special_skill() -> void:
 	is_berserking = true
 	stats_changed.emit(hp, max_hp, current_armor, max_armor)
 
-	await get_tree().create_timer(0.6, true, is_training()).timeout
+	await gameplay_timer(0.6, is_training()).timeout
 	if not is_instance_valid(self) or not is_inside_tree():
 		return
 	is_casting_skill = false
@@ -39,7 +39,7 @@ func use_special_skill() -> void:
 	if not is_dead and animated_sprite.animation == "skill":
 		animated_sprite.play("idle")
 
-	await get_tree().create_timer(maxf(0.05, buff_duration - 0.6)).timeout
+	await gameplay_timer(maxf(0.05, buff_duration - 0.6)).timeout
 	if not is_instance_valid(self) or not is_inside_tree() or my_gen != _berserk_gen:
 		return
 

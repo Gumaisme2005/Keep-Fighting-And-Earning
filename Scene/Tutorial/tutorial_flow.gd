@@ -1,9 +1,10 @@
 extends Node
-## Opt-in coordinator only. Production hall/UI/focus/persistence are Task 4.
+## Context ownership stays here; the hall host owns presentation and input.
 const Session = preload("res://Scene/Tutorial/tutorial_session.gd")
 const Steps = preload("res://Scene/Tutorial/tutorial_steps.gd")
 const Combat = preload("res://Scene/Tutorial/tutorial_training_context.gd")
 const Inventory = preload("res://Scene/Tutorial/tutorial_inventory_context.gd")
+signal context_changed(context: Node)
 var session: RefCounted
 var active_context: Node
 var input_enabled: bool = true
@@ -18,7 +19,7 @@ func bind(value: RefCounted) -> bool:
 	session.tutorial_cancelled.connect(_on_terminal)
 	session.tutorial_completed.connect(_on_terminal)
 	_switch(session.get_session_id(), session.get_current_step())
-	return is_instance_valid(active_context)
+	return is_instance_valid(active_context) or session.get_current_step() == Steps.Step.DUNGEON_ENTRY
 
 func set_input_enabled(enabled: bool) -> void:
 	input_enabled = enabled
@@ -51,6 +52,7 @@ func _dispose() -> void:
 	if is_instance_valid(active_context):
 		active_context.free()
 	active_context = null
+	context_changed.emit(null)
 
 func _switch(id: String, step: int) -> void:
 	if is_queued_for_deletion() or not is_inside_tree() or session.get_session_id() != id \
@@ -66,6 +68,7 @@ func _switch(id: String, step: int) -> void:
 		_dispose()
 		return
 	active_context.set_input_enabled(input_enabled)
+	context_changed.emit(active_context)
 	print("[TRACE] handoff ", "combat" if step < Steps.Step.PICKUP_ITEM else "inventory")
 
 func _exit_tree() -> void:

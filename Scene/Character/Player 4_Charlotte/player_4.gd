@@ -85,7 +85,7 @@ func perform_attack_2():
 
 		if sword_collision != null:
 			sword_collision.set_deferred("disabled", false)
-		await get_tree().create_timer(0.1, true, is_training()).timeout
+		await gameplay_timer(0.1, is_training()).timeout
 		if not is_instance_valid(self) or not is_inside_tree():
 			return
 
@@ -96,7 +96,7 @@ func perform_attack_2():
 
 		if sword_collision != null:
 			sword_collision.set_deferred("disabled", true)
-		await get_tree().create_timer(0.18, true, is_training()).timeout
+		await gameplay_timer(0.18, is_training()).timeout
 		if not is_instance_valid(self) or not is_inside_tree():
 			return
 
@@ -113,7 +113,7 @@ func perform_attack_3():
 
 	var face_direction = -1 if (animated_sprite != null and animated_sprite.flip_h) else 1
 	velocity = Vector2(face_direction * 400.0, 0.0)
-	await get_tree().create_timer(0.10, true, is_training()).timeout
+	await gameplay_timer(0.10, is_training()).timeout
 	if not is_instance_valid(self) or not is_inside_tree():
 		return
 
@@ -132,7 +132,7 @@ func perform_attack_3():
 
 		if sword_collision != null:
 			sword_collision.set_deferred("disabled", false)
-		await get_tree().create_timer(0.1, true, is_training()).timeout
+		await gameplay_timer(0.1, is_training()).timeout
 		if not is_instance_valid(self) or not is_inside_tree():
 			return
 
@@ -143,7 +143,7 @@ func perform_attack_3():
 
 		if sword_collision != null:
 			sword_collision.set_deferred("disabled", true)
-		await get_tree().create_timer(0.15, true, is_training()).timeout
+		await gameplay_timer(0.15, is_training()).timeout
 		if not is_instance_valid(self) or not is_inside_tree():
 			return
 

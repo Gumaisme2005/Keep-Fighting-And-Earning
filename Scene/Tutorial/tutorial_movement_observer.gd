@@ -33,7 +33,7 @@ func _physics_process(delta: float) -> void:
 	var parent_id: int = hero.get_parent().get_instance_id()
 	var relocated := parent_id != _parent_id or not displacement.is_equal_approx(hero.get_position_delta())
 	_parent_id = parent_id
-	var intent := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	var intent: Vector2 = hero.input_direction()
 	var walking: bool = not hero.is_dead and not hero.is_hurt and not hero.is_attacking and not hero.is_casting_skill \
 		and not hero.is_invincible and not hero.has_meta("_stun_lock_count") and hero.is_physics_processing()
 	if hero.get("intro_active") == true or hero.get("guarding") == true:

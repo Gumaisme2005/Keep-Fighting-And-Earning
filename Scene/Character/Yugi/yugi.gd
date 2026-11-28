@@ -132,10 +132,10 @@ func _physics_process(delta: float) -> void:
 		f = GameManager.replay_frames[replay_frame_idx]
 		replay_frame_idx += 1
 	else:
-		var input_direction := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+		var input_direction := input_direction()
 		var aim := get_aim_world_position() - global_position
 		f = {"dx": input_direction.x, "dy": input_direction.y, "ax": aim.x, "ay": aim.y,
-			"shift": Input.is_physical_key_pressed(KEY_SHIFT), "lp": pressed_left, "lr": released_left,
+			"shift": input_shift(), "lp": pressed_left, "lr": released_left,
 			"rp": pressed_right, "rr": released_right, "q": pending_q_skill, "slot": pending_hotbar_slot,
 			"result": special_rng.randi_range(1, 5) if pending_q_skill and can_use_skill else 0}
 		if not is_training():

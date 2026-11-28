@@ -20,6 +20,7 @@ var _consumed: Dictionary = {}
 var _effects: Dictionary = {}
 var _clearing: bool = false
 var _owned_hero: WeakRef
+var input_adapter: RefCounted
 var input_enabled: bool = true
 var _building: bool = false
 signal local_feedback(method: StringName, arguments: Array)

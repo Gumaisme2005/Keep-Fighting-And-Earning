@@ -1,5 +1,11 @@
 extends Node
 
+signal hall_dungeon_requested(hero: Node2D, run: int, request: int)
+signal hall_dungeon_handoff(hero: Node2D, world: Node, run: int, request: int, success: bool)
+var hall_tutorial_visit: int = -1
+var _hall_request_serial: int = 0
+var _hall_request_pending: bool = false
+
 signal seed_changed(new_seed: String)
 signal stats_updated(level: int, kills: int)
 signal saved_data_changed()
@@ -259,28 +265,46 @@ func is_in_guild_hall() -> bool:
 ## Action Replay luôn bắt đầu ở tầng 1 (start_action_replay mở thẳng world.tscn), nên bộ ghi thao tác được xoá tại đây:
 ## những bước đi trong sảnh không lọt vào bản ghi và không làm replay lệch nhịp.
 func enter_dungeon_from_hall(hero: Node2D = null) -> bool:
-	if is_replaying:
+	if is_replaying or _hall_request_pending:
 		return false
 	if hero == null or not is_instance_valid(hero):
 		hero = _find_hero()
-	if hero == null or hero.get("is_dead") == true:
+	if hero == null or hero.is_queued_for_deletion() or hero.get("is_dead") == true \
+		or hero.get_meta("_tutorial_input_leased", false) == true \
+		or (hero.has_method("is_training") and hero.is_training()):
 		return false
 	if sanitize_seed(current_seed).is_empty():
 		current_seed = generate_random_seed()
 	hall_selecting = false
 	current_recording_frames.clear()
 	register_level_advance(1)   # tầng 1 + cập nhật HUD + lưu ví ngay (xuống hầm ngục = chuyển tầng)
-	call_deferred("_swap_to_dungeon", hero)
+	_hall_request_serial += 1
+	_hall_request_pending = true
+	hall_dungeon_requested.emit(hero, run_id, _hall_request_serial)
+	call_deferred("_swap_to_dungeon", hero, run_id, _hall_request_serial)
 	return true
 
-func _swap_to_dungeon(hero: Node2D) -> void:
-	if not is_instance_valid(hero):
+func _swap_to_dungeon(hero: Node2D, expected_run: int, request: int) -> void:
+	if not is_instance_valid(hero) or hero.is_queued_for_deletion() or hero.get("is_dead") == true or run_id != expected_run or is_replaying:
+		_hall_request_pending = false
+		hall_dungeon_handoff.emit(hero if is_instance_valid(hero) else null, null, expected_run, request, false)
 		return
 	var tree := get_tree()
 	tree.paused = false
 	var old_scene := tree.current_scene
-	var world: Node = load(DUNGEON_SCENE).instantiate()
+	var packed := load(DUNGEON_SCENE) as PackedScene
+	if packed == null:
+		_hall_request_pending = false
+		hall_dungeon_handoff.emit(hero, null, expected_run, request, false)
+		return
+	var world: Node = packed.instantiate()
 	var gen: Node = world.get_node_or_null("TileMap")
+	if gen == null or not gen.has_signal("entities_initialized"):
+		world.free()
+		_hall_request_pending = false
+		hall_dungeon_handoff.emit(hero, null, expected_run, request, false)
+		return
+	gen.entities_initialized.connect(_finish_hall_handoff.bind(weakref(hero), weakref(world), expected_run, request), CONNECT_ONE_SHOT)
 	if hero.get_parent() != null:
 		hero.get_parent().remove_child(hero)
 	hero.name = "Player"
@@ -307,13 +331,26 @@ func _swap_to_dungeon(hero: Node2D) -> void:
 	tree.call_group_flags(SceneTree.GROUP_CALL_DEFERRED, "game_ui", "_connect_to_player_and_map")
 	tree.call_group_flags(SceneTree.GROUP_CALL_DEFERRED, "game_ui", "show_banner", "ENTERING THE DUNGEON - FLOOR 1", Color(0.55, 0.9, 1.0))
 
+## Emitted only after the production spawner has placed the existing hero.
+func _finish_hall_handoff(hero_ref: WeakRef, world_ref: WeakRef, expected_run: int, request: int) -> void:
+	var hero = hero_ref.get_ref()
+	var world = world_ref.get_ref()
+	_hall_request_pending = false
+	var success: bool = is_instance_valid(hero) and is_instance_valid(world) and get_tree().current_scene == world \
+		and run_id == expected_run and not is_replaying and world.is_ancestor_of(hero)
+	if success:
+		for camera in hero.find_children("*", "Camera2D", true, false):
+			camera.reset_smoothing()
+	hall_dungeon_handoff.emit(hero, world, expected_run, request, success)
+
 ## Run mới bắt đầu ở Guild Hall, màn "Chọn nhân vật" (giống Soul Knight): sảnh nhìn toàn cảnh, bấm vào một anh hùng
 ## để xem chỉ số / cách chơi, BẮT ĐẦU để điều khiển người đó ngay trong sảnh, rồi đi qua thanh kiếm rune xuống hầm ngục.
 ## Thay cho màn chọn nhân vật cũ (Scene/UI/CharacterSelect.tscn).
-func start_run_in_hall(seed_str: String = "") -> void:
+func start_run_in_hall(seed_str: String = "", offer_tutorial: bool = false) -> void:
 	start_new_run(seed_str if not seed_str.is_empty() else current_seed, false, [])
 	hall_selecting = true
 	hall_select_session += 1
+	hall_tutorial_visit = hall_select_session if offer_tutorial else -1
 	get_tree().paused = false
 	get_tree().change_scene_to_file(GUILD_HALL_SCENE)
 
@@ -347,6 +384,8 @@ func generate_random_seed() -> String:
 	return result
 
 func start_new_run(custom_seed: String = "", replay_mode: bool = false, frames_to_replay: Array = []) -> void:
+	_hall_request_pending = false
+	hall_tutorial_visit = -1
 	var safe_custom := sanitize_seed(custom_seed)
 	if not safe_custom.is_empty():
 		current_seed = safe_custom

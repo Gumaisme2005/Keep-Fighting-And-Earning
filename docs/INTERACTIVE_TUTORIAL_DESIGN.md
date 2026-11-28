@@ -1,8 +1,9 @@
-# Interactive Tutorial — Tasks 1–3
+# Interactive Tutorial — Tasks 1–4
 
-Task 1 below records the foundation and its original verification. Tasks 2 and 3
-implement movement/combat and inventory/survival respectively. Guild Hall UI,
-production input/focus integration and persistence remain designed only.
+Tasks 1-3 below retain their historical architecture and verification records.
+Task 4 installs the optional Guild Hall host, private Tutorial UI, exclusive
+input ownership, completion persistence and actual dungeon-handoff observation.
+The Task 4 section supersedes earlier "designed only" integration statements.
 
 ## Scope and repository audit
 
@@ -791,3 +792,484 @@ consent/skip/restart UI, independent tutorial persistence and Rune Portal handof
 Dungeon entry remains optional. **NOT VERIFIED:** manual graphical feedback,
 controls/focus behavior and full production UI integration. No Task 4 code is
 installed by this feature.
+
+
+## Task 4 - Guild Hall integration, UI and completion
+
+### Audit and scope
+
+Audit date: 2026-11-28 (client timezone Asia/Saigon). The working branch began
+clean at Task 3 `75a793f8acf6970779eb03acb8bb46b2446c0327`; Tasks 1-3 remain
+ancestors. Fetched development remains `43dc122edfdad13c22640a938378254b207e4140`.
+No applicable AGENTS.md exists on this branch or its filesystem ancestors.
+Full Task 3 [CI 46103387459](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/46103387459)
+completed SUCCESS at that exact Task 3 SHA. Issue #62 is still open, assigned to
+Bravee9, with no comments. Open PR #104 concerns Orc regression; #77/#78/#80
+concern BT3. No competing Tutorial PR was found. No issue, PR or external comment
+was changed. The separate FPS/UI branch remains unmerged at `1121564b`.
+Its settings, menus, balance and HUD changes were reviewed for overlap; this
+feature does not implement or import that branch's settings or redesigns.
+
+Source audit covered the session dispatch/source/fact contracts, all Tutorial
+contexts/tests and historical design records; hero physics, pending/custom input,
+owned effects and timers; Guild Hall spawn/place/select/fade/camera lifecycle;
+NPC shop/portal inheritance; GameUI inventory and modal handlers, InventorySlot,
+HeroSelectUI, PortalConfirmUI, UITheme, pixel font/theme resources, pause and Game
+Over menus; project display/input settings; GameManager deferred scene handoff;
+and DungeonSpawner's real first-room placement and entity initialization.
+The initial seven-step framework and its event semantics are preserved.
+
+### Host and player flow - IMPLEMENTED
+
+`guild_tutorial_host.gd` is a hall child, never an autoload or GameManager state
+machine. Main Menu and Game Over's new-champion action call
+`start_run_in_hall(seed, true)` to arm one selected hall visit. The optional
+`offer_tutorial` argument defaults to false, preserving existing one-argument
+API/fixture behavior. `start_new_run()` clears a stale visit token. The hall
+consumes that visit identity; after `start_with_hero()` it attaches one host. The host waits
+for selection removal, StartFade removal, a living production hero, Yugi's intro
+completion, window focus, and absence of pause/shop/inventory/portal transitions.
+Standalone editor/test halls do not arm this feature; fixtures explicitly call
+`enable_tutorial_feature()`.
+
+The first full regression exposed an unintended auto-invitation in the existing
+Hall Select fixture (62/63 assertions). That fixture intentionally exercises the
+legacy one-argument entry API. The explicit production opt-in above fixes the
+integration boundary without changing its assertions or disabling normal portal
+behavior. Both production menu edits are single call-site arguments, with no
+settings or menu redesign; these call sites may overlap the separate FPS/UI branch.
+
+A first-time player sees Welcome, Adventurer / Start Tutorial / Not Now. Consent
+creates no clone. Not Now returns control without creating a session or saving
+completion. An invitation appears only once per visit. A small Adventurer Training
+button in the hall offers manual replay, including to a completed player. Starting
+again cancels the old pending generation; restarting does not reset the run.
+
+Start owns one TutorialSession and TutorialFlow. The flow retains sole ownership
+of its private contexts. Its new `context_changed` signal supplies a fresh viewport,
+hero and inventory to presentation; the old context is destroyed before the new
+clone exists. Successful practice ends at ACTIVE/DUNGEON_ENTRY, destroys all
+practice state, and returns the same original hero to normal hall control.
+The player then chooses Rune Portal E, confirms the existing modal and travels
+through the existing animation. Training never unlocks or automatically uses the
+portal. Skipping/declining never blocks the dungeon or awards anything.
+
+### Exclusive input and suspension - IMPLEMENTED
+
+`tutorial_input_lease.gd` records only process modes, CanvasLayer visibility,
+previous GUI focus and mouse mode. It disables the hall's production descendants,
+including independently ALWAYS-processing menus, HUD, NPCs, hero timers/effects,
+and nodes added during the lease. It hides production CanvasLayers. It never
+copies or restores stats, inventory, Wallet, RNG, run seed, perks or replay data.
+Cooldown signal callbacks already check `can_process()`.
+
+The eight heroes now use BasePlayer polling helpers. Outside a managed practice
+context these delegate to the original global Input calls. A managed clone uses
+`tutorial_input_adapter.gd`: world mouse input is armed only by arena GUI events;
+UI/inventory clicks cannot become a global-polled attack. Keyboard input reaches
+the clone through the host only after GUI processing. Its native input callbacks
+and those of practice items are disabled. Release events clear world holds even
+over UI. Movement and Shift polling share the same authority. Q instructions read
+InputMap; BasePlayer accepts the actual skill_1 action. The adapter normalizes
+interact into WorldItem's existing E handler after matching the real binding.
+
+`gameplay_timer()` creates an owned Timer for existing hero waits with the same
+idle/physics clock and normal ALWAYS pause policy. This lets the lease freeze an
+already-running production cast/invulnerability/Olaf buff; disabling only the hero
+would leave an unowned SceneTreeTimer running. Training timers inherit practice
+processing. No cooldown, damage, duration or potion value is changed.
+
+The raw hero-skill and seven-step end-to-end traces expose one scheduling difference
+against the retained Task 3 evidence: Pyrois's charge contact has `physics_age=20` instead of 19 after
+the owned Timer conversion (one 60 Hz physics tick). Its configured duration is
+unchanged and the original skill assertions still pass. Raw ages are retained in
+30/144 comparisons; no normalization, assertion removal or timing-field filtering
+is used to hide this difference. Human review of charge feel remains a Task 5
+acceptance check.
+
+Escape closes consent or opens Tutorial pause. Restart and Skip use confirmation;
+Resume waits for neutral controls. Focus loss pauses practice and clears pending
+input; focus return requires explicit Resume. No Tutorial action changes the
+SceneTree pause state or unpauses another system. All exits wait for two neutral
+physics samples before restoring production processing; held attack/Q/hotbar/
+movement/Shift/gadget input cannot fire on restoration. If the host is removed
+with held controls, a bounded-by-scene release guard owns the lease until neutral
+or hall teardown. Queued/dead/removed heroes are not given new input authority.
+
+### Practice presentation and UI - IMPLEMENTED
+
+`tutorial_arena_presentation.gd` adds deterministic floor/rug art from the existing
+Guild Hall assets, four collision boundaries and a real training dummy. It disables
+clone cameras and frames the full 640x400 arena. Exceptional gadget displacement
+outside the bounds is recovered locally and cannot count as verified walking.
+The active combat objective has a gold marker; items and the red hazard retain
+their real gameplay visuals. No production RNG or enemy/reward path is used.
+
+`tutorial_ui.gd` builds the same kind of script-driven pixel interface used by
+existing shop/selection UIs. It uses forge5vn, the existing pixel panel/button
+textures, dark panels and bronze/gold accents. Header, step 1-8, confirmed progress,
+hero-specific Q instructions, local damage/heal/toast/progress feedback, live
+HP/armor/damage/Q/potion status, 16 practice bag slots, three equipment slots,
+bounded tooltips and Skip/Restart/Pause controls belong only to practice.
+The UI never submits progression events and has no Next button.
+
+Bag click uses the guarded production equip/consume API, right-click drops only
+into the private world; equipment click unequips. Dragging within the bag swaps
+slots, dragging to matching equipment equips, and equipment-to-bag calls the
+unequip API rather than editing dictionaries. Cross-UI drag origins are rejected.
+Context rebinding disconnects feedback and removes old inventory/viewport references.
+
+A 960x600 logical layout fits the current canvas_items / expand display policy at
+1280x720 (the project override), 1366x768 and 1920x1080. There is no configured
+minimum window size. Arena mapping inverts the UI transform, its aspect-preserving
+content rectangle and the SubViewport canvas transform. Real mouse events update
+aim before hero physics; letterboxed/outside/UI points cannot arm world attacks.
+No FPS/resolution settings or production HUD/menu redesign is included.
+
+### Recovery and lifecycle - IMPLEMENTED
+
+The always-visible Restart / Recover control explains that it creates a fresh
+practice lesson. This is the explicit recovery route for a deleted target/hazard,
+full bag, lost/dropped gear or potions, wrong gadget mode, depleted resource or
+unexpected death. No unlimited production items or fabricated progress are added.
+Dropped armor keeps its original fact and can be collected/equipped again;
+unequipped armor can be re-equipped normally. Cooldowns and guards remain real.
+A full-HP potion attempt does not count; the existing real hazard can create a
+safe deficit again after healing. Death cancels, destroys practice and restores
+the hall; manual replay then creates a fresh lesson with one starter potion.
+
+Skip/cancel/restart/scene exit/hero replacement/UI deletion revoke authority and
+clean private effects. Child UI destruction defers cancellation because its
+parent may already be removing children. Root completion tickets use queued
+deletion during hall teardown to avoid editing a locked root child list.
+
+### Actual dungeon completion - IMPLEMENTED
+
+GameManager emits a generic request identity when it accepts hall entry. Acceptance
+and teleport_started never complete the Tutorial. It connects to the generator's
+`entities_initialized` signal before adding the new world. The signal follows the
+actual production spawner: layout exists, entities are initialized and the existing
+hero is placed at the first-room center. GameManager then reports the scene handoff
+and resets the existing hero camera smoothing. Invalid/dead/queued/stale-run heroes
+are rejected, duplicate pending requests are rejected, and practice clones cannot
+request a production transition.
+
+`tutorial_dungeon_observer.gd` is a root-level transient ticket registered only for
+`dungeon_entered`. It captures session generation, original hero, hall, run ID and
+seed. It survives hall removal only for its pending request. Success requires the
+matching request/run/session, non-replay original hero, current `world.tscn`, exact
+hero ownership by TileMap, floor 1, initialized entities and actual first-room
+placement. Only then does the session complete once and persistence run. A failed
+handoff never submits success or saves completion; a valid hall can retry. Stale
+hero/run/session/replay/scene changes cancel authority. A pending ticket has a
+45-second failure timeout, never a timer-based success inference.
+
+### Persistence - IMPLEMENTED
+
+`user://tutorial_progress.json` is independent of run history, replay and Wallet:
+
+```json
+{"schema_version":1,"tutorial_version":1,"completed":true}
+```
+
+Reads are bounded to 4096 bytes, validate JSON, numeric supported versions and a
+strict boolean completion field, and tolerate missing/corrupt/truncated/unsupported
+saves. Completion writes a sibling .tmp, flushes/closes and renames it over the
+small completion file. A failed open/flush/replacement returns false with a real
+error; no production save is deleted. Completion remains in memory and dungeon
+play continues. Existing valid completion avoids duplicate writes, including
+another instance on the game's main thread. This is safe replacement, not a claim
+of power-loss durability or a general multiprocess transaction system.
+
+Not Now, Skip, death and cancellation never save completion. Replay/restart cannot
+clear earlier completion. A fresh game loads completion and suppresses automatic
+invitation; manual training remains available. Partial sessions are not resumed.
+
+### Verification policy and provenance
+
+Six new suites cover hall, UI, input isolation, recovery, persistence and actual
+dungeon entry. They use real production heroes that demonstrably walk before
+suspension, real selected hero scenes, actual input/physics contacts and guarded
+UI inventory actions. Full-flow tests never submit synthetic progression events.
+Snapshots detect production hero/inventory/equipment/vitals/cooldowns/run/seed/
+Wallet/perks/RNG/replay/save-file changes during practice; they are not runtime
+restore code. Legitimate production wallet/replay work at dungeon entry is checked
+separately from Tutorial completion writes.
+
+Each runner invocation has a fresh copied project, and every suite/FPS job now
+has its own disposable profile. This prevents a 30 FPS completion save from changing
+the 144 FPS first-time fixture. Windows graphical profiles use short unique temp
+paths to avoid GLES shader-cache MAX_PATH failures; profile.json records ownership.
+No real user save is used. Source manifests hash functional source, resource UID,
+test, runner, workflow and project configuration files. Historical docs and ignored
+logs/screenshots are excluded from that functional fingerprint.
+
+Missing suite/dependency, nonzero exit, engine/script errors, assertions, timeout,
+missing/duplicate markers, missing required semantic evidence, empty traces and
+30/144 trace mismatch fail the gate. Hall/input/dungeon suites must supply all
+eight hero evidence rows; dungeon traces must include request, actual handoff and
+completion/persistence. Existing Tasks 1-3 raw trace contracts remain unchanged.
+
+Executed final-source results, graphical evidence and remaining limitations are
+recorded below after the gates complete. Task 5 is limited to acceptance/polish,
+manual review and PR preparation; it is not implemented by Task 4.
+
+
+Task 4 input audit follow-up: a manually forwarded E must stop after selecting
+one nearest eligible WorldItem. Otherwise the first queued-for-deletion item can
+make a second item nearest during the same dispatch. The host now chooses one
+candidate and stops; the recovery suite verifies overlapping sources through a
+real E event, without changing WorldItem's existing nearest-selection rules.
+Hero replacement does not restore the old hero's processing. A lease also revokes
+its SceneTree node-added connection after its hall/host disappears; the held-input
+teardown test verifies late nodes are suspended and that the lease is freed.
+
+Graphical fixtures restore/show/focus their own game window before captures and
+request a real rendered frame explicitly. They do not await frame_post_draw
+indefinitely when an OS-covered/minimized window stops drawing. Focus recovery
+uses the real window focus event and an explicit Resume, then neutral physics
+samples; it never forces the product's input-authority flag or unpauses the tree.
+
+
+Tutorial inventory slots explicitly opt out of native tooltip popups; production
+slots retain their normal tooltip behavior. The local tooltip holds only a weak
+slot identity and an item instance ID, closes when that item leaves/changes or
+when the context changes, and filters unsupported pixel-font glyphs. This prevents
+stale item details from an earlier lesson/hero appearing over a fresh arena.
+
+
+### Task 4 executed graphical verification
+
+**VERIFIED (GUI-assisted, actual rendering):** final-source invocation
+`run-zn52n9_u`, Godot 4.7.2, OpenGL 3.3 compatibility renderer on NVIDIA GeForce
+GTX 1650. Import, UI (99 assertions) and actual dungeon flow (282 assertions)
+all returned exit 0 with zero detected engine/script errors. This is not a
+headless result or a claim of human exploratory testing.
+
+The UI gate renders/captures 1280x720 (also the project default), 1366x768 and
+1920x1080, checks frame/slot/tooltip bounds and mouse transforms, and exercises
+controls and teardown. All eight heroes complete selection, consent, actual
+walking/basic/Q, viewport handoff, pickup, real UI equip/potion clicks, survival,
+portal open/Cancel/Confirm/animation, real floor-1 handoff and completion.
+Inventory/equipment/HP/max HP/Wallet/history/perks are checked across handoff;
+real dungeon walking and production input recording continue afterward.
+Failed persistence, a failed deferred transition, and Skip followed by a normal
+portal transition are separate negative cases, not positive full-flow rows.
+
+Each hero has consent/arena/inventory screenshots, retained only in the disposable
+profile, plus resolution captures from the UI suite. `run-zn52n9_u/profile.json`
+records the short Windows profile locations; image files are under that profile's
+Godot app_userdata/Tutorial Verification run-zn52n9_u/tutorial_captures folder.
+Final images were visually inspected for hierarchy/readability, target visibility,
+private gadget HUD and tooltip cleanup (including Yugi and Doraemon). No screenshot,
+video, cache or save profile is committed.
+
+**NOT VERIFIED by a human:** unstructured play through every optional gadget and
+charged action, every OS/DPI/multi-monitor/fullscreen combination, manual cold-app
+relaunch with a real returning-player profile, read-only media or power-loss tests.
+Save reload/default invitation policy and IO failure handling have automated
+coverage; those statements do not claim hardware failure durability.
+
+Task 5 acceptance checklist: human playtest all eight heroes (especially
+Yugi/Doraemon/Miyabi/Luong Tho), hold/release buttons over inventory and modals,
+resize/focus loss during casts and handoffs, unusual gadget/guard/healing order,
+Skip/Restart/death/UI or scene teardown, cold launch after completion, portal retry
+and normal dungeon combat. Review pixel glyphs, tooltip placement and prompts at
+supported sizes, then perform release regression and prepare a PR only when
+explicitly requested. No Task 5 implementation or PR is included here.
+
+### Task 4 eight-hero integration coverage
+
+**VERIFIED:** each row completed the entire real eight-step GUI-assisted flow in
+`run-zn52n9_u` on the frozen functional source. No row is inferred from another
+hero. Headless 30/144 results are recorded separately below. Full flow includes
+actual selection/consent, movement, basic contact, representative Q, private
+pickup/equip, hazard/armor regeneration, a real UI potion click, return to the
+original hero, portal Cancel/Confirm/animation, actual dungeon handoff, completion
+and cleanup. Optional gadget/charged-action exploration by a human remains NOT
+VERIFIED.
+
+| Hero index / name | Host | Movement / combat | Practice inventory | Representative skill | Full eight-step flow | Cleanup | Result |
+|---|---|---|---|---|---|---|---|
+| 0 Miya | PASS | PASS | PASS | Orthanc Fire PASS | PASS | PASS | PASS |
+| 1 Olaf | PASS | PASS | PASS | Durin's Wrath PASS | PASS | PASS | PASS |
+| 2 Pyrois | PASS | PASS | PASS | Sovereign Rush PASS | PASS | PASS | PASS |
+| 3 Charlotte | PASS | PASS | PASS | Triple Flurry PASS | PASS | PASS | PASS |
+| 4 Yugi / Atem | PASS | PASS | PASS | Special Summon PASS | PASS | PASS | PASS |
+| 5 Doraemon | PASS | PASS | PASS | Friends PASS | PASS | PASS | PASS |
+| 6 Hoshimi Miyabi | PASS | PASS | PASS | Frost Bloom PASS | PASS | PASS | PASS |
+| 7 Luong Tho | PASS | PASS | PASS | White Moon PASS | PASS | PASS | PASS |
+
+### Task 4 changed-file manifest
+
+All 62 files below belong to this feature. UID companions identify their new Godot scripts; scene companions execute the named suite. No Assets, project settings, balance, BT3, user saves, screenshots, logs or imported caches are staged.
+
+| File | Purpose |
+|---|---|
+| `.github/workflows/ci.yml` | Execute all six new suites at both FPS rates; preserve prior jobs. |
+| `Menu/game over menu/game_over_menu.gd` | Pass explicit tutorial opt-in on new-champion entry. |
+| `Menu/main menu/main_menu.gd` | Pass explicit tutorial opt-in on new-run entry. |
+| `Scene/Character/BasePlayer.gd` | Shared input adapter helpers, remapped Q, owned suspendable gameplay timers. |
+| `Scene/Character/Doraemon/doraemon.gd` | Use inherited authoritative input/owned timer helpers; keep hero values and behavior. |
+| `Scene/Character/LuongTho/luong_tho.gd` | Use inherited authoritative input/owned timer helpers; keep hero values and behavior. |
+| `Scene/Character/Miyabi/miyabi.gd` | Use inherited authoritative input/owned timer helpers; keep hero values and behavior. |
+| `Scene/Character/Player 1_Pyrois/player.gd` | Use inherited authoritative input/owned timer helpers; keep hero values and behavior. |
+| `Scene/Character/Player 2_Olaf/player_2.gd` | Use inherited authoritative input/owned timer helpers; keep hero values and behavior. |
+| `Scene/Character/Player 3_Miya/player_3.gd` | Use inherited authoritative input/owned timer helpers; keep hero values and behavior. |
+| `Scene/Character/Player 4_Charlotte/player_4.gd` | Use inherited authoritative input/owned timer helpers; keep hero values and behavior. |
+| `Scene/Character/Yugi/yugi.gd` | Use inherited authoritative input/owned timer helpers; keep hero values and behavior. |
+| `Scene/GameManager.gd` | Opt-in visit identity and generic verified dungeon request/handoff signals. |
+| `Scene/Map/GuildHall/guild_hall.gd` | Attach one optional host after real selection; standalone halls remain opt-in. |
+| `Scene/Map/dungeon_generator.gd` | Report successful production entity initialization. |
+| `Scene/Tutorial/guild_tutorial_host.gd` | Consent, lifecycle, exclusive authority, recovery and real-entry observation. |
+| `Scene/Tutorial/guild_tutorial_host.gd.uid` | Stable Godot UID companion for the named new script. |
+| `Scene/Tutorial/training_target.gd` | Emit private contact damage feedback. |
+| `Scene/Tutorial/tutorial_arena_presentation.gd` | Private arena art, bounds, camera and objective marker. |
+| `Scene/Tutorial/tutorial_arena_presentation.gd.uid` | Stable Godot UID companion for the named new script. |
+| `Scene/Tutorial/tutorial_content.gd` | Step instructions, actual bindings and hero-specific skill text. |
+| `Scene/Tutorial/tutorial_content.gd.uid` | Stable Godot UID companion for the named new script. |
+| `Scene/Tutorial/tutorial_dungeon_observer.gd` | Bounded original-hero/run/session completion ticket. |
+| `Scene/Tutorial/tutorial_dungeon_observer.gd.uid` | Stable Godot UID companion for the named new script. |
+| `Scene/Tutorial/tutorial_flow.gd` | Publish context rebinding; retain sole context ownership through practice. |
+| `Scene/Tutorial/tutorial_input_adapter.gd` | Gate polling and separate arena mouse input from UI clicks. |
+| `Scene/Tutorial/tutorial_input_adapter.gd.uid` | Stable Godot UID companion for the named new script. |
+| `Scene/Tutorial/tutorial_input_lease.gd` | Suspend/restore production processing, UI visibility and focus only. |
+| `Scene/Tutorial/tutorial_input_lease.gd.uid` | Stable Godot UID companion for the named new script. |
+| `Scene/Tutorial/tutorial_movement_observer.gd` | Observe the same authoritative movement input as the hero. |
+| `Scene/Tutorial/tutorial_persistence.gd` | Separate versioned completion save with safe replacement and IO failure handling. |
+| `Scene/Tutorial/tutorial_persistence.gd.uid` | Stable Godot UID companion for the named new script. |
+| `Scene/Tutorial/tutorial_release_guard.gd` | Keep input suspended during held-input host teardown until safe release. |
+| `Scene/Tutorial/tutorial_release_guard.gd.uid` | Stable Godot UID companion for the named new script. |
+| `Scene/Tutorial/tutorial_training_context.gd` | Optional managed input adapter; legacy fixtures remain supported. |
+| `Scene/Tutorial/tutorial_ui.gd` | Independent responsive practice interface and guarded inventory controls. |
+| `Scene/Tutorial/tutorial_ui.gd.uid` | Stable Godot UID companion for the named new script. |
+| `Scene/UI/InventorySlot.gd` | Optional custom-tooltip hook; default production tooltip remains intact. |
+| `docs/INTERACTIVE_TUTORIAL_DESIGN.md` | Architecture, evidence, provenance, limitations and Task 5 acceptance proposal. |
+| `run_tests.bat` | Include the new integration suites in local verification. |
+| `tests/run_tutorial_verification.py` | Fail-closed evidence, per-job disposable profiles, source hashes, GUI capture. |
+| `tests/test_tutorial_dungeon_entry.gd` | Real host/input/UI/lifecycle/persistence/portal verification for the named suite. |
+| `tests/test_tutorial_dungeon_entry.gd.uid` | Stable Godot UID companion for the named new script. |
+| `tests/test_tutorial_dungeon_entry.tscn` | Executable integration-test scene for the named suite. |
+| `tests/test_tutorial_hall_integration.gd` | Real host/input/UI/lifecycle/persistence/portal verification for the named suite. |
+| `tests/test_tutorial_hall_integration.gd.uid` | Stable Godot UID companion for the named new script. |
+| `tests/test_tutorial_hall_integration.tscn` | Executable integration-test scene for the named suite. |
+| `tests/test_tutorial_input_isolation.gd` | Real host/input/UI/lifecycle/persistence/portal verification for the named suite. |
+| `tests/test_tutorial_input_isolation.gd.uid` | Stable Godot UID companion for the named new script. |
+| `tests/test_tutorial_input_isolation.tscn` | Executable integration-test scene for the named suite. |
+| `tests/test_tutorial_persistence.gd` | Real host/input/UI/lifecycle/persistence/portal verification for the named suite. |
+| `tests/test_tutorial_persistence.gd.uid` | Stable Godot UID companion for the named new script. |
+| `tests/test_tutorial_persistence.tscn` | Executable integration-test scene for the named suite. |
+| `tests/test_tutorial_recovery.gd` | Real host/input/UI/lifecycle/persistence/portal verification for the named suite. |
+| `tests/test_tutorial_recovery.gd.uid` | Stable Godot UID companion for the named new script. |
+| `tests/test_tutorial_recovery.tscn` | Executable integration-test scene for the named suite. |
+| `tests/test_tutorial_runner.py` | Negative runner contracts and required per-hero evidence. |
+| `tests/test_tutorial_ui.gd` | Real host/input/UI/lifecycle/persistence/portal verification for the named suite. |
+| `tests/test_tutorial_ui.gd.uid` | Stable Godot UID companion for the named new script. |
+| `tests/test_tutorial_ui.tscn` | Executable integration-test scene for the named suite. |
+| `tests/tutorial_hall_test_support.gd` | Disposable real Hall/hero fixtures, actual UI inputs, isolation snapshots and full-flow driver. |
+| `tests/tutorial_hall_test_support.gd.uid` | Stable Godot UID companion for the named new script. |
+
+Potential conflicts with the separate FPS/UI branch are BasePlayer and the two menu entry call sites. InventorySlot also has a narrow shared hook. GameUI, Pause Menu, SettingsManager, CharacterSelect scenes and project.godot are unchanged in this task. Existing TutorialSession/Steps/framework contracts and existing regression assertions are unchanged.
+
+### Task 4 executed final-source gates
+
+**VERIFIED:** all final groups below completed on the same frozen functional source:
+`026f6ca1a998947e866b9969f195f09cfd088e19ade4a731582f30b17ca02548` (595 files). Current source and each copied project were compared with that manifest; 593 copied functional files match per invocation, accounting for the documented copied project display name and Windows newline normalization in that copied configuration. Docs were updated afterward and are excluded from this functional hash. All 91 Godot jobs (86 suite executions plus five imports) returned exit 0, with zero detected engine/script errors and all required completion/evidence markers. The 21 Python runner contract tests also passed.
+
+| Group | Retained invocation | Executed gate | Result |
+|---|---|---|---|
+| task1_3 | `run-mhwizi0c` | Framework at 144; seven gameplay suites at 30/144 | PASS / exit 0 / errors 0 |
+| task4 | `run-bd12mdtz` | Six new integration suites at 30/144 | PASS / exit 0 / errors 0 |
+| existing144 | `run-x8s16dsa` | All 43 existing regression suites at 144 | PASS / exit 0 / errors 0 |
+| existing30 | `run-9s73u7aj` | All 14 existing CI cross-FPS groups at 30 | PASS / exit 0 / errors 0 |
+| graphical | `run-zn52n9_u` | Actual UI and all-eight-hero dungeon flow at 144 | PASS / exit 0 / errors 0 |
+
+The rejected development Hall Select run was fixed by explicit production opt-in, preserving its original assertions. A subsequent smoke import (`run-7medjx4b`) returned exit 0 but emitted RID/texture cleanup errors and was rejected before any suites ran. Its fresh rerun and every final import above are clean; the failed import is not counted as PASS. Final Hall Select is 63/63. No final-source suite failure is waived.
+
+| Tutorial suite | 30 FPS PASS | 144 FPS PASS | Raw trace pair |
+|---|---:|---:|---|
+| `test_tutorial_framework` | not scheduled (framework) | 56 | not a gameplay trace gate |
+| `test_tutorial_movement` | 27 | 27 | MATCH |
+| `test_tutorial_combat` | 98 | 98 | MATCH |
+| `test_tutorial_hero_skills` | 115 | 115 | MATCH |
+| `test_tutorial_inventory` | 33 | 33 | MATCH |
+| `test_tutorial_survival` | 57 | 57 | MATCH |
+| `test_tutorial_inventory_isolation` | 100 | 100 | MATCH |
+| `test_tutorial_end_to_end` | 92 | 92 | MATCH |
+| `test_tutorial_hall_integration` | 82 | 82 | MATCH |
+| `test_tutorial_ui` | 94 | 94 | MATCH |
+| `test_tutorial_input_isolation` | 135 | 135 | MATCH |
+| `test_tutorial_persistence` | 17 | 17 | MATCH |
+| `test_tutorial_recovery` | 35 | 35 | MATCH |
+| `test_tutorial_dungeon_entry` | 252 | 252 | MATCH |
+
+All 13 Tutorial raw trace pairs match and remain nonempty. Historical Task 3 trace fields/assertions are retained; the one-tick Pyrois owned-Timer scheduling change is explicitly documented above. No runtime or parser normalization removes physics ages.
+
+| Existing suite (144 FPS) | PASS evidence | Exit | Errors |
+|---|---|---:|---:|
+| `test_dungeon_generator_unit` | 28 | 0 | 0 |
+| `test_dungeon_properties` | 11 | 0 | 0 |
+| `test_orc_battle` | 5 | 0 | 0 |
+| `benchmark_dungeon_generator` | benchmark completion marker | 0 | 0 |
+| `test_skeleton_king` | 22 | 0 | 0 |
+| `test_doraemon` | 49 | 0 | 0 |
+| `test_yugi` | YUGI TESTS PASSED | 0 | 0 |
+| `test_werewolf` | 50 | 0 | 0 |
+| `test_moba_hud_and_inventory` | 223 | 0 | 0 |
+| `test_miyabi` | 18 | 0 | 0 |
+| `test_luong_tho` | 15 | 0 | 0 |
+| `test_projectile_obstacles` | 11 | 0 | 0 |
+| `test_archer_combat_lifecycle` | 12 | 0 | 0 |
+| `test_enemy_tactics` | 94 | 0 | 0 |
+| `test_orc_tactical_ai` | 82 | 0 | 0 |
+| `test_archer_tactical_ai` | 120 | 0 | 0 |
+| `test_enemy_ai_integration` | 48 | 0 | 0 |
+| `test_replay_security` | 39 | 0 | 0 |
+| `test_potion_system` | 132 | 0 | 0 |
+| `test_defensive_combat_balance` | 232 | 0 | 0 |
+| `test_equipment_loot_perk_balance` | 430 | 0 | 0 |
+| `test_enemy_floor_balance` | 1053 | 0 | 0 |
+| `test_issue75_development_integration` | 73 | 0 | 0 |
+| `test_bug_bash_regressions` | 43 | 0 | 0 |
+| `test_issue75_progression_balance` | 42327 | 0 | 0 |
+| `test_issue75_acceptance` | 61 | 0 | 0 |
+| `test_issue75_combat_pacing` | 337 | 0 | 0 |
+| `test_issue75_acquisition` | 162 | 0 | 0 |
+| `test_tactical_navigation_contract` | 49 | 0 | 0 |
+| `test_tactical_base_enemy_integration` | 49 | 0 | 0 |
+| `test_coins` | 38 | 0 | 0 |
+| `test_guild_hall` | 89 | 0 | 0 |
+| `test_hall_select` | 63 | 0 | 0 |
+| `test_rune_portal` | 73 | 0 | 0 |
+| `test_shop` | 52 | 0 | 0 |
+| `test_mage_shop` | 33 | 0 | 0 |
+| `test_potion_shop` | 19 | 0 | 0 |
+| `test_wallet` | 47 | 0 | 0 |
+| `test_wandering_merchant` | 56 | 0 | 0 |
+| `test_main_menu_modals` | 151 | 0 | 0 |
+| `test_yugi_audio` | 49 | 0 | 0 |
+| `test_hero_sfx` | 33 | 0 | 0 |
+| `test_perk_system` | 41 | 0 | 0 |
+
+| Existing CI group (30 / 144 FPS) | Both PASS | Trace lines per FPS | Required semantic comparison |
+|---|---|---:|---|
+| `test_orc_tactical_ai` | PASS | 1 | MATCH |
+| `test_archer_tactical_ai` | PASS | 1 | MATCH |
+| `test_enemy_ai_integration` | PASS | 1 | MATCH |
+| `test_defensive_combat_balance` | PASS | 1 | MATCH |
+| `test_equipment_loot_perk_balance` | PASS | 1 | MATCH |
+| `test_enemy_floor_balance` | PASS | 1 | MATCH |
+| `test_issue75_development_integration` | PASS | 1 | MATCH |
+| `test_bug_bash_regressions` | PASS | 0 | no trace contract in existing CI |
+| `test_issue75_progression_balance` | PASS | 2 | MATCH |
+| `test_issue75_acceptance` | PASS | 1 | MATCH |
+| `test_issue75_combat_pacing` | PASS | 1 | MATCH |
+| `test_issue75_acquisition` | PASS | 53 | MATCH |
+| `test_tactical_navigation_contract` | PASS | 1 | MATCH |
+| `test_tactical_base_enemy_integration` | PASS | 0 | no trace contract in existing CI |
+
+All 12 required existing trace pairs match. Bug-bash and tactical-base-enemy execute at both rates but have no existing trace comparison requirement. Final regression uses these exact invocations, not evidence captured before the last integration fix.
+
+Reproduction uses the committed runner with Godot 4.7.2: run every Tutorial row above with `--cross-fps --suites ...`; run the 43 listed existing suites with `--fps 144`, and the 14 listed CI groups with `--fps 30`. GUI evidence is reproduced by `python tests/run_tutorial_verification.py --godot <engine> --graphical --capture --suites test_tutorial_ui test_tutorial_dungeon_entry`. Python contracts: `python -m unittest discover -s tests -p "test_*runner.py"`. `source_manifest.json`, `results.json`, per-suite logs and profile ownership remain under each ignored evidence directory.
+
+Graphical final evidence contains 29 retained PNGs (five UI captures and consent/arena/inventory for each of eight heroes). The final 1920x1080 layout and Yugi inventory/Doraemon arena images were visually inspected after the last functional fix; prior resolution inspections are supplemented by the final responsive assertions. No generated evidence is committed. Human exploratory play, a cold application restart with a real returning profile, unusual DPI/multi-monitor/fullscreen cases, read-only media and power-loss durability remain NOT VERIFIED as described in the Task 5 acceptance checklist.
