@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>[#SPK-12] [Combat] Enemy deals damage before the attack animation becomes visible</title>
+    <meta http-equiv="Content-Type" Content="application/vnd.ms-word; charset=UTF-8">
+        <style type="text/css">
+
+.tableBorder, .grid
+{
+    background-color: #fff;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tableBorder td, .grid td
+{
+    vertical-align: top;
+    padding: 2px;
+    border: 1px solid #ccc;
+}
+
+.noPadding
+{
+    padding: 0 !important;
+}
+
+h3 .subText
+{
+    font-size: 60%;
+    font-weight: normal;
+}
+
+.tabLabel
+{
+    font-weight: bold;
+    border: 1px solid #ccc;
+    border-bottom:none;
+    padding: 2px;
+    display: inline;
+}
+
+td.blank
+{
+    padding: 0;
+    margin: 0;
+}
+
+.blank td
+{
+    border: none;
+}
+
+#descriptionArea
+{
+    margin: 0;
+    padding: 2px;
+    border: 1px solid #ccc;
+}
+
+hr
+{
+    border-top:1px solid #aaa;
+}
+
+hr.fullcontent
+{
+  height: 15px;
+  padding: 10px 0;
+  background: #fff url('https://lengocbaonguyen622.atlassian.net/images/icons/hr.gif') no-repeat scroll center;
+}
+
+</style>
+
+</head>
+<body>
+
+<table class="tableBorder" cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td bgcolor="#f0f0f0" width="100%" colspan="2" valign="top">
+                            <h3 class="formtitle">
+                        [SPK-12]&nbsp;<a href="https://lengocbaonguyen622.atlassian.net/browse/SPK-12">[Combat] Enemy deals damage before the attack animation becomes visible</a>
+            <span class="subText">
+               Created: 28/Nov/26                   &nbsp;Updated: 28/Nov/26
+
+                                            </span>
+            </h3>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%"><b>Status:</b></td>
+        <td width="80%">To Do</td>
+    </tr>
+    <tr>
+        <td width="20%"><b>Project:</b></td>
+        <td width="80%"><a href="https://lengocbaonguyen622.atlassian.net/secure/BrowseProject.jspa?id=10072">SE_Project_K2026</a></td>
+    </tr>
+
+        <tr>
+            <td><b>Components:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+
+        <tr>
+            <td><b>Affects versions:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+
+        <tr>
+            <td><b>Fix versions:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+    
+    </table>
+
+<br />
+<table class="grid" cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td bgcolor="#f0f0f0" valign="top" width="20%">
+            <b>Type:</b>
+        </td>
+        <td bgcolor="#ffffff" valign="top"  width="30%" >
+            Bug
+        </td>
+
+                    <td bgcolor="#f0f0f0">
+                <b>Priority:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" nowrap>
+                Low
+            </td>
+            </tr>
+    <tr>
+                        <td bgcolor="#f0f0f0" valign="top" width="20%">
+                <b>Reporter:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top"  width="30%" >
+                                        
+                
+        
+            <a class="user-hover" rel="712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                id="word_reporter_712020:eb99c4f8-79be-40c7-b727-b6f526e38ae2"
+                href="https://lengocbaonguyen622.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3Aeb99c4f8-79be-40c7-b727-b6f526e38ae2">
+                    Lê Ngọc Bảo Nguyễn
+                </a>
+
+                            </td>
+        
+                    <td bgcolor="#f0f0f0" width="20%">
+                <b>Assignee:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" nowrap  width="30%" >
+                                    Unassigned
+                            </td>
+            </tr>
+    	<tr>
+		<td bgcolor="#f0f0f0" width="20%">
+			<b>Resolution:</b>
+		</td>
+		<td bgcolor="#ffffff" valign="top" width="30%" nowrap>
+            				Unresolved
+                    </td>
+                    <td bgcolor="#f0f0f0" width="20%">
+                <b>Votes:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" width="30%" nowrap>
+                0
+            </td>
+        
+    </tr>
+    
+        <tr>
+        <td bgcolor="#f0f0f0" width="20%">
+            <b>Labels:</b>
+        </td>
+        <td id="labels-10135-value" class="value" bgcolor="#ffffff" valign="top" colspan="3" nowrap>
+                            None
+                    </td>
+    </tr>
+    
+    	<tr>
+        		<td bgcolor="#f0f0f0" width="20%"><b>Remaining Estimate:</b></td>
+        <td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+    </tr>
+    <tr>
+                <td bgcolor="#f0f0f0" width="20%"><b>Time Spent:</b></td>
+		<td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+	</tr>
+    <tr>
+                <td bgcolor="#f0f0f0" width="20%"><b>Original estimate:</b></td>
+		<td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+    </tr>
+    
+    </table>
+
+
+
+    <br />
+
+    	<table class="grid" cellpadding="0" cellspacing="0" border="0" width="100%">
+            
+
+                <tr>
+            <td bgcolor="#f0f0f0" width=20% valign=top>
+                <b>Attachments:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top">
+                                    <img src="https://lengocbaonguyen622.atlassian.net/images/icons/attach/file.gif" height="16" width="16" border="0" alt="File">
+                    # [Combat] Enemy deals damage before the attack animation becomes visible.mp4 &nbsp;&nbsp;&nbsp;
+                            </td>
+        </tr>
+        
+    
+
+
+    
+                        <tr>
+                <td bgcolor="#f0f0f0" width="20%" valign="top"><b>Start date:</b></td>
+                <td id="customfield_10015-10135-value" class="value" bgcolor="#ffffff" width="80%">          <span title="28/Nov/26"><time datetime="2026-11-28">28/Nov/26</time></span>
+    </td>
+            </tr>
+                                <tr>
+                <td bgcolor="#f0f0f0" width="20%" valign="top"><b>Rank:</b></td>
+                <td id="customfield_10019-10135-value" class="value" bgcolor="#ffffff" width="80%">      0|i000de:
+  </td>
+            </tr>
+            </table>
+
+    <br/>
+
+    <table cellpadding="2" cellspacing="0" border="0" width="100%" align="center">
+    <tr>
+        <td bgcolor="#bbbbbb" width="1%" nowrap align="center">
+            &nbsp;<font color="#ffffff"><b>Description</b></font>&nbsp;
+        </td>
+        <td>&nbsp;</td>
+    </tr>
+    </table>
+
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td id="descriptionArea">
+            <p><b>Bug Type:</b> Functional / Combat / Animation Synchronization</p>
+
+<p><b>Priority:</b> High</p>
+
+<p><b>Preconditions:</b></p>
+
+<ul>
+	<li>Game is running.</li>
+	<li>Doraemon is selected as the playable character.</li>
+	<li>The player enters an active combat room containing melee enemies equipped with axes.</li>
+	<li>The enemies are alive and able to attack.</li>
+	<li>No temporary damage immunity or invincibility frames are active.</li>
+</ul>
+
+
+<p><b>Steps to Reproduce:</b></p>
+
+<ol>
+	<li>Start the game and select Doraemon.</li>
+	<li>Enter a combat room containing axe-wielding melee enemies.</li>
+	<li>Approach an enemy and remain within its melee attack range.</li>
+	<li>Observe the enemy's attack animation.</li>
+	<li>Monitor Doraemon's HP/armor and the damage numbers.</li>
+	<li>Compare the moment damage is applied with the visible attack animation.</li>
+	<li>Repeat the test several times to confirm the timing inconsistency.</li>
+</ol>
+
+
+<p><b>Expected Result:</b></p>
+
+<ul>
+	<li>The enemy starts its attack animation before the attack deals damage.</li>
+	<li>Damage is applied only when the attack reaches its intended impact frame.</li>
+	<li>The attack hitbox is synchronized with the visual attack animation.</li>
+	<li>The player has a fair opportunity to react to the attack.</li>
+</ul>
+
+
+<p><b>Actual Result:</b></p>
+
+<ul>
+	<li>Doraemon receives damage before the corresponding attack animation becomes clearly visible.</li>
+	<li>Damage indicators showing <tt>-2</tt> appear while the enemy has not visibly completed the expected attack movement.</li>
+	<li>The timing of damage application appears inconsistent with the attack animation.</li>
+	<li>The issue can occur repeatedly during close-range combat.</li>
+</ul>
+
+
+<p><b>Test Case Result:</b></p>
+
+<ul>
+	<li><b>FAIL</b></li>
+	<li><b>Testing Type:</b> Exploratory / Combat Testing.</li>
+	<li><b>Related Test Cases:</b> TC-EN-01, TC-EN-02, TC-EN-05, TC-EN-11.</li>
+	<li><b>Regression Testing:</b> Required after fixing the animation and hitbox timing.</li>
+</ul>
+
+
+<p><b>Notes:</b></p>
+
+<ul>
+	<li>The issue may be caused by attack collision shapes becoming active too early.</li>
+	<li>Source code inspection indicates that the Orc and Armored Orc attack functions enable their melee hitboxes immediately after starting the attack animation.</li>
+	<li>Verify whether the hitbox activation should be delayed until the corresponding impact frame.</li>
+	<li>Test Orc and Armored Orc separately to identify the affected enemy type.</li>
+	<li>Check both normal and rage attacks where applicable.</li>
+	<li>Check whether multiple overlapping enemies contribute to the observed damage.</li>
+	<li>Verify that damage is not caused by another enemy or an unrelated effect.</li>
+	<li>Test attack timing with different playable characters.</li>
+	<li>Ensure that fixing the issue does not affect attack speed, cooldown, or intended damage.</li>
+</ul>
+
+
+<p><b>Status:</b> To Do</p>
+            <br/>
+        </td>
+    </tr>
+    </table>
+
+Generated at Sat Nov 28 05:06:05 UTC 2026 by Lê Ngọc Bảo Nguyễn using Jira 1001.0.0-SNAPSHOT#100297-rev:b98c7080b2b5bfa1670476e0715f746ffa0c3df0.
+
+</body>
+</html>
