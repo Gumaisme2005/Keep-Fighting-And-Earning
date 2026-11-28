@@ -18,7 +18,9 @@ from run_issue75_acceptance import analyze_output
 
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / '.godot' / 'tutorial_verification'
-TRACE_SUITES = {'test_tutorial_movement', 'test_tutorial_combat', 'test_tutorial_hero_skills'}
+TRACE_SUITES = {'test_tutorial_movement', 'test_tutorial_combat', 'test_tutorial_hero_skills',
+                'test_tutorial_inventory', 'test_tutorial_survival',
+                'test_tutorial_inventory_isolation', 'test_tutorial_end_to_end'}
 MARKERS = {'test_tutorial_framework': '[TUTORIAL_FRAMEWORK_COMPLETE]',
            **{name: '[TUTORIAL_' + name.removeprefix('test_tutorial_').upper() + '_COMPLETE]'
               for name in TRACE_SUITES}}

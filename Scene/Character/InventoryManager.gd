@@ -10,6 +10,14 @@ const MAX_POTION_UNITS: int = 4
 var bag: Array[ItemData] = []
 var last_add_remaining: int = 0
 
+func _practice_owner() -> Node:
+	var actor := get_parent()
+	return actor if actor != null and actor.has_method("is_training") and actor.is_training() else null
+
+func _practice_mutation_allowed() -> bool:
+	var actor := _practice_owner()
+	return actor == null or actor.training_context.inventory_mutation_allowed(actor)
+
 # Quản lý Đa hình ô trang bị bằng Dictionary (Data-Driven Equipment Slots)
 var equipment: Dictionary = {
 	ItemData.ItemType.HELMET: null,
@@ -80,6 +88,8 @@ func is_full() -> bool:
 
 ## Hoán đổi vị trí giữa 2 ô bất kỳ trong Balo (hỗ trợ sắp xếp đồ & kéo thả Drag-and-Drop)
 func swap_slots(from_index: int, to_index: int) -> bool:
+	if not _practice_mutation_allowed():
+		return false
 	_ensure_bag_size()
 	if from_index < 0 or from_index >= max_slots or to_index < 0 or to_index >= max_slots:
 		return false
@@ -104,10 +114,17 @@ func get_potion_count() -> int:
 # File-backed definitions are templates and must never have their quantity mutated.
 func add_item(item: ItemData, count: int = -1) -> bool:
 	last_add_remaining = count if count >= 0 else (item.stack_count if item != null else 0)
+	if not _practice_mutation_allowed():
+		return false
 	if item == null or bag.has(item) or equipment.values().has(item):
 		return false
+	var practice := _practice_owner()
+	if item.has_meta("practice_context") and (practice == null or item.get_meta("practice_context") != practice.training_context.get_instance_id()):
+		return false
 	if not item.resource_path.is_empty():
-		item = item.duplicate()
+		item = item.duplicate(practice != null)
+	if practice != null:
+		item.set_meta("practice_context", practice.training_context.get_instance_id())
 	var total_count: int = count if count >= 0 else item.stack_count
 	if total_count <= 0:
 		return false
@@ -132,7 +149,7 @@ func add_item(item: ItemData, count: int = -1) -> bool:
 		var empty_idx: int = get_first_empty_slot()
 		if empty_idx == -1:
 			break
-		var new_item: ItemData = item.duplicate()
+		var new_item: ItemData = item.duplicate(practice != null)
 		var stack_amt: int = mini(remaining_count, max_stack)
 		new_item.stack_count = stack_amt
 		bag[empty_idx] = new_item
@@ -148,6 +165,11 @@ func add_item(item: ItemData, count: int = -1) -> bool:
 func use_or_equip_item(index: int, player: Node2D, menu_potion: bool = false) -> void:
 	if player == null or not is_instance_valid(player) or player.get("is_dead") == true:
 		return
+	var owner_actor := _practice_owner()
+	var actor_training: bool = player.has_method("is_training") and player.is_training()
+	if owner_actor != null or actor_training:
+		if player != owner_actor or player.is_queued_for_deletion() or not _practice_mutation_allowed():
+			return
 	_ensure_bag_size()
 	if index < 0 or index >= max_slots:
 		print("[INVENTORY] Hotkey slot ", index + 1, " is out of bounds.")
@@ -157,12 +179,16 @@ func use_or_equip_item(index: int, player: Node2D, menu_potion: bool = false) ->
 	if item == null:
 		print("[INVENTORY] Hotkey slot ", index + 1, " is empty.")
 		return
+	var observer: Node = owner_actor.training_context if owner_actor != null else null
+	var transaction: int = observer.begin_inventory_action(player, self, index) if observer != null and observer.has_method("begin_inventory_action") else -1
 
 	if item.type == ItemData.ItemType.POTION:
 		if not is_instance_valid(player) or not player.has_method("consume_potion"):
 			return
 		var consumed: bool = player.consume_potion_from_menu(item.heal_amount, item.max_hp_bonus) if menu_potion and player.has_method("consume_potion_from_menu") else player.consume_potion(item.heal_amount, item.max_hp_bonus)
 		if not consumed:
+			if transaction >= 0:
+				observer.commit_inventory_action(transaction, player, self)
 			return
 		item.stack_count -= 1
 		if item.stack_count <= 0:
@@ -179,9 +205,14 @@ func use_or_equip_item(index: int, player: Node2D, menu_potion: bool = false) ->
 		equipment_changed.emit()
 
 	inventory_changed.emit()
+	# The potion stack and equipment callbacks are committed before observation.
+	if transaction >= 0:
+		observer.commit_inventory_action(transaction, player, self)
 
 # 3. THÁO ĐỒ VÀO TÚI (TỔNG QUÁT THEO LOẠI TRANG BỊ)
 func unequip_item(type: ItemData.ItemType) -> void:
+	if not _practice_mutation_allowed():
+		return
 	_ensure_bag_size()
 	var empty_idx: int = get_first_empty_slot()
 	if empty_idx == -1:
@@ -197,6 +228,8 @@ func unequip_item(type: ItemData.ItemType) -> void:
 
 # 4. VỨT ĐỒ RA SÀN / XÓA KHỎI TÚI (ITEM DROP)
 func drop_item(index: int, drop_all: bool = false, drop_world_pos: Vector2 = Vector2.ZERO, spawn_world_item: Variant = null) -> bool:
+	if not _practice_mutation_allowed():
+		return false
 	_ensure_bag_size()
 	if index < 0 or index >= max_slots:
 		return false
@@ -211,6 +244,16 @@ func drop_item(index: int, drop_all: bool = false, drop_world_pos: Vector2 = Vec
 	var should_spawn: bool = bool(spawn_world_item) if spawn_world_item != null else (drop_world_pos != Vector2.ZERO)
 	# Sinh vật thể WorldItem rơi trên sàn nếu có yêu cầu
 	if WORLD_ITEM_SCENE != null and should_spawn:
+		var owner_actor := _practice_owner()
+		if owner_actor != null:
+			if owner_actor.training_context.has_method("spawn_practice_drop"):
+				var practice_data: ItemData = item.duplicate(true)
+				practice_data.stack_count = drop_amt
+				owner_actor.training_context.spawn_practice_drop(practice_data, drop_world_pos)
+			if item.stack_count <= 0:
+				bag[index] = null
+			inventory_changed.emit()
+			return true
 		var parent_scene = get_tree().current_scene if get_tree() != null else null
 		if parent_scene != null:
 			var world_item = WORLD_ITEM_SCENE.instantiate()

@@ -21,6 +21,17 @@ func gameplay_manager() -> Node:
 func gameplay_perks() -> Node:
 	return null if is_training() else get_node_or_null("/root/PerkManager")
 
+func gameplay_feedback(method: StringName, arguments: Array) -> void:
+	if is_training():
+		training_context.feedback(method, arguments)
+	elif get_tree() != null:
+		get_tree().callv("call_group", [&"game_ui", method] + arguments)
+
+func clear_training_input() -> void:
+	pending_hotbar_slot = -1
+	pending_q_skill = false
+	pending_rmb_skill = false
+
 func training_action(kind: StringName) -> void:
 	if is_training():
 		training_context.begin_action(self, kind)
@@ -139,11 +150,15 @@ func _ready() -> void:
 	regen_delay_timer = Timer.new()
 	regen_delay_timer.one_shot = true
 	regen_delay_timer.wait_time = armor_regen_delay
+	if is_training():
+		regen_delay_timer.process_callback = Timer.TIMER_PROCESS_PHYSICS
 	regen_delay_timer.timeout.connect(_start_armor_regen)
 	add_child(regen_delay_timer)
 
 	regen_tick_timer = Timer.new()
 	regen_tick_timer.wait_time = armor_regen_rate
+	if is_training():
+		regen_tick_timer.process_callback = Timer.TIMER_PROCESS_PHYSICS
 	regen_tick_timer.timeout.connect(_regen_one_armor)
 	add_child(regen_tick_timer)
 
@@ -240,7 +255,7 @@ func _physics_process(delta: float) -> void:
 			# Replay recording concluded
 			gm.is_replaying = false
 			if get_tree():
-				get_tree().call_group("game_ui", "show_banner", "COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6))
+				gameplay_feedback(&"show_banner", ["COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6)])
 	else:
 		direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 		current_aim_offset = get_aim_world_position() - global_position
@@ -365,9 +380,9 @@ func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	# Retain the legacy single popup for a non-piercing overflow hit. A piercing
 	# hit can lose HP while retaining armor, so show both real components there.
 	if absorbed > 0 and (piercing > 0 or actual_hp_lost == 0):
-		get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -24), absorbed, Color(0.3, 0.8, 1.0))
+		gameplay_feedback(&"spawn_damage_number", [global_position + Vector2(0, -24), absorbed, Color(0.3, 0.8, 1.0)])
 	if actual_hp_lost > 0:
-		get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -24), actual_hp_lost, Color(1.0, 0.25, 0.25))
+		gameplay_feedback(&"spawn_damage_number", [global_position + Vector2(0, -24), actual_hp_lost, Color(1.0, 0.25, 0.25)])
 
 	if had_armor and current_armor == 0:
 		_trigger_armor_break_blast()
@@ -391,8 +406,8 @@ func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 			current_armor = max_armor
 			stats_changed.emit(hp, max_hp, current_armor, max_armor)
 			if get_tree():
-				get_tree().call_group("game_ui", "show_banner", "IMMORTAL WILL - REVIVED!", Color(1.0, 0.85, 0.2))
-				get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -32), hp, Color(1.0, 0.85, 0.2))
+				gameplay_feedback(&"show_banner", ["IMMORTAL WILL - REVIVED!", Color(1.0, 0.85, 0.2)])
+				gameplay_feedback(&"spawn_damage_number", [global_position + Vector2(0, -32), hp, Color(1.0, 0.85, 0.2)])
 			var revive_inv_dur: float = PerkManager.get_second_chance_invincibility_duration() if PerkManager.has_method("get_second_chance_invincibility_duration") else 2.5
 			start_invincibility(revive_inv_dur)
 			return
@@ -411,6 +426,9 @@ func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 
 			if has_node("PlayerHurtbox/CollisionShape2D"):
 				$PlayerHurtbox/CollisionShape2D.set_deferred("disabled", true)
+			if is_training():
+				training_context.on_practice_death(self)
+				return
 
 			await get_tree().create_timer(2.0).timeout
 			if not is_inside_tree():
@@ -424,11 +442,13 @@ func start_invincibility(duration_override: float = -1.0) -> void:
 	var my_gen := _hurt_invincible_gen
 	if animated_sprite != null:
 		var tween = create_tween()
+		if is_training():
+			tween.set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 		tween.set_loops(maxi(1, int(round(duration / 0.15))))
 		tween.tween_property(animated_sprite, "modulate:a", 0.3, 0.075)
 		tween.tween_property(animated_sprite, "modulate:a", 1.0, 0.075)
 
-	await get_tree().create_timer(duration).timeout
+	await get_tree().create_timer(duration, true, is_training()).timeout
 	if not is_instance_valid(self) or not is_inside_tree() or my_gen != _hurt_invincible_gen:
 		return
 	_hurt_invincible = false
@@ -459,12 +479,12 @@ func reset_potion_progression() -> void:
 
 # Skill healing (e.g. Doraemon's food) is independent of potion inventory/cooldown.
 func restore_health(amount: int) -> void:
-	if is_dead:
+	if is_dead or is_queued_for_deletion():
 		return
 	var old_hp := hp
 	hp = clampi(hp + maxi(0, amount), 0, max_hp)
 	if get_tree() and hp > old_hp:
-		get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -24), hp - old_hp, Color(0.3, 1.0, 0.4))
+		gameplay_feedback(&"spawn_damage_number", [global_position + Vector2(0, -24), hp - old_hp, Color(0.3, 1.0, 0.4)])
 	stats_changed.emit(hp, max_hp, current_armor, max_armor)
 
 func consume_potion(heal_amount: int, bonus_max_hp: int) -> bool:
@@ -627,7 +647,7 @@ func apply_on_hit_effects(target: Variant, in_damage: int) -> int:
 			var raw_crit: float = float(in_damage) * mult
 			final_dmg = PerkManagerScript.resolve_stochastic_damage(raw_crit)
 			if get_tree():
-				get_tree().call_group("game_ui", "spawn_damage_number", target.global_position + Vector2(0, -28), final_dmg, Color(1.0, 0.85, 0.1))
+				gameplay_feedback(&"spawn_damage_number", [target.global_position + Vector2(0, -28), final_dmg, Color(1.0, 0.85, 0.1)])
 
 	# 2. Burn On Hit
 	if pm.has_burn_on_hit():
@@ -738,6 +758,7 @@ func _exit_tree() -> void:
 
 func _is_defensive_target_valid(target: Node) -> bool:
 	return is_instance_valid(target) and target is Node2D and target != self \
+		and (not is_training() or target.get_world_2d() == get_world_2d()) \
 		and target.is_inside_tree() and not target.is_queued_for_deletion() \
 		and not target.is_in_group("player") and target.get("is_dead") != true \
 		and target.get("is_active") != false and target.has_method("take_damage")
@@ -843,7 +864,7 @@ func _trigger_armor_break_blast() -> void:
 		return
 	armor_break_cooldown_remaining = float(config.cooldown)
 	_sync_defensive_run_state()
-	get_tree().call_group("game_ui", "show_banner", "AEGIS SHATTERED - SHOCKWAVE!", Color(0.6, 0.3, 0.9))
+	gameplay_feedback(&"show_banner", ["AEGIS SHATTERED - SHOCKWAVE!", Color(0.6, 0.3, 0.9)])
 	for target in _get_defensive_targets(float(config.radius)):
 		var push := (target.global_position - global_position).normalized() * 180.0
 		_queue_defensive_damage(target, int(config.damage), push)

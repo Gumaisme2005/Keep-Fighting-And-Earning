@@ -95,6 +95,11 @@ var air_shot_range: float = 190.0
 
 var pending_page: int = 0
 var pending_eat: bool = false
+
+func clear_training_input() -> void:
+	super.clear_training_input()
+	pending_page = 0
+	pending_eat = false
 var rng := RandomNumberGenerator.new()
 
 var _cast_move: String = ""
@@ -205,7 +210,7 @@ func _physics_process(delta: float) -> void:
 		else:
 			gm.is_replaying = false
 			if get_tree():
-				get_tree().call_group("game_ui", "show_banner", "COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6))
+				gameplay_feedback(&"show_banner", ["COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6)])
 	else:
 		var dir_in := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 		var aim := get_aim_world_position() - global_position
@@ -374,7 +379,7 @@ func _use(move: String) -> void:
 	var info: Array = MOVES[move]
 	if power < float(info[5]):
 		if get_tree():
-			get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -30), int(info[5]), Color(0.5, 0.7, 1.0))
+			gameplay_feedback(&"spawn_damage_number", [global_position + Vector2(0, -30), int(info[5]), Color(0.5, 0.7, 1.0)])
 		cooldowns[move] = 0.5
 		return
 	_cast_aim = current_aim_offset
@@ -658,7 +663,7 @@ func _mantle_counter(amount: int) -> void:
 		_fx("mantle_wave", Util.hit_point(t), 0.9, false, 0.3)
 		Util.hit(self, t, amount * 2)
 	if get_tree():
-		get_tree().call_group("game_ui", "spawn_damage_number", global_position + Vector2(0, -30), amount * 2, Color(1.0, 0.5, 0.8))
+		gameplay_feedback(&"spawn_damage_number", [global_position + Vector2(0, -30), amount * 2, Color(1.0, 0.5, 0.8)])
 
 # ------------------------------------------------------------------ Q: friends & supers
 func _on_q() -> void:
@@ -717,7 +722,7 @@ func _start_super(sup: String) -> void:
 		_cast_bars = clampi(int(power / BAR), 1, 3)
 	power -= BAR * _cast_bars
 	if get_tree():
-		get_tree().call_group("game_ui", "show_banner", "DORAEMON SUPER — " + String(info[0]).to_upper(), Color(0.45, 0.8, 1.0))
+		gameplay_feedback(&"show_banner", ["DORAEMON SUPER — " + String(info[0]).to_upper(), Color(0.45, 0.8, 1.0)])
 	match sup:
 		"uradoraman":
 			_enter_mode("uradora_dash", {"dir": _aim_dir()})

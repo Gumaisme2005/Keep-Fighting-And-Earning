@@ -6,7 +6,8 @@ import sys
 from pathlib import Path
 import tempfile
 
-from run_tutorial_verification import inspect_result, run_process, main, prepare, compare_traces
+from run_tutorial_verification import inspect_result, run_process, main, prepare, compare_traces, MARKERS
+import json
 
 
 class TutorialRunnerTests(unittest.TestCase):
@@ -73,6 +74,44 @@ class TutorialRunnerTests(unittest.TestCase):
         self.assertTrue(compare_traces(['[TRACE] verified'], ['[TRACE] verified']))
         for first, second in [(None, None), ([], []), (['hit'], []), (['hit'], ['miss'])]:
             self.assertFalse(compare_traces(first, second))
+
+    def test_new_suites_require_their_own_completion_marker(self):
+        for suite in ('test_tutorial_inventory', 'test_tutorial_survival',
+                      'test_tutorial_inventory_isolation', 'test_tutorial_end_to_end'):
+            good = 'TEST RESULTS: 3 PASSED, 0 FAILED\n' + MARKERS[suite] + '\n'
+            self.assertTrue(inspect_result(suite, good, 0)['ok'])
+            for bad in (self.GOOD, good + MARKERS[suite], good.replace('0 FAILED', '1 FAILED')):
+                self.assertFalse(inspect_result(suite, bad, 0)['ok'])
+
+    def test_new_suites_run_both_rates_and_fail_on_empty_or_different_trace(self):
+        for trace_mode in ('match', 'empty', 'different'):
+            with self.subTest(trace_mode=trace_mode), tempfile.TemporaryDirectory() as folder:
+                root = Path(folder)
+                (root / 'tests').mkdir()
+                suite = 'test_tutorial_end_to_end'
+                (root / 'tests' / (suite + '.gd')).write_text('extends Node')
+                invocation = root / 'invocation'
+                invocation.mkdir()
+                seen_rates = []
+
+                def execute(command, env, timeout):
+                    if '--editor' in command:
+                        return '', 0
+                    fps = int(command[command.index('--max-fps') + 1])
+                    seen_rates.append(fps)
+                    trace = '' if trace_mode == 'empty' else '[TRACE] ' + ('stable' if trace_mode == 'match' else str(fps)) + '\n'
+                    return trace + 'TEST RESULTS: 3 PASSED, 0 FAILED\n' + MARKERS[suite] + '\n', 0
+
+                with patch('run_tutorial_verification.ROOT', root), \
+                        patch('run_tutorial_verification.prepare', return_value=invocation), \
+                        patch('run_tutorial_verification.run_process', side_effect=execute), \
+                        patch.object(sys, 'argv', ['runner', '--godot', 'godot', '--cross-fps', '--suites', suite]), \
+                        patch('sys.stdout'):
+                    code = main()
+                self.assertEqual(seen_rates, [30, 144])
+                self.assertEqual(code, 0 if trace_mode == 'match' else 1)
+                evidence = json.loads((invocation / 'results.json').read_text())
+                self.assertEqual(evidence['comparisons'][0]['trace_match'], trace_mode == 'match')
 
     def test_deleted_asset_cannot_be_resurrected_from_import_cache(self):
         with tempfile.TemporaryDirectory() as folder:

@@ -1,8 +1,8 @@
-# Interactive Tutorial — Tasks 1–2
+# Interactive Tutorial — Tasks 1–3
 
-Task 1 below records the foundation and its original verification. The Task 2
-section supersedes the movement/combat roadmap; Guild Hall UI, inventory/survival
-training and persistence remain designed only.
+Task 1 below records the foundation and its original verification. Tasks 2 and 3
+implement movement/combat and inventory/survival respectively. Guild Hall UI,
+production input/focus integration and persistence remain designed only.
 
 ## Scope and repository audit
 
@@ -493,10 +493,301 @@ The feature changes 49 source/configuration/documentation files:
 | `test_hero_sfx` | PASS (33); exit 0; errors 0 |
 | `test_perk_system` | PASS (41); exit 0; errors 0 |
 
-**DESIGNED ONLY:** Task 3 starts a separate isolated inventory/survival context at
-PICKUP_ITEM. Task 4 owns display/input mapping for the practice viewport, suspends
+Task 3 now implements the separate inventory/survival context described below.
+**DESIGNED ONLY:** Task 4 owns display/input mapping for the practice viewport, suspends
 the run hero while it has input focus, offers opt-in/skip/restart, and adds separate
 tutorial persistence. It must preserve optional dungeon entry and coordinate
 handoff/teardown. No automatic production hall integration is installed here.
 Task 5 covers UI polish and manual graphical playtests, including wind-up, sprite
 feedback and controls. Those graphical/manual checks are **NOT VERIFIED** here.
+
+## Task 3 — inventory and survival architecture
+
+**IMPLEMENTED:** `tutorial_flow.gd` is an explicit opt-in coordinator, not an
+autoload or hall integration. It binds an ACTIVE session after start returns.
+Steps 0-2 use the existing combat context. At PICKUP_ITEM it immediately revokes
+input/event acceptance and defers disposal and source binding. The entire old
+viewport/hero/effects is freed before a fresh production hero is instantiated in
+`tutorial_inventory_context.gd`. No combat buff, transformed form, summon or
+projectile crosses this boundary; session progress remains in TutorialSession.
+Registration never occurs during synchronous session notification dispatch.
+
+The inventory context reuses the Task 2 arena ownership/lifecycle factory and
+implements four restricted event contracts. It never accepts the run hero.
+`training_hazard.gd` supplies an Area2D physics overlap and controlled damage.
+The eight step IDs, session state machine and movement/combat contracts are
+unchanged. A standalone combat context still ends at PICKUP_ITEM, preserving
+Task 2 callers; callers requesting the full seven-step flow use TutorialFlow.
+
+`set_input_enabled(bool)` is a host boundary: acceptance is revoked immediately,
+while process/collision changes are deferred safely outside physics callbacks.
+It clears pending hotbar/Q/RMB input, Yugi mouse/hold/guard state and Doraemon
+page/eat input. Task 4 must manage production focus,
+run-hero suspension and held-input release around this API. No production focus
+or global-input interception is installed by this task.
+
+### Practice items and committed inventory evidence
+
+The normal lesson uses deterministic `ItemDatabase.get_item("common_armor")`
+(Scout Padded Cuirass: +1 armor, +0.05 attack speed), and the hero's real starter
+Common potion. No dungeon RNG selects a practice item. Runtime ItemData and
+mutable nested resources are deep duplicated. Practice context identity travels
+with item data; an inventory in another context or the production run rejects it.
+Deep duplication also protects starter AtlasTexture regions from shared mutation.
+
+The existing WorldItem scene and InventoryManager transfer path are reused:
+
+1. The hero must walk into the real item overlap and press E.
+2. Practice items join `training_world_items`, never production `world_items`.
+   Actor checks require the owning clone, current context and private world.
+3. Nearest selection considers only registered items in the same arena and
+   associated with that hero. Production nearest selection excludes other worlds
+   and other actors; distance/tie semantics remain unchanged within one world.
+4. A transfer snapshots matching bag quantity, calls production `add_item()`,
+   and commits the source remainder before observation. Accepted quantity must be
+   positive and equal the real bag delta, even when `add_item()` returns false
+   for a partial pickup. Same-name stacks may merge into an existing stack.
+5. Pickup identity persists across drop/re-pick, so one item fact cannot be farmed.
+
+Bag/equipment operations retain their production contracts. Training mutations
+require the live owning clone. Practice drops route to the private world (or are
+discarded in the standalone combat context), never `current_scene`. A context
+keeps weak ownership of its pickups and destroys externally reparented items.
+Production items are neither claimed nor cleaned up by practice.
+
+Equipment observation occurs after `equipment_changed` callbacks and the bag
+transaction. The actual claimed item must replace the correct equipment slot;
+the previous item must return to the original bag slot without duplicate
+references. Max HP, clamped armor capacity, weapon damage and attack-speed totals
+must agree with production getters. A synchronous pre-transaction damage scale
+preserves active hero buffs when checking weapon changes. Starter/unclaimed
+gear, pre-equipped gear, invalid/dead/empty operations and duplicate signals give
+no progress. Production InventorySlot still rejects wrong equipment types.
+
+### Health, armor and potion lesson
+
+The player must physically enter the hazard. The first accepted hit removes one
+armor point. If newly equipped armor capacity is empty (notably Charlotte),
+production regeneration fills it before that hit is allowed. The next accepted
+hit is current armor plus at most two HP, leaving at least one HP. Hero-specific
+guard/intro/untouchable/transformed overrides remain authoritative. A repeat hit
+from the same contact is checked against production invulnerability; a local
+physics cooldown prevents contact spam.
+
+HEALTH_AND_ARMOR requires all of: actual armor absorption, actual HP loss, a
+blocked repeated hit, and a later real armor-regeneration timer callback that
+adds one armor after the configured delay/rate. No HP assignment or forged signal
+completes this lesson. Practice regen, hurt-invulnerability timing and tween use
+physics time for controlled cross-FPS verification; production timing is retained.
+Further survival hits stop while regeneration is being learned. HP stays missing
+for the potion lesson. If skill healing fills HP, re-entering/remaining in the
+hazard creates a new safe deficit through real damage, rather than rewriting HP.
+
+Potion use runs through `InventoryManager.use_or_equip_item()` and the existing
+hero hotbar handler/consumption methods. Observation is after stack decrement and
+inventory notification, never during BasePlayer healing. It verifies a live
+owning hero with missing HP, zero previous cooldown, exact one-unit stack/total
+decrement, actual capped healing/max-HP bonus and an 8-second local cooldown.
+Skill healing, empty/full-HP/dead/queued/cooldown calls and duplicate callbacks
+cannot count as potion consumption.
+
+Production definitions remain Common 3, Rare 5, Heroic 8 (+1 max HP), Legendary
+12 (+2 max HP), max-HP growth capped at +4 per run, carry limit 4, shared cooldown
+8 seconds. Higher-tier checks are isolated regression coverage; the main lesson
+uses Common. No values, rarity, caps, balance or dungeon progression are changed.
+
+Successful potion use advances to DUNGEON_ENTRY and disposes the context/items/
+hazard/clone/resources, revoking sources. The first seven steps retain progress;
+the session remains ACTIVE with dungeon progress zero. No Rune Portal call,
+`enter_dungeon_from_hall()` call or `dungeon_entered` event is installed.
+
+### Safety audit and recovery
+
+| Reviewed risk / source | Minimal implementation |
+| --- | --- |
+| BasePlayer damage/heal, Olaf berserk and Doraemon feedback; other hero feedback | `gameplay_feedback` routes only practice calls to a context-local signal; ordinary heroes still call production `game_ui` |
+| BasePlayer death timer / Game Over / finish_run / Second Chance | Practice death calls context cancellation and returns before the Game Over timer; training manager/perk lookup remains isolated |
+| Mythic retaliation global enemy search | Training defensive targets additionally require the same World2D, including deferred target validation |
+| WorldItem player/world_items groups and nearest selection | Explicit practice ownership, actor/world checks, private candidate set and private feedback |
+| InventoryManager drop/current_scene and cross-owner use | Practice drop routing and owner/liveness checks; production paths remain available normally |
+| Mutable ItemData/icons/templates | Deep duplication, context provenance and weak pickup ownership |
+| Global Input | Explicit input-enable API; production focus integration remains Task 4 |
+| Long-session action/effect registries | Remove dead weak effect entries; expire old unreferenced facts after 30 physics seconds, retain current/pending/live-effect facts |
+| Disposable runner workspaces | Fresh project/profile per invocation; no automatic deletion, no reuse of old fixtures/saves |
+
+Unexpected practice death cancels only the tutorial session and disposes practice
+state; explicit restart creates a fresh combat hero. It does not revive/reset the
+run hero, pause the production tree, consume production Second Chance or finish
+the run. Skip/cancel/restart/hero removal/teardown revoke acceptance and destroy
+owned practice data. Deferred callbacks recheck session generation/state and
+node lifetime. Source permissions are unregistered after dispatch or cleared by
+the terminal session state. An inventory-only context does not create a combat
+arena on restart; TutorialFlow owns that phase transition.
+
+### Task 3 verification contract
+
+The four new suites are `test_tutorial_inventory`, `test_tutorial_survival`,
+`test_tutorial_inventory_isolation` and `test_tutorial_end_to_end`. Inventory-only
+fixtures explicitly prepare steps 0-2 with scoped framework events; all positive
+steps 3-6 use production gameplay. The end-to-end suite never uses those synthetic
+fixtures: all eight heroes walk, attack, use Q, hand off, pick up, equip, take
+damage/regenerate and consume a potion through actual gameplay paths.
+
+Production sentinels protect GameManager, Wallet/files, run inventory/equipment,
+vitals/max HP/potion counters, Perk RNG/state, available Second Chance, run ID,
+kill/loot/pity/seed/progression, replay/history and save bytes before/during/after.
+An active UI spy covers toast/banner/damage-number/Game Over pause, with a
+positive control proving ordinary production feedback reaches it. Practice
+damage/healing/pickup/equip/skill/death must leave it empty. A production enemy
+and world item remain alive and unchanged. Resource checks include nested
+AtlasTexture isolation and unchanged ItemDatabase templates. These snapshots
+detect leakage; production training code never restores global state to hide it.
+
+Cross-FPS traces record accepted/remainder quantities, equipment stats, armor/HP
+transitions, regeneration physics age, potion count/healing/cooldown, ordered step
+transitions, handoffs, cleanup and protected-state results. Traces must be
+nonempty and identical at 30/144 render FPS with 60 Hz physics, seed ALOALO1234
+and the same fixture inputs/items/geometry. This is not a whole-game determinism
+claim. Runner tests require each suite's own completion marker and verify that
+both render rates are actually scheduled and empty/different traces fail.
+
+### Task 3 executed final-source tutorial gates
+
+**VERIFIED:** framework 56 PASS, Python evidence/runner contracts 19 tests PASS.
+All gameplay rows below passed at both render rates with exit 0 and zero detected
+runtime/script errors, in fresh final-source invocation `run-aqnentt2`.
+
+| Suite | PASS at each FPS | Trace lines at each FPS | 30/144 |
+| --- | ---: | ---: | --- |
+| `test_tutorial_movement` | 27 | 10 | MATCH |
+| `test_tutorial_combat` | 98 | 107 | MATCH |
+| `test_tutorial_hero_skills` | 115 | 181 | MATCH |
+| `test_tutorial_inventory` | 33 | 14 | MATCH |
+| `test_tutorial_survival` | 57 | 29 | MATCH |
+| `test_tutorial_inventory_isolation` | 100 | 92 | MATCH |
+| `test_tutorial_end_to_end` | 92 | 184 | MATCH |
+
+The companion final-source 30 FPS invocation `run-l40t_ncw` passed all 14 existing
+CI regression suites. All 12 required nonempty 30/144 trace pairs match;
+bug-bash and tactical-base-enemy have no trace contract in existing CI.
+Final 144 FPS regression results follow below. Copied projects
+match the original 555-file
+source/configuration fingerprint; its canonical JSON SHA-256 is
+`09f90b1bc05cf79c8ef6755811d40c0e620bc0c238321f44dcb5243fbe2a3d37`. No behavior/configuration source has changed after this gate began.
+
+### Task 3 eight-hero support matrix
+
+| Hero | Pickup | Equip: damage / armor capacity / max HP / attack rate | Survival | Potion | Cleanup / protected state |
+| --- | --- | --- | --- | --- | --- |
+| Miya | PASS | PASS: 1 / 2 / 3 / 1.05 | PASS | PASS | PASS |
+| Olaf | PASS | PASS: 2 / 2 / 6 / 1.05 | PASS | PASS | PASS |
+| Pyrois | PASS | PASS: 1 / 5 / 4 / 1.05 | PASS | PASS | PASS |
+| Charlotte | PASS | PASS: 2 / 1 / 5 / 1.05 | PASS | PASS | PASS |
+| Yugi/Atem | PASS | PASS: 1 / 2 / 5 / 1.05 | PASS | PASS | PASS |
+| Doraemon | PASS | PASS: 1 / 3 / 5 / 1.05 | PASS | PASS | PASS |
+| Miyabi | PASS | PASS: 1 / 3 / 4 / 1.05 | PASS | PASS | PASS |
+| Luong Tho | PASS | PASS: 1 / 3 / 5 / 1.05 | PASS | PASS | PASS |
+
+### Task 3 final-source full regression
+
+All 43 existing suites PASS at 144 FPS, exit 0, zero detected runtime/script errors.
+The 30 FPS run passed all 14 existing CI suites; all 12 required nonempty trace pairs match.
+
+The main invocation was interrupted externally during progression. Completed
+jobs with directly observed exit-zero summaries were retained: 21 existing
+regression suites plus all tutorial jobs from `run-aqnentt2`. A fresh invocation
+`run-voddries` executed the remaining 22 suites, including three completed logs
+whose exit-code summaries had been lost. The partial progression attempt was
+discarded. No success or exit code was inferred for those incomplete records.
+All three copied projects and the source to commit match the same fingerprint;
+no guard, bug fix, behavior or configuration changed between these runs.
+
+| Suite | Final-source result |
+| --- | --- |
+| `test_dungeon_generator_unit` | PASS (28); exit 0; errors 0 |
+| `test_dungeon_properties` | PASS (11 properties); exit 0; errors 0 |
+| `test_orc_battle` | PASS (5 cases); exit 0; errors 0 |
+| `benchmark_dungeon_generator` | PASS (completion marker); exit 0; errors 0 |
+| `test_skeleton_king` | PASS (22); exit 0; errors 0 |
+| `test_doraemon` | PASS (49); exit 0; errors 0 |
+| `test_yugi` | PASS (completion marker); exit 0; errors 0 |
+| `test_werewolf` | PASS (50); exit 0; errors 0 |
+| `test_moba_hud_and_inventory` | PASS (223); exit 0; errors 0 |
+| `test_miyabi` | PASS (18); exit 0; errors 0 |
+| `test_luong_tho` | PASS (15); exit 0; errors 0 |
+| `test_projectile_obstacles` | PASS (11); exit 0; errors 0 |
+| `test_archer_combat_lifecycle` | PASS (12); exit 0; errors 0 |
+| `test_enemy_tactics` | PASS (94); exit 0; errors 0 |
+| `test_orc_tactical_ai` | PASS (82); exit 0; errors 0 |
+| `test_archer_tactical_ai` | PASS (120); exit 0; errors 0 |
+| `test_enemy_ai_integration` | PASS (48); exit 0; errors 0 |
+| `test_replay_security` | PASS (39); exit 0; errors 0 |
+| `test_potion_system` | PASS (132); exit 0; errors 0 |
+| `test_defensive_combat_balance` | PASS (232); exit 0; errors 0 |
+| `test_equipment_loot_perk_balance` | PASS (430); exit 0; errors 0 |
+| `test_enemy_floor_balance` | PASS (1053); exit 0; errors 0 |
+| `test_issue75_development_integration` | PASS (73); exit 0; errors 0 |
+| `test_bug_bash_regressions` | PASS (43); exit 0; errors 0 |
+| `test_issue75_progression_balance` | PASS (42327); exit 0; errors 0 |
+| `test_issue75_acceptance` | PASS (61); exit 0; errors 0 |
+| `test_issue75_combat_pacing` | PASS (337); exit 0; errors 0 |
+| `test_issue75_acquisition` | PASS (162); exit 0; errors 0 |
+| `test_tactical_navigation_contract` | PASS (49); exit 0; errors 0 |
+| `test_tactical_base_enemy_integration` | PASS (49); exit 0; errors 0 |
+| `test_coins` | PASS (38); exit 0; errors 0 |
+| `test_guild_hall` | PASS (89); exit 0; errors 0 |
+| `test_hall_select` | PASS (63); exit 0; errors 0 |
+| `test_rune_portal` | PASS (73); exit 0; errors 0 |
+| `test_shop` | PASS (52); exit 0; errors 0 |
+| `test_mage_shop` | PASS (33); exit 0; errors 0 |
+| `test_potion_shop` | PASS (19); exit 0; errors 0 |
+| `test_wallet` | PASS (47); exit 0; errors 0 |
+| `test_wandering_merchant` | PASS (56); exit 0; errors 0 |
+| `test_main_menu_modals` | PASS (151); exit 0; errors 0 |
+| `test_yugi_audio` | PASS (49); exit 0; errors 0 |
+| `test_hero_sfx` | PASS (33); exit 0; errors 0 |
+| `test_perk_system` | PASS (41); exit 0; errors 0 |
+
+Baseline before production edits: fresh invocation `run-rgqw_hb5` passed framework
+56, movement 27, combat 98 and skills 115 (training at both render rates with
+matching traces), MOBA inventory 223 and potion system 132. Task 2 CI run
+[46025221941](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/46025221941)
+was completed SUCCESS on `0e37324f0218b12668ed72b52773f1f722b01ba8`.
+No baseline failure was accepted or hidden.
+
+Development failures were rejected by the runner: inferred-Variant type errors
+in new test scripts, an InventorySlot fixture missing its authored ItemIcon child,
+and immediate world disabling from a collision callback during initial E2E
+handoff. The fixture now instantiates the production scene; handoff revokes
+authority synchronously and defers process/collision changes. Passing assertion
+totals with engine errors were not counted as successful verification. A
+standalone `--check-only` probe lacked project autoloads and was not used as a
+gameplay/compile gate; actual verification launches the isolated project normally.
+
+### Task 3 change manifest
+
+| Files (relative to repository) | Reason |
+| --- | --- |
+| `Scene/Tutorial/tutorial_flow.gd`, `tutorial_inventory_context.gd`, `training_hazard.gd` | Opt-in phase coordinator, committed gameplay observers, safe physical hazard |
+| `Scene/Tutorial/tutorial_training_context.gd` | Reuse arena factory; local feedback/input boundary, safe death cancellation and action/effect pruning |
+| `Scene/Character/BasePlayer.gd` | Route feedback locally, cancel practice death before Game Over, physics timers only in training, same-world defensive target guard |
+| `Scene/Character/InventoryManager.gd` | Practice owner/provenance guards, deep copies only in training, committed transaction hooks and local drops |
+| `Scene/Items/WorldItem/WorldItem.gd` | Real practice pickup through existing scene/transfer logic; private group/actor/world/nearest selection and local feedback |
+| `Scene/Character/Player 2_Olaf/player_2.gd`, `Doraemon/doraemon.gd`, `Yugi/yugi.gd`, `Miyabi/miyabi.gd`, `LuongTho/luong_tho.gd` | Route existing feedback through the boundary; clear custom Yugi/Doraemon pending input |
+| `tests/tutorial_inventory_test_support.gd` | Shared fixtures, actual movement/input helpers, protected production/UI/resource sentinels |
+| `tests/test_tutorial_inventory.{gd,tscn}`, `test_tutorial_survival.{gd,tscn}`, `test_tutorial_inventory_isolation.{gd,tscn}`, `test_tutorial_end_to_end.{gd,tscn}` | Pickup/equip/survival/potion/ownership/lifecycle and all-eight-hero E2E coverage |
+| Eight matching `.gd.uid` files for the three new modules and five new test scripts | Godot source identity metadata; no import caches or logs |
+| `tests/run_tutorial_verification.py`, `tests/test_tutorial_runner.py` | Register required trace/marker contracts and verify both rates plus failure paths |
+| `.github/workflows/ci.yml`, `run_tests.bat` | Actually execute all four new suites at 30/144 FPS |
+| `docs/INTERACTIVE_TUTORIAL_DESIGN.md` | Audit, contracts, verification, limitations and Task 4 boundary |
+
+No old test expectations, balance resources, production hall scenes, GameManager,
+PerkManager, portal logic or project autoloads are changed. Ordinary inventory and
+WorldItem resource duplication keeps its original shallow-copy semantics;
+deep nested copies are restricted to practice ownership.
+
+**DESIGNED ONLY / TASK 4:** opt-in Guild Hall activation, display/input mapping,
+consent/skip/restart UI, independent tutorial persistence and Rune Portal handoff.
+Dungeon entry remains optional. **NOT VERIFIED:** manual graphical feedback,
+controls/focus behavior and full production UI integration. No Task 4 code is
+installed by this feature.

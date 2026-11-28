@@ -20,6 +20,35 @@ var _consumed: Dictionary = {}
 var _effects: Dictionary = {}
 var _clearing: bool = false
 var _owned_hero: WeakRef
+var input_enabled: bool = true
+var _building: bool = false
+signal local_feedback(method: StringName, arguments: Array)
+
+func feedback(method: StringName, arguments: Array) -> void:
+	local_feedback.emit(method, arguments)
+
+func set_input_enabled(enabled: bool) -> void:
+	input_enabled = enabled
+	if is_instance_valid(world):
+		# Handoff may originate in an Area2D collision callback. Revoke authority
+		# synchronously, but change collision/process state outside physics flush.
+		world.set_deferred("process_mode", Node.PROCESS_MODE_INHERIT if enabled else Node.PROCESS_MODE_DISABLED)
+	if is_instance_valid(hero) and not enabled:
+		hero.clear_training_input()
+
+func inventory_mutation_allowed(actor: Node) -> bool:
+	return actor == hero and (_building or live())
+
+func on_practice_death(actor: Node) -> void:
+	if actor == hero:
+		accepting = false
+		call_deferred("_cancel_dead_session", session_id)
+
+func _cancel_dead_session(id: String) -> void:
+	if session_id == id and session.get_session_id() == id:
+		if session.get_state() == Session.State.ACTIVE:
+			session.cancel_tutorial()
+		clear_arena()
 
 func bind(value: RefCounted) -> bool:
 	if session != null or value.get_state() != Session.State.ACTIVE or not is_inside_tree():
@@ -33,6 +62,10 @@ func bind(value: RefCounted) -> bool:
 	return _build(session.get_session_id())
 
 func _build(expected_id: String) -> bool:
+	var types: Array[StringName] = [&"basic_attack_hit", &"hero_skill_effect"]
+	return _make_arena(expected_id, types, true)
+
+func _make_arena(expected_id: String, types: Array[StringName], observe_movement: bool) -> bool:
 	if is_queued_for_deletion() or session.get_session_id() != expected_id or session.get_state() != Session.State.ACTIVE:
 		return false
 	clear_arena()
@@ -41,7 +74,6 @@ func _build(expected_id: String) -> bool:
 	_consumed.clear()
 	_effects.clear()
 	_serial = 0
-	var types: Array[StringName] = [&"basic_attack_hit", &"hero_skill_effect"]
 	if not session.register_event_source(session_id, self, types):
 		return false
 	viewport = SubViewport.new()
@@ -57,15 +89,18 @@ func _build(expected_id: String) -> bool:
 	hero.training_context = self
 	_strip_global_ui_and_groups(hero)
 	world.hero = hero
+	_building = true
 	world.add_child(hero)
+	_building = false
 	hero.tree_exiting.connect(_on_hero_exiting)
 	hero.position = Vector2(200, 200)
 	world.child_entered_tree.connect(_capture_effect)
-	movement = Movement.new()
-	add_child(movement)
-	if not movement.bind(hero, session):
-		clear_arena()
-		return false
+	if observe_movement:
+		movement = Movement.new()
+		add_child(movement)
+		if not movement.bind(hero, session):
+			clear_arena()
+			return false
 	accepting = true
 	return true
 
@@ -88,7 +123,7 @@ func add_target(at: Vector2) -> Node2D:
 	return target
 
 func live() -> bool:
-	return is_inside_tree() and not is_queued_for_deletion() and accepting and is_instance_valid(hero) and not hero.is_queued_for_deletion() \
+	return is_inside_tree() and not is_queued_for_deletion() and accepting and input_enabled and is_instance_valid(hero) and not hero.is_queued_for_deletion() \
 		and is_instance_valid(world) and world.hero == hero and not hero.is_dead \
 		and hero.can_process() and not hero.has_meta("_stun_lock_count") \
 		and session.get_session_id() == session_id and session.get_state() == Session.State.ACTIVE \
@@ -160,6 +195,7 @@ func _submit(fact: String, step: int) -> bool:
 	return accepted
 
 func _physics_process(_delta: float) -> void:
+	_prune_actions()
 	if not live():
 		return
 	if session.get_current_step() == Steps.Step.HERO_SKILL and hero.has_meta("training_fact"):
@@ -174,6 +210,23 @@ func _physics_process(_delta: float) -> void:
 				and hero._rate() > hero.get_attack_speed_scale()
 			if buff or transformed:
 				_submit(fact, Steps.Step.HERO_SKILL)
+
+func _prune_actions() -> void:
+	var retained: Dictionary = {}
+	for id in _effects.keys():
+		var effect = _effects[id]["ref"].get_ref()
+		if not is_instance_valid(effect) or effect.is_queued_for_deletion():
+			_effects.erase(id)
+		else:
+			retained[_effects[id]["fact"]] = true
+	if is_instance_valid(hero):
+		retained[hero.get_meta("training_fact", "")] = true
+	for fact in _facts.keys():
+		# Keep pending cast releases for 30 physics seconds and live effects for
+		# their entire lifetime. Old consumed actions cannot grow without bound.
+		if not retained.has(fact) and Engine.get_physics_frames() - int(_facts[fact]["tick"]) > 30 * Engine.physics_ticks_per_second:
+			_facts.erase(fact)
+			_consumed.erase(fact)
 
 func _on_step(id: String, step: int) -> void:
 	if id == session_id and step >= Steps.Step.PICKUP_ITEM:
@@ -213,6 +266,9 @@ func clear_arena() -> void:
 	hero = null
 	world = null
 	_owned_hero = null
+	_facts.clear()
+	_consumed.clear()
+	_effects.clear()
 	_clearing = false
 
 func _exit_tree() -> void:

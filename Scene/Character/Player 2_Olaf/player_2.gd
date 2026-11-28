@@ -24,7 +24,7 @@ func use_special_skill() -> void:
 	animated_sprite.speed_scale = 1.0
 	animated_sprite.play("skill")
 	if get_tree():
-		get_tree().call_group("game_ui", "show_toast", "BERSERK RAGE — Double damage for 5 seconds!")
+		gameplay_feedback(&"show_toast", ["BERSERK RAGE — Double damage for 5 seconds!"])
 
 	_berserk_gen += 1
 	var my_gen := _berserk_gen

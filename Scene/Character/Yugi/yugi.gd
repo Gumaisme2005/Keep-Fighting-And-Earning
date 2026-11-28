@@ -41,6 +41,16 @@ var action_left := 0.0
 var special_rng := RandomNumberGenerator.new()
 var next_voice_msec := 0
 
+func clear_training_input() -> void:
+	super.clear_training_input()
+	pressed_left = false
+	pressed_right = false
+	released_left = false
+	released_right = false
+	left_hold = -1.0
+	right_hold = -1.0
+	_set_guarding(false)
+
 func _ready() -> void:
 	hero_balance_id = "yugi"
 	super._ready()
@@ -117,7 +127,7 @@ func _physics_process(delta: float) -> void:
 			pending_hotbar_slot = -1
 			velocity = Vector2.ZERO
 			if get_tree() != null:
-				get_tree().call_group("game_ui", "show_banner", "COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6))
+				gameplay_feedback(&"show_banner", ["COMBAT REPLAY CONCLUDED", Color(0.4, 1.0, 0.6)])
 			return
 		f = GameManager.replay_frames[replay_frame_idx]
 		replay_frame_idx += 1
