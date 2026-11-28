@@ -239,3 +239,28 @@
 - Regression testing is required after the UI layout is corrected, including checks at multiple screen resolutions.
 - The existing QA test suite remains at **420 test cases**; no execution statuses were changed during this exploratory testing activity.
 - No gameplay source code was modified as part of this QA documentation update.
+## 2026-11-28
+
+### QA
+- **12:00** - Performed exploratory combat testing using **Doraemon** against axe-wielding melee enemies.
+- Identified an issue where the Player receives damage before the corresponding enemy attack animation becomes clearly visible.
+- Observed repeated `-2` damage indicators that appear inconsistent with the visual timing of enemy attacks.
+- Reviewed the Orc and Armored Orc attack logic and identified early hitbox activation as a possible cause.
+- Recorded video evidence for further investigation.
+
+### Bug
+- **Bug:** [Combat] Enemy deals damage before the attack animation becomes visible.
+- **Bug Type:** Functional / Combat / Animation Synchronization.
+- **Priority:** High.
+- **Related Test Cases:** TC-EN-01, TC-EN-02, TC-EN-05, TC-EN-11.
+- **Test Character:** Doraemon.
+- **Test Result:** FAIL.
+- **Status:** To Do.
+- **Evidence:** `20261128-0457-49.0707361.mp4`
+
+### Progress
+- Documented **1 additional combat synchronization issue**.
+- Prepared GitHub Issue and Jira bug reports.
+- Further verification is required to identify the exact enemy type and attack impact frame.
+- Regression testing is pending after the issue is fixed.
+- Existing test case execution statuses remain unchanged.
