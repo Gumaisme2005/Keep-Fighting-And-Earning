@@ -468,7 +468,7 @@ func _build_lore_modal() -> void:
 		"  5. Yugi / Atem — Pharaoh Summoner: Vitality 5, Armor 1, Damage 1. Summons monsters from his Duel Deck, guards with Shift, and unleashes a random Special Summon with Q.\n" + \
 		"  6. Doraemon — Gadget Cat of the 22nd Century: Vitality 5, Armor 2, Damage 1. Fights with his whole 4D Pocket: 20 gadgets on 10 pages, 6 friends on Take-copters and 10 super moves powered by a 3-bar gauge.\n" + \
 		"  7. Hoshimi Miyabi — Frost Swordswoman: Vitality 4, Armor 2, Damage 1. A 3-hit frost combo, an icy dash slash, a charged Frost Wave and the Frost Bloom ice spikes, with an ice spirit firing bolts at her side.\n" + \
-		"  8. Lương Thơ — Twin Gunblade Duelist: Vitality 5, Armor 2, Damage 1. Stabs, swings and smashes with twin tonfa-gunblades, fires both barrels, and transforms into her invulnerable white-haired White Moon form.\n\n" + \
+		"  8. Lương Thơ — Twin Gunblade Duelist: Vitality 5, Armor 2, Damage 1. Stabs, swings and smashes with twin tonfa-gunblades, fires both barrels, and transforms into her empowered white-haired White Moon form.\n\n" + \
 		"• THE SHADOW LEGION OF MORIA:\n" + \
 		"  - Hostile Ranks: Moria Orcs, Armored Uruk-hai, Barrow-wight Remains, Minas Morgul Bone Archers, Angmar Blood Bats, and Warg-breed Werewolves.\n" + \
 		"  - Dungeon Overlords: The Necromancer of Dol Guldur summoning toxic shades, and the ruthless Warg Rider Chieftain."

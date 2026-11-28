@@ -14,13 +14,14 @@ hp = 5
 armor = 2
 speed = 155
 attack_cooldown = 0.3
-skill_cooldown = 20
+skill_cooldown = 24
 lore = "A duelist wielding twin tonfa-gunblades - hammer heads, gear boxes and long barrels. She keeps them on her back until the fight starts. Left Click: 3-step combo Stab -> Twin Swing -> Ground Smash (2x + daze)."
-skill_q = "White Moon — Key Q: Transform into the white-haired form for 12s: immune to all damage, +1 damage on every hit, 25% faster attacks, 20% faster movement, piercing rounds. Cooldown: 20s."
+skill_q = "White Moon — Key Q: Transform into the white-haired form for 12s: immune to damage for the first 2.5s, then 30% damage reduction for 9.5s, +1 damage on every hit, 25% faster attacks, 20% faster movement, piercing rounds. Cooldown: 24s (max 30% CDR)."
 skill_rmb = "Twin Barrels — Right Click: Fire both barrels along the aim, 2 rounds (hold to keep firing). Cooldown: 0.8s."
 custom_stats = {
 "bullet_range": 220.0,
 "bullet_speed": 320.0,
 "rmb_cooldown": 0.8,
-"upgrade_duration": 12.0
+"upgrade_duration": 12.0,
+"upgrade_immunity_duration": 2.5
 }

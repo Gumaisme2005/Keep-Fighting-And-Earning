@@ -65,13 +65,13 @@ func test_perk_data_initialization() -> void:
 	print("\n[TEST 1] Testing PerkData Model & Modifiers...")
 	var perk := PerkData.new()
 	perk.id = "test_perk"
-	perk.name = "Thử Nghiệm"
-	perk.description = "Tăng 10 tốc độ."
+	perk.name = "Test Perk"
+	perk.description = "+10 Movement Speed."
 	perk.rarity = PerkData.Rarity.RARE
 	perk.modifiers = {"speed_bonus": 10.0, "bonus_damage": 2}
 
 	_assert_test(perk.id == "test_perk", "PerkData ID initialized")
-	_assert_test(perk.get_rarity_name() == "Hiếm (Rare)", "PerkData Rarity Name")
+	_assert_test(perk.get_rarity_name() == "Rare", "PerkData Rarity Name")
 	_assert_test(perk.get_modifier("speed_bonus") == 10.0, "PerkData Modifier speed_bonus")
 	_assert_test(perk.get_modifier("non_existent", 99) == 99, "PerkData Modifier default fallback")
 
@@ -109,6 +109,17 @@ func test_perk_database_integrity() -> void:
 			PerkData.Rarity.EPIC: has_epic = true
 			PerkData.Rarity.LEGENDARY: has_legendary = true
 
+	var all_english_ascii := true
+	var non_ascii_perk := ""
+	for p in all_perks:
+		var texts: Array[String] = [p.name, p.description, p.get_rarity_name()]
+		for txt in texts:
+			for ch in txt:
+				var code: int = ch.unicode_at(0)
+				if code < 32 or code > 126:
+					all_english_ascii = false
+					non_ascii_perk = "%s (%s)" % [p.id, ch]
+	_assert_test(all_english_ascii, "All perk names, descriptions, and rarities use consistent English ASCII", "Non-ASCII found in: " + non_ascii_perk)
 	_assert_test(all_icons_valid, "All perk icon files exist on disk", "Missing: " + missing_icon)
 	_assert_test(has_common and has_rare and has_epic and has_legendary, "Catalog contains all 4 rarities")
 

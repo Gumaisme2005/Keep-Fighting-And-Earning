@@ -65,6 +65,7 @@ func _reset_field(layout: Array, form: String = "base") -> void:
 	p.is_invincible = false
 	p._set_form(form)
 	p.form_time = 999.0 if form == "upgraded" else 0.0
+	p.form_immune_time = p.upgrade_immunity_duration if form == "upgraded" else 0.0
 	p.stance = "combat"
 	p.stance_t = 0.0
 	p._set_facing(1.0)
@@ -215,9 +216,9 @@ func _ready() -> void:
 	var mid_form: String = p.form
 	await _play(50, {})
 	_check(untouchable and mid_form == "base" and p.form == "upgraded" and p.animated_sprite.sprite_frames == p.Sprites.character_frames("upgraded")
-		and p.q_cd > 17.0 and p.form_time > 10.0 and p.animated_sprite.speed_scale == 1.25,
-		"LT-11: Q plays the transformation (untouchable) and switches to the white-haired form",
-		"form=%s q_cd=%.1f time=%.1f" % [p.form, p.q_cd, p.form_time])
+		and p.q_cd > 21.0 and p.form_time > 10.0 and is_equal_approx(p.upgrade_immunity_duration, 2.5) and p.form_immune_time > 1.5 and p.animated_sprite.speed_scale == 1.25,
+		"LT-11: Q plays the transformation (untouchable) and switches to the white-haired form (24s CD, 2.5s immunity)",
+		"form=%s q_cd=%.1f time=%.1f immune=%.2f" % [p.form, p.q_cd, p.form_time, p.form_immune_time])
 
 	# --- White form: +1 damage, faster attacks, piercing rounds
 	_reset_field([Vector2(30, 0)], "upgraded")
@@ -230,19 +231,44 @@ func _ready() -> void:
 		"LT-12: White form: Stab lands sooner for 2, rounds deal 2 each and pierce",
 		"stab=%d rounds=%d/%d" % [fast_hit, dummies[0].received, dummies[1].received])
 
-	# --- Nothing hurts her in the white form (and she is hurt again once it is over)
+	# --- White Moon immunity (first 2.5s), then 30% damage reduction (min 1 dmg), and 30% CDR cap (min 16.8s)
 	_reset_field([], "upgraded")
 	var hp_white: int = p.hp + p.current_armor
 	for i in range(3):
 		p.take_damage(2)
 	var immune_white: bool = p.hp + p.current_armor == hp_white and not p.is_hurt
+	p.form_immune_time = 0.0
+	p.is_invincible = false
+	var hp_reduced_before: int = p.hp + p.current_armor
+	p.take_damage(10)
+	var dmg_10_taken: int = hp_reduced_before - (p.hp + p.current_armor)
+	p.is_invincible = false
+	var hp_min_before: int = p.hp + p.current_armor
+	p.take_damage(1)
+	var dmg_1_taken: int = hp_min_before - (p.hp + p.current_armor)
 	_reset_field([], "base")
 	p.is_invincible = false
 	var hp_base: int = p.hp + p.current_armor
 	p.take_damage(1)
-	_check(immune_white and p.hp + p.current_armor == hp_base - 1,
-		"LT-15: The white-haired form takes no damage; the base form does")
+	_check(immune_white and dmg_10_taken == 7 and dmg_1_taken == 1 and p.hp + p.current_armor == hp_base - 1,
+		"LT-15: White Moon blocks damage in first 2.5s, reduces damage by 30% afterwards (never below 1), and base takes full damage",
+		"dmg10=%d dmg1=%d" % [dmg_10_taken, dmg_1_taken])
 	p.is_invincible = false
+
+	# --- White Moon CDR cap is 30% (16.8s min) without nerfing global PerkManager CDR (60%)
+	PerkManager.reset()
+	PerkManager.add_perk(PerkDatabase.get_perk_by_id("chrono_dial"), p)       # 25%
+	PerkManager.add_perk(PerkDatabase.get_perk_by_id("overcharge_sigil"), p)  # 25%
+	PerkManager.add_perk(PerkDatabase.get_perk_by_id("wrath_of_valhalla"), p) # 20% -> global 60% cap
+	var global_cdr: float = PerkManager.get_cooldown_reduction()
+	var white_moon_cd: float = p.get_effective_q_cooldown()
+	_reset_field([], "base")
+	await _play(2, {"q": [0]})
+	var started_cd: float = p.q_cd
+	PerkManager.reset()
+	_check(is_equal_approx(global_cdr, 0.60) and is_equal_approx(white_moon_cd, 16.8) and started_cd >= 16.5 and started_cd <= 16.85,
+		"LT-16: White Moon caps CDR at 30% (16.8s min) while keeping global Perk CDR at 60%",
+		"global_cdr=%.2f wm_cd=%.2f started_cd=%.2f" % [global_cdr, white_moon_cd, started_cd])
 
 	# --- The white form wears off: transformation plays backwards, back to the base form
 	_reset_field([], "upgraded")

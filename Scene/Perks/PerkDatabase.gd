@@ -33,12 +33,12 @@ static func _init_catalog() -> void:
 	_catalog.clear()
 
 	# -------------------------------------------------------------------------
-	# 1. PHẨM CẤP THƯỜNG (COMMON - XANH LỤC)
+	# 1. COMMON PERKS
 	# -------------------------------------------------------------------------
 	_register(_build_perk(
 		"iron_sinew",
-		"Gân Cốt Thiết Giáp",
-		"+1 Máu tối đa và +1 Giáp tối đa.",
+		"Iron Sinew",
+		"+1 Max HP and +1 Max Armor.",
 		PerkData.Rarity.COMMON,
 		"11.png",
 		{"bonus_hp": 1, "bonus_armor": 1}
@@ -46,8 +46,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"swift_stride",
-		"Bộ Pháp Tật Phong",
-		"Tăng +15 Tốc độ di chuyển cơ bản,",
+		"Swift Stride",
+		"+15 Movement Speed.",
 		PerkData.Rarity.COMMON,
 		"12.png",
 		{"speed_bonus": 15.0}
@@ -55,8 +55,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"sharpened_edge",
-		"Lưỡi Kiếm Tôi Rèn",
-		" +1 Sát thương trực tiếp.",
+		"Sharpened Edge",
+		"+1 Damage.",
 		PerkData.Rarity.COMMON,
 		"13.png",
 		{"bonus_damage": 1}
@@ -64,8 +64,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"vitality_essence",
-		"Huyết Khí Thao Thiết",
-		"+2 Máu tối đa và lập tức hồi phục 2 Máu.",
+		"Vitality Essence",
+		"+2 Max HP and restore 2 HP immediately.",
 		PerkData.Rarity.COMMON,
 		"14.png",
 		{"bonus_hp": 2, "heal_instant": 2}
@@ -73,8 +73,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"quick_reflexes",
-		"Phản Xạ Thần Tốc",
-		"Tăng 15% Tốc độ đánh, giảm thời gian hồi giữa các nhịp đánh.",
+		"Quick Reflexes",
+		"+15% Attack Speed.",
 		PerkData.Rarity.COMMON,
 		"15.png",
 		{"attack_speed_bonus": 0.15}
@@ -82,8 +82,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"sturdy_plating",
-		"Giáp Bản Kiên Cố",
-		"+2 Giáp tối đa.",
+		"Sturdy Plating",
+		"+2 Max Armor.",
 		PerkData.Rarity.COMMON,
 		"31.png",
 		{"bonus_armor": 2}
@@ -91,8 +91,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"fleet_foot",
-		"Khinh Công Đột Phá",
-		"Thân pháp nhanh nhẹn kết hợp quyền cước, +15 Tốc độ di chuyển và +1 Sát thương cơ bản.",
+		"Fleet Foot",
+		"+15 Movement Speed and +1 Damage.",
 		PerkData.Rarity.COMMON,
 		"32.png",
 		{"speed_bonus": 15.0, "bonus_damage": 1}
@@ -100,8 +100,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"miner_fortitude",
-		"Ý Chí Thợ Mỏ",
-		"Sức chịu đựng phi thường dưới hầm sâu, +1 Máu tối đa và giảm 1.0s thời gian chờ hồi phục Giáp.",
+		"Miner's Fortitude",
+		"+1 Max HP and -1.0s Armor regen delay.",
 		PerkData.Rarity.COMMON,
 		"33.png",
 		{"bonus_hp": 1, "armor_regen_delay_reduction": 1.0}
@@ -109,20 +109,20 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"sharpened_whetstone",
-		"Đá Mài Tinh Luyện",
-		"+12% Tỉ lệ Chí mạng.",
+		"Refined Whetstone",
+		"+12% Crit Chance.",
 		PerkData.Rarity.COMMON,
 		"34.png",
 		{"crit_chance": 0.12}
 	))
 
 	# -------------------------------------------------------------------------
-	# 2. PHẨM CẤP HIẾM (RARE - XANH LAM)
+	# 2. RARE PERKS
 	# -------------------------------------------------------------------------
 	_register(_build_perk(
 		"blazing_edge",
-		"Liệt Hỏa Kiếm Khí",
-		"Đòn đánh có 35% cơ hội thiêu đốt mục tiêu, gây thêm +2 sát thương lửa.",
+		"Blazing Edge",
+		"Hits have a 35% chance to burn for +2 fire Damage.",
 		PerkData.Rarity.RARE,
 		"16.png",
 		{"on_hit_burn": true, "burn_damage": 2, "burn_chance": 0.35}
@@ -130,8 +130,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"frost_touch",
-		"Hàn Băng Thấu Xương",
-		"Đòn đánh làm giảm 40% tốc độ di chuyển của kẻ thù trong 2.0 giây.",
+		"Frost Touch",
+		"Hits slow enemy Movement Speed by 40% for 2.0s.",
 		PerkData.Rarity.RARE,
 		"17.png",
 		{"on_hit_slow": true, "slow_ratio": 0.40, "slow_duration": 2.0}
@@ -139,8 +139,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"chrono_dial",
-		"Đồng Hồ Cát Cổ",
-		"Giảm 25% thời gian hồi chiêu của Tuyệt kỹ [Q] và Chuột phải.",
+		"Ancient Hourglass",
+		"-25% Cooldown for Q and Right-Click skills.",
 		PerkData.Rarity.RARE,
 		"18.png",
 		{"cooldown_reduction": 0.25}
@@ -148,8 +148,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"reinforced_aegis",
-		"Khiên Chắn Khazad",
-		"+2 Giáp tối đa và giảm 1.5 giây thời gian chờ trước khi Giáp bắt đầu hồi phục.",
+		"Khazad Aegis",
+		"+2 Max Armor and -1.5s Armor regen delay.",
 		PerkData.Rarity.RARE,
 		"19.png",
 		{"bonus_armor": 2, "armor_regen_delay_reduction": 1.5}
@@ -157,8 +157,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"treasure_favor",
-		"Phúc Lành Thợ Mỏ",
-		"Tăng gấp đôi tỉ lệ rơi bình thuốc và vật phẩm giá trị từ quái vật và rương ngọc.",
+		"Miner's Blessing",
+		"Doubles potion and loot drop chance from enemies and chests.",
 		PerkData.Rarity.RARE,
 		"21.png",
 		{"potion_drop_mult": 2.0}
@@ -166,8 +166,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"vampiric_fang",
-		"Huyết Nanh Hút Hồn",
-		"Hấp thụ tàn hồn kẻ tử trận, mỗi khi diệt 1 quái vật có 5% cơ hội hồi 1 Máu và tăng +1 Sát thương.",
+		"Vampiric Fang",
+		"+1 Damage. Kills have a 5% chance to restore 1 HP.",
 		PerkData.Rarity.RARE,
 		"35.png",
 		{"on_kill_heal_chance": 0.05, "bonus_damage": 1}
@@ -175,8 +175,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"windrunner_boots",
-		"Chiến Hài Phong Linh",
-		"Đôi giày thấm đẫm phong linh ma thuật, tăng +20 Tốc độ chạy và giảm 15% thời gian hồi chiêu.",
+		"Windrunner Boots",
+		"+20 Movement Speed and -15% skill Cooldown.",
 		PerkData.Rarity.RARE,
 		"36.png",
 		{"speed_bonus": 20.0, "cooldown_reduction": 0.15}
@@ -184,8 +184,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"iron_aegis_core",
-		"Lõi Thạch Giáp",
-		"Rèn đúc lõi kim cương vào khiên chắn, +2 Giáp tối đa và giảm 1.0s thời gian chờ hồi phục Giáp.",
+		"Iron Aegis Core",
+		"+2 Max Armor and -1.0s Armor regen delay.",
 		PerkData.Rarity.RARE,
 		"37.png",
 		{"bonus_armor": 2, "armor_regen_delay_reduction": 1.0}
@@ -193,20 +193,20 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"venomous_strike",
-		"Hủ Cốt Độc Nhận",
-		"Lưỡi đao tẩm chất độc ăn mòn, tăng +1 Sát thương và có 50% cơ hội ăn mòn mục tiêu (+1 dmg độc).",
+		"Venomous Strike",
+		"+1 Damage. Hits have a 50% chance to inflict +1 poison Damage.",
 		PerkData.Rarity.RARE,
 		"38.png",
 		{"on_hit_burn": true, "burn_damage": 1, "burn_chance": 0.50, "bonus_damage": 1}
 	))
 
 	# -------------------------------------------------------------------------
-	# 3. PHẨM CẤP SỬ THI (EPIC - TÍM)
+	# 3. EPIC PERKS
 	# -------------------------------------------------------------------------
 	_register(_build_perk(
 		"blood_thirst",
-		"Huyết Phách Khát Máu",
-		"Mỗi khi tiêu diệt 1 kẻ địch, có 25% cơ hội lập tức hồi phục 1 Máu.",
+		"Bloodthirst",
+		"Kills have a 25% chance to restore 1 HP.",
 		PerkData.Rarity.EPIC,
 		"22.png",
 		{"on_kill_heal_chance": 0.25, "on_kill_heal_amt": 1}
@@ -214,8 +214,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"stone_bastion",
-		"Bàn Thạch Hộ Thể",
-		"Miễn nhiễm hoàn toàn sát thương từ Bẫy chông ngầm (Spike Trap).",
+		"Stone Bastion",
+		"Immune to Spike Traps and -1 ranged Damage taken.",
 		PerkData.Rarity.EPIC,
 		"23.png",
 		{"spike_immune": true, "ranged_damage_reduction": 1}
@@ -223,8 +223,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"armor_burst",
-		"Phản Chấn Khiên Kính",
-		"Khi Giáp bị vỡ hoàn toàn, gây 1 sát thương và đẩy lùi kẻ thù trong 70px. Hồi chiêu chung: 6 giây.",
+		"Mirror Shield Burst",
+		"On Armor break, deal 1 Damage and knock back foes in 70px (6s CD).",
 		PerkData.Rarity.EPIC,
 		"24.png",
 		{"armor_break_blast": true, "blast_damage": 1, "blast_radius": 70.0, "blast_cooldown": 6.0}
@@ -232,8 +232,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"deadly_precision",
-		"Đòn Đánh Tử Huyệt",
-		"Đòn đánh có 30% cơ hội kích hoạt Sát thương Chí mạng nhân đôi (x2 Damage).",
+		"Deadly Precision",
+		"+30% Crit Chance with 2.0x Crit Damage.",
 		PerkData.Rarity.EPIC,
 		"25.png",
 		{"crit_chance": 0.30, "crit_multiplier": 2.0}
@@ -241,8 +241,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"overcharge_sigil",
-		"Phù Ấn Quá Tải",
-		"Cổ ấn ma thuật rút ngắn 25% thời gian hồi chiêu tuyệt kỹ và tăng +1 Sát thương.",
+		"Overcharge Sigil",
+		"-25% skill Cooldown and +1 Damage.",
 		PerkData.Rarity.EPIC,
 		"41.png",
 		{"cooldown_reduction": 0.25, "bonus_damage": 1}
@@ -250,8 +250,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"titan_blood",
-		"Huyết Mạch Titan",
-		"Khơi dậy dòng máu khổng lồ cổ đại, +3 Máu tối đa, +2 Giáp tối đa và hồi ngay 3 Máu.",
+		"Titan Blood",
+		"+3 Max HP, +2 Max Armor, and restore 3 HP immediately.",
 		PerkData.Rarity.EPIC,
 		"42.png",
 		{"bonus_hp": 3, "bonus_armor": 2, "heal_instant": 3}
@@ -259,20 +259,20 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"fatal_rend",
-		"Xé Toạc Sinh Mệnh",
-		"Tấn công vào tử huyệt, tăng 25% Tỉ lệ Chí mạng, tăng bội số sát thương chí mạng lên 2.5 và+1 Sát thương.",
+		"Fatal Rend",
+		"+25% Crit Chance, 2.5x Crit Damage, and +1 Damage.",
 		PerkData.Rarity.EPIC,
 		"43.png",
 		{"crit_chance": 0.25, "crit_multiplier": 2.5, "bonus_damage": 1}
 	))
 
 	# -------------------------------------------------------------------------
-	# 4. PHẨM CẤP HUYỀN THOẠI (LEGENDARY - VÀNG KIM)
+	# 4. LEGENDARY PERKS
 	# -------------------------------------------------------------------------
 	_register(_build_perk(
 		"chain_lightning",
-		"Lôi Thần Trừng Phạt",
-		"Đòn đánh trúng phóng sét sang 1 kẻ địch gần nhất trong 95px, gây 1 sát thương. Hồi chiêu chung: 0.5 giây.",
+		"Chain Lightning",
+		"Hits arc lightning to 1 nearby foe in 95px for 1 Damage (0.5s CD).",
 		PerkData.Rarity.LEGENDARY,
 		"26.png",
 		{"on_hit_lightning": true, "lightning_damage": 1, "lightning_chain_count": 1, "lightning_range": 95.0, "lightning_cooldown": 0.5}
@@ -280,8 +280,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"immortal_will",
-		"Ý Chí Bất Diệt",
-		"Một lần duy nhất mỗi chuyến thám hiểm: Khi chịu đòn tử vong, sống lại ngay với 50% HP và 2.5s bất tử.",
+		"Immortal Will",
+		"Once per run, survive fatal Damage with 50% HP and 2.5s immunity.",
 		PerkData.Rarity.LEGENDARY,
 		"27.png",
 		{"second_chance": true, "invincibility_duration": 2.5}
@@ -289,8 +289,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"berserk_frenzy",
-		"Cuồng Chiến Đồ Đao",
-		"Theo tỉ lệ Máu đã mất: tăng tối đa +100% Sát thương và +40 Tốc độ chạy khi mất toàn bộ Máu.",
+		"Berserk Frenzy",
+		"Gain up to +100% Damage and +40 Movement Speed as HP drops.",
 		PerkData.Rarity.LEGENDARY,
 		"103.png",
 		{"low_hp_scaling": true, "dmg_per_missing_hp_ratio": 1.0, "speed_per_missing_hp_ratio": 40.0}
@@ -298,8 +298,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"wrath_of_valhalla",
-		"Linh Hồn Valkyrie",
-		"Sự chúc phúc từ nữ thần chiến trận: Tăng +2 Sát thương, +15 Tốc chạy, +20% Chí mạng và giảm 20% hồi chiêu.",
+		"Valkyrie Spirit",
+		"+2 Damage, +15 Movement Speed, +20% Crit Chance, -20% Cooldown.",
 		PerkData.Rarity.LEGENDARY,
 		"45.png",
 		{"bonus_damage": 2, "speed_bonus": 15.0, "crit_chance": 0.20, "cooldown_reduction": 0.20}
@@ -307,8 +307,8 @@ static func _init_catalog() -> void:
 
 	_register(_build_perk(
 		"celestial_barrier",
-		"Thiên Cầu Hộ Mệnh",
-		"Kết giới thần thánh: +4 Giáp tối đa, giảm 1.5s chờ hồi giáp. Khi vỡ giáp, gây 2 sát thương và đẩy lùi kẻ thù trong 80px. Hồi chiêu chung: 6 giây; ưu tiên hơn Phản Chấn Khiên Kính.",
+		"Celestial Barrier",
+		"+4 Max Armor, -1.5s regen delay. Armor break blasts 80px for 2 Damage (6s CD).",
 		PerkData.Rarity.LEGENDARY,
 		"46.png",
 		{"bonus_armor": 4, "armor_regen_delay_reduction": 1.5, "armor_break_blast": true, "blast_damage": 2, "blast_radius": 80.0, "blast_cooldown": 6.0}

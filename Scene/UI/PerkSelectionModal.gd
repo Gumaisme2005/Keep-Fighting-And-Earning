@@ -49,7 +49,7 @@ func _build_ui() -> void:
 
 	# 3. Tiêu đề Vàng Kim & Lời Dẫn
 	var title_lbl := Label.new()
-	title_lbl.text = "✦ CỔ VẬT CHÚC PHÚC (CHOOSE A BLESSING) ✦"
+	title_lbl.text = "CHOOSE A BLESSING"
 	title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_lbl.add_theme_font_override("font", UITheme.FONT_TITLE)
 	title_lbl.add_theme_font_size_override("font_size", 22)
@@ -59,7 +59,7 @@ func _build_ui() -> void:
 	main_vbox.add_child(title_lbl)
 
 	var subtitle_lbl := Label.new()
-	subtitle_lbl.text = "Hào quang cổ xưa soi chiếu lòng Hầm Mỏ Moria. Hãy chọn 1 nguồn sức mạnh để tiếp tục đào sâu."
+	subtitle_lbl.text = "Ancient radiance illuminates the Mines of Moria. Select one Perk to strengthen your expedition."
 	subtitle_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	subtitle_lbl.add_theme_font_override("font", UITheme.FONT_BODY)
 	subtitle_lbl.add_theme_font_size_override("font_size", 12)
@@ -118,7 +118,7 @@ func _create_perk_card(perk: PerkData) -> Control:
 
 	# 1. Huy hiệu Phẩm Cấp (Rarity Badge)
 	var badge_lbl := Label.new()
-	badge_lbl.text = "✦ " + perk.get_rarity_name().to_upper() + " ✦"
+	badge_lbl.text = perk.get_rarity_name().to_upper()
 	badge_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	badge_lbl.add_theme_font_override("font", UITheme.FONT_BODY_BOLD)
 	badge_lbl.add_theme_font_size_override("font_size", 10)
@@ -172,7 +172,7 @@ func _create_perk_card(perk: PerkData) -> Control:
 	card_vbox.add_child(desc_lbl)
 
 	# 5. Nút bấm Chọn
-	var btn := UITheme.create_button("TIẾP NHẬN", "", Vector2(180, 36), border_color, UITheme.COLOR_BG_DARK, 12)
+	var btn := UITheme.create_button("ACCEPT", "", Vector2(180, 36), border_color, UITheme.COLOR_BG_DARK, 12)
 	btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	btn.pressed.connect(func():
 		_on_perk_card_selected(perk)
@@ -199,7 +199,7 @@ func _on_perk_card_selected(perk: PerkData) -> void:
 	perk_chosen.emit(perk)
 
 	if get_tree():
-		get_tree().call_group("game_ui", "show_banner", "CHÚC PHÚC: " + perk.name.to_upper(), perk.get_rarity_color())
+		get_tree().call_group("game_ui", "show_banner", "PERK ACQUIRED: " + perk.name.to_upper(), perk.get_rarity_color())
 
 	if _on_complete_callback.is_valid():
 		_on_complete_callback.call()

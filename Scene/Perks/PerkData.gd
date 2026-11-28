@@ -9,10 +9,10 @@ enum Rarity {
 }
 
 const RARITY_NAMES: Dictionary = {
-	Rarity.COMMON: "Thường (Common)",
-	Rarity.RARE: "Hiếm (Rare)",
-	Rarity.EPIC: "Sử Thi (Epic)",
-	Rarity.LEGENDARY: "Huyền Thoại (Legendary)"
+	Rarity.COMMON: "Common",
+	Rarity.RARE: "Rare",
+	Rarity.EPIC: "Epic",
+	Rarity.LEGENDARY: "Legendary"
 }
 
 const RARITY_COLORS: Dictionary = {
@@ -42,7 +42,7 @@ var _cached_pixel_texture: Texture2D = null
 var _cached_full_texture: Texture2D = null
 
 func get_rarity_name() -> String:
-	return RARITY_NAMES.get(rarity, "Thường")
+	return RARITY_NAMES.get(rarity, "Common")
 
 func get_rarity_color() -> Color:
 	return RARITY_COLORS.get(rarity, Color.WHITE)

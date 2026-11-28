@@ -3,9 +3,10 @@ extends "res://Scene/Character/Player 1_Pyrois/player.gd"
 ##   Left Click   3-step combo: Stab (long thrust) -> Twin Swing (2 hits) -> Ground Smash
 ##                (area hit + daze). Keep clicking, or hold, to chain.
 ##   Right Click  Twin Barrels: both barrels fire a round along the aim (hold to keep firing).
-##   Q            White Moon: transformation into the white-haired form for 12s - takes no
-##                damage at all (from the transformation until she has changed back), +1 damage
-##                on every hit, attacks 25% faster, moves 20% faster, piercing rounds.
+##   Q            White Moon: transformation into the white-haired form for 12s - full damage
+##                immunity for the first 2.5s, then 30% damage reduction for the remaining 9.5s,
+##                +1 damage on every hit, attacks 25% faster, moves 20% faster, piercing rounds.
+##                Cooldown: 24s with a White Moon-specific 30% CDR cap (min 16.8s).
 ## Stance (from the sprite README): standing still she keeps the weapons on her back (idle);
 ## moving draws them to the front (draw -> run); after 2s without fighting she puts them away
 ## again (draw played backwards). Hit / fire frames follow sheet_full.json "meta.events".
@@ -24,6 +25,9 @@ const UPGRADED_ATTACK_RATE := 1.25
 const UPGRADED_SPEED := 1.2
 const REVERT_RATE := 2.0
 const BLOCK_SFX_GAP := 0.2          # White Moon block "ting": at most one every 0.2s
+const WHITE_MOON_IMMUNITY_DURATION := 2.5
+const WHITE_MOON_DAMAGE_REDUCTION := 0.30
+const WHITE_MOON_CDR_CAP := 0.30
 
 # Left Click combo. "box" = [ahead from, ahead to, centre y, half height] in game units from her
 # feet; "circle" = [ahead, y, radius]. "chain" = frame from which a queued next step may start.
@@ -35,12 +39,14 @@ const COMBO: Array = [
 
 var shoot_cooldown: float = 0.8
 var upgrade_duration: float = 12.0
+var upgrade_immunity_duration: float = WHITE_MOON_IMMUNITY_DURATION
 var bullet_speed: float = 320.0
 var bullet_range: float = 220.0
 
 var facing: float = 1.0
 var form: String = "base"           # base (black hair) / upgraded (white hair)
 var form_time: float = 0.0
+var form_immune_time: float = 0.0
 var stance: String = "sheathed"     # sheathed / drawing / combat / sheathing
 var stance_t: float = 0.0
 var q_cd: float = 0.0
@@ -63,6 +69,7 @@ func _ready() -> void:
 	var cfg: Dictionary = BalanceData.get_hero_stats("luong_tho")
 	shoot_cooldown = float(cfg.get("rmb_cooldown", shoot_cooldown))
 	upgrade_duration = float(cfg.get("upgrade_duration", upgrade_duration))
+	upgrade_immunity_duration = float(cfg.get("upgrade_immunity_duration", WHITE_MOON_IMMUNITY_DURATION))
 	bullet_speed = float(cfg.get("bullet_speed", bullet_speed))
 	bullet_range = float(cfg.get("bullet_range", bullet_range))
 	super._ready()
@@ -116,13 +123,18 @@ func _set_form(f: String) -> void:
 	animated_sprite.sprite_frames = Sprites.character_frames(f)
 	animated_sprite.speed_scale = UPGRADED_ATTACK_RATE if form == "upgraded" else 1.0
 
+func get_effective_q_cooldown() -> float:
+	var cdr := PerkManager.get_cooldown_reduction() if get_node_or_null("/root/PerkManager") != null else 0.0
+	var capped_cdr := minf(cdr, WHITE_MOON_CDR_CAP)
+	return skill_cooldown * (1.0 - capped_cdr)
+
 # ------------------------------------------------------------------ main loop
 func _process(_delta: float) -> void:
 	if q_cd != _ui_sent[0] or rmb_cd != _ui_sent[1]:
 		_ui_sent = [q_cd, rmb_cd]
 		q_cd_remaining = q_cd
 		rmb_cd_remaining = rmb_cd
-		skill_cooldown_changed.emit(q_cd, skill_cooldown, rmb_cd, rmb_cd_max)
+		skill_cooldown_changed.emit(q_cd, get_effective_q_cooldown(), rmb_cd, rmb_cd_max)
 
 func _physics_process(delta: float) -> void:
 	if is_dead:
@@ -138,6 +150,7 @@ func _physics_process(delta: float) -> void:
 	can_use_skill = q_cd <= 0.0
 	if form == "upgraded" and move != "revert":
 		form_time = maxf(0.0, form_time - delta)
+		form_immune_time = maxf(0.0, form_immune_time - delta)
 
 	var gm = get_node_or_null("/root/GameManager")
 	var replaying: bool = gm != null and gm.is_replaying
@@ -351,8 +364,7 @@ func _fire() -> void:
 
 # ------------------------------------------------------------------ Q: White Moon transformation
 func _start_transform() -> void:
-	var cdr := PerkManager.get_cooldown_reduction() if get_node_or_null("/root/PerkManager") != null else 0.0
-	q_cd = skill_cooldown * (1.0 - cdr)
+	q_cd = get_effective_q_cooldown()
 	can_use_skill = false
 	_untouchable = true
 	velocity = Vector2.ZERO
@@ -366,12 +378,14 @@ func _step_transform() -> void:
 	if move_t >= Sprites.duration("transform"):
 		_set_form("upgraded")
 		form_time = upgrade_duration
+		form_immune_time = upgrade_immunity_duration
 		stance = "sheathed"
 		_end_move()
 
 ## The white form wears off: the transformation plays backwards (twice as fast).
 func _start_revert() -> void:
 	_set_form("base")
+	form_immune_time = 0.0
 	animated_sprite.speed_scale = REVERT_RATE
 	_untouchable = true
 	velocity = Vector2.ZERO
@@ -406,9 +420,14 @@ func _flash_block() -> void:
 	tween.tween_property(animated_sprite, "modulate", Color(0.75, 0.9, 1.6), 0.05)
 	tween.tween_property(animated_sprite, "modulate", Color.WHITE, 0.12)
 
-## True while nothing can hurt her: transforming, the whole white-haired form, changing back.
+## True while nothing can hurt her: transforming, first 2.5s of White Moon, or reverting.
 func is_immune() -> bool:
-	return _untouchable or form == "upgraded"
+	return _untouchable or (form == "upgraded" and form_immune_time > 0.0)
+
+func reduce_white_moon_damage(amount: int) -> int:
+	if amount <= 0:
+		return 0
+	return maxi(1, int(round(float(amount) * (1.0 - WHITE_MOON_DAMAGE_REDUCTION))))
 
 func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 	if is_dead:
@@ -420,8 +439,9 @@ func take_damage(amount: int, armor_piercing: float = 0.0) -> void:
 				_block_sfx_cd = BLOCK_SFX_GAP
 				_sfx("lt_block")
 		return
+	var incoming := reduce_white_moon_damage(amount) if form == "upgraded" else amount
 	var before := hp + current_armor
-	super.take_damage(amount, armor_piercing)
+	super.take_damage(incoming, armor_piercing)
 	if is_dead:
 		move = ""
 		is_casting_skill = false
