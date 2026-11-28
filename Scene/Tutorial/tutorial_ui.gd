@@ -32,6 +32,7 @@ var _intent := ""
 var _secondary_action := "resume"
 var _tooltip_slot: WeakRef
 var _tooltip_item_id := 0
+var _inventory_dirty := true
 
 func _ready() -> void:
 	layer = 35
@@ -183,11 +184,20 @@ func bind_context(value: Node) -> void:
 	_hide_tooltip()
 	if is_instance_valid(context) and context.local_feedback.is_connected(_feedback):
 		context.local_feedback.disconnect(_feedback)
+	if is_instance_valid(context) and is_instance_valid(context.hero):
+		var previous: Node = context.hero.inventory
+		if previous.inventory_changed.is_connected(_inventory_changed): previous.inventory_changed.disconnect(_inventory_changed)
+		if previous.equipment_changed.is_connected(_inventory_changed): previous.equipment_changed.disconnect(_inventory_changed)
 	context = value
 	arena.texture = context.viewport.get_texture() if is_instance_valid(context) else null
 	if is_instance_valid(context):
 		context.local_feedback.connect(_feedback)
+		context.hero.inventory.inventory_changed.connect(_inventory_changed)
+		context.hero.inventory.equipment_changed.connect(_inventory_changed)
 	_refresh_inventory()
+
+func _inventory_changed() -> void:
+	_inventory_dirty = true
 
 func _feedback(method: StringName, arguments: Array) -> void:
 	if method == &"spawn_damage_number" and arguments.size() >= 2:
@@ -217,12 +227,13 @@ func _process(delta: float) -> void:
 		if host.hero_index == 5: skill = hero.friend_cd
 		if host.hero_index == 6 or host.hero_index == 7: skill = hero.q_cd
 		status.text = "HP %d / %d    ARMOR %d / %d\nDMG %d  /  Q cooldown %.1fs\nPotions %d  /  Cooldown %.1fs" % [hero.hp, hero.max_hp, hero.current_armor, hero.max_armor, hero.get_total_damage(), skill, hero.inventory.get_potion_count(), hero.potion_cooldown_remaining]
-		_refresh_inventory()
+		if _inventory_dirty: _refresh_inventory()
 	_feedback_left = maxf(0.0, _feedback_left - delta)
 	if _feedback_left == 0.0:
 		feedback_label.text = "Practice only - your run, items and rewards are preserved."
 
 func _refresh_inventory() -> void:
+	_inventory_dirty = false
 	var inventory: Node = context.hero.inventory if is_instance_valid(context) and is_instance_valid(context.hero) else null
 	for index in bag_slots.size():
 		bag_slots[index].set_item(inventory.bag[index] if inventory != null else null)

@@ -57,9 +57,9 @@ func snapshot() -> Dictionary:
 		result.files[file] = FileAccess.get_file_as_bytes("user://" + file)
 	return result
 
-func capture(tag: String) -> void:
+func capture(tag: String, windowed := true) -> void:
 	if not OS.get_cmdline_user_args().has("--tutorial-capture") or DisplayServer.get_name() == "headless": return
-	get_window().mode = Window.MODE_WINDOWED
+	if windowed: get_window().mode = Window.MODE_WINDOWED
 	get_window().show()
 	get_window().grab_focus()
 	await get_tree().process_frame
@@ -183,6 +183,15 @@ func click_control(control: Control) -> void:
 	get_viewport().push_input(event, true)
 	await ticks(3)
 
+func choose_portal(panel: CanvasLayer, yes: bool) -> void:
+	var button: Button = panel.yes_button if yes else panel.no_button
+	if DisplayServer.get_name() == "headless":
+		button.grab_focus()
+		await get_tree().process_frame
+		await key(KEY_E, "interact") # Native confirmation input, including its selected button.
+	else:
+		await click_control(button)
+
 func move_to(point: Vector2) -> void:
 	for unused in 300:
 		var offset: Vector2 = point - context.hero.position
@@ -202,10 +211,12 @@ func combat_steps() -> void:
 		await ticks(2)
 	check(host.session.get_current_step() == 1, "Actual movement through host")
 	await move_to(Vector2(295, 200))
+	await capture("hero_%d_basic_lesson" % host.hero_index)
 	await click_world(Vector2(320, 188))
 	check(host.session.get_current_step() == 2, "Actual world click / basic contact through UI")
 	await pointer(Vector2(320, 188))
 	check(context.hero.get_aim_world_position().distance_to(Vector2(320, 188)) < 1.0, "Live mouse event maps to actual private-world aim")
+	await capture("hero_%d_skill_lesson" % host.hero_index)
 	await key(KEY_Q, "skill_1")
 	await ticks(190)
 	check(host.session.get_current_step() == 3, "Actual representative Q through host")
@@ -241,6 +252,7 @@ func seven_steps() -> void:
 			" regen=", context.hero.regen_tick_timer.time_left, " flags=", [context._absorbed, context._lost_hp, context._guarded],
 			" age=", Engine.get_physics_frames() - context._hp_loss_tick)
 	check(host.session.get_current_step() == 6 and context.hero.hp < context.hero.max_hp, "Actual hazard / armor regen")
+	await capture("hero_%d_potion_lesson" % host.hero_index)
 	var potion_slot := -1
 	for index in context.hero.inventory.bag.size():
 		var item: ItemData = context.hero.inventory.bag[index]
@@ -254,6 +266,7 @@ func seven_steps() -> void:
 		"Seven real steps leave ACTIVE at dungeon entry")
 	check(host.mode == "entry" and hall.hero.can_process() and host.flow == null and host.ui == null \
 		and get_tree().get_nodes_in_group("training_player").is_empty(), "Practice cleanup and original input restored")
+	await capture("hero_%d_entry_guidance" % host.hero_index)
 
 func finish(marker: String) -> void:
 	_baseline.clear()

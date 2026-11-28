@@ -21,6 +21,8 @@ var lease: RefCounted
 var observer: Node
 var prompt_layer: CanvasLayer
 var prompt_button: Button
+var entry_hint: Label
+var portal_marker: Polygon2D
 var mode := "waiting"
 var invitation_shown := false
 var _restarting := false
@@ -57,6 +59,13 @@ func _available() -> bool:
 		return false
 	for node in hall.find_children("*", "", true, false):
 		if node == self or is_ancestor_of(node): continue
+		# External effects can own unbound SceneTreeTimers. Let them finish before
+		# acquiring input, rather than expiring a frozen production projectile.
+		if node != production_hero and not production_hero.is_ancestor_of(node) and node.get_script() != null:
+			var path: String = node.get_script().resource_path
+			if path.begins_with("res://Scene/Projectiles/") or Flow.Combat.ALLOWED_EFFECTS.has(path.get_file()) \
+				or node.get("caster") == production_hero:
+				return false
 		if node.get("inventory_modal") is Control and node.inventory_modal.is_visible_in_tree():
 			return false
 		if node.get("teleporting") == true or node.get("shop") != null:
@@ -73,6 +82,7 @@ func _build_prompt() -> void:
 	add_child(prompt_layer)
 	prompt_button = Button.new()
 	prompt_button.text = "Adventurer Training"
+	prompt_button.tooltip_text = "Finish active effects and close other screens before starting training."
 	prompt_button.theme = UI.Pixel.make_theme(load("res://Assets/UI/Shop/forge5vn.fnt"))
 	prompt_button.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
 	prompt_button.offset_left = 16
@@ -81,10 +91,46 @@ func _build_prompt() -> void:
 	prompt_button.offset_bottom = -16
 	prompt_layer.add_child(prompt_button)
 	prompt_button.pressed.connect(open_invitation)
+	entry_hint = Label.new()
+	entry_hint.theme = prompt_button.theme
+	entry_hint.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+	entry_hint.offset_left = -400
+	entry_hint.offset_right = 0
+	entry_hint.offset_top = 82
+	entry_hint.offset_bottom = 126
+	entry_hint.scale = Vector2(2, 2)
+	entry_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	entry_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	entry_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	entry_hint.add_theme_font_size_override("font_size", 14)
+	entry_hint.add_theme_color_override("font_color", Color("f4d58c"))
+	entry_hint.add_theme_color_override("font_outline_color", Color("171219"))
+	entry_hint.add_theme_constant_override("outline_size", 4)
+	var hint_panel := StyleBoxFlat.new()
+	hint_panel.bg_color = Color(0.06, 0.04, 0.07, 0.94)
+	hint_panel.border_color = Color("b89a52")
+	hint_panel.set_border_width_all(1)
+	hint_panel.content_margin_left = 8
+	hint_panel.content_margin_right = 8
+	hint_panel.content_margin_top = 5
+	hint_panel.content_margin_bottom = 5
+	entry_hint.add_theme_stylebox_override("normal", hint_panel)
+	prompt_layer.add_child(entry_hint)
+	entry_hint.hide()
+	portal_marker = Polygon2D.new()
+	portal_marker.polygon = PackedVector2Array([Vector2(-7, -10), Vector2(7, -10), Vector2(0, 0)])
+	portal_marker.color = Color("f4d58c")
+	portal_marker.z_index = 100
+	add_child(portal_marker)
+	var portal := hall.get_node_or_null("Props/RuneSword")
+	if portal != null: portal_marker.position = hall.to_local(portal.global_position) + Vector2(0, -40)
+	portal_marker.hide()
 	prompt_layer.hide()
 
 func _process(_delta: float) -> void:
 	if _closing: return
+	entry_hint.visible = mode == "entry"
+	portal_marker.visible = mode == "entry"
 	if not _valid_hero():
 		cancel()
 		return
@@ -352,7 +398,8 @@ func _restore() -> void:
 	if is_instance_valid(ui): ui.queue_free()
 	ui = null
 	prompt_layer.show()
-	prompt_button.text = "Rune Portal: " + UI.Content.binding(&"interact") + "  |  Train again" if mode == "entry" else "Adventurer Training"
+	prompt_button.text = "Train again" if mode == "entry" else "Adventurer Training"
+	entry_hint.text = "Practice complete! Follow the gold marker to the Rune Portal.\nStand beside the sword, press %s, then confirm when ready." % UI.Content.binding(&"interact")
 	print("[TRACE] tutorial production input restored after neutral controls")
 
 func _ui_destroyed() -> void:

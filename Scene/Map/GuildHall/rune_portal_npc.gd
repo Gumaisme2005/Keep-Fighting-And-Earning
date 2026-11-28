@@ -14,6 +14,12 @@ const FLASH_OUT := 0.6     # tan dần khi đã ở hầm ngục
 
 var teleporting := false
 var flash: CanvasLayer = null
+var _portal_request := -1
+var _portal_run := -1
+var _portal_hero: WeakRef
+var _return_position := Vector2.ZERO
+var _portal_mode: Node.ProcessMode
+var _portal_committed := false
 
 func can_open() -> bool:
 	return not teleporting and super.can_open()
@@ -43,6 +49,10 @@ func start_teleport(who: Node2D) -> void:
 	if teleporting or who == null:
 		return
 	teleporting = true
+	_portal_mode = process_mode
+	_portal_hero = weakref(who)
+	_return_position = who.global_position
+	_portal_committed = false
 	teleport_started.emit(who)
 	var tree := get_tree()
 	tree.paused = true
@@ -91,11 +101,33 @@ func start_teleport(who: Node2D) -> void:
 	var gm := get_node_or_null("/root/GameManager")
 	var entered := false
 	if gm != null and gm.has_method("enter_dungeon_from_hall"):
+		if not gm.hall_dungeon_handoff.is_connected(_on_handoff): gm.hall_dungeon_handoff.connect(_on_handoff)
 		entered = bool(gm.enter_dungeon_from_hall(who))
+		if entered:
+			_portal_request = gm._hall_request_serial
+			_portal_run = gm.run_id
 	if not entered:
-		teleporting = false
-		flash = null
-		fl.queue_free()
+		_recover_portal()
+
+func _on_handoff(_hero: Node2D, _world: Node, expected_run: int, request: int, success: bool) -> void:
+	if request != _portal_request or expected_run != _portal_run: return
+	_portal_request = -1
+	_portal_committed = success
+	if not success: _recover_portal()
+
+func _recover_portal() -> void:
+	teleporting = false
+	process_mode = _portal_mode
+	var actor = _portal_hero.get_ref() if _portal_hero != null else null
+	var current := get_tree().current_scene
+	if current != null and is_instance_valid(actor) and not actor.is_queued_for_deletion() and current.is_ancestor_of(actor):
+		actor.global_position = _return_position
+	if is_instance_valid(flash) and not flash.is_queued_for_deletion(): flash.queue_free()
+	flash = null
+	if sprite_frames.has_animation("idle"): play("idle")
+
+func _exit_tree() -> void:
+	if not _portal_committed and is_instance_valid(flash) and not flash.is_queued_for_deletion(): flash.queue_free()
 
 func _make_flash() -> CanvasLayer:
 	var layer := CanvasLayer.new()

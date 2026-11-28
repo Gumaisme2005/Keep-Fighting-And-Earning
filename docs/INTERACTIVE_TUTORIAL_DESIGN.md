@@ -1273,3 +1273,317 @@ All 12 required existing trace pairs match. Bug-bash and tactical-base-enemy exe
 Reproduction uses the committed runner with Godot 4.7.2: run every Tutorial row above with `--cross-fps --suites ...`; run the 43 listed existing suites with `--fps 144`, and the 14 listed CI groups with `--fps 30`. GUI evidence is reproduced by `python tests/run_tutorial_verification.py --godot <engine> --graphical --capture --suites test_tutorial_ui test_tutorial_dungeon_entry`. Python contracts: `python -m unittest discover -s tests -p "test_*runner.py"`. `source_manifest.json`, `results.json`, per-suite logs and profile ownership remain under each ignored evidence directory.
 
 Graphical final evidence contains 29 retained PNGs (five UI captures and consent/arena/inventory for each of eight heroes). The final 1920x1080 layout and Yugi inventory/Doraemon arena images were visually inspected after the last functional fix; prior resolution inspections are supplemented by the final responsive assertions. No generated evidence is committed. Human exploratory play, a cold application restart with a real returning profile, unusual DPI/multi-monitor/fullscreen cases, read-only media and power-loss durability remain NOT VERIFIED as described in the Task 5 acceptance checklist.
+
+# Task 5 — final safety, polish and verification
+
+The Task 1–4 sections above are historical records. Task 5 evidence below supersedes their acceptance limits only where a new check actually ran. Human acceptance remains separate: see [the per-hero checklist](INTERACTIVE_TUTORIAL_ACCEPTANCE.md). The prepared [PR description](INTERACTIVE_TUTORIAL_PR.md) is review material; this task does not create a PR or merge any branch.
+
+## Audit scope and findings
+
+Reviewed session/event-source authority, flow/context replacement, observer lifetime, input adapter/lease/release guard, arena/UI ownership, completion persistence, BasePlayer and all eight hero gameplay/timer/input boundaries, InventoryManager/WorldItem/InventorySlot transaction observation, Guild Hall selection/activation, Rune Portal, GameManager staging, generator initialization, menu entry points, runner/CI/batch gates and prior documentation. Hero-specific balance and ordinary production timer durations are preserved. No autoload or additional game mode was added.
+
+| Finding | Severity | Reproduction evidence before fix | Fix / disposition |
+|---|---|---|---|
+| F-01 Pending Hall request outlives missing entity initialization | HIGH | `run-h4cws2n4`: after a real 46-second wait, TRANS-08 failed; deferred failure suite 10 PASS / 3 FAIL | GameManager owns the request deadline and releases provisional world/authority on failure; original Hall retained for retry |
+| F-02 Acceptance clears recording / dirties progression before success | HIGH | Same baseline: TRANS-12 detects acceptance mutation before deferred hero deletion | Delay seed/floor/stats/recording commit until actual initialized handoff; no full GameManager snapshot/restore |
+| F-03 Stale callback clears a newer request | HIGH | Same baseline: TRANS-10 fails after an old run/request callback | Match run, serial, hero and staged world before touching current authority |
+| F-04 Production external projectile expires while practice lease freezes its node | HIGH | `run-vbk70tap`: live Miya arrow disappears during consent; 4 PASS / 1 FAIL | Defer acquiring training input while external projectiles/caster effects exist; let their original timers finish |
+| F-05 Wrong-order pickup prevents equipment lesson | HIGH | `run-5ot4j1b9`: real dropped potion pickup, then armor pickup/equip; equipped armor cannot advance (358 PASS / 2 FAIL total) | Record ownership of every successful private pickup, while granting pickup progress only at its current step |
+| F-06 Full healing during survival prevents a new HP deficit | HIGH | Same baseline: real hazard damage + Doraemon F, full-health callback; repeated real hazard overlap cannot continue | Allow damage again at full HP; preserve guard, nonlethal damage, cooldown and natural regeneration checks |
+| F-07 Empty seed written by generator during provisional staging | HIGH | `run-h3b_qvu8`: silent staged generator with empty seed mutates seed and releases request early; subsequent assertions fail | Read explicit staging metadata before the normal generator fallback can update GameManager |
+| F-08 Final portal direction too easy to miss | MEDIUM | Actual rendered entry screenshot: small gold text over bright Hall floor; replay button label clipped in prior presentation | Persistent dark-backed, enlarged entry hint, gold marker above Rune Portal and short Train again label |
+| F-09 Static arena redraw and bag reconstruction repeat each frame | LOW | Source audit: unchanged geometry/slots rebuilt during polling | Redraw arena on step change; dirty inventory on committed inventory/equipment signals. No numerical FPS improvement is claimed |
+| F-10 Pyrois training contact shifts one physics tick | REVIEW | Historical/current five-sample probe at both FPS rates, raw metrics retained | Explained by original timer clock and scheduling order; no Task 5 hero timing/balance change |
+| F-11 OS lost-key-release acceptance cannot be inferred from synthetic focus calls | ACCEPTANCE | GUI minimize attempt leaves `focused=true`; no actual OS `focus_exited` delivered | Emit explicit GUI_NOT_VERIFIED, retain deterministic handler tests; real Alt-Tab remains human acceptance |
+
+Baseline evidence is intentionally retained under ignored `.godot/tutorial_verification/`. Failed or interrupted development invocations are not final regression evidence. Some experimental fixtures exposed their own startup/aim/focus assumptions; those failures are recorded separately from verified product defects.
+
+## Transition ownership and commit boundary
+
+An accepted request captures weak Hall/hero/parent references, identity, transform, run, serial and seed. Staging freezes processing and CanvasLayer visibility, moves the same original hero into an invisible disabled world, and generates real floor 1 using a local seed. It does not clear recording or register progression. The Hall remains current until `entities_initialized` proves that the expected original hero belongs to the initialized generator, occupies its first-room spawn, and still matches the current run/request/seed.
+
+Only successful initialization commits seed, floor 1, recording reset and stats, restores the actor's original processing modes, installs the world as current scene, and emits successful handoff. Tutorial observer then verifies that boundary independently before completion/save. A deferred animation, accepted request, timer expiry or fake handoff is never success evidence.
+
+Missing initialization, hero/world deletion, run/seed/replay changes and current-scene replacement release only the matching request. Failure deletes the provisional world and restores the original live actor/Hall when those still exist. Deleted actors are not resurrected or reconstructed; the normal Hall/menu/new-run recovery applies. The portal clears its teleport flag, restores its processing mode, returns a surviving actor to its pre-animation position and removes failed flash ownership, so confirmation can be retried. A stale callback cannot unlock a newer request. This uses owned references/process restoration, not state rollback to hide progression writes.
+
+`test_tutorial_transition_safety` repeats duplicate/deferred deletion, stale callback, initialization faults, real portal cancel/failure/retry, run change and scene replacement five times. One silent-generator case per FPS waits 46 real seconds; other timeout cases explicitly inject the failure clock. Retry success always uses the actual world generator and production portal path. The previous dungeon-entry suite verifies Tutorial TRANS-02 separately for all eight heroes, including completion-save failure and skipped entry. TRANS-01–15 are covered collectively by these two suites; cancellation checks are additional cases.
+
+## Input, asynchronous work and lifetime
+
+No global Input reset is introduced. The adapter gates polling and event input; neutral controls must persist across the authority boundary. Production Hall processing, ALWAYS timers, CanvasLayers, mouse mode and focus ownership are restored by the lease. A release guard retains the lease when the host disappears with controls held, and releases it once neutral or when the owning Hall exits. Replaced/detached heroes cannot regain input from an old lease.
+
+External projectiles and character effects may own SceneTreeTimers that a disabled node does not stop. Acquisition now waits for those external effects to finish. Owned hero cooldown/buff/regen/cast timers remain suspended with their hero. This avoids changing normal projectile or production skill timing. The stress suite performs 20 start/restart/skip or host-exit cycles across all eight heroes, counts live clones/root tickets/source ownership/connections and checks production identity, inventory, Wallet, RNG, perks, cooldowns and save bytes while leased. An actual menu scene change must free the practice world/UI/lease and disconnect sources.
+
+The long-session case launches a real arrow, deliberately freezes that effect and ages its action fact for pruning, performs a newer real Q, resumes an actual collision and verifies that the old basic action receives exactly one credit. Controlled aging is not a claim that the ordinary two-second arrow naturally lives 31 seconds. A separate real 31-second soak verifies bounded dead-effect/fact pruning. Existing skill suites cover summons, multi-effect activations, stale sessions and duplicate contacts.
+
+## Pyrois: measured timer differences
+
+The comparison extracts Task 3 commit `75a793f8acf6970779eb03acb8bb46b2446c0327` into a separate ignored project and copies the same probe into that project and current source. It never checks out or modifies a branch. Each phase/rate takes five samples after scene/camera warm-up. Q follows the native pending-input/hero-physics path; the probe observes actual hitbox opening, physics contact, damage/immunity, position and recovery. Production uses a normal world/target; training reaches the skill by real movement/basic contact.
+
+Configured charge/recovery remain 0.3 / 0.2 seconds. The original production clock is idle/render time; training uses fixed physics time. Initial probe assumptions of a physics-only 42-pixel lower bound failed an original Task 3 30 FPS sample at 40 pixels. Bounds now derive from one actual timer-clock quantum plus one physics observation quantum. Raw contact/window/recovery/distance/damage remain in every log; there is no normalization that hides the one-tick difference and no assertion that production idle-clock samples must be byte-identical across FPS.
+
+Godot's [Timer implementation](https://raw.githubusercontent.com/godotengine/godot/4.7.2-stable/scene/main/timer.cpp) and [SceneTree timer dispatch](https://raw.githubusercontent.com/godotengine/godot/4.7.2-stable/scene/main/scene_tree.cpp) use different expiry comparisons/order. Historical training opens/contacts at tick 19 and recovers at 32, distance 45; current training opens/contacts at 20 and recovers at 33, distance about 45.493. Both rates preserve one contact and expected damage, charge immunity and recovery of vulnerability. Production measurements retain their original render-clock quantization; the final evidence table below records both historical/current ranges. This supports a scheduling difference in training with preserved tested gameplay contracts. Human judgment of charge feel remains NOT VERIFIED.
+
+## Persistence and runner contracts
+
+Completion schema/version remain 1 and use only `user://tutorial_progress.json`. Strict validation includes missing, empty, malformed/truncated, wrong-type, unsupported, oversized, stale temporary, existing completed and multiple-instance/idempotency cases. Temporary write and rename failures retain memory completion and a diagnostic without making dungeon entry unplayable. A real disposable-directory ACL/chmod denial verifies actual write failure and restoration; no user production directory permissions are changed.
+
+The cold runner imports once, launches process A with a fresh disposable profile, exits it, and launches process B with that same profile. Each prints its actual PID and verifies fresh static completion memory. A completes real training/portal/dungeon and writes a valid save; B loads disk completion through a real new Hall visit, suppresses auto consent, supports manual replay/restart/skip and preserves existing completion and unrelated save files. The runner rejects repeated PIDs, missing phase evidence, errors, failed assertions, missing/duplicate completion markers and timeouts.
+
+The fixed `.tmp` file is safe for the current sequential, single-threaded completion owner and multiple re-reading instances tested here. Independent simultaneous app writers and power-loss durability remain NOT VERIFIED. No power-off or production-data fault experiment was performed.
+
+All old suites/assertions remain. New evidence gates require all eight hero identities, all 20 lifecycle rounds, all five transition rounds, actual menu cleanup, recovery and the real soak. Python contract tests deliberately reject incomplete/error output. The batch runner fails immediately before proceeding to cold relaunch. CI adds a parallel safety/cold job and uploads logs/manifests/results on failure; the old full job is retained. Task 4's full job took 53m11s, with movement/combat 8m27s, inventory/survival 7m29s and six Hall suites 11m07s. New fault/soak work therefore runs in parallel rather than extending that serial path. Local cold imports are serialized to avoid intermittent Godot renderer-import shutdown errors; such errors fail the invocation and are never accepted as PASS.
+
+## Compatibility review
+
+At initial audit, development is `43dc122edfdad13c22640a938378254b207e4140`, an ancestor of Task 4. Task 4 exact-SHA full CI is SUCCESS: [run 46131900973](https://github.com/Gumaisme2005/Keep-Fighting-And-Earning/actions/runs/46131900973). PR #104 Orc is open and is not merged here. PR #107 balance/shop/README is also open; its overlap is review context only. BT3 PRs are untouched. Issue #62 remains guidance/control/lore context, assigned to Bravee9; this feature references it without closing the broader issue or adding lore.
+
+The FPS/UI branch remains separate at `1121564b8a4cc5e5f49c20254f137860832ed2b9`. A three-way `git merge-file -p --diff3` rehearsal uses its common ancestor `34d940c3c82231d2672a9a62d496508f36c90748`, current working files and remote file versions in an ignored directory. No index, branch or worktree merge is performed. Nine files overlap: main menu, pause menu, README, BalanceConfig, BasePlayer, GameUI, project.godot, run_tests.bat and test_perk_system. Six have actual textual conflict markers: main menu (8), pause menu (1), BasePlayer (1), GameUI (2), runner (15), perk test (11). The other three merge textually but still need semantic settings/input/UI review. This includes development changes inherited since the common ancestor; it is not a claim that all nine were edited by Tutorial. Direct Task 5 overlap is the batch runner. Tutorial-owned whole-branch overlap includes the menu activation, BasePlayer input/timers and HUD practice guards. Preserve both branches' behavior when intentionally resolving those conflicts and rerun the full gates. Development ancestry means no current development merge conflict; it does not imply future FPS/UI integration will be conflict-free.
+
+## Final Task 5 verification results (2026-11-28)
+
+All results in this section passed their completion/evidence/error gates. F-01 through F-07 are CLOSED by the targeted tests below. No verified critical/high technical defect remains in the exercised scope. Human acceptance and the new commit's CI are separate merge gates. Failed/interrupted development runs are excluded.
+
+### Source provenance
+
+Final 608-file local manifest: `8869b5885c3579c49505aed7d0295edf4076c5dbddfd278eb259d23b177a66a8`. Common 607-file manifest: `c02f356673c15989dd09d80bf1f3a5106649679a2bb3dbf5de775dbc12726f10`. The manifest covers gameplay/scenes/resources, all test scripts and UIDs, Python runners, project configuration, batch runner and workflow; unchanged assets remain at the recorded Git baseline. Documentation is outside this functional manifest.
+
+The last edit only changes `tests/test_tutorial_dungeon_entry.gd`: aim a post-entry native mouse attack at the world center rather than the OS cursor, then assert attack state and recording separately. Its final version passed at 30/144 FPS and in the GUI. The earlier foundation, safety and 43-suite invocations never execute or load that test fixture; all their executed tests, helpers, production files and the other 607 manifest entries are byte-identical to final source. Their original manifests/copies remain intact. This is an explicit unused-fixture difference, not a claim that all 608 files were identical in every invocation. No old result for the changed fixture is reused.
+
+The collector checks every copied source file against its captured manifest (606 copied entries; batch/workflow are fingerprinted at the root), accounts only for the disposable project-name/newline conversion, rejects any unexpected difference and checks that the older unused fixture is absent from the executed suites. Git staging additionally checks normalized source bytes.
+
+| Gate | Evidence directory under `.godot/tutorial_verification/` | Jobs including import | Trace pairs | Unused fixture difference |
+|---|---|---:|---:|---|
+| task1_3 | `run-cxltfmve` | 16 | 7 | Only the unexecuted dungeon-entry fixture |
+| task4 | `run-52lxbvya` | 13 | 6 | None |
+| task5 | `run-gex8phc2` | 7 | 2 | Only the unexecuted dungeon-entry fixture |
+| existing144 | `run-bv6rhfaq` | 44 | 0 | Only the unexecuted dungeon-entry fixture |
+| existing30 | `run-mdy9eien` | 15 | 0 | None |
+| graphical | `run-3so5uj0h` | 3 | 0 | None |
+| cold_graphical | `run-5fwg80h7` | 3 | 0 | None |
+| cold30 | `run-xy7ypdc_` | 3 | 0 | None |
+
+Machine-readable proof: `.godot/tutorial_verification/task5_final_evidence.json`, `task5_freeze.json` and each run's `source_manifest.json`, `results.json`, logs and profile ownership. All retained accepted jobs exit 0, with zero runtime/script errors. Expected invalid-Wallet and intentionally failed-save warnings are retained; no leaked ObjectDB/RID warning appears in the accepted suite logs.
+
+### Tutorial assertions
+
+| Suite | 30 FPS PASS | 144 FPS PASS | Required trace |
+|---|---:|---:|---|
+| `test_tutorial_framework` | - | 56 | Not a byte-trace equality contract |
+| `test_tutorial_movement` | 27 | 27 | MATCH |
+| `test_tutorial_combat` | 98 | 98 | MATCH |
+| `test_tutorial_hero_skills` | 115 | 115 | MATCH |
+| `test_tutorial_inventory` | 33 | 33 | MATCH |
+| `test_tutorial_survival` | 57 | 57 | MATCH |
+| `test_tutorial_inventory_isolation` | 100 | 100 | MATCH |
+| `test_tutorial_end_to_end` | 92 | 92 | MATCH |
+| `test_tutorial_hall_integration` | 82 | 82 | MATCH |
+| `test_tutorial_ui` | 119 | 119 | MATCH |
+| `test_tutorial_input_isolation` | 135 | 135 | MATCH |
+| `test_tutorial_persistence` | 22 | 22 | MATCH |
+| `test_tutorial_recovery` | 35 | 35 | MATCH |
+| `test_tutorial_dungeon_entry` | 268 | 268 | MATCH |
+| `test_tutorial_transition_safety` | 290 | 290 | MATCH |
+| `test_tutorial_final_regression` | 399 | 399 | MATCH |
+| `test_tutorial_pyrois_probe` | 60 | 60 | Not a byte-trace equality contract |
+
+All 13 previous Tutorial pairs and both new safety/lifecycle pairs MATCH with raw meaningful timing retained. Pyrois runs five samples per phase/rate and keeps production idle-clock metrics separate. Framework is data/authority verification at 144 FPS. The 14 previous Tutorial suites remain, with their old assertions retained.
+
+| Additional verification | Actual result |
+|---|---|
+| Graphical Tutorial UI | 129 PASS, 0 FAIL; exit 0 |
+| Graphical eight-hero full flow / dungeon entry | 354 PASS, 0 FAIL; exit 0 |
+| cold_graphical | A 32 PASS / B 13 PASS; independent PIDs 11976 / 20344; exits 0 |
+| cold30 | A 23 PASS / B 11 PASS; independent PIDs 17612 / 7696; exits 0 |
+| Python runner contracts | 24 PASS; deliberate incomplete/error/missing evidence/timeout/PID failures rejected |
+| Additional controlled Yugi exploration | 10 PASS at each FPS; actual older fire summon retained through a real 31-second wait and a newer Q, one credit per activation despite repeated fire ticks |
+
+That additional exploration lives only in the owned disposable workspace: `.godot/tutorial_verification/task5_exploratory.gd`, SHA-256 `c43eb126e018780a0a5e25fb7c178815b6d293a9ea55e3c02246da68e6b6d021`, run `run-cj1i6wx9`. It freezes the old real effect, waits for the real Q cooldown, performs a newer native Q, then resumes the older fire. It grants no synthetic progress. It supplements the committed regression suites; it is not claimed as a CI suite.
+
+### Existing regression
+
+| Existing suite | 144 FPS PASS | 30 FPS PASS where required |
+|---|---:|---:|
+| `test_dungeon_generator_unit` | 28 | - |
+| `test_dungeon_properties` | 11 | - |
+| `test_orc_battle` | 5 | - |
+| `benchmark_dungeon_generator` | Completion marker | - |
+| `test_skeleton_king` | 22 | - |
+| `test_doraemon` | 49 | - |
+| `test_yugi` | Completion marker | - |
+| `test_werewolf` | 50 | - |
+| `test_moba_hud_and_inventory` | 223 | - |
+| `test_miyabi` | 18 | - |
+| `test_luong_tho` | 15 | - |
+| `test_projectile_obstacles` | 11 | - |
+| `test_archer_combat_lifecycle` | 12 | - |
+| `test_enemy_tactics` | 94 | - |
+| `test_orc_tactical_ai` | 82 | 82 |
+| `test_archer_tactical_ai` | 120 | 120 |
+| `test_enemy_ai_integration` | 48 | 48 |
+| `test_replay_security` | 39 | - |
+| `test_potion_system` | 132 | - |
+| `test_defensive_combat_balance` | 232 | 232 |
+| `test_equipment_loot_perk_balance` | 430 | 430 |
+| `test_enemy_floor_balance` | 1053 | 1053 |
+| `test_issue75_development_integration` | 73 | 73 |
+| `test_bug_bash_regressions` | 43 | 43 |
+| `test_issue75_progression_balance` | 42327 | 42327 |
+| `test_issue75_acceptance` | 61 | 61 |
+| `test_issue75_combat_pacing` | 337 | 337 |
+| `test_issue75_acquisition` | 162 | 162 |
+| `test_tactical_navigation_contract` | 49 | 49 |
+| `test_tactical_base_enemy_integration` | 49 | 49 |
+| `test_coins` | 38 | - |
+| `test_guild_hall` | 89 | - |
+| `test_hall_select` | 63 | - |
+| `test_rune_portal` | 73 | - |
+| `test_shop` | 52 | - |
+| `test_mage_shop` | 33 | - |
+| `test_potion_shop` | 19 | - |
+| `test_wallet` | 47 | - |
+| `test_wandering_merchant` | 56 | - |
+| `test_main_menu_modals` | 151 | - |
+| `test_yugi_audio` | 49 | - |
+| `test_hero_sfx` | 33 | - |
+| `test_perk_system` | 41 | - |
+
+43 existing suites PASS at 144 FPS; all 14 existing CI groups PASS at 30 FPS. All 12 required existing trace pairs MATCH. Bug-bash and tactical-base-enemy run at both rates but have no existing trace contract. No baseline assertion was removed or weakened.
+
+### Eight-hero automated matrix
+
+The first eight columns use real gameplay/equipment/damage/portal paths in the full-flow suites. The final four combine the all-hero input suite and 20-round lifecycle stress. This matrix is technical evidence, not human sign-off.
+
+| Hero | Move | Basic | Skill | Pickup | Equip | Survival | Potion | Entry | Pause/resume | Skip/restart | Isolation | Cleanup |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Miya | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| Olaf | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| Pyrois | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| Charlotte | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| Yugi/Atem | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| Doraemon | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| Hoshimi Miyabi | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| Luong Tho | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+
+Five rounds per FPS cover transition failure/retry/ownership; 20 lifecycle rounds per FPS cover every hero, including held movement/Q/RMB/E/hotbar, release outside the arena, focus handlers, external pause, restart and deletion. Actual menu scene exit frees ownership. Post-entry native attack state and input recording pass for all eight heroes in both headless rates and GUI. Actual production projectile damage against a real Orc is additionally verified for Miya in both cold runs.
+
+### Wrong-order and recovery scenarios
+
+| # | Scenario | Controlled result and evidence |
+|---:|---|---|
+| 1 | Insufficient movement directions | PASS: movement suite rejects incomplete directions |
+| 2 | Repeated misses | PASS: combat/final-regression miss paths never grant progress |
+| 3 | Skill before its objective | PASS: hero-skills/final-regression reject wrong-step credit |
+| 4 | Skill on cooldown | PASS: all eight hero-skills negative cases |
+| 5 | Target lost | PASS: recovery restart restores target |
+| 6 | Wrong-order pickup | PASS: actual dropped potion pickup followed by real armor pickup/equip continues |
+| 7 | Practice armor dropped | PASS: recovery re-pick retains the same item fact |
+| 8 | Wrong item/slot equipped | PASS: inventory suite rejects unclaimed gear and wrong slot |
+| 9 | Armor removed before survival | PASS: recovery re-equip permits real damage/regeneration |
+| 10 | Potion consumed before its objective | PASS: actual early use grants no later credit; restart restores one starter potion |
+| 11 | Skill heals to full | PASS: a controlled partial heal sets a one-HP deficit; actual Doraemon F completes the heal; new real hazard damage and natural regeneration permit continuation |
+| 12 | Potion cooldown active | PASS: survival suite rejects another potion on the shared cooldown |
+| 13 | Practice hero dies | PASS: recovery cancels and returns control without Game Over/run rewards |
+| 14 | Restart with projectile/summon alive | PASS: combat/hero-skills destroy prior-generation effects |
+| 15 | Skip during context handoff | PASS: end-to-end/flow generation checks revoke sources and destroy practice |
+| 16 | Exit to menu while active | PASS: final-regression actual scene transition releases world/UI/lease/sources/tickets |
+| 17 | Open after Skip | PASS: Hall/recovery manual invitation creates a fresh session |
+| 18 | Open after completion | PASS: independent process B loads disk completion and manually replays |
+| 19 | Cancel portal repeatedly | PASS: actual confirmation UI cancels three times in each of five transition rounds |
+| 20 | Portal failure and retry | PASS: original Hall/hero recovery followed by real initialized floor-1 success |
+
+The full-heal test does not manufacture progress or reset the armor timer: only its initial partial-healing precondition is injected. F, hazard contact, production damage guard, natural regeneration and potion continuation are real callbacks. Physical human execution of these cases remains in the acceptance checklist.
+
+### Pyrois raw measurement ranges
+
+| Source / phase | FPS | Hitbox open tick | Contact tick | Recovery tick | Distance (pixels) |
+|---|---:|---|---|---|---|
+| Task 3 / production | 30 | 18..20 | 19..21 | 30..34 | 42.5..47.5 |
+| Task 3 / production | 144 | 18..19 | 19..20 | 31 | 42.5..45.0 |
+| Task 3 / training | 30 | 19 | 19 | 32 | 45.0 |
+| Task 3 / training | 144 | 19 | 19 | 32 | 45.0 |
+| Current / production | 30 | 17..19 | 18..20 | 30..33 | 40.0..45.0 |
+| Current / production | 144 | 18..19 | 19..20 | 31 | 42.5..45.0 |
+| Current / training | 30 | 20 | 20 | 33 | 45.493164 |
+| Current / training | 144 | 20 | 20 | 33 | 45.493164 |
+
+Each row has five actual samples. Production registers one hit of damage 3; training registers one accepted contact. Charge immunity blocks real incoming damage and ends after recovery. Training differs by one scheduling tick (19 to 20; recovery 32 to 33), while production ranges retain render-clock quantization and overlap the historical measurements. This supports a scheduling explanation with preserved tested contracts, not a blanket claim about subjective feel or all hardware.
+
+### Graphical evidence
+
+- UI: `C:/Users/ADMIN/AppData/Local/Temp/kfae-tut-woy3sk0o/roaming/Godot/app_userdata/Tutorial Verification run-3so5uj0h/tutorial_captures`
+- FLOW: `C:/Users/ADMIN/AppData/Local/Temp/kfae-tut-iwgq82qd/roaming/Godot/app_userdata/Tutorial Verification run-3so5uj0h/tutorial_captures`
+- COLD: `C:/Users/ADMIN/AppData/Local/Temp/kfae-cold-hyuoqc6h/roaming/Godot/app_userdata/Tutorial Verification run-5fwg80h7/tutorial_captures`
+
+| Required category | Actual PNG relative to root above |
+|---|---|
+| Hall invitation | `FLOW/hero_0_consent.png` |
+| Movement | `FLOW/hero_0_arena.png` |
+| Melee | `FLOW/hero_1_basic_lesson.png` |
+| Ranged | `FLOW/hero_0_basic_lesson.png` |
+| Hero skill | `FLOW/hero_4_skill_lesson.png` |
+| Inventory/equipment | `FLOW/hero_5_inventory.png` |
+| Health/armor | `FLOW/hero_0_inventory.png` |
+| Potion | `FLOW/hero_0_potion_lesson.png` |
+| Pause/restart modal | `UI/restart_confirmation.png` |
+| Dungeon entry guidance | `FLOW/hero_0_entry_guidance.png` |
+| Dungeon after completion | `FLOW/hero_4_dungeon_completed.png` |
+| Returning player without auto prompt | `COLD/cold_b_returning_player.png` |
+
+90 final PNGs are retained: UI 8, full-flow 72, cold 10. Actual UI rendering covers 960x600, default 1280x720, 1366x768, 1920x1080 and 1920x1080 fullscreen; the full eight-hero flow uses 1280x720. The project has no separately configured global minimum; 960x600 is the tested lower size, not a newly imposed minimum. Final Yugi dungeon, 960x600 layout, entry guidance, fullscreen and returning-player images were visually inspected. Capture assertions and UI bounds do not substitute for human readability/feel acceptance.
+
+### Final acceptance gates
+
+| Gate | Status |
+|---|---|
+| Optional Hall activation and eight-step/eight-hero progression | PASS with the evidence above |
+| Actual movement/combat/inventory/survival and initialized dungeon boundary | PASS with the evidence above |
+| Owned transition failure/retry/stale callback/timeout recovery | PASS with the evidence above |
+| Input/production resources/Wallet/replay/perk/RNG isolation and cleanup | PASS with the evidence above |
+| Versioned completion save, independent cold relaunch and actual write-denial recovery | PASS with the evidence above |
+| Old and new automated suites, required cross-FPS traces and controlled stability | PASS with the evidence above |
+| Rendered layouts/fullscreen and all 12 screenshot categories | PASS with the evidence above |
+| Development ancestry, preserved Tasks 1-4 and bounded non-destructive compatibility rehearsal | PASS with the evidence above |
+| Human MAN-01 through MAN-15 for each of eight heroes | NOT VERIFIED; HUMAN ACCEPTANCE PENDING |
+| Actual Alt-Tab/lost OS key-up, unusual DPI/multi-monitor, low-end hardware, power loss, independent concurrent save writers | NOT VERIFIED |
+| New commit full CI | Must be checked after push; Task 4 success is not reused as Task 5 CI success |
+
+The actual minimize attempt did not emit OS focus_exited and explicitly logs GUI_NOT_VERIFIED. No global input reset or fabricated focus notification is used to turn it into PASS. New local engine/runner gates pass, but no human acceptance or final merge readiness is claimed.
+
+### Task 5 changed-file manifest
+
+| File | Reason |
+|---|---|
+| `.github/workflows/ci.yml` | Parallel final safety/cold gate and bounded evidence artifacts |
+| `Scene/GameManager.gd` | Owned staging, commit boundary, deadline and failure recovery |
+| `Scene/Map/GuildHall/rune_portal_npc.gd` | Recover failed teleport control/position/flash and retry |
+| `Scene/Map/dungeon_generator.gd` | Use local staging seed before normal fallback can mutate GameManager |
+| `Scene/Tutorial/guild_tutorial_host.gd` | Defer active external effects; readable entry guidance and marker |
+| `Scene/Tutorial/tutorial_arena_presentation.gd` | Redraw static presentation only when the step changes |
+| `Scene/Tutorial/tutorial_inventory_context.gd` | Keep valid pickup ownership and recover survival after full healing |
+| `Scene/Tutorial/tutorial_ui.gd` | Refresh practice inventory from committed change signals |
+| `docs/INTERACTIVE_TUTORIAL_ACCEPTANCE.md` | Player instructions and separate per-hero human checklist |
+| `docs/INTERACTIVE_TUTORIAL_DESIGN.md` | Architecture findings, measured results, provenance and compatibility |
+| `docs/INTERACTIVE_TUTORIAL_PR.md` | Complete reviewable PR text and explicit merge gates |
+| `run_tests.bat` | Run new gates and fail before proceeding on an earlier failure |
+| `tests/run_tutorial_cold_relaunch.py` | Independent processes with an explicitly shared disposable profile |
+| `tests/run_tutorial_verification.py` | Require complete per-hero/per-round evidence and schedule timing probes |
+| `tests/test_tutorial_cold_relaunch.gd` | Targeted cold relaunch regression/probe |
+| `tests/test_tutorial_cold_relaunch.gd.uid` | Stable script resource ID companion |
+| `tests/test_tutorial_cold_relaunch.tscn` | Entry scene for the corresponding targeted test |
+| `tests/test_tutorial_dungeon_entry.gd` | Native portal controls, real post-entry attacks/recording and captures |
+| `tests/test_tutorial_final_regression.gd` | Targeted final regression regression/probe |
+| `tests/test_tutorial_final_regression.gd.uid` | Stable script resource ID companion |
+| `tests/test_tutorial_final_regression.tscn` | Entry scene for the corresponding targeted test |
+| `tests/test_tutorial_persistence.gd` | Empty/stale temporary/real read-only-directory cases |
+| `tests/test_tutorial_pyrois_probe.gd` | Targeted pyrois probe regression/probe |
+| `tests/test_tutorial_pyrois_probe.gd.uid` | Stable script resource ID companion |
+| `tests/test_tutorial_pyrois_probe.tscn` | Entry scene for the corresponding targeted test |
+| `tests/test_tutorial_runner.py` | Negative fail-closed and process/FPS scheduling contracts |
+| `tests/test_tutorial_transition_safety.gd` | Targeted transition safety regression/probe |
+| `tests/test_tutorial_transition_safety.gd.uid` | Stable script resource ID companion |
+| `tests/test_tutorial_transition_safety.tscn` | Entry scene for the corresponding targeted test |
+| `tests/test_tutorial_ui.gd` | Lower-size/fullscreen/resize-in-attack and honest OS-focus probe |
+| `tests/tutorial_hall_test_support.gd` | Native confirmation input and actual rendered lesson captures |
+
+No generated project, screenshot, save, log, binary or BT3 file is included. Task 1-4 commits remain ancestors. The final task creates one scoped commit; the final response records its SHA, verified remote equality and actual new CI status after push.

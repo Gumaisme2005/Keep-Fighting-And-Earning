@@ -424,6 +424,17 @@ jobs:
           godot --headless "res://tests/test_hero_sfx.tscn" 2>&1 | tee "$RUNNER_TEMP/hero_sfx.log"
           if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/hero_sfx.log"; then exit 1; fi
 
+      - name: Upload Tutorial Evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tutorial-existing-evidence
+          include-hidden-files: true
+          path: |
+            .godot/tutorial_verification/run-*/results.json
+            .godot/tutorial_verification/run-*/source_manifest.json
+            .godot/tutorial_verification/run-*/*.log
+
       - name: Upload Benchmark Evidence Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -432,3 +443,32 @@ jobs:
             benchmark_output.log
             docs/BENCHMARK_REPORT.md
             docs/SEED_BUG_ISSUES.md
+
+  tutorial-final-safety:
+    name: Tutorial Final Safety and Cold Relaunch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: chickensoft-games/setup-godot@v2
+        with:
+          version: ${{ env.GODOT_VERSION }}
+          use-dotnet: false
+      - name: Import final safety project cache
+        run: godot --headless --editor --import --quit
+      - name: Verify transition failures, lifecycle stress and Pyrois timing at 30 and 144 FPS
+        timeout-minutes: 20
+        run: python3 tests/run_tutorial_verification.py --godot godot --cross-fps --suites test_tutorial_transition_safety test_tutorial_final_regression test_tutorial_pyrois_probe
+      - name: Verify completion across independent cold app processes
+        timeout-minutes: 10
+        run: python3 tests/run_tutorial_cold_relaunch.py --godot godot
+      - name: Upload Final Safety Evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tutorial-final-safety-evidence
+          include-hidden-files: true
+          path: |
+            .godot/tutorial_verification/run-*/results.json
+            .godot/tutorial_verification/run-*/source_manifest.json
+            .godot/tutorial_verification/run-*/profile.json
+            .godot/tutorial_verification/run-*/*.log

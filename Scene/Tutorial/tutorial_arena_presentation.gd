@@ -3,6 +3,7 @@ extends Node2D
 const FLOOR: Texture2D = preload("res://Assets/Map/GuildHall/Walls_interior.png")
 const RUG: Texture2D = preload("res://Assets/Map/GuildHall/Decor/rug_lounge.png")
 var context: Node
+var _draw_step := -1
 
 func configure(value: Node) -> void:
 	context = value
@@ -35,7 +36,9 @@ func _draw() -> void:
 		draw_line(Vector2(325, 154), Vector2(320, 159), Color("f4d58c"), 2)
 
 func _physics_process(_delta: float) -> void:
-	queue_redraw()
+	if is_instance_valid(context) and context.session.get_current_step() != _draw_step:
+		_draw_step = context.session.get_current_step()
+		queue_redraw()
 	if not is_instance_valid(context) or not context.live():
 		return
 	# Real walls handle walking/dashes; recover from exceptional teleport gadgets.

@@ -34,7 +34,7 @@ func _ready() -> void:
 		if portal.shop == null:
 			finish("[TUTORIAL_DUNGEON_ENTRY_COMPLETE]")
 			return
-		portal.shop.choose(false)
+		await choose_portal(portal.shop, false)
 		await ticks(3)
 		check(active_session.get_state() == Session.State.ACTIVE and not save.completed, "ENTRY-02 cancel does not complete %d" % index)
 		await key(KEY_E, "interact")
@@ -43,7 +43,7 @@ func _ready() -> void:
 		var requested: Array = []
 		var request_check := func(_hero, _run, _request): requested.append(active_session.get_state() == Session.State.ACTIVE and not save.completed)
 		GameManager.hall_dungeon_requested.connect(request_check)
-		portal.shop.choose(true)
+		await choose_portal(portal.shop, true)
 		check(portal.teleporting and active_session.get_state() == Session.State.ACTIVE and not save.completed,
 			"ENTRY-03 teleport animation is not completion %d" % index)
 		for unused in 500:
@@ -51,6 +51,8 @@ func _ready() -> void:
 			await ticks(1)
 		GameManager.hall_dungeon_requested.disconnect(request_check)
 		var world := get_tree().current_scene
+		await ticks(60) # Capture the playable dungeon after the owned portal flash fades.
+		await capture("hero_%d_dungeon_completed" % index)
 		check(requested == [true], "ENTRY-04 request acceptance still ACTIVE %d" % index)
 		check(active_session.get_state() == Session.State.COMPLETED and completed.size() == 1 and save.completed,
 			"ENTRY-05/08 actual handoff completes once %d" % index)
@@ -74,6 +76,33 @@ func _ready() -> void:
 		Input.action_release("move_right")
 		check(original.position.distance_to(dungeon_position) > 1 and not GameManager.current_recording_frames.is_empty(),
 			"ENTRY-13 real dungeon walking and production input recording continue %d" % index)
+		var attack := InputEventMouseButton.new()
+		attack.button_index = MOUSE_BUTTON_LEFT
+		attack.position = get_viewport().get_visible_rect().size * 0.5 # World area clear of HUD; native Yugi needs routed events.
+		var aim := InputEventMouseMotion.new()
+		aim.position = attack.position
+		get_viewport().push_input(aim, true)
+		await get_tree().process_frame
+		attack.pressed = true
+		Input.action_press("attack")
+		get_viewport().push_input(attack, true)
+		await ticks(3)
+		var attacking: bool = original.is_attacking or original.is_casting_skill
+		Input.action_release("attack")
+		attack = attack.duplicate()
+		attack.pressed = false
+		get_viewport().push_input(attack, true)
+		await ticks(2)
+		attacking = attacking or original.is_attacking or original.is_casting_skill or (original.get("action_left") != null and original.action_left > 0)
+		await ticks(38)
+		check(attacking, "ENTRY-13 actual production attack state continues %d" % index)
+		check(GameManager.current_recording_frames.any(func(frame): return frame.get("atk", false) or frame.get("lp", false)),
+			"ENTRY-13 actual production attack is recorded %d" % index)
+		if not attacking:
+			print("[ENTRY_ATTACK_DIAGNOSTIC] ", JSON.stringify({"hero": index, "paused": get_tree().paused,
+				"processing": original.can_process(), "dead": original.is_dead, "action_left": original.get("action_left"),
+				"records": GameManager.current_recording_frames.slice(-8)}))
+		await capture("hero_%d_dungeon_attack" % index)
 		await ticks(5)
 		check(hall_ref.get_ref() == null and not is_instance_valid(ticket) and get_tree().get_nodes_in_group("training_player").is_empty(),
 			"ENTRY-12 hall/ticket/practice ownership fully released %d" % index)
@@ -107,7 +136,7 @@ func _ready() -> void:
 	hall.hero.global_position = hall.get_node("Props/RuneSword").global_position + Vector2(0, 12)
 	await ticks(5)
 	await key(KEY_E, "interact")
-	hall.get_node("Props/RuneSword").shop.choose(true)
+	await choose_portal(hall.get_node("Props/RuneSword").shop, true)
 	for unused in 500:
 		if get_tree().current_scene.scene_file_path == GameManager.DUNGEON_SCENE: break
 		await ticks(1)

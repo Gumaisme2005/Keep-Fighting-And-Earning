@@ -2,10 +2,11 @@ extends "res://tests/tutorial_hall_test_support.gd"
 const Content = preload("res://Scene/Tutorial/tutorial_content.gd")
 
 func _ready() -> void:
+	_gui_focus_recovery = DisplayServer.get_name() != "headless" and OS.get_cmdline_user_args().has("--tutorial-capture")
 	await ticks(2)
 	await new_hall(2)
 	await start()
-	for resolution in [Vector2i(1280, 720), Vector2i(1366, 768), Vector2i(1920, 1080)]:
+	for resolution in [Vector2i(960, 600), Vector2i(1280, 720), Vector2i(1366, 768), Vector2i(1920, 1080)]:
 		get_window().size = resolution
 		await get_tree().process_frame
 		host.ui._fit()
@@ -21,8 +22,72 @@ func _ready() -> void:
 			check(Rect2(Vector2.ZERO, host.ui.SIZE).encloses(Rect2(slot.position, slot.size)), "UI-12 inventory slot within frame")
 		check(not Rect2(host.ui.arena.position, host.ui.arena.size).intersects(Rect2(host.ui.objective.position, host.ui.objective.size)),
 			"Objective does not cover practice target %s" % resolution)
+	var held_attack := InputEventMouseButton.new()
+	held_attack.button_index = MOUSE_BUTTON_LEFT
+	held_attack.position = host.ui.arena.get_global_transform_with_canvas() * Vector2(560, 110)
+	held_attack.pressed = true
+	Input.action_press("attack")
+	get_viewport().push_input(held_attack, true)
+	await ticks(2)
+	check(context.hero.is_attacking, "Resize stress begins with actual practice attack")
+	get_window().size = Vector2i(1366, 768)
+	await get_tree().process_frame
+	check(host.session.get_current_step() == 0 and not hall.hero.can_process(), "Resize during attack preserves objective and production input isolation")
+	Input.action_release("attack")
+	held_attack = held_attack.duplicate()
+	held_attack.pressed = false
+	get_viewport().push_input(held_attack, true)
+	await ticks(25)
+	if DisplayServer.get_name() != "headless":
+		get_window().mode = Window.MODE_FULLSCREEN
+		await get_tree().process_frame
+		await get_tree().process_frame
+		check(get_window().mode == Window.MODE_FULLSCREEN, "Actual graphical fullscreen mode accepted")
+		await capture("layout_fullscreen", false)
+		get_window().mode = Window.MODE_WINDOWED
+		get_window().size = Vector2i(1280, 720)
+		await get_tree().process_frame
 	get_window().size = Vector2i(1280, 720)
 	await ticks(4)
+	if DisplayServer.get_name() != "headless":
+		get_window().grab_focus()
+		for unused in 30: await get_tree().process_frame
+		if not get_window().has_focus():
+			print("[GUI_NOT_VERIFIED] OS foreground focus unavailable; lost-key-release case requires human desktop")
+		else:
+			var down := InputEventKey.new()
+			down.keycode = KEY_A
+			down.physical_keycode = KEY_A
+			down.pressed = true
+			Input.parse_input_event(down)
+			Input.flush_buffered_events()
+			await get_tree().process_frame
+			check(Input.is_action_pressed("move_left"), "Focus stress positive control: real mapped key state is held")
+			get_window().mode = Window.MODE_MINIMIZED
+			for unused in 60:
+				await get_tree().process_frame
+				if not host._focused: break
+			await get_tree().process_frame
+			await get_tree().process_frame
+			print("[FOCUS_PROBE] ", JSON.stringify({"focused": host._focused, "mode": host.mode,
+				"held": Input.is_action_pressed("move_left"), "window_mode": get_window().mode}))
+			get_window().mode = Window.MODE_WINDOWED
+			if host._focused:
+				print("[GUI_NOT_VERIFIED] Minimize did not deliver OS focus_exited; actual Alt-Tab/lost release remains pending")
+			else:
+				check(not host._focused and host.mode == "pause" and not Input.is_action_pressed("move_left"),
+					"Actual OS focus loss clears lost key release and pauses practice")
+				get_window().grab_focus()
+				for unused in 60:
+					await get_tree().process_frame
+					if host._focused: break
+				await capture("focus_pause_modal")
+				host._control("resume")
+				await ticks(8)
+				check(host._focused and host._armed and host.mode == "training", "Explicit Resume after actual focus return safely recovers input")
+			down = down.duplicate()
+			down.pressed = false
+			Input.parse_input_event(down) # Cleanup only, after verifying engine focus recovery.
 	check(host.ui.bag_slots[0].current_item == context.hero.inventory.bag[0] and host.ui.status.text.contains("HP"), "UI-04/05 private status and inventory")
 	host.ui._show_tooltip(host.ui.bag_slots[0])
 	await ticks(3)
@@ -63,6 +128,7 @@ func _ready() -> void:
 	var id: String = host.session.get_session_id()
 	host._control("restart")
 	check(host.mode == "confirm", "Restart asks for explicit confirmation")
+	await capture("restart_confirmation")
 	host.ui.primary.pressed.emit()
 	await ticks(10)
 	context = host.flow.active_context

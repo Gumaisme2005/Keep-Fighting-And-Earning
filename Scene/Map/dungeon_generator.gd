@@ -105,7 +105,10 @@ func _ready() -> void:
 		set_layer_z_index(1, 0)
 	if get_layers_count() > 2:
 		set_layer_z_index(2, 0)
-	if get_node_or_null("/root/GameManager") != null:
+	if has_meta("hall_entry_seed"):
+		map_seed = get_meta("hall_entry_seed")
+		current_level = 1
+	elif get_node_or_null("/root/GameManager") != null:
 		if not GameManager.current_seed.strip_edges().is_empty():
 			map_seed = GameManager.current_seed
 		else:

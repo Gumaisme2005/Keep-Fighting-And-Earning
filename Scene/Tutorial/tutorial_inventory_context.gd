@@ -116,8 +116,8 @@ func commit_pickup(serial: int, item: Node, actor: Node, remaining: int) -> void
 		or _matching_quantity(item.item_data) - int(tx["matching"]) != accepted:
 		return
 	print("[TRACE] pickup accepted=", accepted, " remaining=", remaining)
+	_claimed[key] = true # Ownership survives a valid pickup after the pickup lesson.
 	if before["step"] == Steps.Step.PICKUP_ITEM:
-		_claimed[key] = true
 		_credit(Steps.Step.PICKUP_ITEM, "pickup:" + key)
 
 func begin_inventory_action(actor: Node, inventory: Node, index: int) -> int:
@@ -173,7 +173,7 @@ func hazard_contact(source: Node, actor: Node) -> bool:
 	var step: int = session.get_current_step()
 	if step != Steps.Step.HEALTH_AND_ARMOR and step != Steps.Step.USE_POTION:
 		return false
-	if (step == Steps.Step.HEALTH_AND_ARMOR and _lost_hp) or (step == Steps.Step.USE_POTION and hero.hp < hero.max_hp):
+	if hero.hp < hero.max_hp and (step == Steps.Step.USE_POTION or (step == Steps.Step.HEALTH_AND_ARMOR and _lost_hp)):
 		return false
 	if hero.current_armor <= 0 and not _absorbed:
 		return false # allow production regeneration to fill newly equipped capacity

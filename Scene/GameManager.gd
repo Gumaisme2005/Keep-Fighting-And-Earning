@@ -5,6 +5,8 @@ signal hall_dungeon_handoff(hero: Node2D, world: Node, run: int, request: int, s
 var hall_tutorial_visit: int = -1
 var _hall_request_serial: int = 0
 var _hall_request_pending: bool = false
+const HALL_HANDOFF_TIMEOUT := 45.0
+var _hall_request: Dictionary = {}
 
 signal seed_changed(new_seed: String)
 signal stats_updated(level: int, kills: int)
@@ -269,79 +271,150 @@ func enter_dungeon_from_hall(hero: Node2D = null) -> bool:
 		return false
 	if hero == null or not is_instance_valid(hero):
 		hero = _find_hero()
+	var hall := get_tree().current_scene
 	if hero == null or hero.is_queued_for_deletion() or hero.get("is_dead") == true \
 		or hero.get_meta("_tutorial_input_leased", false) == true \
-		or (hero.has_method("is_training") and hero.is_training()):
+		or (hero.has_method("is_training") and hero.is_training()) \
+		or hall == null or hall.scene_file_path != GUILD_HALL_SCENE or hall.get("hero") != hero or not hall.is_ancestor_of(hero):
 		return false
-	if sanitize_seed(current_seed).is_empty():
-		current_seed = generate_random_seed()
-	hall_selecting = false
-	current_recording_frames.clear()
-	register_level_advance(1)   # tầng 1 + cập nhật HUD + lưu ví ngay (xuống hầm ngục = chuyển tầng)
 	_hall_request_serial += 1
 	_hall_request_pending = true
+	_hall_request = {"id": _hall_request_serial, "run": run_id, "seed": current_seed,
+		"hero": weakref(hero), "hall": weakref(hall), "parent": weakref(hero.get_parent()),
+		"transform": hero.transform, "name": hero.name, "world": null, "modes": [], "age": 0.0}
+	set_process(true)
 	hall_dungeon_requested.emit(hero, run_id, _hall_request_serial)
 	call_deferred("_swap_to_dungeon", hero, run_id, _hall_request_serial)
 	return true
 
+func _owns_hall_request(expected_run: int, request: int) -> bool:
+	return _hall_request_pending and not _hall_request.is_empty() \
+		and _hall_request.id == request and _hall_request.run == expected_run
+
+func _freeze_hall_transition(node: Node) -> void:
+	var record := {"ref": weakref(node), "mode": node.process_mode}
+	if node is CanvasLayer:
+		record["visible"] = node.visible
+		node.hide()
+	_hall_request.modes.append(record)
+	node.process_mode = Node.PROCESS_MODE_DISABLED
+	for child in node.get_children(): _freeze_hall_transition(child)
+
+func _restore_hall_transition(request: Dictionary, actor_only: bool) -> void:
+	var actor = request.hero.get_ref()
+	for record in request.modes:
+		var node = record.ref.get_ref()
+		if not is_instance_valid(node) or node.is_queued_for_deletion() or not node.is_inside_tree(): continue
+		var actor_node: bool = is_instance_valid(actor) and (node == actor or actor.is_ancestor_of(node))
+		if actor_only and not actor_node: continue
+		if actor_node and (actor.is_queued_for_deletion() or actor.get("is_dead") == true): continue
+		node.process_mode = record.mode
+		if record.has("visible"): node.visible = record.visible
+
 func _swap_to_dungeon(hero: Node2D, expected_run: int, request: int) -> void:
-	if not is_instance_valid(hero) or hero.is_queued_for_deletion() or hero.get("is_dead") == true or run_id != expected_run or is_replaying:
-		_hall_request_pending = false
-		hall_dungeon_handoff.emit(hero if is_instance_valid(hero) else null, null, expected_run, request, false)
+	if not _owns_hall_request(expected_run, request): return
+	var hall = _hall_request.hall.get_ref()
+	if not is_instance_valid(hero) or hero.is_queued_for_deletion() or hero.get("is_dead") == true \
+		or run_id != expected_run or is_replaying or not is_instance_valid(hall) or get_tree().current_scene != hall:
+		_fail_hall_handoff(expected_run, request)
 		return
-	var tree := get_tree()
-	tree.paused = false
-	var old_scene := tree.current_scene
 	var packed := load(DUNGEON_SCENE) as PackedScene
 	if packed == null:
-		_hall_request_pending = false
-		hall_dungeon_handoff.emit(hero, null, expected_run, request, false)
+		_fail_hall_handoff(expected_run, request)
 		return
-	var world: Node = packed.instantiate()
+	var world: Node2D = packed.instantiate()
 	var gen: Node = world.get_node_or_null("TileMap")
 	if gen == null or not gen.has_signal("entities_initialized"):
 		world.free()
-		_hall_request_pending = false
-		hall_dungeon_handoff.emit(hero, null, expected_run, request, false)
+		_fail_hall_handoff(expected_run, request)
 		return
+	_hall_request.world = weakref(world)
+	_hall_request["entry_seed"] = current_seed if not sanitize_seed(current_seed).is_empty() else generate_random_seed()
+	# Stage floor 1 without committing floor/stat/Wallet/replay changes. Keep the
+	# original hall and hero ownership information until initialization succeeds.
+	gen.set_meta("hall_entry_seed", _hall_request.entry_seed)
 	gen.entities_initialized.connect(_finish_hall_handoff.bind(weakref(hero), weakref(world), expected_run, request), CONNECT_ONE_SHOT)
-	if hero.get_parent() != null:
-		hero.get_parent().remove_child(hero)
+	_freeze_hall_transition(hall)
+	world.process_mode = Node.PROCESS_MODE_DISABLED
+	world.hide()
+	hero.get_parent().remove_child(hero)
 	hero.name = "Player"
-	hero.z_index = 2
-	if "velocity" in hero:
-		hero.velocity = Vector2.ZERO
-	# camera của sảnh bị giới hạn trong sảnh - trả về mặc định cho hầm ngục
-	for cam in hero.find_children("*", "Camera2D", true, false):
-		cam.limit_left = -10000000
-		cam.limit_top = -10000000
-		cam.limit_right = 10000000
-		cam.limit_bottom = 10000000
-	if gen != null:
-		# dungeon_generator thấy the_player đã có thì không sinh nhân vật mới, chỉ đặt vào phòng đầu
-		gen.set("the_player", hero)
-		gen.add_child(hero)
-	else:
-		world.add_child(hero)
-	tree.root.add_child(world)
-	tree.current_scene = world
-	if old_scene != null and old_scene != world:
-		old_scene.queue_free()
-	# HUD (GameUI nằm trong nhân vật) nối lại với bản đồ / minimap mới
-	tree.call_group_flags(SceneTree.GROUP_CALL_DEFERRED, "game_ui", "_connect_to_player_and_map")
-	tree.call_group_flags(SceneTree.GROUP_CALL_DEFERRED, "game_ui", "show_banner", "ENTERING THE DUNGEON - FLOOR 1", Color(0.55, 0.9, 1.0))
+	gen.set("the_player", hero)
+	gen.add_child(hero)
+	get_tree().root.add_child(world)
 
-## Emitted only after the production spawner has placed the existing hero.
 func _finish_hall_handoff(hero_ref: WeakRef, world_ref: WeakRef, expected_run: int, request: int) -> void:
+	if not _owns_hall_request(expected_run, request): return
 	var hero = hero_ref.get_ref()
 	var world = world_ref.get_ref()
+	var hall = _hall_request.hall.get_ref()
+	if hero != _hall_request.hero.get_ref() or _hall_request.world == null or world != _hall_request.world.get_ref(): return
+	var gen: Node = world.get_node_or_null("TileMap") if is_instance_valid(world) else null
+	var success: bool = is_instance_valid(hero) and not hero.is_queued_for_deletion() and hero.get("is_dead") != true \
+		and is_instance_valid(world) and not world.is_queued_for_deletion() and is_instance_valid(hall) \
+		and not hall.is_queued_for_deletion() and get_tree().current_scene == hall and run_id == expected_run \
+		and current_seed == _hall_request.seed and not is_replaying and gen != null and gen.the_player == hero \
+		and gen.is_ancestor_of(hero) and gen.entities_ready and gen.current_level == 1 and not gen.generated_rooms.is_empty() \
+		and hero.global_position.is_equal_approx(gen.to_global(gen.map_to_local(gen.generated_rooms[0].get_center())))
+	if not success:
+		_fail_hall_handoff(expected_run, request)
+		return
+	var completed := _hall_request
+	_hall_request = {}
 	_hall_request_pending = false
-	var success: bool = is_instance_valid(hero) and is_instance_valid(world) and get_tree().current_scene == world \
-		and run_id == expected_run and not is_replaying and world.is_ancestor_of(hero)
-	if success:
-		for camera in hero.find_children("*", "Camera2D", true, false):
-			camera.reset_smoothing()
-	hall_dungeon_handoff.emit(hero, world, expected_run, request, success)
+	set_process(false)
+	current_seed = completed.entry_seed
+	hall_selecting = false
+	current_recording_frames.clear()
+	register_level_advance(1)
+	hero.z_index = 2
+	if "velocity" in hero: hero.velocity = Vector2.ZERO
+	for camera in hero.find_children("*", "Camera2D", true, false):
+		camera.limit_left = -10000000
+		camera.limit_top = -10000000
+		camera.limit_right = 10000000
+		camera.limit_bottom = 10000000
+		camera.reset_smoothing()
+	get_tree().current_scene = world
+	world.process_mode = Node.PROCESS_MODE_INHERIT
+	world.show()
+	_restore_hall_transition(completed, true)
+	hall.hide()
+	hall.queue_free()
+	get_tree().call_group_flags(SceneTree.GROUP_CALL_DEFERRED, "game_ui", "_connect_to_player_and_map")
+	get_tree().call_group_flags(SceneTree.GROUP_CALL_DEFERRED, "game_ui", "show_banner", "ENTERING THE DUNGEON - FLOOR 1", Color(0.55, 0.9, 1.0))
+	hall_dungeon_handoff.emit(hero, world, expected_run, request, true)
+
+func _fail_hall_handoff(expected_run: int, request: int) -> void:
+	if not _owns_hall_request(expected_run, request): return
+	var failed := _hall_request
+	_hall_request = {}
+	_hall_request_pending = false
+	set_process(false)
+	var hero = failed.hero.get_ref()
+	var hall = failed.hall.get_ref()
+	var parent = failed.parent.get_ref()
+	var world = failed.world.get_ref() if failed.world != null else null
+	var recover: bool = is_instance_valid(hall) and not hall.is_queued_for_deletion() and get_tree().current_scene == hall
+	if recover and is_instance_valid(hero) and not hero.is_queued_for_deletion() and is_instance_valid(parent) and not parent.is_queued_for_deletion():
+		if hero.get_parent() != parent: hero.reparent(parent, false)
+		hero.transform = failed.transform
+		hero.name = failed.name
+	if recover: _restore_hall_transition(failed, false)
+	if is_instance_valid(world) and not world.is_queued_for_deletion(): world.queue_free()
+	hall_dungeon_handoff.emit(hero if is_instance_valid(hero) else null, null, expected_run, request, false)
+
+func _process(delta: float) -> void:
+	if not _hall_request_pending: return
+	_hall_request.age += delta
+	var hero = _hall_request.hero.get_ref()
+	var hall = _hall_request.hall.get_ref()
+	var world = _hall_request.world.get_ref() if _hall_request.world != null else null
+	if _hall_request.age >= HALL_HANDOFF_TIMEOUT or run_id != _hall_request.run or current_seed != _hall_request.seed \
+		or is_replaying or not is_instance_valid(hero) or hero.is_queued_for_deletion() or hero.get("is_dead") == true \
+		or not is_instance_valid(hall) or hall.is_queued_for_deletion() or get_tree().current_scene != hall \
+		or (_hall_request.world != null and (not is_instance_valid(world) or world.is_queued_for_deletion())):
+		_fail_hall_handoff(_hall_request.run, _hall_request.id)
 
 ## Run mới bắt đầu ở Guild Hall, màn "Chọn nhân vật" (giống Soul Knight): sảnh nhìn toàn cảnh, bấm vào một anh hùng
 ## để xem chỉ số / cách chơi, BẮT ĐẦU để điều khiển người đó ngay trong sảnh, rồi đi qua thanh kiếm rune xuống hầm ngục.
@@ -384,7 +457,7 @@ func generate_random_seed() -> String:
 	return result
 
 func start_new_run(custom_seed: String = "", replay_mode: bool = false, frames_to_replay: Array = []) -> void:
-	_hall_request_pending = false
+	if _hall_request_pending: _fail_hall_handoff(_hall_request.run, _hall_request.id)
 	hall_tutorial_visit = -1
 	var safe_custom := sanitize_seed(custom_seed)
 	if not safe_custom.is_empty():

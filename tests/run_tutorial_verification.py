@@ -18,17 +18,27 @@ from run_issue75_acceptance import analyze_output
 
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / '.godot' / 'tutorial_verification'
-INTEGRATION_SUITES = {'test_tutorial_hall_integration', 'test_tutorial_ui', 'test_tutorial_input_isolation',
+INTEGRATION_SUITES = {'test_tutorial_transition_safety', 'test_tutorial_final_regression', 'test_tutorial_hall_integration', 'test_tutorial_ui', 'test_tutorial_input_isolation',
                       'test_tutorial_persistence', 'test_tutorial_dungeon_entry', 'test_tutorial_recovery'}
 TRACE_SUITES = INTEGRATION_SUITES | {'test_tutorial_movement', 'test_tutorial_combat', 'test_tutorial_hero_skills',
                 'test_tutorial_inventory', 'test_tutorial_survival',
                 'test_tutorial_inventory_isolation', 'test_tutorial_end_to_end'}
 MARKERS = {'test_tutorial_framework': '[TUTORIAL_FRAMEWORK_COMPLETE]',
+           'test_tutorial_cold_relaunch': '[TUTORIAL_COLD_RELAUNCH_COMPLETE]',
+           'test_tutorial_pyrois_probe': '[TUTORIAL_PYROIS_PROBE_COMPLETE]',
            **{name: '[TUTORIAL_' + name.removeprefix('test_tutorial_').upper() + '_COMPLETE]'
               for name in TRACE_SUITES}}
-DEFAULT_SUITES = ['test_tutorial_framework', *sorted(TRACE_SUITES), 'test_guild_hall', 'test_hall_select',
+DEFAULT_SUITES = ['test_tutorial_framework', *sorted(TRACE_SUITES), 'test_tutorial_pyrois_probe', 'test_guild_hall', 'test_hall_select',
                   'test_rune_portal', 'test_wallet', 'test_replay_security']
 REQUIRED_EVIDENCE = {
+    'test_tutorial_pyrois_probe': ['[PYROIS_PRODUCTION_VERIFIED]', '[PYROIS_TRAINING_VERIFIED]'],
+    'test_tutorial_transition_safety': ['[TRACE] transition rounds=5 all failure/retry/ownership contracts verified',
+        *['[TRACE] transition round=' + str(index) + ' failure/timeout/stale/run/scene/portal retry verified' for index in range(5)]],
+    'test_tutorial_final_regression': ['[TRACE] lifecycle rounds=20 all eight heroes/input/cleanup verified',
+        '[TRACE] recovery wrong-order pickup/full-heal/real F/potion continuation verified',
+        '[TRACE] actual menu scene exit cleanup verified',
+        '[TRACE] real 31-second soak and old effect/new action attribution verified',
+        *['round=' + str(index) + ' held/focus/pause/restart/skip/cleanup verified' for index in range(20)]],
     'test_tutorial_hall_integration': ['[TRACE] tutorial consent;', '[TRACE] tutorial production input restored'],
     'test_tutorial_ui': ['[TRACE] UI responsive mapping/inventory/focus/controls/local feedback verified'],
     'test_tutorial_input_isolation': ['[TRACE] tutorial production input restored'],
@@ -37,6 +47,7 @@ REQUIRED_EVIDENCE = {
     'test_tutorial_dungeon_entry': ['[TRACE] tutorial portal request;', '[TRACE] tutorial actual dungeon handoff;', '[TRACE] tutorial COMPLETED; persistence='],
 }
 HERO_EVIDENCE = {
+    'test_tutorial_final_regression': '[TRACE] lifecycle hero=',
     'test_tutorial_hall_integration': '[TRACE] hall hero=',
     'test_tutorial_input_isolation': '[TRACE] input hero=',
     'test_tutorial_dungeon_entry': '[TRACE] full eight-step hero=',
@@ -156,7 +167,7 @@ def main():
         if not scene.is_file() and not script.is_file():
             parser.error('Missing suite: ' + suite)
         extra = ['res://tests/' + scene.name] if scene.is_file() else ['--script', 'res://tests/' + script.name]
-        for fps in ([30, 144] if args.cross_fps and suite in TRACE_SUITES else [args.fps]):
+        for fps in ([30, 144] if args.cross_fps and (suite in TRACE_SUITES or suite == 'test_tutorial_pyrois_probe') else [args.fps]):
             jobs.append((suite, fps, extra))
     invocation = prepare()
     print('Evidence directory: ' + str(invocation), flush=True)

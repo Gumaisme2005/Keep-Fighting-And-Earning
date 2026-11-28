@@ -28,7 +28,9 @@ echo ==================================================================
 echo.
 echo [Tutorial] Running Tutorial gameplay in an isolated project and save profile...
 if not defined PYTHON_BIN set "PYTHON_BIN=python"
-"!PYTHON_BIN!" tests\run_tutorial_verification.py --godot "!GODOT_BIN!" --cross-fps --suites test_tutorial_framework test_tutorial_movement test_tutorial_combat test_tutorial_hero_skills test_tutorial_inventory test_tutorial_survival test_tutorial_inventory_isolation test_tutorial_end_to_end test_tutorial_hall_integration test_tutorial_ui test_tutorial_input_isolation test_tutorial_recovery test_tutorial_persistence test_tutorial_dungeon_entry
+"!PYTHON_BIN!" tests\run_tutorial_verification.py --godot "!GODOT_BIN!" --cross-fps --suites test_tutorial_framework test_tutorial_movement test_tutorial_combat test_tutorial_hero_skills test_tutorial_inventory test_tutorial_survival test_tutorial_inventory_isolation test_tutorial_end_to_end test_tutorial_hall_integration test_tutorial_ui test_tutorial_input_isolation test_tutorial_recovery test_tutorial_persistence test_tutorial_dungeon_entry test_tutorial_transition_safety test_tutorial_final_regression test_tutorial_pyrois_probe
+if errorlevel 1 exit /b 1
+"!PYTHON_BIN!" tests\run_tutorial_cold_relaunch.py --godot "!GODOT_BIN!"
 if !ERRORLEVEL! NEQ 0 (
     echo [FAILED] Tutorial gameplay failed or did not complete.
     exit /b 1
