@@ -10,16 +10,19 @@ on:
 env:
   GODOT_VERSION: "4.7.2"
 
+permissions:
+  contents: read
+
 jobs:
   automated-tests-and-benchmark:
     name: Unit Tests, Property Tests and Benchmark
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Setup Godot 4 Headless
-        uses: chickensoft-games/setup-godot@v2
+        uses: chickensoft-games/setup-godot@ac93246ea68518a384c1c280a496e5989341f2f6 # v2
         with:
           version: ${{ env.GODOT_VERSION }}
           use-dotnet: false
@@ -406,7 +409,7 @@ jobs:
           if grep -Eq '^(SCRIPT ERROR:|ERROR:)' "$RUNNER_TEMP/hero_sfx.log"; then exit 1; fi
 
       - name: Upload Benchmark Evidence Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: dungeon-benchmark-report
           path: |
