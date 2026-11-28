@@ -8,7 +8,7 @@ extends "res://Scene/Character/Player 1_Pyrois/player.gd"
 ##   Left / Right click   use the page's two gadgets (hold to keep using them)
 ##   Q                    summon the next friend (6 in rotation) — or, when at least one
 ##                        power bar is full, the page's SUPER move
-##   F                    eat a Dorayaki (heal + power)
+##   F                    eat a Dorayaki (+1 HP, 2 uses/floor, 20s cooldown; requires missing HP)
 ## Power gauge: 3 bars (300). Filled by landing hits and by taking damage.
 ## Everything advances in _physics_process and is recorded in the replay stream.
 
@@ -28,7 +28,8 @@ const POWER_MAX := 300.0
 const BAR := 100.0
 const DOOR_TELEPORT_TIME := 0.3
 const FRIEND_COOLDOWN := 8.0
-const EAT_COOLDOWN := 12.0
+const EAT_COOLDOWN := 20.0
+const EAT_MAX_USES_PER_FLOOR := 2
 const ENEMY_PROJECTILES := ["res://Scene/Projectiles/enemy_arrow.gd", "res://Scene/Projectiles/magic_spell.gd"]
 
 const PAGES: Array = [
@@ -87,6 +88,9 @@ var power: float = 0.0
 var friend_index: int = 0
 var friend_cd: float = 0.0
 var eat_cd: float = 0.0
+var eat_uses_left: int = EAT_MAX_USES_PER_FLOOR
+var _eat_floor_level: int = 1
+var _eat_run_id: int = 0
 var cooldowns: Dictionary = {}
 var trex_damage_mult: int = 3
 var door_range: float = 96.0
@@ -121,8 +125,14 @@ func _ready() -> void:
 		cooldowns[m] = 0.0
 	super._ready()
 	var seed_str := "DORAEMON"
-	if get_node_or_null("/root/GameManager") != null:
-		seed_str = GameManager.current_seed + ":" + str(GameManager.current_level)
+	var gm = get_node_or_null("/root/GameManager")
+	if gm != null:
+		seed_str = gm.current_seed + ":" + str(gm.current_level)
+		_eat_floor_level = int(gm.current_level)
+		_eat_run_id = int(gm.run_id)
+		if gm.has_signal("stats_updated") and not gm.stats_updated.is_connected(_on_gm_stats_updated):
+			gm.stats_updated.connect(_on_gm_stats_updated)
+	eat_uses_left = EAT_MAX_USES_PER_FLOOR
 	rng.seed = hash(seed_str + ":doraemon")
 	var anims: Array = ["idle", "walk", "hurt", "death", "attack_1", "kick", "glove", "pistol", "ataru", "shockwave", "pocket",
 		"throw", "skill", "summon", "bubble", "shockgun", "magichand", "magichand_grip", "mantle", "door_in", "door_out", "screw", "stick",
@@ -193,6 +203,7 @@ func _physics_process(delta: float) -> void:
 		cooldowns[m] = maxf(0.0, float(cooldowns[m]) - delta)
 	friend_cd = maxf(0.0, friend_cd - delta)
 	eat_cd = maxf(0.0, eat_cd - delta)
+	_sync_eat_floor()
 	_tick_events(delta)
 
 	var gm = get_node_or_null("/root/GameManager")
@@ -239,7 +250,7 @@ func _physics_process(delta: float) -> void:
 
 	_set_flip(current_aim_offset.x < 0.0)
 	var pg: Dictionary = current_page()
-	if bool(f.get("eat", false)) and eat_cd <= 0.0:
+	if bool(f.get("eat", false)) and can_eat_dorayaki():
 		_start_eat()
 	elif bool(f.get("q", false)):
 		_on_q()
@@ -270,7 +281,7 @@ func _refresh_ui() -> void:
 		hud.refresh({"page": page, "pages": PAGES.size(), "page_name": pg["name"],
 			"lmb": MOVES[lmb][0], "lmb_cd": cooldowns[lmb], "rmb": MOVES[rmb][0], "rmb_cd": cooldowns[rmb],
 			"super_ready": super_ready, "super": SUPERS[sup][0], "friend": FRIEND_NAMES[FRIENDS[friend_index]],
-			"q_cd": friend_cd, "eat_cd": eat_cd, "power": power})
+			"q_cd": friend_cd, "eat_cd": eat_cd, "eat_uses_left": eat_uses_left, "eat_max_uses": EAT_MAX_USES_PER_FLOOR, "hp_full": hp >= max_hp, "power": power})
 
 # ------------------------------------------------------------------ helpers
 func _world() -> Node:
@@ -803,7 +814,28 @@ func _do_super_dorayakin() -> void:
 		"explode_radius": float(s[1]), "explode_damage": _dmg() * int(s[2]), "explode_scale": float(s[3])})
 
 # ------------------------------------------------------------------ Dorayaki
+func _on_gm_stats_updated(_level: int, _kills: int) -> void:
+	_sync_eat_floor()
+
+func _sync_eat_floor() -> void:
+	var gm = get_node_or_null("/root/GameManager")
+	if gm == null:
+		return
+	var cur_lvl: int = int(gm.current_level)
+	var cur_run: int = int(gm.run_id)
+	if cur_run != _eat_run_id or cur_lvl != _eat_floor_level:
+		_eat_run_id = cur_run
+		_eat_floor_level = cur_lvl
+		eat_uses_left = EAT_MAX_USES_PER_FLOOR
+
+func can_eat_dorayaki() -> bool:
+	_sync_eat_floor()
+	return eat_cd <= 0.0 and eat_uses_left > 0 and hp < max_hp
+
 func _start_eat() -> void:
+	if not can_eat_dorayaki():
+		return
+	eat_uses_left -= 1
 	eat_cd = EAT_COOLDOWN
 	_enter_mode("eat", {"fed": false})
 	_play("eat")
@@ -862,7 +894,6 @@ func _step_mode(delta: float, direction: Vector2) -> void:
 			if not bool(_mode_data["fed"]) and _mode_t >= 0.4:
 				_mode_data["fed"] = true
 				restore_health(1)
-				add_power(40)
 			if _mode_t >= Sprites.duration("eat"):
 				_end_mode()
 		"sl":

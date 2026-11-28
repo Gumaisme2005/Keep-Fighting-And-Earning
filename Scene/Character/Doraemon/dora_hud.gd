@@ -61,7 +61,10 @@ func refresh(s: Dictionary) -> void:
 	else:
 		rows[2].text = "Q    Friend: %s%s" % [String(s.get("friend", "")), _cd(float(s.get("q_cd", 0.0)))]
 		rows[2].add_theme_color_override("font_color", Color(0.93, 0.94, 0.98))
-	rows[3].text = "F    Dorayaki%s     Wheel / Z X: switch page" % _cd(float(s.get("eat_cd", 0.0)))
+	var eat_left := int(s.get("eat_uses_left", 2))
+	var eat_max := int(s.get("eat_max_uses", 2))
+	var eat_status: String = "  (empty)" if eat_left <= 0 else (_cd(float(s.get("eat_cd", 0.0))) if not bool(s.get("hp_full", false)) else "  (full HP)")
+	rows[3].text = "F    Dorayaki [%d/%d]%s   Z/X: page" % [eat_left, eat_max, eat_status]
 	bars.queue_redraw()
 
 func _cd(t: float) -> String:

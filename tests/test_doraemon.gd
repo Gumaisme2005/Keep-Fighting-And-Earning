@@ -58,6 +58,7 @@ func _reset_field(layout: Array = [Vector2(36, 0), Vector2(64, 0), Vector2(92, 0
 		p.cooldowns[m] = 0.0
 	p.friend_cd = 0.0
 	p.eat_cd = 0.0
+	p.eat_uses_left = p.EAT_MAX_USES_PER_FLOOR
 	p.is_invincible = false
 	for off in layout:
 		var d := Dummy.new()
@@ -199,12 +200,29 @@ func _ready() -> void:
 		dmg_by_bars.append(_total_damage())
 	_check(dmg_by_bars[1] > dmg_by_bars[0] * 2, "DR-07: Dorayakin grows with the power bars spent", str(dmg_by_bars))
 
-	# --- Dorayaki (F)
+	# --- Dorayaki (F): +1 HP, 0 power, 20s cooldown, 2 uses/floor, no-op at full HP
 	_reset_field([])
-	p.hp = 500
+	p.hp = p.max_hp
 	p.power = 0.0
+	await _press("eat", 20)
+	var full_hp_blocked: bool = (p.hp == p.max_hp and p.eat_uses_left == 2 and p.eat_cd == 0.0 and p.power == 0.0)
+	p.hp = 500
 	await _press("eat", 60)
-	_check(p.hp == 501 and p.power >= 40.0 and p.eat_cd > 0.0, "DR-08: F eats a Dorayaki (+1 HP, +40 power)")
+	var first_eat_ok: bool = (p.hp == 501 and p.power == 0.0 and p.eat_cd > 18.0 and p.eat_uses_left == 1)
+	p.eat_cd = 0.0
+	await _press("eat", 60)
+	var second_eat_ok: bool = (p.hp == 502 and p.power == 0.0 and p.eat_uses_left == 0)
+	p.eat_cd = 0.0
+	await _press("eat", 30)
+	var cap_blocked: bool = (p.hp == 502 and p.eat_uses_left == 0 and p.eat_cd == 0.0)
+	GameManager.register_level_advance(2)
+	await _frames(2)
+	var floor_reset_ok: bool = (p.eat_uses_left == 2)
+	GameManager.current_level = 1
+	p._sync_eat_floor()
+	_check(full_hp_blocked and first_eat_ok and second_eat_ok and cap_blocked and floor_reset_ok,
+		"DR-08: F eats Dorayaki (+1 HP, 0 power, 20s CD, 2/floor, blocked at full HP, resets on new floor)",
+		"full=%s first=%s second=%s cap=%s reset=%s" % [str(full_hp_blocked), str(first_eat_ok), str(second_eat_ok), str(cap_blocked), str(floor_reset_ok)])
 
 	# --- Power gauge fills from hits and from damage taken
 	_reset_field()

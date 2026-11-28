@@ -15,7 +15,7 @@ armor = 2
 attack_cooldown = 0.3
 skill_cooldown = 8
 lore = "A robot cat from the future fighting with the whole 4D Pocket: Air Cannon, Anywhere Door, Shock Gun, Pencil Missiles, a dango-tamed T-Rex, Mini-Doras, his friends on Take-copters and ten super moves fuelled by a 3-bar power gauge."
-skill_q = "Friends / Super — Key Q: summon the next friend (Nobita, Gian, Shizuka, Dorami, Suneo, Come-come Cat). With a full power bar: the current page's SUPER. F: eat a Dorayaki."
+skill_q = "Friends / Super — Key Q: summon the next friend (Nobita, Gian, Shizuka, Dorami, Suneo, Come-come Cat). With a full power bar: the current page's SUPER. F: eat a Dorayaki (+1 HP, 2/floor, 20s CD)."
 skill_rmb = "4D Pocket — Mouse Wheel or Z / X: switch gadget page (10 pages). Left / Right Click: use the page's two gadgets."
 custom_stats = {
 "air_shot_range": 190.0,

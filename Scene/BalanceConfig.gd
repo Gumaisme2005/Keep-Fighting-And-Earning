@@ -121,7 +121,7 @@ static func _build_hero_stats() -> Dictionary:
 			"hp": 5, "armor": 2, "damage": 1, "speed": 150.0, "air_shot_speed": 300.0,
 			"air_shot_range": 190.0, "skill_cooldown": 8.0, "trex_damage_mult": 3, "door_range": 96.0,
 			"lore": "A robot cat from the future fighting with the whole 4D Pocket: Air Cannon, Anywhere Door, Shock Gun, Pencil Missiles, a dango-tamed T-Rex, Mini-Doras, his friends on Take-copters and ten super moves fuelled by a 3-bar power gauge.",
-			"skill_q": "Friends / Super — Key Q: summon the next friend (Nobita, Gian, Shizuka, Dorami, Suneo, Come-come Cat). With a full power bar: the current page's SUPER. F: eat a Dorayaki.",
+			"skill_q": "Friends / Super — Key Q: summon the next friend (Nobita, Gian, Shizuka, Dorami, Suneo, Come-come Cat). With a full power bar: the current page's SUPER. F: eat a Dorayaki (+1 HP, 2/floor, 20s CD).",
 			"skill_rmb": "4D Pocket — Mouse Wheel or Z / X: switch gadget page (10 pages). Left / Right Click: use the page's two gadgets."
 		},
 		"miyabi": {
@@ -137,10 +137,10 @@ static func _build_hero_stats() -> Dictionary:
 		"luong_tho": {
 			"index": 7, "id": "luong_tho", "name": "Lương Thơ", "role": "Twin Gunblade Duelist",
 			"weapon": "Twin Tonfa-Gunblades", "skill_icon": "sword_large",
-			"hp": 5, "armor": 2, "damage": 1, "speed": 155.0, "skill_cooldown": 20.0,
-			"rmb_cooldown": 0.8, "upgrade_duration": 12.0, "bullet_speed": 320.0, "bullet_range": 220.0,
+			"hp": 5, "armor": 2, "damage": 1, "speed": 155.0, "skill_cooldown": 24.0,
+			"rmb_cooldown": 0.8, "upgrade_duration": 12.0, "upgrade_immunity_duration": 2.5, "bullet_speed": 320.0, "bullet_range": 220.0,
 			"lore": "A duelist wielding twin tonfa-gunblades - hammer heads, gear boxes and long barrels. She keeps them on her back until the fight starts. Left Click: 3-step combo Stab -> Twin Swing -> Ground Smash (2x + daze).",
-			"skill_q": "White Moon — Key Q: Transform into the white-haired form for 12s: immune to all damage, +1 damage on every hit, 25% faster attacks, 20% faster movement, piercing rounds. Cooldown: 20s.",
+			"skill_q": "White Moon — Key Q: Transform into the white-haired form for 12s: immune to damage for the first 2.5s, then 30% damage reduction for 9.5s, +1 damage on every hit, 25% faster attacks, 20% faster movement, piercing rounds. Cooldown: 24s (max 30% CDR).",
 			"skill_rmb": "Twin Barrels — Right Click: Fire both barrels along the aim, 2 rounds (hold to keep firing). Cooldown: 0.8s."
 		}
 	}
